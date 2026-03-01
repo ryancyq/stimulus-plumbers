@@ -104,11 +104,20 @@ GEM
     concurrent-ruby (1.3.6)
     connection_pool (3.0.2)
     crass (1.0.6)
+    cuprite (0.17)
+      capybara (~> 3.0)
+      ferrum (~> 0.17.0)
     date (3.5.1)
     docile (1.4.1)
     drb (2.2.3)
     erb (6.0.1)
     erubi (1.13.1)
+    ferrum (0.17.1)
+      addressable (~> 2.5)
+      base64 (~> 0.2)
+      concurrent-ruby (~> 1.1)
+      webrick (~> 1.7)
+      websocket-driver (~> 0.7)
     globalid (1.3.0)
       activesupport (>= 6.1)
     i18n (1.14.8)
@@ -180,6 +189,8 @@ GEM
       date
       stringio
     public_suffix (7.0.2)
+    puma (7.2.0)
+      nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.4)
     rack-session (2.1.1)
@@ -277,6 +288,7 @@ GEM
       activesupport (>= 5.2.0, < 8.2)
       concurrent-ruby (~> 1)
       method_source (~> 1.0)
+    webrick (1.9.2)
     websocket-driver (0.8.0)
       base64
       websocket-extensions (>= 0.1.0)
@@ -298,7 +310,9 @@ PLATFORMS
 DEPENDENCIES
   appraisal (~> 2.5.0)
   capybara (~> 3.39)
+  cuprite
   minitest (~> 5.25)
+  puma
   rails (>= 6.1, < 8.2)
   railties (>= 6.1, < 8.2)
   rake (~> 13.3)

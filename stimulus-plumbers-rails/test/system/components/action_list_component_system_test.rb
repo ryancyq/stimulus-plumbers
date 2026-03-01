@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "application_system_test_case"
+require_relative "../application_system_test_case"
 
 class ActionListComponentSystemTest < ApplicationSystemTestCase
   BASE = "/rails/view_components/action_list_component"

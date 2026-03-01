@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "application_system_test_case"
+require_relative "../application_system_test_case"
 
 class CardComponentSystemTest < ApplicationSystemTestCase
   BASE = "/rails/view_components/card_component"

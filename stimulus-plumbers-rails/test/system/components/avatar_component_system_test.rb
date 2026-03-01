@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "application_system_test_case"
+require_relative "../application_system_test_case"
 
 class AvatarComponentSystemTest < ApplicationSystemTestCase
   BASE = "/rails/view_components/avatar_component"

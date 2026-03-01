@@ -14,6 +14,8 @@ jobs:
   test-a11y-rails:
     name: "a11y tests / Rails ${{ matrix.rails-version }} / Ruby ${{ matrix.ruby-version }}"
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/Gemfile"
     defaults:
       run:
         working-directory: stimulus-plumbers-rails
