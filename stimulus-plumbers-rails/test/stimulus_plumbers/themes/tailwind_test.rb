@@ -135,8 +135,8 @@ class TailwindThemeTest < Minitest::Test
 
     assert_instance_of Hash, colors
     assert_predicate colors, :present?
-    assert colors.keys.all? { |k| k.is_a?(Symbol) }, "expected all keys to be Symbols"
-    assert colors.values.all? { |v| v.is_a?(String) }, "expected all values to be Strings"
+    assert colors.keys.all?(Symbol), "expected all keys to be Symbols"
+    assert colors.values.all?(String), "expected all values to be Strings"
   end
 
   def test_avatar_color_range_returns_the_css_class_values_of_avatar_colors

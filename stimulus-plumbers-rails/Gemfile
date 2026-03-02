@@ -16,14 +16,14 @@ group :development, :test do
 end
 
 group :development do
-  gem "rubocop", "~> 1.79", require: false
-  gem "rubocop-rake", require: false
+  gem "rubocop", "~> 1.85", require: false
   gem "rubocop-minitest", require: false
+  gem "rubocop-rake", require: false
 
   gem "appraisal", "~> 2.5.0", require: false
 end
 
 group :test do
-  gem "minitest", "~> 5.25"
   gem "capybara", "~> 3.39" # last version to support Ruby 2.7
+  gem "minitest", "~> 5.25"
 end
