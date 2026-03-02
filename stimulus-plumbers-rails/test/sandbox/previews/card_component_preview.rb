@@ -2,7 +2,9 @@
 
 class CardComponentPreview < ViewComponent::Preview
   def default
-    render CardComponent.new(title: "Card Title") { "Card content goes here." }
+    render CardComponent.new(title: "Card Title") do
+      "Card content goes here."
+    end
   end
 
   def with_sections

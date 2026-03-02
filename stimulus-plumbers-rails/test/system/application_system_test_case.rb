@@ -42,6 +42,9 @@ class ApplicationSystemTestCase < Minitest::Test
     JS
     assert violations.empty?,
       "Expected no axe violations, but found #{violations.size}:\n" +
-      violations.map { |v| "  [#{v["id"]}] #{v["description"]}" }.join("\n")
+      violations.map { |v|
+        nodes = v["nodes"].map { |n| "    #{n["html"]}" }.join("\n")
+        "  [#{v["id"]}] #{v["description"]}\n#{nodes}"
+      }.join("\n")
   end
 end

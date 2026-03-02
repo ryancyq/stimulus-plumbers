@@ -10,6 +10,8 @@ class PopoverComponentPreview < ViewComponent::Preview
   end
 
   def static
-    render PopoverComponent.new(interactive: false) { "Static popover content" }
+    render PopoverComponent.new(interactive: false) do
+      "Static popover content"
+    end
   end
 end

@@ -2,14 +2,14 @@
   <%= tag.ul **component_attrs do %>
     <% sections.each.with_index do |section, index| %>
       <% if index > 0 %>
-        <%= divider %>
+        <li aria-hidden="true"><%= divider %></li>
       <% end %>
       <li>
         <%= section %>
       </li>
     <% end %>
     <% if items? %>
-      <%= divider %>
+      <li aria-hidden="true"><%= divider %></li>
       <li>
         <%= render StimulusPlumbers::Components::ActionList::SectionComponent.new do |section| %>
           <% items.each do |item| %>
