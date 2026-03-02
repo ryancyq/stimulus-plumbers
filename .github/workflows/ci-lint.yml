@@ -1,0 +1,31 @@
+name: CI (Lint)
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-rubocop:
+    name: "Rubocop"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-rails
+    env:
+      BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/Gemfile"
+
+    steps:
+      - uses: actions/checkout@v6
+      - run: rm Gemfile.lock
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler: latest
+          bundler-cache: true
+
+      - run: bundle exec rubocop
