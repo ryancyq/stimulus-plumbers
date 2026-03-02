@@ -11,7 +11,12 @@ require "stimulus_plumbers"
 
 Capybara.register_driver(:cuprite) do |app|
   headless = ENV["HEADLESS"] != "false"
-  Capybara::Cuprite::Driver.new(app, window_size: [1200, 800], headless: headless)
+  Capybara::Cuprite::Driver.new(
+    app,
+    window_size: [1200, 800],
+    headless: headless,
+    browser_options: { "no-sandbox" => nil },
+  )
 end
 
 class ApplicationSystemTestCase < Minitest::Test
