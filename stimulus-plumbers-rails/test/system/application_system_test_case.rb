@@ -7,7 +7,13 @@ require "minitest/autorun"
 require "capybara"
 require "capybara/minitest"
 require "capybara/cuprite"
+require "capybara_screenshot_diff/minitest"
+require "rodiff"
 require "stimulus_plumbers"
+require_relative "rodiff_driver"
+
+Capybara::Screenshot.save_path = "tmp/screenshots/baselines"
+Capybara::Screenshot::Diff.driver = :rodiff
 
 Capybara.register_driver(:cuprite) do |app|
   headless = ENV["HEADLESS"] != "false"
@@ -22,6 +28,7 @@ end
 class ApplicationSystemTestCase < Minitest::Test
   include Capybara::DSL
   include Capybara::Minitest::Assertions
+  include CapybaraScreenshotDiff::Minitest::Assertions
 
   def setup
     Capybara.current_driver = :cuprite
@@ -29,6 +36,7 @@ class ApplicationSystemTestCase < Minitest::Test
   end
 
   def teardown
+    save_screenshot_on_failure
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end
@@ -45,6 +53,15 @@ class ApplicationSystemTestCase < Minitest::Test
   end
 
   private
+
+  def save_screenshot_on_failure
+    return if failures.empty?
+
+    dir = "tmp/screenshots"
+    FileUtils.mkdir_p(dir)
+    path = "#{dir}/#{self.class.name}##{name}_#{Time.now.strftime("%Y%m%d%H%M%S")}.png"
+    page.save_screenshot(path)
+  end
 
   def axe_violation_message(violations)
     "Expected no axe violations, but found #{violations.size}:\n" +

@@ -69,3 +69,7 @@ Metrics/MethodLength:
 
 Minitest/MultipleAssertions:
   Enabled: false
+
+Lint/Debugger:
+  Exclude:
+    - test/system/application_system_test_case.rb
