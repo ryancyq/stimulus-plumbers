@@ -23,11 +23,12 @@ Gem::Specification.new do |spec|
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  # app/ assets (e.g. compiled JS dist) are resolved via Dir.glob since they are not git-tracked.
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
     ls.readlines("\x0", chomp: true).select do |f|
       f.start_with?(*%w[lib/ LICENSE README.md CHANGELOG.md])
     end
-  end
+  end + Dir.glob("app/**/*", base: __dir__).reject { |f| File.directory?(File.join(__dir__, f)) }
 
   spec.require_paths = ["lib"]
 
