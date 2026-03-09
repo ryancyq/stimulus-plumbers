@@ -18,7 +18,7 @@ class PopoverRendererTest < ActionView::TestCase
 
   # rendering
   def test_renders_outer_div
-    html = renderer.popover { |_p| }
+    html = renderer.popover { |_p| nil }
 
     assert_includes html, "<div"
   end
@@ -66,13 +66,13 @@ class PopoverRendererTest < ActionView::TestCase
   end
 
   def test_merges_custom_class
-    html = renderer.popover(class: "dropdown") { |_p| }
+    html = renderer.popover(class: "dropdown") { |_p| nil }
 
     assert_includes html, "dropdown"
   end
 
   def test_passes_html_options
-    html = renderer.popover(id: "my-popover", data: { controller: "popover" }) { |_p| }
+    html = renderer.popover(id: "my-popover", data: { controller: "popover" }) { |_p| nil }
 
     assert_includes html, 'id="my-popover"'
     assert_includes html, 'data-controller="popover"'
