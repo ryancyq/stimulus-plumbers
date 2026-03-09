@@ -13,6 +13,12 @@ module StimulusPlumbers
       app.config.assets.paths << root.join("app/assets/javascripts")
     end
 
+    initializer "stimulus_plumbers.helpers" do
+      ActiveSupport.on_load(:action_view) do
+        include StimulusPlumbers::Helpers
+      end
+    end
+
     initializer "stimulus_plumbers.view_component" do
       ActiveSupport.on_load(:view_component) do
         # Ensure ViewComponent can find our components
