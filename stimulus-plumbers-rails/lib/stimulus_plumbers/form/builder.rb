@@ -96,16 +96,12 @@ module StimulusPlumbers
         options[:data] ||= {}
         d = options[:data]
 
-        if controller
-          d[:controller] = [d[:controller], controller].compact.join(" ")
-        end
+        d[:controller] = [d[:controller], controller].compact.join(" ") if controller
 
-        if action
-          d[:action] = [d[:action], action].compact.join(" ")
-        end
+        d[:action] = [d[:action], action].compact.join(" ") if action
 
         values.each  { |name, val| d[:"#{controller}-#{name}-value"] = val }
-        targets.each { |name, _|   d[:"#{controller}-target"]        = name }
+        targets.each_key { |name| d[:"#{controller}-target"] = name }
       end
 
       def theme

@@ -7,10 +7,6 @@ AllCops:
   NewCops: enable
   SuggestExtensions: false
 
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - exe/*
-
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
@@ -22,6 +18,19 @@ Style/RegexpLiteral:
 
 Style/HashSyntax:
   EnforcedShorthandSyntax: consistent
+
+Style/Documentation:
+  Enabled: false
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/BlockDelimiters:
+  EnforcedStyle: line_count_based
+
+Style/DocumentDynamicEvalDefinition:
+  Exclude:
+    - lib/stimulus_plumbers/components/plumber/views.rb
 
 Layout/FirstMethodArgumentLineBreak:
   Enabled: true
@@ -40,15 +49,6 @@ Layout/HashAlignment:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 
-Style/Alias:
-  EnforcedStyle: prefer_alias_method
-
-Style/BlockDelimiters:
-  EnforcedStyle: line_count_based
-
-Style/Documentation:
-  Enabled: false
-
 Metrics/ClassLength:
   Exclude:
     - lib/stimulus_plumbers/themes/**/*.rb
@@ -58,14 +58,24 @@ Metrics/ModuleLength:
   Exclude:
     - lib/stimulus_plumbers/components/plumber/stimulus_registry.rb
 
-Style/DocumentDynamicEvalDefinition:
-  Exclude:
-    - lib/stimulus_plumbers/components/plumber/views.rb
-
 Metrics/MethodLength:
   Exclude:
     - lib/stimulus_plumbers/themes/**/*.rb
+    - lib/stimulus_plumbers/form/fields/*.rb
     - test/**/*_test.rb
 
+Metrics/AbcSize:
+  Exclude:
+    - lib/stimulus_plumbers/form/builder.rb
+    - lib/stimulus_plumbers/form/fields/*.rb
+    - lib/stimulus_plumbers/themes/base.rb
+
+Metrics/ParameterLists:
+  Exclude:
+    - lib/stimulus_plumbers/form/field_component.rb
+    - lib/stimulus_plumbers/form/fields/*.rb
+
 Minitest/MultipleAssertions:
-  Enabled: false
+  Max: 5
+  Exclude:
+    - test/system/**/*_test.rb

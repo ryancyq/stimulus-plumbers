@@ -1,21 +1,12 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "active_model"
 require "nokogiri"
-
-class FormBuilderTestModel
-  include ActiveModel::Model
-  attr_accessor :email, :password, :remember_me
-
-  def self.model_name
-    ActiveModel::Name.new(self, nil, "sign_in_form")
-  end
-end
+require_relative "form_builder_model"
 
 class BuilderTest < ActionView::TestCase
   def setup
-    @form = FormBuilderTestModel.new
+    @form = FormBuilderModel.new
   end
 
   # ── Helpers ────────────────────────────────────────────────────────────────
@@ -33,11 +24,11 @@ class BuilderTest < ActionView::TestCase
   end
 
   def assert_css(doc, selector, msg = nil)
-    assert doc.css(selector).any?, msg || "Expected to find #{selector.inspect}"
+    assert_predicate doc.css(selector), :any?, msg || "Expected to find #{selector.inspect}"
   end
 
   def refute_css(doc, selector, msg = nil)
-    assert doc.css(selector).none?, msg || "Expected not to find #{selector.inspect}"
+    assert_predicate doc.css(selector), :none?, msg || "Expected not to find #{selector.inspect}"
   end
 
   # ── FieldComponent integration ─────────────────────────────────────────────
@@ -52,21 +43,21 @@ class BuilderTest < ActionView::TestCase
   def test_field_renders_custom_label_text
     doc = build_field(:email_field, :email, label: "Email address")
 
-    assert doc.text.include?("Email address")
+    assert_includes doc.text, "Email address"
   end
 
   def test_field_renders_details_hint
     doc = build_field(:email_field, :email, details: "We'll never share your email.")
 
     assert_css doc, "#sign_in_form_email_hint"
-    assert doc.text.include?("We'll never share your email.")
+    assert_includes doc.text, "We'll never share your email."
   end
 
   def test_field_renders_required_indicator
     doc = build_field(:email_field, :email, required: true)
 
     assert_css doc, "span[aria-hidden='true']"
-    assert doc.css("span[aria-hidden='true']").text.include?("*")
+    assert_includes doc.css("span[aria-hidden='true']").text, "*"
   end
 
   def test_field_renders_model_error
@@ -74,14 +65,14 @@ class BuilderTest < ActionView::TestCase
     doc = build_field(:email_field, :email)
 
     assert_css doc, "p[role='alert']"
-    assert doc.text.include?("is invalid")
+    assert_includes doc.text, "is invalid"
   end
 
   def test_field_renders_error_override
     doc = build_field(:email_field, :email, error: "Something went wrong")
 
     assert_css doc, "p[role='alert']"
-    assert doc.text.include?("Something went wrong")
+    assert_includes doc.text, "Something went wrong"
   end
 
   def test_hidden_field_renders_without_field_wrapper
@@ -124,6 +115,7 @@ class BuilderTest < ActionView::TestCase
     doc = build_field(:text_area, :email)
 
     textarea = doc.at_css("textarea")
+
     refute_nil textarea
     assert_includes textarea["data-controller"].to_s, "auto-resize"
   end
@@ -134,6 +126,7 @@ class BuilderTest < ActionView::TestCase
     doc = build_field(:email_field, :email, details: "Hint text")
 
     input = doc.at_css("input[type='email']")
+
     assert_includes input["aria-describedby"].to_s, "sign_in_form_email_hint"
   end
 
@@ -142,6 +135,7 @@ class BuilderTest < ActionView::TestCase
     doc = build_field(:email_field, :email)
 
     input = doc.at_css("input[type='email']")
+
     assert_includes input["aria-describedby"].to_s, "sign_in_form_email_error"
   end
 
@@ -149,6 +143,7 @@ class BuilderTest < ActionView::TestCase
     doc = build_field(:email_field, :email)
 
     input = doc.at_css("input[type='email']")
+
     assert_nil input["aria-describedby"]
   end
 
@@ -212,7 +207,7 @@ class BuilderTest < ActionView::TestCase
     builder = StimulusPlumbers::Form::Builder.new("sign_in_form", @form, view, {})
     field   = builder.send(:build_field, :email, {})
 
-    assert_equal false, field.error?
+    refute_predicate field, :error?
   end
 
   def test_build_field_has_error_when_model_has_errors
@@ -220,6 +215,6 @@ class BuilderTest < ActionView::TestCase
     builder = StimulusPlumbers::Form::Builder.new("sign_in_form", @form, view, {})
     field   = builder.send(:build_field, :email, {})
 
-    assert_equal true, field.error?
+    assert_predicate field, :error?
   end
 end

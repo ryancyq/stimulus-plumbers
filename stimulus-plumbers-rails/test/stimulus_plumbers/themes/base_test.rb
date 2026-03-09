@@ -14,7 +14,7 @@ class BaseThemeTest < Minitest::Test
 
   def test_resolve_returns_empty_hash_and_warns_for_all_known_components
     mock_logger = Minitest::Mock.new
-    StimulusPlumbers::Themes::Base::SCHEMA.each_key do |component|
+    StimulusPlumbers::Themes::Base::SCHEMA.each_key do |_component|
       mock_logger.expect(:warn, nil, [String])
     end
     Rails.stub(:logger, mock_logger) do

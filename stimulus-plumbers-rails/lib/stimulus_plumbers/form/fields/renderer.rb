@@ -25,16 +25,16 @@ module StimulusPlumbers
           label_html = template.content_tag(:label, label_inner, for: field.input_id, class: label_klass)
 
           hint_html = if field.details.present?
-            details_klass = theme.resolve(:form_details).fetch(:classes, "")
-            template.content_tag(:p, field.details, id: field.hint_id, class: details_klass)
-          else
-            "".html_safe
-          end
+                        details_klass = theme.resolve(:form_details).fetch(:classes, "")
+                        template.content_tag(:p, field.details, id: field.hint_id, class: details_klass)
+                      else
+                        "".html_safe
+                      end
 
-          errors_html = field.errors.map { |message|
+          errors_html = field.errors.map do |message|
             error_klass = theme.resolve(:form_error).fetch(:classes, "")
             template.content_tag(:p, message, id: field.error_id, class: error_klass, role: "alert")
-          }.join.html_safe
+          end.join.html_safe
 
           field_klass = theme.resolve(:form_group, layout: field.layout, error: field.error?).fetch(:classes, "")
 

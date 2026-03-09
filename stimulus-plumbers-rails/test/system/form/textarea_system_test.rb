@@ -6,7 +6,7 @@ class TextareaSystemTest < ApplicationSystemTestCase
   def test_renders_textarea
     visit "/form/textarea"
 
-    assert_selector "label", text: /Bio/
+    assert_selector "label", text: %r{Bio}
     assert_selector "textarea"
   end
 
@@ -26,6 +26,7 @@ class TextareaSystemTest < ApplicationSystemTestCase
     visit "/form/textarea"
 
     textarea_id = find("textarea")[:id]
+
     assert_selector "label[for='#{textarea_id}']"
   end
 

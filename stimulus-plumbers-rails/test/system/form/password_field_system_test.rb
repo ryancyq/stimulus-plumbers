@@ -6,7 +6,7 @@ class PasswordFieldSystemTest < ApplicationSystemTestCase
   def test_renders_password_input
     visit "/form/password_field"
 
-    assert_selector "label",               text: /Password/
+    assert_selector "label", text: %r{Password}
     assert_selector "input[type='password']"
   end
 
@@ -21,9 +21,11 @@ class PasswordFieldSystemTest < ApplicationSystemTestCase
 
     assert_selector "[data-controller='password-reveal']"
     find("button[data-action='click->password-reveal#toggle']").click
+
     assert_selector "input[type='text']"
 
     find("button[data-action='click->password-reveal#toggle']").click
+
     assert_selector "input[type='password']"
   end
 

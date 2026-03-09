@@ -3,8 +3,14 @@
 module StimulusPlumbers
   module Form
     class FieldComponent
-      attr_reader :object, :attribute, :label_text, :details,
-                  :required, :disabled, :label_visibility, :layout
+      attr_reader :object,
+                  :attribute,
+                  :label_text,
+                  :details,
+                  :required,
+                  :disabled,
+                  :label_visibility,
+                  :layout
 
       def initialize(object:, attribute:,
                      label: nil,

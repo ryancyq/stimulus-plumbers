@@ -6,11 +6,11 @@ class SignInSystemTest < ApplicationSystemTestCase
   def test_renders_all_fields
     visit "/form/sign_in"
 
-    assert_selector "label",                      text: /Email address/
+    assert_selector "label", text: %r{Email address}
     assert_selector "input[type='email']"
-    assert_selector "label",                      text: /Password/
+    assert_selector "label", text: %r{Password}
     assert_selector "input[type='password']"
-    assert_selector "label",                      text: /Remember me/
+    assert_selector "label", text: %r{Remember me}
     assert_selector "input[type='checkbox']"
     assert_selector "input[type='submit'][value='Sign in']"
   end
@@ -32,9 +32,11 @@ class SignInSystemTest < ApplicationSystemTestCase
 
     assert_selector "[data-controller='password-reveal']"
     find("button[data-action='click->password-reveal#toggle']").click
+
     assert_selector "input[type='text']"
 
     find("button[data-action='click->password-reveal#toggle']").click
+
     assert_selector "input[type='password']"
   end
 

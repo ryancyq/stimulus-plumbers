@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 module StimulusPlumbers::Themes::Tailwind::Card
-  BASE = %w[rounded-[--sp-radius-lg] border border-[--sp-color-border] bg-[--sp-color-bg] shadow-[--sp-shadow-sm]].freeze
+  BASE = %w[
+    rounded-[--sp-radius-lg] border border-[--sp-color-border]
+    bg-[--sp-color-bg] shadow-[--sp-shadow-sm]
+  ].freeze
 
   private
 

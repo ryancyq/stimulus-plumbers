@@ -1,24 +1,15 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "active_model"
-
-class FormFieldTestModel
-  include ActiveModel::Model
-  attr_accessor :email, :password, :remember_me
-
-  def self.model_name
-    ActiveModel::Name.new(self, nil, "sign_in_form")
-  end
-end
+require_relative "form_field_model"
 
 class FieldComponentTest < Minitest::Test
   def setup
-    @form = FormFieldTestModel.new
+    @form = FormFieldModel.new
   end
 
   def component(attribute: :email, **kwargs)
-    StimulusPlumbers::Form::FieldComponent.new(object: @form, attribute:, **kwargs)
+    StimulusPlumbers::Form::FieldComponent.new(object: @form, attribute: attribute, **kwargs)
   end
 
   # ── errors ────────────────────────────────────────────────────────────────
@@ -29,6 +20,7 @@ class FieldComponentTest < Minitest::Test
 
   def test_errors_returns_model_errors
     @form.errors.add(:email, "is invalid")
+
     assert_includes component(attribute: :email).errors, "is invalid"
   end
 
@@ -38,22 +30,24 @@ class FieldComponentTest < Minitest::Test
 
   def test_errors_prefers_override_over_model_errors
     @form.errors.add(:email, "is invalid")
+
     assert_equal ["Custom error"], component(attribute: :email, error: "Custom error").errors
   end
 
   # ── error? ────────────────────────────────────────────────────────────────
 
   def test_no_error_with_no_errors
-    assert_equal false, component(attribute: :email).error?
+    refute_predicate component(attribute: :email), :error?
   end
 
   def test_error_when_model_has_errors
     @form.errors.add(:email, "is invalid")
-    assert_equal true, component(attribute: :email).error?
+
+    assert_predicate component(attribute: :email), :error?
   end
 
   def test_error_when_error_override_is_set
-    assert_equal true, component(attribute: :email, error: "Something went wrong").error?
+    assert_predicate component(attribute: :email, error: "Something went wrong"), :error?
   end
 
   # ── ID helpers ─────────────────────────────────────────────────────────────
@@ -82,12 +76,14 @@ class FieldComponentTest < Minitest::Test
 
   def test_described_by_includes_error_id_when_errors_present
     @form.errors.add(:email, "is invalid")
+
     assert_includes component(attribute: :email).described_by, "sign_in_form_email_error"
   end
 
   def test_described_by_includes_both_ids_when_details_and_errors_present
     @form.errors.add(:email, "is invalid")
     c = component(attribute: :email, details: "Hint text")
+
     assert_includes c.described_by, "sign_in_form_email_hint"
     assert_includes c.described_by, "sign_in_form_email_error"
   end
@@ -105,15 +101,15 @@ class FieldComponentTest < Minitest::Test
   # ── label_hidden? ─────────────────────────────────────────────────────────
 
   def test_label_not_hidden_by_default
-    refute component(attribute: :email).label_hidden?
+    refute_predicate component(attribute: :email), :label_hidden?
   end
 
   def test_label_hidden_when_visibility_is_exclusive
-    assert component(attribute: :email, label_visibility: :exclusive).label_hidden?
+    assert_predicate component(attribute: :email, label_visibility: :exclusive), :label_hidden?
   end
 
   def test_label_not_hidden_when_visibility_is_visible
-    refute component(attribute: :email, label_visibility: :visible).label_hidden?
+    refute_predicate component(attribute: :email, label_visibility: :visible), :label_hidden?
   end
 
   # ── layout ────────────────────────────────────────────────────────────────

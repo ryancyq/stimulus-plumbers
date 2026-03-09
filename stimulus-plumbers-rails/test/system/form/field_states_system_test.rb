@@ -6,7 +6,7 @@ class FieldStatesSystemTest < ApplicationSystemTestCase
   def test_renders_required_field_with_indicator
     visit "/form/field_states"
 
-    assert_selector "label",                   text: /Full name/
+    assert_selector "label", text: %r{Full name}
     assert_selector "span[aria-hidden='true']", text: "*"
   end
 
@@ -31,13 +31,14 @@ class FieldStatesSystemTest < ApplicationSystemTestCase
   def test_renders_visually_hidden_label
     visit "/form/field_states"
 
-    assert_selector ".sr-only", text: /Search query/
+    assert_selector ".sr-only", text: %r{Search query}
   end
 
   def test_error_field_has_aria_describedby
     visit "/form/field_states"
 
     error_el = find("[role='alert']", match: :first)
+
     refute_nil error_el[:id], "Error paragraph must have an id"
   end
 

@@ -6,7 +6,7 @@ class SelectFieldSystemTest < ApplicationSystemTestCase
   def test_renders_select
     visit "/form/select_field"
 
-    assert_selector "label",  text: /Country/
+    assert_selector "label", text: %r{Country}
     assert_selector "select"
   end
 
@@ -29,6 +29,7 @@ class SelectFieldSystemTest < ApplicationSystemTestCase
     visit "/form/select_field"
 
     select_id = find("select")[:id]
+
     assert_selector "label[for='#{select_id}']"
   end
 

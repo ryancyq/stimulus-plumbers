@@ -24,8 +24,13 @@ module StimulusPlumbers::Themes::Tailwind::Avatar
 
   BASE = %w[rounded-[--sp-radius-full] overflow-hidden inline-flex items-center justify-center].freeze
 
-  def avatar_colors      = COLORS
-  def avatar_color_range = COLORS.values
+  def avatar_colors
+    COLORS
+  end
+
+  def avatar_color_range
+    COLORS.values
+  end
 
   private
 

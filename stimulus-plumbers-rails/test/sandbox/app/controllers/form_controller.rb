@@ -3,8 +3,16 @@
 class FormController < ActionController::Base
   class DemoForm
     include ActiveModel::Model
-    attr_accessor :email, :name, :password, :bio, :age,
-                  :birth_date, :newsletter, :gender, :country
+
+    attr_accessor :email,
+                  :name,
+                  :password,
+                  :bio,
+                  :age,
+                  :birth_date,
+                  :newsletter,
+                  :gender,
+                  :country
 
     def self.model_name
       ActiveModel::Name.new(self, nil, "demo")

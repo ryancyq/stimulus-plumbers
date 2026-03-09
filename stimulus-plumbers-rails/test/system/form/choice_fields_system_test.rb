@@ -6,16 +6,16 @@ class ChoiceFieldsSystemTest < ApplicationSystemTestCase
   def test_renders_checkbox
     visit "/form/choice_fields"
 
-    assert_selector "label",                text: /Subscribe to newsletter/
+    assert_selector "label", text: %r{Subscribe to newsletter}
     assert_selector "input[type='checkbox']"
   end
 
   def test_renders_radio_buttons
     visit "/form/choice_fields"
 
-    assert_selector "label",               text: /Male/
-    assert_selector "label",               text: /Female/
-    assert_selector "label",               text: /Other/
+    assert_selector "label",               text: %r{Male}
+    assert_selector "label",               text: %r{Female}
+    assert_selector "label",               text: %r{Other}
     assert_selector "input[type='radio']", count: 3
   end
 
@@ -23,6 +23,7 @@ class ChoiceFieldsSystemTest < ApplicationSystemTestCase
     visit "/form/choice_fields"
 
     checkbox_id = find("input[type='checkbox']")[:id]
+
     assert_selector "label[for='#{checkbox_id}']"
   end
 

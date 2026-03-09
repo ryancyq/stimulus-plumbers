@@ -25,8 +25,8 @@ class TestApp < Rails::Application
   # Rack::Static prepends root to the full request path, so root must be the
   # npm package directory and the URL prefix must be "/dist".
   config.middleware.use Rack::Static,
-    urls: ["/dist"],
-    root: File.expand_path("../../../../stimulus-plumbers", __dir__)
+                        urls: ["/dist"],
+                        root: File.expand_path("../../../../stimulus-plumbers", __dir__)
 
   # ViewComponent previews
   config.view_component.preview_paths << Rails.root.join("previews")

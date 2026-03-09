@@ -50,10 +50,10 @@ module StimulusPlumbers
         return value unless schema
 
         range = if schema[:range].is_a?(Symbol)
-          respond_to?(schema[:range], true) ? send(schema[:range]) : []
-        else
-          schema[:range]
-        end
+                  respond_to?(schema[:range], true) ? send(schema[:range]) : []
+                else
+                  schema[:range]
+                end
         return value if range.empty? || range.include?(value)
 
         StimulusPlumbers::Logger.warn(
