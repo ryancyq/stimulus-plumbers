@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Form Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axe-core/axe.min.js"></script>
+  </head>
+  <body class="font-sans text-gray-900 bg-white">
+    <main class="max-w-lg mx-auto my-8 px-6">
+      <%= yield %>
+    </main>
+    <!-- importmap resolves the bare "@hotwired/stimulus" specifier used by the dist bundle -->
+    <script type="importmap">
+      { "imports": { "@hotwired/stimulus": "https://cdn.jsdelivr.net/npm/@hotwired/stimulus/dist/stimulus.js" } }
+    </script>
+    <script type="module">
+      import { Application } from "@hotwired/stimulus";
+      import { PasswordRevealController, AutoResizeController }
+        from "/dist/stimulus-plumbers-controllers.es.js";
+
+      const app = Application.start();
+      app.register("password-reveal", PasswordRevealController);
+      app.register("auto-resize",     AutoResizeController);
+    </script>
+  </body>
+</html>

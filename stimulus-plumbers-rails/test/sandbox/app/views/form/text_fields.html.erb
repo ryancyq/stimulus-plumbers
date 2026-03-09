@@ -1,0 +1,8 @@
+<h1>Text fields</h1>
+
+<%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+  <%= f.email_field  :email,      label: "Email" %>
+  <%= f.text_field   :name,       label: "Full name" %>
+  <%= f.number_field :age,        label: "Age" %>
+  <%= f.date_field   :birth_date, label: "Date of birth" %>
+<% end %>

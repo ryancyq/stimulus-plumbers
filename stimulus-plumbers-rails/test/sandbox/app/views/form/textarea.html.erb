@@ -1,0 +1,5 @@
+<h1>Textarea</h1>
+
+<%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+  <%= f.text_area :bio, label: "Bio", details: "Tell us about yourself." %>
+<% end %>

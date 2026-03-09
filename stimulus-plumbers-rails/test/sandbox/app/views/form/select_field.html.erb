@@ -1,0 +1,16 @@
+<h1>Select field</h1>
+
+<%
+  countries = [
+    ["Australia",      "au"],
+    ["New Zealand",    "nz"],
+    ["Singapore",      "sg"],
+    ["United States",  "us"]
+  ]
+%>
+
+<%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+  <%= f.select :country, countries,
+               { label: "Country", details: "Select your country of residence." },
+               {} %>
+<% end %>

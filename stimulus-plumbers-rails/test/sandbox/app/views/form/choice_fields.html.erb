@@ -1,0 +1,11 @@
+<h1>Choice fields</h1>
+
+<%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+  <h2>Checkbox</h2>
+  <%= f.check_box :newsletter, label: "Subscribe to newsletter" %>
+
+  <h2>Radio buttons</h2>
+  <%= f.radio_button :gender, "male",   label: "Male" %>
+  <%= f.radio_button :gender, "female", label: "Female" %>
+  <%= f.radio_button :gender, "other",  label: "Other" %>
+<% end %>

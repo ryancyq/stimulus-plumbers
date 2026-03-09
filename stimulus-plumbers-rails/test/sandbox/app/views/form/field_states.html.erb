@@ -1,0 +1,19 @@
+<h1>Field states</h1>
+
+<%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+  <h2>Required</h2>
+  <%= f.text_field :name, label: "Full name", required: true %>
+
+  <h2>With hint</h2>
+  <%= f.email_field :email, label: "Email", details: "We'll never share your email." %>
+
+  <h2>Error from model</h2>
+  <%# @form already has errors on :email and :name added in the controller %>
+  <%= f.text_field :name, label: "Name" %>
+
+  <h2>Error override</h2>
+  <%= f.text_field :name, label: "Username", error: "This field is required." %>
+
+  <h2>Visually hidden label</h2>
+  <%= f.text_field :name, label: "Search query", label_visibility: :exclusive %>
+<% end %>
