@@ -61,19 +61,26 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Exclude:
     - lib/stimulus_plumbers/themes/**/*.rb
+    - lib/stimulus_plumbers/components/*/renderer.rb
     - lib/stimulus_plumbers/form/fields/*.rb
     - test/**/*_test.rb
 
 Metrics/AbcSize:
   Exclude:
     - lib/stimulus_plumbers/form/builder.rb
+    - lib/stimulus_plumbers/components/*/renderer.rb
     - lib/stimulus_plumbers/form/fields/*.rb
     - lib/stimulus_plumbers/themes/base.rb
 
+Layout/LineLength:
+  Max: 125
+
 Metrics/ParameterLists:
   Exclude:
+    - lib/stimulus_plumbers/components/*/renderer.rb
     - lib/stimulus_plumbers/form/field_component.rb
     - lib/stimulus_plumbers/form/fields/*.rb
+    - lib/stimulus_plumbers/helpers/*.rb
 
 Minitest/MultipleAssertions:
   Max: 5
