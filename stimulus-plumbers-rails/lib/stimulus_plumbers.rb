@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "stimulus_plumbers/version"
+require_relative "stimulus_plumbers/version"
+
 require "active_support"
 require "active_support/core_ext/string"
 require "view_component"
