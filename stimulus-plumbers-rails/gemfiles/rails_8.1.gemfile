@@ -5,7 +5,6 @@
 source "https://rubygems.org"
 
 gem "railties", "~> 8.1.0"
-gem "view_component", "~> 3.0"
 
 group :development, :test do
   gem "rails", "~> 8.1.0"

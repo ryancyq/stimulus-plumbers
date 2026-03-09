@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Ryan Chang"]
   spec.email = ["ryancyq@gmail.com"]
 
-  spec.summary     = "Accessible ViewComponent components for Rails with Stimulus controllers"
-  spec.description = "Semantically correct, accessible UI components for Rails using ViewComponent and Stimulus"
+  spec.summary     = "Accessible ActionView components for Rails with Stimulus controllers"
+  spec.description = "Semantically correct, accessible UI components for Rails using ActionView helpers and Stimulus"
   spec.homepage    = "https://github.com/ryancyq/stimulus-plumbers"
   spec.license     = "MIT"
 
@@ -36,5 +36,4 @@ Gem::Specification.new do |spec|
   spec.required_rubygems_version = ">= 3.2.0" # for Gem::Platform#match_gem?
 
   spec.add_dependency "railties", ">= 6.1", "< 8.2"
-  spec.add_dependency "view_component", "~> 3.0"
 end

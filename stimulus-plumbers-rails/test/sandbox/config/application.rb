@@ -8,7 +8,6 @@ require "action_controller"
 require "action_view"
 require "active_model"
 require "active_support/core_ext"
-require "view_component"
 
 # Minimal test application for component testing
 class TestApp < Rails::Application
@@ -27,9 +26,4 @@ class TestApp < Rails::Application
   config.middleware.use Rack::Static,
                         urls: ["/dist"],
                         root: File.expand_path("../../../../stimulus-plumbers", __dir__)
-
-  # ViewComponent previews
-  config.view_component.preview_paths << Rails.root.join("previews")
-  config.view_component.show_previews = true
-  config.view_component.default_preview_layout = "preview"
 end

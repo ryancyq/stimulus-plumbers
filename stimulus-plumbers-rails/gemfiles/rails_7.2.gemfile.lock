@@ -3,7 +3,6 @@ PATH
   specs:
     stimulus_plumbers (0.1.0)
       railties (>= 6.1, < 8.2)
-      view_component (~> 3.0)
 
 GEM
   remote: https://rubygems.org/
@@ -144,7 +143,6 @@ GEM
     matrix (0.4.3)
     mcp (0.8.0)
       json-schema (>= 4.1)
-    method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.27.0)
     net-imap (0.6.2)
@@ -266,10 +264,6 @@ GEM
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
     useragent (0.16.11)
-    view_component (3.24.0)
-      activesupport (>= 5.2.0, < 8.2)
-      concurrent-ruby (~> 1)
-      method_source (~> 1.0)
     webrick (1.9.2)
     websocket-driver (0.8.0)
       base64
@@ -301,7 +295,6 @@ DEPENDENCIES
   simplecov (~> 0.22.0)
   simplecov-cobertura
   stimulus_plumbers!
-  view_component (~> 3.0)
 
 BUNDLED WITH
    2.5.22

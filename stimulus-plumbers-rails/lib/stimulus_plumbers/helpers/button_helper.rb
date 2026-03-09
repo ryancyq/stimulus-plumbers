@@ -18,7 +18,7 @@ module StimulusPlumbers
       private
 
       def button_renderer
-        Components::Button::Renderer.new(self, StimulusPlumbers.config.theme)
+        Components::Button::Renderer.new(self)
       end
     end
   end

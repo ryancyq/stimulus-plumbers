@@ -5,7 +5,6 @@
 source "https://rubygems.org"
 
 gem "railties", "~> 7.0.0"
-gem "view_component", "~> 3.0"
 
 group :development, :test do
   gem "bigdecimal"
