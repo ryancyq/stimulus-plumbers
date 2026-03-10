@@ -2,4 +2,5 @@
 
 class ComponentsController < ApplicationController
   def profile; end
+  def calendar; end
 end
