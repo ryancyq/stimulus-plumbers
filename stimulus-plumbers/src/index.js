@@ -14,5 +14,6 @@ export * from './aria.js';
 export { default as ModalController } from './controllers/modal_controller.js';
 export { default as DismisserController } from './controllers/dismisser_controller.js';
 export { default as FlipperController } from './controllers/flipper_controller.js';
+export { default as CalendarMonthController } from './controllers/calendar_month_controller.js';
 export { default as PasswordRevealController } from './controllers/password_reveal_controller.js';
 export { default as AutoResizeController } from './controllers/auto_resize_controller.js';

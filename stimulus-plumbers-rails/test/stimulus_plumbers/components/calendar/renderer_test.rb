@@ -29,6 +29,12 @@ class CalendarRendererTest < ActionView::TestCase
     assert_includes html, 'data-controller="calendar-month"'
   end
 
+  def test_month_sets_grid_role
+    html = renderer.month
+
+    assert_includes html, 'role="grid"'
+  end
+
   def test_month_merges_extra_data_attributes
     html = renderer.month(data: { foo: "bar" })
 
@@ -46,12 +52,6 @@ class CalendarRendererTest < ActionView::TestCase
     assert_includes html, "my-cal"
   end
 
-  def test_month_contains_navigation
-    html = renderer.month
-
-    assert_includes html, "<button"
-  end
-
   def test_month_contains_days_of_week
     html = renderer.month
 
@@ -64,35 +64,10 @@ class CalendarRendererTest < ActionView::TestCase
     assert_includes html, 'data-calendar-month-target="daysOfMonth"'
   end
 
-  # navigation
-  def test_navigation_renders_previous_button
-    html = renderer.navigation
+  def test_month_accepts_parent_action_via_data
+    html = renderer.month(data: { action: "datepicker:navigated->calendar-month#draw" })
 
-    assert_includes html, 'data-calendar-month-target="previous"'
-  end
-
-  def test_navigation_renders_next_button
-    html = renderer.navigation
-
-    assert_includes html, 'data-calendar-month-target="next"'
-  end
-
-  def test_navigation_renders_day_target
-    html = renderer.navigation
-
-    assert_includes html, 'data-calendar-month-target="day"'
-  end
-
-  def test_navigation_renders_month_target
-    html = renderer.navigation
-
-    assert_includes html, 'data-calendar-month-target="month"'
-  end
-
-  def test_navigation_renders_year_target
-    html = renderer.navigation
-
-    assert_includes html, 'data-calendar-month-target="year"'
+    assert_includes html, 'data-action="datepicker:navigated-&gt;calendar-month#draw"'
   end
 
   # days_of_week
@@ -103,9 +78,15 @@ class CalendarRendererTest < ActionView::TestCase
   end
 
   def test_days_of_week_sets_target
-    html = renderer.days_of_week
+    html = renderer.days_of_week(data: { "calendar-month-target" => "daysOfWeek" })
 
     assert_includes html, 'data-calendar-month-target="daysOfWeek"'
+  end
+
+  def test_days_of_week_renders_seven_columns
+    html = renderer.days_of_week
+
+    assert_equal 7, html.scan('role="columnheader"').length
   end
 
   # days_of_month
@@ -116,14 +97,26 @@ class CalendarRendererTest < ActionView::TestCase
   end
 
   def test_days_of_month_sets_target
-    html = renderer.days_of_month
+    html = renderer.days_of_month(data: { "calendar-month-target" => "daysOfMonth" })
 
     assert_includes html, 'data-calendar-month-target="daysOfMonth"'
   end
 
-  def test_days_of_month_has_grid_role
+  def test_days_of_month_renders_rows
     html = renderer.days_of_month
 
-    assert_includes html, 'role="grid"'
+    assert_includes html, 'role="row"'
+  end
+
+  def test_days_of_month_renders_gridcells
+    html = renderer.days_of_month
+
+    assert_includes html, 'role="gridcell"'
+  end
+
+  def test_days_of_month_renders_multiple_of_seven_days
+    html = renderer.days_of_month
+
+    assert_equal 0, html.scan('role="gridcell"').length % 7
   end
 end

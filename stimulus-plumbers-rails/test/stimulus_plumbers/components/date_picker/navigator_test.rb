@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class CalendarNavigatorTest < ActionView::TestCase
+class DatePickerNavigatorTest < ActionView::TestCase
   def navigator
-    StimulusPlumbers::Components::Calendar::Navigator.new(self)
+    StimulusPlumbers::Components::DatePicker::Navigator.new(self)
   end
 
   # navigator
@@ -15,9 +15,9 @@ class CalendarNavigatorTest < ActionView::TestCase
   end
 
   def test_navigator_passes_data_attributes
-    html = navigator.navigator(data: { "calendar-month-target" => "previous" })
+    html = navigator.navigator(data: { "datepicker-target" => "previous" })
 
-    assert_includes html, 'data-calendar-month-target="previous"'
+    assert_includes html, 'data-datepicker-target="previous"'
   end
 
   def test_navigator_merges_custom_class
@@ -32,10 +32,11 @@ class CalendarNavigatorTest < ActionView::TestCase
     assert_includes html, "<svg"
   end
 
-  def test_navigator_renders_fallback_span_for_unknown_icon
-    html = navigator.navigator(icon_options: { name: "unknown-icon" })
+  def test_navigator_renders_empty_button_without_icon_options
+    html = navigator.navigator
 
-    assert_includes html, "<span"
+    assert_includes html, "<button"
+    refute_includes html, "<svg"
   end
 
   # icon

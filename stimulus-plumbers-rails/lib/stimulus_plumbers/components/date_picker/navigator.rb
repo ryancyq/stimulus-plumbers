@@ -2,11 +2,11 @@
 
 module StimulusPlumbers
   module Components
-    module Calendar
+    module DatePicker
       class Navigator < Plumber::Base
         def navigator(icon_options: nil, **kwargs)
           self.html_options = { 
-            classes: theme.resolve(:calendar_navigator).fetch(:classes, ""),
+            classes: theme.resolve(:calendar_navigation_navigator).fetch(:classes, ""),
             **kwargs
           }
           
@@ -19,7 +19,7 @@ module StimulusPlumbers
 
         def icon(**kwargs)
           Icon::Renderer.new(template).icon(
-            classes: theme.resolve(:calendar_navigator_icon).fetch(:classes, ""),
+            classes: theme.resolve(:calendar_navigation_navigator_icon).fetch(:classes, ""),
             **kwargs
           )
         end
