@@ -12,11 +12,17 @@ class BaseThemeTest < Minitest::Test
     assert_equal({}, @theme.resolve(:nonexistent))
   end
 
-  def test_resolve_raises_not_implemented_error_for_all_known_components
-    %i[button button_group card card_section avatar action_list
-       action_list_item divider popover calendar_day].each do |component|
-      assert_raises(NotImplementedError) { @theme.resolve(component) }
+  def test_resolve_returns_empty_hash_and_warns_for_all_known_components
+    mock_logger = Minitest::Mock.new
+    StimulusPlumbers::Themes::Base::SCHEMA.each_key do |_component|
+      mock_logger.expect(:warn, nil, [String])
     end
+    Rails.stub(:logger, mock_logger) do
+      StimulusPlumbers::Themes::Base::SCHEMA.each_key do |component|
+        assert_equal({}, @theme.resolve(component))
+      end
+    end
+    mock_logger.verify
   end
 
   # with invalid args — uses a concrete subclass that returns empty hashes
@@ -24,7 +30,7 @@ class BaseThemeTest < Minitest::Test
     Class.new(StimulusPlumbers::Themes::Base) do
       private
 
-      StimulusPlumbers::Themes::Base::ARG_SCHEMA.each_key do |component|
+      StimulusPlumbers::Themes::Base::SCHEMA.each_key do |component|
         define_method(:"#{component}_classes") { |**| {} }
       end
     end.new

@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Ryan Chang"]
   spec.email = ["ryancyq@gmail.com"]
 
-  spec.summary     = "Accessible ViewComponent components for Rails with Stimulus controllers"
-  spec.description = "Semantically correct, accessible UI components for Rails using ViewComponent and Stimulus"
+  spec.summary     = "Accessible ActionView components for Rails with Stimulus controllers"
+  spec.description = "Semantically correct, accessible UI components for Rails using ActionView helpers and Stimulus"
   spec.homepage    = "https://github.com/ryancyq/stimulus-plumbers"
   spec.license     = "MIT"
 
@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   # app/ assets (e.g. compiled JS dist) are resolved via Dir.glob since they are not git-tracked.
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
     ls.readlines("\x0", chomp: true).select do |f|
-      f.start_with?(*%w[lib/ LICENSE README.md CHANGELOG.md])
+      f.start_with?(*%w[app/ lib/ LICENSE README.md CHANGELOG.md])
     end
   end + Dir.glob("app/**/*", base: __dir__).reject { |f| File.directory?(File.join(__dir__, f)) }
 
@@ -36,5 +36,4 @@ Gem::Specification.new do |spec|
   spec.required_rubygems_version = ">= 3.2.0" # for Gem::Platform#match_gem?
 
   spec.add_dependency "railties", ">= 6.1", "< 8.2"
-  spec.add_dependency "view_component", "~> 3.0"
 end

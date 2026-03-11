@@ -1,12 +1,33 @@
 # frozen_string_literal: true
 
-require "stimulus_plumbers/version"
+require_relative "stimulus_plumbers/version"
+
 require "active_support"
 require "active_support/core_ext/string"
-require "view_component"
 
 require_relative "stimulus_plumbers/configuration"
+require_relative "stimulus_plumbers/helpers"
 require_relative "stimulus_plumbers/logger"
+
+require_relative "stimulus_plumbers/components/plumber/attributes"
+require_relative "stimulus_plumbers/components/plumber/dispatcher"
+require_relative "stimulus_plumbers/components/plumber/renderer"
+require_relative "stimulus_plumbers/components/plumber/base"
+
+require_relative "stimulus_plumbers/components/action_list/renderer"
+require_relative "stimulus_plumbers/components/avatar/renderer"
+require_relative "stimulus_plumbers/components/button/renderer"
+require_relative "stimulus_plumbers/components/card/renderer"
+require_relative "stimulus_plumbers/components/icon/renderer"
+require_relative "stimulus_plumbers/components/calendar/days_of_month"
+require_relative "stimulus_plumbers/components/calendar/days_of_week"
+require_relative "stimulus_plumbers/components/calendar/renderer"
+require_relative "stimulus_plumbers/components/date_picker/navigation"
+require_relative "stimulus_plumbers/components/date_picker/navigator"
+require_relative "stimulus_plumbers/components/date_picker/renderer"
+require_relative "stimulus_plumbers/components/popover/renderer"
+require_relative "stimulus_plumbers/form/field_component"
+require_relative "stimulus_plumbers/form/builder"
 
 module StimulusPlumbers
   class << self
@@ -20,29 +41,4 @@ module StimulusPlumbers
   end
 end
 
-require "stimulus_plumbers/engine" if defined?(Rails::Engine)
-
-HELPERS = %w[
-  stimulus_plumbers/components/plumber/attributes
-  stimulus_plumbers/components/plumber/stimulus_registry
-  stimulus_plumbers/components/plumber/views
-  stimulus_plumbers/components/plumber/base
-].freeze
-
-BASES = %w[
-  stimulus_plumbers/components/container_component
-  stimulus_plumbers/components/divider_component
-  stimulus_plumbers/components/button_component
-].freeze
-
-PRELOAD = (HELPERS + BASES).freeze
-
-PRELOAD.each do |path|
-  require_relative path
-end
-
-Dir[File.join(__dir__, "stimulus_plumbers", "components", "**", "*_component.rb")].sort.each do |file|
-  next if PRELOAD.any? { |preloaded| file.chomp(".rb").end_with?(preloaded) }
-
-  require file
-end
+require_relative "stimulus_plumbers/engine" if defined?(Rails::Engine)

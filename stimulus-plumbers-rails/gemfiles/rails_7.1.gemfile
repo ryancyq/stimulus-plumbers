@@ -5,7 +5,6 @@
 source "https://rubygems.org"
 
 gem "railties", "~> 7.1.0"
-gem "view_component", "~> 3.0"
 
 group :development, :test do
   gem "rails", "~> 7.1.0"
@@ -16,14 +15,16 @@ end
 
 group :development do
   gem "appraisal", "~> 2.5.0", require: false
-  gem "rubocop", "~> 1.79", require: false
+  gem "rubocop", "~> 1.85", require: false
   gem "rubocop-minitest", require: false
   gem "rubocop-rake", require: false
 end
 
 group :test do
-  gem "capybara", "~> 3.39"
+  gem "capybara", ">= 3.0", "< 4.0"
+  gem "cuprite", "~> 0.17"
   gem "minitest", "~> 5.25"
+  gem "puma", ">= 6.0", "< 8.0"
 end
 
 gemspec path: "../"

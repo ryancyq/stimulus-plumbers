@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Form Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axe-core/axe.min.js"></script>
+  </head>
+  <body class="text-gray-900 bg-white">
+    <main class="container mx-auto py-4">
+      <%= yield %>
+    </main>
+    <!-- importmap resolves the bare "@hotwired/stimulus" specifier used by the dist bundle -->
+    <script type="importmap">
+      { "imports": { "@hotwired/stimulus": "https://cdn.jsdelivr.net/npm/@hotwired/stimulus/dist/stimulus.js" } }
+    </script>
+    <script type="module">
+      import { Application } from "@hotwired/stimulus";
+      import * as StimulusPlumbers from "/dist/stimulus-plumbers-controllers.es.js";
+
+      const app = Application.start();
+
+      Object.entries(StimulusPlumbers)
+        .filter(([name]) => name.endsWith("Controller"))
+        .forEach(([name, controller]) => {
+          const identifier = name
+            .replace("Controller", "")
+            .replace(/([a-z])([A-Z])/g, "$1-$2")
+            .toLowerCase();
+          app.register(identifier, controller);
+        });
+    </script>
+  </body>
+</html>
