@@ -14,7 +14,7 @@ module StimulusPlumbers
 
         def html_options=(kwargs)
           html_options[:class] = merge_class_options(html_options[:class], kwargs)
-          html_options.merge!(kwargs) if kwargs.present?
+          html_options.deep_merge!(kwargs) if kwargs.present?
         end
 
         private
