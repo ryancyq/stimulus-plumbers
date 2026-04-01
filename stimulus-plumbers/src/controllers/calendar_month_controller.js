@@ -109,6 +109,7 @@ export default class extends Controller {
     const daysOfWeek = [];
     for (const date of this.calendar.daysOfWeek) {
       const dayElement = this.createDayElement(formatter.format(date.date));
+      dayElement.role = 'columnheader';
       dayElement.title = date.long;
       if (this.hasDayOfWeekClass) dayElement.classList.add(...this.dayOfWeekClasses);
       daysOfWeek.push(dayElement);
@@ -139,7 +140,18 @@ export default class extends Controller {
 
       daysOfMonth.push(dayElement);
     }
-    this.daysOfMonthTarget.replaceChildren(...daysOfMonth);
+
+    const rows = [];
+    for (let i = 0; i < daysOfMonth.length; i += 7) {
+      const row = document.createElement('div');
+      row.role = 'row';
+      for (const day of daysOfMonth.slice(i, i + 7)) {
+        day.role = 'gridcell';
+        row.appendChild(day);
+      }
+      rows.push(row);
+    }
+    this.daysOfMonthTarget.replaceChildren(...rows);
   }
 
   daysOfMonthTargetConnected(target) {

@@ -50,7 +50,7 @@ describe('CalendarMonthController', () => {
 
     it('renders 35 cells for October 2024 (2 leading + 31 current + 2 trailing)', () => {
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      expect(daysOfMonth.childElementCount).toBe(35);
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(35);
     });
 
     it('renders 31 buttons for October 2024 current-month days', () => {
@@ -60,7 +60,7 @@ describe('CalendarMonthController', () => {
 
     it('marks today with ariaCurrent="date"', () => {
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const todayCell = [...daysOfMonth.children].find(el => el.ariaCurrent === 'date');
+      const todayCell = [...daysOfMonth.querySelectorAll('[role="gridcell"]')].find(el => el.ariaCurrent === 'date');
       expect(todayCell).toBeDefined();
       expect(todayCell.textContent).toBe('15');
     });
@@ -121,7 +121,7 @@ describe('CalendarMonthController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      expect(daysOfMonth.childElementCount).toBe(28);
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(28);
     });
 
     it('November 2024 (35-cell grid) renders exactly 35 cells', async () => {
@@ -137,7 +137,7 @@ describe('CalendarMonthController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      expect(daysOfMonth.childElementCount).toBe(35);
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(35);
     });
   });
 
@@ -280,7 +280,7 @@ describe('CalendarMonthController', () => {
       element.addEventListener('calendar-month:select', selectSpy);
 
       // Oct 2024 has 2 leading divs (Sep 29, Sep 30) with ariaDisabled="true"
-      const disabledDiv = [...daysOfMonth.children].find(el => el.ariaDisabled === 'true');
+      const disabledDiv = [...daysOfMonth.querySelectorAll('[role="gridcell"]')].find(el => el.ariaDisabled === 'true');
       expect(disabledDiv).toBeDefined();
       disabledDiv.click();
 
@@ -319,8 +319,8 @@ describe('CalendarMonthController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      // Oct 2024: first 2 children are Sep 29 and Sep 30 (leading divs)
-      const leadingDiv = daysOfMonth.children[0];
+      // Oct 2024: first 2 gridcells are Sep 29 and Sep 30 (leading divs)
+      const leadingDiv = daysOfMonth.querySelector('[role="gridcell"]');
       expect(leadingDiv.ariaDisabled).toBe('true');
       expect(leadingDiv.ariaHidden).toBe('true');
     });

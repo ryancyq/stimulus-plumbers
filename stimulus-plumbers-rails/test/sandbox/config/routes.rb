@@ -3,6 +3,7 @@
 Rails.application.routes.draw do
   scope "/components", controller: "components" do
     get :profile
+    get :calendar
   end
 
   scope "/form", controller: "form" do
