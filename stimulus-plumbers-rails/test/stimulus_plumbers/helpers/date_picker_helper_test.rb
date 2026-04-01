@@ -5,6 +5,12 @@ require "test_helper"
 class DatePickerHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::DatePickerHelper
 
+  def test_renders_datepicker_controller
+    html = sp_date_picker_month
+
+    assert_includes html, 'data-controller="datepicker"'
+  end
+
   def test_renders_calendar_month_controller
     html = sp_date_picker_month
 
@@ -14,8 +20,8 @@ class DatePickerHelperTest < ActionView::TestCase
   def test_renders_navigation_targets
     html = sp_date_picker_month
 
-    assert_includes html, 'data-calendar-month-target="previous"'
-    assert_includes html, 'data-calendar-month-target="next"'
+    assert_includes html, 'data-datepicker-target="previous"'
+    assert_includes html, 'data-datepicker-target="next"'
   end
 
   def test_renders_grid_targets

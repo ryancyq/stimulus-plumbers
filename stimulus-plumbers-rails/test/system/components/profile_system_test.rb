@@ -76,8 +76,8 @@ class ProfileSystemTest < ApplicationSystemTestCase
     visit "/components/profile"
 
     assert_selector "[data-controller='calendar-month']"
-    assert_selector "button[data-calendar-month-target='previous']"
-    assert_selector "button[data-calendar-month-target='next']"
+    assert_selector "button[data-datepicker-target='previous']"
+    assert_selector "button[data-datepicker-target='next']"
   end
 
   def test_renders_date_picker_month_year_targets
@@ -91,7 +91,7 @@ class ProfileSystemTest < ApplicationSystemTestCase
     visit "/components/profile"
 
     assert_selector "[data-calendar-month-target='daysOfWeek']"
-    assert_selector "[data-calendar-month-target='daysOfMonth'][role='grid']"
+    assert_selector "[data-calendar-month-target='daysOfMonth'][role='rowgroup']"
   end
 
   # ── Accessibility ───────────────────────────────────────────────────

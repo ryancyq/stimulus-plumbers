@@ -11,9 +11,14 @@ module StimulusPlumbers
           "arrow-down"  => "M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
         }.freeze
 
-        def icon(name, **html_options)
+        def icon(name:, **kwargs)
+          self.html_options = { 
+            classes: theme.resolve(:icon).fetch(:classes, ""),
+            **kwargs
+          }
+
           if ICONS[name]
-            svg_icon(ICONS[name], html_options)
+            svg_icon(ICONS[name])
           else
             template.content_tag(:span, nil, **html_options)
           end
@@ -21,7 +26,7 @@ module StimulusPlumbers
 
         private
 
-        def svg_icon(path, html_options)
+        def svg_icon(path)
           template.content_tag(
             :svg,
             xmlns:          "http://www.w3.org/2000/svg",
