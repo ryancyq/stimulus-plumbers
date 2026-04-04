@@ -58,14 +58,7 @@ npm run build         # Build distribution
 - `dist/*.umd.js` - UMD format for browsers
 
 ## Guidelines
-- Follow WCAG 2.1 Level AA standards
-- Support `prefers-reduced-motion`
-- Work with screen readers
 - **native HTML5 first** - only use controllers when native elements have limitations
 - import statement should not ends with .js
-
 - **Unit tests** using Vitest
-- **Keyboard navigation tests** (Tab, Enter, Space, Escape, Arrows)
-- **Focus management tests** (focus traps, restoration)
-- **ARIA attribute tests** (roles, labels, states)
 - **Lint tests** (eslint)
