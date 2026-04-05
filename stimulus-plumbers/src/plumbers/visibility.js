@@ -7,25 +7,6 @@ const defaultOptions = {
   onHidden: 'hidden',
 };
 
-/**
- * Toggles element visibility using class or hidden attribute.
- * @param {HTMLElement} target - Element to toggle
- * @param {boolean} visible - True to show, false to hide
- * @param {string|null} [hiddenClass] - CSS class for hiding (defaults to config)
- */
-export function toggleVisibility(target, visible, hiddenClass) {
-  if (!(target instanceof HTMLElement)) return;
-
-  hiddenClass = typeof hiddenClass === 'string' ? hiddenClass : visibilityConfig.hiddenClass;
-  if (hiddenClass) {
-    if (visible) target.classList.remove(hiddenClass);
-    else target.classList.add(hiddenClass);
-  } else {
-    if (visible) target.removeAttribute('hidden');
-    else target.setAttribute('hidden', true);
-  }
-}
-
 export class Visibility extends Plumber {
   /**
    * Creates a new Visibility plumber instance.
@@ -36,7 +17,7 @@ export class Visibility extends Plumber {
    * @param {string} [options.onHidden='hidden'] - Method name on plumber instance called after hiding
    */
   constructor(controller, options = {}) {
-    const { visibility, onShown, onHidden } = Object.assign({}, defaultOptions, options);
+    const { visibility, onShown, onHidden, activator } = Object.assign({}, defaultOptions, options);
 
     const namespace = typeof visibility === 'string' ? visibility : defaultOptions.namespace;
     const resolver = typeof options.visible === 'string' ? options.visible : 'isVisible';
@@ -49,8 +30,11 @@ export class Visibility extends Plumber {
     this.visibilityResolver = resolver;
     this.onShown = onShown;
     this.onHidden = onHidden;
+    this.activator = activator instanceof HTMLElement ? activator : null;
 
     this.enhance();
+
+    if (this.element instanceof HTMLElement) this.activate(this.isVisible(this.element));
   }
 
   /**
@@ -66,6 +50,32 @@ export class Visibility extends Plumber {
   }
 
   /**
+   * Toggles element visibility using class or hidden attribute.
+   * @param {HTMLElement} target - Element to toggle
+   * @param {boolean} visible - True to show, false to hide
+   */
+  toggle(target, visible) {
+    if (!(target instanceof HTMLElement)) return;
+
+    const hiddenClass = visibilityConfig.hiddenClass;
+    if (hiddenClass) {
+      if (visible) target.classList.remove(hiddenClass);
+      else target.classList.add(hiddenClass);
+    } else {
+      if (visible) target.removeAttribute('hidden');
+      else target.setAttribute('hidden', true);
+    }
+  }
+
+  /**
+   * Sets aria-expanded on the activator element.
+   * @param {boolean} isExpanded - True to mark as expanded, false to mark as collapsed
+   */
+  activate(isExpanded) {
+    if (this.activator) this.activator.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+  }
+
+  /**
    * Shows the element and dispatches show events.
    * @returns {Promise<void>}
    */
@@ -73,7 +83,8 @@ export class Visibility extends Plumber {
     if (!(this.element instanceof HTMLElement) || this.isVisible(this.element)) return;
 
     this.dispatch('show');
-    toggleVisibility(this.element, true);
+    this.toggle(this.element, true);
+    this.activate(true);
 
     await this.awaitCallback(this.onShown, { target: this.element });
     this.dispatch('shown');
@@ -87,7 +98,8 @@ export class Visibility extends Plumber {
     if (!(this.element instanceof HTMLElement) || !this.isVisible(this.element)) return;
 
     this.dispatch('hide');
-    toggleVisibility(this.element, false);
+    this.toggle(this.element, false);
+    this.activate(false);
 
     await this.awaitCallback(this.onHidden, { target: this.element });
     this.dispatch('hidden');

@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { attachContentLoader, attachVisibility } from '../plumbers';
 
 export default class extends Controller {
-  static targets = ['content', 'template', 'loader'];
+  static targets = ['content', 'template', 'loader', 'activator'];
   static classes = ['hidden'];
   static values = {
     url: String,
@@ -17,7 +17,12 @@ export default class extends Controller {
       url: this.hasUrlValue ? this.urlValue : null,
     });
 
-    if (this.hasContentTarget) attachVisibility(this, { element: this.contentTarget });
+    if (this.hasContentTarget) {
+      attachVisibility(this, {
+        element: this.contentTarget,
+        activator: this.hasActivatorTarget ? this.activatorTarget : null,
+      });
+    }
     if (this.hasLoaderTarget)
       attachVisibility(this, { element: this.loaderTarget, visibility: 'contentLoaderVisibility' });
   }
