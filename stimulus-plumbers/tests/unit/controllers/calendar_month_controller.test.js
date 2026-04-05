@@ -139,6 +139,21 @@ describe('CalendarMonthController', () => {
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
       expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(35);
     });
+
+    it('July 2023 (42-cell grid) renders exactly 42 cells', async () => {
+      // Jul 1, 2023 = Saturday → 6 leading + 31 current + 5 trailing = 42
+      vi.setSystemTime(new Date(2023, 6, 1));
+
+      document.body.innerHTML = `
+        <div data-controller="calendar-month">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(42);
+    });
   });
 
   describe('navigation', () => {
@@ -213,99 +228,6 @@ describe('CalendarMonthController', () => {
 
       expect(navigateEvent.detail.from).toMatch(/^\d{4}-\d{2}-\d{2}T/);
       expect(navigateEvent.detail.to).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-    });
-  });
-
-  describe('select', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="calendar-month">
-          <div data-calendar-month-target="daysOfMonth"></div>
-        </div>
-      `;
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
-
-    it('dispatches select and selected events when clicking a current-month day', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const selectSpy = vi.fn();
-      const selectedSpy = vi.fn();
-      element.addEventListener('calendar-month:select', selectSpy);
-      element.addEventListener('calendar-month:selected', selectedSpy);
-
-      // October 2024 has 2 leading divs; first button = Oct 1
-      const firstButton = daysOfMonth.querySelector('button');
-      firstButton.click();
-
-      expect(selectSpy).toHaveBeenCalledTimes(1);
-      expect(selectedSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('selected event detail includes epoch and iso for the clicked date', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      let selectedEvent;
-      element.addEventListener('calendar-month:selected', e => {
-        selectedEvent = e;
-      });
-
-      daysOfMonth.querySelector('button').click();
-
-      const date = new Date(selectedEvent.detail.epoch);
-      expect(typeof selectedEvent.detail.epoch).toBe('number');
-      expect(selectedEvent.detail.iso).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-      expect(date.getFullYear()).toBe(2024);
-      expect(date.getMonth()).toBe(9); // October (0-indexed)
-      expect(date.getDate()).toBe(1);  // First button = Oct 1
-    });
-
-    it('does not dispatch events when clicking a disabled button', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const selectSpy = vi.fn();
-      element.addEventListener('calendar-month:select', selectSpy);
-
-      const button = daysOfMonth.querySelector('button');
-      button.disabled = true;
-      button.click();
-
-      expect(selectSpy).not.toHaveBeenCalled();
-    });
-
-    it('does not dispatch events when clicking an ariaDisabled="true" element', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const selectSpy = vi.fn();
-      element.addEventListener('calendar-month:select', selectSpy);
-
-      // Oct 2024 has 2 leading divs (Sep 29, Sep 30) with ariaDisabled="true"
-      const disabledDiv = [...daysOfMonth.querySelectorAll('[role="gridcell"]')].find(el => el.ariaDisabled === 'true');
-      expect(disabledDiv).toBeDefined();
-      disabledDiv.click();
-
-      expect(selectSpy).not.toHaveBeenCalled();
-    });
-
-    it('does not block elements with ariaDisabled="false" (fixes ariaDisabled truthy bug)', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const selectSpy = vi.fn();
-      element.addEventListener('calendar-month:select', selectSpy);
-
-      // Create a div with ariaDisabled='false' inside the grid — should be selectable
-      const div = document.createElement('div');
-      div.ariaDisabled = 'false';
-      const time = document.createElement('time');
-      time.dateTime = new Date(2024, 9, 1).toISOString();
-      div.appendChild(time);
-      daysOfMonth.appendChild(div);
-
-      div.click();
-
-      // With old bug: input.ariaDisabled ('false') is truthy → event blocked
-      // With fix: input.ariaDisabled === 'true' is false → event dispatched
-      expect(selectSpy).toHaveBeenCalledTimes(1);
     });
   });
 

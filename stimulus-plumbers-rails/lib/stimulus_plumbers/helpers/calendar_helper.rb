@@ -3,7 +3,16 @@
 module StimulusPlumbers
   module Helpers
     module CalendarHelper
-      def sp_calendar_month(**html_options, &block)
+      def sp_calendar_month(date: nil, **html_options, &block)
+        if date
+          html_options.deep_merge!(
+            data: {
+              "calendar-month-year-value":  date.year,
+              "calendar-month-month-value": date.month - 1,
+              "calendar-month-day-value":   date.day
+            }
+          )
+        end
         calendar_renderer.month(**html_options, &block)
       end
 
