@@ -153,13 +153,6 @@ describe('Visibility', () => {
       expect(mockController.dispatch).toHaveBeenCalledWith('shown', expect.any(Object))
     })
 
-    it('does nothing for non-HTMLElement', async () => {
-      const visibility = new Visibility(mockController, { element: null })
-
-      await visibility.show()
-
-      expect(mockController.dispatch).not.toHaveBeenCalled()
-    })
   })
 
   describe('hide', () => {
@@ -210,12 +203,12 @@ describe('Visibility', () => {
       expect(mockController.dispatch).toHaveBeenCalledWith('hidden', expect.any(Object))
     })
 
-    it('does nothing for non-HTMLElement', async () => {
+    it('falls back to controller element when element is null', async () => {
       const visibility = new Visibility(mockController, { element: null })
 
       await visibility.hide()
 
-      expect(mockController.dispatch).not.toHaveBeenCalled()
+      expect(mockController.dispatch).toHaveBeenCalledWith('hide', expect.any(Object))
     })
   })
 
@@ -284,10 +277,10 @@ describe('Visibility', () => {
       expect(activator.getAttribute('aria-expanded')).toBe('true')
     })
 
-    it('does not set aria-expanded on init when no element passed', () => {
+    it('uses controller element as fallback when element is null', () => {
       new Visibility(mockController, { activator, element: null })
 
-      expect(activator.hasAttribute('aria-expanded')).toBe(false)
+      expect(activator.getAttribute('aria-expanded')).toBe('true')
     })
 
     it('sets aria-expanded="true" after show', async () => {
