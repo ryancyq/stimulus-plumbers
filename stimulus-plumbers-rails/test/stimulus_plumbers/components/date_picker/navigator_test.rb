@@ -3,52 +3,31 @@
 require "test_helper"
 
 class DatePickerNavigatorTest < ActionView::TestCase
-  def navigator
-    StimulusPlumbers::Components::DatePicker::Navigator.new(self)
+  def navigator(**kwargs)
+    StimulusPlumbers::Components::DatePicker::Navigator.new(self, **kwargs).render
   end
 
-  # navigator
-  def test_navigator_renders_button
-    html = navigator.navigator
-
-    assert_includes html, "<button"
+  def test_renders_button
+    assert_includes navigator, "<button"
   end
 
-  def test_navigator_passes_data_attributes
-    html = navigator.navigator(data: { "datepicker-target" => "previous" })
+  def test_passes_data_attributes
+    html = navigator(data: { "datepicker-target" => "previous" })
 
     assert_includes html, 'data-datepicker-target="previous"'
   end
 
-  def test_navigator_merges_custom_class
-    html = navigator.navigator(class: "nav-btn")
+  def test_merges_custom_class
+    html = navigator(class: "nav-btn")
 
     assert_includes html, "nav-btn"
   end
 
-  def test_navigator_renders_icon_inside_button
-    html = navigator.navigator(icon_options: { name: "arrow-left" })
-
-    assert_includes html, "<svg"
+  def test_renders_icon_when_icon_options_given
+    assert_includes navigator(icon_options: { name: "arrow-left" }), "<svg"
   end
 
-  def test_navigator_renders_empty_button_without_icon_options
-    html = navigator.navigator
-
-    assert_includes html, "<button"
-    refute_includes html, "<svg"
-  end
-
-  # icon
-  def test_icon_renders_svg_for_known_name
-    html = navigator.icon(name: "arrow-left")
-
-    assert_includes html, "<svg"
-  end
-
-  def test_icon_renders_span_for_unknown_name
-    html = navigator.icon(name: "unknown")
-
-    assert_includes html, "<span"
+  def test_renders_no_icon_by_default
+    refute_includes navigator, "<svg"
   end
 end

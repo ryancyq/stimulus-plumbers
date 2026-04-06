@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { Calendar, attachCalendar } from '../../../src/plumbers/calendar'
+import { Calendar, initCalendar } from '../../../src/plumbers/calendar'
 
 describe('Calendar', () => {
   let mockController
@@ -520,9 +520,9 @@ describe('Calendar', () => {
     })
   })
 
-  describe('attachCalendar', () => {
+  describe('initCalendar', () => {
     it('creates and returns a Calendar instance', () => {
-      const calendar = attachCalendar(mockController, {
+      const calendar = initCalendar(mockController, {
         firstDayOfWeek: 1,
       })
 

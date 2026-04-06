@@ -1,96 +1,31 @@
 import { Controller } from '@hotwired/stimulus';
-import { attachCalendar } from '../plumbers';
+import { initCalendar } from '../plumbers';
 
 export default class extends Controller {
-  static targets = ['day', 'month', 'year', 'previous', 'next', 'daysOfWeek', 'daysOfMonth'];
+  static targets = ['daysOfWeek', 'daysOfMonth'];
   static classes = ['dayOfWeek', 'dayOfMonth'];
   static values = {
     locales: { type: Array, default: ['default'] },
     weekdayFormat: { type: String, default: 'short' },
     dayFormat: { type: String, default: 'numeric' },
-    monthFormat: { type: String, default: 'long' },
-    yearFormat: { type: String, default: 'numeric' },
     daysOfOtherMonth: { type: Boolean, default: false },
-    year: { type: Number },
-    month: { type: Number },
-    day: { type: Number },
   };
 
   initialize() {
-    this.previous = this.previous.bind(this);
-    this.next = this.next.bind(this);
+    initCalendar(this);
   }
 
   connect() {
-    const dateOpts = {};
-    if (this.hasYearValue) dateOpts.year = this.yearValue;
-    if (this.hasMonthValue) dateOpts.month = this.monthValue;
-    if (this.hasDayValue) dateOpts.day = this.dayValue;
-    attachCalendar(this, dateOpts);
     this.draw();
-  }
-
-  draw() {
-    this.drawDay();
-    this.drawMonth();
-    this.drawYear();
-    this.drawDaysOfWeek();
-    this.drawDaysOfMonth();
   }
 
   navigated() {
     this.draw();
   }
 
-  previousTargetConnected(target) {
-    target.addEventListener('click', this.previous);
-  }
-
-  previousTargetDisconnected(target) {
-    target.removeEventListener('click', this.previous);
-  }
-
-  async previous(event) {
-    event.preventDefault();
-
-    const { params = {} } = event;
-    await this.calendar.step(params.type || 'month', -1);
-  }
-
-  nextTargetConnected(target) {
-    target.addEventListener('click', this.next);
-  }
-
-  nextTargetDisconnected(target) {
-    target.removeEventListener('click', this.next);
-  }
-
-  async next(event) {
-    event.preventDefault();
-
-    const { params = {} } = event;
-    await this.calendar.step(params.type || 'month', 1);
-  }
-
-  drawDay() {
-    if (!this.hasDayTarget || this.dayTarget.childElementCount > 0) return;
-
-    const formatter = new Intl.DateTimeFormat(this.localesValue, { day: this.dayFormatValue });
-    this.dayTarget.textContent = formatter.format(new Date(this.calendar.year, this.calendar.month, this.calendar.day));
-  }
-
-  drawMonth() {
-    if (!this.hasMonthTarget || this.monthTarget.childElementCount > 0) return;
-
-    const formatter = new Intl.DateTimeFormat(this.localesValue, { month: this.monthFormatValue });
-    this.monthTarget.textContent = formatter.format(new Date(this.calendar.year, this.calendar.month));
-  }
-
-  drawYear() {
-    if (!this.hasYearTarget || this.yearTarget.childElementCount > 0) return;
-
-    const formatter = new Intl.DateTimeFormat(this.localesValue, { year: this.yearFormatValue });
-    this.yearTarget.textContent = formatter.format(new Date(this.calendar.year, 0));
+  draw() {
+    this.drawDaysOfWeek();
+    this.drawDaysOfMonth();
   }
 
   createDayElement(day, { selectable = false, disabled = false } = {}) {
@@ -162,5 +97,4 @@ export default class extends Controller {
     }
     this.daysOfMonthTarget.replaceChildren(...rows);
   }
-
 }

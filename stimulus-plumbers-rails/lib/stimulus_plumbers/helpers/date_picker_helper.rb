@@ -3,8 +3,11 @@
 module StimulusPlumbers
   module Helpers
     module DatePickerHelper
-      def sp_date_picker_month(**html_options, &block)
-        Components::DatePicker::Renderer.new(self).datepicker(**html_options)
+      def sp_date_picker_month(record = nil, attribute = nil, **html_options)
+        Components::DatePicker::Renderer.new(self).render(
+          calendar_id: sp_dom_id(record, "#{attribute}_date"),
+          **html_options
+        )
       end
     end
   end
