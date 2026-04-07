@@ -4,24 +4,22 @@ module StimulusPlumbers
   module Components
     module DatePicker
       class Renderer < Plumber::Base
-        STIMULUS_CONTROLLER      = "datepicker"
-        POPOVER_CONTROLLER       = "popover"
+        STIMULUS_CONTROLLER = "datepicker"
+        POPOVER_CONTROLLER  = "popover"
         CALENDAR_CONTROLLER = Calendar::Renderer::OBSERVER_STIMULUS_CONTROLLER
-        CALENDAR_OUTLET = "#{STIMULUS_CONTROLLER}_#{Calendar::Renderer::STIMULUS_CONTROLLER}_outlet"
+        CALENDAR_OUTLET     = "#{STIMULUS_CONTROLLER}_#{Calendar::Renderer::STIMULUS_CONTROLLER}_outlet"
+        STIMULUS_DATA       = {
+          controller: "#{STIMULUS_CONTROLLER} #{POPOVER_CONTROLLER}",
+          action:     "#{CALENDAR_CONTROLLER}:selected->#{STIMULUS_CONTROLLER}#selected " \
+                      "#{CALENDAR_CONTROLLER}:selected->#{POPOVER_CONTROLLER}#hide"
+        }.freeze
 
         def render(calendar_id: nil, **kwargs)
-          data = {
-            controller: "#{STIMULUS_CONTROLLER} #{POPOVER_CONTROLLER}",
-            action:     [
-              "#{CALENDAR_CONTROLLER}:selected->#{STIMULUS_CONTROLLER}#selected",
-              "#{CALENDAR_CONTROLLER}:selected->#{POPOVER_CONTROLLER}#hide"
-            ].join(" ")
-          }
-          data[CALENDAR_OUTLET] = "##{calendar_id}" if calendar_id
-          self.html_options = {
-            classes: theme.resolve(:datepicker).fetch(:classes, ""),
-            data:    data
-          }.deep_merge(kwargs)
+          data         = calendar_id ? STIMULUS_DATA.merge(CALENDAR_OUTLET => "##{calendar_id}") : STIMULUS_DATA
+          html_options = merge_html_options(
+            { classes: theme.resolve(:datepicker).fetch(:classes, ""), data: data },
+            **kwargs
+          )
 
           template.content_tag(:div, **html_options) do
             template.safe_join([display_input, hidden_input, popover(calendar_id)])
@@ -64,7 +62,7 @@ module StimulusPlumbers
         end
 
         def navigation(**kwargs)
-          Navigation.new(template, **kwargs).render
+          Navigation.new(template).render(stimulus_controller: STIMULUS_CONTROLLER, step: "month", **kwargs)
         end
 
         def calendar_month(**kwargs)

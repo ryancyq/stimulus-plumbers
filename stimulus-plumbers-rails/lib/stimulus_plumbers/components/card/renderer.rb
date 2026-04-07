@@ -5,10 +5,10 @@ module StimulusPlumbers
     module Card
       class Renderer < Plumber::Base
         def card(title: nil, **kwargs, &block)
-          self.html_options = {
-            classes: theme.resolve(:card).fetch(:classes, ""),
+          html_options = merge_html_options(
+            { classes: theme.resolve(:card).fetch(:classes, "") },
             **kwargs
-          }
+          )
 
           template.content_tag(:div, **html_options) do
             template.safe_join(
@@ -21,10 +21,10 @@ module StimulusPlumbers
         end
 
         def section(title: nil, **kwargs, &block)
-          self.html_options = {
-            classes: theme.resolve(:card_section).fetch(:classes, ""),
+          html_options = merge_html_options(
+            { classes: theme.resolve(:card_section).fetch(:classes, "") },
             **kwargs
-          }
+          )
 
           template.content_tag(:div, **html_options) do
             template.safe_join(

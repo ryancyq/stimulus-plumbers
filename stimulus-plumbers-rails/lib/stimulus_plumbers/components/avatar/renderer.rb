@@ -7,12 +7,14 @@ module StimulusPlumbers
         def avatar(name: nil, initials: nil, url: nil, color: nil, size: :md, **kwargs, &block)
           color_css = resolve_color(color, name, initials) unless url || block_given?
 
-          self.html_options = {
-            classes:      [theme.resolve(:avatar, size: size).fetch(:classes, ""), color_css],
-            "aria-label": name,
-            role:         "img",
+          html_options = merge_html_options(
+            {
+              classes:      [theme.resolve(:avatar, size: size).fetch(:classes, ""), color_css],
+              "aria-label": name,
+              role:         "img"
+            },
             **kwargs
-          }
+          )
 
           template.content_tag(:span, inner(name, initials, url, &block), **html_options)
         end

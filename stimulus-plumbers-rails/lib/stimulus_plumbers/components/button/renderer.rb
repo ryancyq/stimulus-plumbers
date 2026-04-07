@@ -5,11 +5,11 @@ module StimulusPlumbers
     module Button
       class Renderer < Plumber::Base
         def button(content = nil, url: nil, external: false, variant: :primary, size: :md, **kwargs, &block)
-          content = template.capture(&block) if block_given?
-          self.html_options = {
-            classes: theme.resolve(:button, variant: variant, size: size).fetch(:classes, ""),
+          content      = template.capture(&block) if block_given?
+          html_options = merge_html_options(
+            { classes: theme.resolve(:button, variant: variant, size: size).fetch(:classes, "") },
             **kwargs
-          }
+          )
 
           if url
             html_options[:target] = "_blank" if external
@@ -21,11 +21,10 @@ module StimulusPlumbers
         end
 
         def group(alignment: :left, direction: :row, **kwargs, &block)
-          classes = theme.resolve(:button_group, alignment: alignment, direction: direction).fetch(:classes, "")
-          self.html_options = {
-            classes: classes,
+          html_options = merge_html_options(
+            { classes: theme.resolve(:button_group, alignment: alignment, direction: direction).fetch(:classes, "") },
             **kwargs
-          }
+          )
           template.content_tag(:div, template.capture(&block), **html_options)
         end
       end

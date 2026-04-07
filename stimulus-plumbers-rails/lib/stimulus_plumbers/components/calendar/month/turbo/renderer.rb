@@ -16,13 +16,13 @@ module StimulusPlumbers
               show_other_months: false,
               **kwargs
             )
-              self.html_options = {
-                classes: theme.resolve(:calendar).fetch(:classes, ""),
-                data:    {
-                  controller: STIMULUS_CONTROLLER,
-                  action:     "click->#{STIMULUS_CONTROLLER}#select"
-                }
-              }.deep_merge(kwargs)
+              html_options = merge_html_options(
+                {
+                  classes: theme.resolve(:calendar).fetch(:classes, ""),
+                  data:    { controller: STIMULUS_CONTROLLER, action: "click->#{STIMULUS_CONTROLLER}#select" }
+                },
+                **kwargs
+              )
 
               template.content_tag(:div, role: "grid", **html_options) do
                 template.safe_join(
@@ -43,7 +43,7 @@ module StimulusPlumbers
             private
 
             def days_of_week(**kwargs)
-              DaysOfWeek.new(template, **kwargs).render
+              DaysOfWeek.new(template).render(**kwargs)
             end
 
             def days_of_month(**kwargs)

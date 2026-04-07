@@ -4,7 +4,7 @@ require "test_helper"
 
 class DatePickerNavigatorTest < ActionView::TestCase
   def navigator(**kwargs)
-    StimulusPlumbers::Components::DatePicker::Navigator.new(self, **kwargs).render
+    StimulusPlumbers::Components::DatePicker::Navigator.new(self).render(**kwargs)
   end
 
   def test_renders_button

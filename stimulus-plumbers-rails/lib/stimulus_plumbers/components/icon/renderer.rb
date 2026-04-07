@@ -12,13 +12,13 @@ module StimulusPlumbers
         }.freeze
 
         def icon(name:, **kwargs)
-          self.html_options = { 
-            classes: theme.resolve(:icon).fetch(:classes, ""),
+          html_options = merge_html_options(
+            { classes: theme.resolve(:icon).fetch(:classes, "") },
             **kwargs
-          }
+          )
 
           if ICONS[name]
-            svg_icon(ICONS[name])
+            svg_icon(ICONS[name], html_options)
           else
             template.content_tag(:span, nil, **html_options)
           end
@@ -26,7 +26,7 @@ module StimulusPlumbers
 
         private
 
-        def svg_icon(path)
+        def svg_icon(path, html_options)
           template.content_tag(
             :svg,
             xmlns:          "http://www.w3.org/2000/svg",

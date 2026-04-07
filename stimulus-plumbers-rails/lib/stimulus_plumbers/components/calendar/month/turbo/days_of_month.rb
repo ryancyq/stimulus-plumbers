@@ -16,8 +16,7 @@ module StimulusPlumbers
               today: Date.today,
               selectable: false,
               selected_date: nil,
-              show_other_months: false,
-              **kwargs
+              show_other_months: false
             )
               super(template)
               @date              = date
@@ -25,13 +24,14 @@ module StimulusPlumbers
               @selectable        = selectable
               @selected_date     = selected_date
               @show_other_months = show_other_months
-              self.html_options  = {
-                classes: theme.resolve(:calendar_days_of_month).fetch(:classes, ""),
-                **kwargs
-              }
             end
 
-            def render
+            def render(**kwargs)
+              html_options = merge_html_options(
+                classes: theme.resolve(:calendar_days_of_month).fetch(:classes, ""),
+                **kwargs
+              )
+
               template.content_tag(:div, **html_options, role: "rowgroup") do
                 template.safe_join(
                   build_days.each_slice(DAYS_IN_WEEK).map do |week|

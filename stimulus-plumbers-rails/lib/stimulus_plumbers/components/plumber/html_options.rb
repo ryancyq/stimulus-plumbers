@@ -5,24 +5,22 @@ require "active_support/concern"
 module StimulusPlumbers
   module Components
     module Plumber
-      module Attributes
+      module HtmlOptions
         extend ActiveSupport::Concern
 
-        def html_options
-          @html_options ||= {}
-        end
-
-        def html_options=(kwargs)
-          html_options[:class] = merge_class_options(html_options[:class], kwargs)
-          html_options.deep_merge!(kwargs) if kwargs.present?
+        def merge_html_options(defaults = {}, **overrides)
+          merged = defaults.deep_merge(overrides)
+          result = { class: merge_class_options(merged) }
+          result.deep_merge!(merged)
+          result
         end
 
         private
 
-        def merge_class_options(current, kwargs)
-          return current unless kwargs.key?(:class) || kwargs.key?(:classes)
+        def merge_class_options(hash)
+          return unless hash.key?(:class) || hash.key?(:classes)
 
-          merge_string_option(current, kwargs.delete(:class), kwargs.delete(:classes))
+          merge_string_option(hash.delete(:class), hash.delete(:classes))
         end
 
         def merge_string_option(*args, delimiter: " ", **kwargs)

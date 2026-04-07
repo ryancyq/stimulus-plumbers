@@ -6,16 +6,6 @@ class DatePickerHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::PlumberHelper
   include StimulusPlumbers::Helpers::DatePickerHelper
 
-  class TestRecord
-    def self.model_name
-      ActiveModel::Name.new(self, nil, "TestRecord")
-    end
-
-    def to_key
-      nil
-    end
-  end
-
   def test_renders_datepicker
     assert_includes sp_date_picker_month, 'data-controller="datepicker'
   end
@@ -40,6 +30,6 @@ class DatePickerHelperTest < ActionView::TestCase
     record = TestRecord.new
     html   = sp_date_picker_month(record, :start)
 
-    assert_includes html, "start_date_new_test_record"
+    assert_includes html, "start_date_test_record"
   end
 end

@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Components
     module Plumber
       class Base
-        include Attributes
+        include HtmlOptions
         include Renderer
 
         attr_reader :template

@@ -6,15 +6,12 @@ module StimulusPlumbers
       module Month
         module Turbo
           class DaysOfWeek < Plumber::Base
-            def initialize(template, **kwargs)
-              super(template)
-              self.html_options = {
-                classes: theme.resolve(:calendar_days_of_week).fetch(:classes, ""),
+            def render(**kwargs)
+              html_options = merge_html_options(
+                { classes: theme.resolve(:calendar_days_of_week).fetch(:classes, "") },
                 **kwargs
-              }
-            end
+              )
 
-            def render
               template.content_tag(:div, **html_options) do
                 template.content_tag(:div, role: "row") do
                   template.safe_join(
