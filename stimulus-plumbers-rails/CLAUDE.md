@@ -46,3 +46,4 @@ bundle exec rspec
 - **Unit tests** using Rspec
 - **Lint tests** using Rubocop
 - **Always Run Linting** after appraisal command
+- **System tests** generally should only be used for accessibility verification
