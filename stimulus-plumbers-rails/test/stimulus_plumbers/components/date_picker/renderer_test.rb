@@ -40,6 +40,20 @@ class DatePickerRendererTest < ActionView::TestCase
     assert_includes renderer.render, 'aria-label="Date"'
   end
 
+  def test_display_input_has_combobox_role
+    assert_includes renderer.render, 'role="combobox"'
+  end
+
+  def test_display_input_has_haspopup_dialog
+    assert_includes renderer.render, 'aria-haspopup="dialog"'
+  end
+
+  def test_display_input_aria_controls_references_dialog
+    html = renderer.render(calendar_dialog_id: "my_dialog")
+    assert_includes html, 'aria-controls="my_dialog"'
+    assert_includes html, 'id="my_dialog"'
+  end
+
   def test_display_input_is_popover_activator
     assert_includes renderer.render, 'data-popover-target="activator"'
   end
@@ -62,6 +76,10 @@ class DatePickerRendererTest < ActionView::TestCase
   # popover
   def test_popover_is_popover_content_target
     assert_includes renderer.render, 'data-popover-target="content"'
+  end
+
+  def test_popover_has_dialog_role
+    assert_includes renderer.render, 'role="dialog"'
   end
 
   def test_popover_is_hidden_by_default
