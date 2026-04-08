@@ -50,6 +50,7 @@ class DatePickerRendererTest < ActionView::TestCase
 
   def test_display_input_aria_controls_references_dialog
     html = renderer.render(calendar_dialog_id: "my_dialog")
+
     assert_includes html, 'aria-controls="my_dialog"'
     assert_includes html, 'id="my_dialog"'
   end

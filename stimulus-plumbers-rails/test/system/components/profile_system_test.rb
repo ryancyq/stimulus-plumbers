@@ -27,7 +27,6 @@ class ProfileSystemTest < ApplicationSystemTestCase
     visit "/components/profile"
 
     find("input[aria-label='Date']").click
-
     find("button[aria-label='Previous Month']").click
 
     assert_accessible
