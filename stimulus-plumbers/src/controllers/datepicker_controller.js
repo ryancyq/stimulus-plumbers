@@ -37,9 +37,9 @@ export default class extends Controller {
 
   formatDate(date) {
     return new Intl.DateTimeFormat(this.localesValue, {
-      day:   this.dayFormatValue,
+      day: this.dayFormatValue,
       month: this.monthFormatValue,
-      year:  this.yearFormatValue,
+      year: this.yearFormatValue,
     }).format(date);
   }
 
