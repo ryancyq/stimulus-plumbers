@@ -59,7 +59,7 @@ describe('DatepickerController', () => {
   };
 
   const getController = () => {
-    const el = document.querySelector('[data-controller="datepicker"]');
+    const el = document.querySelector('[data-controller~="datepicker"]');
     return application.getControllerForElementAndIdentifier(el, 'datepicker');
   };
 
