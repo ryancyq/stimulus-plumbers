@@ -253,7 +253,7 @@ DEPENDENCIES
   appraisal (~> 2.5.0)
   benchmark
   bigdecimal
-  capybara (>= 3.0, < 4.0)
+  capybara (>= 3.40, < 4.0)
   cuprite (~> 0.17)
   minitest (~> 5.25)
   mutex_m
