@@ -93,6 +93,7 @@ GEM
       ferrum (~> 0.17.0)
     date (3.5.1)
     docile (1.4.1)
+    drb (2.2.3)
     erubi (1.13.1)
     ferrum (0.17.1)
       addressable (~> 2.5)
@@ -255,6 +256,7 @@ DEPENDENCIES
   bigdecimal
   capybara (>= 3.40, < 4.0)
   cuprite (~> 0.17)
+  drb
   minitest (~> 5.25)
   mutex_m
   puma (>= 6.0, < 8.0)
