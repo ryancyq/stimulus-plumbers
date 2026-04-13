@@ -27,7 +27,7 @@ stimulus-plumbers-rails/
 
 ### Prerequisites
 
-- **ruby** >= 2.7.0
+- **ruby** >= 3.0
 - **rails** >= 6.1, < 8.2
 - **view_component** ~> 3.0
 - **rubygems** package manager

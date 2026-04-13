@@ -12,7 +12,7 @@ namespace :appraisal do
     ]
     gemfiles_dir = File.expand_path("../gemfiles", __dir__)
 
-    Dir.glob("#{gemfiles_dir}/*.gemfile").sort.each do |gemfile|
+    Dir.glob("#{gemfiles_dir}/*.gemfile").each do |gemfile|
       puts "Adding platforms to #{File.basename(gemfile)}..."
 
       platforms.each do |platform|

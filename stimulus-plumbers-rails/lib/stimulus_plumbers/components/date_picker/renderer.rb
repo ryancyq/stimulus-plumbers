@@ -7,7 +7,7 @@ module StimulusPlumbers
         STIMULUS_CONTROLLER = "datepicker"
         POPOVER_CONTROLLER  = "popover"
         CALENDAR_CONTROLLER = Calendar::Renderer::OBSERVER_STIMULUS_CONTROLLER
-        CALENDAR_OUTLET     = "#{STIMULUS_CONTROLLER}_#{Calendar::Renderer::STIMULUS_CONTROLLER}_outlet"
+        CALENDAR_OUTLET     = "#{STIMULUS_CONTROLLER}_#{Calendar::Renderer::STIMULUS_CONTROLLER}_outlet".freeze
         STIMULUS_DATA       = {
           controller: "#{STIMULUS_CONTROLLER} #{POPOVER_CONTROLLER}",
           action:     "#{CALENDAR_CONTROLLER}:selected->#{STIMULUS_CONTROLLER}#selected " \

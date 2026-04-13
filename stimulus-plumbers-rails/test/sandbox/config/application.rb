@@ -2,12 +2,14 @@
 
 require_relative "boot"
 
-require "logger" if RUBY_VERSION >= "2.7" # for rails < 7.0
-require "rails"
+require "active_support/version"
+require "logger" if ActiveSupport.version < "7.0"
+
 require "action_controller"
 require "action_view"
 require "active_model"
 require "active_support/core_ext"
+require "rails"
 
 # Minimal test application for component testing
 class TestApp < Rails::Application
