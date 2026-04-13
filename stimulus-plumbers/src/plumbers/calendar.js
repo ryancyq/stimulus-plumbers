@@ -396,4 +396,4 @@ export class Calendar extends Plumber {
  * @param {Object} [options] - Configuration options
  * @returns {Calendar} Calendar plumber instance
  */
-export const attachCalendar = (controller, options) => new Calendar(controller, options);
+export const initCalendar = (controller, options) => new Calendar(controller, options);

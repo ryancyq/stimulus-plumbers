@@ -27,3 +27,79 @@ stimulus-plumbers-react/   # npm: @stimulus-plumbers/react
 ├── CLAUDE.md
 └── README.md
 ```
+
+## Design Principle
+- Follow WCAG 2.1 Level AA standards and work with screen readers
+
+## Testing Guideline
+- **Keyboard navigation tests** (Tab, Enter, Space, Escape, Arrows)
+- **Focus management tests** (focus traps, restoration)
+- **ARIA attribute tests** (roles, labels, states)
+- read html output from test output first during a11y violation analysis
+
+## WCAG 2.1 AA Quick Reference
+
+### Core Criteria (all components)
+
+| Criterion | Level | Rule |
+|-----------|-------|------|
+| 1.3.1 Info & Relationships | A | Convey structure via semantic HTML or ARIA roles, not visual styling alone |
+| 1.4.1 Use of Color | A | Never use color as the only means to convey information |
+| 1.4.3 Contrast (text) | AA | 4.5:1 normal text, 3:1 large text (18pt / 14pt bold) |
+| 1.4.11 Non-text Contrast | AA | 3:1 for UI component boundaries and state indicators |
+| 2.1.1 Keyboard | A | All functionality operable via keyboard; no mouse-only interactions |
+| 2.1.2 No Keyboard Trap | A | Focus must be escapable from any component (Escape or documented key) |
+| 2.4.3 Focus Order | A | Focus sequence must be logical and predictable |
+| 2.4.7 Focus Visible | AA | Keyboard focus indicator must be visible |
+| 4.1.2 Name, Role, Value | A | All UI components must have accessible name, role, and state via ARIA or native semantics; state must stay in sync dynamically (e.g. `aria-expanded`, `aria-selected`, `aria-checked`) |
+| 4.1.3 Status Messages | AA | Status/error messages announced via `role="status"` or `aria-live` without focus move |
+
+### Component-Specific Patterns (APG)
+
+#### Modal (`modal_controller`)
+- `role="dialog"`, `aria-modal="true"`, `aria-labelledby` pointing to heading
+- Focus moves into dialog on open; returns to trigger on close
+- Focus trapped inside — Tab/Shift+Tab cycle within; Escape closes
+
+#### Popover (`popover_controller`, `popover/renderer`)
+- `role="dialog"` or `role="tooltip"` depending on interactivity
+- Activator (trigger): must be a `<button>` with `aria-haspopup="dialog"` and `aria-expanded="false"` initially
+- `aria-expanded` must toggle to `"true"` on open and back to `"false"` on close — managed by the controller via the `activator` Stimulus target
+- `aria-controls` linking activator to content id is recommended but optional
+- Escape closes and returns focus to trigger
+
+#### Calendar / Date Picker (`calendar_month_controller`, `date_picker/`)
+- Grid: `role="grid"`, `role="row"`, `role="gridcell"`
+- Navigation buttons: `aria-label="Previous month"` / `"Next month"`
+- Selected date: `aria-selected="true"`; today: `aria-current="date"`
+- Disabled dates: `aria-disabled="true"`, `tabindex="-1"`
+- Arrow keys navigate cells; Enter/Space select; Escape closes picker
+
+#### Action List (`action_list/`)
+- Static list: `role="list"` + `role="listitem"`
+- Interactive menu: `role="menu"` + `role="menuitem"`; Arrow keys navigate; Enter activates
+- Selected item: `aria-selected` (listbox) or `aria-checked` (menuitemcheckbox)
+
+#### Form Fields (`form/`, `form-field_controller`)
+- Every input must have a visible `<label>` via `for`/`id` or `aria-labelledby`
+- Required fields: `required` attribute + `aria-required="true"`
+- Invalid fields: `aria-invalid="true"` + `aria-describedby` pointing to error message
+- Error message element: `role="alert"` or `aria-live="polite"` so it's announced
+
+#### Password Reveal (`password_reveal_controller`)
+- Toggle button: `aria-label` describes action ("Show password" / "Hide password")
+- Or: `aria-pressed` on toggle button
+
+#### Flipper / Visibility / Dismisser
+- Trigger: `aria-expanded="true/false"` when toggling a region
+- Controlled region: `aria-hidden="true"` when collapsed (or removed from DOM)
+- `aria-controls` links trigger to region id
+
+#### Button (`button/renderer`)
+- Use `<button>` (not `<div>` / `<a>`) for actions
+- Icon-only buttons must have `aria-label` or visually-hidden text
+- Disabled: `disabled` attribute (not `aria-disabled` alone) unless intentionally focusable
+
+#### Avatar / Card / Icon
+- Decorative images/icons: `aria-hidden="true"` or `alt=""`
+- Meaningful images: descriptive `alt` text

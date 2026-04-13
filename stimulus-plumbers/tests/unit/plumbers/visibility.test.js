@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import {
   Visibility,
   attachVisibility,
-  toggleVisibility,
 } from '../../../src/plumbers/visibility'
 import { visibilityConfig } from '../../../src/plumbers/plumber/support'
 
@@ -32,50 +31,8 @@ describe('Visibility', () => {
     })
   })
 
-  describe('toggleVisibility', () => {
-    it('adds hidden class when hiding with class-based visibility', () => {
-      toggleVisibility(element, false, 'hidden')
-
-      expect(element.classList.contains('hidden')).toBe(true)
-    })
-
-    it('removes hidden class when showing with class-based visibility', () => {
-      element.classList.add('hidden')
-      toggleVisibility(element, true, 'hidden')
-
-      expect(element.classList.contains('hidden')).toBe(false)
-    })
-
-    it('sets hidden attribute when hiding without class', () => {
-      visibilityConfig.hiddenClass = null
-      toggleVisibility(element, false, null)
-
-      expect(element.hasAttribute('hidden')).toBe(true)
-    })
-
-    it('removes hidden attribute when showing without class', () => {
-      visibilityConfig.hiddenClass = null
-      element.setAttribute('hidden', true)
-      toggleVisibility(element, true, null)
-
-      expect(element.hasAttribute('hidden')).toBe(false)
-    })
-
-    it('uses global config when hiddenClass not provided', () => {
-      visibilityConfig.hiddenClass = 'custom-hidden'
-      toggleVisibility(element, false)
-
-      expect(element.classList.contains('custom-hidden')).toBe(true)
-    })
-
-    it('does nothing for non-HTMLElement', () => {
-      expect(() => toggleVisibility(null, false)).not.toThrow()
-      expect(() => toggleVisibility(undefined, true)).not.toThrow()
-    })
-  })
-
   describe('constructor', () => {
-    it('initializes with default options', () => {
+    it('defaults namespace to "visibility", resolver to "isVisible", callbacks to shown/hidden', () => {
       const visibility = new Visibility(mockController)
 
       expect(visibility.controller).toBe(mockController)
@@ -103,13 +60,12 @@ describe('Visibility', () => {
       expect(visibility.onHidden).toBe('customHidden')
     })
 
-    it('enhances controller with visibility helpers', () => {
-      const visibility = new Visibility(mockController)
+    it('attaches show and hide helpers to controller', () => {
+      new Visibility(mockController)
 
       expect(mockController.visibility).toBeDefined()
       expect(mockController.visibility.show).toBeTypeOf('function')
       expect(mockController.visibility.hide).toBeTypeOf('function')
-      expect(mockController.visibility.isVisible).toBeTypeOf('function')
     })
   })
 
@@ -122,22 +78,20 @@ describe('Visibility', () => {
       expect(visibility.isVisible({})).toBe(false)
     })
 
-    it('returns true when element does not have hidden class', () => {
-      visibilityConfig.hiddenClass = 'hidden'
+    it('returns true without hidden class', () => {
       const visibility = new Visibility(mockController)
 
       expect(visibility.isVisible(element)).toBe(true)
     })
 
-    it('returns false when element has hidden class', () => {
-      visibilityConfig.hiddenClass = 'hidden'
+    it('returns false with hidden class', () => {
       element.classList.add('hidden')
       const visibility = new Visibility(mockController)
 
       expect(visibility.isVisible(element)).toBe(false)
     })
 
-    it('checks hidden attribute when no hiddenClass configured', () => {
+    it('uses hidden attribute when hiddenClass is null', () => {
       visibilityConfig.hiddenClass = null
       const visibility = new Visibility(mockController)
 
@@ -176,11 +130,10 @@ describe('Visibility', () => {
       expect(element.classList.contains('hidden')).toBe(false)
     })
 
-    it('calls onShown callback when defined as method on visibility plumber', async () => {
+    it('calls onShown callback', async () => {
       element.classList.add('hidden')
       const onShown = vi.fn()
       const visibility = new Visibility(mockController, { onShown: 'shown' })
-      // Define the callback method on the visibility plumber instance
       visibility.shown = onShown
 
       await visibility.show()
@@ -188,11 +141,10 @@ describe('Visibility', () => {
       expect(onShown).toHaveBeenCalledWith({ target: element })
     })
 
-    it('awaits async onShown callback when defined on visibility plumber', async () => {
+    it('awaits async onShown callback', async () => {
       element.classList.add('hidden')
       const onShown = vi.fn(() => new Promise((resolve) => setTimeout(resolve, 10)))
       const visibility = new Visibility(mockController, { onShown: 'shown' })
-      // Define the callback method on the visibility plumber instance
       visibility.shown = onShown
 
       await visibility.show()
@@ -201,13 +153,6 @@ describe('Visibility', () => {
       expect(mockController.dispatch).toHaveBeenCalledWith('shown', expect.any(Object))
     })
 
-    it('does nothing for non-HTMLElement', async () => {
-      const visibility = new Visibility(mockController, { element: null })
-
-      await visibility.show()
-
-      expect(mockController.dispatch).not.toHaveBeenCalled()
-    })
   })
 
   describe('hide', () => {
@@ -237,10 +182,9 @@ describe('Visibility', () => {
       expect(element.classList.contains('hidden')).toBe(true)
     })
 
-    it('calls onHidden callback when defined as method on visibility plumber', async () => {
+    it('calls onHidden callback', async () => {
       const onHidden = vi.fn()
       const visibility = new Visibility(mockController, { onHidden: 'hidden' })
-      // Define the callback method on the visibility plumber instance
       visibility.hidden = onHidden
 
       await visibility.hide()
@@ -248,10 +192,9 @@ describe('Visibility', () => {
       expect(onHidden).toHaveBeenCalledWith({ target: element })
     })
 
-    it('awaits async onHidden callback when defined on visibility plumber', async () => {
+    it('awaits async onHidden callback', async () => {
       const onHidden = vi.fn(() => new Promise((resolve) => setTimeout(resolve, 10)))
       const visibility = new Visibility(mockController, { onHidden: 'hidden' })
-      // Define the callback method on the visibility plumber instance
       visibility.hidden = onHidden
 
       await visibility.hide()
@@ -260,26 +203,25 @@ describe('Visibility', () => {
       expect(mockController.dispatch).toHaveBeenCalledWith('hidden', expect.any(Object))
     })
 
-    it('does nothing for non-HTMLElement', async () => {
-      mockController.element = null
+    it('falls back to controller element when element is null', async () => {
       const visibility = new Visibility(mockController, { element: null })
 
       await visibility.hide()
 
-      expect(mockController.dispatch).not.toHaveBeenCalled()
+      expect(mockController.dispatch).toHaveBeenCalledWith('hide', expect.any(Object))
     })
   })
 
   describe('enhance', () => {
     it('adds show and hide methods to controller', () => {
-      const visibility = new Visibility(mockController)
+      new Visibility(mockController)
 
       expect(mockController.visibility.show).toBeTypeOf('function')
       expect(mockController.visibility.hide).toBeTypeOf('function')
     })
 
     it('adds visible getter to controller', () => {
-      const visibility = new Visibility(mockController)
+      new Visibility(mockController)
 
       expect(mockController.visibility.visible).toBe(true)
 
@@ -287,8 +229,8 @@ describe('Visibility', () => {
       expect(mockController.visibility.visible).toBe(false)
     })
 
-    it('adds custom visibility resolver to controller', () => {
-      const visibility = new Visibility(mockController)
+    it('adds isVisible resolver to controller', () => {
+      new Visibility(mockController)
 
       expect(mockController.visibility.isVisible).toBeTypeOf('function')
       expect(mockController.visibility.isVisible(element)).toBe(true)
@@ -298,13 +240,75 @@ describe('Visibility', () => {
     })
 
     it('uses custom namespace', () => {
-      const visibility = new Visibility(mockController, {
-        visibility: 'customVis',
-      })
+      new Visibility(mockController, { visibility: 'customVis' })
 
       expect(mockController.customVis).toBeDefined()
       expect(mockController.customVis.show).toBeTypeOf('function')
       expect(mockController.customVis.hide).toBeTypeOf('function')
+    })
+  })
+
+  describe('activator', () => {
+    let activator
+
+    beforeEach(() => {
+      activator = document.createElement('button')
+      document.body.appendChild(activator)
+    })
+
+    it('sets aria-expanded="false" on init when element has hidden class', () => {
+      element.classList.add('hidden')
+      new Visibility(mockController, { activator })
+
+      expect(activator.getAttribute('aria-expanded')).toBe('false')
+    })
+
+    it('sets aria-expanded="false" on init when element has hidden attribute', () => {
+      visibilityConfig.hiddenClass = null
+      element.setAttribute('hidden', true)
+      new Visibility(mockController, { activator })
+
+      expect(activator.getAttribute('aria-expanded')).toBe('false')
+    })
+
+    it('sets aria-expanded="true" on init when element is visible', () => {
+      new Visibility(mockController, { activator })
+
+      expect(activator.getAttribute('aria-expanded')).toBe('true')
+    })
+
+    it('uses controller element as fallback when element is null', () => {
+      new Visibility(mockController, { activator, element: null })
+
+      expect(activator.getAttribute('aria-expanded')).toBe('true')
+    })
+
+    it('sets aria-expanded="true" after show', async () => {
+      element.classList.add('hidden')
+      new Visibility(mockController, { activator })
+
+      await mockController.visibility.show()
+
+      expect(activator.getAttribute('aria-expanded')).toBe('true')
+    })
+
+    it('sets aria-expanded="false" after hide', async () => {
+      new Visibility(mockController, { activator })
+
+      await mockController.visibility.hide()
+
+      expect(activator.getAttribute('aria-expanded')).toBe('false')
+    })
+
+    it('does not throw when no activator passed', async () => {
+      element.classList.add('hidden')
+      new Visibility(mockController)
+
+      await expect(mockController.visibility.show()).resolves.toBeUndefined()
+    })
+
+    it('ignores non-HTMLElement activator', () => {
+      expect(() => new Visibility(mockController, { activator: 'not-an-element' })).not.toThrow()
     })
   })
 
@@ -320,18 +324,15 @@ describe('Visibility', () => {
   })
 
   describe('integration', () => {
-    it('can show and hide element using controller methods', async () => {
-      const visibility = new Visibility(mockController)
+    it('show and hide toggle class and visible getter', async () => {
+      new Visibility(mockController)
 
-      // Initially visible
       expect(mockController.visibility.visible).toBe(true)
 
-      // Hide
       await mockController.visibility.hide()
       expect(element.classList.contains('hidden')).toBe(true)
       expect(mockController.visibility.visible).toBe(false)
 
-      // Show
       await mockController.visibility.show()
       expect(element.classList.contains('hidden')).toBe(false)
       expect(mockController.visibility.visible).toBe(true)
@@ -339,7 +340,7 @@ describe('Visibility', () => {
 
     it('works with attribute-based visibility', async () => {
       visibilityConfig.hiddenClass = null
-      const visibility = new Visibility(mockController)
+      new Visibility(mockController)
 
       await mockController.visibility.hide()
       expect(element.hasAttribute('hidden')).toBe(true)

@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  mount ViewComponent::Engine, at: "/"
+  scope "/components", controller: "components" do
+    get :profile
+    get :calendar_stimulus
+    get :calendar_turbo
+  end
+
+  scope "/form", controller: "form" do
+    get :sign_up
+    get :field_error
+  end
 end

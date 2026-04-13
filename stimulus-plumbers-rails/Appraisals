@@ -15,8 +15,9 @@
       gem "rails", "~> #{rails_version}"
       gem "benchmark" if rails_version < "7.0"
       gem "bigdecimal" if rails_version < "7.1"
-      gem "tsort" if rails_version < "7.1"
-      gem "mutex_m" if rails_version < "7.1"
+      gem "drb"        if rails_version < "7.0"
+      gem "tsort"      if rails_version < "7.1"
+      gem "mutex_m"    if rails_version < "7.1"
     end
   end
 end

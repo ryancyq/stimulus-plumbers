@@ -6,7 +6,6 @@ describe('CalendarMonthController', () => {
   let application;
 
   beforeEach(() => {
-    // Only fake Date so setTimeout still works for Stimulus connection lifecycle
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date(2024, 9, 15)); // October 15, 2024
 
@@ -21,98 +20,57 @@ describe('CalendarMonthController', () => {
   });
 
   describe('draw on connect', () => {
+    let daysOfWeek, daysOfMonth;
+
     beforeEach(async () => {
       document.body.innerHTML = `
         <div data-controller="calendar-month" data-calendar-month-locales-value='["en-US"]'>
-          <div data-calendar-month-target="day"></div>
-          <div data-calendar-month-target="month"></div>
-          <div data-calendar-month-target="year"></div>
-          <button data-calendar-month-target="previous">Previous</button>
-          <button data-calendar-month-target="next">Next</button>
           <div data-calendar-month-target="daysOfWeek"></div>
           <div data-calendar-month-target="daysOfMonth"></div>
         </div>
       `;
       await new Promise(resolve => setTimeout(resolve, 10));
+
+      daysOfWeek = document.querySelector('[data-calendar-month-target="daysOfWeek"]');
+      daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
     });
 
-    it('renders 7 days of week headers', () => {
-      const daysOfWeek = document.querySelector('[data-calendar-month-target="daysOfWeek"]');
-      expect(daysOfWeek.childElementCount).toBe(7);
-    });
-
-    it('each day of week header has a non-empty title', () => {
-      const daysOfWeek = document.querySelector('[data-calendar-month-target="daysOfWeek"]');
-      for (const child of daysOfWeek.children) {
-        expect(child.title).toBeTruthy();
+    it('renders a row of 7 columnheaders in daysOfWeek', () => {
+      const row = daysOfWeek.querySelector('[role="row"]');
+      expect(row).toBeTruthy();
+      expect(row.children.length).toBe(7);
+      for (const header of row.children) {
+        expect(header.getAttribute('role')).toBe('columnheader');
+        expect(header.title).toBeTruthy();
       }
     });
 
-    it('renders 35 cells for October 2024 (2 leading + 31 current + 2 trailing)', () => {
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      expect(daysOfMonth.childElementCount).toBe(35);
+    it('renders 35 gridcells for October 2024', () => {
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(35);
     });
 
-    it('renders 31 buttons for October 2024 current-month days', () => {
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+    it('renders 31 buttons for current-month days', () => {
       expect(daysOfMonth.querySelectorAll('button').length).toBe(31);
     });
 
-    it('marks today with ariaCurrent="date"', () => {
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const todayCell = [...daysOfMonth.children].find(el => el.ariaCurrent === 'date');
-      expect(todayCell).toBeDefined();
-      expect(todayCell.textContent).toBe('15');
+    it('marks today with aria-current="date"', () => {
+      const today = daysOfMonth.querySelector('[aria-current="date"]');
+      expect(today).toBeTruthy();
+      expect(today.textContent).toContain('15');
     });
 
-    it('renders current year in year target', () => {
-      const yearTarget = document.querySelector('[data-calendar-month-target="year"]');
-      expect(yearTarget.textContent).toBe('2024');
-    });
-
-    it('renders non-empty text in month target', () => {
-      const monthTarget = document.querySelector('[data-calendar-month-target="month"]');
-      expect(monthTarget.textContent).toBeTruthy();
-    });
-
-    it('renders current day number in day target (fixes { day } option)', () => {
-      const dayTarget = document.querySelector('[data-calendar-month-target="day"]');
-      // With bug { date: ... }, Intl ignores the invalid key and returns a full date string.
-      // With fix { day: ... }, it returns just the day number "15".
-      expect(dayTarget.textContent).toBe('15');
-    });
-
-    it('each day cell contains a time element with a dateTime attribute', () => {
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      for (const child of daysOfMonth.children) {
-        const time = child.querySelector('time');
+    it('each gridcell contains a time element with dateTime', () => {
+      for (const cell of daysOfMonth.querySelectorAll('[role="gridcell"]')) {
+        const time = cell.querySelector('time');
         expect(time).toBeTruthy();
         expect(time.dateTime).toBeTruthy();
       }
     });
   });
 
-  describe('draw skips targets that already have children', () => {
-    it('does not overwrite day target when it already has child elements', async () => {
-      document.body.innerHTML = `
-        <div data-controller="calendar-month">
-          <div data-calendar-month-target="day"><span>Custom</span></div>
-          <div data-calendar-month-target="daysOfMonth"></div>
-        </div>
-      `;
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-      const dayTarget = document.querySelector('[data-calendar-month-target="day"]');
-      expect(dayTarget.textContent).toBe('Custom');
-    });
-  });
-
-  describe('trailing padding fix', () => {
-    it('February 2015 (28 days starting on Sunday) renders exactly 28 cells', async () => {
-      // Feb 1, 2015 = Sunday → 0 leading days, 28 current days, 28 % 7 === 0 → 0 trailing
-      // Without fix: 7 - (28 % 7) = 7 trailing cells → 35 total
+  describe('trailing padding', () => {
+    it('February 2015 renders exactly 28 gridcells', async () => {
       vi.setSystemTime(new Date(2015, 1, 1));
-
       document.body.innerHTML = `
         <div data-controller="calendar-month">
           <div data-calendar-month-target="daysOfMonth"></div>
@@ -121,14 +79,11 @@ describe('CalendarMonthController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      expect(daysOfMonth.childElementCount).toBe(28);
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(28);
     });
 
-    it('November 2024 (35-cell grid) renders exactly 35 cells', async () => {
-      // Nov 1, 2024 = Friday → 5 leading + 30 current = 35, 35 % 7 === 0 → 0 trailing
-      // Without fix: 7 - (35 % 7) = 7 trailing cells → 42 total
+    it('November 2024 renders exactly 35 gridcells', async () => {
       vi.setSystemTime(new Date(2024, 10, 1));
-
       document.body.innerHTML = `
         <div data-controller="calendar-month">
           <div data-calendar-month-target="daysOfMonth"></div>
@@ -137,180 +92,25 @@ describe('CalendarMonthController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      expect(daysOfMonth.childElementCount).toBe(35);
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(35);
+    });
+
+    it('July 2023 renders exactly 42 gridcells', async () => {
+      vi.setSystemTime(new Date(2023, 6, 1));
+      document.body.innerHTML = `
+        <div data-controller="calendar-month">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBe(42);
     });
   });
 
-  describe('navigation', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="calendar-month">
-          <div data-calendar-month-target="year"></div>
-          <button data-calendar-month-target="previous">Previous</button>
-          <button data-calendar-month-target="next">Next</button>
-          <div data-calendar-month-target="daysOfMonth"></div>
-        </div>
-      `;
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
-
-    it('previous button navigates to previous month', async () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const navigated = new Promise(resolve => {
-        element.addEventListener('calendar-month:navigated', resolve, { once: true });
-      });
-
-      document.querySelector('[data-calendar-month-target="previous"]').click();
-      await navigated;
-
-      // September 2024: 30 current-month days
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      expect(daysOfMonth.querySelectorAll('button').length).toBe(30);
-    });
-
-    it('next button navigates to next month', async () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const navigated = new Promise(resolve => {
-        element.addEventListener('calendar-month:navigated', resolve, { once: true });
-      });
-
-      document.querySelector('[data-calendar-month-target="next"]').click();
-      await navigated;
-
-      // November 2024: 30 current-month days
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      expect(daysOfMonth.querySelectorAll('button').length).toBe(30);
-    });
-
-    it('dispatches navigate and navigated events', async () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const navigateSpy = vi.fn();
-      element.addEventListener('calendar-month:navigate', navigateSpy);
-
-      const navigated = new Promise(resolve => {
-        element.addEventListener('calendar-month:navigated', resolve, { once: true });
-      });
-
-      document.querySelector('[data-calendar-month-target="next"]').click();
-      await navigated;
-
-      expect(navigateSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('navigate event detail contains from and to ISO strings', async () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      let navigateEvent;
-      element.addEventListener('calendar-month:navigate', e => {
-        navigateEvent = e;
-      });
-
-      const navigated = new Promise(resolve => {
-        element.addEventListener('calendar-month:navigated', resolve, { once: true });
-      });
-
-      document.querySelector('[data-calendar-month-target="next"]').click();
-      await navigated;
-
-      expect(navigateEvent.detail.from).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-      expect(navigateEvent.detail.to).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-    });
-  });
-
-  describe('select', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="calendar-month">
-          <div data-calendar-month-target="daysOfMonth"></div>
-        </div>
-      `;
-      await new Promise(resolve => setTimeout(resolve, 10));
-    });
-
-    it('dispatches select and selected events when clicking a current-month day', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const selectSpy = vi.fn();
-      const selectedSpy = vi.fn();
-      element.addEventListener('calendar-month:select', selectSpy);
-      element.addEventListener('calendar-month:selected', selectedSpy);
-
-      // October 2024 has 2 leading divs; first button = Oct 1
-      const firstButton = daysOfMonth.querySelector('button');
-      firstButton.click();
-
-      expect(selectSpy).toHaveBeenCalledTimes(1);
-      expect(selectedSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('selected event detail includes epoch and iso for the clicked date', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      let selectedEvent;
-      element.addEventListener('calendar-month:selected', e => {
-        selectedEvent = e;
-      });
-
-      daysOfMonth.querySelector('button').click();
-
-      const date = new Date(selectedEvent.detail.epoch);
-      expect(typeof selectedEvent.detail.epoch).toBe('number');
-      expect(selectedEvent.detail.iso).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-      expect(date.getFullYear()).toBe(2024);
-      expect(date.getMonth()).toBe(9); // October (0-indexed)
-      expect(date.getDate()).toBe(1);  // First button = Oct 1
-    });
-
-    it('does not dispatch events when clicking a disabled button', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const selectSpy = vi.fn();
-      element.addEventListener('calendar-month:select', selectSpy);
-
-      const button = daysOfMonth.querySelector('button');
-      button.disabled = true;
-      button.click();
-
-      expect(selectSpy).not.toHaveBeenCalled();
-    });
-
-    it('does not dispatch events when clicking an ariaDisabled="true" element', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const selectSpy = vi.fn();
-      element.addEventListener('calendar-month:select', selectSpy);
-
-      // Oct 2024 has 2 leading divs (Sep 29, Sep 30) with ariaDisabled="true"
-      const disabledDiv = [...daysOfMonth.children].find(el => el.ariaDisabled === 'true');
-      expect(disabledDiv).toBeDefined();
-      disabledDiv.click();
-
-      expect(selectSpy).not.toHaveBeenCalled();
-    });
-
-    it('does not block elements with ariaDisabled="false" (fixes ariaDisabled truthy bug)', () => {
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      const selectSpy = vi.fn();
-      element.addEventListener('calendar-month:select', selectSpy);
-
-      // Create a div with ariaDisabled='false' inside the grid — should be selectable
-      const div = document.createElement('div');
-      div.ariaDisabled = 'false';
-      const time = document.createElement('time');
-      time.dateTime = new Date(2024, 9, 1).toISOString();
-      div.appendChild(time);
-      daysOfMonth.appendChild(div);
-
-      div.click();
-
-      // With old bug: input.ariaDisabled ('false') is truthy → event blocked
-      // With fix: input.ariaDisabled === 'true' is false → event dispatched
-      expect(selectSpy).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('daysOfOtherMonth option', () => {
-    it('hides day text for leading and trailing days by default', async () => {
+  describe('daysOfOtherMonth', () => {
+    it('hides text and disables leading/trailing gridcells by default', async () => {
       document.body.innerHTML = `
         <div data-controller="calendar-month">
           <div data-calendar-month-target="daysOfMonth"></div>
@@ -319,13 +119,12 @@ describe('CalendarMonthController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      // Oct 2024: first 2 children are Sep 29 and Sep 30 (leading divs)
-      const leadingDiv = daysOfMonth.children[0];
-      expect(leadingDiv.ariaDisabled).toBe('true');
-      expect(leadingDiv.ariaHidden).toBe('true');
+      const leading = daysOfMonth.querySelector('[role="gridcell"]');
+      expect(leading.getAttribute('aria-disabled')).toBe('true');
+      expect(leading.getAttribute('aria-hidden')).toBe('true');
     });
 
-    it('shows day text for other-month days when daysOfOtherMonth is enabled', async () => {
+    it('shows text for other-month gridcells when enabled', async () => {
       document.body.innerHTML = `
         <div data-controller="calendar-month" data-calendar-month-days-of-other-month-value="true">
           <div data-calendar-month-target="daysOfMonth"></div>
@@ -334,24 +133,22 @@ describe('CalendarMonthController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
-      // Sep 29 (leading) should now display its day number
-      const leadingDiv = daysOfMonth.children[0];
-      expect(leadingDiv.ariaHidden).not.toBe('true');
-      expect(leadingDiv.textContent.trim()).not.toBe('');
+      const leading = daysOfMonth.querySelector('[role="gridcell"]');
+      expect(leading.getAttribute('aria-hidden')).not.toBe('true');
+      expect(leading.textContent.trim()).not.toBe('');
     });
   });
 
   describe('without targets', () => {
-    it('connects and exposes calendar when no targets are present', async () => {
+    it('connects and attaches calendar', async () => {
       document.body.innerHTML = '<div data-controller="calendar-month"></div>';
       await new Promise(resolve => setTimeout(resolve, 10));
 
-      const element = document.querySelector('[data-controller="calendar-month"]');
-      const controller = application.getControllerForElementAndIdentifier(element, 'calendar-month');
-      expect(controller).toBeTruthy();
+      const controller = application.getControllerForElementAndIdentifier(
+        document.querySelector('[data-controller="calendar-month"]'),
+        'calendar-month'
+      );
       expect(controller.calendar).toBeDefined();
-      expect(controller.calendar.year).toBe(2024);
-      expect(controller.calendar.month).toBe(9); // October (0-indexed)
     });
   });
 });

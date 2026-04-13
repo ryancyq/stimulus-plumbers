@@ -24,7 +24,6 @@ jobs:
       fail-fast: false
       matrix:
         ruby-version:
-          - "2.7"
           - "3.0"
           - "3.1"
           - "3.2"
@@ -50,20 +49,14 @@ jobs:
             rails-version: "edge"
         exclude:
           # ruby >= 3.1 for rails >= 7.2
-          - ruby-version: "2.7"
-            rails-version: "7.2"
           - ruby-version: "3.0"
             rails-version: "7.2"
           # ruby >= 3.2 for rails == 8.0
-          - ruby-version: "2.7"
-            rails-version: "8.0"
           - ruby-version: "3.0"
             rails-version: "8.0"
           - ruby-version: "3.1"
             rails-version: "8.0"
           # ruby >= 3.2 for rails >= 8.1
-          - ruby-version: "2.7"
-            rails-version: "8.1"
           - ruby-version: "3.0"
             rails-version: "8.1"
           - ruby-version: "3.1"
@@ -81,8 +74,21 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          rubygems: 3.4.22 # last version to support Ruby 2.7
+          rubygems: latest
           bundler: latest
           bundler-cache: true
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: stimulus-plumbers/package-lock.json
+
+      - run: npm ci
+        working-directory: stimulus-plumbers
+
+      - run: npm run build
+        working-directory: stimulus-plumbers
+
       - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake test:unit"
+      - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake test:system"

@@ -37,7 +37,7 @@ describe('PopoverController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
     });
 
-    it('exposes load and visibility on connect', () => {
+    it('attaches load and visibility to controller', () => {
       const element = document.querySelector('[data-controller="popover"]');
       const controller = application.getControllerForElementAndIdentifier(element, 'popover');
 
@@ -51,6 +51,43 @@ describe('PopoverController', () => {
       const controller = application.getControllerForElementAndIdentifier(element, 'popover');
 
       expect(controller.contentLoaderVisibility).toBeDefined();
+    });
+  });
+
+  describe('activator aria-expanded', () => {
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="popover">
+          <button data-popover-target="activator">Open</button>
+          <div data-popover-target="content" hidden>Content</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+    });
+
+    const button = () => document.querySelector('[data-popover-target="activator"]');
+
+    it('sets aria-expanded="false" on connect when content is hidden', () => {
+      expect(button().getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('sets aria-expanded="true" after show', async () => {
+      const controller = application.getControllerForElementAndIdentifier(
+        document.querySelector('[data-controller="popover"]'), 'popover'
+      );
+      await controller.show();
+
+      expect(button().getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('sets aria-expanded="false" after hide', async () => {
+      const controller = application.getControllerForElementAndIdentifier(
+        document.querySelector('[data-controller="popover"]'), 'popover'
+      );
+      await controller.show();
+      await controller.hide();
+
+      expect(button().getAttribute('aria-expanded')).toBe('false');
     });
   });
 
@@ -111,7 +148,7 @@ describe('PopoverController', () => {
       expect(global.fetch).toHaveBeenCalledWith('/content');
     });
 
-    it('does not re-fetch after first load with reload never', async () => {
+    it('does not re-fetch when reload is "never"', async () => {
       const controller = application.getControllerForElementAndIdentifier(
         document.querySelector('[data-controller="popover"]'),
         'popover'
@@ -278,7 +315,7 @@ describe('PopoverController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
     });
 
-    it('dispatches load, loading, and loaded events during content load', async () => {
+    it('dispatches load, loading, and loaded events', async () => {
       const element = document.querySelector('[data-controller="popover"]');
       const loadSpy = vi.fn();
       const loadingSpy = vi.fn();
@@ -311,7 +348,7 @@ describe('PopoverController', () => {
       expect(controller.visibility).toBeUndefined();
     });
 
-    it('contentLoaderVisibility is absent without loader target', async () => {
+    it('does not attach contentLoaderVisibility without loader target', async () => {
       document.body.innerHTML = `
         <div data-controller="popover">
           <div data-popover-target="content" hidden>Content</div>
@@ -325,6 +362,21 @@ describe('PopoverController', () => {
       );
 
       expect(controller.contentLoaderVisibility).toBeUndefined();
+    });
+
+    it('contentLoading does nothing without loader target', async () => {
+      document.body.innerHTML = `
+        <div data-controller="popover">
+          <div data-popover-target="content" hidden>Content</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const controller = application.getControllerForElementAndIdentifier(
+        document.querySelector('[data-controller="popover"]'),
+        'popover'
+      );
+
       await expect(controller.contentLoading()).resolves.toBeUndefined();
     });
 

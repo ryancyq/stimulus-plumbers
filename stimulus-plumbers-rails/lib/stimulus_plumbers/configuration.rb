@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require_relative "themes/base"
-require_relative "themes/tailwind"
+require_relative "themes/tailwind_theme"
 
 module StimulusPlumbers
   class Configuration
-    DEFAULT_LOG_FORMATTER = ->(message) { "[StimulusPlumbers] #{message}" }
+    DEFAULT_LOG_FORMATTER  = ->(message) { "[StimulusPlumbers] #{message}" }
+    THEME_KLASS_FORMATTER  = ->(type) { "StimulusPlumbers::Themes::#{type.to_s.classify}Theme" }
 
     def theme
       @theme ||= build_theme(:tailwind)
@@ -30,10 +31,9 @@ module StimulusPlumbers
     def build_theme(type)
       return type if type.is_a?(Themes::Base)
 
-      case type
-      when :tailwind then Themes::Tailwind.new
-      else raise ArgumentError, "Unknown theme: #{type.inspect}. Pass :tailwind or a Themes::Base instance."
-      end
+      klass_name = THEME_KLASS_FORMATTER.call(type)
+      klass_name.safe_constantize&.new or
+        raise ArgumentError, "Unknown theme #{type.inspect}: #{klass_name} is not defined."
     end
   end
 end

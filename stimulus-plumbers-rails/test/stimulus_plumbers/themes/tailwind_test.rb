@@ -4,7 +4,7 @@ require "test_helper"
 
 class TailwindThemeTest < Minitest::Test
   def setup
-    @theme = StimulusPlumbers::Themes::Tailwind.new
+    @theme = StimulusPlumbers::Themes::TailwindTheme.new
   end
 
   def classes_for(component, **args)
@@ -38,13 +38,13 @@ class TailwindThemeTest < Minitest::Test
     assert_includes classes_for(:button), "h-9"
   end
 
-  StimulusPlumbers::Themes::Base::ARG_SCHEMA[:button][:variant][:range].each do |variant|
+  StimulusPlumbers::Themes::Base::SCHEMA[:button][:variant][:range].each do |variant|
     define_method("test_button_resolves_#{variant}_variant_without_error") do
       classes_for(:button, variant: variant)
     end
   end
 
-  StimulusPlumbers::Themes::Base::SIZE_RANGE.each do |size|
+  StimulusPlumbers::Themes::Schema::Ranges::SIZE_RANGE.each do |size|
     define_method("test_button_resolves_#{size}_size") do
       height = { sm: "h-8", md: "h-9", lg: "h-11" }
 
@@ -122,16 +122,16 @@ class TailwindThemeTest < Minitest::Test
     assert_includes result, "rounded-[--sp-radius-full]"
   end
 
-  StimulusPlumbers::Themes::Base::SIZE_RANGE.each do |size|
+  StimulusPlumbers::Themes::Schema::Ranges::SIZE_RANGE.each do |size|
     define_method("test_avatar_resolves_#{size}_size") do
-      size_class = StimulusPlumbers::Themes::Tailwind::AVATAR_SIZE_KLASSES[size]
+      size_class = StimulusPlumbers::Themes::Tailwind::Avatar::SIZES[size]
 
       assert_includes classes_for(:avatar, size: size), size_class
     end
   end
 
   def test_avatar_colors_exposes_avatar_colors_as_hash_of_symbol_keys_to_css_class_strings
-    colors = StimulusPlumbers::Themes::Tailwind::AVATAR_COLORS
+    colors = StimulusPlumbers::Themes::Tailwind::Avatar::COLORS
 
     assert_instance_of Hash, colors
     assert_predicate colors, :present?
@@ -140,15 +140,15 @@ class TailwindThemeTest < Minitest::Test
   end
 
   def test_avatar_color_range_returns_the_css_class_values_of_avatar_colors
-    assert_equal StimulusPlumbers::Themes::Tailwind::AVATAR_COLORS.values, @theme.avatar_color_range
+    assert_equal StimulusPlumbers::Themes::Tailwind::Avatar::COLORS.values, @theme.avatar_color_range
   end
 
   def test_avatar_colors_returns_avatar_colors
-    assert_equal StimulusPlumbers::Themes::Tailwind::AVATAR_COLORS, @theme.avatar_colors
+    assert_equal StimulusPlumbers::Themes::Tailwind::Avatar::COLORS, @theme.avatar_colors
   end
 
   def test_avatar_resolves_each_color_key_to_a_css_class_string
-    StimulusPlumbers::Themes::Tailwind::AVATAR_COLORS.each do |key, css_class|
+    StimulusPlumbers::Themes::Tailwind::Avatar::COLORS.each do |key, css_class|
       assert_equal css_class, @theme.avatar_colors.fetch(key)
     end
   end

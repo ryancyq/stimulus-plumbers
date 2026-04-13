@@ -9,7 +9,7 @@ class ConfigurationTest < Minitest::Test
 
   # #theme
   def test_theme_defaults_to_a_tailwind_instance
-    assert_instance_of StimulusPlumbers::Themes::Tailwind, @config.theme
+    assert_instance_of StimulusPlumbers::Themes::TailwindTheme, @config.theme
   end
 
   def test_theme_is_memoized
@@ -20,7 +20,7 @@ class ConfigurationTest < Minitest::Test
   def test_theme_setter_accepts_tailwind_symbol
     @config.theme = :tailwind
 
-    assert_instance_of StimulusPlumbers::Themes::Tailwind, @config.theme
+    assert_instance_of StimulusPlumbers::Themes::TailwindTheme, @config.theme
   end
 
   def test_theme_setter_accepts_a_themes_base_instance_directly
@@ -33,6 +33,7 @@ class ConfigurationTest < Minitest::Test
   def test_theme_setter_raises_argument_error_for_an_unknown_symbol
     err = assert_raises(ArgumentError) { @config.theme = :unknown }
     assert_match %r{Unknown theme}, err.message
+    assert_match %r{StimulusPlumbers::Themes::UnknownTheme}, err.message
   end
 
   # #log_formatter
