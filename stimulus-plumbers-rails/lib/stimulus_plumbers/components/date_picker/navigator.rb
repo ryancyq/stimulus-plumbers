@@ -7,7 +7,7 @@ module StimulusPlumbers
         def render(icon_options: nil, **kwargs)
           html_options = merge_html_options(
             { classes: theme.resolve(:calendar_navigation_navigator).fetch(:classes, "") },
-            **kwargs
+            kwargs
           )
 
           if icon_options.nil?

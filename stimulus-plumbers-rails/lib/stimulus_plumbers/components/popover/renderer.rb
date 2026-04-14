@@ -25,7 +25,7 @@ module StimulusPlumbers
         def popover(interactive: true, **kwargs, &block)
           html_options = merge_html_options(
             { classes: theme.resolve(:popover).fetch(:classes, "") },
-            **kwargs
+            kwargs
           )
 
           builder = Builder.new(template)

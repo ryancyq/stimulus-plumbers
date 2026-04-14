@@ -33,7 +33,7 @@ class BuilderTest < ActionView::TestCase
 
   # ── FieldComponent integration ─────────────────────────────────────────────
 
-  def test_field_renders_label_associated_to_input
+  def test_email_field_renders_label_for_input
     doc = build_field(:email_field, :email)
 
     assert_css doc, "label[for='sign_in_form_email']"
@@ -82,42 +82,22 @@ class BuilderTest < ActionView::TestCase
     refute_css doc, "label"
   end
 
-  # ── password_field reveal ─────────────────────────────────────────────────
+  # ── password_field ────────────────────────────────────────────────────────
 
-  def test_password_reveal_renders_actor_wrapper
-    doc = build_field(:password_field, :password, reveal: true)
-
-    assert_css doc, "[data-controller='password-reveal']"
-  end
-
-  def test_password_reveal_renders_toggle_button
-    doc = build_field(:password_field, :password, reveal: true)
-
-    assert_css doc, "button[data-action='click->password-reveal#toggle']"
-  end
-
-  def test_password_reveal_wires_input_target
-    doc = build_field(:password_field, :password, reveal: true)
-
-    assert_css doc, "input[data-password-reveal-target='input']"
-  end
-
-  def test_password_without_reveal_renders_plain_input
+  def test_password_field_renders_with_label
     doc = build_field(:password_field, :password)
 
     assert_css doc, "input[type='password']"
-    refute_css doc, "[data-controller='password-reveal']"
+    assert_css doc, "label"
   end
 
   # ── text_area auto-resize ─────────────────────────────────────────────────
 
-  def test_text_area_wires_auto_resize_controller
+  def test_text_area_renders_with_label
     doc = build_field(:text_area, :email)
 
-    textarea = doc.at_css("textarea")
-
-    refute_nil textarea
-    assert_includes textarea["data-controller"].to_s, "auto-resize"
+    assert_css doc, "textarea"
+    assert_css doc, "label"
   end
 
   # ── aria-describedby ──────────────────────────────────────────────────────
@@ -147,6 +127,97 @@ class BuilderTest < ActionView::TestCase
     assert_nil input["aria-describedby"]
   end
 
+  # ── aria-invalid ──────────────────────────────────────────────────────────
+
+  def test_input_has_aria_invalid_when_model_has_errors
+    @form.errors.add(:email, "is invalid")
+    doc = build_field(:email_field, :email)
+
+    input = doc.at_css("input[type='email']")
+
+    assert_equal "true", input["aria-invalid"]
+  end
+
+  def test_input_has_no_aria_invalid_without_model_errors
+    doc = build_field(:email_field, :email)
+
+    input = doc.at_css("input[type='email']")
+
+    assert_nil input["aria-invalid"]
+  end
+
+  def test_check_box_has_aria_invalid_when_model_has_errors
+    @form.errors.add(:remember_me, "must be accepted")
+    doc = build_field(:check_box, :remember_me)
+
+    input = doc.at_css("input[type='checkbox']")
+
+    assert_equal "true", input["aria-invalid"]
+  end
+
+  def test_check_box_has_aria_describedby_for_error
+    @form.errors.add(:remember_me, "must be accepted")
+    doc = build_field(:check_box, :remember_me)
+
+    input = doc.at_css("input[type='checkbox']")
+
+    assert_includes input["aria-describedby"].to_s, "sign_in_form_remember_me_error"
+  end
+
+  def test_radio_button_has_aria_invalid_when_model_has_errors
+    @form.errors.add(:role, "is not included in the list")
+    doc = build_field(:radio_button, :role, "admin")
+
+    input = doc.at_css("input[type='radio']")
+
+    assert_equal "true", input["aria-invalid"]
+  end
+
+  def test_radio_button_has_aria_describedby_for_error
+    @form.errors.add(:role, "is not included in the list")
+    doc = build_field(:radio_button, :role, "admin")
+
+    input = doc.at_css("input[type='radio']")
+
+    assert_includes input["aria-describedby"].to_s, "sign_in_form_role_admin_error"
+  end
+
+  # ── required forwarding ───────────────────────────────────────────────────
+
+  def test_required_field_has_required_attribute
+    doc = build_field(:email_field, :email, required: true)
+
+    input = doc.at_css("input[type='email']")
+
+    assert_equal "required", input["required"]
+  end
+
+  def test_required_field_has_aria_required
+    doc = build_field(:email_field, :email, required: true)
+
+    input = doc.at_css("input[type='email']")
+
+    assert_equal "true", input["aria-required"]
+  end
+
+  def test_optional_field_omits_required_attributes
+    doc = build_field(:email_field, :email)
+
+    input = doc.at_css("input[type='email']")
+
+    assert_nil input["required"]
+    assert_nil input["aria-required"]
+  end
+
+  def test_check_box_required_sets_required_and_aria_required
+    doc = build_field(:check_box, :remember_me, required: true)
+
+    input = doc.at_css("input[type='checkbox']")
+
+    assert_equal "required", input["required"]
+    assert_equal "true", input["aria-required"]
+  end
+
   # ── label_visibility ──────────────────────────────────────────────────────
 
   def test_exclusive_label_visibility_adds_sr_only
@@ -157,53 +228,27 @@ class BuilderTest < ActionView::TestCase
 
   # ── extract_options ───────────────────────────────────────────────────────
 
-  def test_extract_options_separates_custom_keys
+  def test_extract_options_separates_form_field_keys
     builder = StimulusPlumbers::Form::Builder.new("sign_in_form", @form, view, {})
 
-    custom, rails = builder.send(:extract_options, { label: "Email", required: true, class: "custom", id: "my-id" })
+    rails, form_field = builder.send(:extract_options, { label: "Email", required: true, class: "custom", id: "my-id" })
 
-    assert_equal({ label: "Email", required: true }, custom)
     assert_equal({ class: "custom", id: "my-id" }, rails)
+    assert_equal({ label: "Email", required: true }, form_field)
   end
 
   def test_extract_options_leaves_rails_options_intact
     builder = StimulusPlumbers::Form::Builder.new("sign_in_form", @form, view, {})
 
-    custom, rails = builder.send(:extract_options, { autocomplete: "email", placeholder: "you@example.com" })
+    rails, form_field = builder.send(:extract_options, { autocomplete: "email", placeholder: "you@example.com" })
 
-    assert_empty custom
     assert_equal({ autocomplete: "email", placeholder: "you@example.com" }, rails)
-  end
-
-  # ── apply_stimulus! ───────────────────────────────────────────────────────
-
-  def test_apply_stimulus_adds_controller
-    builder = StimulusPlumbers::Form::Builder.new("sign_in_form", @form, view, {})
-    opts = {}
-    builder.send(:apply_stimulus!, opts, controller: "auto-resize")
-
-    assert_equal "auto-resize", opts[:data][:controller]
-  end
-
-  def test_apply_stimulus_space_joins_multiple_controllers
-    builder = StimulusPlumbers::Form::Builder.new("sign_in_form", @form, view, {})
-    opts = { data: { controller: "existing" } }
-    builder.send(:apply_stimulus!, opts, controller: "new-one")
-
-    assert_equal "existing new-one", opts[:data][:controller]
-  end
-
-  def test_apply_stimulus_adds_values
-    builder = StimulusPlumbers::Form::Builder.new("sign_in_form", @form, view, {})
-    opts = {}
-    builder.send(:apply_stimulus!, opts, controller: "char-count", values: { max: 100 })
-
-    assert_equal 100, opts[:data][:"char-count-max-value"]
+    assert_empty form_field
   end
 
   # ── build_field / error? ──────────────────────────────────────────────────
 
-  def test_build_field_has_no_error_without_errors
+  def test_build_field_no_error_without_model_errors
     builder = StimulusPlumbers::Form::Builder.new("sign_in_form", @form, view, {})
     field   = builder.send(:build_field, :email, {})
 

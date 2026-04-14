@@ -49,6 +49,7 @@ Metrics/ClassLength:
   Exclude:
     - lib/stimulus_plumbers/themes/**/*.rb
     - test/stimulus_plumbers/form/builder_test.rb
+    - test/stimulus_plumbers/form/field_component_test.rb
     - test/stimulus_plumbers/components/**/turbo/*_test.rb
     - test/stimulus_plumbers/components/plumber/*_test.rb
     - test/stimulus_plumbers/themes/**/*_test.rb
@@ -61,6 +62,7 @@ Metrics/MethodLength:
   Exclude:
     - lib/stimulus_plumbers/themes/**/*.rb
     - lib/stimulus_plumbers/components/**/*.rb
+    - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/fields/*.rb
     - test/system/**/*_test.rb
 

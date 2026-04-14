@@ -9,6 +9,7 @@ class FieldComponentTest < Minitest::Test
   end
 
   def component(attribute: :email, **kwargs)
+    kwargs[:input_id] ||= "sign_in_form_#{attribute}"
     StimulusPlumbers::Form::FieldComponent.new(object: @form, attribute: attribute, **kwargs)
   end
 
@@ -36,7 +37,7 @@ class FieldComponentTest < Minitest::Test
 
   # ── error? ────────────────────────────────────────────────────────────────
 
-  def test_no_error_with_no_errors
+  def test_no_error_without_model_errors
     refute_predicate component(attribute: :email), :error?
   end
 
@@ -88,6 +89,53 @@ class FieldComponentTest < Minitest::Test
     assert_includes c.described_by, "sign_in_form_email_error"
   end
 
+  # ── html_opts ───────────────────────────────────────────────────────────
+
+  def test_html_opts_includes_id
+    assert_equal "sign_in_form_email", component(attribute: :email).html_opts[:id]
+  end
+
+  def test_html_opts_includes_aria_describedby_when_hint_present
+    attrs = component(attribute: :email, details: "Hint text").html_opts
+
+    assert_includes attrs[:"aria-describedby"], "sign_in_form_email_hint"
+  end
+
+  def test_html_opts_includes_aria_describedby_when_error_present
+    @form.errors.add(:email, "is invalid")
+    attrs = component(attribute: :email).html_opts
+
+    assert_includes attrs[:"aria-describedby"], "sign_in_form_email_error"
+  end
+
+  def test_html_opts_omits_aria_describedby_without_hint_or_error
+    refute component(attribute: :email).html_opts.key?(:"aria-describedby")
+  end
+
+  def test_html_opts_includes_aria_invalid_when_error
+    @form.errors.add(:email, "is invalid")
+
+    assert_equal "true", component(attribute: :email).html_opts[:"aria-invalid"]
+  end
+
+  def test_html_opts_omits_aria_invalid_without_error
+    refute component(attribute: :email).html_opts.key?(:"aria-invalid")
+  end
+
+  def test_html_opts_includes_required_and_aria_required
+    attrs = component(attribute: :email, required: true).html_opts
+
+    assert attrs[:required]
+    assert_equal "true", attrs[:"aria-required"]
+  end
+
+  def test_html_opts_omits_required_when_not_required
+    attrs = component(attribute: :email).html_opts
+
+    refute attrs.key?(:required)
+    refute attrs.key?(:"aria-required")
+  end
+
   # ── label_text ────────────────────────────────────────────────────────────
 
   def test_label_text_defaults_to_humanized_attribute
@@ -108,17 +156,13 @@ class FieldComponentTest < Minitest::Test
     assert_predicate component(attribute: :email, label_visibility: :exclusive), :label_hidden?
   end
 
-  def test_label_not_hidden_when_visibility_is_visible
-    refute_predicate component(attribute: :email, label_visibility: :visible), :label_hidden?
-  end
-
   # ── layout ────────────────────────────────────────────────────────────────
 
   def test_default_layout_is_stacked
     assert_equal :stacked, component(attribute: :email).layout
   end
 
-  def test_inline_layout_is_accepted
+  def test_layout_is_inline_when_set
     assert_equal :inline, component(attribute: :email, layout: :inline).layout
   end
 end

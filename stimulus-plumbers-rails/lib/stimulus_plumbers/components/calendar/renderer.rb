@@ -14,7 +14,7 @@ module StimulusPlumbers
         def month(**kwargs)
           html_options = merge_html_options(
             { classes: theme.resolve(:calendar).fetch(:classes, ""), data: STIMULUS_DATA },
-            **kwargs
+            kwargs
           )
 
           template.content_tag(:div, role: "grid", **html_options) do

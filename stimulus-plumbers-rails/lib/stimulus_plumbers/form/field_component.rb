@@ -3,34 +3,35 @@
 module StimulusPlumbers
   module Form
     class FieldComponent
+      OPTIONS = %i[label details error required label_visibility layout].freeze
+
       attr_reader :object,
                   :attribute,
+                  :input_id,
                   :label_text,
                   :details,
                   :required,
-                  :disabled,
                   :label_visibility,
                   :layout
 
-      def initialize(object:, attribute:,
+      def initialize(object:,
+                     attribute:,
+                     input_id:,
                      label: nil,
                      details: nil,
                      error: nil,
                      required: false,
-                     disabled: false,
                      label_visibility: :visible,
-                     layout: :stacked,
-                     input_id: nil)
+                     layout: :stacked)
         @object           = object
         @attribute        = attribute
+        @input_id         = input_id
         @label_text       = label || attribute.to_s.humanize
         @details          = details
         @error_override   = error
         @required         = required
-        @disabled         = disabled
         @label_visibility = label_visibility.to_sym
         @layout           = layout.to_sym
-        @input_id_override = input_id
       end
 
       def errors
@@ -47,8 +48,13 @@ module StimulusPlumbers
         errors.any?
       end
 
-      def input_id
-        @input_id_override || "#{object.model_name.param_key}_#{attribute}"
+      def html_opts
+        attrs = { id: input_id }
+        attrs[:"aria-describedby"] = described_by if described_by
+        attrs[:"aria-invalid"]     = "true"       if error?
+        attrs[:required]           = true         if required
+        attrs[:"aria-required"]    = "true"       if required
+        attrs
       end
 
       def hint_id

@@ -5,22 +5,20 @@ module StimulusPlumbers
     module Fields
       module Select
         def select(attribute, choices = nil, options = {}, html_options = {})
-          custom_opts, rails_opts = extract_options(options)
-          field = build_field(attribute, custom_opts)
-          apply_aria_describedby!(field, html_options)
-          apply_theme!(:form_select, html_options, error: field.error?)
-          render_field(field, super(attribute, choices, rails_opts, html_options))
+          rails_opts, form_field_opts = extract_options(options)
+          field     = build_field(attribute, form_field_opts)
+          html_opts = merge_html_options(html_options, field_theme(:form_select, error: field.error?), field.html_opts)
+          render_field(field, super(attribute, choices, rails_opts, html_opts))
         end
 
         def collection_select(attribute, collection, value_method, text_method,
                               options = {}, html_options = {})
-          custom_opts, rails_opts = extract_options(options)
-          field = build_field(attribute, custom_opts)
-          apply_aria_describedby!(field, html_options)
-          apply_theme!(:form_select, html_options, error: field.error?)
+          rails_opts, form_field_opts = extract_options(options)
+          field     = build_field(attribute, form_field_opts)
+          html_opts = merge_html_options(html_options, field_theme(:form_select, error: field.error?), field.html_opts)
           render_field(
             field,
-            super(attribute, collection, value_method, text_method, rails_opts, html_options)
+            super(attribute, collection, value_method, text_method, rails_opts, html_opts)
           )
         end
       end
