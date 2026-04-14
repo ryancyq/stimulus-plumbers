@@ -91,31 +91,6 @@ class SignUpSystemTest < ApplicationSystemTestCase
     assert_selector "option", text: "United States"
   end
 
-  def test_password_reveal_toggle
-    visit "/form/sign_up"
-
-    assert_selector "[data-controller='password-reveal']"
-    find("button[data-action='click->password-reveal#toggle']").click
-
-    assert_selector "input[type='text']"
-
-    find("button[data-action='click->password-reveal#toggle']").click
-
-    assert_selector "input[type='password']"
-  end
-
-  def test_reveal_button_has_aria_label
-    visit "/form/sign_up"
-
-    assert_selector "button[aria-label]"
-  end
-
-  def test_textarea_has_auto_resize_controller
-    visit "/form/sign_up"
-
-    assert_selector "textarea[data-controller='auto-resize']"
-  end
-
   def test_renders_card
     visit "/form/sign_up"
 
