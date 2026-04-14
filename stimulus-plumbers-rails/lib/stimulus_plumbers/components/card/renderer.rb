@@ -7,7 +7,7 @@ module StimulusPlumbers
         def card(title: nil, **kwargs, &block)
           html_options = merge_html_options(
             { classes: theme.resolve(:card).fetch(:classes, "") },
-            **kwargs
+            kwargs
           )
 
           template.content_tag(:div, **html_options) do
@@ -23,7 +23,7 @@ module StimulusPlumbers
         def section(title: nil, **kwargs, &block)
           html_options = merge_html_options(
             { classes: theme.resolve(:card_section).fetch(:classes, "") },
-            **kwargs
+            kwargs
           )
 
           template.content_tag(:div, **html_options) do

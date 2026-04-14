@@ -7,10 +7,12 @@ require_relative "fields/text_area"
 require_relative "fields/file"
 require_relative "fields/select"
 require_relative "fields/choice"
+require_relative "../components/plumber/html_options"
 
 module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
+      include Components::Plumber::HtmlOptions
       include Fields::Text
       include Fields::TextArea
       include Fields::File

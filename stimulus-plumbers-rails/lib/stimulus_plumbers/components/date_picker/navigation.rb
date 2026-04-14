@@ -7,7 +7,7 @@ module StimulusPlumbers
         def render(stimulus_controller:, step:, **kwargs)
           html_options = merge_html_options(
             { classes: theme.resolve(:calendar_navigation).fetch(:classes, ""), aria: { label: "DatePicker Navigation" } },
-            **kwargs
+            kwargs
           )
 
           template.content_tag(:nav, **html_options) do

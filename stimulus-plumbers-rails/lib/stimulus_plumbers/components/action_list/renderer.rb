@@ -7,13 +7,13 @@ module StimulusPlumbers
         def list(**kwargs, &block)
           html_options = merge_html_options(
             { classes: theme.resolve(:action_list).fetch(:classes, "") },
-            **kwargs
+            kwargs
           )
           template.content_tag(:div, template.capture(&block), **html_options)
         end
 
         def section(title: nil, **kwargs, &block)
-          html_options = merge_html_options({}, **kwargs)
+          html_options = merge_html_options(kwargs)
           template.content_tag(:div, **html_options) do
             template.safe_join(
               [
@@ -28,7 +28,7 @@ module StimulusPlumbers
           content      = template.capture(&block) if block_given?
           html_options = merge_html_options(
             { classes: theme.resolve(:action_list_item, active: active).fetch(:classes, "") },
-            **kwargs
+            kwargs
           )
 
           inner = if url

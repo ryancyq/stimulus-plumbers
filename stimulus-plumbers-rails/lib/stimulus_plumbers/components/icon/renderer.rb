@@ -14,7 +14,7 @@ module StimulusPlumbers
         def icon(name:, **kwargs)
           html_options = merge_html_options(
             { classes: theme.resolve(:icon).fetch(:classes, "") },
-            **kwargs
+            kwargs
           )
 
           if ICONS[name]

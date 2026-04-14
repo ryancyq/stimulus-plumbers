@@ -21,7 +21,7 @@ module StimulusPlumbers
                   classes: theme.resolve(:calendar).fetch(:classes, ""),
                   data:    { controller: STIMULUS_CONTROLLER, action: "click->#{STIMULUS_CONTROLLER}#select" }
                 },
-                **kwargs
+                kwargs
               )
 
               template.content_tag(:div, role: "grid", **html_options) do

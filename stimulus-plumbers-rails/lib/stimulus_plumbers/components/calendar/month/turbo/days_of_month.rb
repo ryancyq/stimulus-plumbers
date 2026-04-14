@@ -28,8 +28,8 @@ module StimulusPlumbers
 
             def render(**kwargs)
               html_options = merge_html_options(
-                classes: theme.resolve(:calendar_days_of_month).fetch(:classes, ""),
-                **kwargs
+                { classes: theme.resolve(:calendar_days_of_month).fetch(:classes, "") },
+                kwargs
               )
 
               template.content_tag(:div, **html_options, role: "rowgroup") do

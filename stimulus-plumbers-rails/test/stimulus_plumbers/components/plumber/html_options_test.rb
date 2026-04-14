@@ -15,17 +15,17 @@ module StimulusPlumbers
         def test_deep_merges_data_attributes
           result = instance.merge_html_options(
             { data: { controller: "ctrl" } },
-            data: { "ctrl-target": "el" }
+            { data: { "ctrl-target": "el" } }
           )
 
           assert_equal "ctrl", result[:data][:controller]
           assert_equal "el",   result[:data][:"ctrl-target"]
         end
 
-        def test_overrides_do_not_clobber_defaults_data
+        def test_deep_merge_preserves_all_nested_data_keys
           result = instance.merge_html_options(
             { data: { controller: "ctrl", action: "click->ctrl#act" } },
-            data: { foo: "bar" }
+            { data: { foo: "bar" } }
           )
 
           assert_equal "ctrl",              result[:data][:controller]
@@ -34,21 +34,31 @@ module StimulusPlumbers
         end
 
         def test_converts_classes_to_class
-          result = instance.merge_html_options(classes: "btn btn-primary")
+          result = instance.merge_html_options({ classes: "btn btn-primary" })
 
           assert_equal "btn btn-primary", result[:class]
           assert_nil result[:classes]
         end
 
-        def test_merges_class_and_classes
-          result = instance.merge_html_options(class: "btn", classes: "btn-primary")
+        def test_concatenates_class_and_classes_keys
+          result = instance.merge_html_options({ class: "btn", classes: "btn-primary" })
 
           assert_includes result[:class], "btn"
           assert_includes result[:class], "btn-primary"
         end
 
+        def test_concatenates_class_across_hashes
+          result = instance.merge_html_options(
+            { class: "theme-class" },
+            { class: "user-class" }
+          )
+
+          assert_includes result[:class], "theme-class"
+          assert_includes result[:class], "user-class"
+        end
+
         def test_preserves_other_top_level_keys
-          result = instance.merge_html_options(id: "foo", aria: { label: "bar" })
+          result = instance.merge_html_options({ id: "foo", aria: { label: "bar" } })
 
           assert_equal "foo", result[:id]
           assert_equal "bar", result[:aria][:label]

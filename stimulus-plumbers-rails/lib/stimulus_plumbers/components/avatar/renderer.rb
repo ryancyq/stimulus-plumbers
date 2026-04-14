@@ -13,7 +13,7 @@ module StimulusPlumbers
               "aria-label": name,
               role:         "img"
             },
-            **kwargs
+            kwargs
           )
 
           template.content_tag(:span, inner(name, initials, url, &block), **html_options)

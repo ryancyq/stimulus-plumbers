@@ -18,7 +18,7 @@ module StimulusPlumbers
           data         = calendar_id ? STIMULUS_DATA.merge(CALENDAR_OUTLET => "##{calendar_id}") : STIMULUS_DATA
           html_options = merge_html_options(
             { classes: theme.resolve(:datepicker).fetch(:classes, ""), data: data },
-            **kwargs
+            kwargs
           )
 
           template.content_tag(:div, **html_options) do

@@ -9,7 +9,7 @@ module StimulusPlumbers
             def render(**kwargs)
               html_options = merge_html_options(
                 { classes: theme.resolve(:calendar_days_of_week).fetch(:classes, "") },
-                **kwargs
+                kwargs
               )
 
               template.content_tag(:div, **html_options) do
