@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "action_view/version"
+
 require_relative "field_component"
 require_relative "fields/renderer"
 require_relative "fields/text"
@@ -49,6 +51,16 @@ module StimulusPlumbers
 
       def theme
         StimulusPlumbers.config.theme
+      end
+
+      # field_id was added in Rails 7.0. Provide a compatible implementation for Rails 6.1.
+      if ActionView.version < "7.0"
+        def field_id(attribute, *suffixes, index: @index, namespace: @options[:namespace])
+          tokens = [namespace, @object_name, index, attribute, *suffixes]
+          tokens.select!(&:present?)
+          tokens.map! { |t| t.to_s.delete("]").tr("^-a-zA-Z0-9:.", "_") }
+          tokens.join("_")
+        end
       end
     end
   end
