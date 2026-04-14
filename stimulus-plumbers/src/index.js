@@ -19,5 +19,3 @@ export { default as CalendarMonthController } from './controllers/calendar_month
 export { default as CalendarMonthObserverController } from './controllers/calendar_month_observer_controller.js';
 export { default as DatepickerController } from './controllers/datepicker_controller.js';
 export { default as PannerController } from './controllers/panner_controller.js';
-export { default as PasswordRevealController } from './controllers/password_reveal_controller.js';
-export { default as AutoResizeController } from './controllers/auto_resize_controller.js';
