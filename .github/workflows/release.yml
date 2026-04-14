@@ -54,7 +54,7 @@ jobs:
           files: |
             stimulus-plumbers/package.json
             stimulus-plumbers/package-lock.json
-          commit-message: "Bump @stimulus-plumbers/controllers version to ${{ env.VERSION }}"
+          commit-message: "Bump npm @stimulus-plumbers/controllers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers/v${{ env.VERSION }}
 
       - name: Build
@@ -110,7 +110,7 @@ jobs:
           files: |
             stimulus-plumbers-rails/Gemfile.lock
             stimulus-plumbers-rails/lib/stimulus_plumbers/version.rb
-          commit-message: "Bump stimulus_plumbers version to ${{ env.VERSION }}"
+          commit-message: "Bump rubygem stimulus_plumbers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers-rails/v${{ env.VERSION }}
 
       - name: Build gem
