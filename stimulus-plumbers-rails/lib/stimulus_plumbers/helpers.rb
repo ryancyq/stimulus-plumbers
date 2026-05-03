@@ -7,6 +7,7 @@ require_relative "helpers/button_helper"
 require_relative "helpers/calendar_helper"
 require_relative "helpers/calendar_turbo_helper"
 require_relative "helpers/card_helper"
+require_relative "helpers/combobox_helper"
 require_relative "helpers/date_picker_helper"
 require_relative "helpers/popover_helper"
 
@@ -19,6 +20,7 @@ module StimulusPlumbers
     include CalendarHelper
     include CalendarTurboHelper
     include CardHelper
+    include ComboboxHelper
     include DatePickerHelper
     include PopoverHelper
   end

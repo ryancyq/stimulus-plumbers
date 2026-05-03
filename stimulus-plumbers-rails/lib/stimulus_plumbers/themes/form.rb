@@ -19,6 +19,7 @@ module StimulusPlumbers
         form_checkbox:      { error: { default: false, range: Schema::Ranges::BOOL_RANGE } }.freeze,
         form_radio:         { error: { default: false, range: Schema::Ranges::BOOL_RANGE } }.freeze,
         form_actor:         { error: { default: false, range: Schema::Ranges::BOOL_RANGE } }.freeze,
+        form_combobox:      { error: { default: false, range: Schema::Ranges::BOOL_RANGE } }.freeze,
         form_input_reveal:  {}.freeze,
         form_button_reveal: {}.freeze,
         form_submit:        {

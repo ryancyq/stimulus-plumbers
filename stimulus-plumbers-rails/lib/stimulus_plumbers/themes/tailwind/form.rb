@@ -82,6 +82,10 @@ module StimulusPlumbers
           { classes: klasses(*ACTOR_BASE, ACTOR_BORDER[error ? :error : :default]) }
         end
 
+        def form_combobox_classes(error: false)
+          form_input_classes(error: error)
+        end
+
         def form_input_reveal_classes
           { classes: klasses(*INPUT_REVEAL) }
         end

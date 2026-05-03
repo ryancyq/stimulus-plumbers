@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "nokogiri"
 require_relative "form_builder_model"
 
 class BuilderTest < ActionView::TestCase
@@ -15,20 +14,12 @@ class BuilderTest < ActionView::TestCase
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.public_send(method_name, attribute, *args, **opts)
     end
-    Nokogiri::HTML.fragment(html)
+    parse_html(html)
   end
 
   def build_form(&block)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session", &block)
-    Nokogiri::HTML.fragment(html)
-  end
-
-  def assert_css(doc, selector, msg = nil)
-    assert_predicate doc.css(selector), :any?, msg || "Expected to find #{selector.inspect}"
-  end
-
-  def refute_css(doc, selector, msg = nil)
-    assert_predicate doc.css(selector), :none?, msg || "Expected not to find #{selector.inspect}"
+    parse_html(html)
   end
 
   # ── FieldComponent integration ─────────────────────────────────────────────
@@ -79,7 +70,7 @@ class BuilderTest < ActionView::TestCase
     doc = build_field(:hidden_field, :email)
 
     assert_css doc, "input[type='hidden']"
-    refute_css doc, "label"
+    assert_no_css doc, "label"
   end
 
   # ── password_field ────────────────────────────────────────────────────────

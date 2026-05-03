@@ -30,6 +30,9 @@ require_relative "stimulus_plumbers/components/date_picker/navigator"
 require_relative "stimulus_plumbers/components/date_picker/navigation"
 require_relative "stimulus_plumbers/components/date_picker/renderer"
 
+require_relative "stimulus_plumbers/components/combobox/renderer"
+require_relative "stimulus_plumbers/components/combobox/date"
+
 require_relative "stimulus_plumbers/form/field_component"
 require_relative "stimulus_plumbers/form/builder"
 

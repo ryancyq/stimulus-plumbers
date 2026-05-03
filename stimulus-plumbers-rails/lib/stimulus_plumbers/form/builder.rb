@@ -9,6 +9,7 @@ require_relative "fields/text_area"
 require_relative "fields/file"
 require_relative "fields/select"
 require_relative "fields/choice"
+require_relative "fields/combobox"
 require_relative "../components/plumber/html_options"
 
 module StimulusPlumbers
@@ -20,6 +21,7 @@ module StimulusPlumbers
       include Fields::File
       include Fields::Select
       include Fields::Choice
+      include Fields::Combobox
 
       private
 
