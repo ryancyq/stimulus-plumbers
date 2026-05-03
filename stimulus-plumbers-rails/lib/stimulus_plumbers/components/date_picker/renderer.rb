@@ -14,7 +14,7 @@ module StimulusPlumbers
                       "#{CALENDAR_CONTROLLER}:selected->#{POPOVER_CONTROLLER}#hide"
         }.freeze
 
-        def render(calendar_id: nil, calendar_dialog_id: nil, **kwargs)
+        def render(calendar_dialog_id: nil, calendar_id: nil, **kwargs)
           data         = calendar_id ? STIMULUS_DATA.merge(CALENDAR_OUTLET => "##{calendar_id}") : STIMULUS_DATA
           html_options = merge_html_options(
             { classes: theme.resolve(:datepicker).fetch(:classes, ""), data: data },

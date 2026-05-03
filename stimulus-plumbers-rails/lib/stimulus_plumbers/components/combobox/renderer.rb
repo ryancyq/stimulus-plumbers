@@ -6,43 +6,52 @@ module StimulusPlumbers
       class Renderer < Plumber::Base
         STIMULUS_CONTROLLER = "input-combobox"
 
-        # Renders the combobox shell: a trigger text input, a hidden value input,
-        # and a popup wrapper containing the given content.
-        #
-        # @param name [String] HTML name attribute for the hidden value input
-        # @param value [String, nil] current value for the hidden input
-        # @param content [String] safe HTML string for the popup body
-        # @param popup_id [String] id applied to the popup div (for aria-controls)
-        # @param trigger_data [Hash] extra data attributes merged onto the trigger input
-        # @param value_data [Hash] extra data attributes merged onto the hidden input
-        def render(name:, value: nil, content:, popup_id:, trigger_data: {}, value_data: {}, **kwargs)
+        def render(
+          content:,
+          name:,
+          popover_id:,
+          aria_autocomplete: nil,
+          popover_label: nil,
+          popover_role: "dialog",
+          popover_tag: :div,
+          trigger_data: {},
+          trigger_readonly: true,
+          value: nil,
+          value_data: {},
+          **kwargs
+        )
           html_options = merge_html_options(
             { data: { controller: STIMULUS_CONTROLLER } },
             kwargs
           )
           template.content_tag(:div, **html_options) do
-            template.safe_join([
-              trigger_input(popup_id, trigger_data),
-              hidden_input(name, value, value_data),
-              popup_div(content, popup_id)
-            ])
+            template.safe_join(
+              [
+                trigger_input(popover_id, popover_role, aria_autocomplete, trigger_readonly, trigger_data),
+                hidden_input(name, value, value_data),
+                popover_element(content, popover_id, popover_role, popover_tag, popover_label)
+              ]
+            )
           end
         end
 
         private
 
-        def trigger_input(popup_id, extra_data)
+        def trigger_input(popover_id, haspopup, aria_autocomplete, readonly, extra_data)
           data = {
             "#{STIMULUS_CONTROLLER}_target": "trigger",
-            action: "focus->#{STIMULUS_CONTROLLER}#open keydown.esc->#{STIMULUS_CONTROLLER}#close"
+            action:                          "focus->#{STIMULUS_CONTROLLER}#open keydown.esc->#{STIMULUS_CONTROLLER}#close"
           }.merge(extra_data)
 
+          aria = { haspopup: haspopup, expanded: "false", controls: popover_id }
+          aria[:autocomplete] = aria_autocomplete if aria_autocomplete
+
           template.tag.input(
-            type: "text",
-            readonly: true,
-            role: "combobox",
-            aria: { haspopup: "dialog", expanded: "false", controls: popup_id },
-            data: data
+            type:     "text",
+            readonly: (readonly ? true : nil),
+            role:     "combobox",
+            aria:     aria,
+            data:     data
           )
         end
 
@@ -51,15 +60,15 @@ module StimulusPlumbers
           template.tag.input(type: "hidden", name: name, value: value, data: data)
         end
 
-        def popup_div(content, popup_id)
-          template.content_tag(
-            :div,
-            id: popup_id,
-            role: "dialog",
-            aria: { label: "Picker" },
+        def popover_element(content, popover_id, role, tag, label)
+          options = {
+            id:     popover_id,
+            role:   role,
             hidden: "",
-            data: { "#{STIMULUS_CONTROLLER}_target": "popup" }
-          ) { content }
+            data:   { "#{STIMULUS_CONTROLLER}_target": "popover" }
+          }
+          options[:aria] = { label: label } if label
+          template.content_tag(tag, **options) { content }
         end
       end
     end

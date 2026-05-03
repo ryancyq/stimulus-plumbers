@@ -5,15 +5,18 @@ require_relative "stimulus_plumbers/version"
 require "active_support"
 require "active_support/core_ext/string"
 
+# -- Core infrastructure --
 require_relative "stimulus_plumbers/configuration"
 require_relative "stimulus_plumbers/helpers"
 require_relative "stimulus_plumbers/logger"
 
+# -- Plumber base --
 require_relative "stimulus_plumbers/components/plumber/html_options"
 require_relative "stimulus_plumbers/components/plumber/dispatcher"
 require_relative "stimulus_plumbers/components/plumber/renderer"
 require_relative "stimulus_plumbers/components/plumber/base"
 
+# -- UI components --
 require_relative "stimulus_plumbers/components/icon/renderer"
 require_relative "stimulus_plumbers/components/avatar/renderer"
 require_relative "stimulus_plumbers/components/button/renderer"
@@ -21,18 +24,30 @@ require_relative "stimulus_plumbers/components/card/renderer"
 require_relative "stimulus_plumbers/components/action_list/renderer"
 require_relative "stimulus_plumbers/components/popover/renderer"
 
+# -- Calendar --
 require_relative "stimulus_plumbers/components/calendar/renderer"
 require_relative "stimulus_plumbers/components/calendar/month/turbo/days_of_week"
 require_relative "stimulus_plumbers/components/calendar/month/turbo/days_of_month"
 require_relative "stimulus_plumbers/components/calendar/month/turbo/renderer"
 
+# -- Date picker --
 require_relative "stimulus_plumbers/components/date_picker/navigator"
 require_relative "stimulus_plumbers/components/date_picker/navigation"
 require_relative "stimulus_plumbers/components/date_picker/renderer"
 
-require_relative "stimulus_plumbers/components/combobox/renderer"
-require_relative "stimulus_plumbers/components/combobox/date"
+# -- Time picker --
+require_relative "stimulus_plumbers/components/time_picker/renderer"
 
+# -- Combobox --
+require_relative "stimulus_plumbers/components/combobox/renderer"
+require_relative "stimulus_plumbers/components/combobox/option"
+require_relative "stimulus_plumbers/components/combobox/option_group"
+require_relative "stimulus_plumbers/components/combobox/date"
+require_relative "stimulus_plumbers/components/combobox/dropdown"
+require_relative "stimulus_plumbers/components/combobox/autocomplete"
+require_relative "stimulus_plumbers/components/combobox/time"
+
+# -- Form --
 require_relative "stimulus_plumbers/form/field_component"
 require_relative "stimulus_plumbers/form/builder"
 

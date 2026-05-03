@@ -30,26 +30,26 @@ class ComboboxHelperTest < ActionView::TestCase
     assert_css doc, "input[aria-expanded='false']"
   end
 
-  def test_renders_popup_dialog
+  def test_renders_dialog_popover
     doc = build_combobox_date
 
     assert_css doc, "[role='dialog']"
   end
 
-  def test_popup_is_hidden_by_default
+  def test_popover_is_hidden_by_default
     doc = build_combobox_date
-    popup = doc.at_css("[role='dialog']")
+    popover = doc.at_css("[role='dialog']")
 
-    assert_not_nil popup
-    assert popup.key?("hidden"), "Expected popup to have the hidden attribute"
+    assert_not_nil popover
+    assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
   end
 
-  def test_popup_has_accessible_label
+  def test_popover_has_accessible_label
     doc = build_combobox_date
-    popup = doc.at_css("[role='dialog']")
+    popover = doc.at_css("[role='dialog']")
 
-    assert_not_nil popup
-    assert_not_nil popup["aria-label"], "Expected popup to have aria-label"
+    assert_not_nil popover
+    assert_not_nil popover["aria-label"], "Expected popover to have aria-label"
   end
 
   def test_renders_hidden_value_input
@@ -72,14 +72,14 @@ class ComboboxHelperTest < ActionView::TestCase
 
   # ── aria linkage ──────────────────────────────────────────────────────────
 
-  def test_trigger_aria_controls_matches_popup_id
+  def test_trigger_aria_controls_matches_popover_id
     doc = build_combobox_date
     trigger = doc.at_css("input[role='combobox']")
-    popup   = doc.at_css("[role='dialog']")
+    popover   = doc.at_css("[role='dialog']")
 
     assert_not_nil trigger
-    assert_not_nil popup
-    assert_equal popup["id"], trigger["aria-controls"]
+    assert_not_nil popover
+    assert_equal popover["id"], trigger["aria-controls"]
   end
 
   # ── cross-wiring ──────────────────────────────────────────────────────────
@@ -106,22 +106,22 @@ class ComboboxHelperTest < ActionView::TestCase
     html1 = sp_combobox_date(TestRecord.new, :start_date, name: "test_record[start_date]", value: "")
     html2 = sp_combobox_date(TestRecord.new, :start_date, name: "test_record[start_date]", value: "")
 
-    popup_id1 = html1[%r{aria-controls="([^"]+)"}, 1]
-    popup_id2 = html2[%r{aria-controls="([^"]+)"}, 1]
+    popover_id1 = html1[%r{aria-controls="([^"]+)"}, 1]
+    popover_id2 = html2[%r{aria-controls="([^"]+)"}, 1]
 
-    assert_not_nil popup_id1
-    assert_equal popup_id1, popup_id2
+    assert_not_nil popover_id1
+    assert_equal popover_id1, popover_id2
   end
 
   def test_random_ids_without_record
     html1 = sp_combobox_date(name: "field1")
     html2 = sp_combobox_date(name: "field2")
 
-    popup_id1 = html1[%r{aria-controls="([^"]+)"}, 1]
-    popup_id2 = html2[%r{aria-controls="([^"]+)"}, 1]
+    popover_id1 = html1[%r{aria-controls="([^"]+)"}, 1]
+    popover_id2 = html2[%r{aria-controls="([^"]+)"}, 1]
 
-    assert_not_nil popup_id1
-    assert_not_equal popup_id1, popup_id2
+    assert_not_nil popover_id1
+    assert_not_equal popover_id1, popover_id2
   end
 
   # ── name / value resolution ───────────────────────────────────────────────

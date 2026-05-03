@@ -47,36 +47,36 @@ class ComboboxFieldTest < ActionView::TestCase
     assert_css doc, "input[type='hidden'][name='sign_in_form[birthday]']"
   end
 
-  def test_renders_popup_dialog
+  def test_renders_dialog_popover
     doc = build_combobox(:birthday)
 
     assert_css doc, "[role='dialog']"
   end
 
-  def test_popup_is_hidden_by_default
+  def test_popover_is_hidden_by_default
     doc = build_combobox(:birthday)
-    popup = doc.at_css("[role='dialog']")
+    popover = doc.at_css("[role='dialog']")
 
-    assert_not_nil popup
-    assert popup.key?("hidden"), "Expected popup to have the hidden attribute"
+    assert_not_nil popover
+    assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
   end
 
-  def test_popup_has_accessible_label
-    doc   = build_combobox(:birthday)
-    popup = doc.at_css("[role='dialog']")
+  def test_popover_has_accessible_label
+    doc = build_combobox(:birthday)
+    popover = doc.at_css("[role='dialog']")
 
-    assert_not_nil popup
-    assert_not_nil popup["aria-label"], "Expected popup to have aria-label"
+    assert_not_nil popover
+    assert_not_nil popover["aria-label"], "Expected popover to have aria-label"
   end
 
-  def test_trigger_aria_controls_matches_popup_id
+  def test_trigger_aria_controls_matches_popover_id
     doc     = build_combobox(:birthday)
     trigger = doc.at_css("input[role='combobox']")
-    popup   = doc.at_css("[role='dialog']")
+    popover   = doc.at_css("[role='dialog']")
 
     assert_not_nil trigger
-    assert_not_nil popup
-    assert_equal popup["id"], trigger["aria-controls"]
+    assert_not_nil popover
+    assert_equal popover["id"], trigger["aria-controls"]
   end
 
   def test_renders_navigation_inside_popup

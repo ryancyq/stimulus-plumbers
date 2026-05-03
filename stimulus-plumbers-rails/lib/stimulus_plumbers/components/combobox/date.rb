@@ -3,20 +3,15 @@
 module StimulusPlumbers
   module Components
     module Combobox
-      # Renders the date picker popup content: month navigation + calendar grid.
-      # Intended to be embedded inside the popup of a Combobox::Renderer shell.
-      #
-      # Wires:
-      #   - InputDatepickerController for navigation and display drawing
-      #   - CalendarMonthController + CalendarMonthObserverController (via Calendar::Renderer)
-      #   - Dispatches input-datepicker:changed → InputComboboxController#onValueChanged
+      # Renders the date picker popover content: month navigation + calendar grid.
+      # Wires InputDatepickerController and dispatches input-datepicker:changed → InputComboboxController.
       class Date < Plumber::Base
         PICKER_CONTROLLER   = "input-datepicker"
         # Rails dasherizes underscores: input_datepicker_calendar_month_outlet
         # → data-input-datepicker-calendar-month-outlet
-        CALENDAR_OUTLET_KEY = "#{PICKER_CONTROLLER.tr("-", "_")}_calendar_month_outlet"
+        CALENDAR_OUTLET_KEY = "#{PICKER_CONTROLLER.tr("-", "_")}_calendar_month_outlet".freeze
 
-        def render(calendar_id:, popup_id:, **_kwargs)
+        def render(calendar_id:, **_kwargs)
           template.content_tag(
             :div,
             data: {
