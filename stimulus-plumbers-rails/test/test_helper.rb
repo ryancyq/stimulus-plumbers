@@ -12,3 +12,4 @@ require "stimulus_plumbers"
 Dir[File.join(__dir__, "support/**/*.rb")].each { |f| require f }
 
 ActiveSupport::TestCase.include HtmlAssertions
+ActionView::TestCase.include StimulusPlumbers::Helpers::PlumberHelper

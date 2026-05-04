@@ -8,6 +8,13 @@ module StimulusPlumbers
       class Autocomplete < Plumber::Base
         include OptionGroup
 
+        def self.default_opts
+          {
+            popover: { role: "listbox", tag: :ul },
+            trigger: { aria_autocomplete: "list", readonly: false }
+          }
+        end
+
         def render(options: [], value: nil, **_kwargs)
           render_items(options, value: value)
         end

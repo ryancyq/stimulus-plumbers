@@ -7,6 +7,8 @@ module StimulusPlumbers
       class Dropdown < Plumber::Base
         include OptionGroup
 
+        def self.default_opts = { popover: { role: "listbox", tag: :ul } }
+
         def render(options: [], value: nil, **_kwargs)
           render_items(options, value: value)
         end

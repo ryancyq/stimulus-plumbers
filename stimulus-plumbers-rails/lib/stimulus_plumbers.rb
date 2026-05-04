@@ -33,7 +33,6 @@ require_relative "stimulus_plumbers/components/calendar/month/turbo/renderer"
 # -- Date picker --
 require_relative "stimulus_plumbers/components/date_picker/navigator"
 require_relative "stimulus_plumbers/components/date_picker/navigation"
-require_relative "stimulus_plumbers/components/date_picker/renderer"
 
 # -- Time picker --
 require_relative "stimulus_plumbers/components/time_picker/renderer"

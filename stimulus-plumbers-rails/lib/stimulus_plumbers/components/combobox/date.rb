@@ -11,7 +11,17 @@ module StimulusPlumbers
         # → data-input-datepicker-calendar-month-outlet
         CALENDAR_OUTLET_KEY = "#{PICKER_CONTROLLER.tr("-", "_")}_calendar_month_outlet".freeze
 
-        def render(calendar_id:, **_kwargs)
+        def self.default_opts
+          {
+            input:   { data: { input_datepicker_target: "input" } },
+            popover: { label: "Picker", role: "dialog", tag: :div },
+            trigger: { data: { input_datepicker_target: "display" } }
+          }
+        end
+
+        def render(**_kwargs)
+          calendar_id = "combobox_date_#{SecureRandom.hex(8)}_calendar"
+
           template.content_tag(
             :div,
             data: {
@@ -31,8 +41,8 @@ module StimulusPlumbers
 
         def navigation
           DatePicker::Navigation.new(template).render(
-            stimulus_controller: PICKER_CONTROLLER,
-            step:                "month"
+            step:                "month",
+            stimulus_controller: PICKER_CONTROLLER
           )
         end
 

@@ -8,6 +8,14 @@ module StimulusPlumbers
       class Time < Plumber::Base
         PICKER_CONTROLLER = "input-timepicker"
 
+        def self.default_opts
+          {
+            input:   { data: { input_timepicker_target: "input" } },
+            popover: { label: "Picker", role: "dialog", tag: :div },
+            trigger: { data: { input_timepicker_target: "display" } }
+          }
+        end
+
         def render(format: :h12, step: 1, value: nil, **_kwargs)
           @format = format
           @step   = [1, step.to_i].max
