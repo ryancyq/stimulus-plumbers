@@ -70,6 +70,7 @@ Metrics/MethodLength:
     - lib/stimulus_plumbers/components/**/*.rb
     - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/fields/*.rb
+    - lib/stimulus_plumbers/helpers/combobox_helper.rb
     - test/system/**/*_test.rb
 
 Metrics/AbcSize:

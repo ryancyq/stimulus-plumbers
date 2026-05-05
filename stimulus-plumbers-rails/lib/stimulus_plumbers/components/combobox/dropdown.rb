@@ -25,12 +25,11 @@ module StimulusPlumbers
           }
         end
 
-        def render(options: [], value: nil, **_kwargs)
-          listbox = template.content_tag(
-            :ul,
-            role: "listbox",
-            data: { "#{DROPDOWN_CONTROLLER}_target": "listbox" }
-          ) do
+        def render(options: [], value: nil, label: nil, **_kwargs)
+          listbox_attrs = { role: "listbox", data: { "#{DROPDOWN_CONTROLLER}_target": "listbox" } }
+          listbox_attrs[:aria] = { label: label } if label
+
+          listbox = template.content_tag(:ul, **listbox_attrs) do
             render_items(options, value: value)
           end
 
