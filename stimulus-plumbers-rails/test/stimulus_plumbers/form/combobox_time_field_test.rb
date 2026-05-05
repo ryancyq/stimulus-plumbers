@@ -201,6 +201,56 @@ class ComboboxTimeFieldTest < ActionView::TestCase
     assert_no_css doc, "ul[aria-label='Period'] li[aria-selected='true']"
   end
 
+  # ── h24 format ────────────────────────────────────────────────────────────
+
+  def test_h24_format_omits_period_drum
+    doc = build_combobox(:meeting_time, format: :h24)
+
+    assert_css doc, "ul[aria-label='Hour']"
+    assert_no_css doc, "ul[aria-label='Period']"
+  end
+
+  def test_h24_hour_drum_has_24_options
+    doc   = build_combobox(:meeting_time, format: :h24)
+    items = doc.css("ul[aria-label='Hour'] li[role='option']")
+
+    assert_equal 24, items.length
+  end
+
+  # ── step ──────────────────────────────────────────────────────────────────
+
+  def test_minute_step_reduces_option_count
+    doc   = build_combobox(:meeting_time, step: 15)
+    items = doc.css("ul[aria-label='Minute'] li[role='option']")
+
+    assert_equal 4, items.length
+  end
+
+  def test_minute_step_items_are_correct
+    doc    = build_combobox(:meeting_time, step: 15)
+    values = doc.css("ul[aria-label='Minute'] li[role='option']").map { |li| li["data-value"] }
+
+    assert_equal %w[00 15 30 45], values
+  end
+
+  # ── midnight / noon edge cases ────────────────────────────────────────────
+
+  def test_midnight_selects_12_am
+    @form.define_singleton_method(:meeting_time) { "00:00" }
+    doc = build_combobox(:meeting_time)
+
+    assert_css doc, "ul[aria-label='Hour']   li[data-value='12'][aria-selected='true']"
+    assert_css doc, "ul[aria-label='Period'] li[data-value='AM'][aria-selected='true']"
+  end
+
+  def test_noon_selects_12_pm
+    @form.define_singleton_method(:meeting_time) { "12:00" }
+    doc = build_combobox(:meeting_time)
+
+    assert_css doc, "ul[aria-label='Hour']   li[data-value='12'][aria-selected='true']"
+    assert_css doc, "ul[aria-label='Period'] li[data-value='PM'][aria-selected='true']"
+  end
+
   # ── label / error ─────────────────────────────────────────────────────────
 
   def test_renders_label

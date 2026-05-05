@@ -61,6 +61,18 @@ class ComboboxAutocompleteHelperTest < ActionView::TestCase
     assert_equal "", popover.inner_html.strip
   end
 
+  def test_renders_loading_indicator
+    doc = parse_html(sp_combobox_autocomplete)
+
+    assert_css doc, "[aria-live='polite'][hidden]"
+  end
+
+  def test_renders_empty_state_element
+    doc = parse_html(sp_combobox_autocomplete)
+
+    assert_css doc, "[role='status'][hidden]"
+  end
+
   def test_renders_initial_options_when_provided
     options = [%w[London london], %w[Paris paris]]
     doc     = parse_html(sp_combobox_autocomplete(options: options))

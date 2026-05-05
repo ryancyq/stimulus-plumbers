@@ -83,6 +83,18 @@ class ComboboxAutocompleteFieldTest < ActionView::TestCase
     assert_equal "", popover.inner_html.strip
   end
 
+  def test_renders_loading_indicator
+    doc = build_combobox(:city)
+
+    assert_css doc, "[aria-live='polite'][hidden]"
+  end
+
+  def test_renders_empty_state_element
+    doc = build_combobox(:city)
+
+    assert_css doc, "[role='status'][hidden]"
+  end
+
   def test_renders_initial_options_when_provided
     options = [%w[London london], %w[Paris paris]]
     doc     = build_combobox(:city, options: options)

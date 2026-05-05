@@ -41,6 +41,20 @@ class ComboboxFieldTest < ActionView::TestCase
     assert_css doc, "input[aria-expanded='false']"
   end
 
+  def test_trigger_has_haspopup_dialog
+    doc = build_combobox(:birthday)
+
+    assert_css doc, "input[aria-haspopup='dialog']"
+  end
+
+  def test_trigger_is_readonly
+    doc     = build_combobox(:birthday)
+    trigger = doc.at_css("input[role='combobox']")
+
+    assert_not_nil trigger
+    assert trigger.key?("readonly"), "Expected trigger to be readonly"
+  end
+
   def test_renders_hidden_value_input
     doc = build_combobox(:birthday)
 

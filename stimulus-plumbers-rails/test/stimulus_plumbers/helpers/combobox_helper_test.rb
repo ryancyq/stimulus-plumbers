@@ -25,6 +25,20 @@ class ComboboxHelperTest < ActionView::TestCase
     assert_css doc, "input[aria-expanded='false']"
   end
 
+  def test_trigger_has_haspopup_dialog
+    doc = parse_html(sp_combobox_date)
+
+    assert_css doc, "input[aria-haspopup='dialog']"
+  end
+
+  def test_trigger_is_readonly
+    doc     = parse_html(sp_combobox_date)
+    trigger = doc.at_css("input[role='combobox']")
+
+    assert_not_nil trigger
+    assert trigger.key?("readonly"), "Expected trigger to be readonly"
+  end
+
   def test_renders_dialog_popover
     doc = parse_html(sp_combobox_date)
 
