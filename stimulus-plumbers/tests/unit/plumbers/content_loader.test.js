@@ -43,7 +43,7 @@ describe('ContentLoader', () => {
       expect(loader.url).toBe('')
       expect(loader.reload).toBe('never')
       expect(loader.stale).toBe(3600)
-      expect(loader.onLoad).toBe('contentLoad')
+      expect(loader.onLoad).toBe('canLoad')
       expect(loader.onLoading).toBe('contentLoading')
       expect(loader.onLoaded).toBe('contentLoaded')
     })
@@ -91,7 +91,7 @@ describe('ContentLoader', () => {
     })
   })
 
-  describe('contentLoad', () => {
+  describe('canLoad', () => {
     it('returns true when url is provided', async () => {
       const loader = new ContentLoader(mockController, {
         url: '/api/content',
@@ -112,11 +112,11 @@ describe('ContentLoader', () => {
       const loader = new ContentLoader(mockController, {
         url: '',
       })
-      loader.contentLoad = vi.fn(async () => true)
+      loader.canLoad = vi.fn(async () => true)
 
-      const result = await loader.contentLoad({ url: '' })
+      const result = await loader.canLoad({ url: '' })
 
-      expect(loader.contentLoad).toHaveBeenCalled()
+      expect(loader.canLoad).toHaveBeenCalled()
       expect(result).toBe(true)
     })
   })
@@ -254,12 +254,12 @@ describe('ContentLoader', () => {
       expect(global.fetch).toHaveBeenCalledWith('/api/content')
     })
 
-    it('calls contentLoad to check if loadable', async () => {
+    it('calls canLoad to check if loadable', async () => {
       const contentLoad = vi.fn(async () => true)
       const loader = new ContentLoader(mockController, {
         url: '/api/content',
       })
-      loader.contentLoad = contentLoad
+      loader.canLoad = contentLoad
 
       await loader.load()
 
@@ -310,7 +310,7 @@ describe('ContentLoader', () => {
       const loader = new ContentLoader(mockController, {
         url: '',
       })
-      loader.contentLoad = vi.fn(async () => true)
+      loader.canLoad = vi.fn(async () => true)
       loader.contentLoader = vi.fn(async () => '<p>Static content</p>')
 
       await loader.load()
@@ -351,7 +351,7 @@ describe('ContentLoader', () => {
       expect(global.fetch).toHaveBeenCalledWith('/api/content')
     })
 
-    it('awaits async contentLoad callback', async () => {
+    it('awaits async canLoad callback', async () => {
       const contentLoad = vi.fn(async () => {
         await new Promise((resolve) => setTimeout(resolve, 10))
         return true
@@ -359,7 +359,7 @@ describe('ContentLoader', () => {
       const loader = new ContentLoader(mockController, {
         url: '/api/content',
       })
-      loader.contentLoad = contentLoad
+      loader.canLoad = contentLoad
 
       await loader.load()
 

@@ -39,7 +39,7 @@ export default class extends Controller {
     await this.load();
   }
 
-  contentLoad() {
+  canLoad() {
     if (this.hasContentTarget && this.contentTarget.tagName.toLowerCase() === 'turbo-frame') {
       if (this.hasUrlValue) this.contentTarget.setAttribute('src', this.urlValue);
       return false;

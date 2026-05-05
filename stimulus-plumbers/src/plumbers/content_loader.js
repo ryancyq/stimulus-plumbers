@@ -6,7 +6,7 @@ const defaultOptions = {
   url: '',
   reload: 'never',
   stale: 3600,
-  onLoad: 'contentLoad',
+  onLoad: 'canLoad',
   onLoading: 'contentLoading',
   onLoaded: 'contentLoaded',
 };
@@ -20,7 +20,7 @@ export class ContentLoader extends Plumber {
    * @param {string} [options.url=''] - URL to fetch content from
    * @param {string} [options.reload='never'] - Reload strategy ('never', 'always', or 'stale')
    * @param {number} [options.stale=3600] - Seconds before content becomes stale
-   * @param {string} [options.onLoad='contentLoad'] - Callback name to check if loadable
+   * @param {string} [options.onLoad='canLoad'] - Callback name to check if loadable
    * @param {string} [options.onLoading='contentLoading'] - Callback name to load content
    * @param {string} [options.onLoaded='contentLoaded'] - Callback name after loading
    */

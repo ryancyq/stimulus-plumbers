@@ -3,11 +3,6 @@ import { FocusTrap } from '../focus';
 import { announce } from '../aria';
 import { attachDismisser } from '../plumbers';
 
-/**
- * Modal Dialog Controller
- * Implements WAI-ARIA Dialog (Modal) pattern
- * Supports both native <dialog> elements and custom implementations
- */
 export default class ModalController extends Controller {
   static targets = ['modal', 'overlay'];
 
@@ -21,7 +16,7 @@ export default class ModalController extends Controller {
 
     if (this.isNativeDialog) {
       this.modalTarget.addEventListener('cancel', this.close);
-      this.modalTarget.addEventListener('click', this.handleBackdropClick);
+      this.modalTarget.addEventListener('click', this.onBackdropClick);
     } else {
       this.focusTrap = new FocusTrap(this.modalTarget, {
         escapeDeactivates: true,
@@ -38,7 +33,7 @@ export default class ModalController extends Controller {
   disconnect() {
     if (this.isNativeDialog) {
       this.modalTarget.removeEventListener('cancel', this.close);
-      this.modalTarget.removeEventListener('click', this.handleBackdropClick);
+      this.modalTarget.removeEventListener('click', this.onBackdropClick);
     }
   }
 
@@ -89,7 +84,7 @@ export default class ModalController extends Controller {
     announce('Modal closed');
   }
 
-  handleBackdropClick = (event) => {
+  onBackdropClick = (event) => {
     const rect = this.modalTarget.getBoundingClientRect();
     const isOutsideDialog =
       event.clientY < rect.top ||
