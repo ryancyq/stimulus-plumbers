@@ -27,7 +27,7 @@ module StimulusPlumbers
           }
         end
 
-        def render(options: [], value: nil, src: nil, label: nil, **_kwargs)
+        def render(options: [], value: nil, label: nil, **_kwargs)
           listbox_attrs = { role: "listbox", data: { "#{DROPDOWN_CONTROLLER}_target": "listbox" } }
           listbox_attrs[:aria] = { label: label } if label
 

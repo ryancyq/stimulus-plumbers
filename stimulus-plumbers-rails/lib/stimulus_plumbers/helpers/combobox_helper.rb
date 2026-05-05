@@ -30,7 +30,7 @@ module StimulusPlumbers
         )
       end
 
-      def sp_combobox_autocomplete(label: nil, options: [], value: nil, src: nil, **html_options)
+      def sp_combobox_autocomplete(label: nil, options: [], value: nil, url: nil, **html_options)
         id         = sp_dom_id
         popover_id = "#{id}_popover"
         opts       = Components::Combobox::Autocomplete.default_opts.deep_merge(
@@ -39,10 +39,9 @@ module StimulusPlumbers
             content: Components::Combobox::Autocomplete.new(self).render(
               options: options,
               value:   value,
-              src:     src,
               label:   label
             ),
-            data:    src ? { combobox_dropdown_src_value: src } : {}
+            data:    url ? { combobox_dropdown_url_value: url } : {}
           }
         )
         opts = opts.deep_merge(trigger: { aria_label: label }) if label
