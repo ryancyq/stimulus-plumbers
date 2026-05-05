@@ -1,75 +1,83 @@
-# Stimulus Plumbers
+# stimulus-plumbers-rails
 
-A library of semantically correct, accessible UI components for Rails 8.0+ using ViewComponent and Stimulus.
+Rails helpers for accessible, WCAG 2.1 AA compliant UI components built on [Stimulus](https://stimulus.hotwired.dev/). Pairs with the [`@stimulus-plumbers/controllers`](../stimulus-plumbers) npm package.
+
+## Requirements
+
+- Ruby >= 3.0
+- Rails >= 6.1
+- `@stimulus-plumbers/controllers` registered in your Stimulus app
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
 ```ruby
-gem 'stimulus_plumbers'
+# Gemfile
+gem "stimulus_plumbers"
 ```
-
-And then execute:
 
 ```bash
 bundle install
 ```
 
-## Usage
+Include the helpers in your `ApplicationHelper`:
 
-Stimulus Plumbers provides ready-to-use ViewComponent components that render semantically correct, accessible HTML. Each component is designed with accessibility as a core requirement, not an afterthought.
-
-### Basic Example
-
-```erb
-<%# In your Rails view %>
-<%= render ButtonComponent.new(url: root_path) do %>
-  Click me
-<% end %>
+```ruby
+module ApplicationHelper
+  include StimulusPlumbers::Helpers::ComboboxHelper
+  include StimulusPlumbers::Helpers::PopoverHelper
+  include StimulusPlumbers::Helpers::CalendarHelper
+end
 ```
 
-### Available Components
+Or use the form builder globally:
 
-- **ActionList**: Accessible lists with items and sections
-- **Avatar**: User avatar component
-- **Button**: Semantic button with optional prefix/suffix
-- **Card**: Card component with sections
-- **Calendar**: Date calendar with navigation
-- **Container**: Layout container
-- **Divider**: Semantic divider/separator
-- **Dropdown**: Accessible dropdown menus
-- **Navigation**: Navigation bars, tabs, and lists
-- **Popover**: Accessible popover component
+```ruby
+# config/application.rb
+config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
+```
 
-## Component Philosophy
+## Components
 
-All components in this library follow these principles:
+| Component | Helper(s) | Docs |
+|-----------|-----------|------|
+| Combobox — date | `sp_combobox_date` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_date) |
+| Combobox — dropdown | `sp_combobox_dropdown` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_dropdown) |
+| Combobox — autocomplete | `sp_combobox_autocomplete` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_autocomplete) |
+| Combobox — time | `sp_combobox_time` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_time) |
+| Calendar | `sp_calendar_month` | [docs/component/calendar.md](docs/component/calendar.md) |
+| Popover | `sp_popover` | [docs/component/popover.md](docs/component/popover.md) |
+| Modal | — (JS only) | [docs/component/modal.md](docs/component/modal.md) |
 
-1. **Accessibility First**: WCAG 2.1 Level AA minimum
-2. **Semantic HTML**: Use native elements before ARIA
-3. **Keyboard Navigation**: Full keyboard support
-4. **Screen Reader Friendly**: Proper announcements and labels
-5. **Focus Management**: Visible focus indicators and logical tab order
+## Form Builder
+
+`StimulusPlumbers::Form::Builder` wraps all components as model-aware form fields with automatic label, name/id, error, and ARIA wiring.
+
+→ [docs/component/form_builder.md](docs/component/form_builder.md)
+
+## Theming
+
+Includes a Tailwind CSS theme out of the box. Supports custom themes by subclassing `Themes::Base`.
+
+→ [docs/component/theme.md](docs/component/theme.md)
 
 ## Development
 
-After checking out the repo, run:
-
 ```bash
 bundle install
+
+bundle exec rake test:unit    # unit tests
+bundle exec rake test:system  # accessibility system tests
+bundle exec rake rubocop      # lint
 ```
 
-Run the test suite with:
+Test against a specific Rails version:
 
 ```bash
-bundle exec rspec
+BUNDLE_GEMFILE=gemfiles/rails_8.0.gemfile bundle exec rake test:unit
 ```
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/ryancyq/stimulus-plumbers.
+Available appraisals: `rails_6.1`, `rails_7.0`, `rails_7.1`, `rails_7.2`, `rails_8.0`, `rails_8.1`, `rails_edge`.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+[MIT](https://opensource.org/licenses/MIT)

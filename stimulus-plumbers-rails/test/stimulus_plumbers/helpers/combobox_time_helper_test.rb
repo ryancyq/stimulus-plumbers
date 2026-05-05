@@ -10,7 +10,7 @@ class ComboboxTimeHelperTest < ActionView::TestCase
   def test_renders_combobox_wrapper_with_stimulus_controller
     doc = parse_html(sp_combobox_time)
 
-    assert_css doc, "[data-controller='input-combobox']"
+    assert_css doc, "[data-controller~='input-combobox']"
   end
 
   def test_renders_trigger_input_with_combobox_role
@@ -132,7 +132,7 @@ class ComboboxTimeHelperTest < ActionView::TestCase
   def test_forwards_html_options_to_wrapper
     doc = parse_html(sp_combobox_time(class: "my-timepicker"))
 
-    assert_css doc, "[data-controller='input-combobox'].my-timepicker"
+    assert_css doc, "[data-controller~='input-combobox'].my-timepicker"
   end
 
   # ── ids ───────────────────────────────────────────────────────────────────

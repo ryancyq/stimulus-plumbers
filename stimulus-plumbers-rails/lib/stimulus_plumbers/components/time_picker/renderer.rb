@@ -5,14 +5,17 @@ module StimulusPlumbers
     module TimePicker
       # Renders a single scrollable drum column (hour, minute, or period) as a listbox.
       class Renderer < Plumber::Base
-        CONTROLLER = "input-timepicker"
+        CONTROLLER = "combobox-time"
 
         def render(items:, label:, target:, selected: nil)
           template.content_tag(
             :ul,
             role: "listbox",
             aria: { label: label },
-            data: { "#{CONTROLLER}_target": target }
+            data: {
+              "#{CONTROLLER}_target": target,
+              action:                 "click->#{CONTROLLER}#select keydown->#{CONTROLLER}#navigate"
+            }
           ) do
             template.safe_join(items.map { |text, value| render_item(text, value, selected) })
           end

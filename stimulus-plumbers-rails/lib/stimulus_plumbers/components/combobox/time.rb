@@ -3,16 +3,14 @@
 module StimulusPlumbers
   module Components
     module Combobox
-      # Renders an iOS-style drum/wheel time picker as the dialog popover body.
-      # Wires InputTimepickerController and dispatches input-timepicker:changed → InputComboboxController.
+      # Renders an iOS-style drum/wheel time picker as the popover body.
+      # Wires ComboboxTimeController; dispatches combobox-time:selected → InputComboboxController.
       class Time < Plumber::Base
-        PICKER_CONTROLLER = "input-timepicker"
+        PICKER_CONTROLLER = "combobox-time"
 
         def self.default_opts
           {
-            input:   { data: { input_timepicker_target: "input" } },
-            popover: { label: "Picker", role: "dialog", tag: :div },
-            trigger: { data: { input_timepicker_target: "display" } }
+            popover: { label: "Picker", role: "dialog", tag: :div }
           }
         end
 
@@ -25,7 +23,7 @@ module StimulusPlumbers
             :div,
             data: {
               controller: PICKER_CONTROLLER,
-              action:     "#{PICKER_CONTROLLER}:changed->input-combobox#onValueChanged"
+              action:     "#{PICKER_CONTROLLER}:selected->input-combobox#onSelected"
             }
           ) do
             template.safe_join(drums)

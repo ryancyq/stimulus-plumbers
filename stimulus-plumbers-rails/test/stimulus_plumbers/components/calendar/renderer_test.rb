@@ -49,6 +49,7 @@ class CalendarRendererTest < ActionView::TestCase
   def test_month_accepts_parent_action_via_data
     html = renderer.month(data: { action: "datepicker:navigated->calendar-month#draw" })
 
-    assert_includes html, 'data-action="datepicker:navigated-&gt;calendar-month#draw"'
+    assert_includes html, "click-&gt;calendar-month-observer#select"
+    assert_includes html, "datepicker:navigated-&gt;calendar-month#draw"
   end
 end

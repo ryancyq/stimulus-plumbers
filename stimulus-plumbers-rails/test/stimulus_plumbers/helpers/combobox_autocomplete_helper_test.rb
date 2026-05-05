@@ -10,7 +10,7 @@ class ComboboxAutocompleteHelperTest < ActionView::TestCase
   def test_renders_combobox_wrapper_with_stimulus_controller
     doc = parse_html(sp_combobox_autocomplete)
 
-    assert_css doc, "[data-controller='input-combobox']"
+    assert_css doc, "[data-controller~='input-combobox']"
   end
 
   def test_renders_trigger_input_with_combobox_role
@@ -47,7 +47,7 @@ class ComboboxAutocompleteHelperTest < ActionView::TestCase
 
   def test_popover_is_hidden_by_default
     doc     = parse_html(sp_combobox_autocomplete)
-    popover = doc.at_css("[role='listbox']")
+    popover = doc.at_css("[data-input-combobox-target='popover']")
 
     assert_not_nil popover
     assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
@@ -85,7 +85,7 @@ class ComboboxAutocompleteHelperTest < ActionView::TestCase
   def test_trigger_aria_controls_matches_popover_id
     doc     = parse_html(sp_combobox_autocomplete)
     trigger = doc.at_css("input[role='combobox']")
-    popover = doc.at_css("[role='listbox']")
+    popover = doc.at_css("[data-input-combobox-target='popover']")
 
     assert_not_nil trigger
     assert_not_nil popover
@@ -105,7 +105,7 @@ class ComboboxAutocompleteHelperTest < ActionView::TestCase
   def test_forwards_html_options_to_wrapper
     doc = parse_html(sp_combobox_autocomplete(class: "my-autocomplete"))
 
-    assert_css doc, "[data-controller='input-combobox'].my-autocomplete"
+    assert_css doc, "[data-controller~='input-combobox'].my-autocomplete"
   end
 
   # ── ids ───────────────────────────────────────────────────────────────────

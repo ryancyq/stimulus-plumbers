@@ -26,7 +26,7 @@ class ComboboxFieldTest < ActionView::TestCase
   def test_renders_combobox_wrapper_with_stimulus_controller
     doc = build_combobox(:birthday)
 
-    assert_css doc, "[data-controller='input-combobox']"
+    assert_css doc, "[data-controller~='input-combobox']"
   end
 
   def test_renders_trigger_input_with_combobox_role
@@ -93,20 +93,20 @@ class ComboboxFieldTest < ActionView::TestCase
 
   # ── cross-wiring ──────────────────────────────────────────────────────────
 
-  def test_trigger_input_is_input_datepicker_display_target
-    doc = build_combobox(:birthday)
+  def test_trigger_input_is_input_format_target
+    doc     = build_combobox(:birthday)
     trigger = doc.at_css("input[role='combobox']")
 
     assert_not_nil trigger
-    assert_includes trigger["data-input-datepicker-target"].to_s, "display"
+    assert_includes trigger["data-input-format-target"].to_s, "input"
   end
 
-  def test_hidden_input_is_input_datepicker_input_target
-    doc = build_combobox(:birthday)
+  def test_hidden_input_is_input_combobox_value_target
+    doc    = build_combobox(:birthday)
     hidden = doc.at_css("input[type='hidden'][name='sign_in_form[birthday]']")
 
     assert_not_nil hidden
-    assert_includes hidden["data-input-datepicker-target"].to_s, "input"
+    assert_includes hidden["data-input-combobox-target"].to_s, "value"
   end
 
   # ── error state ──────────────────────────────────────────────────────────

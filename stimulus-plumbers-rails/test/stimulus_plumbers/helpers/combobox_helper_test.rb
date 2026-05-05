@@ -10,7 +10,7 @@ class ComboboxHelperTest < ActionView::TestCase
   def test_renders_combobox_wrapper_with_stimulus_controller
     doc = parse_html(sp_combobox_date)
 
-    assert_css doc, "[data-controller='input-combobox']"
+    assert_css doc, "[data-controller~='input-combobox']"
   end
 
   def test_renders_trigger_input_with_combobox_role
@@ -79,20 +79,20 @@ class ComboboxHelperTest < ActionView::TestCase
 
   # ── cross-wiring ──────────────────────────────────────────────────────────
 
-  def test_trigger_input_is_input_datepicker_display_target
+  def test_trigger_input_is_input_format_target
     doc     = parse_html(sp_combobox_date)
     trigger = doc.at_css("input[role='combobox']")
 
     assert_not_nil trigger
-    assert_includes trigger["data-input-datepicker-target"].to_s, "display"
+    assert_includes trigger["data-input-format-target"].to_s, "input"
   end
 
-  def test_hidden_input_is_input_datepicker_input_target
+  def test_hidden_input_is_input_combobox_value_target
     doc    = parse_html(sp_combobox_date)
     hidden = doc.at_css("input[type='hidden']")
 
     assert_not_nil hidden
-    assert_includes hidden["data-input-datepicker-target"].to_s, "input"
+    assert_includes hidden["data-input-combobox-target"].to_s, "value"
   end
 
   # ── ids ───────────────────────────────────────────────────────────────────
@@ -129,6 +129,6 @@ class ComboboxHelperTest < ActionView::TestCase
   def test_forwards_html_options_to_wrapper
     doc = parse_html(sp_combobox_date(class: "my-combobox"))
 
-    assert_css doc, "[data-controller='input-combobox'].my-combobox"
+    assert_css doc, "[data-controller~='input-combobox'].my-combobox"
   end
 end
