@@ -114,7 +114,7 @@ jobs:
       - run: bundle exec rake build
 
       - name: Configure RubyGems trusted publishing credentials
-        uses: rubygems/configure-rubygems-credentials@v1.0.0
+        uses: rubygems/configure-rubygems-credentials@v2.0.0
 
       - name: Push gem
         run: |
