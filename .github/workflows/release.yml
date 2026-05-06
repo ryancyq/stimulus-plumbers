@@ -83,38 +83,35 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Download dist artifact
-        uses: actions/download-artifact@v8
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: stimulus-plumbers-dist
           path: stimulus-plumbers-rails/app/assets/javascripts/stimulus-plumbers
 
-      - name: Install Ruby and gems
-        uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ruby
           bundler: latest
 
-      - name: Bump gem version ${{ env.VERSION }}
-        run: bin/bump-version ${{ env.VERSION }}
+      - run: bin/bump-version ${{ env.VERSION }}
         shell: bash
 
-      - name: Commit Gemfile.lock & lib/stimulus_plumbers/version.rb
-        uses: ryancyq/github-signed-commit@v1
+      - run: bundle exec rake appraisal:setup
+      - run: bundle exec rake rubocop:autocorrect_all
+
+      - uses: ryancyq/github-signed-commit@v1
         env:
           GH_TOKEN: ${{ github.token }}
         with:
           files: |
             stimulus-plumbers-rails/Gemfile.lock
+            stimulus-plumbers-rails/gemfiles/*.gemfile.lock
             stimulus-plumbers-rails/lib/stimulus_plumbers/version.rb
           commit-message: "Bump rubygem stimulus_plumbers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers-rails/v${{ env.VERSION }}
 
-      - name: Build gem
-        run: bundle exec rake build
+      - run: bundle exec rake build
 
       - name: Configure RubyGems trusted publishing credentials
         uses: rubygems/configure-rubygems-credentials@v1.0.0

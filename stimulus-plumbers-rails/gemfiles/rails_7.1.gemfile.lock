@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    stimulus_plumbers (0.1.0)
+    stimulus_plumbers (0.2.2)
       railties (>= 6.1, < 8.2)
 
 GEM
