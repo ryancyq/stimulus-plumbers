@@ -29,25 +29,20 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org
           cache: npm
           cache-dependency-path: stimulus-plumbers/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Bump version ${{ env.VERSION }}
-        run: npm version ${{ env.VERSION }} --no-git-tag-version
+      - run: npm version ${{ env.VERSION }} --no-git-tag-version
 
-      - name: Commit package.json & package-lock.json
-        uses: ryancyq/github-signed-commit@v1
+      - uses: ryancyq/github-signed-commit@v1
         env:
           GH_TOKEN: ${{ github.token }}
         with:
@@ -57,11 +52,9 @@ jobs:
           commit-message: "Bump npm @stimulus-plumbers/controllers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers/v${{ env.VERSION }}
 
-      - name: Build
-        run: npm run build
+      - run: npm run build
 
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v7
         with:
           name: stimulus-plumbers-dist
           path: stimulus-plumbers/dist/
