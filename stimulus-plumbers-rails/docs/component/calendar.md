@@ -21,9 +21,9 @@ end
 <%= sp_calendar_month(class: "my-calendar", id: "picker-cal") %>
 ```
 
-| Option | Description |
-|--------|-------------|
-| `date` | `Date` object — navigates the calendar to this month |
+| Option           | Description                                          |
+| ---------------- | ---------------------------------------------------- |
+| `date`           | `Date` object — navigates the calendar to this month |
 | `**html_options` | Forwarded to the `calendar-month` controller element |
 
 For the JS controller API (targets, values, keyboard behaviour), see the [JS package docs](../../../stimulus-plumbers/docs/component/calendar.md).

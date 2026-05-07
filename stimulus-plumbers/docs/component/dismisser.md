@@ -4,14 +4,14 @@ Closes/hides an element when the user clicks outside it. Backed by the `Dismisse
 
 ## Targets
 
-| Target | Description |
-|--------|-------------|
+| Target    | Description                                                                                   |
+| --------- | --------------------------------------------------------------------------------------------- |
 | `trigger` | Optional — click outside this element triggers dismissal. Defaults to the controller element. |
 
 ## Methods
 
-| Method | Wired via | Description |
-|--------|-----------|-------------|
+| Method        | Wired via         | Description                                                                                          |
+| ------------- | ----------------- | ---------------------------------------------------------------------------------------------------- |
 | `dismissed()` | Dismisser plumber | Plumber callback — called when a click-outside is detected. Implement in your controller to respond. |
 
 ## Example

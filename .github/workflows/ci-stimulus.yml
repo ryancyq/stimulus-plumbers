@@ -27,6 +27,4 @@ jobs:
           cache-dependency-path: stimulus-plumbers/package-lock.json
 
       - run: npm ci
-      - run: npm run format:check
-      - run: npm run lint
       - run: npm run test

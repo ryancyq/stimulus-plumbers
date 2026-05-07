@@ -15,11 +15,11 @@ Date picker backed by a calendar grid.
 <%= sp_combobox_date(value: "2024-03-15", label: "Date of birth", class: "w-full") %>
 ```
 
-| Option | Description |
-|--------|-------------|
-| `value` | ISO 8601 date string — pre-fills and navigates the calendar |
-| `label` | `aria-label` on the trigger input |
-| `**html_options` | Forwarded to the wrapper `div` |
+| Option           | Description                                                 |
+| ---------------- | ----------------------------------------------------------- |
+| `value`          | ISO 8601 date string — pre-fills and navigates the calendar |
+| `label`          | `aria-label` on the trigger input                           |
+| `**html_options` | Forwarded to the wrapper `div`                              |
 
 ---
 
@@ -45,12 +45,12 @@ Read-only combobox with a static listbox popover.
 [["Unavailable",   "x",  { disabled: true }], ...]
 ```
 
-| Option | Description |
-|--------|-------------|
-| `options` | Option rows (see formats above) |
-| `value` | Pre-selected value |
-| `label` | `aria-label` on the trigger input |
-| `**html_options` | Forwarded to the wrapper `div` |
+| Option           | Description                       |
+| ---------------- | --------------------------------- |
+| `options`        | Option rows (see formats above)   |
+| `value`          | Pre-selected value                |
+| `label`          | `aria-label` on the trigger input |
+| `**html_options` | Forwarded to the wrapper `div`    |
 
 ---
 
@@ -66,13 +66,13 @@ Editable trigger that filters options as the user types. Supports client-side fu
 <%= sp_combobox_autocomplete(src: cities_path, label: "City") %>
 ```
 
-| Option | Description |
-|--------|-------------|
-| `options` | Initial options rendered on page load (same formats as dropdown) |
-| `value` | Pre-selected value |
-| `src` | URL for server-side filtering |
-| `label` | `aria-label` on the trigger input |
-| `**html_options` | Forwarded to the wrapper `div` |
+| Option           | Description                                                      |
+| ---------------- | ---------------------------------------------------------------- |
+| `options`        | Initial options rendered on page load (same formats as dropdown) |
+| `value`          | Pre-selected value                                               |
+| `src`            | URL for server-side filtering                                    |
+| `label`          | `aria-label` on the trigger input                                |
+| `**html_options` | Forwarded to the wrapper `div`                                   |
 
 ---
 
@@ -85,13 +85,13 @@ iOS-style drum/scroll-wheel time picker.
 <%= sp_combobox_time(format: :h24, step: 15, value: "14:30", label: "Meeting time") %>
 ```
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `format` | `:h12` | `:h12` (1–12 + AM/PM) or `:h24` (00–23) |
-| `step` | `1` | Minute increment — `15` yields 00, 15, 30, 45 |
-| `value` | `nil` | Pre-selected time as `"HH:MM"` |
-| `label` | `nil` | `aria-label` on the trigger input |
-| `**html_options` | — | Forwarded to the wrapper `div` |
+| Option           | Default | Description                                   |
+| ---------------- | ------- | --------------------------------------------- |
+| `format`         | `:h12`  | `:h12` (1–12 + AM/PM) or `:h24` (00–23)       |
+| `step`           | `1`     | Minute increment — `15` yields 00, 15, 30, 45 |
+| `value`          | `nil`   | Pre-selected time as `"HH:MM"`                |
+| `label`          | `nil`   | `aria-label` on the trigger input             |
+| `**html_options` | —       | Forwarded to the wrapper `div`                |
 
 ---
 
@@ -110,11 +110,11 @@ iOS-style drum/scroll-wheel time picker.
 
 Additional options accepted by all field types:
 
-| Option | Description |
-|--------|-------------|
-| `label` | Override label text (defaults to humanised attribute name) |
-| `details` | Hint text rendered below the field |
-| Any helper option | Forwarded to the underlying `sp_combobox_*` helper |
+| Option            | Description                                                |
+| ----------------- | ---------------------------------------------------------- |
+| `label`           | Override label text (defaults to humanised attribute name) |
+| `details`         | Hint text rendered below the field                         |
+| Any helper option | Forwarded to the underlying `sp_combobox_*` helper         |
 
 ---
 
@@ -123,25 +123,26 @@ Additional options accepted by all field types:
 All variants share the same wrapper pattern:
 
 ```html
-<div data-controller="input-combobox input-format"
-     data-action="input-combobox:changed->input-format#format"
-     data-input-combobox-value-value="[initial-value]">
+<div
+  data-controller="input-combobox input-format"
+  data-action="input-combobox:changed->input-format#format"
+  data-input-combobox-value-value="[initial-value]"
+>
+  <input
+    type="text"
+    role="combobox"
+    aria-haspopup="dialog|listbox"
+    aria-expanded="false"
+    aria-controls="[id]_popover"
+    data-input-combobox-target="trigger"
+    data-input-format-target="input"
+  />
 
-  <input type="text" role="combobox"
-         aria-haspopup="dialog|listbox"
-         aria-expanded="false"
-         aria-controls="[id]_popover"
-         data-input-combobox-target="trigger"
-         data-input-format-target="input">
+  <input type="hidden" name="[name]" data-input-combobox-target="value" />
 
-  <input type="hidden" name="[name]"
-         data-input-combobox-target="value">
-
-  <div id="[id]_popover" hidden
-       data-input-combobox-target="popover">
+  <div id="[id]_popover" hidden data-input-combobox-target="popover">
     <!-- variant-specific picker body -->
   </div>
-
 </div>
 ```
 
