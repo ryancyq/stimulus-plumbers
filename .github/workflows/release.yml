@@ -88,8 +88,8 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ruby
-          bundler: latest
+          ruby-version: 3.4
+          bundler: 2.7.2
 
       - run: bin/bump-version ${{ env.VERSION }}
         shell: bash
