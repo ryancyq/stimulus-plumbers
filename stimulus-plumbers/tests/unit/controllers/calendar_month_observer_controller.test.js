@@ -13,7 +13,7 @@ describe('CalendarMonthObserverController', () => {
       <div
         role="grid"
         data-controller="calendar-month-observer"
-        data-action="click->calendar-month-observer#select"
+        data-action="click->calendar-month-observer#onSelect"
       >
         <button role="gridcell" tabindex="0">
           <time datetime="2026-04-01">1</time>
@@ -41,16 +41,16 @@ describe('CalendarMonthObserverController', () => {
   const grid = () => document.querySelector('[data-controller="calendar-month-observer"]');
   const button = () => document.querySelector('button[role="gridcell"]:not([disabled])');
 
-  describe('select', () => {
-    it('dispatches select and selected events when clicking a gridcell button', () => {
-      const selectSpy = vi.fn();
+  describe('onSelect', () => {
+    it('dispatches selecting and selected events when clicking a gridcell button', () => {
+      const selectingSpy = vi.fn();
       const selectedSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:select', selectSpy);
+      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
       grid().addEventListener('calendar-month-observer:selected', selectedSpy);
 
       button().click();
 
-      expect(selectSpy).toHaveBeenCalledTimes(1);
+      expect(selectingSpy).toHaveBeenCalledTimes(1);
       expect(selectedSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -77,39 +77,39 @@ describe('CalendarMonthObserverController', () => {
     });
 
     it('dispatches when clicking the time child element inside a button', () => {
-      const selectSpy = vi.fn();
+      const selectingSpy = vi.fn();
       const selectedSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:select', selectSpy);
+      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
       grid().addEventListener('calendar-month-observer:selected', selectedSpy);
 
       button().querySelector('time').click();
 
-      expect(selectSpy).toHaveBeenCalledTimes(1);
+      expect(selectingSpy).toHaveBeenCalledTimes(1);
       expect(selectedSpy).toHaveBeenCalledTimes(1);
     });
 
     it('does not dispatch when clicking a disabled button', () => {
-      const selectSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:select', selectSpy);
+      const selectingSpy = vi.fn();
+      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
 
       document.querySelector('button[disabled]').click();
 
-      expect(selectSpy).not.toHaveBeenCalled();
+      expect(selectingSpy).not.toHaveBeenCalled();
     });
 
     it('does not dispatch when clicking an aria-disabled cell', () => {
-      const selectSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:select', selectSpy);
+      const selectingSpy = vi.fn();
+      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
 
       document.querySelector('[aria-disabled="true"]').click();
 
-      expect(selectSpy).not.toHaveBeenCalled();
+      expect(selectingSpy).not.toHaveBeenCalled();
     });
 
-    it('dispatches select but not selected when cell has no time element', () => {
-      const selectSpy = vi.fn();
+    it('dispatches selecting but not selected when cell has no time element', () => {
+      const selectingSpy = vi.fn();
       const selectedSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:select', selectSpy);
+      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
       grid().addEventListener('calendar-month-observer:selected', selectedSpy);
 
       const btn = document.createElement('button');
@@ -117,13 +117,13 @@ describe('CalendarMonthObserverController', () => {
       grid().appendChild(btn);
       btn.click();
 
-      expect(selectSpy).toHaveBeenCalledTimes(1);
+      expect(selectingSpy).toHaveBeenCalledTimes(1);
       expect(selectedSpy).not.toHaveBeenCalled();
     });
 
     it('does not block dispatch when aria-disabled is false', () => {
-      const selectSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:select', selectSpy);
+      const selectingSpy = vi.fn();
+      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
 
       const btn = document.createElement('button');
       btn.setAttribute('role', 'gridcell');
@@ -134,7 +134,7 @@ describe('CalendarMonthObserverController', () => {
       grid().appendChild(btn);
       btn.click();
 
-      expect(selectSpy).toHaveBeenCalledTimes(1);
+      expect(selectingSpy).toHaveBeenCalledTimes(1);
     });
 
     it('does not dispatch selected when time datetime is unparseable', () => {
@@ -150,6 +150,30 @@ describe('CalendarMonthObserverController', () => {
       btn.click();
 
       expect(selectedSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('select', () => {
+    it('dispatches selected with epoch and iso for a valid iso string', () => {
+      const spy = vi.fn();
+      grid().addEventListener('calendar-month-observer:selected', spy);
+
+      const ctrl = application.getControllerForElementAndIdentifier(grid(), 'calendar-month-observer');
+      ctrl.select('2026-04-10T00:00:00.000Z');
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0][0].detail.iso).toBe('2026-04-10T00:00:00.000Z');
+      expect(typeof spy.mock.calls[0][0].detail.epoch).toBe('number');
+    });
+
+    it('does not dispatch when iso is unparseable', () => {
+      const spy = vi.fn();
+      grid().addEventListener('calendar-month-observer:selected', spy);
+
+      const ctrl = application.getControllerForElementAndIdentifier(grid(), 'calendar-month-observer');
+      ctrl.select('not-a-date');
+
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 });

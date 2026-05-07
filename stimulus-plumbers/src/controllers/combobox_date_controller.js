@@ -1,10 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 import { tryParseDate } from '../plumbers/plumber/support';
 
-export default class extends Controller {
-  static targets = ['previous', 'next', 'day', 'month', 'year', 'input', 'display'];
+export default class ComboboxDateController extends Controller {
+  static targets = ['previous', 'next', 'day', 'month', 'year'];
   static outlets = ['calendar-month'];
   static values = {
+    date: String,
     locales: { type: Array, default: ['default'] },
     dayFormat: { type: String, default: 'numeric' },
     monthFormat: { type: String, default: 'long' },
@@ -17,36 +18,22 @@ export default class extends Controller {
   }
 
   async calendarMonthOutletConnected() {
-    if (this.hasInputTarget && this.inputTarget.value) {
-      const date = tryParseDate(this.inputTarget.value);
-      if (date) {
-        await this.calendarMonthOutlet.calendar.navigate(date);
-      }
+    if (this.dateValue) {
+      const date = tryParseDate(this.dateValue);
+      if (date) await this.calendarMonthOutlet.calendar.navigate(date);
     }
     this.draw();
   }
 
-  selected(event) {
-    if (this.hasInputTarget) {
-      this.inputTarget.value = event.detail.iso;
-    }
-    if (this.hasDisplayTarget) {
-      this.displayTarget.value = this.formatDate(new Date(event.detail.iso));
-    }
-  }
-
-  formatDate(date) {
-    return new Intl.DateTimeFormat(this.localesValue, {
-      day: this.dayFormatValue,
-      month: this.monthFormatValue,
-      year: this.yearFormatValue,
-    }).format(date);
+  onSelect(event) {
+    this.dateValue = event.detail.iso;
+    this.draw();
+    this.dispatch('selected', { detail: { value: event.detail.iso }, bubbles: true });
   }
 
   previousTargetConnected(target) {
     target.addEventListener('click', this.previous);
   }
-
   previousTargetDisconnected(target) {
     target.removeEventListener('click', this.previous);
   }
@@ -59,7 +46,6 @@ export default class extends Controller {
   nextTargetConnected(target) {
     target.addEventListener('click', this.next);
   }
-
   nextTargetDisconnected(target) {
     target.removeEventListener('click', this.next);
   }
@@ -77,25 +63,25 @@ export default class extends Controller {
 
   drawDay() {
     if (!this.hasDayTarget || !this.hasCalendarMonthOutlet) return;
-
     const { year, month, day } = this.calendarMonthOutlet.calendar;
-    const formatter = new Intl.DateTimeFormat(this.localesValue, { day: this.dayFormatValue });
-    this.dayTarget.textContent = formatter.format(new Date(year, month, day));
+    this.dayTarget.textContent = new Intl.DateTimeFormat(this.localesValue, { day: this.dayFormatValue }).format(
+      new Date(year, month, day)
+    );
   }
 
   drawMonth() {
     if (!this.hasMonthTarget || !this.hasCalendarMonthOutlet) return;
-
     const { year, month } = this.calendarMonthOutlet.calendar;
-    const formatter = new Intl.DateTimeFormat(this.localesValue, { month: this.monthFormatValue });
-    this.monthTarget.textContent = formatter.format(new Date(year, month));
+    this.monthTarget.textContent = new Intl.DateTimeFormat(this.localesValue, { month: this.monthFormatValue }).format(
+      new Date(year, month)
+    );
   }
 
   drawYear() {
     if (!this.hasYearTarget || !this.hasCalendarMonthOutlet) return;
-
     const { year } = this.calendarMonthOutlet.calendar;
-    const formatter = new Intl.DateTimeFormat(this.localesValue, { year: this.yearFormatValue });
-    this.yearTarget.textContent = formatter.format(new Date(year, 0));
+    this.yearTarget.textContent = new Intl.DateTimeFormat(this.localesValue, { year: this.yearFormatValue }).format(
+      new Date(year, 0)
+    );
   }
 }

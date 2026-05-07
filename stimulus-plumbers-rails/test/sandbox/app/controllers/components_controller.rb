@@ -13,4 +13,6 @@ class ComponentsController < ApplicationController
     @selectable        = params[:selectable] == "true"
     @show_other_months = params[:show_other_months] == "true"
   end
+
+  def combobox; end
 end

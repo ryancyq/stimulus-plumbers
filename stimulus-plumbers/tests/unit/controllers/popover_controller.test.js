@@ -162,7 +162,7 @@ describe('PopoverController', () => {
     });
   });
 
-  describe('contentLoad', () => {
+  describe('canLoad', () => {
     it('returns true for regular content target', async () => {
       document.body.innerHTML = `
         <div data-controller="popover" data-popover-url-value="/content">
@@ -176,7 +176,7 @@ describe('PopoverController', () => {
         'popover'
       );
 
-      expect(controller.contentLoad()).toBe(true);
+      expect(controller.canLoad()).toBe(true);
     });
 
     it('sets turbo-frame src and returns false', async () => {
@@ -192,7 +192,7 @@ describe('PopoverController', () => {
         'popover'
       );
 
-      const result = controller.contentLoad();
+      const result = controller.canLoad();
 
       expect(controller.contentTarget.getAttribute('src')).toBe('/content');
       expect(result).toBe(false);

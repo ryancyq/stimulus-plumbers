@@ -2,84 +2,95 @@
 
 Accessible Stimulus controllers following WCAG 2.1+ standards.
 
+## Requirements
+
+- Node.js >= 18
+- `@hotwired/stimulus` ^2.0 or ^3.0 (peer dependency)
+
 ## Installation
 
 ```bash
 npm install @stimulus-plumbers/controllers
 ```
 
-Requires `@hotwired/stimulus` ^2.0.0 or ^3.0.0 as a peer dependency.
+## Setup
 
-## Usage
+Register the controllers you need with your Stimulus application:
 
 ```javascript
-import { Application } from '@hotwired/stimulus';
-import { ModalController, DatepickerController, CalendarMonthController } from '@stimulus-plumbers/controllers';
+import { Application } from '@hotwired/stimulus'
+import {
+  InputComboboxController,
+  InputFormatController,
+  ComboboxDateController,
+  ComboboxTimeController,
+  ComboboxDropdownController,
+  CalendarMonthController,
+  CalendarMonthObserverController,
+  ModalController,
+  PopoverController,
+  DismisserController,
+  FlipperController,
+  ClipboardController,
+} from '@stimulus-plumbers/controllers'
 
-const application = Application.start();
-application.register('modal', ModalController);
-application.register('datepicker', DatepickerController);
-application.register('calendar-month', CalendarMonthController);
+const application = Application.start()
+
+application.register('input-combobox',           InputComboboxController)
+application.register('input-format',             InputFormatController)
+application.register('combobox-date',            ComboboxDateController)
+application.register('combobox-time',            ComboboxTimeController)
+application.register('combobox-dropdown',        ComboboxDropdownController)
+application.register('calendar-month',           CalendarMonthController)
+application.register('calendar-month-observer',  CalendarMonthObserverController)
+application.register('modal',                    ModalController)
+application.register('popover',                  PopoverController)
+application.register('dismisser',                DismisserController)
+application.register('flipper',                  FlipperController)
+application.register('clipboard',                ClipboardController)
 ```
 
-### ModalController
+## Controllers
 
-Native `<dialog>` element:
+| Controller | Description | Docs |
+|-----------|-------------|------|
+| `input-combobox` | Wrapper: trigger, popover, hidden value | [docs/component/combobox.md](docs/component/combobox.md#input-combobox) |
+| `input-format` | Formats and displays values | [docs/component/combobox.md](docs/component/combobox.md#input-format) |
+| `combobox-date` | Calendar grid date picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-date) |
+| `combobox-time` | Drum/scroll-wheel time picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-time) |
+| `combobox-dropdown` | Listbox with fuzzy filter or server fetch | [docs/component/combobox.md](docs/component/combobox.md#combobox-dropdown) |
+| `calendar-month` | Calendar grid renderer | [docs/component/calendar.md](docs/component/calendar.md) |
+| `calendar-month-observer` | Click-to-select handler for calendar grids | [docs/component/calendar.md](docs/component/calendar.md#calendar-month-observer) |
+| `modal` | Native `<dialog>` or custom overlay | [docs/component/modal.md](docs/component/modal.md) |
+| `popover` | Show/hide content with optional remote load | [docs/component/popover.md](docs/component/popover.md) |
+| `dismisser` | Click-outside dismissal | [docs/component/dismisser.md](docs/component/dismisser.md) |
+| `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
+| `clipboard` | Copy-to-clipboard and paste interception | [docs/component/clipboard.md](docs/component/clipboard.md) |
 
-```html
-<div data-controller="modal">
-  <button data-action="modal#open">Open</button>
-  <dialog data-modal-target="modal" aria-labelledby="modal-title">
-    <h2 id="modal-title">Title</h2>
-    <button data-action="modal#close">Close</button>
-  </dialog>
-</div>
+## Method naming convention
+
+Controllers follow a consistent naming pattern:
+
+| Pattern | Parameter | Role | Example |
+|---------|-----------|------|---------|
+| `x(value)` | raw value | Programmatic API — pure logic, callable directly | `select('us')`, `format('4242…')`, `step(1)`, `filter('query')` |
+| `onX(event)` | DOM event | Event adapter — extracts payload, calls programmatic API | `onSelect(event)`, `onChange(event)`, `onPaste(event)`, `onInput(event)`, `onNavigate(event)` |
+| `past()` | — | Plumber callback — called by plumber after async operation completes | `shown()`, `dismissed()`, `flipped()`, `contentLoaded()` |
+
+Wire event adapters via `data-action`; call programmatic APIs directly from other controllers or outlets.
+
+## Development
+
+```bash
+npm install
+
+npm test              # run all tests (Vitest)
+npm run test:ui       # Vitest UI
+npm run test:coverage # coverage report
+npm run lint          # ESLint
+npm run format:write  # Prettier (write)
+npm run build         # build dist/
 ```
-
-Custom implementation with overlay:
-
-```html
-<div data-controller="modal">
-  <button data-action="modal#open">Open</button>
-  <div data-modal-target="overlay" hidden>
-    <div data-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <h2 id="modal-title">Title</h2>
-      <button data-action="modal#close">Close</button>
-    </div>
-  </div>
-</div>
-```
-
-### DatepickerController
-
-Date picker backed by a calendar grid. Combines `datepicker` + `popover` controllers; uses `CalendarMonthController` as an outlet.
-
-```html
-<div data-controller="datepicker popover"
-     data-datepicker-calendar-month-outlet="[data-controller~='calendar-month']">
-  <input type="text"  data-datepicker-target="display" data-action="focus->popover#show" />
-  <input type="hidden" data-datepicker-target="input" />
-
-  <div data-popover-target="content" hidden>
-    <button data-datepicker-target="previous">Prev</button>
-    <button data-datepicker-target="month"></button>
-    <button data-datepicker-target="year"></button>
-    <button data-datepicker-target="next">Next</button>
-
-    <div data-controller="calendar-month">
-      <div data-calendar-month-target="daysOfWeek"></div>
-      <div data-calendar-month-target="daysOfMonth"></div>
-    </div>
-  </div>
-</div>
-```
-
-## Other Controllers
-
-- `PopoverController` — show/hide content with optional remote loading
-- `DismisserController` — click-outside dismissal
-- `FlipperController` — element positioning
-- `PannerController` — scroll management
 
 ## License
 

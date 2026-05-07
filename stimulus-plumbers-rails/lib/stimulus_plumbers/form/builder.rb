@@ -9,6 +9,7 @@ require_relative "fields/text_area"
 require_relative "fields/file"
 require_relative "fields/select"
 require_relative "fields/choice"
+require_relative "fields/combobox"
 require_relative "../components/plumber/html_options"
 
 module StimulusPlumbers
@@ -20,6 +21,7 @@ module StimulusPlumbers
       include Fields::File
       include Fields::Select
       include Fields::Choice
+      include Fields::Combobox
 
       private
 
@@ -53,15 +55,45 @@ module StimulusPlumbers
         StimulusPlumbers.config.theme
       end
 
-      # field_id was added in Rails 7.0. Provide a compatible implementation for Rails 6.1.
+      # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       if ActionView.version < "7.0"
-        def field_id(attribute, *suffixes, index: @index, namespace: @options[:namespace])
-          tokens = [namespace, @object_name, index, attribute, *suffixes]
-          tokens.select!(&:present?)
-          tokens.map! { |t| t.to_s.delete("]").tr("^-a-zA-Z0-9:.", "_") }
-          tokens.join("_")
+        # field_id was added in Rails 7.0, backports it to Rails 6.1.
+        # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_helper.rb#L1777
+        # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_tag_helper.rb#L101
+        def field_id(method_name, *suffixes, namespace: @options[:namespace], index: @options[:index])
+          object_name = @object_name.respond_to?(:model_name) ? @object_name.model_name.singular : @object_name
+
+          sanitized_object_name = object_name.to_s.gsub(%r{\]\[|[^-a-zA-Z0-9:.]}, "_").delete_suffix("_")
+          sanitized_method_name = method_name.to_s.delete_suffix("?")
+
+          [
+            namespace,
+            sanitized_object_name.presence,
+            (index unless sanitized_object_name.empty?),
+            sanitized_method_name,
+            *suffixes
+          ].tap(&:compact!).join("_")
+        end
+
+        # field_name was added in Rails 7.0, backports it to Rails 6.1.
+        # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_helper.rb#L1797
+        # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_tag_helper.rb#L131
+        def field_name(method_name, *method_names, multiple: false, index: @options[:index])
+          object_name = @options.fetch(:as) { @object_name }
+
+          names = method_names.map! { |name| "[#{name}]" }.join
+
+          # a little duplication to construct fewer strings
+          if object_name.blank?
+            "#{method_name}#{names}#{"[]" if multiple}"
+          elsif index
+            "#{object_name}[#{index}][#{method_name}]#{names}#{"[]" if multiple}"
+          else
+            "#{object_name}[#{method_name}]#{names}#{"[]" if multiple}"
+          end
         end
       end
+      # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     end
   end
 end

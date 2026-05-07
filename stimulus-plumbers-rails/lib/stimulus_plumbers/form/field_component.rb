@@ -14,15 +14,17 @@ module StimulusPlumbers
                   :label_visibility,
                   :layout
 
-      def initialize(object:,
-                     attribute:,
-                     input_id:,
-                     label: nil,
-                     details: nil,
-                     error: nil,
-                     required: false,
-                     label_visibility: :visible,
-                     layout: :stacked)
+      def initialize(
+        object:,
+        attribute:,
+        input_id:,
+        label: nil,
+        details: nil,
+        error: nil,
+        required: false,
+        label_visibility: :visible,
+        layout: :stacked
+      )
         @object           = object
         @attribute        = attribute
         @input_id         = input_id
