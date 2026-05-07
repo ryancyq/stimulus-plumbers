@@ -4,18 +4,18 @@ Implements the [WAI-ARIA Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg
 
 ## Targets
 
-| Target | Description |
-|--------|-------------|
-| `modal` | The dialog element (required) |
+| Target    | Description                                                 |
+| --------- | ----------------------------------------------------------- |
+| `modal`   | The dialog element (required)                               |
 | `overlay` | Optional wrapper shown/hidden around `modal` in custom mode |
 
 ## Methods
 
-| Method | Wired via | Description |
-|--------|-----------|-------------|
-| `open(event)` | `data-action` | Action — opens the modal, traps focus inside |
-| `close(event)` | `data-action`, Escape key | Action — closes the modal, restores focus to trigger |
-| `dismissed()` | Dismisser plumber | Plumber callback — called on click-outside (custom mode only); calls `close()` |
+| Method         | Wired via                 | Description                                                                    |
+| -------------- | ------------------------- | ------------------------------------------------------------------------------ |
+| `open(event)`  | `data-action`             | Action — opens the modal, traps focus inside                                   |
+| `close(event)` | `data-action`, Escape key | Action — closes the modal, restores focus to trigger                           |
+| `dismissed()`  | Dismisser plumber         | Plumber callback — called on click-outside (custom mode only); calls `close()` |
 
 ## Native `<dialog>` usage
 
@@ -23,9 +23,7 @@ Implements the [WAI-ARIA Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg
 <div data-controller="modal">
   <button data-action="modal#open">Open</button>
 
-  <dialog data-modal-target="modal"
-          aria-labelledby="modal-title"
-          aria-modal="true">
+  <dialog data-modal-target="modal" aria-labelledby="modal-title" aria-modal="true">
     <h2 id="modal-title">Confirm action</h2>
     <p>Are you sure?</p>
     <button data-action="modal#close">Cancel</button>
@@ -43,10 +41,7 @@ The browser handles backdrop rendering. Clicking outside the dialog closes it vi
   <button data-action="modal#open">Open</button>
 
   <div data-modal-target="overlay" hidden>
-    <div data-modal-target="modal"
-         role="dialog"
-         aria-modal="true"
-         aria-labelledby="modal-title">
+    <div data-modal-target="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <h2 id="modal-title">Title</h2>
       <button data-action="modal#close">Close</button>
     </div>

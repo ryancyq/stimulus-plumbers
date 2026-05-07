@@ -20,9 +20,9 @@ end
 <% end %>
 ```
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `interactive` | `true` | When `true`, renders a `role="dialog"` popover; `false` renders a tooltip |
-| `**html_options` | — | Forwarded to the wrapper element |
+| Option           | Default | Description                                                               |
+| ---------------- | ------- | ------------------------------------------------------------------------- |
+| `interactive`    | `true`  | When `true`, renders a `role="dialog"` popover; `false` renders a tooltip |
+| `**html_options` | —       | Forwarded to the wrapper element                                          |
 
 For the JS controller API (targets, values, remote loading), see the [JS package docs](../../../stimulus-plumbers/docs/component/popover.md).

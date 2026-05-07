@@ -4,38 +4,40 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 
 ## Targets
 
-| Target | Description |
-|--------|-------------|
+| Target   | Description                                                                         |
+| -------- | ----------------------------------------------------------------------------------- |
 | `source` | Element whose `.value` or `.textContent` is copied when no `text` param is provided |
 
 ## Values
 
-| Value | Type | Default | Description |
-|-------|------|---------|-------------|
+| Value  | Type   | Default        | Description                                                                                                      |
+| ------ | ------ | -------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `type` | String | `"text/plain"` | MIME type to extract from `clipboardData` on paste. Common: `"text/plain"` \| `"text/html"` \| `"text/uri-list"` |
 
 ## Methods
 
-| Method | Wired via | Description |
-|--------|-----------|-------------|
-| `onPaste(event)` | `paste` DOM event | Event adapter — intercepts paste, dispatches `clipboard:pasted` |
-| `copy(event)` | `data-action` | Action — writes text to clipboard, dispatches `clipboard:copied` |
+| Method           | Wired via         | Description                                                      |
+| ---------------- | ----------------- | ---------------------------------------------------------------- |
+| `onPaste(event)` | `paste` DOM event | Event adapter — intercepts paste, dispatches `clipboard:pasted`  |
+| `copy(event)`    | `data-action`     | Action — writes text to clipboard, dispatches `clipboard:copied` |
 
 ## Dispatches
 
-| Event | Detail | When |
-|-------|--------|------|
-| `clipboard:pasted` | `{ text, types }` | On successful paste interception |
-| `clipboard:copied` | `{ text }` | On successful clipboard write |
-| `clipboard:copy-failed` | `{ error }` | On clipboard write failure |
+| Event                   | Detail            | When                             |
+| ----------------------- | ----------------- | -------------------------------- |
+| `clipboard:pasted`      | `{ text, types }` | On successful paste interception |
+| `clipboard:copied`      | `{ text }`        | On successful clipboard write    |
+| `clipboard:copy-failed` | `{ error }`       | On clipboard write failure       |
 
 ## Paste example
 
 ```html
 <%# Intercept paste, forward to input-format for normalisation %>
-<input data-controller="clipboard"
-       data-action="paste->clipboard#onPaste clipboard:pasted->input-format#onPaste"
-       data-clipboard-type-value="text/plain">
+<input
+  data-controller="clipboard"
+  data-action="paste->clipboard#onPaste clipboard:pasted->input-format#onPaste"
+  data-clipboard-type-value="text/plain"
+/>
 ```
 
 ## Copy examples
@@ -43,14 +45,12 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 ```html
 <%# Copy from a source target %>
 <div data-controller="clipboard">
-  <input data-clipboard-target="source" value="text to copy" readonly>
+  <input data-clipboard-target="source" value="text to copy" readonly />
   <button data-action="click->clipboard#copy">Copy</button>
 </div>
 
 <%# Copy hardcoded text via param %>
-<button data-controller="clipboard"
-        data-action="click->clipboard#copy"
-        data-clipboard-text-param="https://example.com">
+<button data-controller="clipboard" data-action="click->clipboard#copy" data-clipboard-text-param="https://example.com">
   Copy link
 </button>
 ```

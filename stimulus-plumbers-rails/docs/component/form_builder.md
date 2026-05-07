@@ -23,14 +23,14 @@ Or per form:
 
 All field methods accept these options in addition to their own:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `label` | String | Humanised attribute name | Override label text |
-| `details` | String | `nil` | Hint text rendered below the field |
-| `error` | String / Array | `nil` | Override error message(s); defaults to `model.errors[attribute]` |
-| `required` | Boolean | `false` | Adds `required` + `aria-required="true"` |
-| `label_visibility` | `:visible` / `:exclusive` | `:visible` | `:exclusive` renders label for screen readers only |
-| `layout` | `:stacked` / `:inline` | `:stacked` | Stacked puts label above input; inline puts it beside |
+| Option             | Type                      | Default                  | Description                                                      |
+| ------------------ | ------------------------- | ------------------------ | ---------------------------------------------------------------- |
+| `label`            | String                    | Humanised attribute name | Override label text                                              |
+| `details`          | String                    | `nil`                    | Hint text rendered below the field                               |
+| `error`            | String / Array            | `nil`                    | Override error message(s); defaults to `model.errors[attribute]` |
+| `required`         | Boolean                   | `false`                  | Adds `required` + `aria-required="true"`                         |
+| `label_visibility` | `:visible` / `:exclusive` | `:visible`               | `:exclusive` renders label for screen readers only               |
+| `layout`           | `:stacked` / `:inline`    | `:stacked`               | Stacked puts label above input; inline puts it beside            |
 
 ## Combobox field
 
@@ -41,12 +41,12 @@ All field methods accept these options in addition to their own:
 <%= f.combobox_field :meeting_time, type: :time,         format: :h24, step: 15 %>
 ```
 
-| `type` | Variant |
-|--------|---------|
-| `:date` | Date picker with calendar grid |
-| `:dropdown` | Read-only listbox |
+| `type`          | Variant                                   |
+| --------------- | ----------------------------------------- |
+| `:date`         | Date picker with calendar grid            |
+| `:dropdown`     | Read-only listbox                         |
 | `:autocomplete` | Editable listbox with fuzzy/server filter |
-| `:time` | Drum/scroll-wheel time picker |
+| `:time`         | Drum/scroll-wheel time picker             |
 
 All combobox-specific options (`value`, `src`, `format`, `step`, `options`, `label`) are forwarded to the underlying `sp_combobox_*` helper. See [combobox.md](combobox.md) for option details.
 

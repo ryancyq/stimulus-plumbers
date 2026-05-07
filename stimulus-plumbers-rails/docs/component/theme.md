@@ -20,15 +20,15 @@ The `TailwindTheme` provides Tailwind CSS classes for all form field slots. No a
 
 **Form field slots**
 
-| Slot | Classes |
-|------|---------|
-| Form group wrapper | `flex gap-1 mb-3 flex-col` (stacked) / `flex-row items-center` (inline) |
-| Label | `text-sm font-medium text-gray-900` |
-| Required mark (`*`) | `text-red-700 ml-0.5` |
-| Hint text | `text-xs text-gray-600` |
-| Error text | `text-xs text-red-700` |
-| Input (default) | `w-full rounded-md border border-gray-500 px-3 py-2 text-sm …` |
-| Input (error) | `… border-red-700 focus:ring-red-700` |
+| Slot                | Classes                                                                 |
+| ------------------- | ----------------------------------------------------------------------- |
+| Form group wrapper  | `flex gap-1 mb-3 flex-col` (stacked) / `flex-row items-center` (inline) |
+| Label               | `text-sm font-medium text-gray-900`                                     |
+| Required mark (`*`) | `text-red-700 ml-0.5`                                                   |
+| Hint text           | `text-xs text-gray-600`                                                 |
+| Error text          | `text-xs text-red-700`                                                  |
+| Input (default)     | `w-full rounded-md border border-gray-500 px-3 py-2 text-sm …`          |
+| Input (error)       | `… border-red-700 focus:ring-red-700`                                   |
 
 ## Custom theme
 
