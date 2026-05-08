@@ -30,11 +30,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: stimulus-plumbers/package-lock.json
 
-      - run: rm Gemfile.lock
+      - run: npm ci
+        working-directory: stimulus-plumbers
+
+      - run: npm run build
+        working-directory: stimulus-plumbers
 
       - uses: browser-actions/setup-chrome@v2
-
+      
+      - run: rm Gemfile.lock
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
