@@ -53,6 +53,14 @@ class TailwindThemeFormTest < Minitest::Test
     assert_includes result, "text-gray-900"
   end
 
+  def test_form_label_hidden_includes_sr_only
+    assert_includes classes_for(:form_label, hidden: true), "sr-only"
+  end
+
+  def test_form_label_not_hidden_excludes_sr_only
+    refute_includes classes_for(:form_label, hidden: false), "sr-only"
+  end
+
   # :form_required_mark
 
   def test_form_required_mark_includes_base_classes

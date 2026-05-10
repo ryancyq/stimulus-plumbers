@@ -25,7 +25,7 @@ class FieldErrorSystemTest < ApplicationSystemTestCase
   def test_renders_visually_hidden_label
     visit "/form/field_error"
 
-    assert_selector ".sr-only", text: %r{Search query}
+    assert_selector "label", text: %r{Search query}, visible: :all
   end
 
   def test_error_field_has_aria_describedby

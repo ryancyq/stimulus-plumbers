@@ -38,8 +38,8 @@ module StimulusPlumbers
           { classes: klasses(*GROUP_BASE, layout == :inline ? GROUP_INLINE : "flex-col") }
         end
 
-        def form_label_classes(**)
-          { classes: klasses(*LABEL) }
+        def form_label_classes(hidden: false, **)
+          { classes: klasses(*LABEL, hidden ? "sr-only" : nil) }
         end
 
         def form_required_mark_classes

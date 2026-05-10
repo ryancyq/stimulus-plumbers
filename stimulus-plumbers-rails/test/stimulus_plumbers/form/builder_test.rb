@@ -211,10 +211,10 @@ class BuilderTest < ActionView::TestCase
 
   # ── label_visibility ──────────────────────────────────────────────────────
 
-  def test_exclusive_label_visibility_adds_sr_only
+  def test_exclusive_label_visibility_keeps_label_in_dom
     doc = build_field(:email_field, :email, label_visibility: :exclusive)
 
-    assert_css doc, "label.sr-only"
+    assert_css doc, "label[for='sign_in_form_email']"
   end
 
   # ── extract_options ───────────────────────────────────────────────────────

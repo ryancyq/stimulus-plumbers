@@ -8,7 +8,10 @@ module StimulusPlumbers
           layout: { default: :stacked, range: Schema::Ranges::LAYOUT_RANGE },
           error:  { default: false,    range: Schema::Ranges::BOOL_RANGE }
         }.freeze,
-        form_label:         { required: { default: false, range: Schema::Ranges::BOOL_RANGE } }.freeze,
+        form_label:         {
+          required: { default: false, range: Schema::Ranges::BOOL_RANGE },
+          hidden:   { default: false, range: Schema::Ranges::BOOL_RANGE }
+        }.freeze,
         form_required_mark: {}.freeze,
         form_details:       {}.freeze,
         form_error:         {}.freeze,

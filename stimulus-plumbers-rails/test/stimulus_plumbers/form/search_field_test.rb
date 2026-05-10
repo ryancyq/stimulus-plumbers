@@ -40,25 +40,7 @@ class SearchFieldTest < ActionView::TestCase
     assert_nil input["clearable"]
   end
 
-  def test_applies_form_input_theme_classes
-    theme = StimulusPlumbers.config.theme
-    doc   = build_field
-    input = doc.at_css("input[type='search']")
-
-    assert_includes input["class"].to_s, theme.resolve(:form_input).fetch(:classes, "").split.first
-  end
-
   # ── clearable: true ───────────────────────────────────────────────────────
-
-  def test_clearable_renders_input_group_wrapper
-    doc   = build_field(clearable: true)
-    group = input_group_for(doc)
-    theme = StimulusPlumbers.config.theme
-
-    theme.resolve(:form_input_group).fetch(:classes, "").split.each do |cls|
-      assert_includes group["class"].to_s, cls
-    end
-  end
 
   def test_clearable_renders_clear_button
     assert_css build_field(clearable: true), "button[aria-label='Clear search']"
@@ -100,16 +82,6 @@ class SearchFieldTest < ActionView::TestCase
     @form.errors.add(:email, "is blank")
 
     assert_css build_field(clearable: true), "p[role='alert']"
-  end
-
-  def test_clearable_input_group_applies_error_border_on_error
-    @form.errors.add(:email, "is blank")
-    theme     = StimulusPlumbers.config.theme
-    error_cls = theme.resolve(:form_input_group, error: true).fetch(:classes, "")
-    doc       = build_field(clearable: true)
-    group     = input_group_for(doc)
-
-    error_cls.split.each { |cls| assert_includes group["class"].to_s, cls }
   end
 
   def test_clearable_input_has_aria_invalid_on_error

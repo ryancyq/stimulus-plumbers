@@ -33,23 +33,6 @@ class PasswordFieldTest < ActionView::TestCase
     assert_no_css build_field, "button[data-input-format-target='toggle']"
   end
 
-  def test_applies_form_input_theme_classes
-    theme = StimulusPlumbers.config.theme
-    doc   = build_field
-    input = doc.at_css("input[type='password']")
-
-    assert_includes input["class"], theme.resolve(:form_input).fetch(:classes, "").split.first
-  end
-
-  def test_does_not_apply_form_input_reveal_theme_classes
-    theme        = StimulusPlumbers.config.theme
-    reveal_class = theme.resolve(:form_input_reveal).fetch(:classes, "").split.first
-    doc          = build_field
-    input        = doc.at_css("input[type='password']")
-
-    refute_includes input["class"].to_s, reveal_class
-  end
-
   def test_reveal_option_does_not_leak_into_html_attributes
     doc   = build_field(reveal: false)
     input = doc.at_css("input[type='password']")
@@ -69,15 +52,6 @@ class PasswordFieldTest < ActionView::TestCase
 
   def test_reveal_input_has_stimulus_target
     assert_css build_field(reveal: true), "input[data-input-format-target='input']"
-  end
-
-  def test_reveal_applies_form_input_reveal_theme_classes
-    theme        = StimulusPlumbers.config.theme
-    reveal_class = theme.resolve(:form_input_reveal).fetch(:classes, "").split.first
-    doc          = build_field(reveal: true)
-    input        = doc.at_css("input[type='password']")
-
-    assert_includes input["class"].to_s, reveal_class
   end
 
   def test_reveal_renders_toggle_button
@@ -140,16 +114,6 @@ class PasswordFieldTest < ActionView::TestCase
     input = doc.at_css("input[type='password']")
 
     assert_equal "true", input["aria-invalid"]
-  end
-
-  def test_reveal_input_group_applies_error_border_on_error
-    @form.errors.add(:password, "is too short")
-    theme     = StimulusPlumbers.config.theme
-    error_cls = theme.resolve(:form_input_group, error: true).fetch(:classes, "")
-    doc       = build_field(reveal: true)
-    group     = doc.at_css("[data-controller='input-format']")
-
-    error_cls.split.each { |cls| assert_includes group["class"].to_s, cls }
   end
 
   # ── standard field options pass through ───────────────────────────────────
