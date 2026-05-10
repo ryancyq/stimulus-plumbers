@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rails/rails.git
-  revision: ce3fb7af108d5ee31c06e3765a6694eace0677c4
+  revision: f9b888b3538f2987fef63ad120a8befbfc0c2370
   branch: main
   specs:
     actioncable (8.2.0.alpha)
@@ -103,13 +103,13 @@ GIT
 PATH
   remote: ..
   specs:
-    stimulus_plumbers (0.2.7)
+    stimulus_plumbers (0.2.8)
       railties (>= 6.1, < 8.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    action_text-trix (2.1.18)
+    action_text-trix (2.1.19)
       railties
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
