@@ -1,5 +1,8 @@
 # @stimulus-plumbers/controllers
 
+[![Version][npm_badge]][npm]
+[![CI][ci_badge]][ci]
+
 Accessible Stimulus controllers following WCAG 2.1+ standards.
 
 ## Requirements
@@ -95,3 +98,8 @@ npm run build         # build dist/
 ## License
 
 MIT © Ryan Chang
+
+[npm_badge]: https://img.shields.io/npm/v/@stimulus-plumbers/controllers.svg
+[npm]: https://www.npmjs.com/package/@stimulus-plumbers/controllers
+[ci_badge]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-stimulus.yml/badge.svg
+[ci]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-stimulus.yml

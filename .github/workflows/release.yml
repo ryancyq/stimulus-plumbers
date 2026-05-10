@@ -30,6 +30,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v6
         with:
@@ -42,6 +44,14 @@ jobs:
 
       - run: npm version ${{ env.VERSION }} --no-git-tag-version
 
+      - uses: orhun/git-cliff-action@v4
+        with:
+          config: stimulus-plumbers/cliff.toml
+          args: --tag stimulus-plumbers/v${{ env.VERSION }}
+        env:
+          OUTPUT: stimulus-plumbers/CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
       - uses: ryancyq/github-signed-commit@v1
         env:
           GH_TOKEN: ${{ github.token }}
@@ -49,6 +59,7 @@ jobs:
           files: |
             stimulus-plumbers/package.json
             stimulus-plumbers/package-lock.json
+            stimulus-plumbers/CHANGELOG.md
           commit-message: "Bump npm @stimulus-plumbers/controllers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers/v${{ env.VERSION }}
 
@@ -77,6 +88,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/download-artifact@v8
         with:
           name: stimulus-plumbers-dist
@@ -97,6 +110,14 @@ jobs:
       - run: bundle exec rake appraisal:setup
       - run: bundle exec rake rubocop:autocorrect_all
 
+      - uses: orhun/git-cliff-action@v4
+        with:
+          config: stimulus-plumbers-rails/cliff.toml
+          args: --tag stimulus-plumbers-rails/v${{ env.VERSION }}
+        env:
+          OUTPUT: stimulus-plumbers-rails/CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
       - uses: ryancyq/github-signed-commit@v1
         env:
           GH_TOKEN: ${{ github.token }}
@@ -105,6 +126,7 @@ jobs:
             stimulus-plumbers-rails/Gemfile.lock
             stimulus-plumbers-rails/gemfiles/*.gemfile.lock
             stimulus-plumbers-rails/lib/stimulus_plumbers/version.rb
+            stimulus-plumbers-rails/CHANGELOG.md
           commit-message: "Bump rubygem stimulus_plumbers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers-rails/v${{ env.VERSION }}
 
