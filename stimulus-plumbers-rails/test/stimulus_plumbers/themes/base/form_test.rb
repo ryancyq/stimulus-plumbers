@@ -52,4 +52,22 @@ class BaseThemeFormTest < Minitest::Test
     end
     mock_logger.verify
   end
+
+  def test_coerces_invalid_form_label_required_to_default_and_warns
+    mock_logger = Minitest::Mock.new
+    mock_logger.expect(:warn, nil, [%r{unknown value "yes"}])
+    Rails.stub(:logger, mock_logger) do
+      @theme.resolve(:form_label, required: "yes")
+    end
+    mock_logger.verify
+  end
+
+  def test_coerces_invalid_form_actor_error_to_default_and_warns
+    mock_logger = Minitest::Mock.new
+    mock_logger.expect(:warn, nil, [%r{unknown value "yes"}])
+    Rails.stub(:logger, mock_logger) do
+      @theme.resolve(:form_actor, error: "yes")
+    end
+    mock_logger.verify
+  end
 end

@@ -41,10 +41,42 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_includes classes_for(:button, variant: :unknown), "bg-[--sp-color-primary]"
   end
 
-  StimulusPlumbers::Themes::Base::SCHEMA[:button][:variant][:range].each do |variant|
-    define_method("test_button_resolves_#{variant}_variant_without_error") do
-      classes_for(:button, variant: variant)
-    end
+  def test_button_secondary_variant_includes_muted_background
+    result = classes_for(:button, variant: :secondary)
+
+    assert_includes result, "bg-[--sp-color-muted]"
+    refute_includes result, "bg-[--sp-color-primary]"
+  end
+
+  def test_button_outline_variant_includes_transparent_background_and_border
+    result = classes_for(:button, variant: :outline)
+
+    assert_includes result, "bg-transparent"
+    assert_includes result, "border-[--sp-color-border]"
+    refute_includes result, "bg-[--sp-color-primary]"
+  end
+
+  def test_button_destructive_variant_includes_destructive_colors
+    result = classes_for(:button, variant: :destructive)
+
+    assert_includes result, "bg-[--sp-color-destructive]"
+    assert_includes result, "text-[--sp-color-destructive-fg]"
+    refute_includes result, "bg-[--sp-color-primary]"
+  end
+
+  def test_button_ghost_variant_includes_muted_hover_only
+    result = classes_for(:button, variant: :ghost)
+
+    assert_includes result, "hover:bg-[--sp-color-muted]"
+    refute_includes result, "bg-[--sp-color-primary]"
+  end
+
+  def test_button_link_variant_includes_primary_text_and_underline
+    result = classes_for(:button, variant: :link)
+
+    assert_includes result, "text-[--sp-color-primary]"
+    assert_includes result, "hover:underline"
+    refute_includes result, "bg-[--sp-color-primary]"
   end
 
   # :button sizes
