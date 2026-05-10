@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require_relative "schema/ranges"
-require_relative "action_list"
-require_relative "avatar"
-require_relative "button"
-require_relative "calendar"
-require_relative "card"
-require_relative "form"
-require_relative "layout"
+require_relative "base/action_list"
+require_relative "base/avatar"
+require_relative "base/button"
+require_relative "base/calendar"
+require_relative "base/card"
+require_relative "base/form"
+require_relative "base/layout"
 
 module StimulusPlumbers
   module Themes

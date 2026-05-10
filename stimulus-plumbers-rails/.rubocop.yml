@@ -92,6 +92,6 @@ Metrics/ParameterLists:
     - lib/stimulus_plumbers/helpers/*.rb
 
 Minitest/MultipleAssertions:
-  Max: 5
+  Max: 8
   Exclude:
     - test/system/**/*_test.rb
