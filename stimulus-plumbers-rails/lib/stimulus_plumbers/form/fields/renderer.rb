@@ -23,8 +23,7 @@ module StimulusPlumbers
         private
 
         def label_html
-          klass = theme.resolve(:form_label, required: field.required).fetch(:classes, "")
-          klass = "#{klass} sr-only".strip if field.label_hidden?
+          klass = theme.resolve(:form_label, required: field.required, hidden: field.label_hidden?).fetch(:classes, "")
 
           inner = field.label_text.dup.html_safe
           if field.required

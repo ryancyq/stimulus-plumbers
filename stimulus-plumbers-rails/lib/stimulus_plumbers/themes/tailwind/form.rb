@@ -21,8 +21,8 @@ module StimulusPlumbers
         CHECKBOX      = %w[size-4 rounded border-gray-500 text-blue-700].freeze
         RADIO         = %w[size-4 border-gray-500 text-blue-700].freeze
 
-        ACTOR_BASE    = %w[flex items-center overflow-hidden rounded-md border].freeze
-        ACTOR_BORDER  = { error: "border-red-700", default: "border-gray-500" }.freeze
+        INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-md border].freeze
+        INPUT_GROUP_BORDER = { error: "border-red-700", default: "border-gray-500" }.freeze
 
         INPUT_REVEAL = %w[
           flex-1 border-0 bg-transparent px-3 py-2 text-sm text-gray-900 focus:outline-none
@@ -38,8 +38,8 @@ module StimulusPlumbers
           { classes: klasses(*GROUP_BASE, layout == :inline ? GROUP_INLINE : "flex-col") }
         end
 
-        def form_label_classes(**)
-          { classes: klasses(*LABEL) }
+        def form_label_classes(hidden: false, **)
+          { classes: klasses(*LABEL, hidden ? "sr-only" : nil) }
         end
 
         def form_required_mark_classes
@@ -78,8 +78,8 @@ module StimulusPlumbers
           { classes: klasses(*RADIO) }
         end
 
-        def form_actor_classes(error: false)
-          { classes: klasses(*ACTOR_BASE, ACTOR_BORDER[error ? :error : :default]) }
+        def form_input_group_classes(error: false)
+          { classes: klasses(*INPUT_GROUP_BASE, INPUT_GROUP_BORDER[error ? :error : :default]) }
         end
 
         def form_combobox_classes(error: false)

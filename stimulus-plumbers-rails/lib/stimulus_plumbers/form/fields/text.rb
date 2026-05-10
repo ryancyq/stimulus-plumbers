@@ -5,10 +5,18 @@ module StimulusPlumbers
     module Fields
       module Text
         FIELD_TYPES = %i[
-          text_field email_field url_field telephone_field search_field
-          number_field color_field date_field datetime_local_field
-          time_field month_field week_field range_field
-          password_field
+          color_field
+          date_field
+          datetime_local_field
+          email_field
+          month_field
+          number_field
+          range_field
+          telephone_field
+          text_field
+          time_field
+          url_field
+          week_field
         ].freeze
 
         FIELD_TYPES.each do |method_name|
