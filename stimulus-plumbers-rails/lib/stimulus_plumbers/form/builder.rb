@@ -3,25 +3,27 @@
 require "action_view/version"
 
 require_relative "field_component"
-require_relative "fields/renderer"
-require_relative "fields/text"
-require_relative "fields/text_area"
-require_relative "fields/file"
-require_relative "fields/select"
 require_relative "fields/choice"
 require_relative "fields/combobox"
+require_relative "fields/file"
+require_relative "fields/password"
+require_relative "fields/renderer"
+require_relative "fields/select"
+require_relative "fields/text"
+require_relative "fields/text_area"
 require_relative "../components/plumber/html_options"
 
 module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
       include Components::Plumber::HtmlOptions
-      include Fields::Text
-      include Fields::TextArea
-      include Fields::File
-      include Fields::Select
       include Fields::Choice
       include Fields::Combobox
+      include Fields::File
+      include Fields::Password
+      include Fields::Select
+      include Fields::Text
+      include Fields::TextArea
 
       private
 
@@ -41,6 +43,15 @@ module StimulusPlumbers
 
       def render_field(field, input_html)
         Fields::Renderer.new(@template, theme, field).call(input_html)
+      end
+
+      def build_input_group(input_tag, field, trailing:, **wrapper_opts)
+        @template.content_tag(
+          :div,
+          input_tag.html_safe + trailing,
+          class: field_theme(:form_input_group, error: field.error?)[:class],
+          **wrapper_opts
+        )
       end
 
       def extract_options(options)
