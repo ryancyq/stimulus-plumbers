@@ -8,6 +8,7 @@ require_relative "fields/combobox"
 require_relative "fields/file"
 require_relative "fields/password"
 require_relative "fields/renderer"
+require_relative "fields/search"
 require_relative "fields/select"
 require_relative "fields/text"
 require_relative "fields/text_area"
@@ -21,6 +22,7 @@ module StimulusPlumbers
       include Fields::Combobox
       include Fields::File
       include Fields::Password
+      include Fields::Search
       include Fields::Select
       include Fields::Text
       include Fields::TextArea

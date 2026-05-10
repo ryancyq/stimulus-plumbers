@@ -12,7 +12,6 @@ module StimulusPlumbers
           month_field
           number_field
           range_field
-          search_field
           telephone_field
           text_field
           time_field
