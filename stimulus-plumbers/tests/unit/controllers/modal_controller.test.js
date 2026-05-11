@@ -33,7 +33,7 @@ describe('ModalController', () => {
       );
     });
 
-    it('does not operate when modal target is missing', () => {
+    it('does not open when modal target is missing', () => {
       document.body.innerHTML = `
         <div data-controller="modal">
           <button data-action="modal#open">Open</button>
@@ -43,10 +43,21 @@ describe('ModalController', () => {
       document.querySelector('button').click();
       expect(document.body.style.overflow).toBe('');
     });
+
+    it('does not close when modal target is missing', async () => {
+      document.body.innerHTML = `
+        <div data-controller="modal">
+          <button data-action="modal#close">Close</button>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(() => document.querySelector('button').click()).not.toThrow();
+    });
   });
 
   describe('native dialog element', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       document.body.innerHTML = `
         <div data-controller="modal">
           <button data-action="modal#open">Open</button>
@@ -59,6 +70,7 @@ describe('ModalController', () => {
       const dialog = document.querySelector('dialog');
       dialog.showModal = vi.fn();
       dialog.close = vi.fn();
+      await new Promise(resolve => setTimeout(resolve, 10));
     });
 
     it('uses showModal() to open', () => {
@@ -116,6 +128,41 @@ describe('ModalController', () => {
       }));
 
       expect(dialog.close).not.toHaveBeenCalled();
+    });
+
+    it('skips focus restore when previously focused element is removed before closing', async () => {
+      const openButton = document.querySelector('[data-action="modal#open"]');
+      openButton.focus();
+      openButton.click();
+      openButton.remove();
+
+      document.querySelector('[data-action="modal#close"]').click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(document.activeElement).not.toBe(openButton);
+    });
+
+    it('opens and closes when called programmatically without an event', () => {
+      const element = document.querySelector('[data-controller="modal"]');
+      const controller = application.getControllerForElementAndIdentifier(element, 'modal');
+      const dialog = document.querySelector('dialog');
+
+      controller.open();
+      expect(dialog.showModal).toHaveBeenCalled();
+
+      controller.close();
+      expect(dialog.close).toHaveBeenCalled();
+    });
+
+    it('removes cancel and click listeners when modal target disconnects', async () => {
+      const dialog = document.querySelector('dialog');
+      const spy = vi.spyOn(dialog, 'removeEventListener');
+
+      dialog.remove();
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(spy).toHaveBeenCalledWith('cancel', expect.any(Function));
+      expect(spy).toHaveBeenCalledWith('click', expect.any(Function));
     });
   });
 
@@ -181,6 +228,13 @@ describe('ModalController', () => {
       expect(document.activeElement).toBe(openButton);
     });
 
+    it('does not throw when custom modal target disconnects', async () => {
+      const modal = document.querySelector('[data-modal-target="modal"]');
+      await expect(async () => {
+        modal.remove();
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }).not.toThrow();
+    });
   });
 
   describe('custom implementation without overlay', () => {

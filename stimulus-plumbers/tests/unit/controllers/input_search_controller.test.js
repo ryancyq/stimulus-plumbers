@@ -186,4 +186,29 @@ describe('InputSearchController', () => {
       expect(() => getController().clear()).not.toThrow()
     })
   })
+
+  describe('inputTargetDisconnected', () => {
+    beforeEach(async () => {
+      await setup(`
+        <div data-controller="input-search">
+          <input type="search" value="" data-input-search-target="input">
+          <button type="button" aria-label="Clear search"
+                  data-input-search-target="clear"
+                  data-action="click->input-search#clear">
+          </button>
+        </div>
+      `)
+    })
+
+    it('removes input and keydown listeners when input target disconnects', async () => {
+      const input = document.querySelector('[data-input-search-target="input"]')
+      const spy = vi.spyOn(input, 'removeEventListener')
+
+      input.remove()
+      await new Promise((resolve) => setTimeout(resolve, 10))
+
+      expect(spy).toHaveBeenCalledWith('input', expect.any(Function))
+      expect(spy).toHaveBeenCalledWith('keydown', expect.any(Function))
+    })
+  })
 })
