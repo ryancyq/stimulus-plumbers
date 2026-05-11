@@ -50,6 +50,68 @@ All field methods accept these options in addition to their own:
 
 All combobox-specific options (`value`, `src`, `format`, `step`, `options`, `label`) are forwarded to the underlying `sp_combobox_*` helper. See [combobox.md](combobox.md) for option details.
 
+## Password field
+
+```erb
+<%= f.password_field :password %>
+<%= f.password_field :password, reveal: true %>
+```
+
+| Option   | Type    | Default | Description                                                                       |
+| -------- | ------- | ------- | --------------------------------------------------------------------------------- |
+| `reveal` | Boolean | `false` | Wraps the input in an input-group with a show/hide button wired to `input-format` |
+
+When `reveal: true`, the field renders an input-group wrapper with the `input-format` controller:
+
+```html
+<div class="...">
+  <!-- field group -->
+  <label for="[id]">Password</label>
+  <div
+    data-controller="input-format"
+    data-input-format-type-value="password"
+    class="flex items-center overflow-hidden rounded-md border border-gray-500"
+  >
+    <input type="password" data-input-format-target="input" />
+    <button
+      type="button"
+      aria-label="Show password"
+      aria-pressed="false"
+      data-input-format-target="toggle"
+      data-action="click->input-format#toggle"
+    ></button>
+  </div>
+</div>
+```
+
+See [input-format.md](../../../stimulus-plumbers/docs/component/input-format.md) for the full controller API.
+
+## Search field
+
+```erb
+<%= f.search_field :query %>
+<%= f.search_field :query, clearable: true %>
+```
+
+| Option      | Type    | Default | Description                                                             |
+| ----------- | ------- | ------- | ----------------------------------------------------------------------- |
+| `clearable` | Boolean | `false` | Wraps the input in an input-group with a "Clear search" button appended |
+
+When `clearable: true`, the field renders an input-group wrapper:
+
+```html
+<div class="...">
+  <!-- field group -->
+  <label for="[id]">Query</label>
+  <div
+    class="flex items-center overflow-hidden rounded-md border border-gray-500"
+  >
+    <input type="search" ... />
+    <button type="button" aria-label="Clear search"></button>
+  </div>
+</div>
+```
+
 ## Standard fields
 
 These wrap Rails' built-in helpers with the field chrome (label, hint, error):
