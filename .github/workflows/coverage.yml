@@ -1,0 +1,136 @@
+name: Code Coverage
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 12 * * 5'
+
+permissions:
+  contents: read
+
+jobs:
+  coverage-stimulus:
+    name: Coverage (Stimulus)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stimulus-plumbers
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          cache: npm
+          cache-dependency-path: stimulus-plumbers/package-lock.json
+
+      - run: npm ci
+      - run: npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: javascript
+          fail_ci_if_error: true
+
+  coverage-rails:
+    name: "Coverage (Rails ${{ matrix.rails-version }} / Ruby ${{ matrix.ruby-version }})"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-rails
+    continue-on-error: ${{ matrix.ruby-version == 'head' }}
+    env:
+      BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/gemfiles/rails_${{ matrix.rails-version }}.gemfile"
+      COV_DIR: "coverage-rails-${{ matrix.rails-version }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version:
+          - "head"
+        rails-version:
+          - "edge"
+        include:
+          - ruby-version: "3.0"
+            rails-version: "6.1"
+          - ruby-version: "3.0"
+            rails-version: "7.1"
+          - ruby-version: "3.1"
+            rails-version: "7.2"
+          - ruby-version: "3.2"
+            rails-version: "8.1"
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - run: rm Gemfile.lock
+      - run: rm gemfiles/*.gemfile.lock
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          rubygems: latest
+          bundler: latest
+          bundler-cache: true
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: stimulus-plumbers/package-lock.json
+
+      - run: npm ci
+        working-directory: stimulus-plumbers
+
+      - run: npm run build
+        working-directory: stimulus-plumbers
+
+      - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake coverage:run"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: "coverage-rails-${{ matrix.rails-version }}-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
+          include-hidden-files: true
+          retention-days: 1
+
+  report:
+    name: "CodeCov (Ruby ${{ matrix.ruby-version }})"
+    needs: [coverage-rails]
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby-version == 'head' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version:
+          - "head"
+        rails-version:
+          - "edge"
+        include:
+          - ruby-version: "3.0"
+            rails-version: "6.1"
+          - ruby-version: "3.0"
+            rails-version: "7.1"
+          - ruby-version: "3.1"
+            rails-version: "7.2"
+          - ruby-version: "3.2"
+            rails-version: "8.1"
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: "coverage-rails-${{ matrix.rails-version }}-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          directory: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ruby
+          fail_ci_if_error: true

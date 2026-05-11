@@ -1,7 +1,7 @@
 # Stimulus Plumbers
 
-[![CI Stimulus][ci_stimulus_badge]][ci_stimulus]
-[![CI Rails][ci_rails_badge]][ci_rails]
+[![@stimulus-plumbers/controllers][npm_badge]][npm]
+[![stimulus_plumbers][rubygems_badge]][rubygems]
 
 Accessible, WCAG 2.1 AA compliant UI components for Rails + Hotwire applications.
 
@@ -18,7 +18,7 @@ The two packages work together: the Rails gem renders semantic, ARIA-wired HTML;
 
 MIT © Ryan Chang
 
-[ci_stimulus_badge]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-stimulus.yml/badge.svg
-[ci_stimulus]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-stimulus.yml
-[ci_rails_badge]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-rails.yml/badge.svg
-[ci_rails]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-rails.yml
+[npm_badge]: https://img.shields.io/npm/v/@stimulus-plumbers/controllers.svg
+[npm]: https://www.npmjs.com/package/@stimulus-plumbers/controllers
+[rubygems_badge]: https://img.shields.io/gem/v/stimulus_plumbers.svg
+[rubygems]: https://rubygems.org/gems/stimulus_plumbers

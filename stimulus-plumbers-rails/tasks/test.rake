@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
-require "rake/testtask"
+require "minitest/test_task"
 
-Rake::TestTask.new("test:unit") do |t|
-  t.libs << "test"
-  t.pattern = "test/stimulus_plumbers/**/*_test.rb"
-  t.verbose = true
+Minitest::TestTask.create("test:unit") do |t|
+  t.test_globs = ["test/stimulus_plumbers/**/*_test.rb"]
+  t.warning = false
 end
 
-Rake::TestTask.new("test:system") do |t|
-  t.libs << "test"
-  t.pattern = "test/system/**/*_system_test.rb"
-  t.verbose = true
+Minitest::TestTask.create("test:system") do |t|
+  t.test_globs = ["test/system/**/*_system_test.rb"]
+  t.warning = false
 end
 
 task test: %w[test:unit test:system]
