@@ -14,13 +14,14 @@ Shows a clear button when a search input has a value, hides it when empty, and c
 | Method    | Wired via     | Description                                                                                     |
 | --------- | ------------- | ----------------------------------------------------------------------------------------------- |
 | `clear()` | `data-action` | Empties the input, hides the clear button, returns focus to the input, dispatches `input` event |
-| `draw()`  | `data-action` | Syncs clear button visibility to the current input value                                        |
+
+> `draw()` is called automatically by the controller whenever the input value changes. It does not need to be wired via `data-action`.
 
 ## Example
 
 ```html
 <div data-controller="input-search">
-  <input type="search" data-input-search-target="input" data-action="input->input-search#draw" />
+  <input type="search" data-input-search-target="input" />
   <button
     type="button"
     aria-label="Clear search"

@@ -3,16 +3,23 @@ import { Controller } from '@hotwired/stimulus';
 export default class InputSearchController extends Controller {
   static targets = ['input', 'clear'];
 
-  connect() {
-    this.draw();
+  initialize() {
+    this.onInput = this.draw.bind(this);
     this.onEscape = this.handleEscape.bind(this);
-    this.inputTarget.addEventListener('keydown', this.onEscape);
   }
 
-  disconnect() {
-    if (this.hasInputTarget) {
-      this.inputTarget.removeEventListener('keydown', this.onEscape);
-    }
+  connect() {
+    this.draw();
+  }
+
+  inputTargetConnected(input) {
+    input.addEventListener('input', this.onInput);
+    input.addEventListener('keydown', this.onEscape);
+  }
+
+  inputTargetDisconnected(input) {
+    input.removeEventListener('input', this.onInput);
+    input.removeEventListener('keydown', this.onEscape);
   }
 
   clear() {
