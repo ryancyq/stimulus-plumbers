@@ -43,6 +43,7 @@ jobs:
     continue-on-error: ${{ matrix.ruby-version == 'head' }}
     env:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/gemfiles/rails_${{ matrix.rails-version }}.gemfile"
+      COV_DIR: "coverage-rails-${{ matrix.rails-version }}"
     strategy:
       fail-fast: false
       matrix:
@@ -90,8 +91,8 @@ jobs:
 
       - uses: actions/upload-artifact@v7
         with:
-          name: "coverage-ruby-${{ matrix.ruby-version }}"
-          path: stimulus-plumbers-rails/coverage/ruby-*
+          name: "coverage-rails-${{ matrix.rails-version }}-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
           include-hidden-files: true
           retention-days: 1
 
@@ -123,13 +124,13 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          pattern: "coverage-ruby-${{ matrix.ruby-version }}*"
-          path: stimulus-plumbers-rails/coverage
+          name: "coverage-rails-${{ matrix.rails-version }}-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v6
         with:
-          directory: stimulus-plumbers-rails/coverage
+          directory: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ruby
           fail_ci_if_error: true
