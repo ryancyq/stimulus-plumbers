@@ -15,4 +15,6 @@ class ComponentsController < ApplicationController
   end
 
   def combobox; end
+
+  def search; end
 end
