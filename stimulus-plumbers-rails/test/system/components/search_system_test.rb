@@ -34,7 +34,8 @@ class SearchSystemTest < ApplicationSystemTestCase
 
   def test_clear_button_hidden_again_after_input_cleared_by_typing
     fill_in "Search", with: "hello"
-    fill_in "Search", with: ""
+    field = find("input[type='search']")
+    "hello".length.times { field.send_keys(:backspace) }
 
     assert_selector "button[aria-label='Clear search']", visible: :hidden
   end
