@@ -2,6 +2,7 @@
 
 [![Version][rubygems_badge]][rubygems]
 [![CI][ci_badge]][ci]
+[![Coverage][coverage_badge]][coverage]
 
 Rails helpers for accessible, WCAG 2.1 AA compliant UI components built on [Stimulus](https://stimulus.hotwired.dev/). Pairs with the [`@stimulus-plumbers/controllers`](../stimulus-plumbers) npm package.
 
@@ -89,3 +90,5 @@ Available appraisals: `rails_6.1`, `rails_7.0`, `rails_7.1`, `rails_7.2`, `rails
 [rubygems]: https://rubygems.org/gems/stimulus_plumbers
 [ci_badge]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-rails.yml/badge.svg
 [ci]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-rails.yml
+[coverage_badge]: https://codecov.io/gh/ryancyq/stimulus-plumbers/graph/badge.svg?token=TODO
+[coverage]: https://codecov.io/gh/ryancyq/stimulus-plumbers
