@@ -16,7 +16,7 @@ class SearchFieldTest < ActionView::TestCase
   end
 
   def input_group_for(doc)
-    doc.at_css("button[aria-label='Clear search']")&.parent
+    doc.at_css("[data-controller='input-search']")
   end
 
   # ── default (no clearable) ────────────────────────────────────────────────
@@ -33,6 +33,10 @@ class SearchFieldTest < ActionView::TestCase
     assert_no_css build_field, "button[aria-label='Clear search']"
   end
 
+  def test_does_not_render_input_group_wrapper
+    assert_no_css build_field, "[data-controller='input-search']"
+  end
+
   def test_clearable_option_does_not_leak_into_html_attributes
     doc   = build_field(clearable: false)
     input = doc.at_css("input[type='search']")
@@ -42,12 +46,36 @@ class SearchFieldTest < ActionView::TestCase
 
   # ── clearable: true ───────────────────────────────────────────────────────
 
+  def test_clearable_renders_input_group_with_stimulus_controller
+    assert_css build_field(clearable: true), "[data-controller='input-search']"
+  end
+
+  def test_clearable_input_group_has_search_role
+    assert_css build_field(clearable: true), "[role='search']"
+  end
+
+  def test_clearable_input_has_stimulus_target
+    assert_css build_field(clearable: true), "input[data-input-search-target='input']"
+  end
+
+  def test_clearable_input_has_inputmode_search
+    assert_css build_field(clearable: true), "input[inputmode='search']"
+  end
+
   def test_clearable_renders_clear_button
     assert_css build_field(clearable: true), "button[aria-label='Clear search']"
   end
 
   def test_clearable_clear_button_type_is_button
     assert_css build_field(clearable: true), "button[type='button']"
+  end
+
+  def test_clearable_clear_button_has_stimulus_target
+    assert_css build_field(clearable: true), "button[data-input-search-target='clear']"
+  end
+
+  def test_clearable_clear_button_has_action
+    assert_css build_field(clearable: true), "button[data-action='click->input-search#clear']"
   end
 
   def test_clearable_input_is_inside_input_group

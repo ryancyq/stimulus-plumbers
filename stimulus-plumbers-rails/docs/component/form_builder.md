@@ -93,24 +93,38 @@ See [input-format.md](../../../stimulus-plumbers/docs/component/input-format.md)
 <%= f.search_field :query, clearable: true %>
 ```
 
-| Option      | Type    | Default | Description                                                             |
-| ----------- | ------- | ------- | ----------------------------------------------------------------------- |
-| `clearable` | Boolean | `false` | Wraps the input in an input-group with a "Clear search" button appended |
+| Option      | Type    | Default | Description                                                                            |
+| ----------- | ------- | ------- | -------------------------------------------------------------------------------------- |
+| `clearable` | Boolean | `false` | Wraps the input in an input-group with a "Clear search" button wired to `input-search` |
 
-When `clearable: true`, the field renders an input-group wrapper:
+When `clearable: true`, the field renders an input-group wrapper with the `input-search` controller:
 
 ```html
 <div class="...">
   <!-- field group -->
   <label for="[id]">Query</label>
   <div
+    role="search"
+    data-controller="input-search"
     class="flex items-center overflow-hidden rounded-md border border-gray-500"
   >
-    <input type="search" ... />
-    <button type="button" aria-label="Clear search"></button>
+    <input
+      type="search"
+      inputmode="search"
+      data-input-search-target="input"
+      ...
+    />
+    <button
+      type="button"
+      aria-label="Clear search"
+      data-input-search-target="clear"
+      data-action="click->input-search#clear"
+    ></button>
   </div>
 </div>
 ```
+
+The `role="search"` landmark identifies the region for screen readers. The native webkit clear button is suppressed via CSS (`input[type=search]::-webkit-search-cancel-button { appearance: none }`) so only the controlled button is visible.
 
 ## Standard fields
 

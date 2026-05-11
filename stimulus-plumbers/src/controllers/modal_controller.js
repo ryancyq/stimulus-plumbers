@@ -6,36 +6,37 @@ import { attachDismisser } from '../plumbers';
 export default class ModalController extends Controller {
   static targets = ['modal', 'overlay'];
 
+  initialize() {
+    this.onCancel = this.close.bind(this);
+  }
+
   connect() {
     if (!this.hasModalTarget) {
       console.error('ModalController requires a modal target. Add data-modal-target="modal" to your element.');
-      return;
     }
+  }
 
-    this.isNativeDialog = this.modalTarget instanceof HTMLDialogElement;
-
+  modalTargetConnected(modal) {
+    this.isNativeDialog = modal instanceof HTMLDialogElement;
     if (this.isNativeDialog) {
-      this.modalTarget.addEventListener('cancel', this.close);
-      this.modalTarget.addEventListener('click', this.onBackdropClick);
+      modal.addEventListener('cancel', this.onCancel);
+      modal.addEventListener('click', this.onBackdropClick);
     } else {
-      this.focusTrap = new FocusTrap(this.modalTarget, {
-        escapeDeactivates: true,
-      });
+      this.focusTrap = new FocusTrap(modal, { escapeDeactivates: true });
+      attachDismisser(this, { element: modal });
+    }
+  }
 
-      attachDismisser(this, { element: this.modalTarget });
+  modalTargetDisconnected(modal) {
+    if (this.isNativeDialog) {
+      modal.removeEventListener('cancel', this.onCancel);
+      modal.removeEventListener('click', this.onBackdropClick);
     }
   }
 
   dismissed = () => {
     this.close();
   };
-
-  disconnect() {
-    if (this.isNativeDialog) {
-      this.modalTarget.removeEventListener('cancel', this.close);
-      this.modalTarget.removeEventListener('click', this.onBackdropClick);
-    }
-  }
 
   open(event) {
     if (event) event.preventDefault();

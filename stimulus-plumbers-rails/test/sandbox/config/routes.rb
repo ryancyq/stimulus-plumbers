@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get :calendar_stimulus
     get :calendar_turbo
     get :combobox
+    get :search
   end
 
   scope "/form", controller: "form" do

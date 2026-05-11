@@ -21,6 +21,7 @@ export { default as DismisserController } from './controllers/dismisser_controll
 export { default as FlipperController } from './controllers/flipper_controller.js';
 export { default as InputComboboxController } from './controllers/input_combobox_controller.js';
 export { default as InputFormatController } from './controllers/input_format_controller.js';
+export { default as InputSearchController } from './controllers/input_search_controller.js';
 export { default as ModalController } from './controllers/modal_controller.js';
 export { default as PannerController } from './controllers/panner_controller.js';
 export { default as PopoverController } from './controllers/popover_controller.js';
