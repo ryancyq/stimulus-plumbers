@@ -18,6 +18,7 @@ jobs:
   test-rails:
     name: "Rails ${{ matrix.rails-version }} / Ruby ${{ matrix.ruby-version }}"
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby-version == 'head' || matrix.rails-version == 'edge' }}
     env:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/gemfiles/rails_${{ matrix.rails-version }}.gemfile"
     strategy:
