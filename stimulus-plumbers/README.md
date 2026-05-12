@@ -104,5 +104,5 @@ MIT © Ryan Chang
 [npm]: https://www.npmjs.com/package/@stimulus-plumbers/controllers
 [ci_badge]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-stimulus.yml/badge.svg
 [ci]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-stimulus.yml
-[coverage_badge]: https://codecov.io/gh/ryancyq/stimulus-plumbers/graph/badge.svg?token=TODO
+[coverage_badge]: https://codecov.io/gh/ryancyq/stimulus-plumbers/graph/badge.svg?token=Z77H6M5GER&flag=javascript
 [coverage]: https://codecov.io/gh/ryancyq/stimulus-plumbers

@@ -90,5 +90,5 @@ Available appraisals: `rails_6.1`, `rails_7.0`, `rails_7.1`, `rails_7.2`, `rails
 [rubygems]: https://rubygems.org/gems/stimulus_plumbers
 [ci_badge]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-rails.yml/badge.svg
 [ci]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-rails.yml
-[coverage_badge]: https://codecov.io/gh/ryancyq/stimulus-plumbers/graph/badge.svg?token=TODO
+[coverage_badge]: https://codecov.io/gh/ryancyq/stimulus-plumbers/graph/badge.svg?token=Z77H6M5GER&flag=ruby
 [coverage]: https://codecov.io/gh/ryancyq/stimulus-plumbers
