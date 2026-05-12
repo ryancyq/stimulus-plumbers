@@ -11,10 +11,10 @@ require_relative "stimulus_plumbers/helpers"
 require_relative "stimulus_plumbers/logger"
 
 # -- Plumber base --
-require_relative "stimulus_plumbers/components/plumber/html_options"
-require_relative "stimulus_plumbers/components/plumber/dispatcher"
-require_relative "stimulus_plumbers/components/plumber/renderer"
-require_relative "stimulus_plumbers/components/plumber/base"
+require_relative "stimulus_plumbers/plumber/html_options"
+require_relative "stimulus_plumbers/plumber/dispatcher"
+require_relative "stimulus_plumbers/plumber/renderer"
+require_relative "stimulus_plumbers/plumber/base"
 
 # -- UI components --
 require_relative "stimulus_plumbers/components/icon/renderer"

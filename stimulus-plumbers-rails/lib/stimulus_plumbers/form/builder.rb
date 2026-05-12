@@ -13,12 +13,12 @@ require_relative "fields/select"
 require_relative "fields/text"
 require_relative "fields/text_area"
 require_relative "fields/submit"
-require_relative "../components/plumber/html_options"
+require_relative "../plumber/html_options"
 
 module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
-      include Components::Plumber::HtmlOptions
+      include Plumber::HtmlOptions
       include Fields::Choice
       include Fields::Combobox
       include Fields::File
