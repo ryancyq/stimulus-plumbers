@@ -2,6 +2,7 @@
 
 [![@stimulus-plumbers/controllers][npm_badge]][npm]
 [![stimulus_plumbers][rubygems_badge]][rubygems]
+[![Coverage][coverage_badge]][coverage]
 
 Accessible, WCAG 2.1 AA compliant UI components for Rails + Hotwire applications.
 
@@ -22,3 +23,5 @@ MIT © Ryan Chang
 [npm]: https://www.npmjs.com/package/@stimulus-plumbers/controllers
 [rubygems_badge]: https://img.shields.io/gem/v/stimulus_plumbers.svg
 [rubygems]: https://rubygems.org/gems/stimulus_plumbers
+[coverage_badge]: https://codecov.io/gh/ryancyq/stimulus-plumbers/graph/badge.svg?token=Z77H6M5GER
+[coverage]: https://codecov.io/gh/ryancyq/stimulus-plumbers

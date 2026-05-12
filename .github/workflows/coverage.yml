@@ -40,26 +40,34 @@ jobs:
     defaults:
       run:
         working-directory: stimulus-plumbers-rails
-    continue-on-error: ${{ matrix.ruby-version == 'head' }}
+    continue-on-error: ${{ matrix.ruby-version == 'head' || matrix.rails-version == 'edge' }}
     env:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/gemfiles/rails_${{ matrix.rails-version }}.gemfile"
       COV_DIR: "coverage-rails-${{ matrix.rails-version }}"
     strategy:
       fail-fast: false
       matrix:
+        # Base: active rails × min compatible ruby (no excludes needed)
         ruby-version:
-          - "head"
+          - "3.2"
         rails-version:
-          - "edge"
+          - "8.0"   # Ruby >= 3.2
+          - "8.1"   # Ruby >= 3.2
         include:
-          - ruby-version: "3.0"
-            rails-version: "6.1"
-          - ruby-version: "3.0"
-            rails-version: "7.1"
-          - ruby-version: "3.1"
-            rails-version: "7.2"
-          - ruby-version: "3.2"
-            rails-version: "8.1"
+          # Rails 7.2 — min ruby is 3.1, below the base
+          - { rails-version: "7.2", ruby-version: "3.1" }
+          # EOL rails — gemspec supports >= 6.1 with Ruby >= 3.0
+          - { rails-version: "6.1", ruby-version: "3.0" }
+          - { rails-version: "6.1", ruby-version: "4.0" }
+          - { rails-version: "6.1", ruby-version: "head" }
+          - { rails-version: "7.0", ruby-version: "3.0" }
+          - { rails-version: "7.0", ruby-version: "4.0" }
+          - { rails-version: "7.0", ruby-version: "head" }
+          - { rails-version: "7.1", ruby-version: "3.0" }
+          - { rails-version: "7.1", ruby-version: "4.0" }
+          - { rails-version: "7.1", ruby-version: "head" }
+          # Rails edge — bleeding edge
+          - { rails-version: "edge", ruby-version: "head" }
     timeout-minutes: 3
 
     steps:
@@ -96,27 +104,35 @@ jobs:
           include-hidden-files: true
           retention-days: 1
 
-  report:
-    name: "CodeCov (Ruby ${{ matrix.ruby-version }})"
+  coverage-rails-report:
+    name: "CodeCov (Rails ${{ matrix.rails-version }} / Ruby ${{ matrix.ruby-version }})"
     needs: [coverage-rails]
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.ruby-version == 'head' }}
+    continue-on-error: ${{ matrix.ruby-version == 'head' || matrix.rails-version == 'edge' }}
     strategy:
       fail-fast: false
       matrix:
+        # Base: active rails × min compatible ruby (no excludes needed)
         ruby-version:
-          - "head"
+          - "3.2"
         rails-version:
-          - "edge"
+          - "8.0"   # Ruby >= 3.2
+          - "8.1"   # Ruby >= 3.2
         include:
-          - ruby-version: "3.0"
-            rails-version: "6.1"
-          - ruby-version: "3.0"
-            rails-version: "7.1"
-          - ruby-version: "3.1"
-            rails-version: "7.2"
-          - ruby-version: "3.2"
-            rails-version: "8.1"
+          # Rails 7.2 — min ruby is 3.1, below the base
+          - { rails-version: "7.2", ruby-version: "3.1" }
+          # EOL rails — gemspec supports >= 6.1 with Ruby >= 3.0
+          - { rails-version: "6.1", ruby-version: "3.0" }
+          - { rails-version: "6.1", ruby-version: "4.0" }
+          - { rails-version: "6.1", ruby-version: "head" }
+          - { rails-version: "7.0", ruby-version: "3.0" }
+          - { rails-version: "7.0", ruby-version: "4.0" }
+          - { rails-version: "7.0", ruby-version: "head" }
+          - { rails-version: "7.1", ruby-version: "3.0" }
+          - { rails-version: "7.1", ruby-version: "4.0" }
+          - { rails-version: "7.1", ruby-version: "head" }
+          # Rails edge — bleeding edge
+          - { rails-version: "edge", ruby-version: "head" }
     timeout-minutes: 3
 
     steps:
