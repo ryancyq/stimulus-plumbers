@@ -48,6 +48,10 @@ require_relative "stimulus_plumbers/components/combobox/time"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field_component"
+require_relative "stimulus_plumbers/form/fields/group"
+require_relative "stimulus_plumbers/form/fields/label"
+require_relative "stimulus_plumbers/form/fields/hint"
+require_relative "stimulus_plumbers/form/fields/error"
 require_relative "stimulus_plumbers/form/builder"
 
 module StimulusPlumbers
