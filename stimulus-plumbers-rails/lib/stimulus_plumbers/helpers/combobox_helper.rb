@@ -9,7 +9,7 @@ module StimulusPlumbers
           popover: { content: Components::Combobox::Date.new(self).render(value: value) }
         )
         opts = opts.deep_merge(trigger: { aria_label: label }) if label
-        Components::Combobox::Renderer.new(self).render(
+        Components::Combobox.new(self).render(
           base_id: sp_dom_id,
           options: opts,
           data:    { input_format_type_value: "date" },
@@ -23,7 +23,7 @@ module StimulusPlumbers
           popover: { content: Components::Combobox::Dropdown.new(self).render(options: options, value: value, label: label) }
         )
         opts = opts.deep_merge(trigger: { aria_label: label }) if label
-        Components::Combobox::Renderer.new(self).render(
+        Components::Combobox.new(self).render(
           base_id: sp_dom_id,
           options: opts,
           **html_options
@@ -45,7 +45,7 @@ module StimulusPlumbers
           }
         )
         opts = opts.deep_merge(trigger: { aria_label: label }) if label
-        Components::Combobox::Renderer.new(self).render(
+        Components::Combobox.new(self).render(
           base_id: id,
           options: opts,
           data:    {
@@ -62,7 +62,7 @@ module StimulusPlumbers
           popover: { content: Components::Combobox::Time.new(self).render(format: format, step: step, value: value) }
         )
         opts = opts.deep_merge(trigger: { aria_label: label }) if label
-        Components::Combobox::Renderer.new(self).render(
+        Components::Combobox.new(self).render(
           base_id: sp_dom_id,
           options: opts,
           data:    { input_format_type_value: "time", input_format_options_value: { format: format }.to_json },

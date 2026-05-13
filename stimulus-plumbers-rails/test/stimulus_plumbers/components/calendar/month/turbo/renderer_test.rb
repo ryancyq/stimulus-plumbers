@@ -4,7 +4,7 @@ require "test_helper"
 
 class CalendarMonthTurboRendererTest < ActionView::TestCase
   def renderer
-    StimulusPlumbers::Components::Calendar::Month::Turbo::Renderer.new(self)
+    StimulusPlumbers::Components::Calendar::Month::Turbo.new(self)
   end
 
   def test_exposes_template

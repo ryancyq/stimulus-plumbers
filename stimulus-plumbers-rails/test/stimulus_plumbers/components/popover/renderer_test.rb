@@ -4,7 +4,7 @@ require "test_helper"
 
 class PopoverRendererTest < ActionView::TestCase
   def renderer
-    StimulusPlumbers::Components::Popover::Renderer.new(self)
+    StimulusPlumbers::Components::Popover.new(self)
   end
 
   # attr_readers
@@ -18,13 +18,13 @@ class PopoverRendererTest < ActionView::TestCase
 
   # rendering
   def test_renders_outer_div
-    html = renderer.popover { |_p| nil }
+    html = renderer.render { |_p| nil }
 
     assert_includes html, "<div"
   end
 
   def test_renders_activator_content
-    html = renderer.popover do |p|
+    html = renderer.render do |p|
       p.activator { "Open" }
     end
 
@@ -32,7 +32,7 @@ class PopoverRendererTest < ActionView::TestCase
   end
 
   def test_renders_content
-    html = renderer.popover do |p|
+    html = renderer.render do |p|
       p.content { "Popover body" }
     end
 
@@ -40,7 +40,7 @@ class PopoverRendererTest < ActionView::TestCase
   end
 
   def test_wraps_content_in_template_when_interactive
-    html = renderer.popover(interactive: true) do |p|
+    html = renderer.render(interactive: true) do |p|
       p.content { "Hidden" }
     end
 
@@ -48,7 +48,7 @@ class PopoverRendererTest < ActionView::TestCase
   end
 
   def test_does_not_wrap_content_in_template_when_not_interactive
-    html = renderer.popover(interactive: false) do |p|
+    html = renderer.render(interactive: false) do |p|
       p.content { "Visible" }
     end
 
@@ -57,7 +57,7 @@ class PopoverRendererTest < ActionView::TestCase
   end
 
   def test_activator_appears_before_content
-    html = renderer.popover do |p|
+    html = renderer.render do |p|
       p.activator { "trigger" }
       p.content   { "body" }
     end
@@ -66,13 +66,13 @@ class PopoverRendererTest < ActionView::TestCase
   end
 
   def test_merges_custom_class
-    html = renderer.popover(class: "dropdown") { |_p| nil }
+    html = renderer.render(class: "dropdown") { |_p| nil }
 
     assert_includes html, "dropdown"
   end
 
   def test_passes_html_options
-    html = renderer.popover(id: "my-popover", data: { controller: "popover" }) { |_p| nil }
+    html = renderer.render(id: "my-popover", data: { controller: "popover" }) { |_p| nil }
 
     assert_includes html, 'id="my-popover"'
     assert_includes html, 'data-controller="popover"'

@@ -19,7 +19,7 @@ module StimulusPlumbers
       private
 
       def calendar_renderer
-        Components::Calendar::Renderer.new(self)
+        Components::Calendar.new(self)
       end
     end
   end

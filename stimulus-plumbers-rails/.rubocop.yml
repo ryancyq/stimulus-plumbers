@@ -53,43 +53,48 @@ Layout/HashAlignment:
 
 Metrics/ClassLength:
   Exclude:
-    - lib/stimulus_plumbers/themes/**/*.rb
-    - test/stimulus_plumbers/components/**/turbo/*_test.rb
-    - test/stimulus_plumbers/components/plumber/*_test.rb
+    - test/stimulus_plumbers/components/calendar/*/turbo/*_test.rb
     - test/stimulus_plumbers/form/*_test.rb
     - test/stimulus_plumbers/helpers/*_test.rb
+    - test/stimulus_plumbers/plumber/*_test.rb
     - test/stimulus_plumbers/themes/**/*_test.rb
 
-Metrics/ModuleLength:
-  Exclude:
-    - lib/stimulus_plumbers/components/plumber/stimulus_registry.rb
-
 Metrics/MethodLength:
+  Max: 15
   Exclude:
-    - lib/stimulus_plumbers/themes/**/*.rb
-    - lib/stimulus_plumbers/components/**/*.rb
+    - lib/stimulus_plumbers/components/calendar/*/turbo.rb
+    - lib/stimulus_plumbers/components/calendar/*/turbo/*.rb
+    - lib/stimulus_plumbers/components/combobox.rb
+    - lib/stimulus_plumbers/components/combobox/**/*.rb
+    - lib/stimulus_plumbers/components/date_picker/*.rb
+    - lib/stimulus_plumbers/components/icon.rb
     - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/fields/*.rb
-    - lib/stimulus_plumbers/helpers/combobox_helper.rb
+    - lib/stimulus_plumbers/helpers/*_helper.rb
+    - lib/stimulus_plumbers/plumber/*.rb
+    - lib/stimulus_plumbers/themes/**/*.rb
     - test/system/**/*_test.rb
 
 Metrics/AbcSize:
   Exclude:
+    - lib/stimulus_plumbers/components/calendar/**/*.rb
+    - lib/stimulus_plumbers/components/date_picker/*.rb
+    - lib/stimulus_plumbers/components/popover.rb
     - lib/stimulus_plumbers/form/builder.rb
-    - lib/stimulus_plumbers/components/**/*.rb
     - lib/stimulus_plumbers/form/fields/*.rb
     - lib/stimulus_plumbers/themes/base.rb
+    - lib/stimulus_plumbers/plumber/*.rb
     - test/system/**/*_test.rb
 
 Layout/LineLength:
-  Max: 125
+  Max: 130
 
 Metrics/ParameterLists:
+  Max: 6
   Exclude:
-    - lib/stimulus_plumbers/components/**/*.rb
-    - lib/stimulus_plumbers/form/field_component.rb
-    - lib/stimulus_plumbers/form/fields/*.rb
-    - lib/stimulus_plumbers/helpers/*.rb
+    - lib/stimulus_plumbers/components/combobox/trigger.rb
+    - lib/stimulus_plumbers/components/combobox/popover.rb
+    - lib/stimulus_plumbers/form/field.rb
 
 Minitest/MultipleAssertions:
   Max: 8

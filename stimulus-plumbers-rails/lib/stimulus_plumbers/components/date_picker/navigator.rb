@@ -20,7 +20,7 @@ module StimulusPlumbers
         private
 
         def icon(icon_options)
-          Icon::Renderer.new(template).icon(
+          Icon.new(template).render(
             classes: theme.resolve(:calendar_navigation_navigator_icon).fetch(:classes, ""),
             **icon_options
           )

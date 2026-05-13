@@ -2,9 +2,9 @@
 
 module StimulusPlumbers
   module Components
-    module Calendar
+    class Calendar
       module Month
-        module Turbo
+        class Turbo
           class DaysOfMonth < Plumber::Base
             DAYS_IN_WEEK = 7
 

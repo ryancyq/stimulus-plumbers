@@ -57,7 +57,28 @@ class ComboboxTimeHelperTest < ActionView::TestCase
     assert_equal popover["id"], trigger["aria-controls"]
   end
 
+  # ── aria ──────────────────────────────────────────────────────────────────
+
+  def test_trigger_aria_expanded_false
+    doc = parse_html(sp_combobox_time)
+
+    assert_css doc, "input[aria-expanded='false']"
+  end
+
+  def test_popover_has_accessible_label
+    doc     = parse_html(sp_combobox_time)
+    popover = doc.at_css("[role='dialog']")
+
+    assert_not_nil popover["aria-label"]
+  end
+
   # ── drums ──────────────────────────────────────────────────────────────────
+
+  def test_time_controller_inside_popover
+    doc = parse_html(sp_combobox_time)
+
+    assert_css doc, "[role='dialog'] [data-controller='combobox-time']"
+  end
 
   def test_renders_hour_minute_period_drums_by_default
     doc = parse_html(sp_combobox_time)
@@ -65,6 +86,14 @@ class ComboboxTimeHelperTest < ActionView::TestCase
     assert_css doc, "ul[role='listbox'][aria-label='Hour']"
     assert_css doc, "ul[role='listbox'][aria-label='Minute']"
     assert_css doc, "ul[role='listbox'][aria-label='Period']"
+  end
+
+  def test_drums_are_keyboard_focusable
+    doc = parse_html(sp_combobox_time)
+
+    assert_css doc, "ul[role='listbox'][aria-label='Hour'][tabindex='0']"
+    assert_css doc, "ul[role='listbox'][aria-label='Minute'][tabindex='0']"
+    assert_css doc, "ul[role='listbox'][aria-label='Period'][tabindex='0']"
   end
 
   def test_h24_format_omits_period_drum
@@ -95,6 +124,35 @@ class ComboboxTimeHelperTest < ActionView::TestCase
     assert_equal %w[00 15 30 45], values
   end
 
+  def test_h12_hour_drum_has_12_options
+    doc   = parse_html(sp_combobox_time)
+    items = doc.css("ul[aria-label='Hour'] li[role='option']")
+
+    assert_equal 12, items.length
+  end
+
+  def test_twelve_hour_drum_values_range_from_one_to_twelve
+    doc    = parse_html(sp_combobox_time)
+    values = doc.css("ul[aria-label='Hour'] li[role='option']").map { |li| li["data-value"] }
+
+    assert_includes values, "1"
+    assert_includes values, "12"
+  end
+
+  def test_minute_drum_has_60_options_by_default
+    doc   = parse_html(sp_combobox_time)
+    items = doc.css("ul[aria-label='Minute'] li[role='option']")
+
+    assert_equal 60, items.length
+  end
+
+  def test_period_drum_has_am_and_pm_options
+    doc = parse_html(sp_combobox_time)
+
+    assert_css doc, "ul[aria-label='Period'] li[role='option'][data-value='AM']"
+    assert_css doc, "ul[aria-label='Period'] li[role='option'][data-value='PM']"
+  end
+
   # ── pre-selection ─────────────────────────────────────────────────────────
 
   def test_pre_selects_from_value
@@ -117,6 +175,20 @@ class ComboboxTimeHelperTest < ActionView::TestCase
 
     assert_css doc, "ul[aria-label='Hour']   li[data-value='12'][aria-selected='true']"
     assert_css doc, "ul[aria-label='Period'] li[data-value='PM'][aria-selected='true']"
+  end
+
+  def test_pre_selects_period_am_for_morning_value
+    doc = parse_html(sp_combobox_time(value: "09:00"))
+
+    assert_css doc, "ul[aria-label='Period'] li[data-value='AM'][aria-selected='true']"
+  end
+
+  def test_no_preselection_without_value
+    doc = parse_html(sp_combobox_time)
+
+    assert_no_css doc, "ul[aria-label='Hour']   li[aria-selected='true']"
+    assert_no_css doc, "ul[aria-label='Minute'] li[aria-selected='true']"
+    assert_no_css doc, "ul[aria-label='Period'] li[aria-selected='true']"
   end
 
   # ── value ─────────────────────────────────────────────────────────────────

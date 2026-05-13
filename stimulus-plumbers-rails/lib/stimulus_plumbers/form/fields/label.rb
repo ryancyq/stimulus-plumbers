@@ -3,7 +3,7 @@
 module StimulusPlumbers
   module Form
     module Fields
-      class Label < Components::Plumber::Base
+      class Label < Plumber::Base
         def render(text:, for_id:, required: false, hidden: false)
           klass = theme.resolve(:form_label, required: required, hidden: hidden).fetch(:classes, "")
 

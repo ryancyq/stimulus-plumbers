@@ -2,9 +2,9 @@
 
 module StimulusPlumbers
   module Components
-    module Calendar
+    class Calendar
       module Month
-        module Turbo
+        class Turbo
           class DaysOfWeek < Plumber::Base
             def render(**kwargs)
               html_options = merge_html_options(

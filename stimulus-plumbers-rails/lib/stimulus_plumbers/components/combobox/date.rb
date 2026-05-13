@@ -2,12 +2,10 @@
 
 module StimulusPlumbers
   module Components
-    module Combobox
-      # Renders the date picker popover body: navigation + calendar grid.
-      # Wires ComboboxDateController; dispatches combobox-date:selected → InputComboboxController.
+    class Combobox
       class Date < Plumber::Base
-        PICKER_CONTROLLER   = "combobox-date"
-        CALENDAR_OUTLET_KEY = "#{PICKER_CONTROLLER.tr("-", "_")}_calendar_month_outlet".freeze
+        STIMULUS_CONTROLLER = "combobox-date"
+        CALENDAR_OUTLET = "#{STIMULUS_CONTROLLER}-calendar-month-outlet".freeze
 
         def self.default_opts
           {
@@ -19,17 +17,17 @@ module StimulusPlumbers
         def render(value: nil, **_kwargs)
           calendar_id = "combobox_date_#{SecureRandom.hex(8)}_calendar"
 
-          template.content_tag(
-            :div,
-            data: {
-              controller:        PICKER_CONTROLLER,
-              CALENDAR_OUTLET_KEY => "##{calendar_id}",
-              action:            [
-                "calendar-month-observer:selected->#{PICKER_CONTROLLER}#onSelected",
-                "#{PICKER_CONTROLLER}:selected->input-combobox#onSelected"
-              ].join(" ")
-            }.tap { |d| d["#{PICKER_CONTROLLER.tr("-", "_")}_date_value"] = value if value }
-          ) do
+          data = {
+            controller:          STIMULUS_CONTROLLER,
+            CALENDAR_OUTLET  => "##{calendar_id}",
+            action:              [
+              "calendar-month-observer:selected->#{STIMULUS_CONTROLLER}#onSelected",
+              "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelected"
+            ].join(" "),
+            "#{STIMULUS_CONTROLLER}-date-value" => value
+          }.compact
+
+          template.content_tag(:div, data: data) do
             template.safe_join([navigation, calendar_month(id: calendar_id)])
           end
         end
@@ -39,12 +37,12 @@ module StimulusPlumbers
         def navigation
           DatePicker::Navigation.new(template).render(
             step:                "month",
-            stimulus_controller: PICKER_CONTROLLER
+            stimulus_controller: STIMULUS_CONTROLLER
           )
         end
 
         def calendar_month(**kwargs)
-          Calendar::Renderer.new(template).month(**kwargs)
+          Calendar.new(template).month(**kwargs)
         end
       end
     end

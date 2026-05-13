@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Helpers
     module ButtonHelper
       def sp_button(content = nil, url: nil, external: false, variant: :primary, size: :md, **html_options, &block)
-        button_renderer.button(
+        button_renderer.render(
           content,
           url: url, external: external, variant: variant, size: size, **html_options,
           &block
@@ -18,7 +18,7 @@ module StimulusPlumbers
       private
 
       def button_renderer
-        Components::Button::Renderer.new(self)
+        Components::Button.new(self)
       end
     end
   end

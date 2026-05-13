@@ -1,25 +1,19 @@
 # frozen_string_literal: true
 
-require_relative "schema/ranges"
-require_relative "base/action_list"
-require_relative "base/avatar"
-require_relative "base/button"
-require_relative "base/calendar"
-require_relative "base/card"
-require_relative "base/form"
-require_relative "base/layout"
+require_relative "schema"
 
 module StimulusPlumbers
   module Themes
     class Base
       SCHEMA = {
-        **ActionList::SCHEMA,
-        **Avatar::SCHEMA,
-        **Button::SCHEMA,
-        **Calendar::SCHEMA,
-        **Card::SCHEMA,
-        **Form::SCHEMA,
-        **Layout::SCHEMA
+        **Schema::ACTION_LIST,
+        **Schema::AVATAR,
+        **Schema::BUTTON,
+        **Schema::CALENDAR,
+        **Schema::CARD,
+        **Schema::COMBOBOX,
+        **Schema::FORM,
+        **Schema::LAYOUT
       }.freeze
 
       def name
