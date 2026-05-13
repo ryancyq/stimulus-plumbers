@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { setExpanded } from '../aria';
+import { attachDismisser } from '../plumbers';
 
 export default class InputComboboxController extends Controller {
   static targets = ['trigger', 'popover', 'value'];
@@ -8,6 +9,14 @@ export default class InputComboboxController extends Controller {
     minLength: { type: Number, default: 1 },
   };
   static outlets = ['combobox-dropdown'];
+
+  connect() {
+    attachDismisser(this);
+  }
+
+  async dismissed() {
+    this.close();
+  }
 
   open() {
     if (!this.hasPopoverTarget) return;

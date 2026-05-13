@@ -1,13 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Application } from '@hotwired/stimulus'
 import InputComboboxController from '../../../src/controllers/input_combobox_controller'
+import { visibilityConfig } from '../../../src/plumbers/plumber/support'
 
 describe('InputComboboxController', () => {
   let application
+  let isVisibleOnlySpy
 
   beforeEach(async () => {
     application = Application.start()
     application.register('input-combobox', InputComboboxController)
+    isVisibleOnlySpy = vi.spyOn(visibilityConfig, 'visibleOnly', 'get').mockReturnValue(false)
 
     document.body.innerHTML = `
       <div data-controller="input-combobox">
@@ -25,6 +28,7 @@ describe('InputComboboxController', () => {
   afterEach(() => {
     application.stop()
     document.body.innerHTML = ''
+    isVisibleOnlySpy.mockRestore()
   })
 
   const getController = () =>
@@ -193,6 +197,41 @@ describe('InputComboboxController', () => {
       const trigger = document.querySelector('[data-input-combobox-target="trigger"]')
       trigger.value = 'hello'
       expect(() => getController().onInput({ target: trigger })).not.toThrow()
+    })
+  })
+
+  describe('dismissed — click outside', () => {
+    it('closes the popover when clicking outside the controller element', async () => {
+      getController().open()
+      expect(document.querySelector('[data-input-combobox-target="popover"]').hidden).toBe(false)
+
+      const outside = document.createElement('button')
+      document.body.appendChild(outside)
+      outside.click()
+      await new Promise((r) => setTimeout(r, 10))
+
+      expect(document.querySelector('[data-input-combobox-target="popover"]').hidden).toBe(true)
+      outside.remove()
+    })
+
+    it('does not close when clicking inside the controller element', async () => {
+      getController().open()
+      document.querySelector('[data-input-combobox-target="popover"]').click()
+      await new Promise((r) => setTimeout(r, 10))
+      expect(document.querySelector('[data-input-combobox-target="popover"]').hidden).toBe(false)
+    })
+
+    it('does not close when popover is already hidden', async () => {
+      const popover = document.querySelector('[data-input-combobox-target="popover"]')
+      expect(popover.hidden).toBe(true)
+
+      const outside = document.createElement('button')
+      document.body.appendChild(outside)
+      outside.click()
+      await new Promise((r) => setTimeout(r, 10))
+
+      expect(popover.hidden).toBe(true)
+      outside.remove()
     })
   })
 
