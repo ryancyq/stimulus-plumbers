@@ -138,4 +138,84 @@ describe('InputComboboxController', () => {
       expect(document.querySelector('[data-input-combobox-target="value"]').value).toBe('abc')
     })
   })
+
+  describe('onInput', () => {
+    const mockOutlet = () => ({ showAll: vi.fn(), filter: vi.fn() })
+
+    function wireOutlet(ctrl, outlet) {
+      Object.defineProperty(ctrl, 'hasComboboxDropdownOutlet', { get: () => true, configurable: true })
+      Object.defineProperty(ctrl, 'comboboxDropdownOutlet', { get: () => outlet, configurable: true })
+    }
+
+    it('ignores input events from elements other than the trigger', () => {
+      const outlet = mockOutlet()
+      wireOutlet(getController(), outlet)
+
+      const other = document.createElement('input')
+      other.value = 'something'
+      getController().onInput({ target: other })
+
+      expect(outlet.showAll).not.toHaveBeenCalled()
+      expect(outlet.filter).not.toHaveBeenCalled()
+    })
+
+    it('calls showAll when query is shorter than minLength', () => {
+      const outlet = mockOutlet()
+      wireOutlet(getController(), outlet)
+
+      const trigger = document.querySelector('[data-input-combobox-target="trigger"]')
+      trigger.value = '' // length 0 < default minLength 1
+      getController().onInput({ target: trigger })
+
+      expect(outlet.showAll).toHaveBeenCalledOnce()
+      expect(outlet.filter).not.toHaveBeenCalled()
+    })
+
+    it('calls filter(query) when query meets minLength', () => {
+      const outlet = mockOutlet()
+      wireOutlet(getController(), outlet)
+
+      const trigger = document.querySelector('[data-input-combobox-target="trigger"]')
+      trigger.value = 'abc'
+      getController().onInput({ target: trigger })
+
+      expect(outlet.filter).toHaveBeenCalledWith('abc')
+      expect(outlet.showAll).not.toHaveBeenCalled()
+    })
+
+    it('does not throw when below minLength and no outlet is connected', () => {
+      const trigger = document.querySelector('[data-input-combobox-target="trigger"]')
+      trigger.value = ''
+      expect(() => getController().onInput({ target: trigger })).not.toThrow()
+    })
+
+    it('does not throw when above minLength and no outlet is connected', () => {
+      const trigger = document.querySelector('[data-input-combobox-target="trigger"]')
+      trigger.value = 'hello'
+      expect(() => getController().onInput({ target: trigger })).not.toThrow()
+    })
+  })
+
+  describe('close — no trigger target', () => {
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="input-combobox">
+          <div data-input-combobox-target="popover">
+            <button>Pick</button>
+          </div>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+    })
+
+    it('hides the popover without throwing when trigger target is absent', () => {
+      const ctrl = application.getControllerForElementAndIdentifier(
+        document.querySelector('[data-controller="input-combobox"]'),
+        'input-combobox'
+      )
+      ctrl.open()
+      expect(() => ctrl.close()).not.toThrow()
+      expect(document.querySelector('[data-input-combobox-target="popover"]').hidden).toBe(true)
+    })
+  })
 })
