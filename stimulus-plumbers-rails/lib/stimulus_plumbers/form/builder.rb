@@ -12,6 +12,7 @@ require_relative "fields/search"
 require_relative "fields/select"
 require_relative "fields/text"
 require_relative "fields/text_area"
+require_relative "fields/submit"
 require_relative "../components/plumber/html_options"
 
 module StimulusPlumbers
@@ -24,6 +25,7 @@ module StimulusPlumbers
       include Fields::Password
       include Fields::Search
       include Fields::Select
+      include Fields::Submit
       include Fields::Text
       include Fields::TextArea
 
