@@ -21,8 +21,8 @@ module StimulusPlumbers
             controller:          STIMULUS_CONTROLLER,
             CALENDAR_OUTLET  => "##{calendar_id}",
             action:              [
-              "calendar-month-observer:selected->#{STIMULUS_CONTROLLER}#onSelected",
-              "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelected"
+              "calendar-month-observer:selected->#{STIMULUS_CONTROLLER}#onSelect",
+              "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
             ].join(" "),
             "#{STIMULUS_CONTROLLER}-date-value" => value
           }.compact

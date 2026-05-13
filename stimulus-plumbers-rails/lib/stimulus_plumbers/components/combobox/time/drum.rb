@@ -16,7 +16,7 @@ module StimulusPlumbers
                   aria:     { label: label },
                   data:     { "#{stimulus_controller}_target": target }
                 },
-                { data: { action: "click->#{stimulus_controller}#select keydown->#{stimulus_controller}#navigate" } }
+                { data: { action: "click->#{stimulus_controller}#select keydown->#{stimulus_controller}#onNavigate" } }
               )
             ) do
               template.safe_join(
