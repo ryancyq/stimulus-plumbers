@@ -111,6 +111,34 @@ class ComboboxDropdownHelperTest < ActionView::TestCase
     assert_empty option.css("span")
   end
 
+  # ── disabled ──────────────────────────────────────────────────────────────
+
+  def test_disabled_option_has_aria_disabled_true
+    options = [["Disabled", "x", { disabled: true }], %w[Enabled y]]
+    doc     = parse_html(sp_combobox_dropdown(options: options))
+
+    assert_css doc, "li[role='option'][data-value='x'][aria-disabled='true']"
+    assert_no_css doc, "li[role='option'][data-value='y'][aria-disabled]"
+  end
+
+  # ── hash options ──────────────────────────────────────────────────────────
+
+  def test_hash_option_renders_label_and_value
+    options = [{ label: "United States", value: "us" }]
+    doc     = parse_html(sp_combobox_dropdown(options: options))
+
+    assert_css doc, "li[role='option'][data-value='us']"
+  end
+
+  def test_hash_option_with_description_renders_two_spans
+    options = [{ label: "United States", value: "us", description: "North America" }]
+    doc     = parse_html(sp_combobox_dropdown(options: options))
+    option  = doc.at_css("li[role='option'][data-value='us']")
+
+    assert_not_nil option
+    assert_equal 2, option.css("span").length
+  end
+
   # ── grouping ──────────────────────────────────────────────────────────────
 
   def test_renders_groups
@@ -124,6 +152,30 @@ class ComboboxDropdownHelperTest < ActionView::TestCase
     doc = parse_html(sp_combobox_dropdown(options: GROUPED_OPTIONS))
 
     assert_css doc, "li[role='group'] ul li[role='option']"
+  end
+
+  def test_group_label_span_is_aria_hidden
+    doc  = parse_html(sp_combobox_dropdown(options: GROUPED_OPTIONS))
+    span = doc.at_css("li[role='group'] span[aria-hidden='true']")
+
+    assert_not_nil span
+    assert_includes span.text, "Americas"
+  end
+
+  def test_total_option_count_across_groups
+    doc     = parse_html(sp_combobox_dropdown(options: GROUPED_OPTIONS))
+    options = doc.css("li[role='option']")
+    expected = GROUPED_OPTIONS.sum { |g| g[:options].length }
+
+    assert_equal expected, options.length
+  end
+
+  # ── aria ──────────────────────────────────────────────────────────────────
+
+  def test_trigger_aria_expanded_false
+    doc = parse_html(sp_combobox_dropdown)
+
+    assert_css doc, "input[aria-expanded='false']"
   end
 
   # ── value ─────────────────────────────────────────────────────────────────

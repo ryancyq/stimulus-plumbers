@@ -73,6 +73,12 @@ class ComboboxAutocompleteHelperTest < ActionView::TestCase
     assert_css doc, "[role='status'][hidden]"
   end
 
+  def test_trigger_aria_expanded_false
+    doc = parse_html(sp_combobox_autocomplete)
+
+    assert_css doc, "input[aria-expanded='false']"
+  end
+
   def test_renders_initial_options_when_provided
     options = [%w[London london], %w[Paris paris]]
     doc     = parse_html(sp_combobox_autocomplete(options: options))
