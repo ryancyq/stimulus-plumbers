@@ -88,6 +88,14 @@ class ComboboxTimeHelperTest < ActionView::TestCase
     assert_css doc, "ul[role='listbox'][aria-label='Period']"
   end
 
+  def test_drums_are_keyboard_focusable
+    doc = parse_html(sp_combobox_time)
+
+    assert_css doc, "ul[role='listbox'][aria-label='Hour'][tabindex='0']"
+    assert_css doc, "ul[role='listbox'][aria-label='Minute'][tabindex='0']"
+    assert_css doc, "ul[role='listbox'][aria-label='Period'][tabindex='0']"
+  end
+
   def test_h24_format_omits_period_drum
     doc = parse_html(sp_combobox_time(format: :h24))
 

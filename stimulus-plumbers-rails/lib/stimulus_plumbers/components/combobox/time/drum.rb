@@ -11,9 +11,10 @@ module StimulusPlumbers
               **merge_html_options(
                 { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
                 {
-                  role: "listbox",
-                  aria: { label: label },
-                  data: { "#{stimulus_controller}_target": target }
+                  role:     "listbox",
+                  tabindex: "0",
+                  aria:     { label: label },
+                  data:     { "#{stimulus_controller}_target": target }
                 },
                 { data: { action: "click->#{stimulus_controller}#select keydown->#{stimulus_controller}#navigate" } }
               )
