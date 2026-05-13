@@ -57,4 +57,41 @@ class TailwindThemeCalendarTest < Minitest::Test
     refute_includes result, "text-[--sp-color-muted-fg]"
     refute_includes result, "opacity-50"
   end
+
+  def test_calendar_includes_width_class
+    assert_includes classes_for(:calendar), "w-full"
+  end
+
+  def test_calendar_days_of_week_includes_grid_classes
+    result = classes_for(:calendar_days_of_week)
+
+    assert_includes result, "grid"
+    assert_includes result, "grid-cols-7"
+  end
+
+  def test_calendar_days_of_month_includes_grid_classes
+    result = classes_for(:calendar_days_of_month)
+
+    assert_includes result, "grid"
+    assert_includes result, "grid-cols-7"
+  end
+
+  def test_calendar_navigation_includes_flex_classes
+    result = classes_for(:calendar_navigation)
+
+    assert_includes result, "flex"
+    assert_includes result, "justify-between"
+  end
+
+  def test_calendar_navigation_navigator_includes_button_classes
+    result = classes_for(:calendar_navigation_navigator)
+
+    assert_includes result, "inline-flex"
+    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "disabled:opacity-50"
+  end
+
+  def test_calendar_navigation_navigator_icon_includes_size_class
+    assert_includes classes_for(:calendar_navigation_navigator_icon), "size-4"
+  end
 end
