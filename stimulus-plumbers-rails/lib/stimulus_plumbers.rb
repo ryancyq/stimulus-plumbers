@@ -39,9 +39,6 @@ require_relative "stimulus_plumbers/components/calendar/month/turbo/days_of_mont
 require_relative "stimulus_plumbers/components/date_picker/navigator"
 require_relative "stimulus_plumbers/components/date_picker/navigation"
 
-# -- Time picker --
-require_relative "stimulus_plumbers/components/time_picker"
-
 # -- Combobox --
 require_relative "stimulus_plumbers/components/combobox"
 require_relative "stimulus_plumbers/components/combobox/trigger"
@@ -52,6 +49,7 @@ require_relative "stimulus_plumbers/components/combobox/date"
 require_relative "stimulus_plumbers/components/combobox/dropdown"
 require_relative "stimulus_plumbers/components/combobox/autocomplete"
 require_relative "stimulus_plumbers/components/combobox/time"
+require_relative "stimulus_plumbers/components/combobox/time/column"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field"

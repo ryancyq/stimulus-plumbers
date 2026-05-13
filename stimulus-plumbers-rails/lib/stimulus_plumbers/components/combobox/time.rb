@@ -39,7 +39,13 @@ module StimulusPlumbers
         end
 
         def hour_drum
-          drum.render(target: "hour", label: "Hour", items: hour_items, selected: current_hour)
+          column.render(
+            stimulus_controller: STIMULUS_CONTROLLER,
+            target:              "hour",
+            label:               "Hour",
+            items:               hour_items,
+            selected:            current_hour
+          )
         end
 
         def minute_drum
@@ -48,14 +54,24 @@ module StimulusPlumbers
             [s, s]
           end
           selected = @time ? snap_minute(@time.min).to_s.rjust(2, "0") : nil
-          drum.render(target: "minute", label: "Minute", items: items, selected: selected)
+          column.render(
+            stimulus_controller: STIMULUS_CONTROLLER,
+            target:              "minute",
+            label:               "Minute",
+            items:               items,
+            selected:            selected
+          )
         end
 
         def period_drum
-          selected = if @time
-                       @time.hour < 12 ? "AM" : "PM"
-                     end
-          drum.render(target: "period", label: "Period", items: [%w[AM AM], %w[PM PM]], selected: selected)
+          selected = @time && (@time.hour < 12 ? "AM" : "PM")
+          column.render(
+            stimulus_controller: STIMULUS_CONTROLLER,
+            target:              "period",
+            label:               "Period",
+            items:               [%w[AM AM], %w[PM PM]],
+            selected:            selected
+          )
         end
 
         def hour_items
@@ -86,8 +102,8 @@ module StimulusPlumbers
           ((minute.to_f / @step).round * @step) % 60
         end
 
-        def drum
-          @drum ||= TimePicker.new(template)
+        def column
+          @column ||= Time::Column.new(template)
         end
 
         def parse_time(value)
