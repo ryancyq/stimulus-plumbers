@@ -2,11 +2,11 @@
 
 module StimulusPlumbers
   module Components
-    module Combobox
+    class Combobox
       # Renders an iOS-style drum/wheel time picker as the popover body.
       # Wires ComboboxTimeController; dispatches combobox-time:selected → InputComboboxController.
       class Time < Plumber::Base
-        PICKER_CONTROLLER = "combobox-time"
+        STIMULUS_CONTROLLER = "combobox-time"
 
         def self.default_opts
           {
@@ -22,8 +22,8 @@ module StimulusPlumbers
           template.content_tag(
             :div,
             data: {
-              controller: PICKER_CONTROLLER,
-              action:     "#{PICKER_CONTROLLER}:selected->input-combobox#onSelected"
+              controller: STIMULUS_CONTROLLER,
+              action:     "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelected"
             }
           ) do
             template.safe_join(drums)
@@ -87,7 +87,7 @@ module StimulusPlumbers
         end
 
         def drum
-          TimePicker::Renderer.new(template)
+          @drum ||= TimePicker.new(template)
         end
 
         def parse_time(value)

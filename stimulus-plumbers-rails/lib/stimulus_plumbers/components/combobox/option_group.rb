@@ -2,7 +2,7 @@
 
 module StimulusPlumbers
   module Components
-    module Combobox
+    class Combobox
       module OptionGroup
         private
 

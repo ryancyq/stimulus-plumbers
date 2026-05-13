@@ -24,7 +24,7 @@ module StimulusPlumbers
       private
 
       def calendar_month_turbo_renderer
-        Components::Calendar::Month::Turbo::Renderer.new(self)
+        Components::Calendar::Month::Turbo.new(self)
       end
     end
   end

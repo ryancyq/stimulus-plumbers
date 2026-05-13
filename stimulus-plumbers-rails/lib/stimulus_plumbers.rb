@@ -17,28 +17,35 @@ require_relative "stimulus_plumbers/plumber/renderer"
 require_relative "stimulus_plumbers/plumber/base"
 
 # -- UI components --
-require_relative "stimulus_plumbers/components/icon/renderer"
-require_relative "stimulus_plumbers/components/avatar/renderer"
-require_relative "stimulus_plumbers/components/button/renderer"
-require_relative "stimulus_plumbers/components/card/renderer"
-require_relative "stimulus_plumbers/components/action_list/renderer"
-require_relative "stimulus_plumbers/components/popover/renderer"
+require_relative "stimulus_plumbers/components/icon"
+require_relative "stimulus_plumbers/components/avatar"
+require_relative "stimulus_plumbers/components/button"
+require_relative "stimulus_plumbers/components/button/group"
+require_relative "stimulus_plumbers/components/card"
+require_relative "stimulus_plumbers/components/card/section"
+require_relative "stimulus_plumbers/components/action_list"
+require_relative "stimulus_plumbers/components/action_list/section"
+require_relative "stimulus_plumbers/components/action_list/item"
+require_relative "stimulus_plumbers/components/popover"
+require_relative "stimulus_plumbers/components/popover/builder"
 
 # -- Calendar --
-require_relative "stimulus_plumbers/components/calendar/renderer"
+require_relative "stimulus_plumbers/components/calendar"
+require_relative "stimulus_plumbers/components/calendar/month/turbo"
 require_relative "stimulus_plumbers/components/calendar/month/turbo/days_of_week"
 require_relative "stimulus_plumbers/components/calendar/month/turbo/days_of_month"
-require_relative "stimulus_plumbers/components/calendar/month/turbo/renderer"
 
 # -- Date picker --
 require_relative "stimulus_plumbers/components/date_picker/navigator"
 require_relative "stimulus_plumbers/components/date_picker/navigation"
 
 # -- Time picker --
-require_relative "stimulus_plumbers/components/time_picker/renderer"
+require_relative "stimulus_plumbers/components/time_picker"
 
 # -- Combobox --
-require_relative "stimulus_plumbers/components/combobox/renderer"
+require_relative "stimulus_plumbers/components/combobox"
+require_relative "stimulus_plumbers/components/combobox/trigger"
+require_relative "stimulus_plumbers/components/combobox/popover"
 require_relative "stimulus_plumbers/components/combobox/option"
 require_relative "stimulus_plumbers/components/combobox/option_group"
 require_relative "stimulus_plumbers/components/combobox/date"

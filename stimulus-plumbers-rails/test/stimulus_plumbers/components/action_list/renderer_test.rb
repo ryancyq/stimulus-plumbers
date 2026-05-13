@@ -4,7 +4,7 @@ require "test_helper"
 
 class ActionListRendererTest < ActionView::TestCase
   def renderer
-    StimulusPlumbers::Components::ActionList::Renderer.new(self)
+    StimulusPlumbers::Components::ActionList.new(self)
   end
 
   # attr_readers
@@ -18,19 +18,19 @@ class ActionListRendererTest < ActionView::TestCase
 
   # list
   def test_list_renders_div
-    html = renderer.list { "" }
+    html = renderer.render { "" }
 
     assert_includes html, "<div"
   end
 
   def test_list_merges_custom_class
-    html = renderer.list(class: "custom") { "" }
+    html = renderer.render(class: "custom") { "" }
 
     assert_includes html, "custom"
   end
 
   def test_list_passes_html_options
-    html = renderer.list(id: "nav", data: { controller: "list" }) { "" }
+    html = renderer.render(id: "nav", data: { controller: "list" }) { "" }
 
     assert_includes html, 'id="nav"'
     assert_includes html, 'data-controller="list"'

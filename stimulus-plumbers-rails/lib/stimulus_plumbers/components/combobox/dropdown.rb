@@ -2,17 +2,17 @@
 
 module StimulusPlumbers
   module Components
-    module Combobox
+    class Combobox
       # Renders a static listbox popover body with combobox-dropdown controller.
       # Supports flat options, descriptions, and option groups.
       class Dropdown < Plumber::Base
         include OptionGroup
 
-        DROPDOWN_CONTROLLER = "combobox-dropdown"
-        DROPDOWN_ACTION     = [
-          "click->combobox-dropdown#select",
-          "keydown->combobox-dropdown#navigate",
-          "combobox-dropdown:selected->input-combobox#onSelected"
+        STIMULUS_CONTROLLER = "combobox-dropdown"
+        STIMULUS_ACTION     = [
+          "click->#{STIMULUS_CONTROLLER}#select",
+          "keydown->#{STIMULUS_CONTROLLER}#navigate",
+          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelected"
         ].join(" ").freeze
 
         def self.default_opts
@@ -20,20 +20,18 @@ module StimulusPlumbers
             popover: {
               tag:      :div,
               haspopup: "listbox",
-              data:     { controller: DROPDOWN_CONTROLLER, action: DROPDOWN_ACTION }
+              data:     { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION }
             }
           }
         end
 
         def render(options: [], value: nil, label: nil, **_kwargs)
-          listbox_attrs = { role: "listbox", data: { "#{DROPDOWN_CONTROLLER}_target": "listbox" } }
+          listbox_attrs = { role: "listbox", data: { "#{STIMULUS_CONTROLLER}_target": "listbox" } }
           listbox_attrs[:aria] = { label: label } if label
 
-          listbox = template.content_tag(:ul, **listbox_attrs) do
+          template.content_tag(:ul, **listbox_attrs) do
             render_items(options, value: value)
           end
-
-          template.safe_join([listbox])
         end
       end
     end

@@ -27,7 +27,7 @@ module StimulusPlumbers
             input:   { name: field_name(attribute), value: current_value },
             popover: { content: popover }
           )
-          wrapper = Components::Combobox::Renderer.new(@template).render(
+          wrapper = Components::Combobox.new(@template).render(
             base_id: base_id,
             options: opts,
             **field_theme(:form_combobox, error: field.error?),

@@ -4,7 +4,7 @@ require "test_helper"
 
 class CardRendererTest < ActionView::TestCase
   def renderer
-    StimulusPlumbers::Components::Card::Renderer.new(self)
+    StimulusPlumbers::Components::Card.new(self)
   end
 
   # attr_readers
@@ -18,33 +18,33 @@ class CardRendererTest < ActionView::TestCase
 
   # card
   def test_card_renders_div
-    html = renderer.card { "Content" }
+    html = renderer.render { "Content" }
 
     assert_includes html, "<div"
     assert_includes html, "Content"
   end
 
   def test_card_renders_title_as_h2
-    html = renderer.card(title: "My Card") { "" }
+    html = renderer.render(title: "My Card") { "" }
 
     assert_includes html, "<h2"
     assert_includes html, "My Card"
   end
 
   def test_card_omits_h2_when_no_title
-    html = renderer.card { "" }
+    html = renderer.render { "" }
 
     refute_includes html, "<h2"
   end
 
   def test_card_merges_custom_class
-    html = renderer.card(class: "elevated") { "" }
+    html = renderer.render(class: "elevated") { "" }
 
     assert_includes html, "elevated"
   end
 
   def test_card_passes_html_options
-    html = renderer.card(id: "main-card") { "" }
+    html = renderer.render(id: "main-card") { "" }
 
     assert_includes html, 'id="main-card"'
   end

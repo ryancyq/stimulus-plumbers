@@ -2,7 +2,7 @@
 
 module StimulusPlumbers
   module Components
-    module Combobox
+    class Combobox
       class Option < Plumber::Base
         def render(label:, value:, description: nil, disabled: false, selected: false)
           aria = { selected: selected ? "true" : "false" }
