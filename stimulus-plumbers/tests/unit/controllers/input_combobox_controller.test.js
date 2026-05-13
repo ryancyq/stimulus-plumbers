@@ -6,11 +6,13 @@ import { visibilityConfig } from '../../../src/plumbers/plumber/support'
 describe('InputComboboxController', () => {
   let application
   let isVisibleOnlySpy
+  let offsetWidthSpy
 
   beforeEach(async () => {
     application = Application.start()
     application.register('input-combobox', InputComboboxController)
     isVisibleOnlySpy = vi.spyOn(visibilityConfig, 'visibleOnly', 'get').mockReturnValue(false)
+    offsetWidthSpy = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(10)
 
     document.body.innerHTML = `
       <div data-controller="input-combobox">
@@ -29,6 +31,7 @@ describe('InputComboboxController', () => {
     application.stop()
     document.body.innerHTML = ''
     isVisibleOnlySpy.mockRestore()
+    offsetWidthSpy.mockRestore()
   })
 
   const getController = () =>
@@ -50,8 +53,8 @@ describe('InputComboboxController', () => {
       ).toBe('true')
     })
 
-    it('moves focus to the first focusable element inside the popover', () => {
-      getController().open()
+    it('moves focus to the first focusable element inside the popover', async () => {
+      await getController().open()
       expect(document.activeElement).toBe(document.getElementById('first-focusable'))
     })
 
@@ -81,8 +84,8 @@ describe('InputComboboxController', () => {
       ).toBe('false')
     })
 
-    it('returns focus to the trigger', () => {
-      getController().close()
+    it('returns focus to the trigger', async () => {
+      await getController().close()
       expect(document.activeElement).toBe(
         document.querySelector('[data-input-combobox-target="trigger"]')
       )
@@ -116,9 +119,9 @@ describe('InputComboboxController', () => {
       expect(document.querySelector('[data-input-combobox-target="popover"]').hidden).toBe(true)
     })
 
-    it('returns focus to trigger after selection', () => {
+    it('returns focus to trigger after selection', async () => {
       getController().open()
-      getController().onSelect({ detail: { value: 'us' } })
+      await getController().onSelect({ detail: { value: 'us' } })
       expect(document.activeElement).toBe(
         document.querySelector('[data-input-combobox-target="trigger"]')
       )

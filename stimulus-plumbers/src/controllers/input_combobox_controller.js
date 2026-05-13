@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import { setExpanded } from '../aria';
-import { attachDismisser } from '../plumbers';
+import { focusFirst } from '../focus';
+import { attachDismisser, attachVisibility } from '../plumbers';
 
 export default class InputComboboxController extends Controller {
   static targets = ['trigger', 'popover', 'value'];
@@ -12,36 +12,44 @@ export default class InputComboboxController extends Controller {
 
   connect() {
     attachDismisser(this);
-  }
-
-  async dismissed() {
-    this.close();
-  }
-
-  open() {
-    if (!this.hasPopoverTarget) return;
-    this.popoverTarget.hidden = false;
-    if (this.hasTriggerTarget) setExpanded(this.triggerTarget, true);
-    this.focusFirstInPopover();
-  }
-
-  close() {
-    if (!this.hasPopoverTarget) return;
-    this.popoverTarget.hidden = true;
-    if (this.hasTriggerTarget) {
-      setExpanded(this.triggerTarget, false);
-      this.triggerTarget.focus();
+    if (this.hasPopoverTarget) {
+      attachVisibility(this, {
+        element: this.popoverTarget,
+        activator: this.hasTriggerTarget ? this.triggerTarget : null,
+      });
     }
   }
 
-  toggle() {
-    this.hasPopoverTarget && this.popoverTarget.hidden ? this.open() : this.close();
+  async dismissed() {
+    await this.close();
+  }
+
+  async open() {
+    if (!this.hasPopoverTarget) return;
+    await this.visibility.show();
+  }
+
+  async close() {
+    if (!this.hasPopoverTarget) return;
+    await this.visibility.hide();
+  }
+
+  async toggle() {
+    this.visibility?.visible ? await this.close() : await this.open();
+  }
+
+  async shown() {
+    if (this.hasPopoverTarget) focusFirst(this.popoverTarget);
+  }
+
+  async hidden() {
+    if (this.hasTriggerTarget) this.triggerTarget.focus();
   }
 
   // Receives combobox-*:selected events from sub-controllers
-  onSelect(event) {
+  async onSelect(event) {
     if (event.detail?.value !== undefined) this.valueValue = event.detail.value;
-    this.close();
+    await this.close();
   }
 
   onInput(event) {
@@ -57,13 +65,5 @@ export default class InputComboboxController extends Controller {
   valueValueChanged(newVal) {
     if (this.hasValueTarget) this.valueTarget.value = newVal;
     this.dispatch('changed', { detail: { value: newVal } });
-  }
-
-  focusFirstInPopover() {
-    if (!this.hasPopoverTarget) return;
-    const focusable = this.popoverTarget.querySelector(
-      'button:not([disabled]), [href], input:not([type="hidden"]):not([disabled]), [tabindex]:not([tabindex="-1"])'
-    );
-    focusable?.focus();
   }
 }
