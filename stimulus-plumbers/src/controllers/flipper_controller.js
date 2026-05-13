@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { attachFlipper } from '../plumbers';
 
-export default class FlipperController extends Controller {
+export default class extends Controller {
   static targets = ['anchor', 'reference'];
   static values = {
     placement: { type: String, default: 'bottom' },

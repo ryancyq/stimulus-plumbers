@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { setPressed } from '../aria';
 import { attachFormatter } from '../plumbers';
 
-export default class InputFormatController extends Controller {
+export default class extends Controller {
   static targets = ['input', 'toggle'];
   static values = {
     type: { type: String, default: 'plain' },

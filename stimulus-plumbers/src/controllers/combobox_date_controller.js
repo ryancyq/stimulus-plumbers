@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { tryParseDate } from '../plumbers/plumber/support';
 
-export default class ComboboxDateController extends Controller {
+export default class extends Controller {
   static targets = ['previous', 'next', 'day', 'month', 'year'];
   static outlets = ['calendar-month'];
   static values = {

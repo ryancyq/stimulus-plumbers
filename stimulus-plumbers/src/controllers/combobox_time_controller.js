@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class ComboboxTimeController extends Controller {
+export default class extends Controller {
   static targets = ['hour', 'minute', 'period'];
 
   connect() {

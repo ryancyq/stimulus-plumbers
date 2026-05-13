@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class ClipboardController extends Controller {
+export default class extends Controller {
   static targets = ['source'];
   static values = {
     type: { type: String, default: 'text/plain' },

@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class InputSearchController extends Controller {
+export default class extends Controller {
   static targets = ['input', 'clear'];
 
   initialize() {
