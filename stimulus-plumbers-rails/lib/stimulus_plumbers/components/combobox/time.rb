@@ -3,8 +3,6 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      # Renders an iOS-style drum/wheel time picker as the popover body.
-      # Wires ComboboxTimeController; dispatches combobox-time:selected → InputComboboxController.
       class Time < Plumber::Base
         STIMULUS_CONTROLLER = "combobox-time"
 
@@ -21,10 +19,13 @@ module StimulusPlumbers
 
           template.content_tag(
             :div,
-            data: {
-              controller: STIMULUS_CONTROLLER,
-              action:     "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelected"
-            }
+            **merge_html_options(
+              { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
+              { data: { controller: STIMULUS_CONTROLLER,
+                        action:     "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelected"
+}
+}
+            )
           ) do
             template.safe_join(drums)
           end
@@ -39,7 +40,7 @@ module StimulusPlumbers
         end
 
         def hour_drum
-          column.render(
+          drum.render(
             stimulus_controller: STIMULUS_CONTROLLER,
             target:              "hour",
             label:               "Hour",
@@ -54,7 +55,7 @@ module StimulusPlumbers
             [s, s]
           end
           selected = @time ? snap_minute(@time.min).to_s.rjust(2, "0") : nil
-          column.render(
+          drum.render(
             stimulus_controller: STIMULUS_CONTROLLER,
             target:              "minute",
             label:               "Minute",
@@ -65,7 +66,7 @@ module StimulusPlumbers
 
         def period_drum
           selected = @time && (@time.hour < 12 ? "AM" : "PM")
-          column.render(
+          drum.render(
             stimulus_controller: STIMULUS_CONTROLLER,
             target:              "period",
             label:               "Period",
@@ -102,8 +103,8 @@ module StimulusPlumbers
           ((minute.to_f / @step).round * @step) % 60
         end
 
-        def column
-          @column ||= Time::Column.new(template)
+        def drum
+          @drum ||= Time::Drum.new(template)
         end
 
         def parse_time(value)

@@ -3,11 +3,7 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      # Renders a static listbox popover body with combobox-dropdown controller.
-      # Supports flat options, descriptions, and option groups.
       class Dropdown < Plumber::Base
-        include OptionGroup
-
         STIMULUS_CONTROLLER = "combobox-dropdown"
         STIMULUS_ACTION     = [
           "click->#{STIMULUS_CONTROLLER}#select",
@@ -26,11 +22,14 @@ module StimulusPlumbers
         end
 
         def render(options: [], value: nil, label: nil, **_kwargs)
-          listbox_attrs = { role: "listbox", data: { "#{STIMULUS_CONTROLLER}_target": "listbox" } }
+          listbox_attrs = merge_html_options(
+            { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
+            { role: "listbox", data: { "#{STIMULUS_CONTROLLER}_target": "listbox" } }
+          )
           listbox_attrs[:aria] = { label: label } if label
 
           template.content_tag(:ul, **listbox_attrs) do
-            render_items(options, value: value)
+            Options.new(template).render(options, value: value)
           end
         end
       end
