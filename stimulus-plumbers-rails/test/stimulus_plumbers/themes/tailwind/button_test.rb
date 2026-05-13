@@ -85,7 +85,7 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_includes classes_for(:button), "h-9"
   end
 
-  StimulusPlumbers::Themes::Schema::Ranges::SIZE_RANGE.each do |size|
+  StimulusPlumbers::Themes::Schema::Ranges::SIZE.each do |size|
     define_method("test_button_resolves_#{size}_size") do
       height = { sm: "h-8", md: "h-9", lg: "h-11" }
 

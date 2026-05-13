@@ -7,14 +7,14 @@ module StimulusPlumbers
     module Schema
       ACTION_LIST = {
         action_list_item: {
-          active: { default: false, range: Ranges::BOOL_RANGE }
+          active: { default: false, range: Ranges::BOOL }
         }.freeze,
         action_list:      {}.freeze
       }.freeze
 
       AVATAR = {
         avatar: {
-          size:  { default: :md, range: Ranges::SIZE_RANGE },
+          size:  { default: :md, range: Ranges::SIZE },
           color: { default: nil, range: :avatar_color_range }
         }.freeze
       }.freeze
@@ -22,11 +22,11 @@ module StimulusPlumbers
       BUTTON = {
         button:       {
           variant: { default: :primary, range: %i[primary secondary outline destructive ghost link].freeze },
-          size:    { default: :md,      range: Ranges::SIZE_RANGE }
+          size:    { default: :md,      range: Ranges::SIZE }
         }.freeze,
         button_group: {
-          alignment: { default: :left, range: Ranges::ALIGN_RANGE },
-          direction: { default: :row,  range: Ranges::DIR_RANGE }
+          alignment: { default: :left, range: Ranges::FLEX_ALIGN },
+          direction: { default: :row,  range: Ranges::FLEX_DIRECTION }
         }.freeze
       }.freeze
 
@@ -35,9 +35,9 @@ module StimulusPlumbers
         calendar_days_of_week:              {}.freeze,
         calendar_days_of_month:             {}.freeze,
         calendar_day:                       {
-          today:    { default: false, range: Ranges::BOOL_RANGE },
-          selected: { default: false, range: Ranges::BOOL_RANGE },
-          outside:  { default: false, range: Ranges::BOOL_RANGE }
+          today:    { default: false, range: Ranges::BOOL },
+          selected: { default: false, range: Ranges::BOOL },
+          outside:  { default: false, range: Ranges::BOOL }
         }.freeze,
         calendar_navigation:                {}.freeze,
         calendar_navigation_navigator:      {}.freeze,
@@ -51,8 +51,8 @@ module StimulusPlumbers
 
       COMBOBOX = {
         combobox_option:               {
-          selected: { default: false, range: Ranges::BOOL_RANGE },
-          disabled: { default: false, range: Ranges::BOOL_RANGE }
+          selected: { default: false, range: Ranges::BOOL },
+          disabled: { default: false, range: Ranges::BOOL }
         }.freeze,
         combobox_option_group:         {}.freeze,
         combobox_listbox:              {}.freeze,
@@ -63,24 +63,24 @@ module StimulusPlumbers
 
       FORM = {
         form_group:         {
-          layout: { default: :stacked, range: Ranges::LAYOUT_RANGE },
-          error:  { default: false,    range: Ranges::BOOL_RANGE }
+          layout: { default: :stacked, range: Ranges::FORM_LAYOUT },
+          error:  { default: false,    range: Ranges::BOOL }
         }.freeze,
         form_label:         {
-          required: { default: false, range: Ranges::BOOL_RANGE },
-          hidden:   { default: false, range: Ranges::BOOL_RANGE }
+          required: { default: false, range: Ranges::BOOL },
+          hidden:   { default: false, range: Ranges::BOOL }
         }.freeze,
         form_required_mark: {}.freeze,
         form_details:       {}.freeze,
         form_error:         {}.freeze,
-        form_input:         { error: { default: false, range: Ranges::BOOL_RANGE } }.freeze,
-        form_textarea:      { error: { default: false, range: Ranges::BOOL_RANGE } }.freeze,
-        form_file:          { error: { default: false, range: Ranges::BOOL_RANGE } }.freeze,
-        form_select:        { error: { default: false, range: Ranges::BOOL_RANGE } }.freeze,
-        form_checkbox:      { error: { default: false, range: Ranges::BOOL_RANGE } }.freeze,
-        form_radio:         { error: { default: false, range: Ranges::BOOL_RANGE } }.freeze,
-        form_input_group:   { error: { default: false, range: Ranges::BOOL_RANGE } }.freeze,
-        form_combobox:      { error: { default: false, range: Ranges::BOOL_RANGE } }.freeze,
+        form_input:         { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_textarea:      { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_file:          { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_select:        { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_checkbox:      { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_radio:         { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_input_group:   { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_combobox:      { error: { default: false, range: Ranges::BOOL } }.freeze,
         form_input_reveal:  {}.freeze,
         form_button_reveal: {}.freeze,
         form_submit:        {
