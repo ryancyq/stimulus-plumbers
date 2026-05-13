@@ -2,7 +2,7 @@
 
 module StimulusPlumbers
   module Form
-    class FieldComponent
+    class Field
       OPTIONS = %i[label details error required label_visibility layout reveal clearable].freeze
 
       attr_reader :object,

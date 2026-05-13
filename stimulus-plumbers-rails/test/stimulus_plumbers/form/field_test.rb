@@ -3,14 +3,14 @@
 require "test_helper"
 require_relative "form_field_model"
 
-class FieldComponentTest < Minitest::Test
+class FieldTest < Minitest::Test
   def setup
     @form = FormFieldModel.new
   end
 
   def component(attribute: :email, **kwargs)
     kwargs[:input_id] ||= "sign_in_form_#{attribute}"
-    StimulusPlumbers::Form::FieldComponent.new(object: @form, attribute: attribute, **kwargs)
+    StimulusPlumbers::Form::Field.new(object: @form, attribute: attribute, **kwargs)
   end
 
   # ── errors ────────────────────────────────────────────────────────────────

@@ -2,7 +2,7 @@
 
 require "action_view/version"
 
-require_relative "field_component"
+require_relative "field"
 require_relative "fields/choice"
 require_relative "fields/combobox"
 require_relative "fields/file"
@@ -32,7 +32,7 @@ module StimulusPlumbers
       private
 
       def build_field(attribute, form_field_opts, input_id: field_id(attribute))
-        FieldComponent.new(
+        Field.new(
           object:           object,
           attribute:        attribute,
           input_id:         input_id,
@@ -59,7 +59,7 @@ module StimulusPlumbers
       end
 
       def extract_options(options)
-        [options.except(*FieldComponent::OPTIONS), options.slice(*FieldComponent::OPTIONS)]
+        [options.except(*Field::OPTIONS), options.slice(*Field::OPTIONS)]
       end
 
       def field_theme(key, **variants)
