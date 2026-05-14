@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { setPressed } from '../aria';
-import { attachInputFormat } from '../plumbers';
+import { attachFormatter } from '../plumbers';
 
 export default class InputFormatController extends Controller {
   static targets = ['input', 'toggle'];
@@ -11,58 +11,55 @@ export default class InputFormatController extends Controller {
   };
 
   connect() {
-    attachInputFormat(this, { type: this.typeValue, options: this.optionsValue });
+    attachFormatter(this, { type: this.typeValue, options: this.optionsValue });
     this.format(this.readValue());
     this.drawToggle();
   }
 
   typeValueChanged() {
-    if (!this.inputFormat) return;
-    attachInputFormat(this, { type: this.typeValue, options: this.optionsValue });
+    if (!this.formatter) return;
+    attachFormatter(this, { type: this.typeValue, options: this.optionsValue });
     this.format(this.readValue());
     this.drawToggle();
   }
 
   optionsValueChanged() {
-    if (!this.inputFormat) return;
-    attachInputFormat(this, { type: this.typeValue, options: this.optionsValue });
+    if (!this.formatter) return;
+    attachFormatter(this, { type: this.typeValue, options: this.optionsValue });
     this.format(this.readValue());
   }
 
   revealedValueChanged() {
-    if (!this.inputFormat) return;
+    if (!this.formatter) return;
     this.format(this.readValue());
     this.drawToggle();
   }
 
-  // Event adapter — wired via data-action="input-combobox:changed->input-format#onChange"
   onChange(event) {
     this.format(event?.detail?.value ?? '');
   }
 
-  // Programmatic API — formats and writes a raw value
   format(value) {
-    if (!this.inputFormat) return;
+    if (!this.formatter) return;
     this.onFormatting(value);
   }
 
   toggle() {
-    if (!this.inputFormat.maskable() && this.typeValue !== 'password') return;
+    if (!this.formatter.maskable() && this.typeValue !== 'password') return;
     this.revealedValue = !this.revealedValue;
   }
 
-  // Event adapter — wired via data-action="clipboard:pasted->input-format#onPaste"
   onPaste(event) {
     const raw = event.detail?.text ?? '';
-    if (!this.inputFormat || !raw) return;
-    const value = this.inputFormat.normalize(raw);
-    if (!this.inputFormat.validate(value)) return;
+    if (!this.formatter || !raw) return;
+    const value = this.formatter.normalize(raw);
+    if (!this.formatter.validate(value)) return;
     this.format(value);
   }
 
   drawToggle() {
     if (!this.hasToggleTarget) return;
-    const hasToggleBehavior = this.inputFormat?.maskable() || this.typeValue === 'password';
+    const hasToggleBehavior = this.formatter?.maskable() || this.typeValue === 'password';
     this.toggleTarget.hidden = !hasToggleBehavior;
     if (hasToggleBehavior) setPressed(this.toggleTarget, this.revealedValue);
   }
@@ -73,18 +70,16 @@ export default class InputFormatController extends Controller {
   }
 
   onFormatting(raw) {
-    if (!this.inputFormat) return;
+    if (!this.formatter) return;
 
     if (this.typeValue === 'password') {
       if (this.hasInputTarget) this.inputTarget.type = this.revealedValue ? 'text' : 'password';
       return;
     }
 
-    const value = this.inputFormat.normalize(raw);
+    const value = this.formatter.normalize(raw);
     const formatted =
-      this.revealedValue || !this.inputFormat.maskable()
-        ? this.inputFormat.format(value)
-        : this.inputFormat.mask(value);
+      this.revealedValue || !this.formatter.maskable() ? this.formatter.format(value) : this.formatter.mask(value);
 
     if (this.hasInputTarget) {
       if (this.inputTarget instanceof HTMLInputElement) {

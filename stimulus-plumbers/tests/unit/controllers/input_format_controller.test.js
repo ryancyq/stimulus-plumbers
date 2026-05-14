@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Application } from '@hotwired/stimulus'
 import InputFormatController from '../../../src/controllers/input_format_controller'
-import { InputFormat } from '../../../src/plumbers/input_format'
+import { Formatter } from '../../../src/plumbers/formatter'
 
 describe('InputFormatController', () => {
   let application
@@ -33,8 +33,8 @@ describe('InputFormatController', () => {
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
-    it('attaches inputFormat on connect', () => {
-      expect(getController().inputFormat).toBeDefined()
+    it('attaches formatter on connect', () => {
+      expect(getController().formatter).toBeDefined()
     })
 
     it('hides the toggle button for non-maskable types', () => {
@@ -239,7 +239,7 @@ describe('InputFormatController', () => {
       expect(output.textContent).toBe('original')
     })
 
-    it('does not throw when there is no inputFormat', async () => {
+    it('does not throw when there is no formatter', async () => {
       document.body.innerHTML = `<div data-controller="input-format"></div>`
       await new Promise((resolve) => setTimeout(resolve, 10))
       expect(() =>
@@ -250,7 +250,7 @@ describe('InputFormatController', () => {
 
   describe('maskable type — custom formatter', () => {
     beforeEach(async () => {
-      InputFormat.register('secret', {
+      Formatter.register('secret', {
         normalize: (raw) => (typeof raw === 'string' ? raw : ''),
         validate: () => true,
         format: (value) => value,

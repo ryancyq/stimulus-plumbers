@@ -1,4 +1,4 @@
-export const PlainInputFormatter = {
+export const PlainFormatter = {
   normalize(raw) {
     if (typeof raw !== 'string') return '';
     return raw;

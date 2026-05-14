@@ -4,7 +4,7 @@ const STRIP_NON_NUMERIC = /[^\d.,-]/g;
 /** Matches a valid canonical amount: optional negative sign, digits, optional decimal part */
 const VALID_AMOUNT_PATTERN = /^-?\d+(\.\d+)?$/;
 
-export const CurrencyInputFormatter = {
+export const CurrencyFormatter = {
   /**
    * Converts raw input to the canonical stored form: a plain decimal number string.
    * Handles US format (1,234.56), European format (1.234,56), and integers ($1,000).
