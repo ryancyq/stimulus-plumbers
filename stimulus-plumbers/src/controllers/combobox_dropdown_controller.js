@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { initComboboxDropdown } from '../plumbers/combobox_dropdown';
 
-export default class ComboboxDropdownController extends Controller {
+export default class extends Controller {
   static targets = ['listbox', 'loading', 'empty'];
   static values = {
     url: { type: String, default: '' },

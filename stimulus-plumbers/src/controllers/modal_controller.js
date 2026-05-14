@@ -3,7 +3,7 @@ import { FocusTrap } from '../focus';
 import { announce } from '../aria';
 import { attachDismisser } from '../plumbers';
 
-export default class ModalController extends Controller {
+export default class extends Controller {
   static targets = ['modal', 'overlay'];
 
   initialize() {

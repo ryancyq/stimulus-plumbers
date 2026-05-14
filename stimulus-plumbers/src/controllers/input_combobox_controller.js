@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { focusFirst } from '../focus';
 import { attachDismisser, attachVisibility } from '../plumbers';
 
-export default class InputComboboxController extends Controller {
+export default class extends Controller {
   static targets = ['trigger', 'popover', 'value'];
   static values = {
     value: String,
