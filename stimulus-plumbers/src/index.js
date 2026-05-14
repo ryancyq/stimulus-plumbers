@@ -10,6 +10,8 @@ export * from './focus.js';
 export * from './keyboard.js';
 export * from './aria.js';
 
+export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
+
 // Export Stimulus controllers
 export { default as CalendarMonthController } from './controllers/calendar_month_controller.js';
 export { default as CalendarMonthObserverController } from './controllers/calendar_month_observer_controller.js';

@@ -7,7 +7,7 @@ const SEPARATED_DATE_PATTERN = /^(\d{1,4})[/\-.](\d{1,2})[/\-.](\d{1,4})$/;
 /** Strips all non-digit characters (used when extracting 8-digit compact dates) */
 const STRIP_NON_DIGITS = /\D/g;
 
-export const DateInputFormatter = {
+export const DateFormatter = {
   /**
    * Converts raw input to the canonical stored form: ISO 8601 YYYY-MM-DD.
    * Accepts a variety of common date formats:
@@ -61,7 +61,7 @@ export const DateInputFormatter = {
    */
   validate(value) {
     if (typeof value !== 'string') return false;
-    const iso = DateInputFormatter.normalize(value);
+    const iso = DateFormatter.normalize(value);
     if (!ISO_DATE_PATTERN.test(iso)) return false;
     const date = new Date(`${iso}T00:00:00Z`);
     return !isNaN(date.getTime()) && date.toISOString().startsWith(iso);

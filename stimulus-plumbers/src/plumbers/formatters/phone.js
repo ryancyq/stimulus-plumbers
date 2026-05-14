@@ -18,7 +18,7 @@ const STRIP_NON_DIGITS = /\D/g;
 /** Matches an E.164 international phone number: + followed by 7–15 digits */
 const E164_PATTERN = /^\+\d{7,15}$/;
 
-export const PhoneInputFormatter = {
+export const PhoneFormatter = {
   /**
    * Converts raw input to canonical form.
    * If input starts with '+', produces E.164 (+digits); otherwise strips to digits only.

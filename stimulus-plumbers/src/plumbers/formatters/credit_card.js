@@ -32,7 +32,7 @@ const VALID_CARD_LENGTH = /^\d{13,19}$/;
 /** Captures groups of up to 4 characters followed by at least one more character */
 const GROUP_FOUR_DIGITS = /(.{4})(?=.)/g;
 
-export const CreditCardInputFormatter = {
+export const CreditCardFormatter = {
   /**
    * Converts raw input to the canonical stored form: digits only, no separators.
    * e.g. '4242 4242 4242 4242' → '4242424242424242'

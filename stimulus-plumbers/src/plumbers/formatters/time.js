@@ -1,7 +1,7 @@
 /** Matches a 24-hour time: HH:MM */
 const H24_PATTERN = /^([01]?\d|2[0-3]):([0-5]\d)$/;
 
-export const TimeInputFormatter = {
+export const TimeFormatter = {
   /**
    * Converts raw input to canonical 24-hour form: HH:MM.
    * Accepts HH:MM (24h) and h:mm AM/PM (12h).
@@ -38,7 +38,7 @@ export const TimeInputFormatter = {
    * @returns {boolean}
    */
   validate(value) {
-    return TimeInputFormatter.normalize(value) !== '';
+    return TimeFormatter.normalize(value) !== '';
   },
 
   /**
