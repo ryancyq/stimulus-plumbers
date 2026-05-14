@@ -7,10 +7,6 @@ on:
   schedule:
     - cron: '0 12 * * 5'
 
-defaults:
-  run:
-    working-directory: stimulus-plumbers-rails
-
 permissions:
   contents: read
 
@@ -19,10 +15,10 @@ jobs:
     name: Define Rails matrix
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set.outputs.matrix }}
+      matrix: ${{ steps.read-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
-      - id: set
+      - id: read-matrix
         run: echo "matrix=$(yq -o=json -I=0 '.' .github/matrix-rails-ruby.yml)" >> $GITHUB_OUTPUT
 
   test-rails:
@@ -30,8 +26,12 @@ jobs:
     needs: [matrix-rails-ruby]
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.ruby-version == 'head' || matrix.rails-version == 'edge' }}
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-rails
     env:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/gemfiles/rails_${{ matrix.rails-version }}.gemfile"
+      COV_DIR: "coverage-rails-${{ matrix.rails-version }}"
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.matrix-rails-ruby.outputs.matrix) }}
@@ -63,5 +63,13 @@ jobs:
       - run: npm run build
         working-directory: stimulus-plumbers
 
-      - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake test:unit"
+      - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake coverage:run"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: "coverage-rails-${{ matrix.rails-version }}-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
+          include-hidden-files: true
+          retention-days: 1
+
       - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake test:system"

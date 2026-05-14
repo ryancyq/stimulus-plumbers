@@ -1,0 +1,48 @@
+name: Coverage Report (Rails)
+on:
+  workflow_run:
+    workflows: ["CI (Rails)"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  matrix-rails-ruby:
+    name: Define Rails matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.read-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: read-matrix
+        run: echo "matrix=$(yq -o=json -I=0 '.' .github/matrix-rails-ruby.yml)" >> $GITHUB_OUTPUT
+
+  report-rails-coverage:
+    name: "CodeCov Rails ${{ matrix.rails-version }} / Ruby ${{ matrix.ruby-version }}"
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    needs: [matrix-rails-ruby]
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby-version == 'head' || matrix.rails-version == 'edge' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix-rails-ruby.outputs.matrix) }}
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: "coverage-rails-${{ matrix.rails-version }}-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          directory: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ruby
+          fail_ci_if_error: true

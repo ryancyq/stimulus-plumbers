@@ -7,10 +7,6 @@ on:
   schedule:
     - cron: '0 12 * * 5'
 
-defaults:
-  run:
-    working-directory: stimulus-plumbers
-
 permissions:
   contents: read
 
@@ -18,6 +14,9 @@ jobs:
   test-stimulus:
     name: Stimulus Tests
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stimulus-plumbers
 
     steps:
       - uses: actions/checkout@v6
@@ -27,4 +26,11 @@ jobs:
           cache-dependency-path: stimulus-plumbers/package-lock.json
 
       - run: npm ci
-      - run: npm run test
+      - run: npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: javascript
+          fail_ci_if_error: true
