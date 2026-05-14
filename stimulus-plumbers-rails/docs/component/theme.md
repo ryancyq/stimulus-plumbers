@@ -38,29 +38,40 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Calendar
 
-| Key                                  | Component                                                | Variants                                         |
-| ------------------------------------ | -------------------------------------------------------- | ------------------------------------------------ |
-| `calendar`                           | `Calendar::Renderer`, `Calendar::Month::Turbo::Renderer` | —                                                |
-| `calendar_days_of_week`              | `Calendar::Month::Turbo::DaysOfWeek`                     | —                                                |
-| `calendar_days_of_month`             | `Calendar::Month::Turbo::DaysOfMonth`                    | —                                                |
-| `calendar_day`                       | `Calendar::Month::Turbo::DaysOfMonth` (each cell)        | `today: bool`, `selected: bool`, `outside: bool` |
-| `calendar_navigation`                | `DatePicker::Navigation`                                 | —                                                |
-| `calendar_navigation_navigator`      | `DatePicker::Navigator` (each button)                    | —                                                |
-| `calendar_navigation_navigator_icon` | `DatePicker::Navigator` (button icon)                    | —                                                |
+| Key                                  | Component                                         | Variants                                         |
+| ------------------------------------ | ------------------------------------------------- | ------------------------------------------------ |
+| `calendar`                           | `Calendar`, `Calendar::Month::Turbo`              | —                                                |
+| `calendar_days_of_week`              | `Calendar::Month::Turbo::DaysOfWeek`              | —                                                |
+| `calendar_days_of_month`             | `Calendar::Month::Turbo::DaysOfMonth`             | —                                                |
+| `calendar_day`                       | `Calendar::Month::Turbo::DaysOfMonth` (each cell) | `today: bool`, `selected: bool`, `outside: bool` |
+| `calendar_navigation`                | `DatePicker::Navigation`                          | —                                                |
+| `calendar_navigation_navigator`      | `DatePicker::Navigator` (each button)             | —                                                |
+| `calendar_navigation_navigator_icon` | `DatePicker::Navigator` (button icon)             | —                                                |
+
+### Combobox
+
+| Key                             | Component                                                                           | Variants                           |
+| ------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
+| `combobox_listbox`              | `Combobox::Dropdown`, `Combobox::Autocomplete`, `Combobox::Time::Drum` (the `<ul>`) | —                                  |
+| `combobox_option`               | `Combobox::Options::Option`                                                         | `selected: bool`, `disabled: bool` |
+| `combobox_option_group`         | `Combobox::Options::OptionGroup`                                                    | —                                  |
+| `combobox_autocomplete_loading` | `Combobox::Autocomplete` (loading indicator)                                        | —                                  |
+| `combobox_autocomplete_empty`   | `Combobox::Autocomplete` (no-results message)                                       | —                                  |
+| `combobox_time`                 | `Combobox::Time` (drum wrapper)                                                     | —                                  |
 
 ### Other components
 
-| Key                | Component                          | Variants                                                                                      |
-| ------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------- |
-| `button`           | `Button::Renderer`                 | `variant: :primary\|:secondary\|:outline\|:destructive\|:ghost\|:link`, `size: :sm\|:md\|:lg` |
-| `button_group`     | `Button::Renderer`                 | `alignment:`, `direction: :row\|:col`                                                         |
-| `action_list`      | `ActionList::Renderer`             | —                                                                                             |
-| `action_list_item` | `ActionList::Renderer` (each item) | `active: bool`                                                                                |
-| `avatar`           | `Avatar::Renderer`                 | `size:`                                                                                       |
-| `card`             | `Card::Renderer`                   | —                                                                                             |
-| `card_section`     | `Card::Renderer`                   | —                                                                                             |
-| `icon`             | `Icon::Renderer`                   | —                                                                                             |
-| `popover`          | `Popover::Renderer`                | —                                                                                             |
+| Key                | Component          | Variants                                                                                      |
+| ------------------ | ------------------ | --------------------------------------------------------------------------------------------- |
+| `button`           | `Button`           | `variant: :primary\|:secondary\|:outline\|:destructive\|:ghost\|:link`, `size: :sm\|:md\|:lg` |
+| `button_group`     | `Button::Group`    | `alignment:`, `direction: :row\|:col`                                                         |
+| `action_list`      | `ActionList`       | —                                                                                             |
+| `action_list_item` | `ActionList::Item` | `active: bool`                                                                                |
+| `avatar`           | `Avatar`           | `size:`                                                                                       |
+| `card`             | `Card`             | —                                                                                             |
+| `card_section`     | `Card::Section`    | —                                                                                             |
+| `icon`             | `Icon`             | —                                                                                             |
+| `popover`          | `Popover`          | —                                                                                             |
 
 ## Custom theme
 
