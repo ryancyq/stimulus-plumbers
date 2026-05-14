@@ -50,7 +50,7 @@ module StimulusPlumbers
           options: opts,
           data:    {
             input_combobox_combobox_dropdown_outlet: "##{popover_id}",
-            action:                                  "input->input-combobox#filter"
+            action:                                  "input->input-combobox#onInput"
           },
           **html_options
         )
