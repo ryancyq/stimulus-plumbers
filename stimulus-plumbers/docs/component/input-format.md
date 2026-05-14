@@ -49,9 +49,9 @@ Formats, masks, and reveals values written to an input element. Handles password
 Custom formatters can be registered at runtime:
 
 ```js
-import { InputFormat } from '@stimulus-plumbers/controllers';
+import { Formatter } from '@stimulus-plumbers/controllers';
 
-InputFormat.register('iban', {
+Formatter.register('iban', {
   normalize: (raw) => raw.replace(/\s/g, '').toUpperCase(),
   validate: (value) => /^[A-Z]{2}\d{2}[A-Z0-9]+$/.test(value),
   format: (value) => value.replace(/(.{4})/g, '$1 ').trim(),
