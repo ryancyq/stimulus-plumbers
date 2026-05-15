@@ -73,3 +73,29 @@ jobs:
           retention-days: 1
 
       - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake test:system"
+
+  test-rails-coverage:
+    name: "CodeCov Rails ${{ matrix.rails-version }} / Ruby ${{ matrix.ruby-version }}"
+    needs: [matrix-rails-ruby, test-rails]
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby-version == 'head' || matrix.rails-version == 'edge' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix-rails-ruby.outputs.matrix) }}
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: "coverage-rails-${{ matrix.rails-version }}-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          directory: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ruby
+          fail_ci_if_error: true
