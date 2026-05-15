@@ -2,14 +2,14 @@
 
 Positions an element relative to an anchor, flipping to the opposite direction when the preferred placement overflows the viewport. Used by `flipper` and `popover`.
 
+Extends `WindowObserver`. Exposes `this.flip()` on the controller, registers window event listeners, and cleans up on `disconnect`.
+
 ## Factory
 
 ```js
 import { attachFlipper } from '../plumbers';
 attachFlipper(controller, options);
 ```
-
-Exposes `this.flip()` on the controller and registers window event listeners. Cleans up on `disconnect`.
 
 ## Options
 
@@ -26,7 +26,7 @@ Exposes `this.flip()` on the controller and registers window event listeners. Cl
 
 ## Controller method — `this.flip()`
 
-Calculates available space around the anchor, positions the element in the preferred direction, and flips to the opposite direction if there is insufficient space. Sets `position: absolute` and writes `top`/`left` styles directly.
+Positions the element relative to the anchor in the preferred direction, flipping to the opposite side when the viewport has insufficient space.
 
 ## Dispatches & callbacks
 
@@ -34,7 +34,3 @@ Calculates available space around the anchor, positions the element in the prefe
 | --------- | ------------------ | ---------------------------------- |
 | Pre-flip  | `{prefix}:flip`    | —                                  |
 | Post-flip | `{prefix}:flipped` | `onFlipped({ target, placement })` |
-
-## Cleanup
-
-`Flipper` patches `controller.disconnect` to call `unobserve()` automatically.
