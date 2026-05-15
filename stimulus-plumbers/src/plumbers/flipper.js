@@ -1,6 +1,6 @@
-import Plumber from './plumber';
-import { defineRect, viewportRect, directionMap } from './plumber/support';
-import { connectTriggerToTarget } from '../aria';
+import WindowObserver from './plumber/window_observer';
+import { defineRect, viewportRect, directionMap } from './plumber/geometry';
+import { connectTriggerToTarget } from '../accessibility/aria';
 
 const defaultOptions = {
   anchor: null,
@@ -12,19 +12,7 @@ const defaultOptions = {
   respectMotion: true,
 };
 
-export class Flipper extends Plumber {
-  /**
-   * Creates a new Flipper plumber instance for smart positioning relative to an anchor.
-   * @param {Object} controller - Stimulus controller instance
-   * @param {Object} [options] - Configuration options
-   * @param {HTMLElement} [options.anchor] - Anchor element for positioning
-   * @param {string[]} [options.events=['click']] - Events triggering flip calculation
-   * @param {string} [options.placement='bottom'] - Initial placement direction ('top', 'bottom', 'left', 'right')
-   * @param {string} [options.alignment='start'] - Alignment ('start', 'center', 'end')
-   * @param {string} [options.onFlipped='flipped'] - Callback name when flipped
-   * @param {string} [options.ariaRole=null] - ARIA role to set on element
-   * @param {boolean} [options.respectMotion=true] - Respect prefers-reduced-motion preference
-   */
+export class Flipper extends WindowObserver {
   constructor(controller, options = {}) {
     super(controller, options);
 
@@ -43,22 +31,13 @@ export class Flipper extends Plumber {
     this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (this.anchor && this.element) {
-      connectTriggerToTarget({
-        trigger: this.anchor,
-        target: this.element,
-        role: this.ariaRole,
-      });
+      connectTriggerToTarget({ trigger: this.anchor, target: this.element, role: this.ariaRole });
     }
 
     this.enhance();
-    this.observe();
+    this.observe(this.flip);
   }
 
-  /**
-   * Attempts to place element in configured direction, flipping to opposite direction if needed.
-   * For example, if placement is 'bottom' but no space below anchor, flips to 'top'.
-   * @returns {Promise<void>}
-   */
   flip = async () => {
     if (!this.visible) return;
 
@@ -68,7 +47,6 @@ export class Flipper extends Plumber {
 
     const placement = this.flippedRect(this.anchor.getBoundingClientRect(), this.element.getBoundingClientRect());
 
-    // Disable transitions for users who prefer reduced motion
     this.element.style.transition = this.respectMotion && this.prefersReducedMotion ? 'none' : '';
 
     for (const [key, value] of Object.entries(placement)) {
@@ -79,12 +57,6 @@ export class Flipper extends Plumber {
     this.dispatch('flipped', { detail: { placement } });
   };
 
-  /**
-   * Determines the best position that fits within viewport boundaries.
-   * @param {DOMRect} anchorRect - Anchor element's bounding rect
-   * @param {DOMRect} referenceRect - Reference element's bounding rect
-   * @returns {Object} Position object with top and left styles
-   */
   flippedRect(anchorRect, referenceRect) {
     const candidateRects = this.quadrumRect(anchorRect, viewportRect());
     const candidates = [this.placement, directionMap[this.placement]];
@@ -92,7 +64,6 @@ export class Flipper extends Plumber {
     while (!Object.keys(flipped).length && candidates.length > 0) {
       const candidate = candidates.shift();
       if (!this.biggerRectThan(candidateRects[candidate], referenceRect)) continue;
-
       const placementRect = this.quadrumPlacement(anchorRect, candidate, referenceRect);
       const alignmentRect = this.quadrumAlignment(anchorRect, candidate, placementRect);
       flipped['top'] = `${alignmentRect['top'] + window.scrollY}px`;
@@ -105,32 +76,16 @@ export class Flipper extends Plumber {
     return flipped;
   }
 
-  /**
-   * Calculates available space in each direction around the inner rect within outer rect.
-   * @param {Object} inner - Inner rect object
-   * @param {Object} outer - Outer rect object
-   * @returns {Object} Rect objects for each direction (left, right, top, bottom)
-   */
   quadrumRect(inner, outer) {
     return {
-      left: defineRect({
-        x: outer.x,
-        y: outer.y,
-        width: inner.x - outer.x,
-        height: outer.height,
-      }),
+      left: defineRect({ x: outer.x, y: outer.y, width: inner.x - outer.x, height: outer.height }),
       right: defineRect({
         x: inner.x + inner.width,
         y: outer.y,
         width: outer.width - (inner.x + inner.width),
         height: outer.height,
       }),
-      top: defineRect({
-        x: outer.x,
-        y: outer.y,
-        width: outer.width,
-        height: inner.y - outer.y,
-      }),
+      top: defineRect({ x: outer.x, y: outer.y, width: outer.width, height: inner.y - outer.y }),
       bottom: defineRect({
         x: outer.x,
         y: inner.y + inner.height,
@@ -140,14 +95,6 @@ export class Flipper extends Plumber {
     };
   }
 
-  /**
-   * Calculates placement rect for reference element in given direction from anchor.
-   * @param {Object} anchor - Anchor rect object
-   * @param {string} direction - Direction ('top', 'bottom', 'left', 'right')
-   * @param {Object} reference - Reference rect object
-   * @returns {Object} Placed rect object
-   * @throws {string} If direction is invalid
-   */
   quadrumPlacement(anchor, direction, reference) {
     switch (direction) {
       case 'top':
@@ -183,14 +130,6 @@ export class Flipper extends Plumber {
     }
   }
 
-  /**
-   * Applies alignment adjustment to placed rect based on configuration.
-   * @param {Object} anchor - Anchor rect object
-   * @param {string} direction - Direction ('top', 'bottom', 'left', 'right')
-   * @param {Object} reference - Reference rect object
-   * @returns {Object} Aligned rect object
-   * @throws {string} If direction is invalid
-   */
   quadrumAlignment(anchor, direction, reference) {
     switch (direction) {
       case 'top':
@@ -198,75 +137,28 @@ export class Flipper extends Plumber {
         let alignment = anchor.x;
         if (this.alignment === 'center') alignment = anchor.x + anchor.width / 2 - reference.width / 2;
         else if (this.alignment === 'end') alignment = anchor.x + anchor.width - reference.width;
-        return defineRect({
-          x: alignment,
-          y: reference.y,
-          width: reference.width,
-          height: reference.height,
-        });
+        return defineRect({ x: alignment, y: reference.y, width: reference.width, height: reference.height });
       }
       case 'left':
       case 'right': {
         let alignment = anchor.y;
         if (this.alignment === 'center') alignment = anchor.y + anchor.height / 2 - reference.height / 2;
         else if (this.alignment === 'end') alignment = anchor.y + anchor.height - reference.height;
-        return defineRect({
-          x: reference.x,
-          y: alignment,
-          width: reference.width,
-          height: reference.height,
-        });
+        return defineRect({ x: reference.x, y: alignment, width: reference.width, height: reference.height });
       }
       default:
         throw `Unable align at the quadrum, ${direction}`;
     }
   }
 
-  /**
-   * Checks if the big rect can contain the small rect dimensions.
-   * @param {Object} big - Larger rect object
-   * @param {Object} small - Smaller rect object
-   * @returns {boolean} True if big rect can contain small rect
-   */
   biggerRectThan(big, small) {
     return big.height >= small.height && big.width >= small.width;
   }
 
-  /**
-   * Starts observing configured events for flipping.
-   */
-  observe() {
-    this.events.forEach((event) => {
-      window.addEventListener(event, this.flip, true);
-    });
-  }
-
-  /**
-   * Stops observing events for flipping.
-   */
-  unobserve() {
-    this.events.forEach((event) => {
-      window.removeEventListener(event, this.flip, true);
-    });
-  }
-
   enhance() {
-    const context = this;
-    const superDisconnect = context.controller.disconnect.bind(context.controller);
-    Object.assign(this.controller, {
-      disconnect: () => {
-        context.unobserve();
-        superDisconnect();
-      },
-      flip: context.flip.bind(context),
-    });
+    super.enhance();
+    this.controller.flip = this.flip;
   }
 }
 
-/**
- * Factory function to create and attach a Flipper plumber to a controller.
- * @param {Object} controller - Stimulus controller instance
- * @param {Object} [options] - Configuration options
- * @returns {Flipper} Flipper plumber instance
- */
 export const attachFlipper = (controller, options) => new Flipper(controller, options);

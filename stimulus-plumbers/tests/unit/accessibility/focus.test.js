@@ -6,7 +6,7 @@ import {
   focusFirst,
   FocusTrap,
   FocusRestoration,
-} from '../../src/focus'
+} from '../../../src/accessibility/focus'
 
 // jsdom returns offsetWidth=0 and getClientRects()=[] for all elements.
 // Override getClientRects on an element to make isVisible() return true.

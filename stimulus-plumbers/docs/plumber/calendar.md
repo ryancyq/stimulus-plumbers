@@ -9,7 +9,7 @@ import { initCalendar } from '../plumbers';
 this.calendar = initCalendar(controller, options);
 ```
 
-Returns a `Calendar` instance stored on the controller. Does not patch the controller directly — the controller accesses it via `this.calendar`.
+Returns a `Calendar` instance; the controller accesses it via `this.calendar`.
 
 ## Options
 

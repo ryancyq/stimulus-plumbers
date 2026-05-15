@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { tryParseDate } from '../plumbers/plumber/support';
+import { tryParseDate } from '../plumbers/plumber/date';
 
 export default class extends Controller {
   static targets = ['previous', 'next', 'day', 'month', 'year'];

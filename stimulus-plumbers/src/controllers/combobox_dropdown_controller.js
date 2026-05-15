@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import { initComboboxDropdown } from '../plumbers/combobox_dropdown';
+import { Requestor } from '../requestor';
+import { filterOptions } from '../researcher';
 
 export default class extends Controller {
   static targets = ['listbox', 'loading', 'empty'];
@@ -10,7 +11,7 @@ export default class extends Controller {
   };
 
   initialize() {
-    this.comboboxDropdown = initComboboxDropdown(this);
+    this._requestor = new Requestor();
   }
 
   onSelect(event) {
@@ -51,21 +52,28 @@ export default class extends Controller {
     next.scrollIntoView({ block: 'nearest' });
   }
 
-  // Called by input-combobox via outlet when in autocomplete mode
   filter(query) {
     if (this.urlValue) {
-      this.comboboxDropdown.scheduleFetch(query, this.delayValue, {
-        url: this.urlValue,
-        field: this.fieldValue,
-        onLoading: (on) => this.setLoading(on),
-        onLoaded: (html) => {
-          this.listboxTarget.innerHTML = html;
-          this.setEmpty(this.listboxTarget.querySelectorAll('[role="option"]').length === 0);
-        },
-        onError: (err) => console.error('[combobox-dropdown] fetch failed', err),
-      });
+      const url = new URL(this.urlValue, window.location.href);
+      url.searchParams.set(this.fieldValue, query);
+      this.setLoading(true);
+      this._requestor.schedule(
+        () =>
+          this._requestor
+            .request(url)
+            .then((r) => r.text())
+            .then((html) => {
+              this.listboxTarget.innerHTML = html;
+              this.setEmpty(this.listboxTarget.querySelectorAll('[role="option"]').length === 0);
+            })
+            .catch((err) => {
+              if (err.name !== 'AbortError') console.error('[combobox-dropdown] fetch failed', err);
+            })
+            .finally(() => this.setLoading(false)),
+        this.delayValue
+      );
     } else {
-      const visible = this.comboboxDropdown.fuzzyFilter(this.listboxTarget, query);
+      const visible = filterOptions(this.listboxTarget, query);
       this.setEmpty(visible === 0);
     }
   }
@@ -78,11 +86,12 @@ export default class extends Controller {
   setLoading(on) {
     if (this.hasLoadingTarget) this.loadingTarget.hidden = !on;
   }
+
   setEmpty(on) {
     if (this.hasEmptyTarget) this.emptyTarget.hidden = !on;
   }
 
   disconnect() {
-    this.comboboxDropdown.cancel();
+    this._requestor.cancel();
   }
 }

@@ -183,6 +183,13 @@ Listbox with client-side fuzzy filter or server-side fetch. Used by both dropdow
 | ---------------------------- | ----------- | --------------------------- |
 | `combobox-dropdown:selected` | `{ value }` | After an option is selected |
 
+**Filter implementation**
+
+`combobox-dropdown` uses two standalone utilities internally:
+
+- **Client-side** (`url` is empty): calls `filterOptions(listboxTarget, query)` from `researcher.js` — hides non-matching `[role="option"]` elements using fuzzy matching by default. See [Researcher docs](../utility/researcher.md) for strategy and field options.
+- **Server-side** (`url` is set): debounces requests via `Requestor` from `requestor.js`, then issues `GET {url}?{field}={query}`. See [Requestor docs](../utility/requestor.md) for abort and debounce behaviour.
+
 **Server fetch contract**
 
 `GET {url}?{field}={query}` — expected response: an HTML fragment of `<li role="option" data-value="...">` elements, which replaces the inner HTML of the `listbox` target.

@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import { FocusTrap } from '../focus';
-import { announce } from '../aria';
+import { FocusTrap } from '../accessibility/focus';
+import { announce } from '../accessibility/aria';
 import { attachDismisser } from '../plumbers';
 
 export default class extends Controller {

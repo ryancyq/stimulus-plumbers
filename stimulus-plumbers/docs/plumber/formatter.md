@@ -28,8 +28,6 @@ Exposes `this.formatter` on the controller.
 | `mask(value)`     | `(value) → string\|null` | Returns masked display string, or `null` if not maskable |
 | `maskable()`      | `() → boolean`           | True if this formatter supports masking                  |
 
-`this.formatter` is re-defined on every `attachFormatter` call (the property is `configurable: true`), so calling it again with a different type safely swaps the formatter.
-
 ## Built-in types
 
 | `type`         | Class                 | Description                                                              |
@@ -55,7 +53,7 @@ Formatter.register('iban', {
 });
 ```
 
-A custom formatter object must implement `normalize` and `validate`. `format` and `mask` are optional. If `mask` is defined, `maskable()` returns `true` and the `input-format` toggle button is shown.
+`normalize` and `validate` are required. `format` and `mask` are optional.
 
 ## Individual formatters
 

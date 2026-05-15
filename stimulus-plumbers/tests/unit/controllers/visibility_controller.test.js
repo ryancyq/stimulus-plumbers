@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-import { visibilityConfig } from '../../../src/plumbers/plumber/support'
+import { visibilityConfig } from '../../../src/plumbers/plumber/config'
 import VisibilityController from '../../../src/controllers/visibility_controller';
 
 describe('VisibilityController', () => {

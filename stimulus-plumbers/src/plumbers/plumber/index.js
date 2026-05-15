@@ -1,4 +1,5 @@
-import { isWithinViewport, visibilityConfig } from './support';
+import { isWithinViewport } from './geometry';
+import { visibilityConfig } from './config';
 
 const defaultOptions = {
   element: null,

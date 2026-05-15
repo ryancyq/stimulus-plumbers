@@ -3,7 +3,6 @@
  */
 
 export { initCalendar } from './calendar';
-export { initComboboxDropdown } from './combobox_dropdown';
 export { attachContentLoader } from './content_loader';
 export { attachDismisser } from './dismisser';
 export { attachFlipper } from './flipper';

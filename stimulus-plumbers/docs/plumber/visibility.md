@@ -41,8 +41,6 @@ Exposes `this.visibility` on the controller.
 | Pre-hide  | `{prefix}:hide`   | —            |
 | Post-hide | `{prefix}:hidden` | `onHidden()` |
 
-The `hidden` attribute (or configured `hiddenClass`) is toggled synchronously before the callback is awaited, so transitions and focus management can be handled in the controller callback.
-
 ## Multiple instances
 
 A controller can attach more than one `Visibility` instance by providing a unique `visibility` namespace:
