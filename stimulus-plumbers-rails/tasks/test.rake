@@ -7,9 +7,9 @@ Minitest::TestTask.create("test:unit") do |t|
   t.warning = false
 end
 
-Minitest::TestTask.create("test:system") do |t|
-  t.test_globs = ["test/system/**/*_system_test.rb"]
+Minitest::TestTask.create("test:accessibility") do |t|
+  t.test_globs = ["test/accessibility/**/*_accessibility_test.rb"]
   t.warning = false
 end
 
-task test: %w[test:unit test:system]
+task test: %w[test:unit test:accessibility]

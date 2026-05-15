@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../application_system_test_case"
+require_relative "../application_accessibility_test_case"
 
-class CalendarTurboSystemTest < ApplicationSystemTestCase
+class CalendarTurboAccessibilityTest < ApplicationAccessibilityTestCase
   # Each test covers a unique HTML output combination verified by axe.
 
   def test_passes_wcag_with_default_options

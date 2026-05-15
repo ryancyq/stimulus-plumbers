@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../application_system_test_case"
+require_relative "../application_accessibility_test_case"
 
-class SearchSystemTest < ApplicationSystemTestCase
+class SearchAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
     visit "/components/search"

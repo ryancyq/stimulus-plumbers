@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../application_system_test_case"
+require_relative "../application_accessibility_test_case"
 
-class FieldErrorSystemTest < ApplicationSystemTestCase
+class FieldErrorAccessibilityTest < ApplicationAccessibilityTestCase
   def test_renders_required_field_with_indicator
     visit "/form/field_error"
 

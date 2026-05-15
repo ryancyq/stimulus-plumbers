@@ -72,7 +72,7 @@ jobs:
           include-hidden-files: true
           retention-days: 1
 
-      - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake test:system"
+      - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake test:accessibility"
 
   test-rails-coverage:
     name: "CodeCov Rails ${{ matrix.rails-version }} / Ruby ${{ matrix.ruby-version }}"

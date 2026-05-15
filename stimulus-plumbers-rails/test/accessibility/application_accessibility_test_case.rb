@@ -19,7 +19,7 @@ Capybara.register_driver(:cuprite) do |app|
   )
 end
 
-class ApplicationSystemTestCase < Minitest::Test
+class ApplicationAccessibilityTestCase < Minitest::Test
   include Capybara::DSL
   include Capybara::Minitest::Assertions
 
