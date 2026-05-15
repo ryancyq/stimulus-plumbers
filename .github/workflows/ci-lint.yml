@@ -58,7 +58,7 @@ jobs:
       - run: npm run format:check
 
   lint-rubocop:
-    name: "Rubocop"
+    name: "rubocop"
     runs-on: ubuntu-latest
     defaults:
       run:

@@ -51,4 +51,4 @@ jobs:
           bundler: latest
           bundler-cache: true
 
-      - run: bundle exec rake test:system
+      - run: bundle exec rake test:accessibility
