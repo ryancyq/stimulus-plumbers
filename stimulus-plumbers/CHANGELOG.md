@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.2.9](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.2.8..stimulus-plumbers/v0.2.9) - 2026-05-15
+
+### Bug Fixes
+
+- update broken ruby action bindings ([#55](https://github.com/ryancyq/stimulus-plumbers/issues/55)) - ([f2259df](https://github.com/ryancyq/stimulus-plumbers/commit/f2259dfd8f2369bb588ee24fec3d9e8a8f854093)) - Ryan Chang
+- add dismisser to combobox for click/focus outside handling of popover ([#58](https://github.com/ryancyq/stimulus-plumbers/issues/58)) - ([a022862](https://github.com/ryancyq/stimulus-plumbers/commit/a022862a1088f9fa235458fcf25d0b603594a27c)) - Ryan Chang
+- plumbers input-format to formatter ([#59](https://github.com/ryancyq/stimulus-plumbers/issues/59)) - ([d6b849e](https://github.com/ryancyq/stimulus-plumbers/commit/d6b849e63dfe8efe03730e289f2533bb93e0f49f)) - Ryan Chang
+- keep to anonymous controllers ([#60](https://github.com/ryancyq/stimulus-plumbers/issues/60)) - ([68aed50](https://github.com/ryancyq/stimulus-plumbers/commit/68aed5031b765715657ac7afce71d16ce8dcd428)) - Ryan Chang
+
+### Documentation
+
+- update form input ([#49](https://github.com/ryancyq/stimulus-plumbers/issues/49)) - ([dd35b7f](https://github.com/ryancyq/stimulus-plumbers/commit/dd35b7fdadf5ffb8808b00c0c5b75542bcde4d02)) - Ryan Chang
+
+### Features
+
+- form input search ([#50](https://github.com/ryancyq/stimulus-plumbers/issues/50)) - ([130b966](https://github.com/ryancyq/stimulus-plumbers/commit/130b9666a644a54b94da5ba23f5d0b32a0458f53)) - Ryan Chang
+
+### Tests
+
+- code coverage report ([#48](https://github.com/ryancyq/stimulus-plumbers/issues/48)) - ([78950e6](https://github.com/ryancyq/stimulus-plumbers/commit/78950e603ac7e003b5c6361ab6016796caca3397)) - Ryan Chang
+- improve coverage for input + focus ([#54](https://github.com/ryancyq/stimulus-plumbers/issues/54)) - ([a333ae6](https://github.com/ryancyq/stimulus-plumbers/commit/a333ae68539eb42f97472c2515d7f198a9b87191)) - Ryan Chang
+
+---
 ## [0.2.3](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.2.2..stimulus-plumbers/v0.2.3) - 2026-05-06
 
 ### Dependencies
