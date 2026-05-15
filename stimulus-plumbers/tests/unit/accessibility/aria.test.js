@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { announce, connectTriggerToTarget, disconnectTriggerFromTarget } from '../../src/aria';
+import { announce, connectTriggerToTarget, disconnectTriggerFromTarget } from '../../../src/accessibility/aria';
 
 describe('ARIA utilities', () => {
   let trigger;

@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { focusFirst } from '../focus';
+import { focusFirst } from '../accessibility/focus';
 import { attachDismisser, attachVisibility } from '../plumbers';
 
 export default class extends Controller {

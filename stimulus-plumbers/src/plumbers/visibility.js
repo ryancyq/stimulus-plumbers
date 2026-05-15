@@ -1,5 +1,5 @@
 import Plumber from './plumber';
-import { visibilityConfig } from './plumber/support';
+import { visibilityConfig } from './plumber/config';
 
 const defaultOptions = {
   visibility: 'visibility',

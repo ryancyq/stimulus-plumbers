@@ -1,5 +1,5 @@
 import Plumber from './plumber';
-import { isValidDate, tryParseDate } from './plumber/support';
+import { isValidDate, tryParseDate } from './plumber/date';
 
 const DAYS_OF_WEEK = 7;
 

@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { setPressed } from '../aria';
+import { setPressed } from '../accessibility/aria';
 import { attachFormatter } from '../plumbers';
 
 export default class extends Controller {

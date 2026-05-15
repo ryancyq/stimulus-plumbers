@@ -5,10 +5,14 @@
  * Following WCAG 2.1+ and WAI-ARIA best practices
  */
 
-// Export utilities (framework-agnostic)
-export * from './focus.js';
-export * from './keyboard.js';
-export * from './aria.js';
+// Export accessibility utilities
+export * from './accessibility/focus.js';
+export * from './accessibility/keyboard.js';
+export * from './accessibility/aria.js';
+
+// Export utilities
+export { Requestor } from './requestor.js';
+export { fuzzyMatcher, filterOptions } from './researcher.js';
 
 export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
 

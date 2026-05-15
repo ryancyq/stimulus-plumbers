@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Application } from '@hotwired/stimulus'
 import InputComboboxController from '../../../src/controllers/input_combobox_controller'
-import { visibilityConfig } from '../../../src/plumbers/plumber/support'
+import { visibilityConfig } from '../../../src/plumbers/plumber/config'
 
 describe('InputComboboxController', () => {
   let application

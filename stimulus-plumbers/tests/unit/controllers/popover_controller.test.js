@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-import { visibilityConfig } from '../../../src/plumbers/plumber/support';
+import { visibilityConfig } from '../../../src/plumbers/plumber/config';
 import PopoverController from '../../../src/controllers/popover_controller';
 
 describe('PopoverController', () => {
@@ -15,6 +15,7 @@ describe('PopoverController', () => {
     application.register('popover', PopoverController);
 
     global.fetch = vi.fn(async () => ({
+      ok: true,
       text: () => Promise.resolve('<p>Loaded content</p>'),
     }));
   });
@@ -145,7 +146,7 @@ describe('PopoverController', () => {
 
       await controller.show();
 
-      expect(global.fetch).toHaveBeenCalledWith('/content');
+      expect(global.fetch).toHaveBeenCalledWith('/content', expect.objectContaining({ signal: expect.any(AbortSignal) }));
     });
 
     it('does not re-fetch when reload is "never"', async () => {
