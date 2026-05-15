@@ -103,6 +103,16 @@ describe('ComboboxDropdownController', () => {
       document.querySelector('[role="listbox"]').click()
       expect(spy).not.toHaveBeenCalled()
     })
+
+    it('falls back to empty string when option has no data-value attribute', () => {
+      const ctrl = getController()
+      const spy = vi.spyOn(ctrl, 'select')
+      const li = document.createElement('li')
+      li.setAttribute('role', 'option')
+      document.querySelector('[role="listbox"]').appendChild(li)
+      li.click()
+      expect(spy).toHaveBeenCalledWith('')
+    })
   })
 
   describe('onNavigate', () => {
@@ -217,6 +227,22 @@ describe('ComboboxDropdownController', () => {
     })
   })
 
+  describe('step (empty listbox)', () => {
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="combobox-dropdown">
+          <ul data-combobox-dropdown-target="listbox" role="listbox"></ul>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+    })
+
+    it('does nothing when there are no enabled visible options', () => {
+      expect(() => getController().step(1)).not.toThrow()
+      expect(() => getController().step(-1)).not.toThrow()
+    })
+  })
+
   describe('filter (local fuzzy)', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
@@ -308,6 +334,110 @@ describe('ComboboxDropdownController', () => {
     })
   })
 
+  describe('filter (remote URL)', () => {
+    const flushPromises = () => new Promise((r) => setTimeout(r, 0))
+    let mockRequestor
+
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="combobox-dropdown"
+             data-combobox-dropdown-url-value="http://example.com/options"
+             data-combobox-dropdown-delay-value="0">
+          <ul data-combobox-dropdown-target="listbox" role="listbox">
+            <li role="option" data-value="a">Option A</li>
+          </ul>
+          <div data-combobox-dropdown-target="loading" hidden>Loading...</div>
+          <div data-combobox-dropdown-target="empty" hidden>No results</div>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+
+      const ctrl = getController()
+      mockRequestor = {
+        schedule: vi.fn((fn) => fn()),
+        request: vi.fn(),
+        cancel: vi.fn(),
+      }
+      ctrl._requestor = mockRequestor
+    })
+
+    it('shows loading before scheduling the request', () => {
+      mockRequestor.request.mockReturnValue(new Promise(() => {})) // never resolves
+      getController().filter('test')
+      expect(document.querySelector('[data-combobox-dropdown-target="loading"]').hidden).toBe(false)
+    })
+
+    it('passes fieldValue as query param in the request URL', () => {
+      mockRequestor.request.mockReturnValue(new Promise(() => {}))
+      getController().filter('hello')
+      const calledUrl = mockRequestor.request.mock.calls[0][0]
+      expect(calledUrl.searchParams.get('q')).toBe('hello')
+    })
+
+    it('passes delayValue to requestor.schedule', () => {
+      mockRequestor.request.mockReturnValue(new Promise(() => {}))
+      getController().filter('test')
+      expect(mockRequestor.schedule).toHaveBeenCalledWith(expect.any(Function), 0)
+    })
+
+    it('updates listbox HTML on successful response', async () => {
+      const html = '<li role="option" data-value="x">X</li>'
+      mockRequestor.request.mockResolvedValue({ text: async () => html })
+      getController().filter('test')
+      await flushPromises()
+      expect(document.querySelector('[role="listbox"]').innerHTML).toBe(html)
+    })
+
+    it('hides empty target when response contains options', async () => {
+      const html = '<li role="option" data-value="x">X</li>'
+      mockRequestor.request.mockResolvedValue({ text: async () => html })
+      getController().filter('test')
+      await flushPromises()
+      expect(document.querySelector('[data-combobox-dropdown-target="empty"]').hidden).toBe(true)
+    })
+
+    it('shows empty target when response has no options', async () => {
+      mockRequestor.request.mockResolvedValue({ text: async () => '' })
+      getController().filter('xyz')
+      await flushPromises()
+      expect(document.querySelector('[data-combobox-dropdown-target="empty"]').hidden).toBe(false)
+    })
+
+    it('clears loading after response resolves', async () => {
+      const html = '<li role="option" data-value="x">X</li>'
+      mockRequestor.request.mockResolvedValue({ text: async () => html })
+      getController().filter('test')
+      await flushPromises()
+      expect(document.querySelector('[data-combobox-dropdown-target="loading"]').hidden).toBe(true)
+    })
+
+    it('silently ignores AbortError', async () => {
+      const err = new Error('aborted')
+      err.name = 'AbortError'
+      mockRequestor.request.mockRejectedValue(err)
+      const consoleSpy = vi.spyOn(console, 'error')
+      getController().filter('test')
+      await flushPromises()
+      expect(consoleSpy).not.toHaveBeenCalled()
+    })
+
+    it('logs non-abort errors to console.error', async () => {
+      const err = new Error('network failure')
+      mockRequestor.request.mockRejectedValue(err)
+      const consoleSpy = vi.spyOn(console, 'error')
+      getController().filter('test')
+      await flushPromises()
+      expect(consoleSpy).toHaveBeenCalledWith('[combobox-dropdown] fetch failed', err)
+    })
+
+    it('clears loading after a fetch error', async () => {
+      mockRequestor.request.mockRejectedValue(new Error('network failure'))
+      getController().filter('test')
+      await flushPromises()
+      expect(document.querySelector('[data-combobox-dropdown-target="loading"]').hidden).toBe(true)
+    })
+  })
+
   describe('setEmpty', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
@@ -337,6 +467,24 @@ describe('ComboboxDropdownController', () => {
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
       expect(() => getController().setEmpty(true)).not.toThrow()
+    })
+  })
+
+  describe('disconnect', () => {
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="combobox-dropdown">
+          <ul data-combobox-dropdown-target="listbox" role="listbox"></ul>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+    })
+
+    it('cancels any pending requestor on disconnect', () => {
+      const ctrl = getController()
+      const cancelSpy = vi.spyOn(ctrl._requestor, 'cancel')
+      ctrl.disconnect()
+      expect(cancelSpy).toHaveBeenCalledOnce()
     })
   })
 })
