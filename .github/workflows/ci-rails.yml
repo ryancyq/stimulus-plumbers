@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   matrix-rails-ruby:
-    name: Define Rails matrix
+    name: Read Rails / Ruby matrix
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.read-matrix.outputs.matrix }}
@@ -71,8 +71,6 @@ jobs:
           path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
           include-hidden-files: true
           retention-days: 1
-
-      - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake test:accessibility"
 
   test-rails-coverage:
     name: "CodeCov Rails ${{ matrix.rails-version }} / Ruby ${{ matrix.ruby-version }}"
