@@ -120,6 +120,28 @@ describe('Calendar', () => {
       expect(calendar.disabledYears).toEqual([2025])
     })
 
+    it('rejects negative firstDayOfWeek', () => {
+      const calendar = new Calendar(mockController, { firstDayOfWeek: -1 })
+
+      expect(calendar.firstDayOfWeek).toBe(0)
+    })
+
+    it('falls back to empty arrays for non-array disabled option values', () => {
+      const calendar = new Calendar(mockController, {
+        disabledDates: 'not-an-array',
+        disabledWeekdays: 123,
+        disabledDays: null,
+        disabledMonths: {},
+        disabledYears: false,
+      })
+
+      expect(calendar.disabledDates).toEqual([])
+      expect(calendar.disabledWeekdays).toEqual([])
+      expect(calendar.disabledDays).toEqual([])
+      expect(calendar.disabledMonths).toEqual([])
+      expect(calendar.disabledYears).toEqual([])
+    })
+
     it('enhances controller with calendar helpers', () => {
       const calendar = new Calendar(mockController)
 
@@ -128,6 +150,50 @@ describe('Calendar', () => {
       expect(mockController.calendar.step).toBeTypeOf('function')
       expect(mockController.calendar.isDisabled).toBeTypeOf('function')
       expect(mockController.calendar.isWithinRange).toBeTypeOf('function')
+    })
+  })
+
+  describe('today setter', () => {
+    it('rejects invalid date without changing now', () => {
+      const calendar = new Calendar(mockController, { today: '2024-06-15' })
+      const before = calendar.now
+      calendar.today = new Date('invalid')
+      expect(calendar.now).toBe(before)
+    })
+
+    it('uses the new date day when month/year match the current calendar', () => {
+      const calendar = new Calendar(mockController, { today: '2024-06-15' })
+      calendar.today = new Date('2024-06-20')
+      const now = new Date(calendar.now)
+      expect(now.getDate()).toBe(20)
+      expect(now.getMonth()).toBe(5)
+      expect(now.getFullYear()).toBe(2024)
+    })
+
+    it('sets day to 1 when the new date is in a different month', () => {
+      const calendar = new Calendar(mockController, { today: '2024-06-15' })
+      // calendar.month = 5 (June), so sameMonthYear = false for July
+      calendar.today = new Date('2024-07-20')
+      const now = new Date(calendar.now)
+      expect(now.getDate()).toBe(1)
+      expect(now.getMonth()).toBe(5) // retains existing June
+      expect(now.getFullYear()).toBe(2024)
+    })
+
+    it('assigns now as an ISO string after setting', () => {
+      const calendar = new Calendar(mockController, { today: '2024-06-15' })
+      calendar.today = new Date('2024-06-20')
+      // Known behavior: setter stores an ISO string, not a Date
+      expect(typeof calendar.now).toBe('string')
+    })
+
+    it('picks month from new date when calendar is on January (month 0 is falsy)', () => {
+      const calendar = new Calendar(mockController, { today: '2024-01-15' })
+      // calendar.month = 0 (January). The check `this.month ? this.month : value.getMonth()`
+      // treats 0 as falsy, so month falls through to value.getMonth() instead.
+      calendar.today = new Date('2024-03-10')
+      const now = new Date(calendar.now)
+      expect(now.getMonth()).toBe(2) // March taken from value, not January
     })
   })
 
@@ -300,6 +366,23 @@ describe('Calendar', () => {
 
       expect(mockController.dispatch).not.toHaveBeenCalled()
     })
+
+    it('dispatches navigate and navigated with matching from/to ISO strings', async () => {
+      const calendar = new Calendar(mockController, { today: '2024-01-15' })
+      const target = new Date('2024-02-20')
+      const toIso = target.toISOString()
+
+      await calendar.navigate(target)
+
+      expect(mockController.dispatch).toHaveBeenCalledWith(
+        'navigate',
+        expect.objectContaining({ detail: expect.objectContaining({ to: toIso }) }),
+      )
+      expect(mockController.dispatch).toHaveBeenCalledWith(
+        'navigated',
+        expect.objectContaining({ detail: expect.objectContaining({ to: toIso }) }),
+      )
+    })
   })
 
   describe('step', () => {
@@ -446,6 +529,42 @@ describe('Calendar', () => {
 
       expect(calendar.isDisabled(new Date('2024-01-15'))).toBe(false)
     })
+
+    it('checks disabled weekdays by short name', () => {
+      const calendar = new Calendar(mockController, {
+        disabledWeekdays: ['Sun'],
+      })
+
+      expect(calendar.isDisabled(new Date('2024-01-14'))).toBe(true) // Sunday
+      expect(calendar.isDisabled(new Date('2024-01-15'))).toBe(false) // Monday
+    })
+
+    it('checks disabled weekdays by long name', () => {
+      const calendar = new Calendar(mockController, {
+        disabledWeekdays: ['Sunday'],
+      })
+
+      expect(calendar.isDisabled(new Date('2024-01-14'))).toBe(true) // Sunday
+      expect(calendar.isDisabled(new Date('2024-01-15'))).toBe(false) // Monday
+    })
+
+    it('checks disabled months by short name', () => {
+      const calendar = new Calendar(mockController, {
+        disabledMonths: ['Jan'],
+      })
+
+      expect(calendar.isDisabled(new Date('2024-01-15'))).toBe(true)
+      expect(calendar.isDisabled(new Date('2024-02-15'))).toBe(false)
+    })
+
+    it('checks disabled months by long name', () => {
+      const calendar = new Calendar(mockController, {
+        disabledMonths: ['January'],
+      })
+
+      expect(calendar.isDisabled(new Date('2024-01-15'))).toBe(true)
+      expect(calendar.isDisabled(new Date('2024-02-15'))).toBe(false)
+    })
   })
 
   describe('isWithinRange', () => {
@@ -517,6 +636,32 @@ describe('Calendar', () => {
       expect(mockController.calendar.step).toBeTypeOf('function')
       expect(mockController.calendar.isDisabled).toBeTypeOf('function')
       expect(mockController.calendar.isWithinRange).toBeTypeOf('function')
+    })
+
+    it('exposes collection and range properties', () => {
+      const calendar = new Calendar(mockController, {
+        since: '2024-01-01',
+        till: '2024-12-31',
+        firstDayOfWeek: 1,
+        disabledDates: ['2024-03-15'],
+        disabledWeekdays: [0],
+        disabledDays: [13],
+        disabledMonths: [11],
+        disabledYears: [2025],
+      })
+
+      const cal = mockController.calendar
+      expect(cal.since).toBeInstanceOf(Date)
+      expect(cal.till).toBeInstanceOf(Date)
+      expect(cal.firstDayOfWeek).toBe(1)
+      expect(cal.disabledDates).toEqual(['2024-03-15'])
+      expect(cal.disabledWeekdays).toEqual([0])
+      expect(cal.disabledDays).toEqual([13])
+      expect(cal.disabledMonths).toEqual([11])
+      expect(cal.disabledYears).toEqual([2025])
+      expect(cal.daysOfWeek).toHaveLength(7)
+      expect(cal.daysOfMonth.length).toBeGreaterThan(0)
+      expect(cal.monthsOfYear).toHaveLength(12)
     })
   })
 
