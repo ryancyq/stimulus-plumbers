@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.2.9](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.2.8..stimulus-plumbers-rails/v0.2.9) - 2026-05-15
+
+### Bug Fixes
+
+- combobox options + theme ([#53](https://github.com/ryancyq/stimulus-plumbers/issues/53)) - ([38b8f56](https://github.com/ryancyq/stimulus-plumbers/commit/38b8f5632fd62ed62947d62567e704a0b8b46f74)) - Ryan Chang
+- update broken ruby action bindings ([#55](https://github.com/ryancyq/stimulus-plumbers/issues/55)) - ([f2259df](https://github.com/ryancyq/stimulus-plumbers/commit/f2259dfd8f2369bb588ee24fec3d9e8a8f854093)) - Ryan Chang
+
+### Documentation
+
+- update form input ([#49](https://github.com/ryancyq/stimulus-plumbers/issues/49)) - ([dd35b7f](https://github.com/ryancyq/stimulus-plumbers/commit/dd35b7fdadf5ffb8808b00c0c5b75542bcde4d02)) - Ryan Chang
+- update theme to align with implementation ([#57](https://github.com/ryancyq/stimulus-plumbers/issues/57)) - ([0645cfa](https://github.com/ryancyq/stimulus-plumbers/commit/0645cfa9896aa65082b7f2fd9e619d2216c13f75)) - Ryan Chang
+
+### Features
+
+- form input search ([#50](https://github.com/ryancyq/stimulus-plumbers/issues/50)) - ([130b966](https://github.com/ryancyq/stimulus-plumbers/commit/130b9666a644a54b94da5ba23f5d0b32a0458f53)) - Ryan Chang
+
+### Tests
+
+- code coverage report ([#48](https://github.com/ryancyq/stimulus-plumbers/issues/48)) - ([78950e6](https://github.com/ryancyq/stimulus-plumbers/commit/78950e603ac7e003b5c6361ab6016796caca3397)) - Ryan Chang
+
+---
 ## [0.2.8](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.2.7..stimulus-plumbers-rails/v0.2.8) - 2026-05-10
 
 ### Features
