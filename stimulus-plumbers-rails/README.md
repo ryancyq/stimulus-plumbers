@@ -69,10 +69,19 @@ Includes a Tailwind CSS theme out of the box. Supports custom themes by subclass
 ```bash
 bundle install
 
-bundle exec rake test:unit         # unit tests
-bundle exec rake test:accessibility # accessibility tests
-bundle exec rake rubocop           # lint
-bundle exec rake coverage          # run tests with coverage + collate report
+bundle exec rake test:unit          # unit tests
+bundle exec rake test:accessibility # accessibility tests (Capybara + axe-core)
+bundle exec rake rubocop            # lint
+bundle exec rake coverage           # run tests with coverage + collate report
+```
+
+Snapshot tests use Playwright and run separately:
+
+```bash
+npm install
+
+npm run test:snapshots         # compare against committed baselines
+npm run test:snapshots:update  # regenerate baselines
 ```
 
 Test against a specific Rails version:
