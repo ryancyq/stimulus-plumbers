@@ -94,4 +94,15 @@ class TailwindThemeCalendarTest < Minitest::Test
   def test_calendar_navigation_navigator_icon_includes_size_class
     assert_includes classes_for(:calendar_navigation_navigator_icon), "size-4"
   end
+
+  def test_calendar_week_returns_a_classes_string
+    result = classes_for(:calendar_week)
+
+    assert_instance_of String, result
+    assert_predicate result, :present?
+  end
+
+  def test_calendar_week_includes_contents_class
+    assert_includes classes_for(:calendar_week), "contents"
+  end
 end

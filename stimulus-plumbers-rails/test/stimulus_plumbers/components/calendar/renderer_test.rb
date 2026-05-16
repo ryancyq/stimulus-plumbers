@@ -52,4 +52,12 @@ class CalendarRendererTest < ActionView::TestCase
     assert_includes html, "click-&gt;calendar-month-observer#select"
     assert_includes html, "datepicker:navigated-&gt;calendar-month#draw"
   end
+
+  def test_month_passes_week_class_to_controller_data
+    assert_includes renderer.month, "data-calendar-month-week-class"
+  end
+
+  def test_month_passes_day_of_month_class_to_controller_data
+    assert_includes renderer.month, "data-calendar-month-day-of-month-class"
+  end
 end

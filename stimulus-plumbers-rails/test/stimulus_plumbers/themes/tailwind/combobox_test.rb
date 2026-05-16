@@ -11,6 +11,12 @@ class TailwindThemeComboboxTest < Minitest::Test
     @theme.resolve(component, **args)[:classes]
   end
 
+  # ── trigger ───────────────────────────────────────────────────────────────
+
+  def test_combobox_trigger_is_in_schema
+    assert StimulusPlumbers::Themes::Base::SCHEMA.key?(:combobox_trigger)
+  end
+
   # ── listbox ───────────────────────────────────────────────────────────────
 
   def test_combobox_listbox_returns_a_classes_string
