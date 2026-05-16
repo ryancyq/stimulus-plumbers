@@ -1,0 +1,98 @@
+name: CI (snapshots)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 12 * * 5'
+  workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: Regenerate baseline screenshots and commit them
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  test-snapshots:
+    name: "Snapshot tests / Ruby ${{ matrix.ruby-version }}"
+    runs-on: ubuntu-latest
+    permissions:
+      # write only when regenerating baselines via workflow_dispatch
+      contents: write
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-rails
+    env:
+      BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/Gemfile"
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version:
+          - "3.4"
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: stimulus-plumbers/package-lock.json
+
+      - run: npm ci
+        working-directory: stimulus-plumbers
+
+      - run: npm run build
+        working-directory: stimulus-plumbers
+
+      - run: rm Gemfile.lock
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler: latest
+          bundler-cache: true
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: stimulus-plumbers-rails/package-lock.json
+
+      - run: npm ci
+
+      - run: npx playwright install chromium --with-deps
+
+      - run: npm run build:css
+
+      - name: Run snapshots (compare)
+        if: ${{ !inputs.update_snapshots }}
+        run: npm run test:snapshots
+
+      - name: Regenerate baselines
+        if: ${{ inputs.update_snapshots }}
+        run: npm run test:snapshots:update
+
+      - uses: ryancyq/github-signed-commit@v1
+        if: ${{ inputs.update_snapshots }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          files: stimulus-plumbers-rails/test/snapshots/__screenshots__
+          commit-message: "chore: update snapshot baselines [skip ci]"
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: stimulus-plumbers-rails/playwright-report/
+          retention-days: 7

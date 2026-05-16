@@ -5,7 +5,6 @@ require_relative "sandbox/config/environment"
 
 require "minitest/autorun"
 require "minitest/mock"
-require "capybara/minitest"
 require "nokogiri"
 
 Dir[File.join(__dir__, "support/**/*.rb")].each { |f| require f }

@@ -28,8 +28,17 @@ stimulus-plumbers-rails/
 │   ├── stimulus_plumbers/
 │   │   ├── helpers/                  # Helper-level HTML output tests
 │   │   └── form/                     # Form builder tests
+│   ├── accessibility/                # Accessibility tests (axe-core via Capybara)
+│   │   ├── components/
+│   │   └── form/
+│   ├── snapshots/                    # Playwright visual regression tests
+│   │   ├── __screenshots__/          # Baseline screenshots (committed)
+│   │   └── *.spec.js
+│   ├── sandbox/                      # Minimal Rails app used by a11y + snapshot tests
 │   └── test_helper.rb
 ├── gemfiles/                         # Appraisal-generated gemfiles (rails 6.1–edge)
+├── playwright.config.js              # Playwright config (snapshot tests)
+├── package.json                      # npm deps: Playwright, Tailwind CSS CLI
 ├── Gemfile
 ├── Rakefile
 └── *.gemspec
@@ -39,9 +48,10 @@ stimulus-plumbers-rails/
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
+- **Accessibility tests** using Capybara + axe-core (`rake test:accessibility`)
+- **Snapshot tests** using Playwright (`npm run test:snapshots`); update baselines with `npm run test:snapshots:update`
 - **Lint tests** using Rubocop (`rake rubocop`)
 - **Always run linting** after appraisal command
-- **System tests** generally should only be used for accessibility verification
 
 ## Component Architecture
 

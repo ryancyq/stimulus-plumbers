@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:css": "./node_modules/.bin/tailwindcss -i test/sandbox/tailwind.css -o test/sandbox/public/tailwind.css",
+    "test:snapshots": "npm run build:css && playwright test",
+    "test:snapshots:update": "npm run build:css && playwright test --update-snapshots"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@tailwindcss/cli": "^4.1.0",
+    "tailwindcss": "^4.1.0"
+  }
+}
