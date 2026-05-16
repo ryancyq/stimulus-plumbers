@@ -28,7 +28,7 @@ class TestApp < Rails::Application
   # Rack::Static prepends root to the full request path, so root must be the
   # npm package directory and the URL prefix must be "/dist".
   config.middleware.use Rack::Static,
-                        urls: ["/dist"],
+                        urls: ["/dist", "/node_modules"],
                         root: File.expand_path("../../../../stimulus-plumbers", __dir__)
 
   # Serve pre-built Tailwind CSS from the sandbox public directory.
