@@ -30,4 +30,10 @@ class TestApp < Rails::Application
   config.middleware.use Rack::Static,
                         urls: ["/dist"],
                         root: File.expand_path("../../../../stimulus-plumbers", __dir__)
+
+  # Serve pre-built Tailwind CSS from the sandbox public directory.
+  # Built by `npm run build:css` in stimulus-plumbers-rails/; not part of the npm package.
+  config.middleware.use Rack::Static,
+                        urls: ["/tailwind.css"],
+                        root: File.expand_path("../public", __dir__)
 end
