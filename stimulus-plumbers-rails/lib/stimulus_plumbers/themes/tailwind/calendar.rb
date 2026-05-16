@@ -48,6 +48,10 @@ module StimulusPlumbers
           { classes: klasses(*DAYS_OF_WEEK) }
         end
 
+        def calendar_week_classes
+          { classes: "contents" }
+        end
+
         def calendar_days_of_month_classes
           { classes: klasses(*DAYS_OF_MONTH) }
         end
