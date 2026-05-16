@@ -4,6 +4,13 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Combobox
+        TRIGGER = %w[
+          w-full rounded-(--sp-radius-md) border border-(--sp-color-muted-fg)
+          px-(--sp-space-3) py-(--sp-space-2)
+          text-(--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
+          focus:outline-none focus:ring-2 focus:ring-(--sp-focus-ring-color)
+        ].freeze
+
         LISTBOX = %w[
           py-(--sp-space-1) overflow-y-auto max-h-60
         ].freeze
@@ -39,6 +46,10 @@ module StimulusPlumbers
         TIME = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
 
         private
+
+        def combobox_trigger_classes
+          { classes: klasses(*TRIGGER) }
+        end
 
         def combobox_listbox_classes
           { classes: klasses(*LISTBOX) }

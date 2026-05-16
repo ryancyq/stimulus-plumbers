@@ -11,7 +11,7 @@ module StimulusPlumbers
           font-medium text-(--sp-color-muted-fg) mb-1
         ].freeze
 
-        DAYS_OF_MONTH = %w[grid grid-cols-7].freeze
+        DAYS_OF_MONTH = %w[grid grid-cols-7 justify-items-center].freeze
 
         DAY = %w[
           size-(--sp-calendar-day-size) rounded-(--sp-radius-md)
