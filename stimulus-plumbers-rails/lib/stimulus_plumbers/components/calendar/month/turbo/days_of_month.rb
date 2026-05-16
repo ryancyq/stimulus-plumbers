@@ -45,29 +45,41 @@ module StimulusPlumbers
 
             private
 
-            # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
             def focus_day
-              @focus_day ||= if selected_date&.month == date.month && selected_date&.year == date.year
+              @focus_day ||= if selected_date_in_current_month?
                                selected_date
-                             elsif today.month == date.month && today.year == date.year
+                             elsif today_in_current_month?
                                today
                              else
                                date.beginning_of_month
                              end
             end
-            # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
             def build_days
-              first = date.beginning_of_month
-              last  = date.end_of_month
-
-              prev_days    = (first - first.wday).upto(first - 1).to_a
+              first        = date.beginning_of_month
+              last         = date.end_of_month
               current_days = first.upto(last).to_a
-              total        = prev_days.length + current_days.length
-              next_count   = (DAYS_IN_WEEK - (total % DAYS_IN_WEEK)) % DAYS_IN_WEEK
-              next_days    = next_count.positive? ? (last + 1).upto(last + next_count).to_a : []
+              prev_filler_days(first) + current_days + next_filler_days(last, current_days.length)
+            end
 
-              prev_days + current_days + next_days
+            def prev_filler_days(first_day_of_month)
+              week_start = first_day_of_month - first_day_of_month.wday
+              week_start.upto(first_day_of_month - 1).to_a
+            end
+
+            def next_filler_days(last_day_of_month, days_in_month)
+              week_start_offset = last_day_of_month.beginning_of_month.wday
+              total             = week_start_offset + days_in_month
+              next_count = (DAYS_IN_WEEK - (total % DAYS_IN_WEEK)) % DAYS_IN_WEEK
+              next_count.positive? ? (last_day_of_month + 1).upto(last_day_of_month + next_count).to_a : []
+            end
+
+            def selected_date_in_current_month?
+              selected_date&.month == date.month && selected_date&.year == date.year
+            end
+
+            def today_in_current_month?
+              today.month == date.month && today.year == date.year
             end
 
             def days_in_week(week)

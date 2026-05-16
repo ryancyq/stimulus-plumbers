@@ -42,9 +42,12 @@ module StimulusPlumbers
           return "".html_safe if field.errors.none?
 
           field.errors.map.with_index(1) do |message, i|
-            id = field.errors.one? ? field.error_id : "#{field.error_id}_#{i}"
-            Error.new(template).render(message: message, id: id)
+            Error.new(template).render(message: message, id: error_id_for(i))
           end.join.html_safe
+        end
+
+        def error_id_for(index)
+          field.errors.one? ? field.error_id : "#{field.error_id}_#{index}"
         end
       end
     end

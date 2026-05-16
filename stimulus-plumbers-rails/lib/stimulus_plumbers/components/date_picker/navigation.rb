@@ -19,29 +19,21 @@ module StimulusPlumbers
 
         def navigators(stimulus_controller, step)
           [
-            Navigator.new(template).render(
-              icon_options: { name: "arrow-left" },
-              aria:         { label: ["previous", step].join(" ").titleize },
-              data:         { "#{stimulus_controller}-target" => "previous" }
-            ),
-            Navigator.new(template).render(
-              aria: { label: "Day" },
-              data: { "#{stimulus_controller}-target" => "day" }
-            ),
-            Navigator.new(template).render(
-              aria: { label: "Month" },
-              data: { "#{stimulus_controller}-target" => "month" }
-            ),
-            Navigator.new(template).render(
-              aria: { label: "Year" },
-              data: { "#{stimulus_controller}-target" => "year" }
-            ),
-            Navigator.new(template).render(
-              icon_options: { name: "arrow-right" },
-              aria:         { label: ["next", step].join(" ").titleize },
-              data:         { "#{stimulus_controller}-target" => "next" }
-            )
+            navigator(stimulus_controller, target: "previous", icon: "arrow-left", label: ["previous", step].join(" ").titleize),
+            navigator(stimulus_controller, target: "day",      label: "Day"),
+            navigator(stimulus_controller, target: "month",    label: "Month"),
+            navigator(stimulus_controller, target: "year",     label: "Year"),
+            navigator(stimulus_controller, target: "next",     icon: "arrow-right", label: ["next", step].join(" ").titleize)
           ]
+        end
+
+        def navigator(stimulus_controller, target:, label:, icon: nil)
+          opts = {
+            aria: { label: label },
+            data: { "#{stimulus_controller}-target" => target }
+          }
+          opts[:icon_options] = { name: icon } if icon
+          Navigator.new(template).render(**opts)
         end
       end
     end
