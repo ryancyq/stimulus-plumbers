@@ -35,5 +35,5 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 3.0"
   spec.required_rubygems_version = ">= 3.2.0" # for Gem::Platform#match_gem?
 
-  spec.add_dependency "railties", ">= 6.1", "< 8.2"
+  spec.add_dependency "actionview", ">= 6.1", "< 8.2"
 end

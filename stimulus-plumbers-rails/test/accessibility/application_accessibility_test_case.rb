@@ -7,7 +7,6 @@ require "minitest/autorun"
 require "capybara"
 require "capybara/minitest"
 require "capybara/cuprite"
-require "stimulus_plumbers"
 
 Capybara.register_driver(:cuprite) do |app|
   headless = ENV["HEADLESS"] != "false"

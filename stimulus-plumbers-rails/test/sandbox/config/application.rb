@@ -10,6 +10,8 @@ require "action_view"
 require "active_model"
 require "active_support/core_ext"
 require "rails"
+require "sprockets/railtie" if Rails.version < "7.0"
+require "stimulus_plumbers"
 
 # Minimal test application for component testing
 class TestApp < Rails::Application
