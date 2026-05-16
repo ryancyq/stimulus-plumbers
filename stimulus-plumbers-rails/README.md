@@ -69,9 +69,10 @@ Includes a Tailwind CSS theme out of the box. Supports custom themes by subclass
 ```bash
 bundle install
 
-bundle exec rake test:unit    # unit tests
-bundle exec rake test:system  # accessibility system tests
-bundle exec rake rubocop      # lint
+bundle exec rake test:unit         # unit tests
+bundle exec rake test:accessibility # accessibility tests
+bundle exec rake rubocop           # lint
+bundle exec rake coverage          # run tests with coverage + collate report
 ```
 
 Test against a specific Rails version:
