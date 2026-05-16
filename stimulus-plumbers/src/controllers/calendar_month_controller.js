@@ -3,7 +3,7 @@ import { initCalendar } from '../plumbers';
 
 export default class extends Controller {
   static targets = ['daysOfWeek', 'daysOfMonth'];
-  static classes = ['dayOfWeek', 'dayOfMonth'];
+  static classes = ['dayOfWeek', 'dayOfMonth', 'week'];
   static values = {
     locales: { type: Array, default: ['default'] },
     weekdayFormat: { type: String, default: 'short' },
@@ -56,6 +56,7 @@ export default class extends Controller {
     }
     const row = document.createElement('div');
     row.setAttribute('role', 'row');
+    if (this.hasWeekClass) row.classList.add(...this.weekClasses);
     row.replaceChildren(...daysOfWeek);
     this.daysOfWeekTarget.replaceChildren(row);
   }
@@ -89,6 +90,7 @@ export default class extends Controller {
     for (let i = 0; i < daysOfMonth.length; i += 7) {
       const row = document.createElement('div');
       row.setAttribute('role', 'row');
+      if (this.hasWeekClass) row.classList.add(...this.weekClasses);
       for (const day of daysOfMonth.slice(i, i + 7)) {
         day.setAttribute('role', 'gridcell');
         row.appendChild(day);

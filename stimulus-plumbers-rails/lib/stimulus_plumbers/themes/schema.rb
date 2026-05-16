@@ -33,6 +33,7 @@ module StimulusPlumbers
       CALENDAR = {
         calendar:                           {}.freeze,
         calendar_days_of_week:              {}.freeze,
+        calendar_week:                      {}.freeze,
         calendar_days_of_month:             {}.freeze,
         calendar_day:                       {
           today:    { default: false, range: Ranges::BOOL },
@@ -50,6 +51,7 @@ module StimulusPlumbers
       }.freeze
 
       COMBOBOX = {
+        combobox_trigger:              {}.freeze,
         combobox_option:               {
           selected: { default: false, range: Ranges::BOOL },
           disabled: { default: false, range: Ranges::BOOL }

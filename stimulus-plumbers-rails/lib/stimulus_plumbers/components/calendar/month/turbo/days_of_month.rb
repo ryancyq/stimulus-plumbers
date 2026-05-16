@@ -31,19 +31,22 @@ module StimulusPlumbers
                 { classes: theme.resolve(:calendar_days_of_month).fetch(:classes, "") },
                 kwargs
               )
-
-              template.content_tag(:div, **html_options, role: "rowgroup") do
-                template.safe_join(
-                  build_days.each_slice(DAYS_IN_WEEK).map do |week|
-                    template.content_tag(:div, role: "row") do
-                      days_in_week(week)
-                    end
-                  end
-                )
-              end
+              template.content_tag(:div, **html_options, role: "rowgroup") { weeks_of_month }
             end
 
             private
+
+            def weeks_of_month
+              week_options = merge_html_options(
+                { classes: theme.resolve(:calendar_week).fetch(:classes, "") },
+                { role: "row" }
+              )
+              template.safe_join(
+                build_days.each_slice(DAYS_IN_WEEK).map do |days|
+                  template.content_tag(:div, **week_options) { days_in_week(days) }
+                end
+              )
+            end
 
             def focus_day
               @focus_day ||= if selected_date_in_current_month?
@@ -82,9 +85,9 @@ module StimulusPlumbers
               today.month == date.month && today.year == date.year
             end
 
-            def days_in_week(week)
+            def days_in_week(days)
               template.safe_join(
-                week.map do |day|
+                days.map do |day|
                   if day.month == date.month
                     current_month_day_cell(day)
                   elsif show_other_months
@@ -103,28 +106,32 @@ module StimulusPlumbers
             end
 
             def current_month_day_cell(date)
-              tag      = selectable ? :button : :span
-              selected = selected_date && date == selected_date ? "true" : "false"
-              template.content_tag(
-                tag,
-                role:     "gridcell",
-                tabindex: date == focus_day ? 0 : -1,
-                aria:     {
-                  current:  date == today ? "date" : nil,
-                  selected: selectable ? selected : nil
-                }
-              ) do
+              tag = selectable ? :button : :span
+              template.content_tag(tag, **day_cell_html_options(date, today)) do
                 template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
               end
             end
 
-            def other_month_day_cell(date)
-              template.content_tag(
-                :span,
+            def day_cell_html_options(date, today)
+              is_today = date == today
+              selected = selected_date && date == selected_date
+              {
+                classes:  theme.resolve(:calendar_day, today: is_today, selected: selected).fetch(:classes, ""),
                 role:     "gridcell",
-                tabindex: -1,
-                aria:     { disabled: "true", selected: "false" }
-              ) do
+                tabindex: date == focus_day ? 0 : -1,
+                aria:     {
+                  current:  is_today ? "date" : nil,
+                  selected: if selectable then selected ? "true" : "false" end
+                }
+              }
+            end
+
+            def other_month_day_cell(date)
+              options = merge_html_options(
+                { classes: theme.resolve(:calendar_day, outside: true).fetch(:classes, "") },
+                { role: "gridcell", tabindex: -1, aria: { disabled: "true", selected: "false" } }
+              )
+              template.content_tag(:span, **options) do
                 template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
               end
             end
