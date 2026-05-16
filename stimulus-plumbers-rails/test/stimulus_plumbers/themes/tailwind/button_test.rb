@@ -33,50 +33,50 @@ class TailwindThemeButtonTest < Minitest::Test
   def test_button_includes_primary_variant_classes_by_default
     result = classes_for(:button)
 
-    assert_includes result, "bg-[--sp-color-primary]"
-    assert_includes result, "text-[--sp-color-primary-fg]"
+    assert_includes result, "bg-(--sp-color-primary)"
+    assert_includes result, "text-(--sp-color-primary-fg)"
   end
 
   def test_button_falls_back_to_primary_for_unknown_variant
-    assert_includes classes_for(:button, variant: :unknown), "bg-[--sp-color-primary]"
+    assert_includes classes_for(:button, variant: :unknown), "bg-(--sp-color-primary)"
   end
 
   def test_button_secondary_variant_includes_muted_background
     result = classes_for(:button, variant: :secondary)
 
-    assert_includes result, "bg-[--sp-color-muted]"
-    refute_includes result, "bg-[--sp-color-primary]"
+    assert_includes result, "bg-(--sp-color-muted)"
+    refute_includes result, "bg-(--sp-color-primary)"
   end
 
   def test_button_outline_variant_includes_transparent_background_and_border
     result = classes_for(:button, variant: :outline)
 
     assert_includes result, "bg-transparent"
-    assert_includes result, "border-[--sp-color-border]"
-    refute_includes result, "bg-[--sp-color-primary]"
+    assert_includes result, "border-(--sp-color-border)"
+    refute_includes result, "bg-(--sp-color-primary)"
   end
 
   def test_button_destructive_variant_includes_destructive_colors
     result = classes_for(:button, variant: :destructive)
 
-    assert_includes result, "bg-[--sp-color-destructive]"
-    assert_includes result, "text-[--sp-color-destructive-fg]"
-    refute_includes result, "bg-[--sp-color-primary]"
+    assert_includes result, "bg-(--sp-color-destructive)"
+    assert_includes result, "text-(--sp-color-destructive-fg)"
+    refute_includes result, "bg-(--sp-color-primary)"
   end
 
   def test_button_ghost_variant_includes_muted_hover_only
     result = classes_for(:button, variant: :ghost)
 
-    assert_includes result, "hover:bg-[--sp-color-muted]"
-    refute_includes result, "bg-[--sp-color-primary]"
+    assert_includes result, "hover:bg-(--sp-color-muted)"
+    refute_includes result, "bg-(--sp-color-primary)"
   end
 
   def test_button_link_variant_includes_primary_text_and_underline
     result = classes_for(:button, variant: :link)
 
-    assert_includes result, "text-[--sp-color-primary]"
+    assert_includes result, "text-(--sp-color-primary)"
     assert_includes result, "hover:underline"
-    refute_includes result, "bg-[--sp-color-primary]"
+    refute_includes result, "bg-(--sp-color-primary)"
   end
 
   # :button sizes
@@ -106,7 +106,7 @@ class TailwindThemeButtonTest < Minitest::Test
     result = classes_for(:button_group)
 
     assert_includes result, "flex"
-    assert_includes result, "gap-[--sp-space-2]"
+    assert_includes result, "gap-(--sp-space-2)"
   end
 
   # :button_group alignments (row direction)

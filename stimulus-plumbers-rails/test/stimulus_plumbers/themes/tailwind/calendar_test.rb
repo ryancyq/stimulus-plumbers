@@ -36,25 +36,25 @@ class TailwindThemeCalendarTest < Minitest::Test
   def test_calendar_day_includes_selected_classes_when_selected
     result = classes_for(:calendar_day, selected: true)
 
-    assert_includes result, "bg-[--sp-color-primary]"
-    assert_includes result, "text-[--sp-color-primary-fg]"
+    assert_includes result, "bg-(--sp-color-primary)"
+    assert_includes result, "text-(--sp-color-primary-fg)"
   end
 
   def test_calendar_day_excludes_selected_classes_when_not_selected
-    refute_includes classes_for(:calendar_day, selected: false), "bg-[--sp-color-primary]"
+    refute_includes classes_for(:calendar_day, selected: false), "bg-(--sp-color-primary)"
   end
 
   def test_calendar_day_includes_outside_classes_when_outside_month
     result = classes_for(:calendar_day, outside: true)
 
-    assert_includes result, "text-[--sp-color-muted-fg]"
+    assert_includes result, "text-(--sp-color-muted-fg)"
     assert_includes result, "opacity-50"
   end
 
   def test_calendar_day_excludes_outside_classes_when_not_outside
     result = classes_for(:calendar_day, outside: false)
 
-    refute_includes result, "text-[--sp-color-muted-fg]"
+    refute_includes result, "text-(--sp-color-muted-fg)"
     refute_includes result, "opacity-50"
   end
 
@@ -74,6 +74,10 @@ class TailwindThemeCalendarTest < Minitest::Test
 
     assert_includes result, "grid"
     assert_includes result, "grid-cols-7"
+  end
+
+  def test_calendar_week_returns_contents_display
+    assert_includes classes_for(:calendar_week), "contents"
   end
 
   def test_calendar_navigation_includes_flex_classes

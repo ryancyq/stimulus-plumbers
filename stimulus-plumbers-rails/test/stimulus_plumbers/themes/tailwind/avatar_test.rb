@@ -22,7 +22,7 @@ class TailwindThemeAvatarTest < Minitest::Test
     result = classes_for(:avatar)
 
     assert_includes result, "inline-flex"
-    assert_includes result, "rounded-[--sp-radius-full]"
+    assert_includes result, "rounded-(--sp-radius-full)"
   end
 
   StimulusPlumbers::Themes::Schema::Ranges::SIZE.each do |size|

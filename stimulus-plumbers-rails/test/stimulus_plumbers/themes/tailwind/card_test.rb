@@ -22,11 +22,11 @@ class TailwindThemeCardTest < Minitest::Test
     result = classes_for(:card)
 
     assert_includes result, "border"
-    assert_includes result, "bg-[--sp-color-bg]"
-    assert_includes result, "rounded-[--sp-radius-lg]"
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "rounded-(--sp-radius-lg)"
   end
 
   def test_card_section_returns_a_classes_string_with_padding
-    assert_includes classes_for(:card_section), "p-[--sp-space-6]"
+    assert_includes classes_for(:card_section), "p-(--sp-space-6)"
   end
 end

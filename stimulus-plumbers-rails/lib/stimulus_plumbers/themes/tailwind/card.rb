@@ -5,8 +5,8 @@ module StimulusPlumbers
     module Tailwind
       module Card
         BASE = %w[
-          rounded-[--sp-radius-lg] border border-[--sp-color-border]
-          bg-[--sp-color-bg] shadow-[--sp-shadow-sm]
+          rounded-(--sp-radius-lg) border border-(--sp-color-border)
+          bg-(--sp-color-bg) shadow-(--sp-shadow-sm)
         ].freeze
 
         private
@@ -16,7 +16,7 @@ module StimulusPlumbers
         end
 
         def card_section_classes
-          { classes: klasses("p-[--sp-space-6]") }
+          { classes: klasses("p-(--sp-space-6)") }
         end
       end
     end

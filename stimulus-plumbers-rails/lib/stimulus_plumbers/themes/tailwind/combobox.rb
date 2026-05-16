@@ -5,38 +5,38 @@ module StimulusPlumbers
     module Tailwind
       module Combobox
         LISTBOX = %w[
-          py-[--sp-space-1] overflow-y-auto max-h-60
+          py-(--sp-space-1) overflow-y-auto max-h-60
         ].freeze
 
         OPTION_BASE = %w[
-          flex items-center gap-[--sp-space-2] w-full
-          px-[--sp-space-2] py-[--sp-space-1]
-          rounded-[--sp-radius-sm] text-[--sp-text-sm]
+          flex items-center gap-(--sp-space-2) w-full
+          px-(--sp-space-2) py-(--sp-space-1)
+          rounded-(--sp-radius-sm) text-(--sp-text-sm)
           cursor-pointer select-none outline-none
-          hover:bg-[--sp-color-muted] focus:bg-[--sp-color-muted]
+          hover:bg-(--sp-color-muted) focus:bg-(--sp-color-muted)
         ].freeze
 
         OPTION_SELECTED = %w[
-          bg-[--sp-color-primary]/10 text-[--sp-color-primary]
+          bg-(--sp-color-primary)/10 text-(--sp-color-primary)
         ].freeze
 
         OPTION_DISABLED = %w[
           opacity-50 cursor-not-allowed pointer-events-none
         ].freeze
 
-        OPTION_GROUP = %w[py-[--sp-space-1]].freeze
+        OPTION_GROUP = %w[py-(--sp-space-1)].freeze
 
         AUTOCOMPLETE_LOADING = %w[
           flex items-center justify-center
-          py-[--sp-space-2] text-[--sp-text-sm] text-[--sp-color-muted-fg]
+          py-(--sp-space-2) text-(--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
         AUTOCOMPLETE_EMPTY = %w[
           flex items-center justify-center
-          py-[--sp-space-2] text-[--sp-text-sm] text-[--sp-color-muted-fg]
+          py-(--sp-space-2) text-(--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
-        TIME = %w[flex gap-[--sp-space-2] overflow-hidden].freeze
+        TIME = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
 
         private
 

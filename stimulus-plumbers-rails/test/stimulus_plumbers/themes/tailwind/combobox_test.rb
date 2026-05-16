@@ -49,12 +49,12 @@ class TailwindThemeComboboxTest < Minitest::Test
   def test_combobox_option_includes_selected_classes_when_selected
     result = classes_for(:combobox_option, selected: true)
 
-    assert_includes result, "bg-[--sp-color-primary]/10"
-    assert_includes result, "text-[--sp-color-primary]"
+    assert_includes result, "bg-(--sp-color-primary)/10"
+    assert_includes result, "text-(--sp-color-primary)"
   end
 
   def test_combobox_option_excludes_selected_classes_when_not_selected
-    refute_includes classes_for(:combobox_option, selected: false), "bg-[--sp-color-primary]/10"
+    refute_includes classes_for(:combobox_option, selected: false), "bg-(--sp-color-primary)/10"
   end
 
   def test_combobox_option_includes_disabled_classes_when_disabled

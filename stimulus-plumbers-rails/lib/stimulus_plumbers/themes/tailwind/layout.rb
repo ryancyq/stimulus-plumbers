@@ -4,10 +4,10 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Layout
-        DIVIDER = %w[border-t border-[--sp-color-border] my-[--sp-space-1]].freeze
+        DIVIDER = %w[border-t border-(--sp-color-border) my-(--sp-space-1)].freeze
         POPOVER = %w[
-          rounded-[--sp-radius-lg] border border-[--sp-color-border]
-          bg-[--sp-color-bg] shadow-[--sp-shadow-md] z-[--sp-z-popover]
+          rounded-(--sp-radius-lg) border border-(--sp-color-border)
+          bg-(--sp-color-bg) shadow-(--sp-shadow-md) z-(--sp-z-popover)
         ].freeze
 
         private

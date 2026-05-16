@@ -15,8 +15,8 @@ class TailwindThemeLayoutTest < Minitest::Test
     result = classes_for(:divider)
 
     assert_includes result, "border-t"
-    assert_includes result, "border-[--sp-color-border]"
-    assert_includes result, "my-[--sp-space-1]"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "my-(--sp-space-1)"
   end
 
   def test_popover_returns_a_classes_string
@@ -29,11 +29,11 @@ class TailwindThemeLayoutTest < Minitest::Test
   def test_popover_includes_all_classes
     result = classes_for(:popover)
 
-    assert_includes result, "rounded-[--sp-radius-lg]"
+    assert_includes result, "rounded-(--sp-radius-lg)"
     assert_includes result, "border"
-    assert_includes result, "border-[--sp-color-border]"
-    assert_includes result, "bg-[--sp-color-bg]"
-    assert_includes result, "shadow-[--sp-shadow-md]"
-    assert_includes result, "z-[--sp-z-popover]"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "shadow-(--sp-shadow-md)"
+    assert_includes result, "z-(--sp-z-popover)"
   end
 end

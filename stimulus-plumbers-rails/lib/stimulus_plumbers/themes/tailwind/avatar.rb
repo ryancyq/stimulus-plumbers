@@ -20,12 +20,12 @@ module StimulusPlumbers
         }.freeze
 
         SIZES = {
-          sm: "size-[--sp-icon-size]",
-          md: "size-[--sp-avatar-size]",
+          sm: "size-(--sp-icon-size)",
+          md: "size-(--sp-avatar-size)",
           lg: "size-12"
         }.freeze
 
-        BASE = %w[rounded-[--sp-radius-full] overflow-hidden inline-flex items-center justify-center].freeze
+        BASE = %w[rounded-(--sp-radius-full) overflow-hidden inline-flex items-center justify-center].freeze
 
         def avatar_colors
           COLORS
