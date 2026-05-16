@@ -49,11 +49,7 @@ module StimulusPlumbers
       def coerce_arg(component, key, value, schema)
         return value unless schema
 
-        range = if schema[:range].is_a?(Symbol)
-                  respond_to?(schema[:range], true) ? send(schema[:range]) : []
-                else
-                  schema[:range]
-                end
+        range = range_for(schema)
         return value if range.empty? || range.include?(value)
 
         StimulusPlumbers::Logger.warn(
@@ -61,6 +57,14 @@ module StimulusPlumbers
           "Range: #{schema[:range].inspect}. Falling back to: #{schema[:default].inspect}"
         )
         schema[:default]
+      end
+
+      def range_for(schema)
+        if schema[:range].is_a?(Symbol)
+          respond_to?(schema[:range], true) ? send(schema[:range]) : []
+        else
+          schema[:range]
+        end
       end
     end
   end

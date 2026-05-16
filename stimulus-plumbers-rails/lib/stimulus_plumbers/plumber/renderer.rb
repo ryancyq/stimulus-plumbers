@@ -12,7 +12,7 @@ module StimulusPlumbers
       end
 
       module ClassMethods
-        # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         def renders(method_name, with: nil, &block)
           raise ArgumentError, "method_name must be Symbol" unless method_name.is_a?(Symbol)
           raise ArgumentError, "provide either with: or a block" if !with.nil? && block_given?
@@ -26,7 +26,7 @@ module StimulusPlumbers
           self.renderers = renderers.merge(method_name => with)
           ActiveSupport.version >= "7.2" ? generate_renderer_method(method_name) : eval_renderer_method(method_name)
         end
-        # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
         private
 

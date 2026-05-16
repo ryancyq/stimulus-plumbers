@@ -13,12 +13,17 @@ module StimulusPlumbers
         template.capture(builder, &block)
 
         template.content_tag(:div, **html_options) do
-          wrapped_content = if interactive
-                              template.content_tag(:template, builder.content_html)
-                            else
-                              builder.content_html
-                            end
-          template.safe_join([builder.activator_html, wrapped_content])
+          template.safe_join([builder.activator_html, wrap_content(interactive, builder)])
+        end
+      end
+
+      private
+
+      def wrap_content(interactive, builder)
+        if interactive
+          template.content_tag(:template, builder.content_html)
+        else
+          builder.content_html
         end
       end
     end

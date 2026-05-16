@@ -8,15 +8,16 @@ module StimulusPlumbers
       extend ActiveSupport::Concern
 
       def merge_html_options(*hashes)
-        classes     = hashes.flat_map { |h| [h[:class], h[:classes]] }
-        data_hashes = hashes.map { |h| h[:data] || {} }
+        class_value = merge_string_option(*extract_classes(*hashes)).presence
+        merged_data = merge_data_options(*hashes.map { |h| h[:data] || {} })
         rest        = hashes.map { |h| h.except(:class, :classes, :data) }.reduce({}, :deep_merge)
-
-        class_value = merge_string_option(*classes).presence
-        merged_data = merge_data_options(*data_hashes)
 
         result = class_value ? rest.merge(class: class_value) : rest
         merged_data.present? ? result.merge(data: merged_data) : result
+      end
+
+      def extract_classes(*hashes)
+        hashes.flat_map { |h| [h[:class], h[:classes]] }
       end
 
       STIMULUS_SPACEJOIN_KEYS = %i[controller action].freeze

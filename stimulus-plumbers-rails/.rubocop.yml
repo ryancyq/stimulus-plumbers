@@ -53,6 +53,7 @@ Layout/HashAlignment:
 
 Metrics/ClassLength:
   Exclude:
+    - lib/stimulus_plumbers/components/calendar/*/turbo/*.rb
     - test/stimulus_plumbers/components/calendar/*/turbo/*_test.rb
     - test/stimulus_plumbers/form/*_test.rb
     - test/stimulus_plumbers/helpers/*_test.rb
@@ -77,13 +78,6 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   Exclude:
-    - lib/stimulus_plumbers/components/calendar/**/*.rb
-    - lib/stimulus_plumbers/components/date_picker/*.rb
-    - lib/stimulus_plumbers/components/popover.rb
-    - lib/stimulus_plumbers/form/builder.rb
-    - lib/stimulus_plumbers/form/fields/*.rb
-    - lib/stimulus_plumbers/themes/base.rb
-    - lib/stimulus_plumbers/plumber/*.rb
     - test/accessibility/**/*_test.rb
 
 Layout/LineLength:
