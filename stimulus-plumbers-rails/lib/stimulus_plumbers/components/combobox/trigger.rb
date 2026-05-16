@@ -24,13 +24,13 @@ module StimulusPlumbers
           aria[:autocomplete] = aria_autocomplete if aria_autocomplete
           aria[:label]        = aria_label        if aria_label
 
-          template.tag.input(
-            type:     "text",
-            readonly: (readonly ? true : nil),
-            role:     "combobox",
-            aria:     aria,
-            data:     merge_data_options(base_data, data.symbolize_keys)
+          html_options = merge_html_options(
+            { classes: theme.resolve(:combobox_trigger).fetch(:classes, "") },
+            { type: "text", readonly: (readonly ? true : nil), role: "combobox", aria: aria,
+              data: merge_data_options(base_data, data.symbolize_keys)
+}
           )
+          template.tag.input(**html_options)
         end
       end
     end
