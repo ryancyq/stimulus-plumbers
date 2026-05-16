@@ -22,3 +22,7 @@
 
 # Generated assets
 /test/sandbox/public/tailwind.css
+
+# Playwright
+/playwright-report/
+/test-results/

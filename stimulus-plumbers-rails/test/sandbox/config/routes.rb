@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get "up" => "rails/health#show", as: :rails_health_check
+
   scope "/components", controller: "components" do
     get :profile
     get :calendar_stimulus
