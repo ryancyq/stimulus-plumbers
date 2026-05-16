@@ -8,8 +8,8 @@ module StimulusPlumbers
 
     config.autoload_paths << File.expand_path("../stimulus-plumbers", __dir__)
 
-    initializer "stimulus_plumbers.assets" do |app|
-      app.config.assets.paths << root.join("app/assets/javascripts")
+    initializer "stimulus_plumbers.assets", after: :set_default_precompile do |app|
+      app.config.assets.precompile += %w[stimulus_plumbers/tokens.css] if app.config.respond_to?(:assets)
     end
 
     initializer "stimulus_plumbers.helpers" do
