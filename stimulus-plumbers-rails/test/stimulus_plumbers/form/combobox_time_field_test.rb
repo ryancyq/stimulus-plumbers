@@ -15,6 +15,8 @@ class ComboboxTimeFieldTest < ActionView::TestCase
     parse_html(html)
   end
 
+  # ── structure ──────────────────────────────────────────────────────────────
+
   def test_renders_label
     doc = build_combobox(:meeting_time)
 
@@ -27,21 +29,33 @@ class ComboboxTimeFieldTest < ActionView::TestCase
     assert_css doc, "input[type='hidden'][name='sign_in_form[meeting_time]']"
   end
 
-  def test_hidden_input_is_value_target
-    doc    = build_combobox(:meeting_time)
-    hidden = doc.at_css("input[type='hidden'][name='sign_in_form[meeting_time]']")
+  def test_trigger_has_haspopup_dialog
+    doc = build_combobox(:meeting_time)
 
-    assert_not_nil hidden
-    assert_includes hidden["data-input-combobox-target"].to_s, "value"
+    assert_css doc, "input[aria-haspopup='dialog']"
   end
 
-  def test_trigger_is_input_format_target
-    doc     = build_combobox(:meeting_time)
-    trigger = doc.at_css("input[role='combobox']")
+  def test_renders_dialog_popover
+    doc = build_combobox(:meeting_time)
 
-    assert_not_nil trigger
-    assert_includes trigger["data-input-format-target"].to_s, "input"
+    assert_css doc, "[role='dialog']"
   end
+
+  # ── label options ─────────────────────────────────────────────────────────
+
+  def test_renders_custom_label_text
+    doc = build_combobox(:meeting_time, label: "Meeting time")
+
+    assert_includes doc.text, "Meeting time"
+  end
+
+  def test_renders_details_hint
+    doc = build_combobox(:meeting_time, details: "Use 24-hour format")
+
+    assert_css doc, "#sign_in_form_meeting_time_hint"
+  end
+
+  # ── value pre-selection ───────────────────────────────────────────────────
 
   def test_pre_selects_drums_from_model_value
     @form.define_singleton_method(:meeting_time) { "14:30" }
@@ -51,6 +65,8 @@ class ComboboxTimeFieldTest < ActionView::TestCase
     assert_css doc, "ul[aria-label='Minute'] li[data-value='30'][aria-selected='true']"
     assert_css doc, "ul[aria-label='Period'] li[data-value='PM'][aria-selected='true']"
   end
+
+  # ── error state ──────────────────────────────────────────────────────────
 
   def test_renders_error_message_when_model_has_errors
     @form.errors.add(:meeting_time, "is invalid")

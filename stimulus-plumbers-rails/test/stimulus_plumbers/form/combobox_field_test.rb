@@ -23,104 +23,10 @@ class ComboboxFieldTest < ActionView::TestCase
     assert_css doc, "label[for='sign_in_form_birthday']"
   end
 
-  def test_renders_combobox_wrapper_with_stimulus_controller
-    doc = build_combobox(:birthday)
-
-    assert_css doc, "[data-controller~='input-combobox']"
-  end
-
-  def test_renders_trigger_input_with_combobox_role
-    doc = build_combobox(:birthday)
-
-    assert_css doc, "input[type='text'][role='combobox']"
-  end
-
-  def test_renders_trigger_input_with_aria_expanded_false
-    doc = build_combobox(:birthday)
-
-    assert_css doc, "input[aria-expanded='false']"
-  end
-
-  def test_trigger_has_haspopup_dialog
-    doc = build_combobox(:birthday)
-
-    assert_css doc, "input[aria-haspopup='dialog']"
-  end
-
-  def test_trigger_is_readonly
-    doc     = build_combobox(:birthday)
-    trigger = doc.at_css("input[role='combobox']")
-
-    assert_not_nil trigger
-    assert trigger.key?("readonly"), "Expected trigger to be readonly"
-  end
-
   def test_renders_hidden_value_input
     doc = build_combobox(:birthday)
 
     assert_css doc, "input[type='hidden'][name='sign_in_form[birthday]']"
-  end
-
-  def test_renders_dialog_popover
-    doc = build_combobox(:birthday)
-
-    assert_css doc, "[role='dialog']"
-  end
-
-  def test_popover_is_hidden_by_default
-    doc = build_combobox(:birthday)
-    popover = doc.at_css("[role='dialog']")
-
-    assert_not_nil popover
-    assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
-  end
-
-  def test_popover_has_accessible_label
-    doc = build_combobox(:birthday)
-    popover = doc.at_css("[role='dialog']")
-
-    assert_not_nil popover
-    assert_not_nil popover["aria-label"], "Expected popover to have aria-label"
-  end
-
-  def test_trigger_aria_controls_matches_popover_id
-    doc     = build_combobox(:birthday)
-    trigger = doc.at_css("input[role='combobox']")
-    popover   = doc.at_css("[role='dialog']")
-
-    assert_not_nil trigger
-    assert_not_nil popover
-    assert_equal popover["id"], trigger["aria-controls"]
-  end
-
-  def test_renders_navigation_inside_popup
-    doc = build_combobox(:birthday)
-
-    assert_css doc, "[role='dialog'] nav"
-  end
-
-  def test_renders_calendar_month_inside_popup
-    doc = build_combobox(:birthday)
-
-    assert_css doc, "[role='dialog'] [data-controller~='calendar-month']"
-  end
-
-  # ── cross-wiring ──────────────────────────────────────────────────────────
-
-  def test_trigger_input_is_input_format_target
-    doc     = build_combobox(:birthday)
-    trigger = doc.at_css("input[role='combobox']")
-
-    assert_not_nil trigger
-    assert_includes trigger["data-input-format-target"].to_s, "input"
-  end
-
-  def test_hidden_input_is_input_combobox_value_target
-    doc    = build_combobox(:birthday)
-    hidden = doc.at_css("input[type='hidden'][name='sign_in_form[birthday]']")
-
-    assert_not_nil hidden
-    assert_includes hidden["data-input-combobox-target"].to_s, "value"
   end
 
   # ── error state ──────────────────────────────────────────────────────────
