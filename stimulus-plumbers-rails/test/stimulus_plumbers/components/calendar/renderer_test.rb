@@ -12,7 +12,7 @@ class CalendarRendererTest < ActionView::TestCase
   end
 
   def test_exposes_theme
-    assert_equal StimulusPlumbers.config.theme, renderer.theme
+    assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
   def test_month_has_calendar_month_controllers

@@ -12,8 +12,9 @@ Accessible, WCAG 2.1 AA compliant UI components for Rails + Hotwire applications
 |---------|-------------|
 | [`@stimulus-plumbers/controllers`](stimulus-plumbers/) | Stimulus JS controllers |
 | [`stimulus_plumbers`](stimulus-plumbers-rails/) | Rails view helpers and form builder |
+| [`stimulus_plumbers_tailwind`](stimulus-plumbers-tailwind/) | Tailwind CSS v4 theme |
 
-The two packages work together: the Rails gem renders semantic, ARIA-wired HTML; the npm package provides the Stimulus controllers that drive behavior.
+The Rails gem renders semantic, ARIA-wired HTML; the npm package provides the Stimulus controllers that drive behavior; the Tailwind gem layers utility-class styling on top.
 
 ## License
 

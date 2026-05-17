@@ -13,7 +13,7 @@ class CardRendererTest < ActionView::TestCase
   end
 
   def test_exposes_theme
-    assert_equal StimulusPlumbers.config.theme, renderer.theme
+    assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
   # card

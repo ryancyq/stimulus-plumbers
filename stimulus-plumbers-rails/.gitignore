@@ -16,13 +16,3 @@
 # Bundler
 /.bundle/
 /vendor/bundle/
-
-# Node
-/node_modules/
-
-# Generated assets
-/test/sandbox/public/tailwind.css
-
-# Playwright
-/playwright-report/
-/test-results/

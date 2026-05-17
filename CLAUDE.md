@@ -16,10 +16,17 @@ stimulus-plumbers/         # npm: @stimulus-plumbers/controllers
 └── README.md
 stimulus-plumbers-rails/   # Ruby gem: stimulus-plumbers
 ├── lib/                   # core library
-├── test/                  # test cases (unit, accessibility, snapshots)
+├── test/                  # test cases (unit, accessibility)
 ├── */
 ├── Gemfile                # package manager
-├── package.json           # npm deps: Playwright, Tailwind CSS CLI
+├── CLAUDE.md
+└── README.md
+stimulus-plumbers-tailwind/ # Ruby gem: stimulus_plumbers_tailwind
+├── lib/                   # theme library
+├── test/                  # test cases (unit, snapshots)
+├── */
+├── Gemfile                # package manager
+├── package.json           # Tailwind CLI + Playwright
 ├── CLAUDE.md
 └── README.md
 stimulus-plumbers-react/   # npm: @stimulus-plumbers/react
@@ -36,7 +43,7 @@ stimulus-plumbers-react/   # npm: @stimulus-plumbers/react
 - **Keyboard navigation tests** (Tab, Enter, Space, Escape, Arrows)
 - **Focus management tests** (focus traps, restoration)
 - **ARIA attribute tests** (roles, labels, states)
-- **Visual snapshot tests** using Playwright (`npm run test:snapshots` in `stimulus-plumbers-rails/`)
+- **Visual snapshot tests** using Playwright (`npm run test:snapshots` in `stimulus-plumbers-tailwind/`)
 - read html output from test output first during a11y violation analysis
 
 ## WCAG 2.1 AA Quick Reference

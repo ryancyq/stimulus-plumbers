@@ -60,7 +60,7 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 
 ## Theming
 
-Includes a Tailwind CSS theme out of the box. Supports custom themes by subclassing `Themes::Base`.
+Supports custom themes by subclassing `StimulusPlumbers::Themes::Base`. A ready-made Tailwind CSS v4 theme is available via the [`stimulus_plumbers_tailwind`](../stimulus-plumbers-tailwind) gem.
 
 → [docs/component/theme.md](docs/component/theme.md)
 
@@ -73,15 +73,6 @@ bundle exec rake test:unit          # unit tests
 bundle exec rake test:accessibility # accessibility tests (Capybara + axe-core)
 bundle exec rake rubocop            # lint
 bundle exec rake coverage           # run tests with coverage + collate report
-```
-
-Snapshot tests use Playwright and run separately:
-
-```bash
-npm install
-
-npm run test:snapshots         # compare against committed baselines
-npm run test:snapshots:update  # regenerate baselines
 ```
 
 Test against a specific Rails version:
