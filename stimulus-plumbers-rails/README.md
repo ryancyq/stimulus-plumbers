@@ -60,7 +60,7 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 
 ## Theming
 
-Includes a Tailwind CSS theme out of the box. Supports custom themes by subclassing `Themes::Base`.
+Supports custom themes by subclassing `StimulusPlumbers::Themes::Base`. A ready-made Tailwind CSS v4 theme is available via the [`stimulus_plumbers_tailwind`](../stimulus-plumbers-tailwind) gem.
 
 → [docs/component/theme.md](docs/component/theme.md)
 
