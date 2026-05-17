@@ -33,12 +33,13 @@ module StimulusPlumbers
       end
 
       def resolve_color(color, name, initials)
+        range = theme.avatar_color_range
         if color
           theme.avatar_colors.fetch(color, nil)
-        elsif (seed = name || initials)
-          theme.avatar_color_range[seed.bytes.reduce(:^) % theme.avatar_color_range.length]
+        elsif (seed = name || initials) && range.any?
+          range[seed.bytes.reduce(:^) % range.length]
         else
-          theme.avatar_color_range.first
+          range.first
         end
       end
 
