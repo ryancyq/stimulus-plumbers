@@ -8,38 +8,76 @@ class ConfigurationTest < Minitest::Test
   end
 
   # #theme
-  def test_theme_defaults_to_a_base_instance
-    assert_instance_of StimulusPlumbers::Themes::BaseTheme, @config.theme
+  def test_theme_returns_a_theme_configuration
+    assert_instance_of StimulusPlumbers::Themes::Configuration, @config.theme
   end
 
   def test_theme_is_memoized
     assert_same @config.theme, @config.theme
   end
 
-  # #theme=
-  def test_theme_setter_accepts_base_symbol
-    @config.theme = :base
-
-    assert_instance_of StimulusPlumbers::Themes::BaseTheme, @config.theme
+  # #theme.current
+  def test_theme_current_defaults_to_a_base_instance
+    assert_instance_of StimulusPlumbers::Themes::Base, @config.theme.current
   end
 
-  def test_theme_setter_accepts_tailwind_symbol
-    @config.theme = :tailwind
-
-    assert_instance_of StimulusPlumbers::Themes::TailwindTheme, @config.theme
+  def test_theme_current_is_memoized
+    assert_same @config.theme.current, @config.theme.current
   end
 
-  def test_theme_setter_accepts_a_themes_base_instance_directly
+  # #theme.register
+  def test_theme_register_accepts_a_base_subclass
+    custom_klass = Class.new(StimulusPlumbers::Themes::Base)
+    @config.theme.register(:custom, custom_klass)
+
+    assert_equal custom_klass, @config.theme.registry[:custom]
+  end
+
+  def test_theme_register_accepts_base_itself
+    @config.theme.register(:custom, StimulusPlumbers::Themes::Base)
+
+    assert_equal StimulusPlumbers::Themes::Base, @config.theme.registry[:custom]
+  end
+
+  def test_theme_register_raises_for_a_non_base_subclass
+    err = assert_raises(ArgumentError) { @config.theme.register(:bad, Class.new) }
+
+    assert_match %r{must be a subclass of Themes::Base}, err.message
+  end
+
+  def test_theme_register_is_chainable
+    result = @config.theme.register(:custom, Class.new(StimulusPlumbers::Themes::Base))
+
+    assert_same @config.theme, result
+  end
+
+  # #theme.use
+  def test_theme_use_accepts_a_registered_name
+    custom_klass = Class.new(StimulusPlumbers::Themes::Base)
+    @config.theme.register(:custom, custom_klass)
+    @config.theme.use(:custom)
+
+    assert_instance_of custom_klass, @config.theme.current
+  end
+
+  def test_theme_use_accepts_a_themes_base_instance_directly
     custom = StimulusPlumbers::Themes::Base.new
-    @config.theme = custom
+    @config.theme.use(custom)
 
-    assert_same custom, @config.theme
+    assert_same custom, @config.theme.current
   end
 
-  def test_theme_setter_raises_argument_error_for_an_unknown_symbol
-    err = assert_raises(ArgumentError) { @config.theme = :unknown }
-    assert_match %r{Unknown theme}, err.message
-    assert_match %r{StimulusPlumbers::Themes::UnknownTheme}, err.message
+  def test_theme_use_raises_for_an_unknown_name
+    err = assert_raises(ArgumentError) { @config.theme.use(:unknown) }
+
+    assert_match %r{Unknown theme :unknown}, err.message
+    assert_match %r{Registered:}, err.message
+  end
+
+  def test_theme_use_is_chainable
+    result = @config.theme.use(StimulusPlumbers::Themes::Base.new)
+
+    assert_same @config.theme, result
   end
 
   # #log_formatter
@@ -66,11 +104,13 @@ class ConfigurationTest < Minitest::Test
 
   def test_log_formatter_setter_raises_argument_error_when_given_a_non_callable
     err = assert_raises(ArgumentError) { @config.log_formatter = "a string" }
+
     assert_match %r{respond to #call}, err.message
   end
 
   def test_log_formatter_setter_raises_argument_error_when_given_nil
     err = assert_raises(ArgumentError) { @config.log_formatter = nil }
+
     assert_match %r{respond to #call}, err.message
   end
 end

@@ -2,11 +2,7 @@
 
 require "test_helper"
 
-class BaseThemeAvatarTest < Minitest::Test
-  def setup
-    @theme = build_stub_theme
-  end
-
+class BaseThemeAvatarTest < StubThemeTestCase
   def build_stub_theme(with_color_range: false)
     Class.new(StimulusPlumbers::Themes::Base) do
       private

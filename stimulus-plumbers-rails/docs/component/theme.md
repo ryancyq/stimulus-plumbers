@@ -7,8 +7,8 @@ Stimulus Plumbers uses a theme system to apply presentational CSS classes to for
 ```ruby
 # config/initializers/stimulus_plumbers.rb
 StimulusPlumbers.configure do |config|
-  config.theme = :tailwind   # default
-  # config.theme = MyCustomTheme.new
+  config.theme.use(:tailwind)
+  # config.theme.use(MyCustomTheme.new)
 end
 ```
 
@@ -90,5 +90,8 @@ class MyTheme < StimulusPlumbers::Themes::Base
   end
 end
 
-StimulusPlumbers.configure { |c| c.theme = MyTheme.new }
+StimulusPlumbers.configure do |c|
+  c.theme.register(:my_theme, MyTheme)
+  c.theme.use(:my_theme)
+end
 ```

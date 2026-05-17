@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
 require_relative "themes/base"
-require_relative "themes/base_theme"
+require_relative "themes/configuration"
 
 module StimulusPlumbers
   class Configuration
-    DEFAULT_LOG_FORMATTER  = ->(message) { "[StimulusPlumbers] #{message}" }
-    THEME_KLASS_FORMATTER  = ->(type) { "StimulusPlumbers::Themes::#{type.to_s.classify}Theme" }
+    DEFAULT_LOG_FORMATTER = ->(message) { "[StimulusPlumbers] #{message}" }
 
     def theme
-      @theme ||= build_theme(:base)
-    end
-
-    def theme=(value)
-      @theme = build_theme(value)
+      @theme ||= Themes::Configuration.new
     end
 
     def log_formatter
@@ -24,16 +19,6 @@ module StimulusPlumbers
       raise ArgumentError, "log_formatter must respond to #call" unless callable.respond_to?(:call)
 
       @log_formatter = callable
-    end
-
-    private
-
-    def build_theme(type)
-      return type if type.is_a?(Themes::Base)
-
-      klass_name = THEME_KLASS_FORMATTER.call(type)
-      klass_name.safe_constantize&.new or
-        raise ArgumentError, "Unknown theme #{type.inspect}: #{klass_name} is not defined."
     end
   end
 end

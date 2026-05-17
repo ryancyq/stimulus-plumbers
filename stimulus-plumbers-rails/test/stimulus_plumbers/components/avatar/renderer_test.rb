@@ -13,7 +13,7 @@ class AvatarRendererTest < ActionView::TestCase
   end
 
   def test_exposes_theme
-    assert_equal StimulusPlumbers.config.theme, renderer.theme
+    assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
   # rendering
@@ -97,11 +97,11 @@ class AvatarRendererTest < ActionView::TestCase
   end
 
   def with_stub_theme(theme)
-    original = StimulusPlumbers.config.theme
-    StimulusPlumbers.config.theme = theme
+    original = StimulusPlumbers.config.theme.current
+    StimulusPlumbers.config.theme.use(theme)
     yield
   ensure
-    StimulusPlumbers.config.theme = original
+    StimulusPlumbers.config.theme.use(original)
   end
 
   def test_derives_color_from_name
@@ -123,7 +123,7 @@ class AvatarRendererTest < ActionView::TestCase
   end
 
   def test_does_not_apply_color_when_url_given
-    theme  = StimulusPlumbers.config.theme
+    theme  = StimulusPlumbers.config.theme.current
     html   = renderer.render(name: "John", url: "/avatar.jpg")
     colors = theme.avatar_color_range
 
@@ -131,7 +131,7 @@ class AvatarRendererTest < ActionView::TestCase
   end
 
   def test_does_not_apply_color_when_block_given
-    theme  = StimulusPlumbers.config.theme
+    theme  = StimulusPlumbers.config.theme.current
     html   = renderer.render(name: "John") { "custom" }
     colors = theme.avatar_color_range
 

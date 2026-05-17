@@ -67,7 +67,7 @@ module StimulusPlumbers
       end
 
       def theme
-        StimulusPlumbers.config.theme
+        StimulusPlumbers.config.theme.current
       end
 
       # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
