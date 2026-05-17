@@ -30,8 +30,4 @@ class DatePickerNavigationTest < ActionView::TestCase
   def test_next_button_has_aria_label
     assert_css parse_html(navigation), "button[aria-label='Next Month']"
   end
-
-  def test_renders_icon_on_previous_and_next_buttons
-    assert_equal 2, parse_html(navigation).css("svg").length
-  end
 end

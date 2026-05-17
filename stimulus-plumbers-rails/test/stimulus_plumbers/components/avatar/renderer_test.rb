@@ -87,18 +87,39 @@ class AvatarRendererTest < ActionView::TestCase
     assert_includes html, 'id="my-avatar"'
   end
 
-  # color logic
-  def test_applies_color_class_for_explicit_color
-    theme = StimulusPlumbers.config.theme
-    html  = renderer.render(color: :indigo)
+  # color logic — stub theme with a known color range, independent of any concrete theme
 
-    assert_includes html, theme.avatar_colors.fetch(:indigo)
+  def stub_theme_with_colors(colors)
+    Class.new(StimulusPlumbers::Themes::Base) do
+      define_method(:avatar_color_range) { colors.values }
+      define_method(:avatar_colors) { colors }
+    end.new
+  end
+
+  def with_stub_theme(theme)
+    original = StimulusPlumbers.config.theme
+    StimulusPlumbers.config.theme = theme
+    yield
+  ensure
+    StimulusPlumbers.config.theme = original
   end
 
   def test_derives_color_from_name
-    html = renderer.render(name: "Test User")
+    stub = stub_theme_with_colors(red: "text-red", blue: "text-blue")
+    with_stub_theme(stub) do
+      html = renderer.render(name: "Test User")
 
-    assert(StimulusPlumbers.config.theme.avatar_color_range.any? { |c| html.include?(c) })
+      assert(stub.avatar_color_range.any? { |c| html.include?(c) })
+    end
+  end
+
+  def test_applies_explicit_color
+    stub = stub_theme_with_colors(red: "text-red", blue: "text-blue")
+    with_stub_theme(stub) do
+      html = renderer.render(color: :red)
+
+      assert_includes html, "text-red"
+    end
   end
 
   def test_does_not_apply_color_when_url_given

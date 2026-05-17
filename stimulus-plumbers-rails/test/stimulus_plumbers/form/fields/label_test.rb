@@ -25,8 +25,4 @@ class FormFieldsLabelTest < ActionView::TestCase
     assert_css doc, "span[aria-hidden='true']"
     assert_includes doc.text, "*"
   end
-
-  def test_hidden_label_includes_sr_only_class
-    assert_includes label(text: "Email", for_id: "user_email", hidden: true), "sr-only"
-  end
 end

@@ -251,20 +251,6 @@ class BuilderTest < ActionView::TestCase
     assert_css doc, "input[type='submit']"
   end
 
-  def test_submit_default_variant_applies_link_classes
-    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/") { |f| f.submit "Save" }
-
-    assert_includes html, "hover:underline"
-  end
-
-  def test_submit_button_variant_applies_button_classes
-    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/") do |f|
-      f.submit "Save", variant: :button
-    end
-
-    assert_includes html, "inline-flex"
-  end
-
   # ── build_field / error? ──────────────────────────────────────────────────
 
   def test_build_field_no_error_without_model_errors

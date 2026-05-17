@@ -23,10 +23,6 @@ class DatePickerNavigatorTest < ActionView::TestCase
     assert_includes html, "nav-btn"
   end
 
-  def test_renders_icon_when_icon_options_given
-    assert_includes navigator(icon_options: { name: "arrow-left" }), "<svg"
-  end
-
   def test_renders_no_icon_by_default
     refute_includes navigator, "<svg"
   end

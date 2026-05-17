@@ -8,8 +8,8 @@ class ConfigurationTest < Minitest::Test
   end
 
   # #theme
-  def test_theme_defaults_to_a_tailwind_instance
-    assert_instance_of StimulusPlumbers::Themes::TailwindTheme, @config.theme
+  def test_theme_defaults_to_a_base_instance
+    assert_instance_of StimulusPlumbers::Themes::BaseTheme, @config.theme
   end
 
   def test_theme_is_memoized
@@ -17,6 +17,12 @@ class ConfigurationTest < Minitest::Test
   end
 
   # #theme=
+  def test_theme_setter_accepts_base_symbol
+    @config.theme = :base
+
+    assert_instance_of StimulusPlumbers::Themes::BaseTheme, @config.theme
+  end
+
   def test_theme_setter_accepts_tailwind_symbol
     @config.theme = :tailwind
 

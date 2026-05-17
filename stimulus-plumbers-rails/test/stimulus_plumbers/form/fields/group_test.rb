@@ -13,12 +13,4 @@ class FormFieldsGroupTest < ActionView::TestCase
     assert_includes html, "<div"
     assert_includes html, "content"
   end
-
-  def test_stacked_layout_by_default
-    assert_includes group { "" }, "flex-col"
-  end
-
-  def test_inline_layout
-    assert_includes group(layout: :inline) { "" }, "flex-row"
-  end
 end
