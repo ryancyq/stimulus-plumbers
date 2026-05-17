@@ -2,7 +2,6 @@
 
 require_relative "themes/base"
 require_relative "themes/base_theme"
-require_relative "themes/tailwind_theme"
 
 module StimulusPlumbers
   class Configuration
