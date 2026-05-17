@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class SearchAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/a11y/components/search"
+    visit "/components/search"
   end
 
   # ── WCAG / axe ────────────────────────────────────────────────────────────

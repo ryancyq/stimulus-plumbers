@@ -31,14 +31,9 @@ stimulus-plumbers-rails/
 │   ├── accessibility/                # Accessibility tests (axe-core via Capybara)
 │   │   ├── components/
 │   │   └── form/
-│   ├── snapshots/                    # Playwright visual regression tests
-│   │   ├── __screenshots__/          # Baseline screenshots (committed)
-│   │   └── *.spec.js
 │   ├── sandbox/                      # Minimal Rails app used by a11y + snapshot tests
 │   └── test_helper.rb
 ├── gemfiles/                         # Appraisal-generated gemfiles (rails 6.1–edge)
-├── playwright.config.js              # Playwright config (snapshot tests)
-├── package.json                      # npm deps: Playwright, Tailwind CSS CLI
 ├── Gemfile
 ├── Rakefile
 └── *.gemspec

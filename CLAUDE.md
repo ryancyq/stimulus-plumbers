@@ -19,7 +19,6 @@ stimulus-plumbers-rails/   # Ruby gem: stimulus-plumbers
 ├── test/                  # test cases (unit, accessibility, snapshots)
 ├── */
 ├── Gemfile                # package manager
-├── package.json           # npm deps: Playwright, Tailwind CSS CLI
 ├── CLAUDE.md
 └── README.md
 stimulus-plumbers-react/   # npm: @stimulus-plumbers/react

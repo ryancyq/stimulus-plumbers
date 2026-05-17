@@ -4,7 +4,7 @@ require_relative "../application_accessibility_test_case"
 
 class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   def test_renders_all_fields
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_selector "label", text: %r{Full name}
     assert_selector "input[type='text']"
@@ -28,7 +28,7 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_renders_hint_text
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_text "We'll never share your email."
     assert_text "Tell us a little about yourself."
@@ -36,13 +36,13 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_renders_required_indicators
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_selector "span[aria-hidden='true']", text: "*", minimum: 3
   end
 
   def test_each_input_has_an_associated_label
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_selector "label[for='sign_up_name']"
     assert_selector "label[for='sign_up_email']"
@@ -51,7 +51,7 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_label_is_associated_with_textarea
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     textarea_id = find("textarea")[:id]
 
@@ -59,7 +59,7 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_radio_buttons_are_associated_with_labels
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     all("input[type='radio']").each do |radio|
       assert_selector "label[for='#{radio[:id]}']"
@@ -67,7 +67,7 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_checkbox_is_associated_with_label
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     checkbox_id = find("input[type='checkbox']")[:id]
 
@@ -75,7 +75,7 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_label_is_associated_with_select
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     select_id = find("select")[:id]
 
@@ -83,7 +83,7 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_renders_country_options
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_selector "option", text: "Australia"
     assert_selector "option", text: "New Zealand"
@@ -92,26 +92,26 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_renders_card
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_selector "h1", text: "Create account"
     assert_selector "div"
   end
 
   def test_renders_avatar
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_selector "span[role='img'][aria-label='Stimulus Plumbers']"
   end
 
   def test_renders_sign_in_button
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_selector "a", text: "Sign in"
   end
 
   def test_passes_wcag
-    visit "/a11y/form/sign_up"
+    visit "/form/sign_up"
 
     assert_accessible
   end

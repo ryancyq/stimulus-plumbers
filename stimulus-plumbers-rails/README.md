@@ -75,15 +75,6 @@ bundle exec rake rubocop            # lint
 bundle exec rake coverage           # run tests with coverage + collate report
 ```
 
-Snapshot tests use Playwright and run separately:
-
-```bash
-npm install
-
-npm run test:snapshots         # compare against committed baselines
-npm run test:snapshots:update  # regenerate baselines
-```
-
 Test against a specific Rails version:
 
 ```bash
