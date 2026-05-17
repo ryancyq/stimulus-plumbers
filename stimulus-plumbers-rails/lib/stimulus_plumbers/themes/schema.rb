@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative "schema/ranges"
+require_relative "schema/form/ranges"
+require_relative "schema/icon"
 
 module StimulusPlumbers
   module Themes
@@ -21,7 +23,7 @@ module StimulusPlumbers
 
       BUTTON = {
         button:       {
-          variant: { default: :primary, range: %i[primary secondary outline destructive ghost link].freeze },
+          variant: { default: :primary, range: Ranges::BUTTON_VARIANT },
           size:    { default: :md,      range: Ranges::SIZE }
         }.freeze,
         button_group: {
@@ -42,7 +44,9 @@ module StimulusPlumbers
         }.freeze,
         calendar_navigation:                {}.freeze,
         calendar_navigation_navigator:      {}.freeze,
-        calendar_navigation_navigator_icon: {}.freeze
+        calendar_navigation_navigator_icon: {
+          name: { default: "arrow-left", range: :icon_range }
+        }.freeze
       }.freeze
 
       CARD = {
@@ -65,7 +69,7 @@ module StimulusPlumbers
 
       FORM = {
         form_group:         {
-          layout: { default: :stacked, range: Ranges::FORM_LAYOUT },
+          layout: { default: :stacked, range: Form::Ranges::LAYOUT },
           error:  { default: false,    range: Ranges::BOOL }
         }.freeze,
         form_label:         {
@@ -86,7 +90,7 @@ module StimulusPlumbers
         form_input_reveal:  {}.freeze,
         form_button_reveal: {}.freeze,
         form_submit:        {
-          variant: { default: :default, range: %i[default button].freeze }
+          variant: { default: :default, range: Form::Ranges::SUBMIT_VARIANT }
         }.freeze
       }.freeze
 

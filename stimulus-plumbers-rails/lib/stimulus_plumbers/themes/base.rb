@@ -28,6 +28,14 @@ module StimulusPlumbers
         []
       end
 
+      def icons
+        {}
+      end
+
+      def icon_range
+        icons.keys
+      end
+
       def attribute_names(component)
         SCHEMA.fetch(component, {}).keys
       end
