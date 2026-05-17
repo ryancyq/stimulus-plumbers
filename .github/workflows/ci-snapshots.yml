@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       update_snapshots:
-        description: Regenerate baseline screenshots and commit them
+        description: Regenerate and update baseline screenshots
         type: boolean
         default: false
 
@@ -89,10 +89,12 @@ jobs:
           files: stimulus-plumbers-rails/test/snapshots/__screenshots__
           commit-message: "chore: update snapshot baselines [skip ci]"
 
-      - name: Upload Playwright report
+      - name: Upload Playwright report and snapshot diffs
         if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: playwright-report
-          path: stimulus-plumbers-rails/playwright-report/
+          path: |
+            stimulus-plumbers-rails/playwright-report/
+            stimulus-plumbers-rails/test-results/
           retention-days: 7

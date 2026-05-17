@@ -20,6 +20,14 @@ module StimulusPlumbers
         @name ||= self.class.name.demodulize.delete_suffix("Theme")
       end
 
+      def avatar_colors
+        {}
+      end
+
+      def avatar_color_range
+        []
+      end
+
       def attribute_names(component)
         SCHEMA.fetch(component, {}).keys
       end

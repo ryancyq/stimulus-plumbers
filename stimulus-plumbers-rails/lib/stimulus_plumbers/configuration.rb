@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "themes/base"
+require_relative "themes/base_theme"
 require_relative "themes/tailwind_theme"
 
 module StimulusPlumbers
@@ -9,7 +10,7 @@ module StimulusPlumbers
     THEME_KLASS_FORMATTER  = ->(type) { "StimulusPlumbers::Themes::#{type.to_s.classify}Theme" }
 
     def theme
-      @theme ||= build_theme(:tailwind)
+      @theme ||= build_theme(:base)
     end
 
     def theme=(value)

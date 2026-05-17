@@ -11,6 +11,14 @@ class BaseThemeTest < Minitest::Test
     assert_equal({}, @theme.resolve(:nonexistent))
   end
 
+  def test_avatar_colors_returns_empty_hash
+    assert_equal({}, @theme.avatar_colors)
+  end
+
+  def test_avatar_color_range_returns_empty_array
+    assert_equal([], @theme.avatar_color_range)
+  end
+
   def test_resolve_returns_empty_hash_and_warns_for_all_known_components
     mock_logger = Minitest::Mock.new
     StimulusPlumbers::Themes::Base::SCHEMA.each_key do |_component|
