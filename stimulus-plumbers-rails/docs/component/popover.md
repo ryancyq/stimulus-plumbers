@@ -12,7 +12,7 @@ end
 
 ```erb
 <%= sp_popover do |p| %>
-  <%= p.trigger { tag.button "Open", data: { action: "popover#show" } } %>
+  <%= p.activator { tag.button "Open", data: { action: "popover#show" } } %>
   <%= p.content(role: "dialog", aria: { label: "Options" }) do %>
     <p>Popover content</p>
     <%= tag.button "Close", data: { action: "popover#hide" } %>
