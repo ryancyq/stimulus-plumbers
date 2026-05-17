@@ -70,7 +70,7 @@ Editable trigger that filters options as the user types. Supports client-side fu
 | ---------------- | ---------------------------------------------------------------- |
 | `options`        | Initial options rendered on page load (same formats as dropdown) |
 | `value`          | Pre-selected value                                               |
-| `src`            | URL for server-side filtering                                    |
+| `url`            | URL for server-side filtering                                    |
 | `label`          | `aria-label` on the trigger input                                |
 | `**html_options` | Forwarded to the wrapper `div`                                   |
 
@@ -140,10 +140,38 @@ All variants share the same wrapper pattern:
 
   <input type="hidden" name="[name]" data-input-combobox-target="value" />
 
-  <div id="[id]_popover" hidden data-input-combobox-target="popover">
-    <!-- variant-specific picker body -->
-  </div>
+  <!-- variant-specific popover body (see below) -->
 </div>
 ```
 
 `aria-haspopup` is `"listbox"` for dropdown/autocomplete, `"dialog"` for date/time.
+
+### Popover body by variant
+
+**date / time** — a `<div role="dialog">` wrapping the picker content:
+
+```html
+<div
+  id="[id]_popover"
+  role="dialog"
+  aria-label="[label]"
+  hidden
+  data-input-combobox-target="popover"
+>
+  <!-- calendar grid (date) or drum columns (time) -->
+</div>
+```
+
+**dropdown / autocomplete** — a `<ul role="listbox">` containing `<li role="option">` items:
+
+```html
+<ul
+  id="[id]_popover"
+  role="listbox"
+  hidden
+  data-input-combobox-target="popover"
+>
+  <li role="option" data-value="us" aria-selected="false">United States</li>
+  <li role="option" data-value="ca" aria-selected="false">Canada</li>
+</ul>
+```

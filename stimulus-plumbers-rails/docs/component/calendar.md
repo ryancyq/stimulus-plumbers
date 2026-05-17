@@ -27,3 +27,22 @@ end
 | `**html_options` | Forwarded to the `calendar-month` controller element |
 
 For the JS controller API (targets, values, keyboard behaviour), see the [JS package docs](../../../stimulus-plumbers/docs/component/calendar.md).
+
+---
+
+## Rendered HTML Structure
+
+```html
+<div
+  data-controller="calendar-month"
+  data-calendar-month-year-value="2024"
+  data-calendar-month-month-value="2"
+  data-calendar-month-day-value="15"
+>
+  <!-- calendar grid rendered by the JS controller -->
+</div>
+```
+
+> `month-value` is **zero-indexed** (January = 0, December = 11), matching the JavaScript `Date` API.
+>
+> When no `date:` option is passed, the three value attributes are omitted and the controller defaults to the current month.
