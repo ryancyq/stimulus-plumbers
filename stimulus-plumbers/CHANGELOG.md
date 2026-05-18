@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.3.0](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.2.9..stimulus-plumbers/v0.3.0) - 2026-05-18
+
+### Bug Fixes
+
+- reduce complexity violations raised by rubocop ([#65](https://github.com/ryancyq/stimulus-plumbers/issues/65)) - ([f540d38](https://github.com/ryancyq/stimulus-plumbers/commit/f540d3820158229661249c2c9095eca95c638ff1)) - Ryan Chang
+
+### Features
+
+- plumber rework ([#62](https://github.com/ryancyq/stimulus-plumbers/issues/62)) - ([41130fb](https://github.com/ryancyq/stimulus-plumbers/commit/41130fb7d331de376fab19df9b9931474d753c17)) - Ryan Chang
+
+### Style
+
+- add calendar week + combobox trigger theme option ([#67](https://github.com/ryancyq/stimulus-plumbers/issues/67)) - ([e7f52e3](https://github.com/ryancyq/stimulus-plumbers/commit/e7f52e3c394138b146da96d22381e06008fd0f6b)) - Ryan Chang
+
+### Tests
+
+- improve plumber calendar & combobox dropdown coverage ([#63](https://github.com/ryancyq/stimulus-plumbers/issues/63)) - ([e05c0d5](https://github.com/ryancyq/stimulus-plumbers/commit/e05c0d525135c47a974776f9e17c59e460c63b5e)) - Ryan Chang
+
+---
 ## [0.2.9](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.2.8..stimulus-plumbers/v0.2.9) - 2026-05-15
 
 ### Bug Fixes
