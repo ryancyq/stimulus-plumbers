@@ -7,46 +7,28 @@ module StimulusPlumbers
         module Search
           def search_field(attribute, options = {})
             rails_opts, form_field_opts = extract_options(options)
-            clearable = form_field_opts.delete(:clearable) { false }
-            field     = build_field(attribute, form_field_opts)
+            url           = rails_opts.delete(:url) { nil }
+            choices       = rails_opts.delete(:options) { [] }
+            field         = build_field(attribute, form_field_opts)
+            current_value = object&.public_send(attribute)
+            popover_id    = "#{field_id(attribute)}_popover"
 
-            input_html = if clearable
-                           input_opts = merge_html_options(
-                             rails_opts,
-                             field_theme(:form_input, error: field.error?),
-                             field.html_opts,
-                             { "data-input-search-target": "input", inputmode: "search" }
-                           )
-                           build_input_group(
-                             super(attribute, input_opts),
-                             field,
-                             trailing:          clear_button,
-                             "data-controller": "input-search",
-                             role:              "search"
-                           )
-                         else
-                           html_opts = merge_html_options(
-                             rails_opts,
-                             field_theme(:form_input, error: field.error?),
-                             field.html_opts
-                           )
-                           super(attribute, html_opts)
-                         end
+            opts = Components::Combobox::Autocomplete.default_opts.deep_merge(
+              input:   { value: current_value },
+              popover: { data: url ? { combobox_dropdown_url_value: url } : {} }
+            )
 
-            render_field(field, input_html)
-          end
-
-          private
-
-          def clear_button
-            @template.content_tag(
-              :button,
-              "",
-              type:                       "button",
-              class:                      field_theme(:form_button_reveal)[:class],
-              "aria-label":               "Clear search",
-              "data-input-search-target": "clear",
-              "data-action":              "click->input-search#clear"
+            render_field(
+              field,
+              render_combobox(
+                attribute,
+                field,
+                opts,
+                wrapper_data: {
+                  input_combobox_combobox_dropdown_outlet: "##{popover_id}",
+                  action:                                  "input->input-combobox#onInput"
+                }
+              ) { Components::Combobox::Autocomplete.new(@template).render(options: choices, value: current_value) }
             )
           end
         end

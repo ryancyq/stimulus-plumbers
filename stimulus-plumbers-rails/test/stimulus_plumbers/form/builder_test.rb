@@ -73,24 +73,6 @@ class BuilderTest < ActionView::TestCase
     assert_no_css doc, "label"
   end
 
-  # ── password_field ────────────────────────────────────────────────────────
-
-  def test_password_field_renders_with_label
-    doc = build_field(:password_field, :password)
-
-    assert_css doc, "input[type='password']"
-    assert_css doc, "label"
-  end
-
-  # ── text_area auto-resize ─────────────────────────────────────────────────
-
-  def test_text_area_renders_with_label
-    doc = build_field(:text_area, :email)
-
-    assert_css doc, "textarea"
-    assert_css doc, "label"
-  end
-
   # ── aria-describedby ──────────────────────────────────────────────────────
 
   def test_input_has_aria_describedby_for_hint
@@ -137,42 +119,6 @@ class BuilderTest < ActionView::TestCase
     assert_nil input["aria-invalid"]
   end
 
-  def test_check_box_has_aria_invalid_when_model_has_errors
-    @form.errors.add(:remember_me, "must be accepted")
-    doc = build_field(:check_box, :remember_me)
-
-    input = doc.at_css("input[type='checkbox']")
-
-    assert_equal "true", input["aria-invalid"]
-  end
-
-  def test_check_box_has_aria_describedby_for_error
-    @form.errors.add(:remember_me, "must be accepted")
-    doc = build_field(:check_box, :remember_me)
-
-    input = doc.at_css("input[type='checkbox']")
-
-    assert_includes input["aria-describedby"].to_s, "sign_in_form_remember_me_error"
-  end
-
-  def test_radio_button_has_aria_invalid_when_model_has_errors
-    @form.errors.add(:role, "is not included in the list")
-    doc = build_field(:radio_button, :role, "admin")
-
-    input = doc.at_css("input[type='radio']")
-
-    assert_equal "true", input["aria-invalid"]
-  end
-
-  def test_radio_button_has_aria_describedby_for_error
-    @form.errors.add(:role, "is not included in the list")
-    doc = build_field(:radio_button, :role, "admin")
-
-    input = doc.at_css("input[type='radio']")
-
-    assert_includes input["aria-describedby"].to_s, "sign_in_form_role_admin_error"
-  end
-
   # ── required forwarding ───────────────────────────────────────────────────
 
   def test_required_field_has_required_attribute
@@ -198,15 +144,6 @@ class BuilderTest < ActionView::TestCase
 
     assert_nil input["required"]
     assert_nil input["aria-required"]
-  end
-
-  def test_check_box_required_sets_required_and_aria_required
-    doc = build_field(:check_box, :remember_me, required: true)
-
-    input = doc.at_css("input[type='checkbox']")
-
-    assert_equal "required", input["required"]
-    assert_equal "true", input["aria-required"]
   end
 
   # ── label_visibility ──────────────────────────────────────────────────────

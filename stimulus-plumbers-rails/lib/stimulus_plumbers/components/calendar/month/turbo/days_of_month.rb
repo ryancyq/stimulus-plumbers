@@ -115,15 +115,17 @@ module StimulusPlumbers
             def day_cell_html_options(date, today)
               is_today = date == today
               selected = selected_date && date == selected_date
-              {
-                classes:  theme.resolve(:calendar_day, today: is_today, selected: selected).fetch(:classes, ""),
-                role:     "gridcell",
-                tabindex: date == focus_day ? 0 : -1,
-                aria:     {
-                  current:  is_today ? "date" : nil,
-                  selected: if selectable then selected ? "true" : "false" end
+              merge_html_options(
+                { classes: theme.resolve(:calendar_day, today: is_today, selected: selected).fetch(:classes, "") },
+                {
+                  role:     "gridcell",
+                  tabindex: date == focus_day ? 0 : -1,
+                  aria:     {
+                    current:  is_today ? "date" : nil,
+                    selected: if selectable then selected ? "true" : "false" end
+                  }
                 }
-              }
+              )
             end
 
             def other_month_day_cell(date)

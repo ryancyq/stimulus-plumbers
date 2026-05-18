@@ -89,48 +89,48 @@ class FieldTest < Minitest::Test
     assert_includes c.described_by, "sign_in_form_email_error"
   end
 
-  # ── html_opts ───────────────────────────────────────────────────────────
+  # ── html_options ───────────────────────────────────────────────────────────
 
-  def test_html_opts_includes_id
-    assert_equal "sign_in_form_email", component(attribute: :email).html_opts[:id]
+  def test_html_options_includes_id
+    assert_equal "sign_in_form_email", component(attribute: :email).html_options[:id]
   end
 
-  def test_html_opts_includes_aria_describedby_when_hint_present
-    attrs = component(attribute: :email, details: "Hint text").html_opts
+  def test_html_options_includes_aria_describedby_when_hint_present
+    attrs = component(attribute: :email, details: "Hint text").html_options
 
     assert_includes attrs[:"aria-describedby"], "sign_in_form_email_hint"
   end
 
-  def test_html_opts_includes_aria_describedby_when_error_present
+  def test_html_options_includes_aria_describedby_when_error_present
     @form.errors.add(:email, "is invalid")
-    attrs = component(attribute: :email).html_opts
+    attrs = component(attribute: :email).html_options
 
     assert_includes attrs[:"aria-describedby"], "sign_in_form_email_error"
   end
 
-  def test_html_opts_omits_aria_describedby_without_hint_or_error
-    refute component(attribute: :email).html_opts.key?(:"aria-describedby")
+  def test_html_options_omits_aria_describedby_without_hint_or_error
+    refute component(attribute: :email).html_options.key?(:"aria-describedby")
   end
 
-  def test_html_opts_includes_aria_invalid_when_error
+  def test_html_options_includes_aria_invalid_when_error
     @form.errors.add(:email, "is invalid")
 
-    assert_equal "true", component(attribute: :email).html_opts[:"aria-invalid"]
+    assert_equal "true", component(attribute: :email).html_options[:"aria-invalid"]
   end
 
-  def test_html_opts_omits_aria_invalid_without_error
-    refute component(attribute: :email).html_opts.key?(:"aria-invalid")
+  def test_html_options_omits_aria_invalid_without_error
+    refute component(attribute: :email).html_options.key?(:"aria-invalid")
   end
 
-  def test_html_opts_includes_required_and_aria_required
-    attrs = component(attribute: :email, required: true).html_opts
+  def test_html_options_includes_required_and_aria_required
+    attrs = component(attribute: :email, required: true).html_options
 
     assert attrs[:required]
     assert_equal "true", attrs[:"aria-required"]
   end
 
-  def test_html_opts_omits_required_when_not_required
-    attrs = component(attribute: :email).html_opts
+  def test_html_options_omits_required_when_not_required
+    attrs = component(attribute: :email).html_options
 
     refute attrs.key?(:required)
     refute attrs.key?(:"aria-required")

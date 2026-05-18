@@ -5,8 +5,8 @@ module StimulusPlumbers
     module Fields
       class Group < Plumber::Base
         def render(layout: :stacked, error: false, &block)
-          klass = theme.resolve(:form_group, layout: layout, error: error).fetch(:classes, "")
-          template.content_tag(:div, class: klass.presence, &block)
+          html_options = merge_html_options(theme.resolve(:form_group, layout: layout, error: error))
+          template.content_tag(:div, **html_options, &block)
         end
       end
     end

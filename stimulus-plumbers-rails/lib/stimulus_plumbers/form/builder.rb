@@ -5,7 +5,7 @@ require "action_view/version"
 require_relative "field"
 require_relative "fields/renderer"
 require_relative "fields/inputs/choice"
-require_relative "fields/inputs/combobox"
+require_relative "fields/inputs/datetime"
 require_relative "fields/inputs/file"
 require_relative "fields/inputs/password"
 require_relative "fields/inputs/search"
@@ -20,7 +20,7 @@ module StimulusPlumbers
     class Builder < ActionView::Helpers::FormBuilder
       include Plumber::HtmlOptions
       include Fields::Inputs::Choice
-      include Fields::Inputs::Combobox
+      include Fields::Inputs::Datetime
       include Fields::Inputs::File
       include Fields::Inputs::Password
       include Fields::Inputs::Search
@@ -49,8 +49,22 @@ module StimulusPlumbers
         Fields::Renderer.new(@template, theme, field).call(input_html)
       end
 
-      def build_input_group(input_tag, field, trailing:, **wrapper_opts)
+      def render_input_group(input_tag, field, trailing:, **wrapper_opts)
         Fields::InputGroup.new(@template).render(input_tag, trailing: trailing, error: field.error?, **wrapper_opts)
+      end
+
+      def render_combobox(attribute, field, opts, wrapper_data: {}, html_options: {}, &block)
+        Components::Combobox.new(@template).render(
+          base_id: field_id(attribute),
+          options: opts.deep_merge(input: { name: field_name(attribute) }),
+          **merge_html_options(
+            html_options,
+            { data: wrapper_data },
+            field_theme(:form_combobox, error: field.error?),
+            field.html_options
+          ),
+          &block
+        )
       end
 
       def extract_options(options)

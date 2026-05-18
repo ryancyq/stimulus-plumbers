@@ -7,7 +7,7 @@ module StimulusPlumbers
       FORMAT_CONTROLLER   = "input-format"
       FORMAT_ACTION       = "input-combobox:changed->input-format#format"
 
-      def render(base_id:, options: {}, **kwargs)
+      def render(base_id:, options: {}, **kwargs, &block)
         popover_id    = "#{base_id}_popover"
         initial_value = options.dig(:input, :value)
 
@@ -24,7 +24,7 @@ module StimulusPlumbers
             [
               trigger(popover_id, options),
               hidden_input(options.fetch(:input, {})),
-              popover(popover_id, options)
+              popover(popover_id, options, &block)
             ]
           )
         end
@@ -40,11 +40,12 @@ module StimulusPlumbers
         )
       end
 
-      def popover(popover_id, options)
+      def popover(popover_id, options, &block)
         Combobox::Popover.new(template).render(
           stimulus_controller: STIMULUS_CONTROLLER,
           id:                  popover_id,
-          **options.fetch(:popover, {})
+          **options.fetch(:popover, {}),
+          &block
         )
       end
 

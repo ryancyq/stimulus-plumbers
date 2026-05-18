@@ -3,7 +3,7 @@
 module StimulusPlumbers
   module Form
     class Field
-      OPTIONS = %i[label details error required label_visibility layout reveal clearable].freeze
+      OPTIONS = %i[label details error required label_visibility layout reveal clearable html_native].freeze
 
       attr_reader :object,
                   :attribute,
@@ -50,7 +50,7 @@ module StimulusPlumbers
         errors.any?
       end
 
-      def html_opts
+      def html_options
         attrs = { id: input_id }
         attrs[:"aria-describedby"] = described_by if described_by
         attrs[:"aria-invalid"]     = "true"       if error?

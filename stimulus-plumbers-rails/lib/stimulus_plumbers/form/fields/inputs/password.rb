@@ -14,10 +14,10 @@ module StimulusPlumbers
                            input_opts = merge_html_options(
                              rails_opts,
                              field_theme(:form_input_reveal),
-                             field.html_opts,
+                             field.html_options,
                              { "data-input-format-target": "input" }
                            )
-                           build_input_group(
+                           render_input_group(
                              super(attribute, input_opts),
                              field,
                              trailing:                       reveal_button,
@@ -28,7 +28,7 @@ module StimulusPlumbers
                            html_opts = merge_html_options(
                              rails_opts,
                              field_theme(:form_input, error: field.error?),
-                             field.html_opts
+                             field.html_options
                            )
                            super(attribute, html_opts)
                          end
@@ -39,16 +39,17 @@ module StimulusPlumbers
           private
 
           def reveal_button
-            @template.content_tag(
-              :button,
-              "",
-              type:                       "button",
-              class:                      field_theme(:form_button_reveal)[:class],
-              "aria-label":               "Show password",
-              "aria-pressed":             "false",
-              "data-input-format-target": "toggle",
-              "data-action":              "click->input-format#toggle"
+            html_options = merge_html_options(
+              field_theme(:form_button_reveal),
+              {
+                type:                       "button",
+                "aria-label":               "Show password",
+                "aria-pressed":             "false",
+                "data-input-format-target": "toggle",
+                "data-action":              "click->input-format#toggle"
+              }
             )
+            @template.content_tag(:button, "", **html_options)
           end
         end
       end
