@@ -58,9 +58,10 @@ module StimulusPlumbers
       end
 
       def render_combobox(attribute, field, opts, wrapper_data: {}, html_options: {}, &block)
+        trigger_aria = field.error? ? { trigger: { aria: { invalid: "true" } } } : {}
         Components::Combobox.new(@template).render(
           base_id: field_id(attribute),
-          options: opts.deep_merge(input: { name: field_name(attribute) }),
+          options: opts.deep_merge(input: { name: field_name(attribute) }).deep_merge(trigger_aria),
           **merge_html_options(
             html_options,
             { data: wrapper_data },
