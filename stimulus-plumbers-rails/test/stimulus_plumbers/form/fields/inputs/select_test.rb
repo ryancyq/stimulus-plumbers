@@ -6,7 +6,8 @@ require_relative "../../form_builder_model"
 class SelectTest < ActionView::TestCase
   SIMPLE_OPTIONS = [["United States", "us"], ["Canada", "ca"]].freeze
 
-  Country = Struct.new(:code, :name)
+  Country   = Struct.new(:code, :name)
+  Continent = Struct.new(:continent_name, :countries)
 
   def setup
     @form = FormBuilderModel.new
@@ -147,5 +148,199 @@ class SelectTest < ActionView::TestCase
 
   def test_collection_select_html_native_does_not_render_combobox_trigger
     assert_no_css build_collection_select(:country, [], :code, :name, html_native: true), "input[role='combobox']"
+  end
+
+  # ── grouped_collection_select ─────────────────────────────────────────────
+
+  CONTINENTS = [
+    Continent.new("Europe",   [Country.new("fr", "France"), Country.new("de", "Germany")]),
+    Continent.new("Americas", [Country.new("us", "United States"), Country.new("ca", "Canada")])
+  ].freeze
+
+  def build_grouped_collection_select(attribute, collection, **opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.grouped_collection_select(attribute, collection, :countries, :continent_name, :code, :name, **opts)
+    end
+    parse_html(html)
+  end
+
+  def test_grouped_collection_select_renders_label
+    assert_css build_grouped_collection_select(:country, CONTINENTS), "label[for='sign_in_form_country']"
+  end
+
+  def test_grouped_collection_select_renders_combobox_trigger
+    assert_css build_grouped_collection_select(:country, CONTINENTS), "input[role='combobox'][aria-haspopup='listbox']"
+  end
+
+  def test_grouped_collection_select_renders_listbox
+    assert_css build_grouped_collection_select(:country, CONTINENTS), "ul[role='listbox']"
+  end
+
+  def test_grouped_collection_select_renders_option_groups
+    doc = build_grouped_collection_select(:country, CONTINENTS)
+
+    assert_css doc, "li[role='group'][aria-label='Europe']"
+    assert_css doc, "li[role='group'][aria-label='Americas']"
+  end
+
+  def test_grouped_collection_select_renders_options_within_groups
+    doc = build_grouped_collection_select(:country, CONTINENTS)
+
+    assert_css doc, "li[role='group'][aria-label='Europe'] li[role='option'][data-value='fr']"
+    assert_css doc, "li[role='group'][aria-label='Europe'] li[role='option'][data-value='de']"
+    assert_css doc, "li[role='group'][aria-label='Americas'] li[role='option'][data-value='us']"
+    assert_css doc, "li[role='group'][aria-label='Americas'] li[role='option'][data-value='ca']"
+  end
+
+  def test_grouped_collection_select_pre_selects_from_model_value
+    @form.define_singleton_method(:country) { "de" }
+    doc = build_grouped_collection_select(:country, CONTINENTS)
+
+    assert_css doc, "li[role='option'][data-value='de'][aria-selected='true']"
+  end
+
+  def test_grouped_collection_select_renders_error_message
+    @form.errors.add(:country, "is invalid")
+
+    assert_css build_grouped_collection_select(:country, CONTINENTS), "p[role='alert']"
+  end
+
+  def test_grouped_collection_select_html_native_renders_select_tag
+    assert_css build_grouped_collection_select(:country, CONTINENTS, html_native: true),
+               "select[name='sign_in_form[country]']"
+  end
+
+  def test_grouped_collection_select_html_native_does_not_render_combobox_trigger
+    assert_no_css build_grouped_collection_select(:country, CONTINENTS, html_native: true),
+                  "input[role='combobox']"
+  end
+
+  # ── time_zone_select ──────────────────────────────────────────────────────
+
+  def build_time_zone_select(attribute, priority_zones = nil, **opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.time_zone_select(attribute, priority_zones, **opts)
+    end
+    parse_html(html)
+  end
+
+  def test_time_zone_select_renders_label
+    assert_css build_time_zone_select(:timezone), "label[for='sign_in_form_timezone']"
+  end
+
+  def test_time_zone_select_renders_combobox_trigger
+    assert_css build_time_zone_select(:timezone), "input[role='combobox'][aria-haspopup='listbox']"
+  end
+
+  def test_time_zone_select_renders_listbox_with_zone_options
+    doc = build_time_zone_select(:timezone)
+
+    assert_css doc, "ul[role='listbox']"
+    assert doc.css("li[role='option']").any?, "Expected zone options to be rendered"
+  end
+
+  def test_time_zone_select_pre_selects_from_model_value
+    @form.define_singleton_method(:timezone) { "Eastern Time (US & Canada)" }
+    doc = build_time_zone_select(:timezone)
+
+    assert_css doc, "li[role='option'][data-value='Eastern Time (US & Canada)'][aria-selected='true']"
+  end
+
+  def test_time_zone_select_with_priority_zones_renders_two_groups
+    priority = [ActiveSupport::TimeZone["Hawaii"], ActiveSupport::TimeZone["Alaska"]]
+    doc      = build_time_zone_select(:timezone, priority)
+
+    assert doc.css("li[role='group']").size >= 2, "Expected at least two option groups"
+  end
+
+  def test_time_zone_select_with_priority_zones_excludes_them_from_remaining
+    priority = [ActiveSupport::TimeZone["Hawaii"]]
+    doc      = build_time_zone_select(:timezone, priority)
+
+    groups = doc.css("li[role='group']")
+    assert_equal 2, groups.size
+
+    priority_group   = groups[0]
+    remaining_group  = groups[1]
+    hawaii_value     = "Hawaii"
+
+    assert_css priority_group, "li[role='option'][data-value='#{hawaii_value}']"
+    assert_nil remaining_group.at_css("li[role='option'][data-value='#{hawaii_value}']")
+  end
+
+  def test_time_zone_select_renders_error_message
+    @form.errors.add(:timezone, "is invalid")
+
+    assert_css build_time_zone_select(:timezone), "p[role='alert']"
+  end
+
+  def test_time_zone_select_html_native_renders_select_tag
+    assert_css build_time_zone_select(:timezone, nil, html_native: true),
+               "select[name='sign_in_form[timezone]']"
+  end
+
+  def test_time_zone_select_html_native_does_not_render_combobox_trigger
+    assert_no_css build_time_zone_select(:timezone, nil, html_native: true), "input[role='combobox']"
+  end
+
+  # ── weekday_select ────────────────────────────────────────────────────────
+
+  if ActionView.version >= Gem::Version.new("7.1")
+    def build_weekday_select(attribute, **opts)
+      html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+        f.weekday_select(attribute, **opts)
+      end
+      parse_html(html)
+    end
+
+    def test_weekday_select_renders_label
+      assert_css build_weekday_select(:weekday), "label[for='sign_in_form_weekday']"
+    end
+
+    def test_weekday_select_renders_combobox_trigger
+      assert_css build_weekday_select(:weekday), "input[role='combobox'][aria-haspopup='listbox']"
+    end
+
+    def test_weekday_select_renders_seven_day_options
+      doc = build_weekday_select(:weekday)
+
+      assert_equal 7, doc.css("li[role='option']").size
+    end
+
+    def test_weekday_select_day_names_as_values_by_default
+      doc = build_weekday_select(:weekday)
+
+      assert_css doc, "li[role='option'][data-value='Sunday']"
+      assert_css doc, "li[role='option'][data-value='Monday']"
+    end
+
+    def test_weekday_select_index_as_value
+      doc = build_weekday_select(:weekday, index_as_value: true)
+
+      assert_css doc, "li[role='option'][data-value='0']"
+      assert_css doc, "li[role='option'][data-value='1']"
+    end
+
+    def test_weekday_select_pre_selects_from_model_value
+      @form.define_singleton_method(:weekday) { "Wednesday" }
+      doc = build_weekday_select(:weekday)
+
+      assert_css doc, "li[role='option'][data-value='Wednesday'][aria-selected='true']"
+    end
+
+    def test_weekday_select_renders_error_message
+      @form.errors.add(:weekday, "is invalid")
+
+      assert_css build_weekday_select(:weekday), "p[role='alert']"
+    end
+
+    def test_weekday_select_html_native_renders_select_tag
+      assert_css build_weekday_select(:weekday, html_native: true),
+                 "select[name='sign_in_form[weekday]']"
+    end
+
+    def test_weekday_select_html_native_does_not_render_combobox_trigger
+      assert_no_css build_weekday_select(:weekday, html_native: true), "input[role='combobox']"
+    end
   end
 end
