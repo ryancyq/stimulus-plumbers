@@ -96,6 +96,10 @@ module StimulusPlumbers
         }.freeze
       }.freeze
 
+      ICON = {
+        icon: {}.freeze
+      }.freeze
+
       LAYOUT = {
         divider: {}.freeze,
         popover: {}.freeze
