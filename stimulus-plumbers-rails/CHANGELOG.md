@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.3.0](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.2.9..stimulus-plumbers-rails/v0.3.0) - 2026-05-18
+
+### Bug Fixes
+
+- reduce complexity violations raised by rubocop ([#65](https://github.com/ryancyq/stimulus-plumbers/issues/65)) - ([f540d38](https://github.com/ryancyq/stimulus-plumbers/commit/f540d3820158229661249c2c9095eca95c638ff1)) - Ryan Chang
+- default theme to base ([#71](https://github.com/ryancyq/stimulus-plumbers/issues/71)) - ([3ba50fe](https://github.com/ryancyq/stimulus-plumbers/commit/3ba50feb8233083c3cca40467940ebf99eab7178)) - Ryan Chang
+- update calendar + combobox documentation and test coverage ([#72](https://github.com/ryancyq/stimulus-plumbers/issues/72)) - ([3fb4a6f](https://github.com/ryancyq/stimulus-plumbers/commit/3fb4a6f93f049bb7d88ed7de2dcbb592f8a58185)) - Ryan Chang
+
+### Dependencies
+
+- replace runtime dep from railties to actionview ([#66](https://github.com/ryancyq/stimulus-plumbers/issues/66)) - ([c58dff5](https://github.com/ryancyq/stimulus-plumbers/commit/c58dff56149319f97247a4078fba766218c7bf9b)) - Ryan Chang
+
+### Documentation
+
+- update readme with rake task cmds - ([8bbb0f8](https://github.com/ryancyq/stimulus-plumbers/commit/8bbb0f855d4b0a1cd2c115b071f6b1e6388d47d2)) - Ryan Chang
+
+### Features
+
+- icon schema for theme ([#70](https://github.com/ryancyq/stimulus-plumbers/issues/70)) - ([ff952c6](https://github.com/ryancyq/stimulus-plumbers/commit/ff952c6eb390b249e4605a9ddc178709133b8bbc)) - Ryan Chang
+- theme config ([#73](https://github.com/ryancyq/stimulus-plumbers/issues/73)) - ([2745309](https://github.com/ryancyq/stimulus-plumbers/commit/27453095d7c6140cda49dc24eb86b12bab5894c7)) - Ryan Chang
+
+### Style
+
+- add calendar week + combobox trigger theme option ([#67](https://github.com/ryancyq/stimulus-plumbers/issues/67)) - ([e7f52e3](https://github.com/ryancyq/stimulus-plumbers/commit/e7f52e3c394138b146da96d22381e06008fd0f6b)) - Ryan Chang
+
+### Tests
+
+- rename system tests as a11y test to reflect its usage accurately ([#64](https://github.com/ryancyq/stimulus-plumbers/issues/64)) - ([4bd7563](https://github.com/ryancyq/stimulus-plumbers/commit/4bd7563aea00543cfdb01bebe9d2491e8846caca)) - Ryan Chang
+- playwright snapshot ([#68](https://github.com/ryancyq/stimulus-plumbers/issues/68)) - ([d0ef50e](https://github.com/ryancyq/stimulus-plumbers/commit/d0ef50e7bf8fd86d67f1b19b453a56ed8a0d9349)) - Ryan Chang
+
+---
 ## [0.2.9](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.2.8..stimulus-plumbers-rails/v0.2.9) - 2026-05-15
 
 ### Bug Fixes
