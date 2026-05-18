@@ -3,31 +3,31 @@
 require "action_view/version"
 
 require_relative "field"
-require_relative "fields/choice"
-require_relative "fields/combobox"
-require_relative "fields/file"
-require_relative "fields/password"
 require_relative "fields/renderer"
-require_relative "fields/search"
-require_relative "fields/select"
-require_relative "fields/text"
-require_relative "fields/text_area"
-require_relative "fields/submit"
+require_relative "fields/inputs/choice"
+require_relative "fields/inputs/combobox"
+require_relative "fields/inputs/file"
+require_relative "fields/inputs/password"
+require_relative "fields/inputs/search"
+require_relative "fields/inputs/select"
+require_relative "fields/inputs/submit"
+require_relative "fields/inputs/text"
+require_relative "fields/inputs/text_area"
 require_relative "../plumber/html_options"
 
 module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
       include Plumber::HtmlOptions
-      include Fields::Choice
-      include Fields::Combobox
-      include Fields::File
-      include Fields::Password
-      include Fields::Search
-      include Fields::Select
-      include Fields::Submit
-      include Fields::Text
-      include Fields::TextArea
+      include Fields::Inputs::Choice
+      include Fields::Inputs::Combobox
+      include Fields::Inputs::File
+      include Fields::Inputs::Password
+      include Fields::Inputs::Search
+      include Fields::Inputs::Select
+      include Fields::Inputs::Submit
+      include Fields::Inputs::Text
+      include Fields::Inputs::TextArea
 
       private
 
@@ -50,12 +50,7 @@ module StimulusPlumbers
       end
 
       def build_input_group(input_tag, field, trailing:, **wrapper_opts)
-        @template.content_tag(
-          :div,
-          input_tag.html_safe + trailing,
-          class: field_theme(:form_input_group, error: field.error?)[:class],
-          **wrapper_opts
-        )
+        Fields::InputGroup.new(@template).render(input_tag, trailing: trailing, error: field.error?, **wrapper_opts)
       end
 
       def extract_options(options)
