@@ -88,7 +88,7 @@ class SearchTest < ActionView::TestCase
   def test_combobox_has_aria_invalid_on_error
     @form.errors.add(:email, "is blank")
 
-    assert_equal "true", build_field.at_css("[data-controller~='input-combobox']")["aria-invalid"]
+    assert_equal "true", build_field.at_css("input[role='combobox']")["aria-invalid"]
   end
 
   # ── clearable: true ───────────────────────────────────────────────────────
