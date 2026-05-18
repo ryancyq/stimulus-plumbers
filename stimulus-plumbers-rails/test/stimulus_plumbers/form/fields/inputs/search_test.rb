@@ -90,4 +90,75 @@ class SearchTest < ActionView::TestCase
 
     assert_equal "true", build_field.at_css("[data-controller~='input-combobox']")["aria-invalid"]
   end
+
+  # ── clearable: true ───────────────────────────────────────────────────────
+
+  def test_clearable_renders_input_search_controller_wrapper
+    assert_css build_field(clearable: true), "[data-controller='input-search']"
+  end
+
+  def test_clearable_combobox_is_inside_input_search_wrapper
+    doc     = build_field(clearable: true)
+    wrapper = doc.at_css("[data-controller='input-search']")
+
+    assert_not_nil wrapper.at_css("[data-controller~='input-combobox']")
+  end
+
+  def test_clearable_trigger_has_input_search_target
+    assert_css build_field(clearable: true),
+               "input[role='combobox'][data-input-search-target='input']"
+  end
+
+  def test_clearable_renders_clear_button
+    assert_css build_field(clearable: true),
+               "button[data-input-search-target='clear'][data-action='click->input-search#clear']"
+  end
+
+  def test_clearable_clear_button_type_is_button
+    assert_css build_field(clearable: true), "button[type='button'][data-input-search-target='clear']"
+  end
+
+  def test_clearable_clear_button_has_aria_label
+    assert_css build_field(clearable: true), "button[aria-label='Clear search']"
+  end
+
+  def test_clearable_clear_button_is_initially_hidden
+    doc    = build_field(clearable: true)
+    button = doc.at_css("button[data-input-search-target='clear']")
+
+    assert button.key?("hidden"), "Expected clear button to have hidden attribute"
+  end
+
+  def test_clearable_clear_button_is_inside_input_search_wrapper
+    doc     = build_field(clearable: true)
+    wrapper = doc.at_css("[data-controller='input-search']")
+
+    assert_not_nil wrapper.at_css("button[data-input-search-target='clear']")
+  end
+
+  def test_without_clearable_does_not_render_input_search_controller
+    assert_no_css build_field, "[data-controller='input-search']"
+  end
+
+  def test_without_clearable_trigger_has_no_input_search_target
+    assert_nil build_field.at_css("input[role='combobox']")["data-input-search-target"]
+  end
+
+  def test_clearable_option_does_not_leak_into_html_attributes
+    assert_nil build_field(clearable: true).at_css("[clearable]")
+  end
+
+  def test_clearable_still_renders_label
+    assert_css build_field(clearable: true), "label[for='sign_in_form_email']"
+  end
+
+  def test_clearable_still_renders_error_message
+    @form.errors.add(:email, "is blank")
+
+    assert_css build_field(clearable: true), "p[role='alert']"
+  end
+
+  def test_clearable_still_renders_hidden_value_input
+    assert_css build_field(clearable: true), "input[type='hidden'][name='sign_in_form[email]']"
+  end
 end
