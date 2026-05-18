@@ -3,6 +3,7 @@
 require "action_view/version"
 
 require_relative "field"
+require_relative "fields/fieldset"
 require_relative "fields/renderer"
 require_relative "fields/inputs/choice"
 require_relative "fields/inputs/datetime"
@@ -47,6 +48,10 @@ module StimulusPlumbers
 
       def render_field(field, input_html)
         Fields::Renderer.new(@template, theme, field).call(input_html)
+      end
+
+      def render_fieldset(field, inputs_html, **fieldset_opts)
+        Fields::Fieldset.new(@template).call(field, inputs_html, **fieldset_opts)
       end
 
       def render_input_group(input_tag, field, trailing:, **wrapper_opts)

@@ -29,6 +29,20 @@ class ChoiceTest < ActionView::TestCase
     parse_html(html)
   end
 
+  def build_collection_radio_buttons(**opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.collection_radio_buttons(:role, ROLES, :id, :name, **opts)
+    end
+    parse_html(html)
+  end
+
+  def build_collection_check_boxes(**opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.collection_check_boxes(:role, ROLES, :id, :name, **opts)
+    end
+    parse_html(html)
+  end
+
   # ── check_box ─────────────────────────────────────────────────────────────
 
   def test_check_box_renders_input
@@ -81,5 +95,127 @@ class ChoiceTest < ActionView::TestCase
 
     assert_includes build_radio_button.at_css("input[type='radio']")["aria-describedby"].to_s,
                     "sign_in_form_role_admin_error"
+  end
+
+  # ── collection_radio_buttons ──────────────────────────────────────────────
+
+  def test_collection_radio_buttons_renders_fieldset
+    assert_css build_collection_radio_buttons, "fieldset"
+  end
+
+  def test_collection_radio_buttons_renders_legend
+    assert_css build_collection_radio_buttons, "fieldset legend"
+    assert_includes build_collection_radio_buttons.at_css("legend").text, "Role"
+  end
+
+  def test_collection_radio_buttons_renders_inputs_inside_fieldset
+    assert_css build_collection_radio_buttons, "fieldset input[type='radio']"
+  end
+
+  def test_collection_radio_buttons_renders_custom_legend_text
+    assert_includes build_collection_radio_buttons(label: "User Role").at_css("legend").text, "User Role"
+  end
+
+  def test_collection_radio_buttons_renders_details_hint
+    assert_css build_collection_radio_buttons(details: "Choose a role"), "#sign_in_form_role_hint"
+  end
+
+  def test_collection_radio_buttons_renders_error_message
+    @form.errors.add(:role, "must be selected")
+
+    assert_css build_collection_radio_buttons, "p[role='alert']"
+    assert_includes build_collection_radio_buttons.text, "must be selected"
+  end
+
+  def test_collection_radio_buttons_has_aria_invalid_on_fieldset_when_error
+    @form.errors.add(:role, "must be selected")
+
+    assert_equal "true", build_collection_radio_buttons.at_css("fieldset")["aria-invalid"]
+  end
+
+  def test_collection_radio_buttons_has_aria_describedby_on_fieldset_when_error
+    @form.errors.add(:role, "must be selected")
+
+    assert_includes build_collection_radio_buttons.at_css("fieldset")["aria-describedby"].to_s,
+                    "sign_in_form_role_error"
+  end
+
+  def test_collection_radio_buttons_has_aria_describedby_on_fieldset_when_hint
+    doc = build_collection_radio_buttons(details: "Choose a role")
+
+    assert_includes doc.at_css("fieldset")["aria-describedby"].to_s, "sign_in_form_role_hint"
+  end
+
+  def test_collection_radio_buttons_required_sets_aria_required_on_fieldset
+    doc = build_collection_radio_buttons(required: true)
+
+    assert_equal "true", doc.at_css("fieldset")["aria-required"]
+  end
+
+  def test_collection_radio_buttons_required_renders_mark_in_legend
+    doc = build_collection_radio_buttons(required: true)
+
+    assert_css doc, "legend span[aria-hidden='true']"
+  end
+
+  # ── collection_check_boxes ────────────────────────────────────────────────
+
+  def test_collection_check_boxes_renders_fieldset
+    assert_css build_collection_check_boxes, "fieldset"
+  end
+
+  def test_collection_check_boxes_renders_legend
+    assert_css build_collection_check_boxes, "fieldset legend"
+    assert_includes build_collection_check_boxes.at_css("legend").text, "Role"
+  end
+
+  def test_collection_check_boxes_renders_inputs_inside_fieldset
+    assert_css build_collection_check_boxes, "fieldset input[type='checkbox']"
+  end
+
+  def test_collection_check_boxes_renders_custom_legend_text
+    assert_includes build_collection_check_boxes(label: "Permissions").at_css("legend").text, "Permissions"
+  end
+
+  def test_collection_check_boxes_renders_details_hint
+    assert_css build_collection_check_boxes(details: "Select all that apply"), "#sign_in_form_role_hint"
+  end
+
+  def test_collection_check_boxes_renders_error_message
+    @form.errors.add(:role, "is invalid")
+
+    assert_css build_collection_check_boxes, "p[role='alert']"
+    assert_includes build_collection_check_boxes.text, "is invalid"
+  end
+
+  def test_collection_check_boxes_has_aria_invalid_on_fieldset_when_error
+    @form.errors.add(:role, "is invalid")
+
+    assert_equal "true", build_collection_check_boxes.at_css("fieldset")["aria-invalid"]
+  end
+
+  def test_collection_check_boxes_has_aria_describedby_on_fieldset_when_error
+    @form.errors.add(:role, "is invalid")
+
+    assert_includes build_collection_check_boxes.at_css("fieldset")["aria-describedby"].to_s,
+                    "sign_in_form_role_error"
+  end
+
+  def test_collection_check_boxes_has_aria_describedby_on_fieldset_when_hint
+    doc = build_collection_check_boxes(details: "Select all that apply")
+
+    assert_includes doc.at_css("fieldset")["aria-describedby"].to_s, "sign_in_form_role_hint"
+  end
+
+  def test_collection_check_boxes_required_sets_aria_required_on_fieldset
+    doc = build_collection_check_boxes(required: true)
+
+    assert_equal "true", doc.at_css("fieldset")["aria-required"]
+  end
+
+  def test_collection_check_boxes_required_renders_mark_in_legend
+    doc = build_collection_check_boxes(required: true)
+
+    assert_css doc, "legend span[aria-hidden='true']"
   end
 end
