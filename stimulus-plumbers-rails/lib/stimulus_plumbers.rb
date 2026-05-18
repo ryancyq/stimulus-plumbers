@@ -26,6 +26,7 @@ require_relative "stimulus_plumbers/components/card/section"
 require_relative "stimulus_plumbers/components/action_list"
 require_relative "stimulus_plumbers/components/action_list/section"
 require_relative "stimulus_plumbers/components/action_list/item"
+require_relative "stimulus_plumbers/components/divider"
 require_relative "stimulus_plumbers/components/popover"
 require_relative "stimulus_plumbers/components/popover/builder"
 
