@@ -87,7 +87,7 @@ module StimulusPlumbers
         form_radio:         { error: { default: false, range: Ranges::BOOL } }.freeze,
         form_input_group:   { error: { default: false, range: Ranges::BOOL } }.freeze,
         form_combobox:      { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_input_reveal:  {}.freeze,
+        form_input_reveal:  { error: { default: false, range: Ranges::BOOL } }.freeze,
         form_button_reveal: {}.freeze,
         form_submit:        {
           variant: { default: :default, range: Form::Ranges::SUBMIT_VARIANT }

@@ -65,4 +65,21 @@ class BaseThemeFormTest < StubThemeTestCase
     end
     mock_logger.verify
   end
+
+  def test_resolves_valid_form_input_reveal_error_without_warning
+    mock_logger = Minitest::Mock.new
+    Rails.stub(:logger, mock_logger) do
+      @theme.resolve(:form_input_reveal, error: true)
+    end
+    mock_logger.verify
+  end
+
+  def test_coerces_invalid_form_input_reveal_error_to_default_and_warns
+    mock_logger = Minitest::Mock.new
+    mock_logger.expect(:warn, nil, [%r{unknown value "yes"}])
+    Rails.stub(:logger, mock_logger) do
+      @theme.resolve(:form_input_reveal, error: "yes")
+    end
+    mock_logger.verify
+  end
 end

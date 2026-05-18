@@ -65,6 +65,26 @@ class FieldTest < Minitest::Test
     assert_equal "sign_in_form_email_error", component(attribute: :email).error_id
   end
 
+  # ── error_ids ─────────────────────────────────────────────────────────────
+
+  def test_error_ids_is_empty_with_no_errors
+    assert_empty component(attribute: :email).error_ids
+  end
+
+  def test_error_ids_returns_single_id_for_one_error
+    @form.errors.add(:email, "is invalid")
+
+    assert_equal ["sign_in_form_email_error"], component(attribute: :email).error_ids
+  end
+
+  def test_error_ids_returns_suffixed_ids_for_multiple_errors
+    @form.errors.add(:email, "is invalid")
+    @form.errors.add(:email, "is too long")
+
+    assert_equal %w[sign_in_form_email_error_1 sign_in_form_email_error_2],
+                 component(attribute: :email).error_ids
+  end
+
   # ── described_by ──────────────────────────────────────────────────────────
 
   def test_described_by_is_nil_with_no_details_or_errors
@@ -87,6 +107,25 @@ class FieldTest < Minitest::Test
 
     assert_includes c.described_by, "sign_in_form_email_hint"
     assert_includes c.described_by, "sign_in_form_email_error"
+  end
+
+  def test_described_by_includes_all_error_ids_for_multiple_errors
+    @form.errors.add(:email, "is invalid")
+    @form.errors.add(:email, "is too long")
+    c = component(attribute: :email)
+
+    assert_includes c.described_by, "sign_in_form_email_error_1"
+    assert_includes c.described_by, "sign_in_form_email_error_2"
+  end
+
+  def test_described_by_includes_hint_and_all_error_ids_for_multiple_errors
+    @form.errors.add(:email, "is invalid")
+    @form.errors.add(:email, "is too long")
+    c = component(attribute: :email, details: "Hint text")
+
+    assert_includes c.described_by, "sign_in_form_email_hint"
+    assert_includes c.described_by, "sign_in_form_email_error_1"
+    assert_includes c.described_by, "sign_in_form_email_error_2"
   end
 
   # ── html_options ───────────────────────────────────────────────────────────

@@ -92,6 +92,26 @@ class BuilderTest < ActionView::TestCase
     assert_includes input["aria-describedby"].to_s, "sign_in_form_email_error"
   end
 
+  def test_input_aria_describedby_references_all_error_ids_for_multiple_errors
+    @form.errors.add(:email, "is invalid")
+    @form.errors.add(:email, "is too long")
+    doc = build_field(:email_field, :email)
+
+    described_by = doc.at_css("input[type='email']")["aria-describedby"].to_s
+
+    assert_includes described_by, "sign_in_form_email_error_1"
+    assert_includes described_by, "sign_in_form_email_error_2"
+  end
+
+  def test_multiple_error_elements_have_matching_ids
+    @form.errors.add(:email, "is invalid")
+    @form.errors.add(:email, "is too long")
+    doc = build_field(:email_field, :email)
+
+    assert_css doc, "#sign_in_form_email_error_1"
+    assert_css doc, "#sign_in_form_email_error_2"
+  end
+
   def test_input_has_no_aria_describedby_without_hint_or_error
     doc = build_field(:email_field, :email)
 
@@ -186,6 +206,41 @@ class BuilderTest < ActionView::TestCase
     doc = build_form(&:submit)
 
     assert_css doc, "input[type='submit']"
+  end
+
+  # ── fields_for ────────────────────────────────────────────────────────────
+
+  NestedAddress = Struct.new(:street) do
+    def errors
+      ActiveModel::Errors.new(self)
+    end
+
+    def self_and_descendants_from_active_record
+      [self]
+    end
+
+    def self.human_attribute_name(attr, _opts = {})
+      attr.to_s.humanize
+    end
+  end
+
+  def test_fields_for_uses_sp_builder
+    builder_class = nil
+    build_form do |f|
+      f.fields_for(:address, NestedAddress.new) { |af| builder_class = af.class }
+      ""
+    end
+
+    assert_equal StimulusPlumbers::Form::Builder, builder_class
+  end
+
+  def test_fields_for_nested_text_field_renders_label
+    doc = build_form do |f|
+      f.fields_for(:address, NestedAddress.new) { |af| af.text_field(:street) }
+    end
+
+    assert_css doc, "label"
+    assert_css doc, "input[type='text']"
   end
 
   # ── build_field / error? ──────────────────────────────────────────────────

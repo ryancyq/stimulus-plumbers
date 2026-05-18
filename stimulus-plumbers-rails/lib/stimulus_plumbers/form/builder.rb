@@ -4,7 +4,6 @@ require "action_view/version"
 
 require_relative "field"
 require_relative "fields/fieldset"
-require_relative "fields/renderer"
 require_relative "fields/inputs/choice"
 require_relative "fields/inputs/datetime"
 require_relative "fields/inputs/file"
@@ -47,11 +46,11 @@ module StimulusPlumbers
       end
 
       def render_field(field, input_html)
-        Fields::Renderer.new(@template, theme, field).call(input_html)
+        field.render(@template, theme, input_html)
       end
 
       def render_fieldset(field, inputs_html, **fieldset_opts)
-        Fields::Fieldset.new(@template).call(field, inputs_html, **fieldset_opts)
+        Fields::Fieldset.new(@template).render(field, inputs_html, **fieldset_opts)
       end
 
       def render_input_group(input_tag, field, trailing:, **wrapper_opts)
@@ -85,7 +84,7 @@ module StimulusPlumbers
       end
 
       # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-      if ActionView.version < "7.0"
+      if ActionView.version < Gem::Version.new("7.0")
         # field_id was added in Rails 7.0, backports it to Rails 6.1.
         # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_helper.rb#L1777
         # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_tag_helper.rb#L101

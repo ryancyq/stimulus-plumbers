@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Form
     module Fields
       class Fieldset < Plumber::Base
-        def call(field, inputs_html, **fieldset_opts)
+        def render(field, inputs_html, **fieldset_opts)
           Group.new(template).render(layout: field.layout, error: field.error?) do
             (fieldset_tag(field, inputs_html, **fieldset_opts) + field_hint(field) + field_errors(field)).html_safe
           end
@@ -37,9 +37,8 @@ module StimulusPlumbers
         def field_errors(field)
           return "".html_safe if field.errors.none?
 
-          field.errors.map.with_index(1) do |message, i|
-            id = field.errors.one? ? field.error_id : "#{field.error_id}_#{i}"
-            Error.new(template).render(message: message, id: id)
+          field.errors.map.with_index do |message, i|
+            Error.new(template).render(message: message, id: field.error_ids[i])
           end.join.html_safe
         end
       end

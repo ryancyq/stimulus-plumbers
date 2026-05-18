@@ -140,6 +140,26 @@ class ChoiceTest < ActionView::TestCase
                     "sign_in_form_role_error"
   end
 
+  def test_collection_radio_buttons_aria_describedby_references_all_error_ids_for_multiple_errors
+    @form.errors.add(:role, "must be selected")
+    @form.errors.add(:role, "is not included in the list")
+    doc = build_collection_radio_buttons
+
+    described_by = doc.at_css("fieldset")["aria-describedby"].to_s
+
+    assert_includes described_by, "sign_in_form_role_error_1"
+    assert_includes described_by, "sign_in_form_role_error_2"
+  end
+
+  def test_collection_radio_buttons_multiple_error_elements_have_matching_ids
+    @form.errors.add(:role, "must be selected")
+    @form.errors.add(:role, "is not included in the list")
+    doc = build_collection_radio_buttons
+
+    assert_css doc, "#sign_in_form_role_error_1"
+    assert_css doc, "#sign_in_form_role_error_2"
+  end
+
   def test_collection_radio_buttons_has_aria_describedby_on_fieldset_when_hint
     doc = build_collection_radio_buttons(details: "Choose a role")
 
@@ -199,6 +219,26 @@ class ChoiceTest < ActionView::TestCase
 
     assert_includes build_collection_check_boxes.at_css("fieldset")["aria-describedby"].to_s,
                     "sign_in_form_role_error"
+  end
+
+  def test_collection_check_boxes_aria_describedby_references_all_error_ids_for_multiple_errors
+    @form.errors.add(:role, "is invalid")
+    @form.errors.add(:role, "must be selected")
+    doc = build_collection_check_boxes
+
+    described_by = doc.at_css("fieldset")["aria-describedby"].to_s
+
+    assert_includes described_by, "sign_in_form_role_error_1"
+    assert_includes described_by, "sign_in_form_role_error_2"
+  end
+
+  def test_collection_check_boxes_multiple_error_elements_have_matching_ids
+    @form.errors.add(:role, "is invalid")
+    @form.errors.add(:role, "must be selected")
+    doc = build_collection_check_boxes
+
+    assert_css doc, "#sign_in_form_role_error_1"
+    assert_css doc, "#sign_in_form_role_error_2"
   end
 
   def test_collection_check_boxes_has_aria_describedby_on_fieldset_when_hint

@@ -13,7 +13,7 @@ module StimulusPlumbers
             input_html = if reveal
                            input_opts = merge_html_options(
                              rails_opts,
-                             field_theme(:form_input_reveal),
+                             field_theme(:form_input_reveal, error: field.error?),
                              field.html_options,
                              { "data-input-format-target": "input" }
                            )

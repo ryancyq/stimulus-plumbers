@@ -67,15 +67,53 @@ module StimulusPlumbers
         "#{input_id}_error"
       end
 
+      def error_ids
+        return [] if errors.none?
+        return [error_id] if errors.one?
+
+        errors.each_index.map { |i| "#{error_id}_#{i + 1}" }
+      end
+
       def described_by
         ids = []
-        ids << hint_id  if details.present?
-        ids << error_id if errors.any?
+        ids << hint_id if details.present?
+        ids.concat(error_ids)
         ids.join(" ").presence
       end
 
       def label_hidden?
         label_visibility == :exclusive
+      end
+
+      def render(template, theme, input_html)
+        Fields::Group.new(template).render(layout: layout, error: error?) do
+          (field_label(template) + input_html.html_safe + field_hint(template) + field_errors(template)).html_safe
+        end
+      end
+
+      private
+
+      def field_label(template)
+        Fields::Label.new(template).render(
+          text:     label_text,
+          for_id:   input_id,
+          required: required,
+          hidden:   label_hidden?
+        )
+      end
+
+      def field_hint(template)
+        return "".html_safe unless details.present?
+
+        Fields::Hint.new(template).render(text: details, id: hint_id)
+      end
+
+      def field_errors(template)
+        return "".html_safe if errors.none?
+
+        errors.map.with_index do |message, i|
+          Fields::Error.new(template).render(message: message, id: error_ids[i])
+        end.join.html_safe
       end
     end
   end

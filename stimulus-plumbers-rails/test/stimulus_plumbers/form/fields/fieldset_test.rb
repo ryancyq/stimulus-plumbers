@@ -18,7 +18,7 @@ class FieldsetTest < ActionView::TestCase
   end
 
   def render_inputs(field, inputs = "<input>", **fieldset_opts)
-    parse_html(StimulusPlumbers::Form::Fields::Fieldset.new(view).call(field, inputs, **fieldset_opts))
+    parse_html(StimulusPlumbers::Form::Fields::Fieldset.new(view).render(field, inputs, **fieldset_opts))
   end
 
   # ── structure ─────────────────────────────────────────────────────────────
@@ -90,5 +90,22 @@ class FieldsetTest < ActionView::TestCase
 
     assert_css doc, "p[role='alert']"
     assert_nil doc.at_css("fieldset p[role='alert']")
+  end
+
+  def test_single_error_element_has_base_id
+    @form.errors.add(:email, "is invalid")
+    doc = render_inputs(component)
+
+    assert_css doc, "p[id='sign_in_form_email_error'][role='alert']"
+  end
+
+  def test_multiple_error_elements_have_suffixed_ids
+    @form.errors.add(:email, "is invalid")
+    @form.errors.add(:email, "is too long")
+    doc = render_inputs(component)
+
+    assert_css doc, "p[id='sign_in_form_email_error_1'][role='alert']"
+    assert_css doc, "p[id='sign_in_form_email_error_2'][role='alert']"
+    assert_nil doc.at_css("p[id='sign_in_form_email_error']")
   end
 end
