@@ -291,6 +291,18 @@ class SelectTest < ActionView::TestCase
     assert_operator doc.css("li[role='group']").size, :>=, 2, "Expected at least two option groups"
   end
 
+  def test_time_zone_select_with_regexp_priority_zones_renders_matching_group
+    doc = build_time_zone_select(:timezone, %r{Hawaii})
+
+    groups = doc.css("li[role='group']")
+
+    assert_operator groups.size, :>=, 2
+
+    priority_group = groups[0]
+
+    assert_css priority_group, "li[role='option'][data-value='Hawaii']"
+  end
+
   def test_time_zone_select_with_priority_zones_excludes_them_from_remaining
     priority = [ActiveSupport::TimeZone["Hawaii"]]
     doc      = build_time_zone_select(:timezone, priority)
