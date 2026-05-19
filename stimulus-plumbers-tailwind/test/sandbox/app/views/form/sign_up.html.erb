@@ -1,0 +1,35 @@
+<%
+  countries = [
+    ["Australia",     "au"],
+    ["New Zealand",   "nz"],
+    ["Singapore",     "sg"],
+    ["United States", "us"]
+  ]
+%>
+
+<h1>Create account</h1>
+
+<%= sp_card do %>
+  <%= sp_avatar(initials: "SP", name: "Stimulus Plumbers") %>
+
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.text_field     :name,       label: "Full name",     required: true %>
+    <%= f.email_field    :email,      label: "Email address", required: true,
+                                      details: "We'll never share your email." %>
+    <%= f.password_field :password,   label: "Password",      required: true, reveal: true %>
+    <%= f.number_field   :age,        label: "Age" %>
+    <%= f.date_field     :birth_date, label: "Date of birth" %>
+    <%= f.text_area      :bio,        label: "Bio",
+                                      details: "Tell us a little about yourself." %>
+    <%= f.radio_button   :gender, "male",   label: "Male" %>
+    <%= f.radio_button   :gender, "female", label: "Female" %>
+    <%= f.radio_button   :gender, "other",  label: "Other" %>
+    <%= f.select         :country, countries,
+                         { label: "Country", details: "Select your country of residence." },
+                         {} %>
+    <%= f.check_box      :newsletter, label: "Subscribe to newsletter" %>
+    <%= f.submit "Create account" %>
+  <% end %>
+
+  <%= sp_button("Sign in", url: "#", variant: :secondary) %>
+<% end %>

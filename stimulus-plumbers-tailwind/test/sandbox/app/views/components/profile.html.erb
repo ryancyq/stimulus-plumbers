@@ -1,0 +1,62 @@
+<h1>User profile</h1>
+
+<%# ── Profile card ─────────────────────────────────────────────────── %>
+<%= sp_card(title: "Profile") do %>
+  <%= sp_card_section do %>
+    <%= sp_avatar(initials: "JD", name: "Jane Doe") %>
+    <p>Jane Doe</p>
+    <p>jane@example.com</p>
+  <% end %>
+
+  <%= sp_card_section(title: "About") do %>
+    <p>Software engineer passionate about accessible UI components.</p>
+  <% end %>
+
+  <%= sp_card_section do %>
+    <%= sp_button_group do %>
+      <%= sp_button("Edit profile") %>
+      <%= sp_button("Change password", variant: :secondary) %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%# ── Preferences card ─────────────────────────────────────────────── %>
+<%= sp_card(title: "Preferences") do %>
+  <%= sp_card_section(title: "Preferences") do %>
+    <%= sp_action_list do %>
+      <%= sp_action_list_section(title: "Notifications") do %>
+        <%= sp_action_list_item("Email notifications") %>
+        <%= sp_action_list_item("Push notifications") %>
+        <%= sp_action_list_item("SMS alerts") %>
+      <% end %>
+
+      <%= sp_action_list_section(title: "Account") do %>
+        <%= sp_action_list_item("Privacy settings", url: "#") %>
+        <%= sp_action_list_item("Connected accounts", url: "#") %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%# ── More options popover ─────────────────────────────────────────── %>
+<%= sp_popover interactive: false, data: { controller: "popover" } do |p| %>
+  <% p.activator do %>
+    <%= sp_button("More options",
+          data: { action: "click->popover#show", "popover-target": "activator" },
+          aria: { expanded: "false", haspopup: "dialog" }) %>
+  <% end %>
+  <% p.content do %>
+    <div data-popover-target="content" role="dialog" aria-label="More options" hidden="hidden">
+      <%= sp_action_list do %>
+        <%= sp_action_list_section do %>
+          <%= sp_action_list_item("Export data",       url: "#") %>
+          <%= sp_action_list_item("Download archive",  url: "#") %>
+          <%= sp_action_list_item("Delete account") %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<%# ── Date picker ──────────────────────────────────────────────────── %>
+<%= sp_combobox_date(label: "Date") %>

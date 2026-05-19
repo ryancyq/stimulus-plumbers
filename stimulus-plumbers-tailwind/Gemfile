@@ -1,0 +1,29 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+gem "stimulus_plumbers", path: "../stimulus-plumbers-rails"
+
+gem "railties", ">= 6.1", "< 8.2"
+
+group :development, :test do
+  gem "rails", ">= 6.1", "< 8.2"
+  gem "rake", "~> 13.3"
+
+  gem "simplecov", "~> 0.22.0", require: false
+  gem "simplecov-cobertura", require: false
+end
+
+group :development do
+  gem "rubocop", "~> 1.85", require: false
+  gem "rubocop-minitest", require: false
+  gem "rubocop-rake", require: false
+end
+
+group :test do
+  gem "minitest", "~> 5.25"
+  gem "nokogiri"
+  gem "puma", ">= 6.0", "< 8.0"
+end

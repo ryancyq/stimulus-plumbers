@@ -1,0 +1,89 @@
+name: CI (Tailwind)
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 12 * * 5'
+
+permissions:
+  contents: read
+
+jobs:
+  test-tailwind:
+    name: "Tailwind / Ruby ${{ matrix.ruby-version }}"
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby-version == 'head' }}
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-tailwind
+    env:
+      BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-tailwind/Gemfile"
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version:
+          - "3.0"
+          - "3.1"
+          - "3.2"
+          - "3.3"
+          - "3.4"
+          - "4.0"
+          - "head"
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - run: rm Gemfile.lock
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          rubygems: latest
+          bundler: latest
+          bundler-cache: true
+
+      - run: bundle exec rake coverage:run
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: "coverage-tailwind-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-tailwind/coverage
+          include-hidden-files: true
+          retention-days: 1
+
+  test-tailwind-coverage:
+    name: "CodeCov Tailwind / Ruby ${{ matrix.ruby-version }}"
+    needs: [test-tailwind]
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby-version == 'head' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version:
+          - "3.0"
+          - "3.1"
+          - "3.2"
+          - "3.3"
+          - "3.4"
+          - "4.0"
+          - "head"
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: "coverage-tailwind-ruby-${{ matrix.ruby-version }}"
+          path: stimulus-plumbers-tailwind/coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          directory: stimulus-plumbers-tailwind/coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: tailwind
+          fail_ci_if_error: true

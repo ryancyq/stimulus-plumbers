@@ -9,8 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  lint-md:
-    name: "markdown"
+  lint-md-docs:
+    name: "markdown (docs)"
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +23,8 @@ jobs:
       - run: npm ci
       - run: npm run format:docs:check
 
-  lint-eslint:
-    name: "eslint"
+  lint-eslint-npm:
+    name: "eslint (npm)"
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -40,8 +40,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
 
-  lint-prettier:
-    name: "prettier"
+  lint-prettier-npm:
+    name: "prettier (npm)"
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -57,14 +57,35 @@ jobs:
       - run: npm ci
       - run: npm run format:check
 
-  lint-rubocop:
-    name: "rubocop"
+  lint-rubocop-rails:
+    name: "rubocop (rails)"
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: stimulus-plumbers-rails
     env:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/Gemfile"
+
+    steps:
+      - uses: actions/checkout@v6
+      - run: rm Gemfile.lock
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler: latest
+          bundler-cache: true
+
+      - run: bundle exec rake rubocop
+
+  lint-rubocop-tailwind:
+    name: "rubocop (tailwind)"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-tailwind
+    env:
+      BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-tailwind/Gemfile"
 
     steps:
       - uses: actions/checkout@v6
