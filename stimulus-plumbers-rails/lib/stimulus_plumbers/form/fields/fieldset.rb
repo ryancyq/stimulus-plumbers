@@ -14,7 +14,7 @@ module StimulusPlumbers
                   template.safe_join(
                     [
                       legend(field, attribute),
-                      yield(error)
+                      template.capture(error, &block)
                     ]
                   )
                 end,

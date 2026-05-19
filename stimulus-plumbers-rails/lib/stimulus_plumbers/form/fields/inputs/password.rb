@@ -25,7 +25,7 @@ module StimulusPlumbers
 
           private
 
-          def render_reveal_password(html_opts, error)
+          def render_reveal_password(html_opts, error, &block)
             html_options = merge_html_options(
               html_opts,
               field_theme(:form_input_reveal, error: error),
@@ -35,7 +35,7 @@ module StimulusPlumbers
               error:    error,
               trailing: reveal_button,
               data:     { controller: "input-format", input_format_type_value: "password" }
-            ) { yield html_options }
+            ) { @template.capture(html_options, &block) }
           end
 
           def reveal_button

@@ -40,12 +40,12 @@ module StimulusPlumbers
         ids.join(" ").presence
       end
 
-      def render(object, attribute, input_id:)
+      def render(object, attribute, input_id:, &block)
         @label ||= attribute.to_s.humanize
         error          = error?(object, attribute)
         aria           = build_aria(object, attribute, input_id)
         generated_opts = build_html_options(input_id, aria)
-        field_html     = yield(generated_opts, @kwargs, error)
+        field_html     = @template.capture(generated_opts, @kwargs, error, &block)
         Fields::Group.new(@template).render(layout: @layout, error: error) do
           @template.safe_join(
             [

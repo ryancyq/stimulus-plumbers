@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Form
     module Fields
       class InputGroup < Plumber::Base
-        def render(leading: nil, trailing: nil, error: false, **wrapper_opts)
+        def render(leading: nil, trailing: nil, error: false, **wrapper_opts, &block)
           html_options = merge_html_options(
             theme.resolve(:form_input_group, error: error),
             wrapper_opts
@@ -13,7 +13,7 @@ module StimulusPlumbers
             template.safe_join(
               [
                 leading.respond_to?(:call) ? leading.call : leading,
-                yield,
+                template.capture(&block),
                 trailing.respond_to?(:call) ? trailing.call : trailing
               ]
             )
