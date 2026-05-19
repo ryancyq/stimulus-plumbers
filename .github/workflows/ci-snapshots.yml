@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  test-snapshots:
+  test-snapshots-tailwind:
     name: "Snapshot tests / Ruby ${{ matrix.ruby-version }}"
     runs-on: ubuntu-latest
     permissions:
@@ -26,9 +26,9 @@ jobs:
       contents: write
     defaults:
       run:
-        working-directory: stimulus-plumbers-rails
+        working-directory: stimulus-plumbers-tailwind
     env:
-      BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/Gemfile"
+      BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-tailwind/Gemfile"
     strategy:
       fail-fast: false
       matrix:
@@ -65,7 +65,7 @@ jobs:
         with:
           node-version: lts/*
           cache: npm
-          cache-dependency-path: stimulus-plumbers-rails/package-lock.json
+          cache-dependency-path: stimulus-plumbers-tailwind/package-lock.json
 
       - run: npm ci
 
@@ -86,7 +86,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         with:
-          files: stimulus-plumbers-rails/test/snapshots/__screenshots__
+          files: stimulus-plumbers-tailwind/test/snapshots/__screenshots__
           commit-message: "chore: update snapshot baselines [skip ci]"
 
       - name: Upload Playwright report and snapshot diffs
@@ -95,6 +95,6 @@ jobs:
         with:
           name: playwright-report
           path: |
-            stimulus-plumbers-rails/playwright-report/
-            stimulus-plumbers-rails/test-results/
+            stimulus-plumbers-tailwind/playwright-report/
+            stimulus-plumbers-tailwind/test-results/
           retention-days: 7

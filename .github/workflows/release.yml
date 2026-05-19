@@ -17,7 +17,7 @@ env:
 
 jobs:
   npm:
-    name: Publish to NPM
+    name: Publish @stimulus-plumbers/controllers to NPM
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -73,8 +73,8 @@ jobs:
       - name: Publish to NPM
         run: npm publish --provenance --access public
 
-  rubygem:
-    name: Publish to RubyGems
+  rubygem-rails:
+    name: Publish stimulus_plumbers to RubyGems
     runs-on: ubuntu-latest
     needs: npm
     defaults:
@@ -138,6 +138,67 @@ jobs:
       - name: Push gem
         run: |
           for gem in pkg/stimulus_plumbers-$VERSION*.gem ; do
+            gem push "$gem" --host https://rubygems.org
+          done
+        shell: bash
+
+  rubygem-tailwind:
+    name: Publish stimulus_plumbers_tailwind to RubyGems
+    runs-on: ubuntu-latest
+    needs: rubygem-rails
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-tailwind
+    permissions:
+      contents: write
+      id-token: write
+    environment: release
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - run: rm Gemfile.lock
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler: 2.7.2
+
+      - run: bin/bump-version ${{ env.VERSION }}
+        shell: bash
+
+      - run: bundle exec rake rubocop:autocorrect_all
+
+      - uses: orhun/git-cliff-action@v4
+        with:
+          config: stimulus-plumbers-tailwind/cliff.toml
+          args: --tag stimulus-plumbers-tailwind/v${{ env.VERSION }}
+        env:
+          OUTPUT: stimulus-plumbers-tailwind/CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      - uses: ryancyq/github-signed-commit@v1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          files: |
+            stimulus-plumbers-tailwind/Gemfile.lock
+            stimulus-plumbers-tailwind/lib/stimulus_plumbers_tailwind/version.rb
+            stimulus-plumbers-tailwind/CHANGELOG.md
+          commit-message: "Bump rubygem stimulus_plumbers_tailwind version to ${{ env.VERSION }}"
+          tag: stimulus-plumbers-tailwind/v${{ env.VERSION }}
+
+      - run: bundle exec rake build
+
+      - name: Configure RubyGems trusted publishing credentials
+        uses: rubygems/configure-rubygems-credentials@v2.0.0
+
+      - name: Push gem
+        run: |
+          for gem in pkg/stimulus_plumbers_tailwind-$VERSION*.gem ; do
             gem push "$gem" --host https://rubygems.org
           done
         shell: bash

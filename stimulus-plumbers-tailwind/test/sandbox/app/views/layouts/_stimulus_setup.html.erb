@@ -1,0 +1,16 @@
+<script type="module">
+  import { Application } from "@hotwired/stimulus";
+  import * as StimulusPlumbers from "/dist/stimulus-plumbers-controllers.es.js";
+
+  const app = Application.start();
+
+  Object.entries(StimulusPlumbers)
+    .filter(([name]) => name.endsWith("Controller"))
+    .forEach(([name, controller]) => {
+      const identifier = name
+        .replace("Controller", "")
+        .replace(/([a-z])([A-Z])/g, "$1-$2")
+        .toLowerCase();
+      app.register(identifier, controller);
+    });
+</script>

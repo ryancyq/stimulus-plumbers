@@ -1,0 +1,16 @@
+<h1>Combobox components</h1>
+
+<%# ── Date ──────────────────────────────────────────────────────────── %>
+<%= sp_combobox_date(label: "Birthday") %>
+
+<%# ── Time ──────────────────────────────────────────────────────────── %>
+<%= sp_combobox_time(label: "Meeting Time") %>
+
+<%# ── Dropdown ───────────────────────────────────────────────────────── %>
+<%= sp_combobox_dropdown(
+      label:   "Country",
+      options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
+    ) %>
+
+<%# ── Autocomplete ───────────────────────────────────────────────────── %>
+<%= sp_combobox_autocomplete(label: "City") %>
