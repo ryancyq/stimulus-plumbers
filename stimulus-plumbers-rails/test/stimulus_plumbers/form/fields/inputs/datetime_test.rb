@@ -28,6 +28,14 @@ class DatetimeTest < ActionView::TestCase
     assert_css build_date_field, "label[for='sign_in_form_birthday']"
   end
 
+  def test_date_label_has_id
+    assert_css build_date_field, "label[id='sign_in_form_birthday_label']"
+  end
+
+  def test_date_dialog_has_aria_labelledby_referencing_label
+    assert_css build_date_field, "[role='dialog'][aria-labelledby='sign_in_form_birthday_label']"
+  end
+
   def test_date_renders_combobox_trigger
     assert_css build_date_field, "input[role='combobox']"
   end
@@ -111,6 +119,14 @@ class DatetimeTest < ActionView::TestCase
 
   def test_time_renders_label
     assert_css build_time_field, "label[for='sign_in_form_meeting_time']"
+  end
+
+  def test_time_label_has_id
+    assert_css build_time_field, "label[id='sign_in_form_meeting_time_label']"
+  end
+
+  def test_time_dialog_has_aria_labelledby_referencing_label
+    assert_css build_time_field, "[role='dialog'][aria-labelledby='sign_in_form_meeting_time_label']"
   end
 
   def test_time_renders_combobox_trigger

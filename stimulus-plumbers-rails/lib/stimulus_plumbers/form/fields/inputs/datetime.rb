@@ -45,7 +45,8 @@ module StimulusPlumbers
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             opts = Components::Combobox::Date.default_opts.deep_merge(
               input:   { value: current_value, data: { combobox_date_date_value: current_value } },
-              trigger: { aria: html_opts[:aria] }
+              trigger: { aria: html_opts[:aria] },
+              popover: { labelledby: Field.label_id(html_opts[:id]) }
             )
             render_combobox(
               attribute,
@@ -62,7 +63,8 @@ module StimulusPlumbers
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             opts = Components::Combobox::Time.default_opts.deep_merge(
               input:   { value: current_value },
-              trigger: { aria: html_opts[:aria] }
+              trigger: { aria: html_opts[:aria] },
+              popover: { labelledby: Field.label_id(html_opts[:id]) }
             )
             render_combobox(
               attribute,

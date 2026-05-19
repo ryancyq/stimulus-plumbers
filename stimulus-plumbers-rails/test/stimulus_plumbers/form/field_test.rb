@@ -81,6 +81,12 @@ class FieldTest < Minitest::Test
     assert_includes db, "#{INPUT_ID}_error_2"
   end
 
+  # ── label_id ──────────────────────────────────────────────────────────────
+
+  def test_label_id_returns_input_id_with_label_suffix
+    assert_equal "#{INPUT_ID}_label", StimulusPlumbers::Form::Field.label_id(INPUT_ID)
+  end
+
   # ── label ─────────────────────────────────────────────────────────────────
 
   def test_label_is_nil_without_explicit_label

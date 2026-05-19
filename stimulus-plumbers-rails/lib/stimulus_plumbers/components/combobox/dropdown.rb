@@ -21,12 +21,16 @@ module StimulusPlumbers
           }
         end
 
-        def render(options: [], value: nil, label: nil)
+        def render(options: [], value: nil, label: nil, labelledby: nil)
           listbox_attrs = merge_html_options(
             { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
             { role: "listbox", data: { "#{STIMULUS_CONTROLLER}_target": "listbox" } }
           )
-          listbox_attrs[:aria] = { label: label } if label
+          if labelledby
+            listbox_attrs[:aria] = { labelledby: labelledby }
+          elsif label
+            listbox_attrs[:aria] = { label: label }
+          end
 
           template.content_tag(:ul, **listbox_attrs) do
             Options.new(template).render(options, value: value)

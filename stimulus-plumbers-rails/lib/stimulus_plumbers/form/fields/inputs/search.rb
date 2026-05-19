@@ -79,7 +79,7 @@ module StimulusPlumbers
                 input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.popover_id_for(input_id)}",
                 action:                                  "input->input-combobox#onInput"
               }
-            ) { Components::Combobox::Autocomplete.new(@template).render(options: choices, value: current_value) }
+            ) { Components::Combobox::Autocomplete.new(@template).render(options: choices, value: current_value, labelledby: Field.label_id(input_id)) }
           end
 
           def clear_button

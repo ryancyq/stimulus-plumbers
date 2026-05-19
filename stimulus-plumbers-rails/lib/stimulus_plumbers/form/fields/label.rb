@@ -4,13 +4,13 @@ module StimulusPlumbers
   module Form
     module Fields
       class Label < Plumber::Base
-        def render(text:, for_id: nil, required: false, hidden: false, tag: :label)
+        def render(text:, for_id: nil, id: nil, required: false, hidden: false, tag: :label)
           mark_options = required && merge_html_options(
             { aria: { hidden: true } },
             theme.resolve(:form_required_mark)
           )
           html_options = merge_html_options(theme.resolve(:form_label, required: required, hidden: hidden))
-          template.content_tag(tag, for: for_id, **html_options) do
+          template.content_tag(tag, for: for_id, id: id, **html_options) do
             template.safe_join(
               [
                 text,

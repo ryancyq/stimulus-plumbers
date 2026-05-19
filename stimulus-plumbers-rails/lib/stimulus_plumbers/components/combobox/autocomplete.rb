@@ -10,10 +10,10 @@ module StimulusPlumbers
           )
         end
 
-        def render(options: [], value: nil, label: nil)
+        def render(options: [], value: nil, label: nil, labelledby: nil)
           template.safe_join(
             [
-              Dropdown.new(template).render(options: options, value: value, label: label),
+              Dropdown.new(template).render(options: options, value: value, label: label, labelledby: labelledby),
               loading,
               empty
             ]

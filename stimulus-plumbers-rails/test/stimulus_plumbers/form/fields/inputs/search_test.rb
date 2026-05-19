@@ -23,6 +23,14 @@ class SearchTest < ActionView::TestCase
     assert_css build_field, "label[for='sign_in_form_email']"
   end
 
+  def test_label_has_id
+    assert_css build_field, "label[id='sign_in_form_email_label']"
+  end
+
+  def test_listbox_has_aria_labelledby_referencing_label
+    assert_css build_field, "ul[role='listbox'][aria-labelledby='sign_in_form_email_label']"
+  end
+
   def test_renders_hidden_value_input
     assert_css build_field, "input[type='hidden'][name='sign_in_form[email]']"
   end

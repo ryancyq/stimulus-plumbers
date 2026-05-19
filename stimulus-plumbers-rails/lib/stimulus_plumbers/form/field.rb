@@ -5,6 +5,10 @@ module StimulusPlumbers
     class Field
       attr_reader :label, :required, :layout
 
+      def self.label_id(input_id)
+        [input_id, "label"].compact.join("_")
+      end
+
       def initialize(
         template,
         label: nil,
@@ -116,7 +120,13 @@ module StimulusPlumbers
       end
 
       def field_label(input_id)
-        Fields::Label.new(@template).render(text: @label, for_id: input_id, required: @required, hidden: @hide_label)
+        Fields::Label.new(@template).render(
+          text:     @label,
+          for_id:   input_id,
+          id:       self.class.label_id(input_id),
+          required: @required,
+          hidden:   @hide_label
+        )
       end
     end
   end

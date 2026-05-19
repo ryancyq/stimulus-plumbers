@@ -43,6 +43,21 @@ class ComboboxDropdownTest < ActionView::TestCase
     assert_no_css parse_html(render_dropdown), "ul[aria-label]"
   end
 
+  def test_aria_labelledby_when_set
+    assert_css parse_html(render_dropdown(labelledby: "country_label")), "ul[aria-labelledby='country_label']"
+  end
+
+  def test_aria_labelledby_omitted_when_nil
+    assert_no_css parse_html(render_dropdown), "ul[aria-labelledby]"
+  end
+
+  def test_labelledby_takes_precedence_over_label
+    doc = parse_html(render_dropdown(label: "Choose country", labelledby: "country_label"))
+
+    assert_css    doc, "ul[aria-labelledby='country_label']"
+    assert_no_css doc, "ul[aria-label]"
+  end
+
   # ── stimulus ──────────────────────────────────────────────────────────────
 
   def test_stimulus_listbox_target

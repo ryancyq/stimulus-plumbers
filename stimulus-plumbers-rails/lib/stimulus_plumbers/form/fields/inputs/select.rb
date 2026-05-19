@@ -59,7 +59,11 @@ module StimulusPlumbers
               trigger: html_opts
             )
             render_combobox(attribute, input_id: html_opts[:id], opts: dropdown_opts, err: err) do
-              Components::Combobox::Dropdown.new(@template).render(options: choices, value: current_value)
+              Components::Combobox::Dropdown.new(@template).render(
+                options:    choices,
+                value:      current_value,
+                labelledby: Field.label_id(html_opts[:id])
+              )
             end
           end
 

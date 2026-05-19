@@ -33,6 +33,14 @@ class SelectTest < ActionView::TestCase
     assert_css build_select(:country), "label[for='sign_in_form_country']"
   end
 
+  def test_select_label_has_id
+    assert_css build_select(:country), "label[id='sign_in_form_country_label']"
+  end
+
+  def test_select_listbox_has_aria_labelledby_referencing_label
+    assert_css build_select(:country), "ul[role='listbox'][aria-labelledby='sign_in_form_country_label']"
+  end
+
   def test_select_renders_hidden_value_input
     assert_css build_select(:country), "input[type='hidden'][name='sign_in_form[country]']"
   end

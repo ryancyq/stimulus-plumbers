@@ -56,4 +56,15 @@ class ComboboxAutocompleteTest < ActionView::TestCase
   def test_aria_label_on_listbox_when_set
     assert_css parse_html(render_autocomplete(label: "Cities")), "ul[aria-label='Cities']"
   end
+
+  def test_aria_labelledby_on_listbox_when_set
+    assert_css parse_html(render_autocomplete(labelledby: "cities_label")), "ul[aria-labelledby='cities_label']"
+  end
+
+  def test_labelledby_takes_precedence_over_label_on_listbox
+    doc = parse_html(render_autocomplete(label: "Cities", labelledby: "cities_label"))
+
+    assert_css    doc, "ul[aria-labelledby='cities_label']"
+    assert_no_css doc, "ul[aria-label]"
+  end
 end
