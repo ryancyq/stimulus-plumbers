@@ -7,6 +7,7 @@ require_relative "tailwind/calendar"
 require_relative "tailwind/card"
 require_relative "tailwind/combobox"
 require_relative "tailwind/form"
+require_relative "tailwind/icon"
 require_relative "tailwind/layout"
 
 module StimulusPlumbers
@@ -19,6 +20,7 @@ module StimulusPlumbers
       include Tailwind::Calendar
       include Tailwind::Card
       include Tailwind::Form
+      include Tailwind::Icon
       include Tailwind::Layout
 
       private

@@ -218,18 +218,33 @@ class TailwindThemeFormTest < Minitest::Test
 
   # :form_input_reveal
 
-  def test_form_input_reveal_includes_base_classes
-    result = classes_for(:form_input_reveal)
+  def test_form_input_reveal_returns_empty_classes
+    assert_equal "", classes_for(:form_input_reveal)
+  end
 
-    assert_includes result, "flex-1"
-    assert_includes result, "border-0"
-    assert_includes result, "bg-transparent"
+  def test_form_input_reveal_accepts_error_arg
+    assert_equal "", classes_for(:form_input_reveal, error: true)
+  end
+
+  # :form_input_search
+
+  def test_form_input_search_returns_empty_classes
+    assert_equal "", classes_for(:form_input_search)
   end
 
   # :form_button_reveal
 
   def test_form_button_reveal_includes_base_classes
     result = classes_for(:form_button_reveal)
+
+    assert_includes result, "border-0"
+    assert_includes result, "cursor-pointer"
+  end
+
+  # :form_button_clear
+
+  def test_form_button_clear_includes_base_classes
+    result = classes_for(:form_button_clear)
 
     assert_includes result, "border-0"
     assert_includes result, "cursor-pointer"

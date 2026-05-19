@@ -5,11 +5,11 @@ require "test_helper"
 class TailwindThemeIconTest < ActionView::TestCase
   def setup
     @theme = StimulusPlumbers::Themes::TailwindTheme.new
-    StimulusPlumbers.config.theme = :tailwind
+    StimulusPlumbers.config.theme.use(:tailwind)
   end
 
   def teardown
-    StimulusPlumbers.config.theme = :base
+    StimulusPlumbers.config.theme.use(StimulusPlumbers::Themes::Base.new)
   end
 
   def renderer

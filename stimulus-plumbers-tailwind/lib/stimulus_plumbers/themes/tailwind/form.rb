@@ -24,11 +24,11 @@ module StimulusPlumbers
         INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-md border].freeze
         INPUT_GROUP_BORDER = { error: "border-red-700", default: "border-gray-500" }.freeze
 
-        INPUT_REVEAL = %w[
-          flex-1 border-0 bg-transparent px-3 py-2 text-sm text-gray-900 focus:outline-none
-        ].freeze
         BUTTON_REVEAL = %w[
           self-stretch border-0 bg-transparent px-3 cursor-pointer text-gray-600 hover:text-gray-900 text-sm
+        ].freeze
+        BUTTON_CLEAR = %w[
+          self-stretch border-0 bg-transparent px-2 cursor-pointer text-gray-500 hover:text-gray-900 text-sm
         ].freeze
         SUBMIT_LINK = %w[cursor-pointer text-sm font-medium text-gray-900 hover:underline].freeze
 
@@ -86,12 +86,20 @@ module StimulusPlumbers
           form_input_classes(error: error)
         end
 
-        def form_input_reveal_classes
-          { classes: klasses(*INPUT_REVEAL) }
+        def form_input_reveal_classes(**)
+          { classes: "" }
+        end
+
+        def form_input_search_classes
+          { classes: "" }
         end
 
         def form_button_reveal_classes
           { classes: klasses(*BUTTON_REVEAL) }
+        end
+
+        def form_button_clear_classes
+          { classes: klasses(*BUTTON_CLEAR) }
         end
 
         def form_submit_classes(variant: :default)

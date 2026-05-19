@@ -18,4 +18,19 @@ class TailwindThemeTest < Minitest::Test
       assert_instance_of Hash, result, "expected Hash for #{component}"
     end
   end
+
+  def test_registers_theme_without_rails_engine
+    rails_engine = Rails.send(:remove_const, :Engine)
+    load File.expand_path("../../../lib/stimulus_plumbers_tailwind.rb", __dir__)
+
+    assert_equal StimulusPlumbers::Themes::TailwindTheme, StimulusPlumbers.config.theme.registry[:tailwind]
+  ensure
+    Rails.const_set(:Engine, rails_engine)
+  end
+
+  def test_loads_engine_with_rails_engine
+    load File.expand_path("../../../lib/stimulus_plumbers_tailwind.rb", __dir__)
+
+    assert_operator StimulusPlumbersTailwind::Engine, :<, Rails::Engine
+  end
 end
