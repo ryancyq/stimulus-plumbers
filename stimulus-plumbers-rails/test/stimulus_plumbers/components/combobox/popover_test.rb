@@ -12,58 +12,46 @@ class ComboboxPopoverTest < ActionView::TestCase
     )
   end
 
-  def test_renders_element_with_id
-    html = render_popover
+  # ── structure ─────────────────────────────────────────────────────────────
 
-    assert_includes html, 'id="combo_popover"'
+  def test_renders_element_with_id
+    assert_css parse_html(render_popover), "#combo_popover"
   end
 
   def test_hidden_by_default
-    html = render_popover
-
-    assert_includes html, "hidden"
+    assert_css parse_html(render_popover), "[hidden]"
   end
 
   def test_default_tag_is_div
-    html = render_popover
-
-    assert_includes html, "<div"
+    assert_css parse_html(render_popover), "div#combo_popover"
   end
 
   def test_custom_tag
-    html = render_popover(tag: :section)
-
-    assert_includes html, "<section"
+    assert_css parse_html(render_popover(tag: :section)), "section#combo_popover"
   end
 
-  def test_role_when_set
-    html = render_popover(role: "dialog")
+  # ── aria ──────────────────────────────────────────────────────────────────
 
-    assert_includes html, 'role="dialog"'
+  def test_role_when_set
+    assert_css parse_html(render_popover(role: "dialog")), "[role='dialog']"
   end
 
   def test_role_omitted_when_nil
-    html = render_popover
-
-    refute_includes html, "role="
+    assert_no_css parse_html(render_popover), "[role]"
   end
 
   def test_aria_label_when_set
-    html = render_popover(label: "Picker")
-
-    assert_includes html, 'aria-label="Picker"'
+    assert_css parse_html(render_popover(label: "Picker")), "[aria-label='Picker']"
   end
 
   def test_aria_label_omitted_when_nil
-    html = render_popover
-
-    refute_includes html, "aria-label"
+    assert_no_css parse_html(render_popover), "[aria-label]"
   end
 
-  def test_renders_block_content
-    html = render_popover { "Popover body" }
+  # ── content ───────────────────────────────────────────────────────────────
 
-    assert_includes html, "Popover body"
+  def test_renders_block_content
+    assert_includes parse_html(render_popover { "Popover body" }).text, "Popover body"
   end
 
   def test_block_receives_id_as_argument
@@ -74,14 +62,12 @@ class ComboboxPopoverTest < ActionView::TestCase
   end
 
   def test_renders_content_kwarg
-    html = render_popover(content: "Static content")
-
-    assert_includes html, "Static content"
+    assert_includes parse_html(render_popover(content: "Static content")).text, "Static content"
   end
 
-  def test_stimulus_popover_target
-    html = render_popover
+  # ── stimulus ──────────────────────────────────────────────────────────────
 
-    assert_includes html, "input-combobox-target"
+  def test_stimulus_popover_target
+    assert_css parse_html(render_popover), "[data-input-combobox-target~='popover']"
   end
 end

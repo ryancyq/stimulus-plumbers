@@ -7,40 +7,33 @@ class ComboboxDateTest < ActionView::TestCase
     StimulusPlumbers::Components::Combobox::Date.new(self).render(**opts)
   end
 
-  def test_renders_wrapper_div
-    html = render_date
+  # ── structure ─────────────────────────────────────────────────────────────
 
-    assert_includes html, "<div"
+  def test_renders_wrapper_div
+    assert_css parse_html(render_date), "div"
   end
 
   def test_has_combobox_date_controller
-    html = render_date
-
-    assert_includes html, "combobox-date"
+    assert_css parse_html(render_date), "[data-controller~='combobox-date']"
   end
 
   def test_renders_navigation
-    doc = parse_html(render_date)
-
-    assert_css doc, "nav"
+    assert_css parse_html(render_date), "nav"
   end
 
   def test_renders_calendar_grid
-    doc = parse_html(render_date)
-
-    assert_css doc, "[role='grid']"
+    assert_css parse_html(render_date), "[role='grid']"
   end
+
+  # ── date value ────────────────────────────────────────────────────────────
 
   def test_sets_date_value_when_given
-    html = render_date(value: "2024-06-15")
-
-    assert_includes html, "2024-06-15"
+    assert_css parse_html(render_date(value: "2024-06-15")),
+               "[data-combobox-date-date-value='2024-06-15']"
   end
 
-  def test_no_date_value_when_nil
-    html = render_date(value: nil)
-
-    refute_includes html, "date-value"
+  def test_no_date_value_attribute_when_nil
+    assert_no_css parse_html(render_date(value: nil)), "[data-combobox-date-date-value]"
   end
 
   # ── calendar_id_for ───────────────────────────────────────────────────────

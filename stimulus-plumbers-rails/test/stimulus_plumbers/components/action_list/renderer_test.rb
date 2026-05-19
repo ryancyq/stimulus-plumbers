@@ -7,7 +7,8 @@ class ActionListRendererTest < ActionView::TestCase
     StimulusPlumbers::Components::ActionList.new(self)
   end
 
-  # attr_readers
+  # ── attr_readers ──────────────────────────────────────────────────────────
+
   def test_exposes_template
     assert_equal self, renderer.template
   end
@@ -16,128 +17,105 @@ class ActionListRendererTest < ActionView::TestCase
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
-  # list
-  def test_list_renders_ul
-    html = renderer.render { "" }
+  # ── list ──────────────────────────────────────────────────────────────────
 
-    assert_includes html, "<ul"
+  def test_list_renders_ul
+    assert_css parse_html(renderer.render { "" }), "ul"
   end
 
   def test_list_has_role_list_by_default
-    html = renderer.render { "" }
-
-    assert_includes html, 'role="list"'
+    assert_css parse_html(renderer.render { "" }), "ul[role='list']"
   end
 
   def test_list_role_can_be_overridden
-    html = renderer.render(role: "menu") { "" }
+    doc = parse_html(renderer.render(role: "menu") { "" })
 
-    assert_includes html, 'role="menu"'
-    refute_includes html, 'role="list"'
+    assert_css    doc, "ul[role='menu']"
+    assert_no_css doc, "ul[role='list']"
   end
 
   def test_list_merges_custom_class
-    html = renderer.render(class: "custom") { "" }
-
-    assert_includes html, "custom"
+    assert_css parse_html(renderer.render(class: "custom") { "" }), ".custom"
   end
 
   def test_list_passes_html_options
-    html = renderer.render(id: "nav", data: { controller: "list" }) { "" }
+    doc = parse_html(renderer.render(id: "nav", data: { controller: "list" }) { "" })
 
-    assert_includes html, 'id="nav"'
-    assert_includes html, 'data-controller="list"'
+    assert_css doc, "#nav"
+    assert_css doc, "[data-controller='list']"
   end
 
-  # section
-  def test_section_renders_li_with_ul
-    html = renderer.section { "" }
+  # ── section ───────────────────────────────────────────────────────────────
 
-    assert_includes html, "<li"
-    assert_includes html, "<ul"
+  def test_section_renders_li_with_ul
+    doc = parse_html(renderer.section { "" })
+
+    assert_css doc, "li"
+    assert_css doc, "ul"
   end
 
   def test_section_renders_title_in_span
-    html = renderer.section(title: "Navigation") { "" }
+    doc = parse_html(renderer.section(title: "Navigation") { "" })
 
-    assert_includes html, "<span"
-    assert_includes html, "Navigation"
+    assert_css doc, "span"
+    assert_includes doc.text, "Navigation"
   end
 
   def test_section_omits_title_span_when_no_title
-    html = renderer.section { "" }
-
-    refute_includes html, "aria-hidden"
+    assert_no_css parse_html(renderer.section { "" }), "span[aria-hidden]"
   end
 
   def test_section_renders_block_inside_ul
-    html = renderer.section { renderer.item("Action") }
+    doc = parse_html(renderer.section { renderer.item("Action") })
 
-    assert_includes html, "<ul"
-    assert_includes html, "Action"
+    assert_css doc, "ul"
+    assert_includes doc.text, "Action"
   end
 
   def test_section_does_not_set_role_none_on_li
-    html = renderer.section { "" }
-
-    refute_includes html, 'role="none"'
+    assert_no_css parse_html(renderer.section { "" }), "li[role='none']"
   end
 
   def test_section_inner_ul_has_aria_label_when_title_given
-    html = renderer.section(title: "Navigation") { "" }
-
-    assert_includes html, 'aria-label="Navigation"'
+    assert_css parse_html(renderer.section(title: "Navigation") { "" }), "ul[aria-label='Navigation']"
   end
 
   def test_section_inner_ul_has_no_role_group
-    html = renderer.section { "" }
-
-    refute_includes html, 'role="group"'
+    assert_no_css parse_html(renderer.section { "" }), "[role='group']"
   end
 
-  # item
-  def test_item_renders_li_with_button
-    html = renderer.item("Click me")
+  # ── item ──────────────────────────────────────────────────────────────────
 
-    assert_includes html, "<li"
-    assert_includes html, "<button"
-    assert_includes html, "Click me"
+  def test_item_renders_li_with_button
+    doc = parse_html(renderer.item("Click me"))
+
+    assert_css doc, "li"
+    assert_css doc, "button"
+    assert_includes doc.text, "Click me"
   end
 
   def test_item_renders_button_type
-    html = renderer.item("Click me")
-
-    assert_includes html, 'type="button"'
+    assert_css parse_html(renderer.item("Click me")), "button[type='button']"
   end
 
   def test_item_renders_link_when_url_given
-    html = renderer.item("Home", url: "/")
-
-    assert_includes html, "<a"
-    assert_includes html, 'href="/"'
+    assert_css parse_html(renderer.item("Home", url: "/")), "a[href='/']"
   end
 
   def test_item_renders_external_link_with_target_blank
-    html = renderer.item("External", url: "https://example.com", external: true)
-
-    assert_includes html, 'target="_blank"'
+    assert_css parse_html(renderer.item("External", url: "https://example.com", external: true)),
+               "a[target='_blank']"
   end
 
   def test_item_does_not_add_target_blank_for_internal_links
-    html = renderer.item("Internal", url: "/path")
-
-    refute_includes html, "target"
+    assert_no_css parse_html(renderer.item("Internal", url: "/path")), "a[target]"
   end
 
   def test_item_accepts_block_content
-    html = renderer.item { "Block content" }
-
-    assert_includes html, "Block content"
+    assert_includes parse_html(renderer.item { "Block content" }).text, "Block content"
   end
 
   def test_item_merges_custom_class
-    html = renderer.item("Action", class: "custom")
-
-    assert_includes html, "custom"
+    assert_css parse_html(renderer.item("Action", class: "custom")), ".custom"
   end
 end

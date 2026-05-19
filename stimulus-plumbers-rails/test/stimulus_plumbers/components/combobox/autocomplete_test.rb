@@ -7,41 +7,37 @@ class ComboboxAutocompleteTest < ActionView::TestCase
     StimulusPlumbers::Components::Combobox::Autocomplete.new(self).render(**opts)
   end
 
-  def test_renders_listbox
-    doc = parse_html(render_autocomplete)
+  # ── structure ─────────────────────────────────────────────────────────────
 
-    assert_css doc, "ul[role='listbox']"
+  def test_renders_listbox
+    assert_css parse_html(render_autocomplete), "ul[role='listbox']"
   end
 
-  def test_renders_loading_region
-    doc = parse_html(render_autocomplete)
+  # ── loading ───────────────────────────────────────────────────────────────
 
-    assert_css doc, "div[aria-live='polite']"
+  def test_renders_loading_region
+    assert_css parse_html(render_autocomplete), "div[aria-live='polite']"
   end
 
   def test_loading_is_hidden_by_default
-    doc = parse_html(render_autocomplete)
-
-    assert_css doc, "div[aria-live='polite'][hidden]"
+    assert_css parse_html(render_autocomplete), "div[aria-live='polite'][hidden]"
   end
 
-  def test_renders_empty_state_with_role_status
-    doc = parse_html(render_autocomplete)
+  # ── empty state ───────────────────────────────────────────────────────────
 
-    assert_css doc, "div[role='status']"
+  def test_renders_empty_state_with_role_status
+    assert_css parse_html(render_autocomplete), "div[role='status']"
   end
 
   def test_empty_state_is_hidden_by_default
-    doc = parse_html(render_autocomplete)
-
-    assert_css doc, "div[role='status'][hidden]"
+    assert_css parse_html(render_autocomplete), "div[role='status'][hidden]"
   end
 
   def test_empty_state_has_no_results_text
-    html = render_autocomplete
-
-    assert_includes html, "No results"
+    assert_includes parse_html(render_autocomplete).text, "No results"
   end
+
+  # ── options ───────────────────────────────────────────────────────────────
 
   def test_renders_options
     doc = parse_html(render_autocomplete(options: [%w[London lon], %w[Paris par]]))
@@ -51,14 +47,13 @@ class ComboboxAutocompleteTest < ActionView::TestCase
   end
 
   def test_marks_matching_value_as_selected
-    doc = parse_html(render_autocomplete(options: [%w[London lon]], value: "lon"))
-
-    assert_css doc, "li[data-value='lon'][aria-selected='true']"
+    assert_css parse_html(render_autocomplete(options: [%w[London lon]], value: "lon")),
+               "li[data-value='lon'][aria-selected='true']"
   end
 
-  def test_aria_label_on_listbox_when_set
-    html = render_autocomplete(label: "Cities")
+  # ── aria ──────────────────────────────────────────────────────────────────
 
-    assert_includes html, 'aria-label="Cities"'
+  def test_aria_label_on_listbox_when_set
+    assert_css parse_html(render_autocomplete(label: "Cities")), "ul[aria-label='Cities']"
   end
 end

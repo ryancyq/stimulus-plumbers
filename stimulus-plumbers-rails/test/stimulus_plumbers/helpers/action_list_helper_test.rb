@@ -5,74 +5,70 @@ require "test_helper"
 class ActionListHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::ActionListHelper
 
-  def test_renders_container_ul
-    html = sp_action_list { "" }
+  # ── list ──────────────────────────────────────────────────────────────────
 
-    assert_includes html, "<ul"
+  def test_renders_container_ul
+    assert_css parse_html(sp_action_list { "" }), "ul"
   end
 
-  def test_renders_section_with_ul
-    html = sp_action_list_section { "" }
+  # ── section ───────────────────────────────────────────────────────────────
 
-    assert_includes html, "<ul"
+  def test_renders_section_with_ul
+    assert_css parse_html(sp_action_list_section { "" }), "ul"
   end
 
   def test_renders_section_title
-    html = sp_action_list_section(title: "Navigation") { "" }
+    doc = parse_html(sp_action_list_section(title: "Navigation") { "" })
 
-    assert_includes html, "<span"
-    assert_includes html, "Navigation"
+    assert_css doc, "span"
+    assert_includes doc.text, "Navigation"
   end
 
-  def test_renders_no_title_when_absent
-    html = sp_action_list_section { "" }
-
-    refute_includes html, "aria-hidden"
+  def test_renders_no_title_span_when_absent
+    assert_no_css parse_html(sp_action_list_section { "" }), "span[aria-hidden]"
   end
+
+  # ── item ──────────────────────────────────────────────────────────────────
 
   def test_item_renders_button_by_default
-    html = sp_action_list_item("Click me")
+    doc = parse_html(sp_action_list_item("Click me"))
 
-    assert_includes html, "<li"
-    assert_includes html, "<button"
-    assert_includes html, "Click me"
+    assert_css doc, "li"
+    assert_css doc, "button"
+    assert_includes doc.text, "Click me"
   end
 
   def test_item_renders_link_with_url
-    html = sp_action_list_item("Home", url: "/")
-
-    assert_includes html, "<a"
-    assert_includes html, 'href="/"'
+    assert_css parse_html(sp_action_list_item("Home", url: "/")), "a[href='/']"
   end
 
   def test_item_renders_external_link
-    html = sp_action_list_item("External", url: "https://example.com", external: true)
-
-    assert_includes html, 'target="_blank"'
+    assert_css parse_html(sp_action_list_item("External", url: "https://example.com", external: true)),
+               "a[target='_blank']"
   end
 
   def test_item_accepts_block_content
-    html = sp_action_list_item { "Block item" }
-
-    assert_includes html, "Block item"
+    assert_includes parse_html(sp_action_list_item { "Block item" }).text, "Block item"
   end
 
   def test_item_merges_custom_class
-    html = sp_action_list_item("Action", class: "custom")
-
-    assert_includes html, "custom"
+    assert_css parse_html(sp_action_list_item("Action", class: "custom")), ".custom"
   end
 
-  def test_composition
-    html = sp_action_list do
-      sp_action_list_section(title: "Nav") do
-        sp_action_list_item("Home", url: "/")
-      end
-    end
+  # ── composition ───────────────────────────────────────────────────────────
 
-    assert_includes html, "Nav"
-    assert_includes html, 'href="/"'
-    assert_includes html, "<ul"
-    assert_includes html, "<li"
+  def test_composition
+    doc = parse_html(
+      sp_action_list do
+        sp_action_list_section(title: "Nav") do
+          sp_action_list_item("Home", url: "/")
+        end
+      end
+    )
+
+    assert_css doc, "ul"
+    assert_css doc, "li"
+    assert_css doc, "a[href='/']"
+    assert_includes doc.text, "Nav"
   end
 end

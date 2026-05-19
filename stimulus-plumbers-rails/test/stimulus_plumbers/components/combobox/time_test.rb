@@ -82,11 +82,11 @@ class ComboboxTimeTest < ActionView::TestCase
     doc_step1  = parse_html(render_time(step: 1))
     doc_step15 = parse_html(render_time(step: 15))
 
-    count_1  = doc_step1.css("ul[aria-label='Minute'] li").length
-    count_15 = doc_step15.css("ul[aria-label='Minute'] li").length
+    every_minute_count  = doc_step1.css("ul[aria-label='Minute'] li").length
+    every_quarter_count = doc_step15.css("ul[aria-label='Minute'] li").length
 
-    assert_operator count_15, :<, count_1
-    assert_equal 4, count_15
+    assert_operator every_quarter_count, :<, every_minute_count
+    assert_equal 4, every_quarter_count
   end
 
   def test_invalid_value_renders_without_selection

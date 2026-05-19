@@ -69,11 +69,9 @@ class FormFieldsInputGroupTest < ActionView::TestCase
       ) { "<input>".html_safe }
     )
 
-    children = doc.at_css("div").children.select(&:element?)
+    names = doc.at_css("div").children.select(&:element?).map(&:name)
 
-    assert_equal "span",   children[0].name
-    assert_equal "input",  children[1].name
-    assert_equal "button", children[2].name
+    assert_equal %w[span input button], names
   end
 
   def test_passes_extra_html_attributes_to_wrapper

@@ -5,81 +5,85 @@ require "test_helper"
 class CardHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::CardHelper
 
-  def test_renders_card_div
-    html = sp_card { "Content" }
+  # ── card ──────────────────────────────────────────────────────────────────
 
-    assert_includes html, "<div"
-    assert_includes html, "Content"
+  def test_renders_card_div
+    doc = parse_html(sp_card { "Content" })
+
+    assert_css doc, "div"
+    assert_includes doc.text, "Content"
   end
 
   def test_renders_title_as_h2
-    html = sp_card(title: "My Card") { "" }
+    doc = parse_html(sp_card(title: "My Card") { "" })
 
-    assert_includes html, "<h2"
-    assert_includes html, "My Card"
+    assert_css doc, "h2"
+    assert_includes doc.text, "My Card"
   end
 
-  def test_renders_no_title_when_absent
-    html = sp_card { "" }
-
-    refute_includes html, "<h2"
+  def test_renders_no_heading_when_title_absent
+    assert_no_css parse_html(sp_card { "" }), "h2"
   end
 
   def test_renders_title_at_custom_heading_level
-    html = sp_card(title: "My Card", title_tag: :h3) { "" }
+    doc = parse_html(sp_card(title: "My Card", title_tag: :h3) { "" })
 
-    assert_includes html, "<h3"
-    refute_includes html, "<h2"
+    assert_css    doc, "h3"
+    assert_no_css doc, "h2"
   end
 
   def test_merges_custom_class
-    html = sp_card(class: "elevated") { "" }
-
-    assert_includes html, "elevated"
+    assert_css parse_html(sp_card(class: "elevated") { "" }), ".elevated"
   end
 
   def test_passes_html_options
-    html = sp_card(id: "main-card") { "" }
-
-    assert_includes html, 'id="main-card"'
+    assert_css parse_html(sp_card(id: "main-card") { "" }), "#main-card"
   end
 
-  def test_section_renders_div
-    html = sp_card_section { "Section content" }
+  # ── section ───────────────────────────────────────────────────────────────
 
-    assert_includes html, "<div"
-    assert_includes html, "Section content"
+  def test_section_renders_div
+    doc = parse_html(sp_card_section { "Section content" })
+
+    assert_css doc, "div"
+    assert_includes doc.text, "Section content"
   end
 
   def test_section_renders_title_as_h3
-    html = sp_card_section(title: "Section One") { "" }
+    doc = parse_html(sp_card_section(title: "Section One") { "" })
 
-    assert_includes html, "<h3"
-    assert_includes html, "Section One"
+    assert_css doc, "h3"
+    assert_includes doc.text, "Section One"
   end
 
-  def test_section_renders_no_title_when_absent
-    html = sp_card_section { "" }
-
-    refute_includes html, "<h3"
+  def test_section_renders_no_heading_when_title_absent
+    assert_no_css parse_html(sp_card_section { "" }), "h3"
   end
 
   def test_section_renders_title_at_custom_heading_level
-    html = sp_card_section(title: "Section One", title_tag: :h4) { "" }
+    doc = parse_html(sp_card_section(title: "Section One", title_tag: :h4) { "" })
 
-    assert_includes html, "<h4"
-    refute_includes html, "<h3"
+    assert_css    doc, "h4"
+    assert_no_css doc, "h3"
   end
 
-  def test_composition
-    html = sp_card(title: "Card") do
-      sp_card_section(title: "Section 1") { "Content 1" }
-    end
+  def test_section_merges_custom_class
+    assert_css parse_html(sp_card_section(class: "bordered") { "" }), ".bordered"
+  end
 
-    assert_includes html, "<h2"
-    assert_includes html, "Card"
-    assert_includes html, "<h3"
-    assert_includes html, "Section 1"
-    assert_includes html, "Content 1"
+  # ── composition ───────────────────────────────────────────────────────────
+
+  def test_composition
+    doc = parse_html(
+      sp_card(title: "Card") do
+        sp_card_section(title: "Section 1") { "Content 1" }
+      end
+    )
+
+    assert_css doc, "h2"
+    assert_css doc, "h3"
+    assert_includes doc.text, "Card"
+    assert_includes doc.text, "Section 1"
+    assert_includes doc.text, "Content 1"
   end
 end

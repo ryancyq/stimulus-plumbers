@@ -7,23 +7,23 @@ class ComboboxDropdownTest < ActionView::TestCase
     StimulusPlumbers::Components::Combobox::Dropdown.new(self).render(**opts)
   end
 
-  def test_renders_ul_element
-    html = render_dropdown
+  # ── structure ─────────────────────────────────────────────────────────────
 
-    assert_includes html, "<ul"
+  def test_renders_ul_element
+    assert_css parse_html(render_dropdown), "ul"
   end
 
   def test_role_is_listbox
-    html = render_dropdown
-
-    assert_includes html, 'role="listbox"'
+    assert_css parse_html(render_dropdown), "ul[role='listbox']"
   end
 
-  def test_renders_options
-    html = render_dropdown(options: [["Canada", "ca"], ["United States", "us"]])
+  # ── options ───────────────────────────────────────────────────────────────
 
-    assert_includes html, "Canada"
-    assert_includes html, "United States"
+  def test_renders_options
+    doc = parse_html(render_dropdown(options: [["Canada", "ca"], ["United States", "us"]]))
+
+    assert_css doc, "li[role='option'][data-value='ca']"
+    assert_css doc, "li[role='option'][data-value='us']"
   end
 
   def test_marks_matching_value_as_selected
@@ -33,21 +33,19 @@ class ComboboxDropdownTest < ActionView::TestCase
     assert_css doc, "li[data-value='us'][aria-selected='false']"
   end
 
-  def test_aria_label_when_set
-    html = render_dropdown(label: "Choose country")
+  # ── aria ──────────────────────────────────────────────────────────────────
 
-    assert_includes html, 'aria-label="Choose country"'
+  def test_aria_label_when_set
+    assert_css parse_html(render_dropdown(label: "Choose country")), "ul[aria-label='Choose country']"
   end
 
   def test_aria_label_omitted_when_nil
-    html = render_dropdown
-
-    refute_includes html, "aria-label"
+    assert_no_css parse_html(render_dropdown), "ul[aria-label]"
   end
 
-  def test_stimulus_listbox_target
-    html = render_dropdown
+  # ── stimulus ──────────────────────────────────────────────────────────────
 
-    assert_includes html, "listbox"
+  def test_stimulus_listbox_target
+    assert_css parse_html(render_dropdown), "[data-combobox-dropdown-target~='listbox']"
   end
 end
