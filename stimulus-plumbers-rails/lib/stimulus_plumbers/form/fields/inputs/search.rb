@@ -51,7 +51,7 @@ module StimulusPlumbers
           end
 
           def render_search_combobox(attribute, html_opts, error, url:, clearable:, &block)
-            current_value = object&.public_send(attribute)
+            current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             input_id      = html_opts[:id]
             opts          = Components::Combobox::Autocomplete.default_opts.deep_merge(
               input:   { value: current_value },

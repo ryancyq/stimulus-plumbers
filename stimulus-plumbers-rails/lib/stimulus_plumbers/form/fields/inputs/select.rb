@@ -51,7 +51,7 @@ module StimulusPlumbers
           def render_dropdown(attribute, opts, html_opts, err:)
             include_blank = opts.delete(:include_blank)
             prompt        = opts.delete(:prompt)
-            current_value = opts.delete(:selected) { object&.public_send(attribute) }
+            current_value = opts.delete(:selected) { object.respond_to?(attribute) ? object.public_send(attribute) : nil }
             choices       = build_dropdown_choices(yield(current_value), include_blank: include_blank, prompt: prompt)
 
             dropdown_opts = Components::Combobox::Dropdown.default_opts.deep_merge(
