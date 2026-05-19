@@ -73,7 +73,7 @@ class SearchTest < ActionView::TestCase
   end
 
   def test_renders_details_hint
-    assert_css build_field(details: "Start typing to filter"), "#sign_in_form_email_hint"
+    assert_css build_field(hint: "Start typing to filter"), "#sign_in_form_email_hint"
   end
 
   # ── error state ───────────────────────────────────────────────────────────
@@ -160,5 +160,84 @@ class SearchTest < ActionView::TestCase
 
   def test_clearable_still_renders_hidden_value_input
     assert_css build_field(clearable: true), "input[type='hidden'][name='sign_in_form[email]']"
+  end
+
+  # ── html_native: true ────────────────────────────────────────────────────
+
+  def test_html_native_option_does_not_leak_into_attributes
+    assert_nil build_field(html_native: false).at_css("input[role='combobox']")["html_native"]
+  end
+
+  def test_html_native_renders_native_search_input
+    assert_css build_field(html_native: true), "input[type='search']"
+  end
+
+  def test_html_native_does_not_render_combobox_trigger
+    assert_no_css build_field(html_native: true), "input[role='combobox']"
+  end
+
+  def test_html_native_does_not_render_hidden_value_input
+    assert_no_css build_field(html_native: true), "input[type='hidden'][name='sign_in_form[email]']"
+  end
+
+  def test_html_native_renders_label
+    assert_css build_field(html_native: true), "label[for='sign_in_form_email']"
+  end
+
+  def test_html_native_renders_error_message
+    @form.errors.add(:email, "is blank")
+
+    assert_css build_field(html_native: true), "p[role='alert']"
+  end
+
+  def test_html_native_input_has_aria_invalid_on_error
+    @form.errors.add(:email, "is blank")
+
+    assert_equal "true", build_field(html_native: true).at_css("input[type='search']")["aria-invalid"]
+  end
+
+  # ── html_native: true + clearable: true ──────────────────────────────────
+
+  def test_html_native_clearable_renders_input_search_controller_wrapper
+    assert_css build_field(html_native: true, clearable: true), "[data-controller='input-search']"
+  end
+
+  def test_html_native_clearable_native_input_has_input_search_target
+    assert_css build_field(html_native: true, clearable: true),
+               "input[type='search'][data-input-search-target='input']"
+  end
+
+  def test_html_native_clearable_renders_clear_button
+    assert_css build_field(html_native: true, clearable: true),
+               "button[data-input-search-target='clear'][data-action='click->input-search#clear']"
+  end
+
+  def test_html_native_clearable_does_not_render_combobox
+    assert_no_css build_field(html_native: true, clearable: true), "input[role='combobox']"
+  end
+
+  def test_html_native_without_clearable_does_not_add_input_search_target
+    assert_nil build_field(html_native: true).at_css("input[type='search']")["data-input-search-target"]
+  end
+
+  # ── model value pre-population ─────────────────────────────────────────────
+
+  def test_model_value_sets_hidden_input_value
+    @form.define_singleton_method(:email) { "hello@example.com" }
+
+    assert_equal "hello@example.com", build_field.at_css("input[type='hidden'][name='sign_in_form[email]']")["value"]
+  end
+
+  def test_model_value_sets_combobox_value_data_attribute
+    @form.define_singleton_method(:email) { "hello@example.com" }
+
+    assert_css build_field, "[data-input-combobox-value-value='hello@example.com']"
+  end
+
+  def test_clearable_model_value_sets_hidden_input_value
+    @form.define_singleton_method(:email) { "hello@example.com" }
+    hidden = build_field(clearable: true).at_css("input[type='hidden'][name='sign_in_form[email]']")
+
+    assert_equal "hello@example.com", hidden["value"]
   end
 end

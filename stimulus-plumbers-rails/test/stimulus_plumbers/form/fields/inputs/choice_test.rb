@@ -15,9 +15,9 @@ class ChoiceTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  def build_check_box(**opts)
+  def build_check_box(checked_value: "1", unchecked_value: "0", **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
-      f.check_box(:remember_me, **opts)
+      f.check_box(:remember_me, opts, checked_value, unchecked_value)
     end
     parse_html(html)
   end
@@ -74,6 +74,20 @@ class ChoiceTest < ActionView::TestCase
     assert_equal "true", input["aria-required"]
   end
 
+  def test_check_box_renders_hint
+    assert_css build_check_box(hint: "You must accept"), "#sign_in_form_remember_me_hint"
+  end
+
+  def test_check_box_forwards_data_attributes
+    assert_equal "toggle", build_check_box(data: { controller: "toggle" }).at_css("input[type='checkbox']")["data-controller"]
+  end
+
+  def test_check_box_forwards_custom_checked_value
+    doc = build_check_box(checked_value: "yes", unchecked_value: "no")
+
+    assert_css doc, "input[type='checkbox'][value='yes']"
+  end
+
   # ── radio_button ──────────────────────────────────────────────────────────
 
   def test_radio_button_renders_input
@@ -97,6 +111,16 @@ class ChoiceTest < ActionView::TestCase
                     "sign_in_form_role_admin_error"
   end
 
+  def test_radio_button_renders_hint
+    assert_css build_radio_button("admin", hint: "Select your role"), "#sign_in_form_role_admin_hint"
+  end
+
+  def test_radio_button_forwards_data_attributes
+    input = build_radio_button("admin", data: { controller: "selector" }).at_css("input[type='radio']")
+
+    assert_equal "selector", input["data-controller"]
+  end
+
   # ── collection_radio_buttons ──────────────────────────────────────────────
 
   def test_collection_radio_buttons_renders_fieldset
@@ -117,7 +141,7 @@ class ChoiceTest < ActionView::TestCase
   end
 
   def test_collection_radio_buttons_renders_details_hint
-    assert_css build_collection_radio_buttons(details: "Choose a role"), "#sign_in_form_role_hint"
+    assert_css build_collection_radio_buttons(hint: "Choose a role"), "#sign_in_form_role_hint"
   end
 
   def test_collection_radio_buttons_renders_error_message
@@ -161,7 +185,7 @@ class ChoiceTest < ActionView::TestCase
   end
 
   def test_collection_radio_buttons_has_aria_describedby_on_fieldset_when_hint
-    doc = build_collection_radio_buttons(details: "Choose a role")
+    doc = build_collection_radio_buttons(hint: "Choose a role")
 
     assert_includes doc.at_css("fieldset")["aria-describedby"].to_s, "sign_in_form_role_hint"
   end
@@ -198,7 +222,7 @@ class ChoiceTest < ActionView::TestCase
   end
 
   def test_collection_check_boxes_renders_details_hint
-    assert_css build_collection_check_boxes(details: "Select all that apply"), "#sign_in_form_role_hint"
+    assert_css build_collection_check_boxes(hint: "Select all that apply"), "#sign_in_form_role_hint"
   end
 
   def test_collection_check_boxes_renders_error_message
@@ -242,7 +266,7 @@ class ChoiceTest < ActionView::TestCase
   end
 
   def test_collection_check_boxes_has_aria_describedby_on_fieldset_when_hint
-    doc = build_collection_check_boxes(details: "Select all that apply")
+    doc = build_collection_check_boxes(hint: "Select all that apply")
 
     assert_includes doc.at_css("fieldset")["aria-describedby"].to_s, "sign_in_form_role_hint"
   end

@@ -21,7 +21,7 @@ module StimulusPlumbers
           }
         end
 
-        def render(options: [], value: nil, label: nil, **_kwargs)
+        def render(options: [], value: nil, label: nil)
           listbox_attrs = merge_html_options(
             { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
             { role: "listbox", data: { "#{STIMULUS_CONTROLLER}_target": "listbox" } }

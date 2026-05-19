@@ -6,47 +6,45 @@ module StimulusPlumbers
       module Inputs
         module Password
           def password_field(attribute, options = {})
-            rails_opts, form_field_opts = extract_options(options)
-            reveal = form_field_opts.delete(:reveal) { false }
-            field  = build_field(attribute, form_field_opts)
-
-            input_html = if reveal
-                           input_opts = merge_html_options(
-                             rails_opts,
-                             field_theme(:form_input_reveal, error: field.error?),
-                             field.html_options,
-                             { "data-input-format-target": "input" }
-                           )
-                           render_input_group(
-                             super(attribute, input_opts),
-                             field,
-                             trailing:                       reveal_button,
-                             "data-controller":              "input-format",
-                             "data-input-format-type-value": "password"
-                           )
-                         else
-                           html_opts = merge_html_options(
-                             rails_opts,
-                             field_theme(:form_input, error: field.error?),
-                             field.html_options
-                           )
-                           super(attribute, html_opts)
-                         end
-
-            render_field(field, input_html)
+            reveal = options.delete(:reveal) { false }
+            Field.new(@template, **options).render(
+              object,
+              attribute,
+              input_id: field_id(attribute)
+            ) do |html_opts, opts, error|
+              if reveal
+                render_reveal_password(merge_html_options(opts, html_opts), error) do |html_options|
+                  super(attribute, html_options)
+                end
+              else
+                html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error))
+                super(attribute, html_options)
+              end
+            end
           end
 
           private
+
+          def render_reveal_password(html_opts, error)
+            html_options = merge_html_options(
+              html_opts,
+              field_theme(:form_input_reveal, error: error),
+              { data: { input_format_target: "input" } }
+            )
+            render_input_group(
+              error:    error,
+              trailing: reveal_button,
+              data:     { controller: "input-format", input_format_type_value: "password" }
+            ) { yield html_options }
+          end
 
           def reveal_button
             html_options = merge_html_options(
               field_theme(:form_button_reveal),
               {
-                type:                       "button",
-                "aria-label":               "Show password",
-                "aria-pressed":             "false",
-                "data-input-format-target": "toggle",
-                "data-action":              "click->input-format#toggle"
+                type: "button",
+                aria: { label: "Show password", pressed: "false" },
+                data: { input_format_target: "toggle", action: "click->input-format#toggle" }
               }
             )
             @template.content_tag(:button, "", **html_options)

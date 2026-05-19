@@ -44,14 +44,14 @@ class ComboboxAutocompleteTest < ActionView::TestCase
   end
 
   def test_renders_options
-    doc = parse_html(render_autocomplete(options: [["London", "lon"], ["Paris", "par"]]))
+    doc = parse_html(render_autocomplete(options: [%w[London lon], %w[Paris par]]))
 
     assert_css doc, "li[data-value='lon']"
     assert_css doc, "li[data-value='par']"
   end
 
   def test_marks_matching_value_as_selected
-    doc = parse_html(render_autocomplete(options: [["London", "lon"]], value: "lon"))
+    doc = parse_html(render_autocomplete(options: [%w[London lon]], value: "lon"))
 
     assert_css doc, "li[data-value='lon'][aria-selected='true']"
   end

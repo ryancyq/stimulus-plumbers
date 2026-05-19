@@ -7,53 +7,60 @@ module StimulusPlumbers
       FORMAT_CONTROLLER   = "input-format"
       FORMAT_ACTION       = "input-combobox:changed->input-format#format"
 
-      def render(base_id:, options: {}, **kwargs, &block)
-        popover_id    = "#{base_id}_popover"
-        initial_value = options.dig(:input, :value)
+      def self.popover_id_for(trigger_id)
+        [trigger_id, "popover"].compact.join("_")
+      end
 
-        base_data = {
+      def render(trigger: {}, input: {}, popover: {}, **kwargs, &block)
+        popover_id    = self.class.popover_id_for(trigger[:id])
+        initial_value = input[:value]
+        haspopup      = popover.delete(:haspopup) { popover[:role] || "dialog" }
+
+        stimulus_data = {
           controller: "#{STIMULUS_CONTROLLER} #{FORMAT_CONTROLLER}",
           action:     FORMAT_ACTION
         }
-        base_data[:input_combobox_value_value] = initial_value if initial_value.present?
+        stimulus_data[:input_combobox_value_value] = initial_value if initial_value.present?
 
-        html_options = merge_html_options({ data: base_data }, kwargs)
+        html_options = merge_html_options({ data: stimulus_data }, kwargs)
 
         template.content_tag(:div, **html_options) do
           template.safe_join(
             [
-              trigger(popover_id, options),
-              hidden_input(options.fetch(:input, {})),
-              popover(popover_id, options, &block)
+              combobox_trigger(popover_id, trigger, haspopup),
+              hidden_input(input),
+              combobox_popover(popover_id, popover, &block)
             ]
           )
         end
       end
 
-      def trigger(popover_id, options)
-        haspopup = options.dig(:popover, :haspopup) || options.dig(:popover, :role) || "dialog"
+      private
+
+      def combobox_trigger(popover_id, trigger, haspopup)
         Combobox::Trigger.new(template).render(
           stimulus_controller: STIMULUS_CONTROLLER,
           popover_id:          popover_id,
           haspopup:            haspopup,
-          **options.fetch(:trigger, {})
+          **trigger
         )
       end
 
-      def popover(popover_id, options, &block)
+      def combobox_popover(popover_id, popover, &block)
         Combobox::Popover.new(template).render(
           stimulus_controller: STIMULUS_CONTROLLER,
           id:                  popover_id,
-          **options.fetch(:popover, {}),
+          **popover,
           &block
         )
       end
 
-      private
-
-      def hidden_input(opts)
-        data = { "#{STIMULUS_CONTROLLER}_target": "value" }.merge(opts.fetch(:data, {}))
-        template.tag.input(type: "hidden", name: opts[:name], value: opts[:value], data: data)
+      def hidden_input(input)
+        stimulus_data = merge_html_options(
+          { "#{STIMULUS_CONTROLLER}_target": "value" },
+          input.fetch(:data, {})
+        )
+        template.tag.input(type: "hidden", name: input[:name], value: input[:value], data: stimulus_data)
       end
     end
   end

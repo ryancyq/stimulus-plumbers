@@ -122,4 +122,38 @@ class PasswordTest < ActionView::TestCase
   def test_label_option_sets_label_text
     assert_includes build_field(label: "Secret").text, "Secret"
   end
+
+  # ── hint ──────────────────────────────────────────────────────────────────
+
+  def test_renders_hint
+    assert_css build_field(hint: "Min 8 characters"), "#sign_in_form_password_hint"
+  end
+
+  def test_reveal_renders_hint
+    assert_css build_field(reveal: true, hint: "Min 8 characters"), "#sign_in_form_password_hint"
+  end
+
+  # ── hide_label ────────────────────────────────────────────────────────────
+
+  def test_hide_label_keeps_label_in_dom
+    assert_css build_field(hide_label: true), "label[for='sign_in_form_password']"
+  end
+
+  # ── html option forwarding ─────────────────────────────────────────────────
+
+  def test_forwards_autocomplete_to_input
+    input = build_field(autocomplete: "current-password").at_css("input[type='password']")
+
+    assert_equal "current-password", input["autocomplete"]
+  end
+
+  def test_reveal_forwards_autocomplete_to_input
+    input = build_field(reveal: true, autocomplete: "current-password").at_css("input[type='password']")
+
+    assert_equal "current-password", input["autocomplete"]
+  end
+
+  def test_forwards_data_attributes_to_input
+    assert_equal "validator", build_field(data: { controller: "validator" }).at_css("input[type='password']")["data-controller"]
+  end
 end

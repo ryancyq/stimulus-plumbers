@@ -66,6 +66,13 @@ class ComboboxPopoverTest < ActionView::TestCase
     assert_includes html, "Popover body"
   end
 
+  def test_block_receives_id_as_argument
+    received_id = nil
+    render_popover { |id| received_id = id }
+
+    assert_equal "combo_popover", received_id
+  end
+
   def test_renders_content_kwarg
     html = render_popover(content: "Static content")
 

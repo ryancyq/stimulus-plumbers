@@ -9,16 +9,15 @@ class FieldsetTest < ActionView::TestCase
   end
 
   def component(**opts)
-    StimulusPlumbers::Form::Field.new(
-      object:    @form,
-      attribute: :email,
-      input_id:  "sign_in_form_email",
-      **opts
-    )
+    StimulusPlumbers::Form::Field.new(view, **opts)
   end
 
-  def render_inputs(field, inputs = "<input>", **fieldset_opts)
-    parse_html(StimulusPlumbers::Form::Fields::Fieldset.new(view).render(field, inputs, **fieldset_opts))
+  def render_inputs(field, inputs = "<input>")
+    parse_html(
+      StimulusPlumbers::Form::Fields::Fieldset.new(view).render(
+        @form, :email, "sign_in_form_email", field
+      ) { inputs.html_safe }
+    )
   end
 
   # ── structure ─────────────────────────────────────────────────────────────
@@ -31,6 +30,12 @@ class FieldsetTest < ActionView::TestCase
     doc = render_inputs(component(label: "Notifications"))
 
     assert_includes doc.at_css("legend").text, "Notifications"
+  end
+
+  def test_renders_legend_with_humanized_attribute_when_no_label
+    doc = render_inputs(component)
+
+    assert_includes doc.at_css("legend").text, "Email"
   end
 
   def test_renders_inputs_inside_fieldset
@@ -56,27 +61,37 @@ class FieldsetTest < ActionView::TestCase
 
   # ── hidden legend ──────────────────────────────────────────────────────────
 
-  def test_renders_legend_when_label_visibility_exclusive
-    doc = render_inputs(component(label_visibility: :exclusive))
+  def test_renders_legend_when_hide_label
+    doc = render_inputs(component(hide_label: true))
 
     assert_css doc, "legend"
   end
 
-  # ── fieldset opts passthrough ──────────────────────────────────────────────
+  # ── fieldset aria ──────────────────────────────────────────────────────────
 
-  def test_fieldset_opts_applied_to_fieldset_element
-    doc = render_inputs(component, "<input>", "aria-describedby": "some_hint", "aria-invalid": "true")
+  def test_fieldset_has_aria_invalid_when_error
+    @form.errors.add(:email, "is invalid")
+    doc = render_inputs(component)
 
-    fieldset = doc.at_css("fieldset")
+    assert_equal "true", doc.at_css("fieldset")["aria-invalid"]
+  end
 
-    assert_equal "some_hint", fieldset["aria-describedby"]
-    assert_equal "true",      fieldset["aria-invalid"]
+  def test_fieldset_has_aria_describedby_when_hint_present
+    doc = render_inputs(component(hint: "Pick one"))
+
+    assert_equal "sign_in_form_email_hint", doc.at_css("fieldset")["aria-describedby"]
+  end
+
+  def test_fieldset_has_aria_required_when_required
+    doc = render_inputs(component(required: true))
+
+    assert_equal "true", doc.at_css("fieldset")["aria-required"]
   end
 
   # ── hint ──────────────────────────────────────────────────────────────────
 
   def test_renders_hint_outside_fieldset
-    doc = render_inputs(component(details: "Pick one"))
+    doc = render_inputs(component(hint: "Pick one"))
 
     assert_css doc, "#sign_in_form_email_hint"
     assert_nil doc.at_css("fieldset #sign_in_form_email_hint")

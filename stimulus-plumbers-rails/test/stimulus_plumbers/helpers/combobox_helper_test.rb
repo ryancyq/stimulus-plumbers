@@ -145,4 +145,14 @@ class ComboboxHelperTest < ActionView::TestCase
 
     assert_css doc, "[data-controller~='input-combobox'].my-combobox"
   end
+
+  # ── outlet wiring ─────────────────────────────────────────────────────────
+
+  def test_calendar_outlet_wired_to_calendar_element
+    doc             = parse_html(sp_combobox_date)
+    date_controller = doc.at_css("[data-controller~='combobox-date']")
+    calendar        = doc.at_css("[data-controller~='calendar-month']")
+
+    assert_equal "##{calendar["id"]}", date_controller["data-combobox-date-calendar-month-outlet"]
+  end
 end

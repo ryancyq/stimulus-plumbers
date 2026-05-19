@@ -26,11 +26,11 @@ class TextTest < ActionView::TestCase
   end
 
   def test_renders_hint_when_details_option_given
-    assert_css build_field(:email_field, details: "We'll never share your email"), "#sign_in_form_email_hint"
+    assert_css build_field(:email_field, hint: "We'll never share your email"), "#sign_in_form_email_hint"
   end
 
   def test_aria_describedby_references_hint_id
-    doc = build_field(:email_field, details: "We'll never share your email")
+    doc = build_field(:email_field, hint: "We'll never share your email")
 
     assert_includes doc.at_css("input[type='email']")["aria-describedby"].to_s, "sign_in_form_email_hint"
   end
@@ -91,6 +91,63 @@ class TextTest < ActionView::TestCase
     doc = build_field(:email_field, required: true)
 
     assert_css doc, "label span[aria-hidden='true']"
+  end
+
+  # ── html option forwarding ─────────────────────────────────────────────
+
+  def test_forwards_placeholder_to_input
+    input = build_field(:email_field, placeholder: "you@example.com").at_css("input[type='email']")
+
+    assert_equal "you@example.com", input["placeholder"]
+  end
+
+  def test_forwards_autocomplete_to_input
+    assert_equal "email", build_field(:email_field, autocomplete: "email").at_css("input[type='email']")["autocomplete"]
+  end
+
+  def test_forwards_class_to_input
+    assert_includes build_field(:email_field, class: "custom").at_css("input[type='email']")["class"].to_s, "custom"
+  end
+
+  def test_forwards_data_attributes_to_input
+    input = build_field(:email_field, data: { controller: "my-ctrl" }).at_css("input[type='email']")
+
+    assert_equal "my-ctrl", input["data-controller"]
+  end
+
+  def test_number_field_forwards_min
+    assert_equal "0", build_field(:number_field, :age, min: 0).at_css("input[type='number']")["min"]
+  end
+
+  def test_number_field_forwards_max
+    assert_equal "120", build_field(:number_field, :age, max: 120).at_css("input[type='number']")["max"]
+  end
+
+  def test_number_field_forwards_step
+    assert_equal "5", build_field(:number_field, :age, step: 5).at_css("input[type='number']")["step"]
+  end
+
+  def test_range_field_forwards_min_and_max
+    input = build_field(:range_field, :age, min: 1, max: 100).at_css("input[type='range']")
+
+    assert_equal "1",   input["min"]
+    assert_equal "100", input["max"]
+  end
+
+  # ── hide_label ────────────────────────────────────────────────────────────
+
+  def test_hide_label_keeps_label_in_dom
+    assert_css build_field(:email_field, hide_label: true), "label[for='sign_in_form_email']"
+  end
+
+  # ── error override ────────────────────────────────────────────────────────
+
+  def test_error_override_renders_error_message
+    assert_includes build_field(:email_field, error: "Something went wrong").text, "Something went wrong"
+  end
+
+  def test_error_override_sets_aria_invalid
+    assert_equal "true", build_field(:email_field, error: "bad").at_css("input[type='email']")["aria-invalid"]
   end
 
   # ── text_field ────────────────────────────────────────────────────────────

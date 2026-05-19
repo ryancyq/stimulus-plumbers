@@ -31,49 +31,25 @@ module StimulusPlumbers
 
       private
 
-      def build_field(attribute, form_field_opts, input_id: field_id(attribute))
-        Field.new(
-          object:           object,
-          attribute:        attribute,
-          input_id:         input_id,
-          label:            form_field_opts[:label],
-          details:          form_field_opts[:details],
-          error:            form_field_opts[:error],
-          required:         form_field_opts.fetch(:required, false),
-          label_visibility: form_field_opts.fetch(:label_visibility, :visible),
-          layout:           form_field_opts.fetch(:layout, :stacked)
+      def render_fieldset(attribute, field, &block)
+        Fields::Fieldset.new(@template).render(object, attribute, field_id(attribute), field, &block)
+      end
+
+      def render_input_group(error:, leading: nil, trailing: nil, **wrapper_opts, &block)
+        Fields::InputGroup.new(@template).render(leading: leading, trailing: trailing, error: error, **wrapper_opts, &block)
+      end
+
+      def render_combobox(attribute, input_id:, opts:, err:, **wrapper_opts, &block)
+        combobox_opts = opts.deep_merge(
+          input:   { name: field_name(attribute) },
+          trigger: { id: input_id }
         )
-      end
 
-      def render_field(field, input_html)
-        field.render(@template, theme, input_html)
-      end
-
-      def render_fieldset(field, inputs_html, **fieldset_opts)
-        Fields::Fieldset.new(@template).render(field, inputs_html, **fieldset_opts)
-      end
-
-      def render_input_group(input_tag, field, trailing:, **wrapper_opts)
-        Fields::InputGroup.new(@template).render(input_tag, trailing: trailing, error: field.error?, **wrapper_opts)
-      end
-
-      def render_combobox(attribute, field, opts, wrapper_data: {}, html_options: {}, &block)
-        trigger_aria = field.error? ? { trigger: { aria: { invalid: "true" } } } : {}
         Components::Combobox.new(@template).render(
-          base_id: field_id(attribute),
-          options: opts.deep_merge(input: { name: field_name(attribute) }).deep_merge(trigger_aria),
-          **merge_html_options(
-            html_options,
-            { data: wrapper_data },
-            field_theme(:form_combobox, error: field.error?),
-            field.html_options
-          ),
+          **combobox_opts,
+          **merge_html_options(wrapper_opts, field_theme(:form_combobox, error: err)),
           &block
         )
-      end
-
-      def extract_options(options)
-        [options.except(*Field::OPTIONS), options.slice(*Field::OPTIONS)]
       end
 
       def field_theme(key, **variants)

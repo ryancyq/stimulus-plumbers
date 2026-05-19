@@ -6,61 +6,74 @@ module StimulusPlumbers
       module Inputs
         module Datetime
           def date_field(attribute, options = {})
-            rails_opts, form_field_opts = extract_options(options)
-            html_native = form_field_opts.delete(:html_native) { false }
-            field       = build_field(attribute, form_field_opts)
-
-            if html_native
-              html_opts = merge_html_options(rails_opts, field_theme(:form_input, error: field.error?), field.html_options)
-              render_field(field, super(attribute, html_opts))
-            else
-              current_value = object&.public_send(attribute)
-              opts = Components::Combobox::Date.default_opts.deep_merge(
-                input: {
-                  value: current_value,
-                  data:  { combobox_date_date_value: current_value }
-                }
-              )
-              render_field(
-                field,
-                render_combobox(
-                  attribute,
-                  field,
-                  opts,
-                  wrapper_data: { input_format_type_value: "date" }
-                ) { Components::Combobox::Date.new(@template).render(value: current_value) }
-              )
+            html_native = options.delete(:html_native) { false }
+            Field.new(@template, **options).render(
+              object,
+              attribute,
+              input_id: field_id(attribute)
+            ) do |html_opts, opts, error|
+              if html_native
+                html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error))
+                super(attribute, html_options)
+              else
+                render_date_combobox(attribute, html_opts, error)
+              end
             end
           end
 
           def time_field(attribute, options = {})
-            rails_opts, form_field_opts = extract_options(options)
-            html_native = form_field_opts.delete(:html_native) { false }
-            field       = build_field(attribute, form_field_opts)
-
-            if html_native
-              html_opts = merge_html_options(rails_opts, field_theme(:form_input, error: field.error?), field.html_options)
-              render_field(field, super(attribute, html_opts))
-            else
-              format        = rails_opts.delete(:format) { :h12 }
-              step          = rails_opts.delete(:step) { 1 }
-              current_value = object&.public_send(attribute)
-              opts = Components::Combobox::Time.default_opts.deep_merge(
-                input: { value: current_value }
-              )
-              render_field(
-                field,
-                render_combobox(
-                  attribute,
-                  field,
-                  opts,
-                  wrapper_data: {
-                    input_format_type_value:    "time",
-                    input_format_options_value: { format: format }.to_json
-                  }
-                ) { Components::Combobox::Time.new(@template).render(format: format, step: step, value: current_value) }
-              )
+            html_native = options.delete(:html_native) { false }
+            format      = options.delete(:format) { :h12 }
+            step        = options.delete(:step) { 1 }
+            Field.new(@template, **options).render(
+              object,
+              attribute,
+              input_id: field_id(attribute)
+            ) do |html_opts, opts, error|
+              if html_native
+                html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error))
+                super(attribute, html_options)
+              else
+                render_time_combobox(attribute, html_opts, error, format: format, step: step)
+              end
             end
+          end
+
+          private
+
+          def render_date_combobox(attribute, html_opts, error)
+            current_value = object&.public_send(attribute)
+            opts = Components::Combobox::Date.default_opts.deep_merge(
+              input:   {
+                value: current_value,
+                data:  { combobox_date_date_value: current_value }
+              },
+              trigger: { aria: html_opts[:aria] }
+            )
+            render_combobox(
+              attribute,
+              input_id: html_opts[:id],
+              opts:     opts,
+              err:      error,
+              data:     { input_format_type_value: "date" }
+            ) do |popover_id|
+              Components::Combobox::Date.new(@template).render(value: current_value, popover_id: popover_id)
+            end
+          end
+
+          def render_time_combobox(attribute, html_opts, error, format:, step:)
+            current_value = object&.public_send(attribute)
+            opts = Components::Combobox::Time.default_opts.deep_merge(
+              input:   { value: current_value },
+              trigger: { aria: html_opts[:aria] }
+            )
+            render_combobox(
+              attribute,
+              input_id: html_opts[:id],
+              opts:     opts,
+              err:      error,
+              data:     { input_format_type_value: "time", input_format_options_value: { format: format }.to_json }
+            ) { Components::Combobox::Time.new(@template).render(format: format, step: step, value: current_value) }
           end
         end
       end

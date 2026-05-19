@@ -6,11 +6,15 @@ module StimulusPlumbers
       module Inputs
         module Choice
           def check_box(attribute, options = {}, checked_value = "1", unchecked_value = "0")
-            rails_opts, form_field_opts = extract_options(options)
-            form_field_opts[:layout] ||= :inline
-            field     = build_field(attribute, form_field_opts)
-            html_opts = merge_html_options(rails_opts, field_theme(:form_checkbox, error: field.error?), field.html_options)
-            render_field(field, super(attribute, html_opts, checked_value, unchecked_value))
+            options[:layout] ||= :inline
+            Field.new(@template, **options).render(
+              object,
+              attribute,
+              input_id: field_id(attribute)
+            ) do |html_opts, opts, error|
+              html_options = merge_html_options(opts, html_opts, field_theme(:form_checkbox, error: error))
+              super(attribute, html_options, checked_value, unchecked_value)
+            end
           end
 
           def collection_check_boxes(
@@ -22,24 +26,24 @@ module StimulusPlumbers
             html_options = {},
             &block
           )
-            rails_opts, form_field_opts = extract_options(options)
-            form_field_opts[:layout] ||= :inline
-            field         = build_field(attribute, form_field_opts)
-            item_opts     = merge_html_options(html_options, field_theme(:form_checkbox, error: field.error?))
-            fieldset_opts = field.html_options.except(:id, :required)
-            render_fieldset(
-              field,
-              super(attribute, collection, value_method, text_method, rails_opts, item_opts, &block),
-              **fieldset_opts
-            )
+            options[:layout] ||= :inline
+            field = Field.new(@template, **options)
+            render_fieldset(attribute, field) do |error|
+              item_opts = merge_html_options(html_options, field_theme(:form_checkbox, error: error))
+              super(attribute, collection, value_method, text_method, {}, item_opts, &block)
+            end
           end
 
           def radio_button(attribute, tag_value, options = {})
-            rails_opts, form_field_opts = extract_options(options)
-            form_field_opts[:layout] ||= :inline
-            field     = build_field(attribute, form_field_opts, input_id: field_id(attribute, tag_value))
-            html_opts = merge_html_options(rails_opts, field_theme(:form_radio, error: field.error?), field.html_options)
-            render_field(field, super(attribute, tag_value, html_opts))
+            options[:layout] ||= :inline
+            Field.new(@template, **options).render(
+              object,
+              attribute,
+              input_id: field_id(attribute, tag_value)
+            ) do |html_opts, opts, error|
+              html_options = merge_html_options(opts, html_opts, field_theme(:form_radio, error: error))
+              super(attribute, tag_value, html_options)
+            end
           end
 
           def collection_radio_buttons(
@@ -51,16 +55,12 @@ module StimulusPlumbers
             html_options = {},
             &block
           )
-            rails_opts, form_field_opts = extract_options(options)
-            form_field_opts[:layout] ||= :inline
-            field         = build_field(attribute, form_field_opts)
-            item_opts     = merge_html_options(html_options, field_theme(:form_radio, error: field.error?))
-            fieldset_opts = field.html_options.except(:id, :required)
-            render_fieldset(
-              field,
-              super(attribute, collection, value_method, text_method, rails_opts, item_opts, &block),
-              **fieldset_opts
-            )
+            options[:layout] ||= :inline
+            field = Field.new(@template, **options)
+            render_fieldset(attribute, field) do |error|
+              item_opts = merge_html_options(html_options, field_theme(:form_radio, error: error))
+              super(attribute, collection, value_method, text_method, {}, item_opts, &block)
+            end
           end
         end
       end

@@ -69,7 +69,7 @@ class SelectTest < ActionView::TestCase
   end
 
   def test_select_renders_details_hint
-    assert_css build_select(:country, nil, details: "Select your country"), "#sign_in_form_country_hint"
+    assert_css build_select(:country, nil, hint: "Select your country"), "#sign_in_form_country_hint"
   end
 
   def test_select_renders_error_message
@@ -77,6 +77,36 @@ class SelectTest < ActionView::TestCase
 
     assert_css build_select(:country), "p[role='alert']"
     assert_includes build_select(:country).text, "is invalid"
+  end
+
+  def test_select_with_include_blank_renders_blank_option
+    doc = build_select(:country, SIMPLE_OPTIONS, include_blank: true)
+
+    assert_css doc, "li[role='option'][data-value='']"
+  end
+
+  def test_select_with_include_blank_string_uses_it_as_label
+    doc = build_select(:country, SIMPLE_OPTIONS, include_blank: "Choose...")
+
+    option = doc.at_css("li[role='option'][data-value='']")
+
+    assert_not_nil option
+    assert_includes option.text, "Choose..."
+  end
+
+  def test_select_with_prompt_renders_disabled_first_option
+    doc = build_select(:country, SIMPLE_OPTIONS, prompt: "Select a country")
+
+    assert_css doc, "li[role='option'][data-value=''][aria-disabled='true']"
+    assert_includes doc.at_css("li[role='option'][data-value='']").text, "Select a country"
+  end
+
+  def test_select_explicit_selected_overrides_model_value
+    @form.define_singleton_method(:country) { "us" }
+    doc = build_select(:country, SIMPLE_OPTIONS, selected: "ca")
+
+    assert_css doc, "li[role='option'][data-value='ca'][aria-selected='true']"
+    assert_css doc, "li[role='option'][data-value='us'][aria-selected='false']"
   end
 
   # ── select html_native: true ──────────────────────────────────────────────
@@ -236,7 +266,7 @@ class SelectTest < ActionView::TestCase
     doc = build_time_zone_select(:timezone)
 
     assert_css doc, "ul[role='listbox']"
-    assert doc.css("li[role='option']").any?, "Expected zone options to be rendered"
+    assert_predicate doc.css("li[role='option']"), :any?, "Expected zone options to be rendered"
   end
 
   def test_time_zone_select_pre_selects_from_model_value
@@ -250,7 +280,7 @@ class SelectTest < ActionView::TestCase
     priority = [ActiveSupport::TimeZone["Hawaii"], ActiveSupport::TimeZone["Alaska"]]
     doc      = build_time_zone_select(:timezone, priority)
 
-    assert doc.css("li[role='group']").size >= 2, "Expected at least two option groups"
+    assert_operator doc.css("li[role='group']").size, :>=, 2, "Expected at least two option groups"
   end
 
   def test_time_zone_select_with_priority_zones_excludes_them_from_remaining
@@ -258,6 +288,7 @@ class SelectTest < ActionView::TestCase
     doc      = build_time_zone_select(:timezone, priority)
 
     groups = doc.css("li[role='group']")
+
     assert_equal 2, groups.size
 
     priority_group   = groups[0]

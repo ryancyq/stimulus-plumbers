@@ -5,10 +5,10 @@ require "test_helper"
 class ActionListHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::ActionListHelper
 
-  def test_renders_container_div
+  def test_renders_container_ul
     html = sp_action_list { "" }
 
-    assert_includes html, "<div"
+    assert_includes html, "<ul"
   end
 
   def test_renders_section_with_ul
@@ -20,14 +20,14 @@ class ActionListHelperTest < ActionView::TestCase
   def test_renders_section_title
     html = sp_action_list_section(title: "Navigation") { "" }
 
-    assert_includes html, "<p"
+    assert_includes html, "<span"
     assert_includes html, "Navigation"
   end
 
   def test_renders_no_title_when_absent
     html = sp_action_list_section { "" }
 
-    refute_includes html, "<p"
+    refute_includes html, "aria-hidden"
   end
 
   def test_item_renders_button_by_default

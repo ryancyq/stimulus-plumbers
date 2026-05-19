@@ -25,6 +25,13 @@ class CardHelperTest < ActionView::TestCase
     refute_includes html, "<h2"
   end
 
+  def test_renders_title_at_custom_heading_level
+    html = sp_card(title: "My Card", title_tag: :h3) { "" }
+
+    assert_includes html, "<h3"
+    refute_includes html, "<h2"
+  end
+
   def test_merges_custom_class
     html = sp_card(class: "elevated") { "" }
 
@@ -54,6 +61,13 @@ class CardHelperTest < ActionView::TestCase
   def test_section_renders_no_title_when_absent
     html = sp_card_section { "" }
 
+    refute_includes html, "<h3"
+  end
+
+  def test_section_renders_title_at_custom_heading_level
+    html = sp_card_section(title: "Section One", title_tag: :h4) { "" }
+
+    assert_includes html, "<h4"
     refute_includes html, "<h3"
   end
 

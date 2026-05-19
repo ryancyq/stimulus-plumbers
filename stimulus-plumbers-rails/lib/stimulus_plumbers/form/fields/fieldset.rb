@@ -4,42 +4,45 @@ module StimulusPlumbers
   module Form
     module Fields
       class Fieldset < Plumber::Base
-        def render(field, inputs_html, **fieldset_opts)
-          Group.new(template).render(layout: field.layout, error: field.error?) do
-            (fieldset_tag(field, inputs_html, **fieldset_opts) + field_hint(field) + field_errors(field)).html_safe
+        def render(object, attribute, input_id, field, &block)
+          error         = field.error?(object, attribute)
+          fieldset_opts = build_fieldset_aria(field, object, attribute, input_id, error)
+          Group.new(template).render(layout: field.layout, error: error) do
+            template.safe_join(
+              [
+                template.content_tag(:fieldset, **fieldset_opts) do
+                  template.safe_join(
+                    [
+                      legend(field, attribute),
+                      yield(error)
+                    ]
+                  )
+                end,
+                field.render_hint(input_id),
+                field.render_errors(object, attribute, input_id)
+              ]
+            )
           end
         end
 
         private
 
-        def fieldset_tag(field, inputs_html, **opts)
-          template.content_tag(:fieldset, **opts) do
-            (legend(field) + inputs_html.html_safe).html_safe
-          end
+        def legend(field, attribute)
+          Label.new(template).render(
+            text:     field.label || attribute.to_s.humanize,
+            required: field.required,
+            hidden:   field.label_hidden?,
+            tag:      :legend
+          )
         end
 
-        def legend(field)
-          inner = field.label_text.dup.html_safe
-          if field.required
-            mark_opts = merge_html_options(theme.resolve(:form_required_mark))
-            inner += template.content_tag(:span, "*", "aria-hidden": "true", **mark_opts)
-          end
-          html_options = merge_html_options(theme.resolve(:form_label, required: field.required, hidden: field.label_hidden?))
-          template.content_tag(:legend, inner, **html_options)
-        end
-
-        def field_hint(field)
-          return "".html_safe unless field.details.present?
-
-          Hint.new(template).render(text: field.details, id: field.hint_id)
-        end
-
-        def field_errors(field)
-          return "".html_safe if field.errors.none?
-
-          field.errors.map.with_index do |message, i|
-            Error.new(template).render(message: message, id: field.error_ids[i])
-          end.join.html_safe
+        def build_fieldset_aria(field, object, attribute, input_id, error)
+          opts = {}
+          db = field.described_by(object, attribute, input_id)
+          opts[:"aria-describedby"] = db      if db
+          opts[:"aria-invalid"]     = "true"  if error
+          opts[:"aria-required"]    = "true"  if field.required
+          opts
         end
       end
     end

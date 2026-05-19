@@ -28,7 +28,7 @@ class FileFieldTest < ActionView::TestCase
   # ── hint ──────────────────────────────────────────────────────────────────
 
   def test_renders_hint_when_details_given
-    assert_css build_field(details: "Accepted formats: PDF, PNG"), "#sign_in_form_email_hint"
+    assert_css build_field(hint: "Accepted formats: PDF, PNG"), "#sign_in_form_email_hint"
   end
 
   # ── error state ───────────────────────────────────────────────────────────
@@ -76,5 +76,25 @@ class FileFieldTest < ActionView::TestCase
     input = build_field.at_css("input[type='file']")
 
     assert_nil input["aria-required"]
+  end
+
+  # ── label option ──────────────────────────────────────────────────────────
+
+  def test_label_option_overrides_label_text
+    assert_includes build_field(label: "Upload file").text, "Upload file"
+  end
+
+  # ── html option forwarding ─────────────────────────────────────────────────
+
+  def test_forwards_accept_to_input
+    assert_equal "image/*", build_field(accept: "image/*").at_css("input[type='file']")["accept"]
+  end
+
+  def test_forwards_multiple_to_input
+    assert build_field(multiple: true).at_css("input[type='file']").key?("multiple"), "Expected multiple attribute"
+  end
+
+  def test_forwards_data_attributes_to_input
+    assert_equal "uploader", build_field(data: { controller: "uploader" }).at_css("input[type='file']")["data-controller"]
   end
 end

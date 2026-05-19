@@ -57,4 +57,14 @@ class SubmitTest < ActionView::TestCase
 
     assert_no_css doc, "div"
   end
+
+  def test_submit_accepts_hash_as_first_arg
+    doc = build_form { |f| f.submit class: "btn" }
+
+    input = doc.at_css("input[type='submit']")
+
+    assert_not_nil input
+    assert_includes input["class"].to_s, "btn"
+    refute_empty input["value"].to_s
+  end
 end

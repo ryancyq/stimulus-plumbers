@@ -49,7 +49,7 @@ class DatetimeTest < ActionView::TestCase
   end
 
   def test_date_renders_details_hint
-    assert_css build_date_field(details: "Select your birthday"), "#sign_in_form_birthday_hint"
+    assert_css build_date_field(hint: "Select your birthday"), "#sign_in_form_birthday_hint"
   end
 
   def test_date_renders_error_message
@@ -61,6 +61,30 @@ class DatetimeTest < ActionView::TestCase
 
   def test_date_html_native_option_does_not_leak_into_attributes
     assert_nil build_date_field(html_native: false).at_css("input[role='combobox']")["html_native"]
+  end
+
+  def test_date_pre_populates_hidden_input_from_model_value
+    @form.define_singleton_method(:birthday) { "2000-06-15" }
+
+    assert_equal "2000-06-15", build_date_field.at_css("input[type='hidden'][name='sign_in_form[birthday]']")["value"]
+  end
+
+  def test_date_sets_combobox_value_data_from_model_value
+    @form.define_singleton_method(:birthday) { "2000-06-15" }
+
+    assert_css build_date_field, "[data-input-combobox-value-value='2000-06-15']"
+  end
+
+  def test_date_renders_error_message_with_error_override
+    assert_includes build_date_field(error: "Invalid date").text, "Invalid date"
+  end
+
+  def test_date_calendar_outlet_wired_to_calendar_element
+    doc             = build_date_field
+    date_controller = doc.at_css("[data-controller~='combobox-date']")
+    calendar        = doc.at_css("[data-controller~='calendar-month']")
+
+    assert_equal "##{calendar["id"]}", date_controller["data-combobox-date-calendar-month-outlet"]
   end
 
   # ── date_field html_native: true ──────────────────────────────────────────
@@ -110,7 +134,7 @@ class DatetimeTest < ActionView::TestCase
   end
 
   def test_time_renders_details_hint
-    assert_css build_time_field(details: "Use 24-hour format"), "#sign_in_form_meeting_time_hint"
+    assert_css build_time_field(hint: "Use 24-hour format"), "#sign_in_form_meeting_time_hint"
   end
 
   def test_time_renders_error_message
@@ -130,6 +154,23 @@ class DatetimeTest < ActionView::TestCase
 
   def test_time_html_native_option_does_not_leak_into_attributes
     assert_nil build_time_field(html_native: false).at_css("input[role='combobox']")["html_native"]
+  end
+
+  def test_time_format_h24_renders_two_drums
+    doc = build_time_field(format: :h24)
+
+    assert_equal 2, doc.css("ul[role='listbox']").length
+    assert_no_css doc, "ul[aria-label='Period']"
+  end
+
+  def test_time_step_15_reduces_minute_options
+    doc = build_time_field(step: 15)
+
+    assert_equal 4, doc.css("ul[aria-label='Minute'] li").length
+  end
+
+  def test_time_renders_error_message_with_error_override
+    assert_includes build_time_field(error: "Invalid time").text, "Invalid time"
   end
 
   # ── time_field html_native: true ──────────────────────────────────────────

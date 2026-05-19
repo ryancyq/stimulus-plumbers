@@ -66,6 +66,7 @@ class ComboboxTimeTest < ActionView::TestCase
 
     assert_css doc, "ul[aria-label='Hour'] li[aria-selected='true']"
     selected = doc.at_css("ul[aria-label='Hour'] li[aria-selected='true']")
+
     assert_equal "2", selected.text.strip
   end
 
@@ -73,6 +74,7 @@ class ComboboxTimeTest < ActionView::TestCase
     doc = parse_html(render_time(value: "09:45"))
 
     selected = doc.at_css("ul[aria-label='Minute'] li[aria-selected='true']")
+
     assert_equal "45", selected.text.strip
   end
 

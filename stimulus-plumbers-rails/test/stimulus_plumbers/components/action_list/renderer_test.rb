@@ -17,10 +17,23 @@ class ActionListRendererTest < ActionView::TestCase
   end
 
   # list
-  def test_list_renders_div
+  def test_list_renders_ul
     html = renderer.render { "" }
 
-    assert_includes html, "<div"
+    assert_includes html, "<ul"
+  end
+
+  def test_list_has_role_list_by_default
+    html = renderer.render { "" }
+
+    assert_includes html, 'role="list"'
+  end
+
+  def test_list_role_can_be_overridden
+    html = renderer.render(role: "menu") { "" }
+
+    assert_includes html, 'role="menu"'
+    refute_includes html, 'role="list"'
   end
 
   def test_list_merges_custom_class
@@ -37,24 +50,24 @@ class ActionListRendererTest < ActionView::TestCase
   end
 
   # section
-  def test_section_renders_div_with_ul
+  def test_section_renders_li_with_ul
     html = renderer.section { "" }
 
-    assert_includes html, "<div"
+    assert_includes html, "<li"
     assert_includes html, "<ul"
   end
 
-  def test_section_renders_title_in_p
+  def test_section_renders_title_in_span
     html = renderer.section(title: "Navigation") { "" }
 
-    assert_includes html, "<p"
+    assert_includes html, "<span"
     assert_includes html, "Navigation"
   end
 
-  def test_section_omits_p_when_no_title
+  def test_section_omits_title_span_when_no_title
     html = renderer.section { "" }
 
-    refute_includes html, "<p"
+    refute_includes html, "aria-hidden"
   end
 
   def test_section_renders_block_inside_ul
@@ -62,6 +75,24 @@ class ActionListRendererTest < ActionView::TestCase
 
     assert_includes html, "<ul"
     assert_includes html, "Action"
+  end
+
+  def test_section_does_not_set_role_none_on_li
+    html = renderer.section { "" }
+
+    refute_includes html, 'role="none"'
+  end
+
+  def test_section_inner_ul_has_aria_label_when_title_given
+    html = renderer.section(title: "Navigation") { "" }
+
+    assert_includes html, 'aria-label="Navigation"'
+  end
+
+  def test_section_inner_ul_has_no_role_group
+    html = renderer.section { "" }
+
+    refute_includes html, 'role="group"'
   end
 
   # item

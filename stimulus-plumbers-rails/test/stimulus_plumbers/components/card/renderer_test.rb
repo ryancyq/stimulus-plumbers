@@ -37,6 +37,13 @@ class CardRendererTest < ActionView::TestCase
     refute_includes html, "<h2"
   end
 
+  def test_card_renders_title_at_custom_heading_level
+    html = renderer.render(title: "My Card", title_tag: :h3) { "" }
+
+    assert_includes html, "<h3"
+    refute_includes html, "<h2"
+  end
+
   def test_card_merges_custom_class
     html = renderer.render(class: "elevated") { "" }
 
@@ -67,6 +74,13 @@ class CardRendererTest < ActionView::TestCase
   def test_section_omits_h3_when_no_title
     html = renderer.section { "" }
 
+    refute_includes html, "<h3"
+  end
+
+  def test_section_renders_title_at_custom_heading_level
+    html = renderer.section(title: "Section One", title_tag: :h4) { "" }
+
+    assert_includes html, "<h4"
     refute_includes html, "<h3"
   end
 
