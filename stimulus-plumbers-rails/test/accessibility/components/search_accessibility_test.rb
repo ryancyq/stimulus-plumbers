@@ -34,7 +34,7 @@ class SearchAccessibilityTest < ApplicationAccessibilityTestCase
 
   def test_clear_button_hidden_again_after_input_cleared_by_typing
     fill_in "Search", with: "hello"
-    field = find("input[type='search']")
+    field = find("input[role='combobox']")
     "hello".length.times { field.send_keys(:backspace) }
 
     assert_selector "button[aria-label='Clear search']", visible: :hidden
@@ -60,7 +60,7 @@ class SearchAccessibilityTest < ApplicationAccessibilityTestCase
     fill_in "Search", with: "hello"
     find("button[aria-label='Clear search']").click
 
-    input_id = find("input[type='search']")[:id]
+    input_id = find("input[role='combobox']")[:id]
 
     assert_equal input_id, evaluate_script("document.activeElement.id")
   end
