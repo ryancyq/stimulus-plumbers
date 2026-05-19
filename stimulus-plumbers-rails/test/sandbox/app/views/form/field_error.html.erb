@@ -5,7 +5,7 @@
   <%= f.text_field :name, label: "Full name", required: true %>
 
   <h2>With hint</h2>
-  <%= f.email_field :email, label: "Email", details: "We'll never share your email." %>
+  <%= f.email_field :email, label: "Email", hint: "We'll never share your email." %>
 
   <h2>Error from model</h2>
   <%# @form already has errors on :email and :name added in the controller %>

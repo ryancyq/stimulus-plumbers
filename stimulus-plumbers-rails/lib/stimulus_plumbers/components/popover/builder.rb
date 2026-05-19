@@ -8,8 +8,8 @@ module StimulusPlumbers
 
         def initialize(template)
           @template = template
-          @activator_html = "".html_safe
-          @content_html   = "".html_safe
+          @activator_html = nil
+          @content_html   = nil
         end
 
         def activator(&block)

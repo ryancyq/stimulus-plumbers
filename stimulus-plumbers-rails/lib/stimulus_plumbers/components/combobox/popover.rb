@@ -4,14 +4,18 @@ module StimulusPlumbers
   module Components
     class Combobox
       class Popover < Plumber::Base
-        def render(stimulus_controller:, id:, tag: :div, role: nil, label: nil, content: nil, data: {}, **_rest, &block)
-          base_data = { "#{stimulus_controller}_target": "popover" }
+        def render(stimulus_controller:, id:, tag: :div, role: nil, label: nil, labelledby: nil, content: nil, data: {}, &block)
+          stimulus_data = { "#{stimulus_controller}_target": "popover" }
 
-          attrs = { id: id, hidden: "", data: merge_data_options(base_data, data.symbolize_keys) }
+          attrs = { id: id, hidden: "", data: merge_data_options(stimulus_data, data) }
           attrs[:role] = role if role
-          attrs[:aria] = { label: label } if label
+          if labelledby
+            attrs[:aria] = { labelledby: labelledby }
+          elsif label
+            attrs[:aria] = { label: label }
+          end
 
-          html_content = block_given? ? template.capture(&block) : content
+          html_content = block_given? ? template.capture(id, &block) : content
           template.content_tag(tag, **attrs) { html_content }
         end
       end

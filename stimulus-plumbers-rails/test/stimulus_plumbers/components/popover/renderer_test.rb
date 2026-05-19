@@ -7,7 +7,8 @@ class PopoverRendererTest < ActionView::TestCase
     StimulusPlumbers::Components::Popover.new(self)
   end
 
-  # attr_readers
+  # ── attr_readers ──────────────────────────────────────────────────────────
+
   def test_exposes_template
     assert_equal self, renderer.template
   end
@@ -16,44 +17,29 @@ class PopoverRendererTest < ActionView::TestCase
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
-  # rendering
-  def test_renders_outer_div
-    html = renderer.render { |_p| nil }
+  # ── rendering ─────────────────────────────────────────────────────────────
 
-    assert_includes html, "<div"
+  def test_renders_outer_div
+    assert_css parse_html(renderer.render { |_p| nil }), "div"
   end
 
   def test_renders_activator_content
-    html = renderer.render do |p|
-      p.activator { "Open" }
-    end
-
-    assert_includes html, "Open"
+    assert_includes parse_html(renderer.render { |p| p.activator { "Open" } }).text, "Open"
   end
 
   def test_renders_content
-    html = renderer.render do |p|
-      p.content { "Popover body" }
-    end
-
-    assert_includes html, "Popover body"
+    assert_includes parse_html(renderer.render { |p| p.content { "Popover body" } }).text, "Popover body"
   end
 
   def test_wraps_content_in_template_when_interactive
-    html = renderer.render(interactive: true) do |p|
-      p.content { "Hidden" }
-    end
-
-    assert_includes html, "<template"
+    assert_css parse_html(renderer.render(interactive: true) { |p| p.content { "Hidden" } }), "template"
   end
 
   def test_does_not_wrap_content_in_template_when_not_interactive
-    html = renderer.render(interactive: false) do |p|
-      p.content { "Visible" }
-    end
+    doc = parse_html(renderer.render(interactive: false) { |p| p.content { "Visible" } })
 
-    assert_includes html, "Visible"
-    refute_includes html, "<template"
+    assert_includes doc.text, "Visible"
+    assert_no_css   doc, "template"
   end
 
   def test_activator_appears_before_content
@@ -65,16 +51,16 @@ class PopoverRendererTest < ActionView::TestCase
     assert_operator html.index("trigger"), :<, html.index("body")
   end
 
-  def test_merges_custom_class
-    html = renderer.render(class: "dropdown") { |_p| nil }
+  # ── html options ──────────────────────────────────────────────────────────
 
-    assert_includes html, "dropdown"
+  def test_merges_custom_class
+    assert_css parse_html(renderer.render(class: "dropdown") { |_p| nil }), ".dropdown"
   end
 
   def test_passes_html_options
-    html = renderer.render(id: "my-popover", data: { controller: "popover" }) { |_p| nil }
+    doc = parse_html(renderer.render(id: "my-popover", data: { controller: "popover" }) { |_p| nil })
 
-    assert_includes html, 'id="my-popover"'
-    assert_includes html, 'data-controller="popover"'
+    assert_css doc, "#my-popover"
+    assert_css doc, "[data-controller='popover']"
   end
 end

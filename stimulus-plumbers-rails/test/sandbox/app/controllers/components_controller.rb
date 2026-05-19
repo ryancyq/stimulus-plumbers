@@ -17,4 +17,12 @@ class ComponentsController < ApplicationController
   def combobox; end
 
   def search; end
+
+  def button; end
+
+  def action_list; end
+
+  def card; end
+
+  def popover; end
 end

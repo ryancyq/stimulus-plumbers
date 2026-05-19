@@ -5,8 +5,8 @@ module StimulusPlumbers
     module Fields
       class Error < Plumber::Base
         def render(message:, id:)
-          klass = theme.resolve(:form_error).fetch(:classes, "")
-          template.content_tag(:p, message, id: id, class: klass.presence, role: "alert")
+          html_options = merge_html_options(theme.resolve(:form_error))
+          template.content_tag(:p, message, id: id, role: "alert", **html_options)
         end
       end
     end

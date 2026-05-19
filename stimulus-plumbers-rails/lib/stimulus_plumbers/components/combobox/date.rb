@@ -14,8 +14,12 @@ module StimulusPlumbers
           }
         end
 
-        def render(value: nil, **_kwargs)
-          calendar_id = "combobox_date_#{SecureRandom.hex(8)}_calendar"
+        def self.calendar_id_for(popover_id)
+          [popover_id, "calendar"].compact.join("_")
+        end
+
+        def render(value: nil, popover_id: nil)
+          calendar_id = self.class.calendar_id_for(popover_id)
 
           data = {
             controller:          STIMULUS_CONTROLLER,

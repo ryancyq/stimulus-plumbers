@@ -3,63 +3,59 @@
 require "action_view/version"
 
 require_relative "field"
-require_relative "fields/choice"
-require_relative "fields/combobox"
-require_relative "fields/file"
-require_relative "fields/password"
-require_relative "fields/renderer"
-require_relative "fields/search"
-require_relative "fields/select"
-require_relative "fields/text"
-require_relative "fields/text_area"
-require_relative "fields/submit"
+require_relative "fields/fieldset"
+require_relative "fields/inputs/choice"
+require_relative "fields/inputs/datetime"
+require_relative "fields/inputs/file"
+require_relative "fields/inputs/password"
+require_relative "fields/inputs/search"
+require_relative "fields/inputs/select"
+require_relative "fields/inputs/select/grouped"
+require_relative "fields/inputs/select/timezone"
+require_relative "fields/inputs/select/weekday"
+require_relative "fields/inputs/submit"
+require_relative "fields/inputs/text"
+require_relative "fields/inputs/text_area"
 require_relative "../plumber/html_options"
 
 module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
       include Plumber::HtmlOptions
-      include Fields::Choice
-      include Fields::Combobox
-      include Fields::File
-      include Fields::Password
-      include Fields::Search
-      include Fields::Select
-      include Fields::Submit
-      include Fields::Text
-      include Fields::TextArea
+      include Fields::Inputs::Choice
+      include Fields::Inputs::Datetime
+      include Fields::Inputs::File
+      include Fields::Inputs::Password
+      include Fields::Inputs::Search
+      include Fields::Inputs::Select
+      include Fields::Inputs::Select::Grouped
+      include Fields::Inputs::Select::Timezone
+      include Fields::Inputs::Select::Weekday
+      include Fields::Inputs::Submit
+      include Fields::Inputs::Text
+      include Fields::Inputs::TextArea
 
       private
 
-      def build_field(attribute, form_field_opts, input_id: field_id(attribute))
-        Field.new(
-          object:           object,
-          attribute:        attribute,
-          input_id:         input_id,
-          label:            form_field_opts[:label],
-          details:          form_field_opts[:details],
-          error:            form_field_opts[:error],
-          required:         form_field_opts.fetch(:required, false),
-          label_visibility: form_field_opts.fetch(:label_visibility, :visible),
-          layout:           form_field_opts.fetch(:layout, :stacked)
+      def render_fieldset(attribute, field, &block)
+        Fields::Fieldset.new(@template).render(object, attribute, field_id(attribute), field, &block)
+      end
+
+      def render_input_group(error:, leading: nil, trailing: nil, **wrapper_opts, &block)
+        Fields::InputGroup.new(@template).render(leading: leading, trailing: trailing, error: error, **wrapper_opts, &block)
+      end
+
+      def render_combobox(attribute, input_id:, opts:, err:, **wrapper_opts, &block)
+        combobox_opts = opts.deep_merge(
+          input:   { name: field_name(attribute) },
+          trigger: { id: input_id }
         )
-      end
 
-      def render_field(field, input_html)
-        Fields::Renderer.new(@template, theme, field).call(input_html)
-      end
-
-      def build_input_group(input_tag, field, trailing:, **wrapper_opts)
-        @template.content_tag(
-          :div,
-          input_tag.html_safe + trailing,
-          class: field_theme(:form_input_group, error: field.error?)[:class],
-          **wrapper_opts
+        Components::Combobox.new(@template).render(
+          **combobox_opts,
+          **merge_html_options(wrapper_opts, field_theme(:form_combobox, error: err)),
+          &block
         )
-      end
-
-      def extract_options(options)
-        [options.except(*Field::OPTIONS), options.slice(*Field::OPTIONS)]
       end
 
       def field_theme(key, **variants)
@@ -71,7 +67,7 @@ module StimulusPlumbers
       end
 
       # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-      if ActionView.version < "7.0"
+      if ActionView.version < Gem::Version.new("7.0")
         # field_id was added in Rails 7.0, backports it to Rails 6.1.
         # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_helper.rb#L1777
         # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_tag_helper.rb#L101

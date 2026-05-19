@@ -12,7 +12,7 @@ module StimulusPlumbers
           }
         end
 
-        def render(format: :h12, step: 1, value: nil, **_kwargs)
+        def render(format: :h12, step: 1, value: nil)
           @format = format
           @step   = [1, step.to_i].max
           @time   = parse_time(value)

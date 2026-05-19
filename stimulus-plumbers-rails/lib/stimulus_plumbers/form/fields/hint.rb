@@ -5,8 +5,8 @@ module StimulusPlumbers
     module Fields
       class Hint < Plumber::Base
         def render(text:, id:)
-          klass = theme.resolve(:form_details).fetch(:classes, "")
-          template.content_tag(:p, text, id: id, class: klass.presence)
+          html_options = merge_html_options(theme.resolve(:form_details))
+          template.content_tag(:p, text, id: id, **html_options)
         end
       end
     end

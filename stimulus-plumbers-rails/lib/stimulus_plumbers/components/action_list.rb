@@ -3,12 +3,12 @@
 module StimulusPlumbers
   module Components
     class ActionList < Plumber::Base
-      def render(**kwargs, &block)
+      def render(role: "list", **kwargs, &block)
         html_options = merge_html_options(
-          { classes: theme.resolve(:action_list).fetch(:classes, "") },
+          { role: role, classes: theme.resolve(:action_list).fetch(:classes, "") },
           kwargs
         )
-        template.content_tag(:div, template.capture(&block), **html_options)
+        template.content_tag(:ul, template.capture(&block), **html_options)
       end
 
       def section(title: nil, **kwargs, &block)

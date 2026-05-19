@@ -26,6 +26,7 @@ require_relative "stimulus_plumbers/components/card/section"
 require_relative "stimulus_plumbers/components/action_list"
 require_relative "stimulus_plumbers/components/action_list/section"
 require_relative "stimulus_plumbers/components/action_list/item"
+require_relative "stimulus_plumbers/components/divider"
 require_relative "stimulus_plumbers/components/popover"
 require_relative "stimulus_plumbers/components/popover/builder"
 
@@ -54,10 +55,11 @@ require_relative "stimulus_plumbers/components/combobox/time/drum"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field"
-require_relative "stimulus_plumbers/form/fields/group"
-require_relative "stimulus_plumbers/form/fields/label"
-require_relative "stimulus_plumbers/form/fields/hint"
 require_relative "stimulus_plumbers/form/fields/error"
+require_relative "stimulus_plumbers/form/fields/group"
+require_relative "stimulus_plumbers/form/fields/hint"
+require_relative "stimulus_plumbers/form/fields/input_group"
+require_relative "stimulus_plumbers/form/fields/label"
 require_relative "stimulus_plumbers/form/builder"
 
 module StimulusPlumbers

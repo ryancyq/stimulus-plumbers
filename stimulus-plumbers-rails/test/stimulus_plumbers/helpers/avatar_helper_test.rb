@@ -5,33 +5,28 @@ require "test_helper"
 class AvatarHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::AvatarHelper
 
-  def test_renders_span
-    html = sp_avatar
+  # ── rendering ─────────────────────────────────────────────────────────────
 
-    assert_includes html, "<span"
+  def test_renders_span_with_role_img
+    assert_css parse_html(sp_avatar), "span[role='img']"
   end
 
-  def test_renders_with_name_aria_label
-    html = sp_avatar(name: "Jane")
-
-    assert_includes html, 'aria-label="Jane"'
+  def test_renders_aria_label_when_name_given
+    assert_css parse_html(sp_avatar(name: "Jane")), "[aria-label='Jane']"
   end
 
   def test_renders_img_when_url_given
-    html = sp_avatar(url: "/photo.jpg")
-
-    assert_includes html, "<img"
+    assert_css parse_html(sp_avatar(url: "/photo.jpg")), "img[src='/photo.jpg']"
   end
 
   def test_renders_initials_svg
-    html = sp_avatar(initials: "AB")
+    doc = parse_html(sp_avatar(initials: "AB"))
 
-    assert_includes html, "AB"
+    assert_css doc, "svg"
+    assert_includes doc.text, "AB"
   end
 
   def test_merges_custom_class
-    html = sp_avatar(class: "custom")
-
-    assert_includes html, "custom"
+    assert_css parse_html(sp_avatar(class: "custom")), ".custom"
   end
 end

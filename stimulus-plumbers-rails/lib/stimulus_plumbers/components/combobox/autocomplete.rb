@@ -10,23 +10,17 @@ module StimulusPlumbers
           )
         end
 
-        def render(options: [], value: nil, label: nil, **_kwargs)
-          template.safe_join([listbox(options, value, label), loading, empty])
+        def render(options: [], value: nil, label: nil, labelledby: nil)
+          template.safe_join(
+            [
+              Dropdown.new(template).render(options: options, value: value, label: label, labelledby: labelledby),
+              loading,
+              empty
+            ]
+          )
         end
 
         private
-
-        def listbox(options, value, label)
-          attrs = merge_html_options(
-            { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
-            { role: "listbox", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "listbox" } }
-          )
-          attrs[:aria] = { label: label } if label
-
-          template.content_tag(:ul, **attrs) do
-            Options.new(template).render(options, value: value)
-          end
-        end
 
         def loading
           template.content_tag(

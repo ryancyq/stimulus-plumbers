@@ -5,6 +5,10 @@
 ```
 stimulus-plumbers/
 ├── src/
+│   ├── accessibility/               # ARIA, focus, keyboard utilities
+│   │   ├── aria.js
+│   │   ├── focus.js
+│   │   └── keyboard.js
 │   ├── controllers/                 # Stimulus controllers
 │   │   ├── *_controller.js
 │   ├── plumbers/                    # Core plumber utilities
@@ -12,10 +16,9 @@ stimulus-plumbers/
 │   │   │   ├── index.js
 │   │   │   └── support.js
 │   │   └── *.js
-│   ├── aria.js                      # ARIA utilities
-│   ├── focus.js                     # Focus management
-│   ├── keyboard.js                  # Keyboard event handlers
-│   └── index.js                     # Main entry point
+│   ├── index.js                     # Main entry point
+│   ├── requestor.js                 # HTTP request helper
+│   └── researcher.js                # Fuzzy match / filter helper
 ├── tests/
 │   ├── unit/
 │   │   ├── controllers/
@@ -37,10 +40,10 @@ stimulus-plumbers/
 
 ## Guidelines
 - **native HTML5 first** - only use controllers when native elements have limitations
-- import statement should not ends with .js
+- import statements should not end with .js
 - **Unit tests** using Vitest
 - **Lint tests** (eslint)
 
 ## Controller / Plumber Design Principles
 
-> See `docs/compomnent/*.md` for HTML structure, Stimulus Controller + Action Wiring.
+> See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.

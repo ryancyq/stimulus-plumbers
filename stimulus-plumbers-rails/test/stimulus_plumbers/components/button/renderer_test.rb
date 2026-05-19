@@ -7,7 +7,8 @@ class ButtonRendererTest < ActionView::TestCase
     StimulusPlumbers::Components::Button.new(self)
   end
 
-  # attr_readers
+  # ── attr_readers ──────────────────────────────────────────────────────────
+
   def test_exposes_template
     assert_equal self, renderer.template
   end
@@ -16,68 +17,54 @@ class ButtonRendererTest < ActionView::TestCase
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
-  # button
-  def test_button_renders_button_element
-    html = renderer.render("Click me")
+  # ── button ────────────────────────────────────────────────────────────────
 
-    assert_includes html, "<button"
-    assert_includes html, "Click me"
+  def test_button_renders_button_element
+    doc = parse_html(renderer.render("Click me"))
+
+    assert_css doc, "button"
+    assert_includes doc.text, "Click me"
   end
 
   def test_button_renders_type_button
-    html = renderer.render("Click me")
-
-    assert_includes html, 'type="button"'
+    assert_css parse_html(renderer.render("Click me")), "button[type='button']"
   end
 
   def test_button_renders_link_when_url_given
-    html = renderer.render("Go", url: "/dashboard")
-
-    assert_includes html, "<a"
-    assert_includes html, 'href="/dashboard"'
+    assert_css parse_html(renderer.render("Go", url: "/dashboard")), "a[href='/dashboard']"
   end
 
   def test_button_renders_external_link_with_target_blank
-    html = renderer.render("External", url: "https://example.com", external: true)
-
-    assert_includes html, 'target="_blank"'
+    assert_css parse_html(renderer.render("External", url: "https://example.com", external: true)),
+               "a[target='_blank']"
   end
 
   def test_button_does_not_add_target_blank_for_internal_links
-    html = renderer.render("Internal", url: "/path")
-
-    refute_includes html, "target"
+    assert_no_css parse_html(renderer.render("Internal", url: "/path")), "a[target]"
   end
 
   def test_button_accepts_block_content
-    html = renderer.render { "Block content" }
-
-    assert_includes html, "Block content"
+    assert_includes parse_html(renderer.render { "Block content" }).text, "Block content"
   end
 
   def test_button_merges_custom_class
-    html = renderer.render("Click", class: "my-class")
-
-    assert_includes html, "my-class"
+    assert_css parse_html(renderer.render("Click", class: "my-class")), ".my-class"
   end
 
   def test_button_passes_html_options
-    html = renderer.render("Click", id: "my-btn")
-
-    assert_includes html, 'id="my-btn"'
+    assert_css parse_html(renderer.render("Click", id: "my-btn")), "#my-btn"
   end
 
-  # group
-  def test_group_renders_div
-    html = renderer.group { renderer.render("One") }
+  # ── group ─────────────────────────────────────────────────────────────────
 
-    assert_includes html, "<div"
-    assert_includes html, "One"
+  def test_group_renders_div
+    doc = parse_html(renderer.group { renderer.render("One") })
+
+    assert_css doc, "div"
+    assert_includes doc.text, "One"
   end
 
   def test_group_merges_custom_class
-    html = renderer.group(class: "custom") { "" }
-
-    assert_includes html, "custom"
+    assert_css parse_html(renderer.group(class: "custom") { "" }), ".custom"
   end
 end

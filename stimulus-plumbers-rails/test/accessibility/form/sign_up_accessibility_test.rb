@@ -13,7 +13,7 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
     assert_selector "label", text: %r{Password}
     assert_selector "input[type='password']"
     assert_selector "input[type='number']"
-    assert_selector "input[type='date']"
+    assert_selector "input[role='combobox'][aria-haspopup='dialog']"
     assert_selector "label", text: %r{Bio}
     assert_selector "textarea"
     assert_selector "label", text: %r{Male}
@@ -21,7 +21,7 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
     assert_selector "label", text: %r{Other}
     assert_selector "input[type='radio']", count: 3
     assert_selector "label", text: %r{Country}
-    assert_selector "select"
+    assert_selector "input[role='combobox'][aria-haspopup='listbox']"
     assert_selector "label", text: %r{Subscribe to newsletter}
     assert_selector "input[type='checkbox']"
     assert_selector "input[type='submit'][value='Create account']"
@@ -74,21 +74,21 @@ class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
     assert_selector "label[for='#{checkbox_id}']"
   end
 
-  def test_label_is_associated_with_select
+  def test_label_is_associated_with_combobox
     visit "/form/sign_up"
 
-    select_id = find("select")[:id]
+    combobox_id = find("input[role='combobox'][aria-haspopup='listbox']")[:id]
 
-    assert_selector "label[for='#{select_id}']"
+    assert_selector "label[for='#{combobox_id}']"
   end
 
   def test_renders_country_options
     visit "/form/sign_up"
 
-    assert_selector "option", text: "Australia"
-    assert_selector "option", text: "New Zealand"
-    assert_selector "option", text: "Singapore"
-    assert_selector "option", text: "United States"
+    assert_selector "li[role='option']", text: "Australia",     visible: false
+    assert_selector "li[role='option']", text: "New Zealand",   visible: false
+    assert_selector "li[role='option']", text: "Singapore",     visible: false
+    assert_selector "li[role='option']", text: "United States", visible: false
   end
 
   def test_renders_card

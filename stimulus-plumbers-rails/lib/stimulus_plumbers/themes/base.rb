@@ -13,6 +13,7 @@ module StimulusPlumbers
         **Schema::CARD,
         **Schema::COMBOBOX,
         **Schema::FORM,
+        **Schema::ICON,
         **Schema::LAYOUT
       }.freeze
 

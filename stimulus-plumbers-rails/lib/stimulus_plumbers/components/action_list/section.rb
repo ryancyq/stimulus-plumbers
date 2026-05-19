@@ -5,13 +5,14 @@ module StimulusPlumbers
     class ActionList
       class Section < Plumber::Base
         def render(title: nil, **kwargs, &block)
-          html_options = merge_html_options(kwargs)
-          template.content_tag(:div, **html_options) do
+          template.content_tag(:li, **kwargs) do
+            ul_opts = {}
+            ul_opts[:aria] = { label: title } if title.present?
             template.safe_join(
               [
-                (template.content_tag(:p, title) if title.present?),
-                template.content_tag(:ul, template.capture(&block))
-              ].compact
+                (template.content_tag(:span, title, aria: { hidden: "true" }) if title.present?),
+                template.content_tag(:ul, template.capture(&block), **ul_opts)
+              ]
             )
           end
         end
