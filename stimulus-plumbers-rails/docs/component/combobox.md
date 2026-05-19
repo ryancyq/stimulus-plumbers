@@ -63,7 +63,7 @@ Editable trigger that filters options as the user types. Supports client-side fu
 <%= sp_combobox_autocomplete(options: [["London", "london"], ["Paris", "paris"]]) %>
 
 <%# Server-side — receives ?q=<query>, must return <li role="option"> HTML fragments %>
-<%= sp_combobox_autocomplete(src: cities_path, label: "City") %>
+<%= sp_combobox_autocomplete(url: cities_path, label: "City") %>
 ```
 
 | Option           | Description                                                      |
@@ -97,24 +97,18 @@ iOS-style drum/scroll-wheel time picker.
 
 ## Form Builder
 
-`StimulusPlumbers::Form::Builder` wraps each variant as a form field with automatic `label`, `name`/`id`, and inline error message wiring.
+`StimulusPlumbers::Form::Builder` exposes combobox-backed fields through purpose-specific methods rather than a single generic helper. See [form_builder.md](form_builder.md) for the full API.
 
 ```erb
 <%= form_with model: @user, builder: StimulusPlumbers::Form::Builder do |f| %>
-  <%= f.combobox_field :birthday,     type: :date %>
-  <%= f.combobox_field :country,      type: :dropdown,     options: country_options %>
-  <%= f.combobox_field :city,         type: :autocomplete, src: cities_path %>
-  <%= f.combobox_field :meeting_time, type: :time,         format: :h24, step: 15 %>
+  <%= f.date_field   :birthday %>
+  <%= f.time_field   :meeting_time, format: :h24, step: 15 %>
+  <%= f.select       :country, country_options %>
+  <%= f.search_field :city, url: cities_path %>
 <% end %>
 ```
 
-Additional options accepted by all field types:
-
-| Option            | Description                                                |
-| ----------------- | ---------------------------------------------------------- |
-| `label`           | Override label text (defaults to humanised attribute name) |
-| `details`         | Hint text rendered below the field                         |
-| Any helper option | Forwarded to the underlying `sp_combobox_*` helper         |
+All form field methods accept `label:`, `hint:`, `error:`, `required:`, and `hide_label:` in addition to their own options.
 
 ---
 
@@ -162,16 +156,21 @@ All variants share the same wrapper pattern:
 </div>
 ```
 
-**dropdown / autocomplete** — a `<ul role="listbox">` containing `<li role="option">` items:
+**dropdown / autocomplete** — a `<div>` popover wrapping a `<ul role="listbox">`:
 
 ```html
-<ul
+<div
   id="[id]_popover"
-  role="listbox"
   hidden
   data-input-combobox-target="popover"
+  data-controller="combobox-dropdown"
+  data-action="click->combobox-dropdown#select keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect"
 >
-  <li role="option" data-value="us" aria-selected="false">United States</li>
-  <li role="option" data-value="ca" aria-selected="false">Canada</li>
-</ul>
+  <ul role="listbox" data-combobox-dropdown-target="listbox">
+    <li role="option" data-value="us" aria-selected="false">United States</li>
+    <li role="option" data-value="ca" aria-selected="false">Canada</li>
+  </ul>
+</div>
 ```
+
+For autocomplete, `loading` and `empty` state elements are appended alongside the `<ul>` inside the popover `<div>`.

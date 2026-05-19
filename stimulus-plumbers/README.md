@@ -26,6 +26,7 @@ import { Application } from '@hotwired/stimulus'
 import {
   InputComboboxController,
   InputFormatController,
+  InputSearchController,
   ComboboxDateController,
   ComboboxTimeController,
   ComboboxDropdownController,
@@ -36,12 +37,14 @@ import {
   DismisserController,
   FlipperController,
   ClipboardController,
+  PannerController,
 } from '@stimulus-plumbers/controllers'
 
 const application = Application.start()
 
 application.register('input-combobox',           InputComboboxController)
 application.register('input-format',             InputFormatController)
+application.register('input-search',             InputSearchController)
 application.register('combobox-date',            ComboboxDateController)
 application.register('combobox-time',            ComboboxTimeController)
 application.register('combobox-dropdown',        ComboboxDropdownController)
@@ -52,6 +55,7 @@ application.register('popover',                  PopoverController)
 application.register('dismisser',                DismisserController)
 application.register('flipper',                  FlipperController)
 application.register('clipboard',                ClipboardController)
+application.register('panner',                   PannerController)
 ```
 
 ## Controllers
@@ -60,6 +64,7 @@ application.register('clipboard',                ClipboardController)
 |-----------|-------------|------|
 | `input-combobox` | Wrapper: trigger, popover, hidden value | [docs/component/combobox.md](docs/component/combobox.md#input-combobox) |
 | `input-format` | Formats and displays values | [docs/component/combobox.md](docs/component/combobox.md#input-format) |
+| `input-search` | Search input with clear button | [docs/component/input-search.md](docs/component/input-search.md) |
 | `combobox-date` | Calendar grid date picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-date) |
 | `combobox-time` | Drum/scroll-wheel time picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-time) |
 | `combobox-dropdown` | Listbox with fuzzy filter or server fetch | [docs/component/combobox.md](docs/component/combobox.md#combobox-dropdown) |
@@ -70,6 +75,7 @@ application.register('clipboard',                ClipboardController)
 | `dismisser` | Click-outside dismissal | [docs/component/dismisser.md](docs/component/dismisser.md) |
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
 | `clipboard` | Copy-to-clipboard and paste interception | [docs/component/clipboard.md](docs/component/clipboard.md) |
+| `panner` | Draggable/pannable content area | — |
 
 ## Method naming convention
 
