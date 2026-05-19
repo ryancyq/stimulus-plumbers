@@ -15,14 +15,7 @@ module StimulusPlumbers
         popover_id    = self.class.popover_id_for(trigger[:id])
         initial_value = input[:value]
         haspopup      = popover.delete(:haspopup) { popover[:role] || "dialog" }
-
-        stimulus_data = {
-          controller: "#{STIMULUS_CONTROLLER} #{FORMAT_CONTROLLER}",
-          action:     FORMAT_ACTION
-        }
-        stimulus_data[:input_combobox_value_value] = initial_value if initial_value.present?
-
-        html_options = merge_html_options({ data: stimulus_data }, kwargs)
+        html_options  = merge_html_options({ data: build_stimulus_data(initial_value) }, kwargs)
 
         template.content_tag(:div, **html_options) do
           template.safe_join(
@@ -36,6 +29,15 @@ module StimulusPlumbers
       end
 
       private
+
+      def build_stimulus_data(initial_value)
+        {
+          controller: "#{STIMULUS_CONTROLLER} #{FORMAT_CONTROLLER}",
+          action:     FORMAT_ACTION
+        }.tap do |data|
+          data[:input_combobox_value_value] = initial_value if initial_value.present?
+        end
+      end
 
       def combobox_trigger(popover_id, trigger, haspopup)
         Combobox::Trigger.new(template).render(

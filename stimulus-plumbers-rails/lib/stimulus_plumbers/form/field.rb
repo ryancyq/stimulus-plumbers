@@ -59,14 +59,12 @@ module StimulusPlumbers
       end
 
       def render_hint(input_id)
-        return nil unless @hint.present?
-
-        Fields::Hint.new(@template).render(text: @hint, id: hint_id(input_id))
+        Fields::Hint.new(@template).render(text: @hint, id: hint_id(input_id)) if @hint.present?
       end
 
       def render_errors(object, attribute, input_id)
         errs = build_errors(object, attribute)
-        return nil if errs.none?
+        return if errs.none?
 
         @template.safe_join(
           errs.map.with_index do |message, i|
@@ -89,17 +87,15 @@ module StimulusPlumbers
 
       def build_aria(object, attribute, input_id)
         aria = {}
-        db = described_by(object, attribute, input_id)
-        aria[:describedby] = db     if db
+        aria[:describedby] = described_by(object, attribute, input_id)
         aria[:invalid]     = "true" if error?(object, attribute)
         aria[:required]    = "true" if @required
-        aria
+        aria.compact
       end
 
       def build_html_options(input_id, aria)
-        attrs = { id: input_id }
+        attrs = { id: input_id, aria: aria }
         attrs[:required] = true if @required
-        attrs[:aria] = aria
         attrs
       end
 
@@ -120,12 +116,7 @@ module StimulusPlumbers
       end
 
       def field_label(input_id)
-        Fields::Label.new(@template).render(
-          text:     @label,
-          for_id:   input_id,
-          required: @required,
-          hidden:   @hide_label
-        )
+        Fields::Label.new(@template).render(text: @label, for_id: input_id, required: @required, hidden: @hide_label)
       end
     end
   end

@@ -28,13 +28,16 @@ module StimulusPlumbers
           def render_reveal_password(html_opts, error, &block)
             html_options = merge_html_options(
               html_opts,
-              field_theme(:form_input_reveal, error: error),
+              field_theme(:form_input, error: error),
               { data: { input_format_target: "input" } }
             )
             render_input_group(
               error:    error,
-              trailing: reveal_button,
-              data:     { controller: "input-format", input_format_type_value: "password" }
+              trailing: method(:reveal_button),
+              **merge_html_options(
+                field_theme(:form_input_reveal, error: error),
+                { data: { controller: "input-format", input_format_type_value: "password" } }
+              )
             ) { @template.capture(html_options, &block) }
           end
 

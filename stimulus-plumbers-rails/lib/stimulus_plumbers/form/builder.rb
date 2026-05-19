@@ -10,6 +10,9 @@ require_relative "fields/inputs/file"
 require_relative "fields/inputs/password"
 require_relative "fields/inputs/search"
 require_relative "fields/inputs/select"
+require_relative "fields/inputs/select/grouped"
+require_relative "fields/inputs/select/timezone"
+require_relative "fields/inputs/select/weekday"
 require_relative "fields/inputs/submit"
 require_relative "fields/inputs/text"
 require_relative "fields/inputs/text_area"
@@ -25,6 +28,9 @@ module StimulusPlumbers
       include Fields::Inputs::Password
       include Fields::Inputs::Search
       include Fields::Inputs::Select
+      include Fields::Inputs::Select::Grouped
+      include Fields::Inputs::Select::Timezone
+      include Fields::Inputs::Select::Weekday
       include Fields::Inputs::Submit
       include Fields::Inputs::Text
       include Fields::Inputs::TextArea

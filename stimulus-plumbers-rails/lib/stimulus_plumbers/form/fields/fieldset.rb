@@ -10,14 +10,7 @@ module StimulusPlumbers
           Group.new(template).render(layout: field.layout, error: error) do
             template.safe_join(
               [
-                template.content_tag(:fieldset, **fieldset_opts) do
-                  template.safe_join(
-                    [
-                      legend(field, attribute),
-                      template.capture(error, &block)
-                    ]
-                  )
-                end,
+                build_fieldset(fieldset_opts, field, attribute, error, &block),
                 field.render_hint(input_id),
                 field.render_errors(object, attribute, input_id)
               ]
@@ -26,6 +19,17 @@ module StimulusPlumbers
         end
 
         private
+
+        def build_fieldset(fieldset_opts, field, attribute, error, &block)
+          template.content_tag(:fieldset, **fieldset_opts) do
+            template.safe_join(
+              [
+                legend(field, attribute),
+                template.capture(error, &block)
+              ]
+            )
+          end
+        end
 
         def legend(field, attribute)
           Label.new(template).render(

@@ -44,10 +44,7 @@ module StimulusPlumbers
           def render_date_combobox(attribute, html_opts, error)
             current_value = object&.public_send(attribute)
             opts = Components::Combobox::Date.default_opts.deep_merge(
-              input:   {
-                value: current_value,
-                data:  { combobox_date_date_value: current_value }
-              },
+              input:   { value: current_value, data: { combobox_date_date_value: current_value } },
               trigger: { aria: html_opts[:aria] }
             )
             render_combobox(
