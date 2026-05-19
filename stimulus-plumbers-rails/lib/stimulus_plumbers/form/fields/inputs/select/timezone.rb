@@ -13,7 +13,7 @@ module StimulusPlumbers
                 if html_native
                   super(attribute, priority_zones, opts, merged_html_opts)
                 else
-                  render_dropdown(attribute, opts, merged_html_opts, err: error) do
+                  render_select_dropdown(attribute, opts, merged_html_opts, err: error) do
                     model = opts.delete(:model) { ActiveSupport::TimeZone }
                     build_zone_choices(priority_zones, model.all)
                   end

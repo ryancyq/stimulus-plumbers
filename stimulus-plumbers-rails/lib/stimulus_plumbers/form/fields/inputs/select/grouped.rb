@@ -35,7 +35,7 @@ module StimulusPlumbers
                     merged_html_opts
                   )
                 else
-                  render_dropdown(attribute, opts, merged_html_opts, err: error) do
+                  render_select_dropdown(attribute, opts, merged_html_opts, err: error) do
                     collection.map do |group|
                       {
                         label:   group.public_send(group_label_method),

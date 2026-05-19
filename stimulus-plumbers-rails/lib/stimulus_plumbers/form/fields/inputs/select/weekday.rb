@@ -18,7 +18,7 @@ module StimulusPlumbers
                   if html_native
                     super(attribute, opts, merged_html_opts)
                   else
-                    render_dropdown(attribute, opts, merged_html_opts, err: error) do
+                    render_select_dropdown(attribute, opts, merged_html_opts, err: error) do
                       build_weekday_choices(opts)
                     end
                   end
