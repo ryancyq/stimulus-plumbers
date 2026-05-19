@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.3.1](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.3.0..stimulus-plumbers/v0.3.1) - 2026-05-19
+
+### Features
+
+- form input group + fieldset ([#75](https://github.com/ryancyq/stimulus-plumbers/issues/75)) - ([b18916f](https://github.com/ryancyq/stimulus-plumbers/commit/b18916f2dcf004ae358a598ce54f28231b069af3)) - Ryan Chang
+
+---
 ## [0.3.0](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.2.9..stimulus-plumbers/v0.3.0) - 2026-05-18
 
 ### Bug Fixes
