@@ -103,6 +103,7 @@ jobs:
         with:
           ruby-version: 3.4
           bundler: 2.7.2
+          bundler-cache: true
 
       - run: bin/bump-version ${{ env.VERSION }}
         shell: bash
@@ -166,6 +167,7 @@ jobs:
         with:
           ruby-version: 3.4
           bundler: 2.7.2
+          bundler-cache: true
 
       - run: bin/bump-version ${{ env.VERSION }}
         shell: bash
