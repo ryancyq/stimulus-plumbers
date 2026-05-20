@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.3.2](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.3.1..stimulus-plumbers-tailwind/v0.3.2) - 2026-05-20
+
+### Dependencies
+
+- bump stimulus plumber version for tailwind gem - ([b534534](https://github.com/ryancyq/stimulus-plumbers/commit/b5345347638fd2a98fec67812caf087f5528b805)) - Ryan Chang
+
+---
 ## [0.3.1] - 2026-05-19
 
 ### Features
