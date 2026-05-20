@@ -32,5 +32,5 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 3.0"
   spec.required_rubygems_version = ">= 3.2.0"
 
-  spec.add_dependency "stimulus_plumbers", ">= 0.2.9"
+  spec.add_dependency "stimulus_plumbers", ">= 0.3.1"
 end
