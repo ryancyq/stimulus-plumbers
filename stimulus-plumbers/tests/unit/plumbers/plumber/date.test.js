@@ -28,12 +28,16 @@ describe('date utilities', () => {
       expect(() => tryParseDate()).toThrow('Missing values to parse as date')
     })
 
-    it('parses a single valid date string', () => {
+    it('parses a YYYY-MM-DD string as local time', () => {
       const result = tryParseDate('2024-01-15')
       expect(result).toBeInstanceOf(Date)
       expect(result.getFullYear()).toBe(2024)
       expect(result.getMonth()).toBe(0)
       expect(result.getDate()).toBe(15)
+    })
+
+    it('returns undefined for empty string', () => {
+      expect(tryParseDate('')).toBeUndefined()
     })
 
     it('parses a single valid timestamp', () => {

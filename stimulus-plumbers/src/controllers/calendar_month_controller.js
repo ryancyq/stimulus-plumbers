@@ -9,10 +9,11 @@ export default class extends Controller {
     weekdayFormat: { type: String, default: 'short' },
     dayFormat: { type: String, default: 'numeric' },
     daysOfOtherMonth: { type: Boolean, default: false },
+    today: { type: String, default: '' },
   };
 
   initialize() {
-    initCalendar(this);
+    initCalendar(this, { today: this.todayValue });
   }
 
   connect() {

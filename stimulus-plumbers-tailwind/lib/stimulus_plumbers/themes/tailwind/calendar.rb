@@ -17,12 +17,10 @@ module StimulusPlumbers
           size-(--sp-calendar-day-size) rounded-(--sp-radius-md)
           flex items-center justify-center text-(--sp-text-sm)
           hover:bg-(--sp-color-muted) cursor-pointer
-        ].freeze
-
-        DAY_SELECTED = %w[
-          bg-(--sp-color-primary)
-          text-(--sp-color-primary-fg)
-          hover:bg-(--sp-color-primary)/90
+          aria-[current=date]:font-bold
+          aria-selected:bg-(--sp-color-primary)
+          aria-selected:text-(--sp-color-primary-fg)
+          aria-selected:hover:bg-(--sp-color-primary)/90
         ].freeze
 
         NAV = %w[flex items-center justify-between gap-1 mb-2].freeze
@@ -56,13 +54,11 @@ module StimulusPlumbers
           { classes: klasses(*DAYS_OF_MONTH) }
         end
 
-        def calendar_day_classes(today: false, selected: false, outside: false)
+        def calendar_day_classes(outside: false)
           {
             classes: klasses(
               *DAY,
-              *(today    ? ["font-bold"] : []),
-              *(selected ? DAY_SELECTED : []),
-              *(outside  ? %w[text-(--sp-color-muted-fg) opacity-50] : [])
+              *(outside ? %w[text-(--sp-color-muted-fg) opacity-50] : [])
             )
           }
         end

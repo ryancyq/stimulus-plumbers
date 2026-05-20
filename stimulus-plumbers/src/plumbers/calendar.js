@@ -177,11 +177,11 @@ export class Calendar extends Plumber {
   set today(value) {
     if (!isValidDate(value)) return;
 
-    const month = this.month ? this.month : value.getMonth();
-    const year = this.year ? this.year : value.getFullYear();
+    const month = this.month ?? value.getMonth();
+    const year = this.year ?? value.getFullYear();
     const sameMonthYear = month == value.getMonth() && year == value.getFullYear();
-    const day = this.hasDayValue ? this.day : sameMonthYear ? value.getDate() : 1;
-    this.now = new Date(year, month, day).toISOString();
+    const day = sameMonthYear ? value.getDate() : 1;
+    this.now = new Date(year, month, day);
   }
 
   /**

@@ -25,23 +25,15 @@ class TailwindThemeCalendarTest < Minitest::Test
     assert_includes result, "cursor-pointer"
   end
 
-  def test_calendar_day_includes_font_bold_when_today
-    assert_includes classes_for(:calendar_day, today: true), "font-bold"
+  def test_calendar_day_includes_today_aria_variant
+    assert_includes classes_for(:calendar_day), "aria-[current=date]:font-bold"
   end
 
-  def test_calendar_day_excludes_font_bold_when_not_today
-    refute_includes classes_for(:calendar_day, today: false), "font-bold"
-  end
+  def test_calendar_day_includes_selected_aria_variants
+    result = classes_for(:calendar_day)
 
-  def test_calendar_day_includes_selected_classes_when_selected
-    result = classes_for(:calendar_day, selected: true)
-
-    assert_includes result, "bg-(--sp-color-primary)"
-    assert_includes result, "text-(--sp-color-primary-fg)"
-  end
-
-  def test_calendar_day_excludes_selected_classes_when_not_selected
-    refute_includes classes_for(:calendar_day, selected: false), "bg-(--sp-color-primary)"
+    assert_includes result, "aria-selected:bg-(--sp-color-primary)"
+    assert_includes result, "aria-selected:text-(--sp-color-primary-fg)"
   end
 
   def test_calendar_day_includes_outside_classes_when_outside_month
