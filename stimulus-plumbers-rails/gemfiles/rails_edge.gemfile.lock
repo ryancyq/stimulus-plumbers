@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 3469de6d1cb4e2e1a329f23ff66b4e60518d55ee
+  revision: e1d8b5f889df2177a7e4c64e494d0d5f12c092cf
   branch: main
   specs:
     actioncable (8.2.0.alpha)
@@ -103,7 +103,7 @@ GIT
 PATH
   remote: ..
   specs:
-    stimulus_plumbers (0.3.1)
+    stimulus_plumbers (0.3.2)
       actionview (>= 6.1, < 8.2)
 
 GEM
