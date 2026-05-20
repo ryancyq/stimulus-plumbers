@@ -116,7 +116,7 @@ module StimulusPlumbers
               is_today = date == today
               selected = selected_date && date == selected_date
               merge_html_options(
-                { classes: theme.resolve(:calendar_day, today: is_today, selected: selected).fetch(:classes, "") },
+                { classes: theme.resolve(:calendar_day).fetch(:classes, "") },
                 {
                   role:     "gridcell",
                   tabindex: date == focus_day ? 0 : -1,

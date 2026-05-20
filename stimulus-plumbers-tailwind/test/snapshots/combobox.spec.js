@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
 
+const FIXED_DATE = new Date("2024-02-29T12:00:00Z");
+
 test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime(FIXED_DATE);
   await page.goto("/components/combobox");
   await page.waitForSelector("input[aria-label='Birthday']");
 });

@@ -139,6 +139,36 @@ describe('CalendarMonthController', () => {
     });
   });
 
+  describe('today value', () => {
+    it('marks the specified today date with aria-current="date"', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month" data-calendar-month-today-value="2024-10-20">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const today = daysOfMonth.querySelector('[aria-current="date"]');
+      expect(today).toBeTruthy();
+      expect(today.textContent).toContain('20');
+    });
+
+    it('falls back to system date when today value is empty', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const today = daysOfMonth.querySelector('[aria-current="date"]');
+      expect(today).toBeTruthy();
+      expect(today.textContent).toContain('15'); // system time mocked to Oct 15, 2024
+    });
+  });
+
   describe('without targets', () => {
     it('connects and attaches calendar', async () => {
       document.body.innerHTML = '<div data-controller="calendar-month"></div>';

@@ -180,20 +180,16 @@ describe('Calendar', () => {
       expect(now.getFullYear()).toBe(2024)
     })
 
-    it('assigns now as an ISO string after setting', () => {
+    it('assigns now as a Date after setting', () => {
       const calendar = new Calendar(mockController, { today: '2024-06-15' })
       calendar.today = new Date('2024-06-20')
-      // Known behavior: setter stores an ISO string, not a Date
-      expect(typeof calendar.now).toBe('string')
+      expect(calendar.now).toBeInstanceOf(Date)
     })
 
-    it('picks month from new date when calendar is on January (month 0 is falsy)', () => {
+    it('retains month 0 (January) when setting today to a different month', () => {
       const calendar = new Calendar(mockController, { today: '2024-01-15' })
-      // calendar.month = 0 (January). The check `this.month ? this.month : value.getMonth()`
-      // treats 0 as falsy, so month falls through to value.getMonth() instead.
       calendar.today = new Date('2024-03-10')
-      const now = new Date(calendar.now)
-      expect(now.getMonth()).toBe(2) // March taken from value, not January
+      expect(calendar.now.getMonth()).toBe(0) // January retained via ?? operator
     })
   })
 
