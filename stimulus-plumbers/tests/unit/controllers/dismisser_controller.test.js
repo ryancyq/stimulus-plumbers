@@ -123,6 +123,52 @@ describe('DismisserController', () => {
     });
   });
 
+  describe('dismissed() callback', () => {
+    it('invokes dismissed() on the controller when a subclass defines it', async () => {
+      const dismissedSpy = vi.fn();
+
+      class ExtendedDismisserController extends DismisserController {
+        dismissed() { dismissedSpy(); }
+      }
+      application.register('dismisser-ext', ExtendedDismisserController);
+
+      document.body.innerHTML = `
+        <div data-controller="dismisser-ext">
+          <button>Inside</button>
+        </div>
+        <button id="outside">Outside</button>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      document.querySelector('#outside').click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(dismissedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not invoke dismissed() when clicking inside', async () => {
+      const dismissedSpy = vi.fn();
+
+      class ExtendedDismisserController extends DismisserController {
+        dismissed() { dismissedSpy(); }
+      }
+      application.register('dismisser-ext', ExtendedDismisserController);
+
+      document.body.innerHTML = `
+        <div data-controller="dismisser-ext">
+          <button id="inside">Inside</button>
+        </div>
+        <button id="outside">Outside</button>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      document.querySelector('#inside').click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(dismissedSpy).not.toHaveBeenCalled();
+    });
+  });
+
   describe('event cleanup', () => {
     it('removes event listeners on disconnect', async () => {
       document.body.innerHTML = `

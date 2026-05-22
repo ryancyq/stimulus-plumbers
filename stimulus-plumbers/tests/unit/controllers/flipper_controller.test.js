@@ -151,40 +151,52 @@ describe('FlipperController', () => {
   });
 
   describe('accessibility enhancements', () => {
-    it('allows overriding default tooltip role', () => {
+    it('sets role="tooltip" on the reference element by default', async () => {
+      document.body.innerHTML = `
+        <div data-controller="flipper">
+          <button data-flipper-target="anchor">Anchor</button>
+          <div data-flipper-target="reference">Tooltip</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('tooltip');
+    });
+
+    it('sets the configured role on the reference element', async () => {
       document.body.innerHTML = `
         <div data-controller="flipper" data-flipper-role-value="menu">
           <button data-flipper-target="anchor">Button</button>
-          <div id="content" data-flipper-target="reference">Menu content</div>
+          <div data-flipper-target="reference">Menu</div>
         </div>
       `;
+      await new Promise(resolve => setTimeout(resolve, 10));
 
-      const element = document.querySelector('[data-controller="flipper"]');
-      expect(element.dataset.flipperRoleValue).toBe('menu');
+      expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('menu');
     });
 
-    it('supports custom placement value', () => {
+    it('sets aria-haspopup on the anchor based on role', async () => {
       document.body.innerHTML = `
-        <div data-controller="flipper" data-flipper-placement-value="top">
-          <button data-flipper-target="anchor">Anchor</button>
-          <div data-flipper-target="reference">Content</div>
+        <div data-controller="flipper" data-flipper-role-value="menu">
+          <button data-flipper-target="anchor">Button</button>
+          <div data-flipper-target="reference">Menu</div>
         </div>
       `;
+      await new Promise(resolve => setTimeout(resolve, 10));
 
-      const element = document.querySelector('[data-controller="flipper"]');
-      expect(element).toBeTruthy();
+      expect(document.querySelector('[data-flipper-target="anchor"]').getAttribute('aria-haspopup')).toBe('menu');
     });
 
-    it('supports custom alignment value', () => {
+    it('does not override an existing role on the reference element', async () => {
       document.body.innerHTML = `
-        <div data-controller="flipper" data-flipper-alignment-value="center">
+        <div data-controller="flipper" data-flipper-role-value="tooltip">
           <button data-flipper-target="anchor">Anchor</button>
-          <div data-flipper-target="reference">Content</div>
+          <div role="dialog" data-flipper-target="reference">Content</div>
         </div>
       `;
+      await new Promise(resolve => setTimeout(resolve, 10));
 
-      const element = document.querySelector('[data-controller="flipper"]');
-      expect(element).toBeTruthy();
+      expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('dialog');
     });
   });
 

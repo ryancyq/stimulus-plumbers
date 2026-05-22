@@ -393,5 +393,20 @@ class SelectTest < ActionView::TestCase
     def test_weekday_select_html_native_does_not_render_combobox_trigger
       assert_no_css build_weekday_select(:weekday, html_native: true), "input[role='combobox']"
     end
+
+    def test_weekday_select_abbr_day_names_as_values
+      doc = build_weekday_select(:weekday, day_format: :abbr_day_names)
+
+      assert_css doc, "li[role='option'][data-value='Sun']"
+      assert_css doc, "li[role='option'][data-value='Mon']"
+    end
+
+    def test_weekday_select_beginning_of_week_monday_starts_week_at_monday
+      doc     = build_weekday_select(:weekday, beginning_of_week: :monday)
+      options = doc.css("li[role='option']")
+
+      assert_equal "Monday", options.first["data-value"]
+      assert_equal "Sunday", options.last["data-value"]
+    end
   end
 end
