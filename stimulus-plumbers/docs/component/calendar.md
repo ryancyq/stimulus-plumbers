@@ -18,12 +18,14 @@ Renders an accessible calendar grid for a given month. Driven by the `Calendar` 
 
 ## Values
 
-| Value              | Type    | Default       | Description                                                |
-| ------------------ | ------- | ------------- | ---------------------------------------------------------- |
-| `locales`          | Array   | `["default"]` | `Intl.DateTimeFormat` locale(s)                            |
-| `weekdayFormat`    | String  | `"short"`     | Weekday header format: `"short"` \| `"long"` \| `"narrow"` |
-| `dayFormat`        | String  | `"numeric"`   | Day number format                                          |
-| `daysOfOtherMonth` | Boolean | `false`       | Show overflow days from adjacent months                    |
+| Value              | Type    | Default       | Description                                                                            |
+| ------------------ | ------- | ------------- | -------------------------------------------------------------------------------------- |
+| `locales`          | Array   | `["default"]` | `Intl.DateTimeFormat` locale(s)                                                        |
+| `weekdayFormat`    | String  | `"short"`     | Weekday header format: `"short"` \| `"long"` \| `"narrow"`                             |
+| `dayFormat`        | String  | `"numeric"`   | Day number format                                                                      |
+| `daysOfOtherMonth` | Boolean | `false`       | Show overflow days from adjacent months                                                |
+| `today`            | String  | `""`          | Override the "today" marker (ISO date string); defaults to system date                 |
+| `selected`         | String  | `""`          | Currently selected date (ISO string); sets `aria-selected="true"` on the matching cell |
 
 ## Calendar plumber options
 
@@ -69,6 +71,30 @@ end
 
 <%# With custom classes %>
 <%= sp_calendar_month(class: "my-calendar") %>
+```
+
+## Actions
+
+| Method            | Description                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| `onSelect(event)` | Reads `event.detail.iso` and sets `selectedValue`, updating `aria-selected` without a full redraw |
+
+Use `onSelect` to wire the observer's `selected` event directly to the calendar:
+
+```html
+<div
+  data-controller="calendar-month"
+  data-action="calendar-month-observer:selected->calendar-month#onSelect"
+  data-calendar-month-selected-value="2024-10-15"
+>
+  <div data-calendar-month-target="daysOfWeek"></div>
+  <div
+    role="grid"
+    data-controller="calendar-month-observer"
+    data-calendar-month-target="daysOfMonth"
+    data-action="click->calendar-month-observer#onSelect"
+  ></div>
+</div>
 ```
 
 ## calendar-month-observer
