@@ -28,7 +28,17 @@ module StimulusPlumbers
             hover:bg-(--sp-color-destructive)/90
           ].freeze,
           ghost:       %w[hover:bg-(--sp-color-muted) text-(--sp-color-fg)].freeze,
-          link:        %w[text-(--sp-color-primary) underline-offset-4 hover:underline].freeze
+          link:        %w[text-(--sp-color-primary) underline-offset-4 hover:underline].freeze,
+          fab:         %w[
+            rounded-full shadow-lg
+            bg-(--sp-color-primary) text-(--sp-color-primary-fg)
+            hover:bg-(--sp-color-primary)/90 hover:shadow-xl
+          ].freeze,
+          dashed:      %w[
+            border border-dashed border-(--sp-color-border)
+            bg-transparent text-(--sp-color-fg)
+            hover:bg-(--sp-color-muted)
+          ].freeze
         }.freeze
 
         SIZES = {
@@ -63,6 +73,13 @@ module StimulusPlumbers
 
         GROUP_BASE = %w[flex gap-(--sp-space-2)].freeze
 
+        BADGE = %w[absolute -top-1 -right-1 flex items-center justify-center rounded-full].freeze
+        BADGE_DOT = %w[size-2 bg-(--sp-color-destructive)].freeze
+        BADGE_COUNT = %w[
+          min-w-4 h-4 px-1 text-[10px] font-semibold
+          bg-(--sp-color-destructive) text-(--sp-color-destructive-fg)
+        ].freeze
+
         private
 
         def button_classes(variant: :primary, size: :md)
@@ -86,6 +103,15 @@ module StimulusPlumbers
 
         def button_icon_classes
           { classes: klasses("size-4", "stroke-current") }
+        end
+
+        def button_badge_classes(count: false)
+          {
+            classes: klasses(
+              *BADGE,
+              *(count ? BADGE_COUNT : BADGE_DOT)
+            )
+          }
         end
       end
     end

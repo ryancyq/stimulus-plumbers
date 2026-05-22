@@ -30,7 +30,10 @@ module StimulusPlumbers
           alignment: { default: :left, range: Ranges::FLEX_ALIGN },
           direction: { default: :row,  range: Ranges::FLEX_DIRECTION }
         }.freeze,
-        button_icon:  {}.freeze
+        button_icon:  {}.freeze,
+        button_badge: {
+          count: { default: false, range: Ranges::BOOL }
+        }.freeze
       }.freeze
 
       CALENDAR = {

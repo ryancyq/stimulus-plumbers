@@ -3,16 +3,12 @@
 module StimulusPlumbers
   module Helpers
     module ButtonHelper
-      def sp_button(content = nil, url: nil, external: false, variant: :primary, size: :md, **html_options, &block)
-        button_renderer.render(
-          content,
-          url: url, external: external, variant: variant, size: size, **html_options,
-          &block
-        )
+      def sp_button(content = nil, **html_options, &block)
+        button_renderer.render(content, **html_options, &block)
       end
 
-      def sp_button_group(alignment: :left, direction: :row, **html_options, &block)
-        button_renderer.group(alignment: alignment, direction: direction, **html_options, &block)
+      def sp_button_group(**html_options, &block)
+        button_renderer.group(**html_options, &block)
       end
 
       private

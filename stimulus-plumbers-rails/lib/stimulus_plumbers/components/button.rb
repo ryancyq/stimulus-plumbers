@@ -4,17 +4,11 @@ module StimulusPlumbers
   module Components
     class Button < Plumber::Base
       def render(content = nil, **kwargs, &block)
-        url      = kwargs.delete(:url)
-        external = kwargs.delete(:external) { false }
-        variant  = kwargs.delete(:variant) { :primary }
-        size     = kwargs.delete(:size) { :md }
-        content      = template.capture(&block) if block_given?
-        inner        = build_button(content, kwargs)
-        html_options = merge_html_options(
-          { classes: theme.resolve(:button, variant: variant, size: size).fetch(:classes, "") },
-          kwargs
-        )
-        render_button(inner, url: url, external: external, **html_options)
+        url     = kwargs.delete(:url)
+        badge   = kwargs.delete(:badge) { false }
+        button  = build_styled_button(content, **kwargs, &block)
+        button  = render_button(button[:inner], url: url, **button[:html_options])
+        badge ? wrap_with_badge(button, badge) : button
       end
 
       def group(alignment: :left, direction: :row, **kwargs, &block)
@@ -22,6 +16,19 @@ module StimulusPlumbers
       end
 
       private
+
+      def build_styled_button(content, **kwargs, &block)
+        external = kwargs.delete(:external) { false }
+        variant  = kwargs.delete(:variant) { :primary }
+        size     = kwargs.delete(:size) { :md }
+        content  = template.capture(&block) if block_given?
+        inner    = build_button(content, kwargs)
+        html_options = merge_html_options(
+          { classes: theme.resolve(:button, variant: variant, size: size).fetch(:classes, "") },
+          kwargs
+        )
+        { inner: inner, html_options: html_options.merge(external: external) }
+      end
 
       def build_button(content, kwargs)
         icon_leading  = kwargs.delete(:icon_leading)
@@ -52,6 +59,20 @@ module StimulusPlumbers
           name:    name,
           classes: theme.resolve(:button_icon).fetch(:classes, "")
         )
+      end
+
+      def wrap_with_badge(button, badge)
+        is_count = badge != true
+        label = badge_label(badge, is_count)
+        badge_classes = theme.resolve(:button_badge, count: is_count).fetch(:classes, "")
+        badge_span = template.content_tag(:span, label, "aria-hidden": "true", class: badge_classes)
+        template.content_tag(:span, template.safe_join([button, badge_span]), class: "relative inline-flex")
+      end
+
+      def badge_label(badge, is_count)
+        return nil unless is_count
+
+        badge.to_i > 9 ? "9+" : badge.to_s
       end
     end
   end

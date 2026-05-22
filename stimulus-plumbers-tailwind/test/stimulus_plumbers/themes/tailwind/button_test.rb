@@ -158,4 +158,84 @@ class TailwindThemeButtonTest < Minitest::Test
   def test_button_group_col_includes_alignment_class_for_right
     assert_includes classes_for(:button_group, direction: :col, alignment: :right), "items-end"
   end
+
+  # :button fab variant
+
+  def test_button_fab_variant_includes_rounded_full
+    result = classes_for(:button, variant: :fab)
+
+    assert_includes result, "rounded-full"
+  end
+
+  def test_button_fab_variant_includes_shadow
+    result = classes_for(:button, variant: :fab)
+
+    assert_includes result, "shadow-lg"
+  end
+
+  def test_button_fab_variant_includes_primary_background
+    result = classes_for(:button, variant: :fab)
+
+    assert_includes result, "bg-(--sp-color-primary)"
+    assert_includes result, "text-(--sp-color-primary-fg)"
+  end
+
+  def test_button_fab_variant_includes_hover_shadow
+    assert_includes classes_for(:button, variant: :fab), "hover:shadow-xl"
+  end
+
+  # :button dashed variant
+
+  def test_button_dashed_variant_includes_dashed_border
+    result = classes_for(:button, variant: :dashed)
+
+    assert_includes result, "border-dashed"
+    assert_includes result, "border-(--sp-color-border)"
+  end
+
+  def test_button_dashed_variant_includes_transparent_background
+    assert_includes classes_for(:button, variant: :dashed), "bg-transparent"
+  end
+
+  def test_button_dashed_variant_includes_muted_hover
+    assert_includes classes_for(:button, variant: :dashed), "hover:bg-(--sp-color-muted)"
+  end
+
+  # :button_badge
+
+  def test_button_badge_dot_returns_a_classes_string
+    result = classes_for(:button_badge)
+
+    assert_instance_of String, result
+    assert_predicate result, :present?
+  end
+
+  def test_button_badge_dot_includes_base_positioning_classes
+    result = classes_for(:button_badge)
+
+    assert_includes result, "absolute"
+    assert_includes result, "-top-1"
+    assert_includes result, "-right-1"
+    assert_includes result, "rounded-full"
+  end
+
+  def test_button_badge_dot_includes_dot_size_and_color
+    result = classes_for(:button_badge)
+
+    assert_includes result, "size-2"
+    assert_includes result, "bg-(--sp-color-destructive)"
+  end
+
+  def test_button_badge_count_includes_count_classes
+    result = classes_for(:button_badge, count: true)
+
+    assert_includes result, "min-w-4"
+    assert_includes result, "h-4"
+    assert_includes result, "bg-(--sp-color-destructive)"
+    assert_includes result, "text-(--sp-color-destructive-fg)"
+  end
+
+  def test_button_badge_count_does_not_include_dot_size
+    refute_includes classes_for(:button_badge, count: true), "size-2"
+  end
 end

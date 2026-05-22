@@ -109,4 +109,54 @@ class ButtonComponentTest < ActionView::TestCase
   def test_group_merges_custom_class
     assert_css parse_html(renderer.group(class: "custom") { "" }), ".custom"
   end
+
+  # ── badge ──────────────────────────────────────────────────────────────────
+
+  def test_badge_dot_wraps_button_in_relative_span
+    doc = parse_html(renderer.render("Click", badge: true))
+
+    assert_css doc, "span.relative"
+    assert_css doc, "span.relative > button"
+  end
+
+  def test_badge_dot_renders_aria_hidden_span
+    doc = parse_html(renderer.render("Click", badge: true))
+
+    assert_css doc, "span[aria-hidden='true']"
+  end
+
+  def test_badge_dot_renders_no_text_content_in_badge_span
+    doc = parse_html(renderer.render("Click", badge: true))
+    badge_span = doc.css("span[aria-hidden='true']").first
+
+    assert_equal "", badge_span.text.strip
+  end
+
+  def test_badge_count_renders_number_in_badge_span
+    doc = parse_html(renderer.render("Click", badge: 3))
+    badge_span = doc.css("span[aria-hidden='true']").first
+
+    assert_equal "3", badge_span.text.strip
+  end
+
+  def test_badge_count_caps_display_at_nine_plus
+    doc = parse_html(renderer.render("Click", badge: 10))
+    badge_span = doc.css("span[aria-hidden='true']").first
+
+    assert_equal "9+", badge_span.text.strip
+  end
+
+  def test_badge_false_does_not_wrap_button
+    doc = parse_html(renderer.render("Click", badge: false))
+
+    assert_no_css doc, "span.relative"
+    assert_css doc, "button"
+  end
+
+  def test_badge_omitted_does_not_wrap_button
+    doc = parse_html(renderer.render("Click"))
+
+    assert_no_css doc, "span.relative"
+    assert_css doc, "button"
+  end
 end
