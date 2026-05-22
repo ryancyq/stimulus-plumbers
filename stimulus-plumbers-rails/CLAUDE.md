@@ -135,3 +135,4 @@ stimulus-plumbers-rails/
 ## Component Architecture
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
+> Ensure examples provided are tested.
