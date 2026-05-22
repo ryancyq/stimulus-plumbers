@@ -169,6 +169,142 @@ describe('CalendarMonthController', () => {
     });
   });
 
+  describe('aria-selected', () => {
+    it('sets aria-selected="false" on all current-month cells when no selected value', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const buttons = daysOfMonth.querySelectorAll('button[role="gridcell"]');
+      expect(buttons.length).toBeGreaterThan(0);
+      for (const btn of buttons) {
+        expect(btn.getAttribute('aria-selected')).toBe('false');
+      }
+    });
+
+    it('sets aria-selected="true" only on the cell matching selected value', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month" data-calendar-month-selected-value="2024-10-15">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const selected = daysOfMonth.querySelectorAll('[aria-selected="true"]');
+      expect(selected.length).toBe(1);
+      expect(selected[0].textContent).toContain('15');
+    });
+
+    it('sets aria-selected="false" on all other current-month cells when one is selected', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month" data-calendar-month-selected-value="2024-10-15">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const notSelected = daysOfMonth.querySelectorAll('button[aria-selected="false"]');
+      expect(notSelected.length).toBe(30); // 31 days in October, 1 selected
+    });
+
+    it('does not set aria-selected on hidden other-month cells', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      for (const cell of daysOfMonth.querySelectorAll('[aria-hidden="true"]')) {
+        expect(cell.hasAttribute('aria-selected')).toBe(false);
+      }
+    });
+
+    it('sets aria-selected="false" on visible other-month cells when daysOfOtherMonth is enabled', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month" data-calendar-month-days-of-other-month-value="true">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const otherMonth = daysOfMonth.querySelectorAll('div[role="gridcell"]');
+      expect(otherMonth.length).toBeGreaterThan(0);
+      for (const cell of otherMonth) {
+        expect(cell.getAttribute('aria-selected')).toBe('false');
+      }
+    });
+
+    it('onSelect() sets aria-selected="true" on the matching cell', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const el = document.querySelector('[data-controller="calendar-month"]');
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
+
+      ctrl.onSelect(new CustomEvent('selected', { detail: { iso: new Date(2024, 9, 10).toISOString() } }));
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const selected = daysOfMonth.querySelectorAll('[aria-selected="true"]');
+      expect(selected.length).toBe(1);
+      expect(selected[0].textContent).toContain('10');
+    });
+
+    it('onSelect() does nothing when detail iso is absent', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month" data-calendar-month-selected-value="2024-10-15">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const el = document.querySelector('[data-controller="calendar-month"]');
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
+
+      ctrl.onSelect(new CustomEvent('selected', { detail: {} }));
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const selected = daysOfMonth.querySelectorAll('[aria-selected="true"]');
+      expect(selected.length).toBe(1);
+      expect(selected[0].textContent).toContain('15');
+    });
+
+    it('re-renders aria-selected when selected value changes', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const el = document.querySelector('[data-controller="calendar-month"]');
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+
+      expect(daysOfMonth.querySelectorAll('[aria-selected="true"]').length).toBe(0);
+
+      el.dataset.calendarMonthSelectedValue = '2024-10-20';
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const selected = daysOfMonth.querySelectorAll('[aria-selected="true"]');
+      expect(selected.length).toBe(1);
+      expect(selected[0].textContent).toContain('20');
+    });
+  });
+
   describe('without targets', () => {
     it('connects and attaches calendar', async () => {
       document.body.innerHTML = '<div data-controller="calendar-month"></div>';
