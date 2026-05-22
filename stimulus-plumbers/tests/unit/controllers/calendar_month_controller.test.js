@@ -139,6 +139,57 @@ describe('CalendarMonthController', () => {
     });
   });
 
+  describe('weekdayFormat value', () => {
+    it('renders short weekday labels by default', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month" data-calendar-month-locales-value='["en-US"]'>
+          <div data-calendar-month-target="daysOfWeek"></div>
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const headers = document
+        .querySelector('[data-calendar-month-target="daysOfWeek"]')
+        .querySelectorAll('[role="columnheader"]');
+      expect(headers[0].textContent).toBe('Sun');
+    });
+
+    it('renders long weekday labels when weekdayFormat is "long"', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month"
+             data-calendar-month-locales-value='["en-US"]'
+             data-calendar-month-weekday-format-value="long">
+          <div data-calendar-month-target="daysOfWeek"></div>
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const headers = document
+        .querySelector('[data-calendar-month-target="daysOfWeek"]')
+        .querySelectorAll('[role="columnheader"]');
+      expect(headers[0].textContent).toBe('Sunday');
+    });
+
+    it('renders narrow weekday labels when weekdayFormat is "narrow"', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month"
+             data-calendar-month-locales-value='["en-US"]'
+             data-calendar-month-weekday-format-value="narrow">
+          <div data-calendar-month-target="daysOfWeek"></div>
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const headers = document
+        .querySelector('[data-calendar-month-target="daysOfWeek"]')
+        .querySelectorAll('[role="columnheader"]');
+      expect(headers[0].textContent).toBe('S');
+    });
+  });
+
   describe('today value', () => {
     it('marks the specified today date with aria-current="date"', async () => {
       document.body.innerHTML = `
