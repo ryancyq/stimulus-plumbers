@@ -7,7 +7,7 @@ input-combobox + input-formatter   ← wrapper
 └── [popover]
       └── combobox-date         ← date picker (calendar grid)
       └── combobox-time         ← time picker (drum/scroll-wheel)
-      └── combobox-dropdown     ← listbox (dropdown & autocomplete)
+      └── combobox-dropdown     ← listbox (dropdown & typeahead)
 ```
 
 ---
@@ -26,16 +26,16 @@ Owns the trigger input, popover visibility, and hidden value. Always co-located 
 
 **Values**
 
-| Value       | Type   | Default | Description                                                               |
-| ----------- | ------ | ------- | ------------------------------------------------------------------------- |
-| `value`     | String | `""`    | Current selected value; setting it triggers `valueValueChanged`           |
-| `minLength` | Number | `1`     | Min query length before autocomplete relays to `combobox-dropdown` outlet |
+| Value       | Type   | Default | Description                                                            |
+| ----------- | ------ | ------- | ---------------------------------------------------------------------- |
+| `value`     | String | `""`    | Current selected value; setting it triggers `valueValueChanged`        |
+| `minLength` | Number | `1`     | Min query length before typeahead relays to `combobox-dropdown` outlet |
 
 **Outlets**
 
-| Outlet              | Description                            |
-| ------------------- | -------------------------------------- |
-| `combobox-dropdown` | Optional; present in autocomplete mode |
+| Outlet              | Description                         |
+| ------------------- | ----------------------------------- |
+| `combobox-dropdown` | Optional; present in typeahead mode |
 
 **Methods**
 
@@ -148,7 +148,7 @@ Drum/scroll-wheel time picker. Each drum is a `ul[role=listbox]`.
 
 ## combobox-dropdown
 
-Listbox with client-side fuzzy filter or server-side fetch. Used by both dropdown and autocomplete variants.
+Listbox with client-side fuzzy filter or server-side fetch. Used by both dropdown and typeahead variants.
 
 **Targets**
 

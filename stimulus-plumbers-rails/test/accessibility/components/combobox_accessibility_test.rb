@@ -30,7 +30,7 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible
   end
 
-  def test_passes_wcag_with_autocomplete_open
+  def test_passes_wcag_with_typeahead_open
     visit "/components/combobox"
     find("input[aria-label='City']").click
 

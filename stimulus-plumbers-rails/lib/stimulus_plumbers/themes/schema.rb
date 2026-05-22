@@ -53,16 +53,16 @@ module StimulusPlumbers
       }.freeze
 
       COMBOBOX = {
-        combobox_trigger:              {}.freeze,
-        combobox_option:               {
+        combobox_trigger:           {}.freeze,
+        combobox_option:            {
           selected: { default: false, range: Ranges::BOOL },
           disabled: { default: false, range: Ranges::BOOL }
         }.freeze,
-        combobox_option_group:         {}.freeze,
-        combobox_listbox:              {}.freeze,
-        combobox_autocomplete_loading: {}.freeze,
-        combobox_autocomplete_empty:   {}.freeze,
-        combobox_time:                 {}.freeze
+        combobox_option_group:      {}.freeze,
+        combobox_listbox:           {}.freeze,
+        combobox_typeahead_loading: {}.freeze,
+        combobox_typeahead_empty:   {}.freeze,
+        combobox_time:              {}.freeze
       }.freeze
 
       FORM = {

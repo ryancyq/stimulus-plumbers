@@ -33,12 +33,12 @@ module StimulusPlumbers
 
         OPTION_GROUP = %w[py-(--sp-space-1)].freeze
 
-        AUTOCOMPLETE_LOADING = %w[
+        TYPEAHEAD_LOADING = %w[
           flex items-center justify-center
           py-(--sp-space-2) text-(--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
-        AUTOCOMPLETE_EMPTY = %w[
+        TYPEAHEAD_EMPTY = %w[
           flex items-center justify-center
           py-(--sp-space-2) text-(--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
@@ -69,12 +69,12 @@ module StimulusPlumbers
           { classes: klasses(*OPTION_GROUP) }
         end
 
-        def combobox_autocomplete_loading_classes
-          { classes: klasses(*AUTOCOMPLETE_LOADING) }
+        def combobox_typeahead_loading_classes
+          { classes: klasses(*TYPEAHEAD_LOADING) }
         end
 
-        def combobox_autocomplete_empty_classes
-          { classes: klasses(*AUTOCOMPLETE_EMPTY) }
+        def combobox_typeahead_empty_classes
+          { classes: klasses(*TYPEAHEAD_EMPTY) }
         end
 
         def combobox_time_classes

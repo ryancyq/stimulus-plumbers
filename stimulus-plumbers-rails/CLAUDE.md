@@ -25,7 +25,7 @@ stimulus-plumbers-rails/
 │       │   │   └── section.rb
 │       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-format
 │       │   ├── combobox/
-│       │   │   ├── autocomplete.rb       # combobox-dropdown (autocomplete mode) body
+│       │   │   ├── typeahead.rb          # combobox-dropdown (typeahead mode) body
 │       │   │   ├── date.rb               # combobox-date picker body
 │       │   │   ├── dropdown.rb           # combobox-dropdown listbox body
 │       │   │   ├── options.rb            # Option list renderer
@@ -52,7 +52,7 @@ stimulus-plumbers-rails/
 │       │   ├── calendar_helper.rb        # sp_calendar_month
 │       │   ├── calendar_turbo_helper.rb  # sp_calendar_month_turbo
 │       │   ├── card_helper.rb            # sp_card, sp_card_section
-│       │   ├── combobox_helper.rb        # sp_combobox_date/time/dropdown/autocomplete
+│       │   ├── combobox_helper.rb        # sp_combobox_date/time/dropdown/typeahead
 │       │   ├── divider_helper.rb         # sp_divider
 │       │   ├── plumber_helper.rb         # sp_dom_id
 │       │   └── popover_helper.rb         # sp_popover

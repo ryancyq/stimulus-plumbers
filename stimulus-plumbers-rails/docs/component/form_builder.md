@@ -134,7 +134,7 @@ Renders a seven-option listbox of day names backed by `combobox-dropdown`. Pass 
 
 ## Search field
 
-Renders an editable autocomplete listbox backed by `combobox-autocomplete`. Supply `options:` for pre-loaded items or `url:` for server-side filtering.
+Renders an editable typeahead listbox backed by `combobox-dropdown`. Supply `options:` for pre-loaded items or `url:` for server-side filtering.
 
 ```erb
 <%= f.search_field :city %>

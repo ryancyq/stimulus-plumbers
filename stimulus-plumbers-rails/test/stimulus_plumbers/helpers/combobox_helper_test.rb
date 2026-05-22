@@ -309,64 +309,64 @@ class ComboboxHelperTest < ActionView::TestCase
     end
   end
 
-  class AutocompleteTest < ComboboxHelperTest
+  class TypeaheadTest < ComboboxHelperTest
     # ── structure ──────────────────────────────────────────────────────────────
 
     def test_renders_combobox_wrapper_with_stimulus_controller
-      assert_css parse_html(sp_combobox_autocomplete), "[data-controller~='input-combobox']"
+      assert_css parse_html(sp_combobox_typeahead), "[data-controller~='input-combobox']"
     end
 
     def test_renders_trigger_input_with_combobox_role
-      assert_css parse_html(sp_combobox_autocomplete), "input[type='text'][role='combobox']"
+      assert_css parse_html(sp_combobox_typeahead), "input[type='text'][role='combobox']"
     end
 
     def test_trigger_is_not_readonly
-      trigger = parse_html(sp_combobox_autocomplete).at_css("input[role='combobox']")
+      trigger = parse_html(sp_combobox_typeahead).at_css("input[role='combobox']")
 
       assert_not_nil trigger
       assert_not trigger.key?("readonly"), "Expected trigger to not be readonly"
     end
 
     def test_trigger_has_haspopup_listbox
-      assert_css parse_html(sp_combobox_autocomplete), "input[aria-haspopup='listbox']"
+      assert_css parse_html(sp_combobox_typeahead), "input[aria-haspopup='listbox']"
     end
 
     def test_trigger_has_aria_autocomplete_list
-      assert_css parse_html(sp_combobox_autocomplete), "input[aria-autocomplete='list']"
+      assert_css parse_html(sp_combobox_typeahead), "input[aria-autocomplete='list']"
     end
 
     def test_renders_listbox_popover
-      assert_css parse_html(sp_combobox_autocomplete), "ul[role='listbox']"
+      assert_css parse_html(sp_combobox_typeahead), "ul[role='listbox']"
     end
 
     def test_popover_is_hidden_by_default
-      popover = parse_html(sp_combobox_autocomplete).at_css("[data-input-combobox-target='popover']")
+      popover = parse_html(sp_combobox_typeahead).at_css("[data-input-combobox-target='popover']")
 
       assert_not_nil popover
       assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
     end
 
     def test_popover_is_empty_by_default
-      popover = parse_html(sp_combobox_autocomplete).at_css("[role='listbox']")
+      popover = parse_html(sp_combobox_typeahead).at_css("[role='listbox']")
 
       assert_not_nil popover
       assert_equal "", popover.inner_html.strip
     end
 
     def test_renders_loading_indicator
-      assert_css parse_html(sp_combobox_autocomplete), "[aria-live='polite'][hidden]"
+      assert_css parse_html(sp_combobox_typeahead), "[aria-live='polite'][hidden]"
     end
 
     def test_renders_empty_state_element
-      assert_css parse_html(sp_combobox_autocomplete), "[role='status'][hidden]"
+      assert_css parse_html(sp_combobox_typeahead), "[role='status'][hidden]"
     end
 
     def test_trigger_aria_expanded_false
-      assert_css parse_html(sp_combobox_autocomplete), "input[aria-expanded='false']"
+      assert_css parse_html(sp_combobox_typeahead), "input[aria-expanded='false']"
     end
 
     def test_renders_initial_options_when_provided
-      doc = parse_html(sp_combobox_autocomplete(options: [%w[London london], %w[Paris paris]]))
+      doc = parse_html(sp_combobox_typeahead(options: [%w[London london], %w[Paris paris]]))
 
       assert_css doc, "li[role='option'][data-value='london']"
       assert_css doc, "li[role='option'][data-value='paris']"
@@ -374,7 +374,7 @@ class ComboboxHelperTest < ActionView::TestCase
 
     def test_option_with_description_renders_two_spans
       options = [["London", "london", { description: "United Kingdom" }]]
-      option  = parse_html(sp_combobox_autocomplete(options: options)).at_css("li[role='option'][data-value='london']")
+      option  = parse_html(sp_combobox_typeahead(options: options)).at_css("li[role='option'][data-value='london']")
 
       assert_not_nil option
       spans = option.css("span")
@@ -385,7 +385,7 @@ class ComboboxHelperTest < ActionView::TestCase
     end
 
     def test_trigger_aria_controls_matches_popover_id
-      doc     = parse_html(sp_combobox_autocomplete)
+      doc     = parse_html(sp_combobox_typeahead)
       trigger = doc.at_css("input[role='combobox']")
       popover = doc.at_css("[data-input-combobox-target='popover']")
 
@@ -397,21 +397,21 @@ class ComboboxHelperTest < ActionView::TestCase
     # ── value ─────────────────────────────────────────────────────────────────
 
     def test_value_from_explicit_option
-      assert_css parse_html(sp_combobox_autocomplete(value: "london")), "input[type='hidden'][value='london']"
+      assert_css parse_html(sp_combobox_typeahead(value: "london")), "input[type='hidden'][value='london']"
     end
 
     # ── html options ──────────────────────────────────────────────────────────
 
     def test_forwards_html_options_to_wrapper
-      assert_css parse_html(sp_combobox_autocomplete(class: "my-autocomplete")),
-                 "[data-controller~='input-combobox'].my-autocomplete"
+      assert_css parse_html(sp_combobox_typeahead(class: "my-typeahead")),
+                 "[data-controller~='input-combobox'].my-typeahead"
     end
 
     # ── ids ───────────────────────────────────────────────────────────────────
 
     def test_generates_unique_id_per_render
-      popover_id1 = sp_combobox_autocomplete[%r{aria-controls="([^"]+)"}, 1]
-      popover_id2 = sp_combobox_autocomplete[%r{aria-controls="([^"]+)"}, 1]
+      popover_id1 = sp_combobox_typeahead[%r{aria-controls="([^"]+)"}, 1]
+      popover_id2 = sp_combobox_typeahead[%r{aria-controls="([^"]+)"}, 1]
 
       assert_not_nil popover_id1
       assert_not_equal popover_id1, popover_id2

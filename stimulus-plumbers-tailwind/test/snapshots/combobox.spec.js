@@ -33,9 +33,9 @@ test("dropdown open", async ({ page }) => {
   await expect(page).toHaveScreenshot("dropdown-open.png");
 });
 
-test("autocomplete open", async ({ page }) => {
+test("typeahead open", async ({ page }) => {
   const trigger = page.getByRole("combobox", { name: "City" });
   await trigger.click();
   await expect(trigger).toHaveAttribute("aria-expanded", "true");
-  await expect(page).toHaveScreenshot("autocomplete-open.png");
+  await expect(page).toHaveScreenshot("typeahead-open.png");
 });

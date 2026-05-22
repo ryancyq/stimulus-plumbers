@@ -46,7 +46,7 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 |-----------|-----------|------|
 | Combobox — date | `sp_combobox_date` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_date) |
 | Combobox — dropdown | `sp_combobox_dropdown` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_dropdown) |
-| Combobox — autocomplete | `sp_combobox_autocomplete` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_autocomplete) |
+| Combobox — typeahead | `sp_combobox_typeahead` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_typeahead) |
 | Combobox — time | `sp_combobox_time` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_time) |
 | Calendar | `sp_calendar_month` | [docs/component/calendar.md](docs/component/calendar.md) |
 | Popover | `sp_popover` | [docs/component/popover.md](docs/component/popover.md) |

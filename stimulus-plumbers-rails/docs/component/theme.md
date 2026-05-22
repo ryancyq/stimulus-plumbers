@@ -52,14 +52,14 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Combobox
 
-| Key                             | Component                                                                           | Variants                           |
-| ------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------- |
-| `combobox_listbox`              | `Combobox::Dropdown`, `Combobox::Autocomplete`, `Combobox::Time::Drum` (the `<ul>`) | —                                  |
-| `combobox_option`               | `Combobox::Options::Option`                                                         | `selected: bool`, `disabled: bool` |
-| `combobox_option_group`         | `Combobox::Options::OptionGroup`                                                    | —                                  |
-| `combobox_autocomplete_loading` | `Combobox::Autocomplete` (loading indicator)                                        | —                                  |
-| `combobox_autocomplete_empty`   | `Combobox::Autocomplete` (no-results message)                                       | —                                  |
-| `combobox_time`                 | `Combobox::Time` (drum wrapper)                                                     | —                                  |
+| Key                          | Component                                                                        | Variants                           |
+| ---------------------------- | -------------------------------------------------------------------------------- | ---------------------------------- |
+| `combobox_listbox`           | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time::Drum` (the `<ul>`) | —                                  |
+| `combobox_option`            | `Combobox::Options::Option`                                                      | `selected: bool`, `disabled: bool` |
+| `combobox_option_group`      | `Combobox::Options::OptionGroup`                                                 | —                                  |
+| `combobox_typeahead_loading` | `Combobox::Typeahead` (loading indicator)                                        | —                                  |
+| `combobox_typeahead_empty`   | `Combobox::Typeahead` (no-results message)                                       | —                                  |
+| `combobox_time`              | `Combobox::Time` (drum wrapper)                                                  | —                                  |
 
 ### Other components
 

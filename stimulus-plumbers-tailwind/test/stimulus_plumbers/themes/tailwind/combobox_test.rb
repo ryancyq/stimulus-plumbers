@@ -77,17 +77,17 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_predicate result, :present?
   end
 
-  # ── autocomplete ──────────────────────────────────────────────────────────
+  # ── typeahead ─────────────────────────────────────────────────────────────
 
-  def test_combobox_autocomplete_loading_returns_a_classes_string
-    result = classes_for(:combobox_autocomplete_loading)
+  def test_combobox_typeahead_loading_returns_a_classes_string
+    result = classes_for(:combobox_typeahead_loading)
 
     assert_instance_of String, result
     assert_predicate result, :present?
   end
 
-  def test_combobox_autocomplete_empty_returns_a_classes_string
-    result = classes_for(:combobox_autocomplete_empty)
+  def test_combobox_typeahead_empty_returns_a_classes_string
+    result = classes_for(:combobox_typeahead_empty)
 
     assert_instance_of String, result
     assert_predicate result, :present?

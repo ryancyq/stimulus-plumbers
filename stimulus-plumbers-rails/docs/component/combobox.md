@@ -54,16 +54,16 @@ Read-only combobox with a static listbox popover.
 
 ---
 
-### `sp_combobox_autocomplete`
+### `sp_combobox_typeahead`
 
 Editable trigger that filters options as the user types. Supports client-side fuzzy matching and server-side fetch.
 
 ```erb
 <%# Client-side fuzzy filter %>
-<%= sp_combobox_autocomplete(options: [["London", "london"], ["Paris", "paris"]]) %>
+<%= sp_combobox_typeahead(options: [["London", "london"], ["Paris", "paris"]]) %>
 
 <%# Server-side — receives ?q=<query>, must return <li role="option"> HTML fragments %>
-<%= sp_combobox_autocomplete(url: cities_path, label: "City") %>
+<%= sp_combobox_typeahead(url: cities_path, label: "City") %>
 ```
 
 | Option           | Description                                                      |
@@ -138,7 +138,7 @@ All variants share the same wrapper pattern:
 </div>
 ```
 
-`aria-haspopup` is `"listbox"` for dropdown/autocomplete, `"dialog"` for date/time.
+`aria-haspopup` is `"listbox"` for dropdown/typeahead, `"dialog"` for date/time.
 
 ### Popover body by variant
 
@@ -156,7 +156,7 @@ All variants share the same wrapper pattern:
 </div>
 ```
 
-**dropdown / autocomplete** — a `<div>` popover wrapping a `<ul role="listbox">`:
+**dropdown / typeahead** — a `<div>` popover wrapping a `<ul role="listbox">`:
 
 ```html
 <div
@@ -173,4 +173,4 @@ All variants share the same wrapper pattern:
 </div>
 ```
 
-For autocomplete, `loading` and `empty` state elements are appended alongside the `<ul>` inside the popover `<div>`.
+For typeahead, `loading` and `empty` state elements are appended alongside the `<ul>` inside the popover `<div>`.
