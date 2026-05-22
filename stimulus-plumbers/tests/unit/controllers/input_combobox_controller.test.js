@@ -18,7 +18,7 @@ describe('InputComboboxController', () => {
       <div data-controller="input-combobox">
         <input type="text" data-input-combobox-target="trigger"
                role="combobox" aria-expanded="false" aria-haspopup="dialog">
-        <input type="hidden" data-input-combobox-target="value">
+        <input type="hidden" data-input-combobox-target="input">
         <div data-input-combobox-target="popover" hidden>
           <button id="first-focusable">Pick</button>
         </div>
@@ -110,7 +110,7 @@ describe('InputComboboxController', () => {
       getController().open()
       getController().onSelect({ detail: { value: '2024-03-15' } })
       await new Promise((r) => setTimeout(r, 10))
-      expect(document.querySelector('[data-input-combobox-target="value"]').value).toBe('2024-03-15')
+      expect(document.querySelector('[data-input-combobox-target="input"]').value).toBe('2024-03-15')
     })
 
     it('closes the popover after selection', () => {
@@ -142,7 +142,7 @@ describe('InputComboboxController', () => {
     it('syncs value to the value target', async () => {
       getController().valueValue = 'abc'
       await new Promise((r) => setTimeout(r, 10))
-      expect(document.querySelector('[data-input-combobox-target="value"]').value).toBe('abc')
+      expect(document.querySelector('[data-input-combobox-target="input"]').value).toBe('abc')
     })
   })
 

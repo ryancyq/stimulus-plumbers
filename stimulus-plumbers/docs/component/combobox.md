@@ -1,9 +1,9 @@
 # Combobox Controllers
 
-The combobox family uses a layered design. `input-combobox` and `input-format` live on the wrapper; a picker sub-controller lives inside the popover.
+The combobox family uses a layered design. `input-combobox` and `input-formatter` live on the wrapper; a picker sub-controller lives inside the popover.
 
 ```
-input-combobox + input-format   ← wrapper
+input-combobox + input-formatter   ← wrapper
 └── [popover]
       └── combobox-date         ← date picker (calendar grid)
       └── combobox-time         ← time picker (drum/scroll-wheel)
@@ -14,7 +14,7 @@ input-combobox + input-format   ← wrapper
 
 ## input-combobox
 
-Owns the trigger input, popover visibility, and hidden value. Always co-located with `input-format`.
+Owns the trigger input, popover visibility, and hidden value. Always co-located with `input-formatter`.
 
 **Targets**
 
@@ -55,7 +55,7 @@ Owns the trigger input, popover visibility, and hidden value. Always co-located 
 
 ---
 
-## input-format
+## input-formatter
 
 Formats and displays values. Always co-located with `input-combobox`.
 
@@ -85,9 +85,9 @@ Formats and displays values. Always co-located with `input-combobox`.
 
 **Dispatches**
 
-| Event                    | Detail      | When                                    |
-| ------------------------ | ----------- | --------------------------------------- |
-| `input-format:formatted` | `{ value }` | After every write to the `input` target |
+| Event                       | Detail      | When                                    |
+| --------------------------- | ----------- | --------------------------------------- |
+| `input-formatter:formatted` | `{ value }` | After every write to the `input` target |
 
 ---
 
@@ -205,11 +205,11 @@ user picks value
             ├─ valueValue = value        → valueValueChanged
             │    ├─ valueTarget.value = value
             │    └─ dispatch input-combobox:changed { value }
-            │         └─ input-format#onChange  ← event adapter
-            │              └─ format(value)     ← programmatic API
+            │         └─ input-formatter#onChange  ← event adapter
+            │              └─ format(value)       ← programmatic API
             │                   ├─ formats value
             │                   ├─ writes to inputTarget
-            │                   └─ dispatch input-format:formatted { value }
+            │                   └─ dispatch input-formatter:formatted { value }
             └─ close()
 ```
 

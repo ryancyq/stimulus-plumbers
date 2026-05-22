@@ -1,4 +1,4 @@
-# input-format
+# input-formatter
 
 Formats, masks, and reveals values written to an input element. Handles password reveal toggling and structured display formatting for credit cards, phone numbers, currencies, dates, and times.
 
@@ -30,9 +30,9 @@ Formats, masks, and reveals values written to an input element. Handles password
 
 ## Dispatches
 
-| Event                    | Detail      | When                                    |
-| ------------------------ | ----------- | --------------------------------------- |
-| `input-format:formatted` | `{ value }` | After every write to the `input` target |
+| Event                       | Detail      | When                                    |
+| --------------------------- | ----------- | --------------------------------------- |
+| `input-formatter:formatted` | `{ value }` | After every write to the `input` target |
 
 ## Formatters
 
@@ -63,14 +63,14 @@ Formatter.register('iban', {
 ### Password reveal
 
 ```html
-<div data-controller="input-format" data-input-format-type-value="password">
-  <input type="password" data-input-format-target="input" />
+<div data-controller="input-formatter" data-input-formatter-type-value="password">
+  <input type="password" data-input-formatter-target="input" />
   <button
     type="button"
     aria-label="Show password"
     aria-pressed="false"
-    data-input-format-target="toggle"
-    data-action="click->input-format#toggle"
+    data-input-formatter-target="toggle"
+    data-action="click->input-formatter#toggle"
   ></button>
 </div>
 ```
@@ -78,8 +78,8 @@ Formatter.register('iban', {
 ### Credit card formatting
 
 ```html
-<div data-controller="input-format" data-input-format-type-value="creditCard">
-  <input type="text" data-input-format-target="input" />
+<div data-controller="input-formatter" data-input-formatter-type-value="creditCard">
+  <input type="text" data-input-formatter-target="input" />
 </div>
 ```
 

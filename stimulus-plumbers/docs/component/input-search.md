@@ -43,4 +43,4 @@ Shows a clear button when a search input has a value, hides it when empty, and c
 
 - Suppress the native WebKit clear button via CSS to avoid visual duplication: `input[type="search"]::-webkit-search-cancel-button { appearance: none }`.
 - `clear()` dispatches a native `input` event with `bubbles: true` so upstream listeners (e.g. live search) react to the cleared value.
-- The controller is standalone — it has no dependency on `input-format` or any other plumber.
+- The controller is standalone — it has no dependency on `input-formatter` or any other plumber.

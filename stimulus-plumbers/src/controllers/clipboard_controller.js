@@ -3,11 +3,11 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
   static targets = ['source'];
   static values = {
-    type: { type: String, default: 'text/plain' },
+    contentType: { type: String, default: 'text/plain' },
   };
 
   onPaste(event) {
-    const text = event.clipboardData?.getData(this.typeValue) ?? '';
+    const text = event.clipboardData?.getData(this.contentTypeValue) ?? '';
     const types = Array.from(event.clipboardData?.types ?? []);
     event.preventDefault();
     this.dispatch('pasted', { detail: { text, types }, bubbles: true });

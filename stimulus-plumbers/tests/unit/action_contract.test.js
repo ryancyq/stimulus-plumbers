@@ -7,7 +7,7 @@ import InputComboboxController         from '../../src/controllers/input_combobo
 import ComboboxDropdownController      from '../../src/controllers/combobox_dropdown_controller'
 import ComboboxTimeController          from '../../src/controllers/combobox_time_controller'
 import ComboboxDateController          from '../../src/controllers/combobox_date_controller'
-import InputFormatController           from '../../src/controllers/input_format_controller'
+import InputFormatterController        from '../../src/controllers/input_formatter_controller'
 import InputSearchController           from '../../src/controllers/input_search_controller'
 import CalendarMonthController         from '../../src/controllers/calendar_month_controller'
 import CalendarMonthObserverController from '../../src/controllers/calendar_month_observer_controller'
@@ -36,7 +36,7 @@ describe('Ruby action binding contract', () => {
       ['combobox-dropdown',       ComboboxDropdownController,      ['select', 'onNavigate']],
       ['combobox-time',           ComboboxTimeController,          ['select', 'onNavigate']],
       ['combobox-date',           ComboboxDateController,          ['onSelect']],
-      ['input-format',            InputFormatController,           ['format', 'toggle']],
+      ['input-formatter',         InputFormatterController,        ['format', 'toggle']],
       ['input-search',            InputSearchController,           ['clear']],
       ['calendar-month',          CalendarMonthController,         ['onSelect']],
       ['calendar-month-observer', CalendarMonthObserverController, ['onSelect', 'select']],

@@ -4,8 +4,8 @@ module StimulusPlumbers
   module Components
     class Combobox < Plumber::Base
       STIMULUS_CONTROLLER = "input-combobox"
-      FORMAT_CONTROLLER   = "input-format"
-      FORMAT_ACTION       = "input-combobox:changed->input-format#format"
+      FORMAT_CONTROLLER   = "input-formatter"
+      FORMAT_ACTION       = "input-combobox:changed->input-formatter#format"
 
       def self.popover_id_for(trigger_id)
         [trigger_id, "popover"].compact.join("_")
@@ -59,7 +59,7 @@ module StimulusPlumbers
 
       def hidden_input(input)
         stimulus_data = merge_html_options(
-          { "#{STIMULUS_CONTROLLER}_target": "value" },
+          { "#{STIMULUS_CONTROLLER}_target": "input" },
           input.fetch(:data, {})
         )
         template.tag.input(type: "hidden", name: input[:name], value: input[:value], data: stimulus_data)

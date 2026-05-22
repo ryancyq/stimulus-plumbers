@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Application } from '@hotwired/stimulus'
-import InputFormatController from '../../../src/controllers/input_format_controller'
+import InputFormatterController from '../../../src/controllers/input_formatter_controller'
 import { Formatter } from '../../../src/plumbers/formatter'
 
-describe('InputFormatController', () => {
+describe('InputFormatterController', () => {
   let application
 
   beforeEach(() => {
     application = Application.start()
-    application.register('input-format', InputFormatController)
+    application.register('input-formatter', InputFormatterController)
   })
 
   afterEach(() => {
@@ -18,16 +18,16 @@ describe('InputFormatController', () => {
 
   const getController = () =>
     application.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller="input-format"]'),
-      'input-format'
+      document.querySelector('[data-controller="input-formatter"]'),
+      'input-formatter'
     )
 
   describe('plain type (default) — non-input display target', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <div data-controller="input-format">
-          <output data-input-format-target="input">hello</output>
-          <button data-action="input-format#toggle" data-input-format-target="toggle">Toggle</button>
+        <div data-controller="input-formatter">
+          <output data-input-formatter-target="input">hello</output>
+          <button data-action="input-formatter#toggle" data-input-formatter-target="toggle">Toggle</button>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
@@ -38,27 +38,27 @@ describe('InputFormatController', () => {
     })
 
     it('hides the toggle button for non-maskable types', () => {
-      expect(document.querySelector('[data-input-format-target="toggle"]').hidden).toBe(true)
+      expect(document.querySelector('[data-input-formatter-target="toggle"]').hidden).toBe(true)
     })
 
     it('renders existing textContent as the formatted value', () => {
-      expect(document.querySelector('[data-input-format-target="input"]').textContent).toBe('hello')
+      expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe('hello')
     })
 
     it('format(value) writes formatted value to the input target', async () => {
       getController().format('world')
-      expect(document.querySelector('[data-input-format-target="input"]').textContent).toBe('world')
+      expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe('world')
     })
 
     it('onChange(event) writes event.detail.value to the input target', () => {
       getController().onChange({ detail: { value: 'world' } })
-      expect(document.querySelector('[data-input-format-target="input"]').textContent).toBe('world')
+      expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe('world')
     })
 
-    it('dispatches input-format:formatted after writing', () => {
-      const el  = document.querySelector('[data-controller="input-format"]')
+    it('dispatches input-formatter:formatted after writing', () => {
+      const el  = document.querySelector('[data-controller="input-formatter"]')
       const spy = vi.fn()
-      el.addEventListener('input-format:formatted', spy)
+      el.addEventListener('input-formatter:formatted', spy)
       getController().format('x')
       expect(spy).toHaveBeenCalledTimes(1)
       expect(spy.mock.calls[0][0].detail.value).toBe('x')
@@ -74,82 +74,82 @@ describe('InputFormatController', () => {
   describe('plain type — <input> display target', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <div data-controller="input-format">
-          <input type="text" value="initial" data-input-format-target="input">
+        <div data-controller="input-formatter">
+          <input type="text" value="initial" data-input-formatter-target="input">
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
     it('reads existing .value on connect and writes it back formatted', () => {
-      expect(document.querySelector('[data-input-format-target="input"]').value).toBe('initial')
+      expect(document.querySelector('[data-input-formatter-target="input"]').value).toBe('initial')
     })
 
     it('format(value) writes to .value on <input> targets', () => {
       getController().format('updated')
-      expect(document.querySelector('[data-input-format-target="input"]').value).toBe('updated')
+      expect(document.querySelector('[data-input-formatter-target="input"]').value).toBe('updated')
     })
   })
 
   describe('creditCard type', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <div data-controller="input-format" data-input-format-type-value="creditCard">
-          <output data-input-format-target="input">4242424242424242</output>
-          <button data-action="input-format#toggle" data-input-format-target="toggle">Toggle</button>
+        <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
+          <output data-input-formatter-target="input">4242424242424242</output>
+          <button data-action="input-formatter#toggle" data-input-formatter-target="toggle">Toggle</button>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
     it('formats the initial value on connect', () => {
-      expect(document.querySelector('[data-input-format-target="input"]').textContent).toBe(
+      expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe(
         '4242 4242 4242 4242'
       )
     })
 
     it('hides the toggle button (not maskable)', () => {
-      expect(document.querySelector('[data-input-format-target="toggle"]').hidden).toBe(true)
+      expect(document.querySelector('[data-input-formatter-target="toggle"]').hidden).toBe(true)
     })
   })
 
   describe('password type', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <div data-controller="input-format" data-input-format-type-value="password">
-          <input type="password" data-input-format-target="input">
-          <button data-action="input-format#toggle" data-input-format-target="toggle">Show</button>
+        <div data-controller="input-formatter" data-input-formatter-format-value="password">
+          <input type="password" data-input-formatter-target="input">
+          <button data-action="input-formatter#toggle" data-input-formatter-target="toggle">Show</button>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
     it('input starts as type password', () => {
-      expect(document.querySelector('[data-input-format-target="input"]').type).toBe('password')
+      expect(document.querySelector('[data-input-formatter-target="input"]').type).toBe('password')
     })
 
     it('changes input type to text on toggle', async () => {
       await getController().toggle()
-      expect(document.querySelector('[data-input-format-target="input"]').type).toBe('text')
+      expect(document.querySelector('[data-input-formatter-target="input"]').type).toBe('text')
     })
 
     it('reverts input type back to password on second toggle', async () => {
       await getController().toggle()
       await getController().toggle()
-      expect(document.querySelector('[data-input-format-target="input"]').type).toBe('password')
+      expect(document.querySelector('[data-input-formatter-target="input"]').type).toBe('password')
     })
   })
 
   describe('sync without input target', () => {
     beforeEach(async () => {
-      document.body.innerHTML = `<div data-controller="input-format"></div>`
+      document.body.innerHTML = `<div data-controller="input-formatter"></div>`
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
     it('dispatches formatted event even with no input target', () => {
-      const el  = document.querySelector('[data-controller="input-format"]')
+      const el  = document.querySelector('[data-controller="input-formatter"]')
       const spy = vi.fn()
-      el.addEventListener('input-format:formatted', spy)
+      el.addEventListener('input-formatter:formatted', spy)
       getController().format('test')
       expect(spy).toHaveBeenCalledTimes(1)
     })
@@ -159,50 +159,50 @@ describe('InputFormatController', () => {
     })
   })
 
-  describe('typeValueChanged', () => {
+  describe('formatValueChanged', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <div data-controller="input-format" data-input-format-type-value="plain">
-          <output data-input-format-target="input">4242424242424242</output>
-          <button data-action="input-format#toggle" data-input-format-target="toggle">Toggle</button>
+        <div data-controller="input-formatter" data-input-formatter-format-value="plain">
+          <output data-input-formatter-target="input">4242424242424242</output>
+          <button data-action="input-formatter#toggle" data-input-formatter-target="toggle">Toggle</button>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
     it('re-attaches the formatter when typeValue changes', async () => {
-      const el = document.querySelector('[data-controller="input-format"]')
-      el.setAttribute('data-input-format-type-value', 'creditCard')
+      const el = document.querySelector('[data-controller="input-formatter"]')
+      el.setAttribute('data-input-formatter-format-value', 'creditCard')
       await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(document.querySelector('[data-input-format-target="input"]').textContent).toBe(
+      expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe(
         '4242 4242 4242 4242'
       )
     })
 
     it('keeps toggle hidden for non-maskable types after change', async () => {
-      const el = document.querySelector('[data-controller="input-format"]')
-      el.setAttribute('data-input-format-type-value', 'creditCard')
+      const el = document.querySelector('[data-controller="input-formatter"]')
+      el.setAttribute('data-input-formatter-format-value', 'creditCard')
       await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(document.querySelector('[data-input-format-target="toggle"]').hidden).toBe(true)
+      expect(document.querySelector('[data-input-formatter-target="toggle"]').hidden).toBe(true)
     })
   })
 
   describe('optionsValueChanged', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <div data-controller="input-format" data-input-format-type-value="currency"
-             data-input-format-options-value='{"currency":"USD"}'>
-          <output data-input-format-target="input">1234.56</output>
+        <div data-controller="input-formatter" data-input-formatter-format-value="currency"
+             data-input-formatter-options-value='{"currency":"USD"}'>
+          <output data-input-formatter-target="input">1234.56</output>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
     it('re-formats when optionsValue changes', async () => {
-      const el = document.querySelector('[data-controller="input-format"]')
-      el.setAttribute('data-input-format-options-value', JSON.stringify({ currency: 'EUR', locale: 'de-DE' }))
+      const el = document.querySelector('[data-controller="input-formatter"]')
+      el.setAttribute('data-input-formatter-options-value', JSON.stringify({ currency: 'EUR', locale: 'de-DE' }))
       await new Promise((resolve) => setTimeout(resolve, 10))
-      const text = document.querySelector('[data-input-format-target="input"]').textContent
+      const text = document.querySelector('[data-input-formatter-target="input"]').textContent
       expect(text).toContain('1')
       expect(text.length).toBeGreaterThan(0)
     })
@@ -211,8 +211,8 @@ describe('InputFormatController', () => {
   describe('onPaste', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <div data-controller="input-format" data-input-format-type-value="creditCard">
-          <output data-input-format-target="input"></output>
+        <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
+          <output data-input-formatter-target="input"></output>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
@@ -220,27 +220,27 @@ describe('InputFormatController', () => {
 
     it('normalizes and formats a valid pasted value', () => {
       getController().onPaste({ detail: { text: '4242424242424242' } })
-      expect(document.querySelector('[data-input-format-target="input"]').textContent).toBe(
+      expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe(
         '4242 4242 4242 4242'
       )
     })
 
     it('does not write when the normalized value fails validation', () => {
-      const output = document.querySelector('[data-input-format-target="input"]')
+      const output = document.querySelector('[data-input-formatter-target="input"]')
       output.textContent = 'original'
       getController().onPaste({ detail: { text: 'not-a-card' } })
       expect(output.textContent).toBe('original')
     })
 
     it('does not write when pasted text is empty', () => {
-      const output = document.querySelector('[data-input-format-target="input"]')
+      const output = document.querySelector('[data-input-formatter-target="input"]')
       output.textContent = 'original'
       getController().onPaste({ detail: { text: '' } })
       expect(output.textContent).toBe('original')
     })
 
     it('does not throw when there is no formatter', async () => {
-      document.body.innerHTML = `<div data-controller="input-format"></div>`
+      document.body.innerHTML = `<div data-controller="input-formatter"></div>`
       await new Promise((resolve) => setTimeout(resolve, 10))
       expect(() =>
         getController().onPaste({ detail: { text: '4242424242424242' } })
@@ -258,20 +258,20 @@ describe('InputFormatController', () => {
       })
 
       document.body.innerHTML = `
-        <div data-controller="input-format" data-input-format-type-value="secret">
-          <output data-input-format-target="input">hello</output>
-          <button data-action="input-format#toggle" data-input-format-target="toggle">Toggle</button>
+        <div data-controller="input-formatter" data-input-formatter-format-value="secret">
+          <output data-input-formatter-target="input">hello</output>
+          <button data-action="input-formatter#toggle" data-input-formatter-target="toggle">Toggle</button>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
     it('shows the toggle button for maskable types', () => {
-      expect(document.querySelector('[data-input-format-target="toggle"]').hidden).toBe(false)
+      expect(document.querySelector('[data-input-formatter-target="toggle"]').hidden).toBe(false)
     })
 
     it('writes the masked value when revealed is false', () => {
-      expect(document.querySelector('[data-input-format-target="input"]').textContent).toBe('*****')
+      expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe('*****')
     })
 
     it('writes the formatted value when revealed is true', async () => {
@@ -279,11 +279,11 @@ describe('InputFormatController', () => {
       await new Promise((resolve) => setTimeout(resolve, 10))
       // With revealedValue=true, format() calls format() instead of mask()
       getController().format('hello')
-      expect(document.querySelector('[data-input-format-target="input"]').textContent).toBe('hello')
+      expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe('hello')
     })
 
     it('sets aria-pressed on the toggle button', () => {
-      const toggle = document.querySelector('[data-input-format-target="toggle"]')
+      const toggle = document.querySelector('[data-input-formatter-target="toggle"]')
       expect(toggle.getAttribute('aria-pressed')).toBe('false')
     })
   })

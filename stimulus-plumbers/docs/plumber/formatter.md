@@ -1,6 +1,6 @@
 # Formatter
 
-Attaches a formatter to a controller, exposing `this.formatter` with `normalize`, `validate`, `format`, and `mask` helpers. Used by `input-format`.
+Attaches a formatter to a controller, exposing `this.formatter` with `normalize`, `validate`, `format`, and `mask` helpers. Used by `input-formatter`.
 
 ## Factory
 

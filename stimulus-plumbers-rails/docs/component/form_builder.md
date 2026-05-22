@@ -158,36 +158,36 @@ When `clearable: true`, the field is wrapped in an `input-search` controller div
 <%= f.password_field :password, reveal: true %>
 ```
 
-| Option   | Type    | Default | Description                                                                       |
-| -------- | ------- | ------- | --------------------------------------------------------------------------------- |
-| `reveal` | Boolean | `false` | Wraps the input in an input-group with a show/hide button wired to `input-format` |
+| Option   | Type    | Default | Description                                                                          |
+| -------- | ------- | ------- | ------------------------------------------------------------------------------------ |
+| `reveal` | Boolean | `false` | Wraps the input in an input-group with a show/hide button wired to `input-formatter` |
 
 HTML options such as `autocomplete:`, `class:`, and `data:` are forwarded to the `<input>` in both the plain and `reveal: true` paths.
 
-When `reveal: true`, the field renders an input-group wrapper with the `input-format` controller:
+When `reveal: true`, the field renders an input-group wrapper with the `input-formatter` controller:
 
 ```html
 <div class="...">
   <!-- field group -->
   <label for="[id]">Password</label>
   <div
-    data-controller="input-format"
-    data-input-format-type-value="password"
+    data-controller="input-formatter"
+    data-input-formatter-format-value="password"
     class="flex items-center overflow-hidden rounded-md border border-gray-500"
   >
-    <input type="password" data-input-format-target="input" />
+    <input type="password" data-input-formatter-target="input" />
     <button
       type="button"
       aria-label="Show password"
       aria-pressed="false"
-      data-input-format-target="toggle"
-      data-action="click->input-format#toggle"
+      data-input-formatter-target="toggle"
+      data-action="click->input-formatter#toggle"
     ></button>
   </div>
 </div>
 ```
 
-See [input-format.md](../../../stimulus-plumbers/docs/component/input-format.md) for the full controller API.
+See [input-formatter.md](../../../stimulus-plumbers/docs/component/input-formatter.md) for the full controller API.
 
 ## Check box / Radio button
 

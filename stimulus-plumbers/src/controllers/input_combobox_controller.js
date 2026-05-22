@@ -3,7 +3,7 @@ import { focusFirst } from '../accessibility/focus';
 import { attachDismisser, attachVisibility } from '../plumbers';
 
 export default class extends Controller {
-  static targets = ['trigger', 'popover', 'value'];
+  static targets = ['trigger', 'popover', 'input'];
   static values = {
     value: String,
     minLength: { type: Number, default: 1 },
@@ -63,7 +63,7 @@ export default class extends Controller {
   }
 
   valueValueChanged(newVal) {
-    if (this.hasValueTarget) this.valueTarget.value = newVal;
+    if (this.hasInputTarget) this.inputTarget.value = newVal;
     this.dispatch('changed', { detail: { value: newVal } });
   }
 }

@@ -26,11 +26,11 @@ class PasswordTest < ActionView::TestCase
   end
 
   def test_does_not_render_input_group_wrapper
-    assert_no_css build_field, "[data-controller='input-format']"
+    assert_no_css build_field, "[data-controller='input-formatter']"
   end
 
   def test_does_not_render_toggle_button
-    assert_no_css build_field, "button[data-input-format-target='toggle']"
+    assert_no_css build_field, "button[data-input-formatter-target='toggle']"
   end
 
   def test_reveal_option_does_not_leak_into_html_attributes
@@ -40,23 +40,23 @@ class PasswordTest < ActionView::TestCase
   # ── reveal: true ──────────────────────────────────────────────────────────
 
   def test_reveal_renders_input_group_with_stimulus_controller
-    assert_css build_field(reveal: true), "[data-controller='input-format']"
+    assert_css build_field(reveal: true), "[data-controller='input-formatter']"
   end
 
-  def test_reveal_input_group_has_password_type_value
-    assert_css build_field(reveal: true), "[data-input-format-type-value='password']"
+  def test_reveal_input_group_has_password_format_value
+    assert_css build_field(reveal: true), "[data-input-formatter-format-value='password']"
   end
 
   def test_reveal_input_has_stimulus_target
-    assert_css build_field(reveal: true), "input[data-input-format-target='input']"
+    assert_css build_field(reveal: true), "input[data-input-formatter-target='input']"
   end
 
   def test_reveal_renders_toggle_button
-    assert_css build_field(reveal: true), "button[data-input-format-target='toggle']"
+    assert_css build_field(reveal: true), "button[data-input-formatter-target='toggle']"
   end
 
   def test_reveal_toggle_button_has_action
-    assert_css build_field(reveal: true), "button[data-action='click->input-format#toggle']"
+    assert_css build_field(reveal: true), "button[data-action='click->input-formatter#toggle']"
   end
 
   def test_reveal_toggle_button_has_aria_label
@@ -72,14 +72,14 @@ class PasswordTest < ActionView::TestCase
   end
 
   def test_reveal_input_is_inside_input_group
-    group = build_field(reveal: true).at_css("[data-controller='input-format']")
+    group = build_field(reveal: true).at_css("[data-controller='input-formatter']")
 
     assert_not_nil group
     assert_css Nokogiri::HTML.fragment(group.to_html), "input[type='password']"
   end
 
   def test_reveal_button_is_inside_input_group
-    group = build_field(reveal: true).at_css("[data-controller='input-format']")
+    group = build_field(reveal: true).at_css("[data-controller='input-formatter']")
 
     assert_not_nil group
     assert_css Nokogiri::HTML.fragment(group.to_html), "button"
