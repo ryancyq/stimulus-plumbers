@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ActionListRendererTest < ActionView::TestCase
+class ActionListComponentTest < ActionView::TestCase
   def renderer
     StimulusPlumbers::Components::ActionList.new(self)
   end

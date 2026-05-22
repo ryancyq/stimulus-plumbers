@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class AvatarRendererTest < ActionView::TestCase
+class AvatarComponentTest < ActionView::TestCase
   def renderer
     StimulusPlumbers::Components::Avatar.new(self)
   end

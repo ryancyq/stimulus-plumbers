@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class PopoverRendererTest < ActionView::TestCase
+class PopoverComponentTest < ActionView::TestCase
   def renderer
     StimulusPlumbers::Components::Popover.new(self)
   end

@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class CalendarMonthTurboRendererTest < ActionView::TestCase
+class CalendarMonthTurboComponentTest < ActionView::TestCase
   def renderer
     StimulusPlumbers::Components::Calendar::Month::Turbo.new(self)
   end

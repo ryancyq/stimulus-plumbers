@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class CardRendererTest < ActionView::TestCase
+class CardComponentTest < ActionView::TestCase
   def renderer
     StimulusPlumbers::Components::Card.new(self)
   end
