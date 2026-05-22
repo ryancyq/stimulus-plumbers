@@ -38,4 +38,8 @@ class BaseThemeButtonTest < StubThemeTestCase
     end
     mock_logger.verify
   end
+
+  def test_button_icon_resolves
+    assert_equal({}, @theme.resolve(:button_icon))
+  end
 end

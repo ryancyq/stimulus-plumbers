@@ -34,8 +34,6 @@ module StimulusPlumbers
           disabled:pointer-events-none disabled:opacity-50
         ].freeze
 
-        NAV_ICON = %w[size-4 stroke-current].freeze
-
         private
 
         def calendar_classes
@@ -69,10 +67,6 @@ module StimulusPlumbers
 
         def calendar_navigation_navigator_classes
           { classes: klasses(*NAV_BTN) }
-        end
-
-        def calendar_navigation_navigator_icon_classes
-          { classes: klasses(*NAV_ICON) }
         end
       end
     end

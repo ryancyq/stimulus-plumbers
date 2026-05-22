@@ -10,14 +10,20 @@ module StimulusPlumbers
             wrapper_opts
           )
           template.content_tag(:div, **html_options) do
-            template.safe_join(
-              [
-                leading.respond_to?(:call) ? leading.call : leading,
-                template.capture(&block),
-                trailing.respond_to?(:call) ? trailing.call : trailing
-              ]
-            )
+            build_input_group(leading, trailing, &block)
           end
+        end
+
+        private
+
+        def build_input_group(leading, trailing, &block)
+          template.safe_join(
+            [
+              leading.respond_to?(:call) ? leading.call : leading,
+              template.capture(&block),
+              trailing.respond_to?(:call) ? trailing.call : trailing
+            ]
+          )
         end
       end
     end

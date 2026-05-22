@@ -137,6 +137,10 @@ class SearchTest < ActionView::TestCase
     assert button.key?("hidden"), "Expected clear button to have hidden attribute"
   end
 
+  def test_clearable_clear_button_contains_icon
+    assert_css build_field(clearable: true), "button[data-input-clearable-target='clear'] span"
+  end
+
   def test_clearable_clear_button_is_inside_input_clearable_wrapper
     doc     = build_field(clearable: true)
     wrapper = doc.at_css("[data-controller='input-clearable']")

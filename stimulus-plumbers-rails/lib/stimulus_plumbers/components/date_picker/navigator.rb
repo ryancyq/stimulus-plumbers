@@ -4,26 +4,12 @@ module StimulusPlumbers
   module Components
     module DatePicker
       class Navigator < Plumber::Base
-        def render(icon_options: nil, **kwargs)
+        def render(icon: nil, **kwargs)
           html_options = merge_html_options(
             { classes: theme.resolve(:calendar_navigation_navigator).fetch(:classes, "") },
             kwargs
           )
-
-          if icon_options.nil?
-            template.content_tag(:button, nil, **html_options)
-          else
-            template.content_tag(:button, icon(icon_options), **html_options)
-          end
-        end
-
-        private
-
-        def icon(icon_options)
-          Icon.new(template).render(
-            classes: theme.resolve(:calendar_navigation_navigator_icon).fetch(:classes, ""),
-            **icon_options
-          )
+          Components::Button.new(template).render(variant: :ghost, size: nil, icon_leading: icon, **html_options)
         end
       end
     end

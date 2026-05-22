@@ -55,6 +55,48 @@ class ButtonComponentTest < ActionView::TestCase
     assert_css parse_html(renderer.render("Click", id: "my-btn")), "#my-btn"
   end
 
+  # ── icon ──────────────────────────────────────────────────────────────────
+
+  def test_icon_leading_renders_before_content
+    html   = renderer.render("Save", icon_leading: :check)
+    button = parse_html(html).at_css("button")
+
+    assert_operator button.inner_html.index("<span"), :<, button.inner_html.index("Save")
+  end
+
+  def test_icon_trailing_renders_after_content
+    html   = renderer.render("Next", icon_trailing: :arrow)
+    button = parse_html(html).at_css("button")
+
+    assert_operator button.inner_html.index("Next"), :<, button.inner_html.index("<span")
+  end
+
+  def test_icon_leading_only_renders_no_extra_text
+    doc = parse_html(renderer.render(icon_leading: :x))
+
+    assert_css doc, "button span"
+    assert_equal "", doc.at_css("button").text.strip
+  end
+
+  def test_icon_leading_as_callable
+    doc = parse_html(renderer.render("Click", icon_leading: -> { "<span>★</span>".html_safe }))
+
+    assert_includes doc.at_css("button").inner_html, "★"
+  end
+
+  def test_icon_trailing_as_callable
+    doc = parse_html(renderer.render("Click", icon_trailing: -> { "<span>→</span>".html_safe }))
+
+    assert_includes doc.at_css("button").inner_html, "→"
+  end
+
+  def test_no_icon_renders_content_only
+    doc      = parse_html(renderer.render("Plain"))
+    children = doc.at_css("button").children.reject { |n| n.text? && n.text.strip.empty? }
+
+    assert_equal 1, children.length
+  end
+
   # ── group ─────────────────────────────────────────────────────────────────
 
   def test_group_renders_div
