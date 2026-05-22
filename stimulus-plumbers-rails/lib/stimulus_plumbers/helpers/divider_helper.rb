@@ -3,8 +3,8 @@
 module StimulusPlumbers
   module Helpers
     module DividerHelper
-      def sp_divider(**html_options)
-        Components::Divider.new(self).render(**html_options)
+      def sp_divider(label = nil, **html_options)
+        Components::Divider.new(self).render(label, **html_options)
       end
     end
   end

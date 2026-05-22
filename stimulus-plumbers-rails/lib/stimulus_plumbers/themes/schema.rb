@@ -99,8 +99,10 @@ module StimulusPlumbers
       }.freeze
 
       LAYOUT = {
-        divider: {}.freeze,
-        popover: {}.freeze
+        divider:           {}.freeze,
+        divider_separator: {}.freeze,
+        divider_label:     {}.freeze,
+        popover:           {}.freeze
       }.freeze
     end
   end
