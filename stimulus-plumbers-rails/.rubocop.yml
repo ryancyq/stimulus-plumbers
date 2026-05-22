@@ -56,7 +56,6 @@ Metrics/ClassLength:
     - lib/stimulus_plumbers/components/calendar/*/turbo/*.rb
     - lib/stimulus_plumbers/form/field.rb
     - test/stimulus_plumbers/components/calendar/*/turbo_test.rb
-    - test/stimulus_plumbers/components/calendar/*/turbo/*_test.rb
     - test/stimulus_plumbers/form/**/*_test.rb
     - test/stimulus_plumbers/helpers/*_test.rb
     - test/stimulus_plumbers/plumber/*_test.rb
@@ -66,18 +65,11 @@ Metrics/MethodLength:
   Max: 15
   Exclude:
     - lib/stimulus_plumbers/components/calendar/*/turbo.rb
-    - lib/stimulus_plumbers/components/calendar/*/turbo/*.rb
-    - lib/stimulus_plumbers/components/combobox.rb
     - lib/stimulus_plumbers/components/combobox/**/*.rb
-    - lib/stimulus_plumbers/components/date_picker/*.rb
     - lib/stimulus_plumbers/components/icon.rb
-    - lib/stimulus_plumbers/form/builder.rb
-    - lib/stimulus_plumbers/form/fields/*.rb
     - lib/stimulus_plumbers/form/fields/inputs/search.rb
     - lib/stimulus_plumbers/form/fields/inputs/select/grouped.rb
     - lib/stimulus_plumbers/helpers/*_helper.rb
-    - lib/stimulus_plumbers/plumber/*.rb
-    - lib/stimulus_plumbers/themes/**/*.rb
     - test/accessibility/**/*_test.rb
 
 Metrics/AbcSize:
