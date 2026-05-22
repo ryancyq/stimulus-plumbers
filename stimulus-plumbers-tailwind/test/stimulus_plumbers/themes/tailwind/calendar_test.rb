@@ -87,10 +87,6 @@ class TailwindThemeCalendarTest < Minitest::Test
     assert_includes result, "disabled:opacity-50"
   end
 
-  def test_calendar_navigation_navigator_icon_includes_size_class
-    assert_includes classes_for(:calendar_navigation_navigator_icon), "size-4"
-  end
-
   def test_calendar_week_returns_a_classes_string
     result = classes_for(:calendar_week)
 

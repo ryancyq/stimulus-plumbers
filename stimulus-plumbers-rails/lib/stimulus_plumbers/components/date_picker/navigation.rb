@@ -32,7 +32,7 @@ module StimulusPlumbers
             aria: { label: label },
             data: { "#{stimulus_controller}-target" => target }
           }
-          opts[:icon_options] = { name: icon } if icon
+          opts[:icon] = icon if icon
           Navigator.new(template).render(**opts)
         end
       end

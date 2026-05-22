@@ -29,24 +29,22 @@ module StimulusPlumbers
         button_group: {
           alignment: { default: :left, range: Ranges::FLEX_ALIGN },
           direction: { default: :row,  range: Ranges::FLEX_DIRECTION }
-        }.freeze
+        }.freeze,
+        button_icon:  {}.freeze
       }.freeze
 
       CALENDAR = {
-        calendar:                           {}.freeze,
-        calendar_days_of_week:              {}.freeze,
-        calendar_week:                      {}.freeze,
-        calendar_days_of_month:             {}.freeze,
-        calendar_day:                       {
+        calendar:                      {}.freeze,
+        calendar_days_of_week:         {}.freeze,
+        calendar_week:                 {}.freeze,
+        calendar_days_of_month:        {}.freeze,
+        calendar_day:                  {
           today:    { default: false, range: Ranges::BOOL },
           selected: { default: false, range: Ranges::BOOL },
           outside:  { default: false, range: Ranges::BOOL }
         }.freeze,
-        calendar_navigation:                {}.freeze,
-        calendar_navigation_navigator:      {}.freeze,
-        calendar_navigation_navigator_icon: {
-          name: { default: "arrow-left", range: :icon_range }
-        }.freeze
+        calendar_navigation:           {}.freeze,
+        calendar_navigation_navigator: {}.freeze
       }.freeze
 
       CARD = {

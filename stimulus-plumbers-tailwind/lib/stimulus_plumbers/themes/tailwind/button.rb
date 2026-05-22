@@ -83,6 +83,10 @@ module StimulusPlumbers
             )
           }
         end
+
+        def button_icon_classes
+          { classes: klasses("size-4", "stroke-current") }
+        end
       end
     end
   end
