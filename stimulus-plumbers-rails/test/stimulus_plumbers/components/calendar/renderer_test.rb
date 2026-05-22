@@ -20,7 +20,7 @@ class CalendarRendererTest < ActionView::TestCase
   end
 
   def test_month_has_click_action_for_observer_controller
-    assert_includes renderer.month, "click-&gt;calendar-month-observer#select"
+    assert_includes renderer.month, "click-&gt;calendar-month-observer#onSelect"
   end
 
   def test_month_has_grid_role
@@ -49,7 +49,7 @@ class CalendarRendererTest < ActionView::TestCase
   def test_month_accepts_parent_action_via_data
     html = renderer.month(data: { action: "datepicker:navigated->calendar-month#draw" })
 
-    assert_includes html, "click-&gt;calendar-month-observer#select"
+    assert_includes html, "click-&gt;calendar-month-observer#onSelect"
     assert_includes html, "datepicker:navigated-&gt;calendar-month#draw"
   end
 end

@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { initCalendar } from '../plumbers';
+import { tryParseDate } from '../plumbers/plumber/date';
 
 export default class extends Controller {
   static targets = ['daysOfWeek', 'daysOfMonth'];
@@ -10,6 +11,7 @@ export default class extends Controller {
     dayFormat: { type: String, default: 'numeric' },
     daysOfOtherMonth: { type: Boolean, default: false },
     today: { type: String, default: '' },
+    selected: { type: String, default: '' },
   };
 
   initialize() {
@@ -24,9 +26,31 @@ export default class extends Controller {
     this.draw();
   }
 
+  selectedValueChanged() {
+    if (!this.hasDaysOfMonthTarget) return;
+
+    this.daysOfMonthTarget.querySelectorAll('[aria-selected]').forEach((el) => {
+      el.setAttribute('aria-selected', 'false');
+    });
+
+    if (!this.selectedValue) return;
+
+    const parsed = tryParseDate(this.selectedValue);
+    if (!parsed) return;
+
+    const time = this.daysOfMonthTarget.querySelector(`time[datetime="${parsed.toISOString()}"]`);
+    if (time) time.closest('[aria-selected]').setAttribute('aria-selected', 'true');
+  }
+
+  onSelect(event) {
+    const iso = event.detail?.iso;
+    if (iso) this.selectedValue = iso;
+  }
+
   draw() {
     this.drawDaysOfWeek();
     this.drawDaysOfMonth();
+    this.selectedValueChanged();
   }
 
   createDayElement(day, { selectable = false, disabled = false } = {}) {
@@ -78,6 +102,7 @@ export default class extends Controller {
       });
 
       if (today === date.date.getTime()) dayElement.setAttribute('aria-current', 'date');
+      if (date.current || this.daysOfOtherMonthValue) dayElement.setAttribute('aria-selected', '');
       if (this.hasDayOfMonthClass) dayElement.classList.add(...this.dayOfMonthClasses);
 
       const time = document.createElement('time');

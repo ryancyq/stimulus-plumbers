@@ -9,6 +9,7 @@ import ComboboxTimeController          from '../../src/controllers/combobox_time
 import ComboboxDateController          from '../../src/controllers/combobox_date_controller'
 import InputFormatController           from '../../src/controllers/input_format_controller'
 import InputSearchController           from '../../src/controllers/input_search_controller'
+import CalendarMonthController         from '../../src/controllers/calendar_month_controller'
 import CalendarMonthObserverController from '../../src/controllers/calendar_month_observer_controller'
 
 const CONTROLLERS_DIR = resolve(
@@ -37,7 +38,8 @@ describe('Ruby action binding contract', () => {
       ['combobox-date',           ComboboxDateController,          ['onSelect']],
       ['input-format',            InputFormatController,           ['format', 'toggle']],
       ['input-search',            InputSearchController,           ['clear']],
-      ['calendar-month-observer', CalendarMonthObserverController, ['select']],
+      ['calendar-month',          CalendarMonthController,         ['onSelect']],
+      ['calendar-month-observer', CalendarMonthObserverController, ['onSelect', 'select']],
     ]
 
     for (const [identifier, Controller, methods] of METHOD_CONTRACT) {
