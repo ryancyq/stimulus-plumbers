@@ -101,29 +101,29 @@ class SearchTest < ActionView::TestCase
 
   # ── clearable: true ───────────────────────────────────────────────────────
 
-  def test_clearable_renders_input_search_controller_wrapper
-    assert_css build_field(clearable: true), "[data-controller='input-search']"
+  def test_clearable_renders_input_clearable_controller_wrapper
+    assert_css build_field(clearable: true), "[data-controller='input-clearable']"
   end
 
-  def test_clearable_combobox_is_inside_input_search_wrapper
+  def test_clearable_combobox_is_inside_input_clearable_wrapper
     doc     = build_field(clearable: true)
-    wrapper = doc.at_css("[data-controller='input-search']")
+    wrapper = doc.at_css("[data-controller='input-clearable']")
 
     assert_not_nil wrapper.at_css("[data-controller~='input-combobox']")
   end
 
-  def test_clearable_trigger_has_input_search_target
+  def test_clearable_trigger_has_input_clearable_target
     assert_css build_field(clearable: true),
-               "input[role='combobox'][data-input-search-target='input']"
+               "input[role='combobox'][data-input-clearable-target='input']"
   end
 
   def test_clearable_renders_clear_button
     assert_css build_field(clearable: true),
-               "button[data-input-search-target='clear'][data-action='click->input-search#clear']"
+               "button[data-input-clearable-target='clear'][data-action='click->input-clearable#clear']"
   end
 
   def test_clearable_clear_button_type_is_button
-    assert_css build_field(clearable: true), "button[type='button'][data-input-search-target='clear']"
+    assert_css build_field(clearable: true), "button[type='button'][data-input-clearable-target='clear']"
   end
 
   def test_clearable_clear_button_has_aria_label
@@ -132,24 +132,24 @@ class SearchTest < ActionView::TestCase
 
   def test_clearable_clear_button_is_initially_hidden
     doc    = build_field(clearable: true)
-    button = doc.at_css("button[data-input-search-target='clear']")
+    button = doc.at_css("button[data-input-clearable-target='clear']")
 
     assert button.key?("hidden"), "Expected clear button to have hidden attribute"
   end
 
-  def test_clearable_clear_button_is_inside_input_search_wrapper
+  def test_clearable_clear_button_is_inside_input_clearable_wrapper
     doc     = build_field(clearable: true)
-    wrapper = doc.at_css("[data-controller='input-search']")
+    wrapper = doc.at_css("[data-controller='input-clearable']")
 
-    assert_not_nil wrapper.at_css("button[data-input-search-target='clear']")
+    assert_not_nil wrapper.at_css("button[data-input-clearable-target='clear']")
   end
 
-  def test_without_clearable_does_not_render_input_search_controller
-    assert_no_css build_field, "[data-controller='input-search']"
+  def test_without_clearable_does_not_render_input_clearable_controller
+    assert_no_css build_field, "[data-controller='input-clearable']"
   end
 
-  def test_without_clearable_trigger_has_no_input_search_target
-    assert_nil build_field.at_css("input[role='combobox']")["data-input-search-target"]
+  def test_without_clearable_trigger_has_no_input_clearable_target
+    assert_nil build_field.at_css("input[role='combobox']")["data-input-clearable-target"]
   end
 
   def test_clearable_option_does_not_leak_into_html_attributes
@@ -206,26 +206,26 @@ class SearchTest < ActionView::TestCase
 
   # ── html_native: true + clearable: true ──────────────────────────────────
 
-  def test_html_native_clearable_renders_input_search_controller_wrapper
-    assert_css build_field(html_native: true, clearable: true), "[data-controller='input-search']"
+  def test_html_native_clearable_renders_input_clearable_controller_wrapper
+    assert_css build_field(html_native: true, clearable: true), "[data-controller='input-clearable']"
   end
 
-  def test_html_native_clearable_native_input_has_input_search_target
+  def test_html_native_clearable_native_input_has_input_clearable_target
     assert_css build_field(html_native: true, clearable: true),
-               "input[type='search'][data-input-search-target='input']"
+               "input[type='search'][data-input-clearable-target='input']"
   end
 
   def test_html_native_clearable_renders_clear_button
     assert_css build_field(html_native: true, clearable: true),
-               "button[data-input-search-target='clear'][data-action='click->input-search#clear']"
+               "button[data-input-clearable-target='clear'][data-action='click->input-clearable#clear']"
   end
 
   def test_html_native_clearable_does_not_render_combobox
     assert_no_css build_field(html_native: true, clearable: true), "input[role='combobox']"
   end
 
-  def test_html_native_without_clearable_does_not_add_input_search_target
-    assert_nil build_field(html_native: true).at_css("input[type='search']")["data-input-search-target"]
+  def test_html_native_without_clearable_does_not_add_input_clearable_target
+    assert_nil build_field(html_native: true).at_css("input[type='search']")["data-input-clearable-target"]
   end
 
   # ── model value pre-population ─────────────────────────────────────────────

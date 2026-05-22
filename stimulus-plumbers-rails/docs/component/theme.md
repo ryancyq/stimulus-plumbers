@@ -18,26 +18,26 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Form fields
 
-| Key                  | Component                                                                                         | Variants                                   |
-| -------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `form_group`         | `Fields::Group` (wrapper div)                                                                     | `layout: :stacked\|:inline`, `error: bool` |
-| `form_label`         | `Fields::Label`, `Fields::Fieldset` (`<legend>`)                                                  | `required: bool`, `hidden: bool`           |
-| `form_required_mark` | `Fields::Label`, `Fields::Fieldset` (required `*` span)                                           | —                                          |
-| `form_details`       | `Fields::Hint`                                                                                    | —                                          |
-| `form_error`         | `Fields::Error`                                                                                   | —                                          |
-| `form_input`         | `Fields::Inputs::Text`, `Fields::Inputs::Datetime`                                                | `error: bool`                              |
-| `form_textarea`      | `Fields::Inputs::TextArea`                                                                        | `error: bool`                              |
-| `form_file`          | `Fields::Inputs::File`                                                                            | `error: bool`                              |
-| `form_select`        | `Fields::Inputs::Select`                                                                          | `error: bool`                              |
-| `form_checkbox`      | `Fields::Inputs::Choice` (single and collection checkbox)                                         | `error: bool`                              |
-| `form_radio`         | `Fields::Inputs::Choice` (single and collection radio)                                            | `error: bool`                              |
-| `form_input_group`   | `Fields::InputGroup` (wrapper for input + adornment)                                              | `error: bool`                              |
-| `form_combobox`      | `Fields::Inputs::Select`, `Fields::Inputs::Search`, `Fields::Inputs::Datetime` (combobox wrapper) | `error: bool`                              |
-| `form_input_search`  | `Fields::Inputs::Search` (combobox trigger inside clearable wrapper)                              | —                                          |
-| `form_button_clear`  | `Fields::Inputs::Search` (clear button in clearable wrapper)                                      | —                                          |
-| `form_input_reveal`  | `Fields::Inputs::Password` (input inside reveal group)                                            | `error: bool`                              |
-| `form_button_reveal` | `Fields::Inputs::Password` (show/hide toggle button)                                              | —                                          |
-| `form_submit`        | `Fields::Inputs::Submit` (`Builder#submit`)                                                       | `variant: :default\|:button`               |
+| Key                    | Component                                                                                         | Variants                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `form_group`           | `Fields::Group` (wrapper div)                                                                     | `layout: :stacked\|:inline`, `error: bool` |
+| `form_label`           | `Fields::Label`, `Fields::Fieldset` (`<legend>`)                                                  | `required: bool`, `hidden: bool`           |
+| `form_required_mark`   | `Fields::Label`, `Fields::Fieldset` (required `*` span)                                           | —                                          |
+| `form_details`         | `Fields::Hint`                                                                                    | —                                          |
+| `form_error`           | `Fields::Error`                                                                                   | —                                          |
+| `form_input`           | `Fields::Inputs::Text`, `Fields::Inputs::Datetime`                                                | `error: bool`                              |
+| `form_textarea`        | `Fields::Inputs::TextArea`                                                                        | `error: bool`                              |
+| `form_file`            | `Fields::Inputs::File`                                                                            | `error: bool`                              |
+| `form_select`          | `Fields::Inputs::Select`                                                                          | `error: bool`                              |
+| `form_checkbox`        | `Fields::Inputs::Choice` (single and collection checkbox)                                         | `error: bool`                              |
+| `form_radio`           | `Fields::Inputs::Choice` (single and collection radio)                                            | `error: bool`                              |
+| `form_input_group`     | `Fields::InputGroup` (wrapper for input + adornment)                                              | `error: bool`                              |
+| `form_combobox`        | `Fields::Inputs::Select`, `Fields::Inputs::Search`, `Fields::Inputs::Datetime` (combobox wrapper) | `error: bool`                              |
+| `form_input_clearable` | `Fields::Inputs::Search` (combobox trigger inside clearable wrapper)                              | —                                          |
+| `form_button_clear`    | `Fields::Inputs::Search` (clear button in clearable wrapper)                                      | —                                          |
+| `form_input_reveal`    | `Fields::Inputs::Password` (input inside reveal group)                                            | `error: bool`                              |
+| `form_button_reveal`   | `Fields::Inputs::Password` (show/hide toggle button)                                              | —                                          |
+| `form_submit`          | `Fields::Inputs::Submit` (`Builder#submit`)                                                       | `variant: :default\|:button`               |
 
 ### Calendar
 

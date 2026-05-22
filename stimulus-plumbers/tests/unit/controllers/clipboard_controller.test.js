@@ -110,7 +110,7 @@ describe('ClipboardController', () => {
 
       document.body.innerHTML = `
         <div data-controller="clipboard"
-             data-clipboard-type-value="text/html"
+             data-clipboard-content-type-value="text/html"
              data-action="paste->clipboard#onPaste">
         </div>
       `

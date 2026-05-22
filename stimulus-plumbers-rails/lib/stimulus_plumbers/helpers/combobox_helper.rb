@@ -11,7 +11,7 @@ module StimulusPlumbers
         )
         Components::Combobox.new(self).render(
           **opts,
-          data: { input_format_type_value: "date" },
+          data: { input_formatter_format_value: "date" },
           **html_options
         ) do |popover_id|
           Components::Combobox::Date.new(self).render(value: value, popover_id: popover_id)
@@ -56,7 +56,7 @@ module StimulusPlumbers
         )
         Components::Combobox.new(self).render(
           **opts,
-          data: { input_format_type_value: "time", input_format_options_value: { format: format }.to_json },
+          data: { input_formatter_format_value: "time", input_formatter_options_value: { format: format }.to_json },
           **html_options
         ) do
           Components::Combobox::Time.new(self).render(format: format, step: step, value: value)

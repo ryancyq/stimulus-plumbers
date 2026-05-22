@@ -5,27 +5,27 @@ import { attachFormatter } from '../plumbers';
 export default class extends Controller {
   static targets = ['input', 'toggle'];
   static values = {
-    type: { type: String, default: 'plain' },
+    format: { type: String, default: 'plain' },
     options: { type: Object, default: {} },
     revealed: { type: Boolean, default: false },
   };
 
   connect() {
-    attachFormatter(this, { type: this.typeValue, options: this.optionsValue });
+    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
     this.format(this.readValue());
     this.drawToggle();
   }
 
-  typeValueChanged() {
+  formatValueChanged() {
     if (!this.formatter) return;
-    attachFormatter(this, { type: this.typeValue, options: this.optionsValue });
+    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
     this.format(this.readValue());
     this.drawToggle();
   }
 
   optionsValueChanged() {
     if (!this.formatter) return;
-    attachFormatter(this, { type: this.typeValue, options: this.optionsValue });
+    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
     this.format(this.readValue());
   }
 
@@ -45,7 +45,7 @@ export default class extends Controller {
   }
 
   toggle() {
-    if (!this.formatter.maskable() && this.typeValue !== 'password') return;
+    if (!this.formatter.maskable() && this.formatValue !== 'password') return;
     this.revealedValue = !this.revealedValue;
   }
 
@@ -59,7 +59,7 @@ export default class extends Controller {
 
   drawToggle() {
     if (!this.hasToggleTarget) return;
-    const hasToggleBehavior = this.formatter?.maskable() || this.typeValue === 'password';
+    const hasToggleBehavior = this.formatter?.maskable() || this.formatValue === 'password';
     this.toggleTarget.hidden = !hasToggleBehavior;
     if (hasToggleBehavior) setPressed(this.toggleTarget, this.revealedValue);
   }
@@ -72,7 +72,7 @@ export default class extends Controller {
   onFormatting(raw) {
     if (!this.formatter) return;
 
-    if (this.typeValue === 'password') {
+    if (this.formatValue === 'password') {
       if (this.hasInputTarget) this.inputTarget.type = this.revealedValue ? 'text' : 'password';
       return;
     }

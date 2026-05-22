@@ -75,18 +75,18 @@ class ComboboxHelperTest < ActionView::TestCase
 
     # ── cross-wiring ──────────────────────────────────────────────────────────
 
-    def test_trigger_input_is_input_format_target
+    def test_trigger_input_is_input_formatter_target
       trigger = parse_html(sp_combobox_date).at_css("input[role='combobox']")
 
       assert_not_nil trigger
-      assert_includes trigger["data-input-format-target"].to_s, "input"
+      assert_includes trigger["data-input-formatter-target"].to_s, "input"
     end
 
-    def test_hidden_input_is_input_combobox_value_target
+    def test_hidden_input_is_input_combobox_input_target
       hidden = parse_html(sp_combobox_date).at_css("input[type='hidden']")
 
       assert_not_nil hidden
-      assert_includes hidden["data-input-combobox-target"].to_s, "value"
+      assert_includes hidden["data-input-combobox-target"].to_s, "input"
     end
 
     def test_calendar_outlet_wired_to_calendar_element

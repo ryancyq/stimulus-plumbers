@@ -32,10 +32,10 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 ## Paste example
 
 ```html
-<%# Intercept paste, forward to input-format for normalisation %>
+<%# Intercept paste, forward to input-formatter for normalisation %>
 <input
   data-controller="clipboard"
-  data-action="paste->clipboard#onPaste clipboard:pasted->input-format#onPaste"
+  data-action="paste->clipboard#onPaste clipboard:pasted->input-formatter#onPaste"
   data-clipboard-type-value="text/plain"
 />
 ```
@@ -58,4 +58,4 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 ## Notes
 
 - `paste` calls `event.preventDefault()` — the original paste is suppressed
-- Use `clipboard:pasted->input-format#onPasted` to forward pasted content for formatting
+- Use `clipboard:pasted->input-formatter#onPasted` to forward pasted content for formatting

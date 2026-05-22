@@ -1,6 +1,6 @@
 # Combobox
 
-Rails helpers that render fully-wired combobox components. Each variant shares the same wrapper structure (`input-combobox` + `input-format`) and differs only in its popover body.
+Rails helpers that render fully-wired combobox components. Each variant shares the same wrapper structure (`input-combobox` + `input-formatter`) and differs only in its popover body.
 
 See [docs/component/combobox-controllers.md](../../stimulus-plumbers/docs/component/combobox.md) in the JS package for the underlying controller API.
 
@@ -118,8 +118,8 @@ All variants share the same wrapper pattern:
 
 ```html
 <div
-  data-controller="input-combobox input-format"
-  data-action="input-combobox:changed->input-format#format"
+  data-controller="input-combobox input-formatter"
+  data-action="input-combobox:changed->input-formatter#format"
   data-input-combobox-value-value="[initial-value]"
 >
   <input
@@ -129,10 +129,10 @@ All variants share the same wrapper pattern:
     aria-expanded="false"
     aria-controls="[id]_popover"
     data-input-combobox-target="trigger"
-    data-input-format-target="input"
+    data-input-formatter-target="input"
   />
 
-  <input type="hidden" name="[name]" data-input-combobox-target="value" />
+  <input type="hidden" name="[name]" data-input-combobox-target="input" />
 
   <!-- variant-specific popover body (see below) -->
 </div>

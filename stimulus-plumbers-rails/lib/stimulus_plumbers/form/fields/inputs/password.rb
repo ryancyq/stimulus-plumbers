@@ -29,14 +29,14 @@ module StimulusPlumbers
             html_options = merge_html_options(
               html_opts,
               field_theme(:form_input, error: error),
-              { data: { input_format_target: "input" } }
+              { data: { input_formatter_target: "input" } }
             )
             render_input_group(
               error:    error,
               trailing: method(:reveal_button),
               **merge_html_options(
                 field_theme(:form_input_reveal, error: error),
-                { data: { controller: "input-format", input_format_type_value: "password" } }
+                { data: { controller: "input-formatter", input_formatter_format_value: "password" } }
               )
             ) { @template.capture(html_options, &block) }
           end
@@ -47,7 +47,7 @@ module StimulusPlumbers
               {
                 type: "button",
                 aria: { label: "Show password", pressed: "false" },
-                data: { input_format_target: "toggle", action: "click->input-format#toggle" }
+                data: { input_formatter_target: "toggle", action: "click->input-formatter#toggle" }
               }
             )
             @template.content_tag(:button, "", **html_options)

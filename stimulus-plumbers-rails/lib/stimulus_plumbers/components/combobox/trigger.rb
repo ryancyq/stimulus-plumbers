@@ -18,7 +18,7 @@ module StimulusPlumbers
         )
           stimulus_data = {
             "#{stimulus_controller}_target": "trigger",
-            input_format_target:             "input",
+            input_formatter_target:          "input",
             action:                          "focus->#{stimulus_controller}#open keydown.esc->#{stimulus_controller}#close"
           }
 

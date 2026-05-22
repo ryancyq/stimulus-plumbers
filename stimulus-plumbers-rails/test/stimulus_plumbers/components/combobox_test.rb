@@ -20,16 +20,16 @@ class ComboboxTest < ActionView::TestCase
     assert_css doc, "[data-controller~='input-combobox']"
   end
 
-  def test_wrapper_includes_input_format_controller
+  def test_wrapper_includes_input_formatter_controller
     doc = parse_html(render_combobox)
 
-    assert_css doc, "[data-controller~='input-format']"
+    assert_css doc, "[data-controller~='input-formatter']"
   end
 
   def test_wrapper_includes_format_action
     doc = parse_html(render_combobox)
 
-    assert_css doc, "[data-action~='input-combobox:changed->input-format#format']"
+    assert_css doc, "[data-action~='input-combobox:changed->input-formatter#format']"
   end
 
   # ── initial value wiring ───────────────────────────────────────────────────

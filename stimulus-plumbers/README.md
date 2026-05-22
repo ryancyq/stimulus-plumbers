@@ -25,8 +25,8 @@ Register the controllers you need with your Stimulus application:
 import { Application } from '@hotwired/stimulus'
 import {
   InputComboboxController,
-  InputFormatController,
-  InputSearchController,
+  InputFormatterController,
+  InputClearableController,
   ComboboxDateController,
   ComboboxTimeController,
   ComboboxDropdownController,
@@ -43,8 +43,8 @@ import {
 const application = Application.start()
 
 application.register('input-combobox',           InputComboboxController)
-application.register('input-format',             InputFormatController)
-application.register('input-search',             InputSearchController)
+application.register('input-formatter',          InputFormatterController)
+application.register('input-clearable',          InputClearableController)
 application.register('combobox-date',            ComboboxDateController)
 application.register('combobox-time',            ComboboxTimeController)
 application.register('combobox-dropdown',        ComboboxDropdownController)
@@ -63,8 +63,8 @@ application.register('panner',                   PannerController)
 | Controller | Description | Docs |
 |-----------|-------------|------|
 | `input-combobox` | Wrapper: trigger, popover, hidden value | [docs/component/combobox.md](docs/component/combobox.md#input-combobox) |
-| `input-format` | Formats and displays values | [docs/component/combobox.md](docs/component/combobox.md#input-format) |
-| `input-search` | Search input with clear button | [docs/component/input-search.md](docs/component/input-search.md) |
+| `input-formatter` | Formats and displays values | [docs/component/combobox.md](docs/component/combobox.md#input-formatter) |
+| `input-clearable` | Input with clear button | [docs/component/input-clearable.md](docs/component/input-clearable.md) |
 | `combobox-date` | Calendar grid date picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-date) |
 | `combobox-time` | Drum/scroll-wheel time picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-time) |
 | `combobox-dropdown` | Listbox with fuzzy filter or server fetch | [docs/component/combobox.md](docs/component/combobox.md#combobox-dropdown) |

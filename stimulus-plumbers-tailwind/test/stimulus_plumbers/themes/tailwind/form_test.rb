@@ -226,10 +226,10 @@ class TailwindThemeFormTest < Minitest::Test
     assert_equal "", classes_for(:form_input_reveal, error: true)
   end
 
-  # :form_input_search
+  # :form_input_clearable
 
-  def test_form_input_search_returns_empty_classes
-    assert_equal "", classes_for(:form_input_search)
+  def test_form_input_clearable_returns_empty_classes
+    assert_equal "", classes_for(:form_input_clearable)
   end
 
   # :form_button_reveal

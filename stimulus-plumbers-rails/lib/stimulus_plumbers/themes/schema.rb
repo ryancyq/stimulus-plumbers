@@ -68,30 +68,30 @@ module StimulusPlumbers
       }.freeze
 
       FORM = {
-        form_group:         {
+        form_group:           {
           layout: { default: :stacked, range: Form::Ranges::LAYOUT },
           error:  { default: false,    range: Ranges::BOOL }
         }.freeze,
-        form_label:         {
+        form_label:           {
           required: { default: false, range: Ranges::BOOL },
           hidden:   { default: false, range: Ranges::BOOL }
         }.freeze,
-        form_required_mark: {}.freeze,
-        form_details:       {}.freeze,
-        form_error:         {}.freeze,
-        form_input:         { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_textarea:      { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_file:          { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_select:        { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_checkbox:      { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_radio:         { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_input_group:   { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_combobox:      { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_input_reveal:  { error: { default: false, range: Ranges::BOOL } }.freeze,
-        form_input_search:  {}.freeze,
-        form_button_reveal: {}.freeze,
-        form_button_clear:  {}.freeze,
-        form_submit:        {
+        form_required_mark:   {}.freeze,
+        form_details:         {}.freeze,
+        form_error:           {}.freeze,
+        form_input:           { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_textarea:        { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_file:            { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_select:          { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_checkbox:        { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_radio:           { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_input_group:     { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_combobox:        { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_input_reveal:    { error: { default: false, range: Ranges::BOOL } }.freeze,
+        form_input_clearable: {}.freeze,
+        form_button_reveal:   {}.freeze,
+        form_button_clear:    {}.freeze,
+        form_submit:          {
           variant: { default: :default, range: Form::Ranges::SUBMIT_VARIANT }
         }.freeze
       }.freeze

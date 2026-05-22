@@ -48,8 +48,8 @@ class DatetimeTest < ActionView::TestCase
     assert_css build_date_field, "[role='dialog']"
   end
 
-  def test_date_combobox_has_input_format_type_value
-    assert_css build_date_field, "[data-input-format-type-value='date']"
+  def test_date_combobox_has_input_formatter_format_value
+    assert_css build_date_field, "[data-input-formatter-format-value='date']"
   end
 
   def test_date_renders_custom_label_text
@@ -141,8 +141,8 @@ class DatetimeTest < ActionView::TestCase
     assert_css build_time_field, "[role='dialog']"
   end
 
-  def test_time_combobox_has_input_format_type_value
-    assert_css build_time_field, "[data-input-format-type-value='time']"
+  def test_time_combobox_has_input_formatter_format_value
+    assert_css build_time_field, "[data-input-formatter-format-value='time']"
   end
 
   def test_time_renders_custom_label_text
