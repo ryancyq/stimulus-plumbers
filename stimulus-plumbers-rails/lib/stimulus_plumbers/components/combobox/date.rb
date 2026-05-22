@@ -18,7 +18,13 @@ module StimulusPlumbers
           [popover_id, "calendar"].compact.join("_")
         end
 
-        def render(value: nil, popover_id: nil)
+        def render(...)
+          render_date(...)
+        end
+
+        private
+
+        def render_date(value: nil, popover_id: nil)
           calendar_id = self.class.calendar_id_for(popover_id)
 
           data = {
@@ -35,8 +41,6 @@ module StimulusPlumbers
             template.safe_join([navigation, calendar_month(id: calendar_id)])
           end
         end
-
-        private
 
         def navigation
           DatePicker::Navigation.new(template).render(

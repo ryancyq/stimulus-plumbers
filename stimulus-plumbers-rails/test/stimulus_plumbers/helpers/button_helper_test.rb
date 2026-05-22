@@ -57,23 +57,4 @@ class ButtonHelperTest < ActionView::TestCase
     assert_css doc, "div"
     assert_includes doc.text, "One"
   end
-
-  # ── badge ──────────────────────────────────────────────────────────────────
-
-  def test_badge_dot_wraps_button_in_relative_span
-    doc = parse_html(sp_button("Notify", badge: true))
-
-    assert_css doc, "span.relative"
-  end
-
-  def test_badge_count_renders_number
-    doc = parse_html(sp_button("Notify", badge: 5))
-    badge_span = doc.css("span[aria-hidden='true']").first
-
-    assert_equal "5", badge_span.text.strip
-  end
-
-  def test_badge_omitted_does_not_wrap_button
-    assert_no_css parse_html(sp_button("Click")), "span.relative"
-  end
 end

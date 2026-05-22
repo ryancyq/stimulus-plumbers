@@ -3,7 +3,13 @@
 module StimulusPlumbers
   module Components
     class Popover < Plumber::Base
-      def render(interactive: true, **kwargs, &block)
+      def render(...)
+        render_popover(...)
+      end
+
+      private
+
+      def render_popover(interactive: true, **kwargs, &block)
         html_options = merge_html_options(
           { classes: theme.resolve(:popover).fetch(:classes, "") },
           kwargs
@@ -16,8 +22,6 @@ module StimulusPlumbers
           template.safe_join([builder.activator_html, wrap_content(interactive, builder)])
         end
       end
-
-      private
 
       def wrap_content(interactive, builder)
         if interactive

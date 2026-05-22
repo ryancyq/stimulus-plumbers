@@ -11,7 +11,13 @@ module StimulusPlumbers
         [trigger_id, "popover"].compact.join("_")
       end
 
-      def render(trigger: {}, input: {}, popover: {}, **kwargs, &block)
+      def render(...)
+        render_combobox(...)
+      end
+
+      private
+
+      def render_combobox(trigger: {}, input: {}, popover: {}, **kwargs, &block)
         popover_id    = self.class.popover_id_for(trigger[:id])
         initial_value = input[:value]
         haspopup      = popover.delete(:haspopup) { popover[:role] || "dialog" }
@@ -27,8 +33,6 @@ module StimulusPlumbers
           )
         end
       end
-
-      private
 
       def build_stimulus_data(initial_value)
         {

@@ -12,7 +12,13 @@ module StimulusPlumbers
           }
         end
 
-        def render(format: :h12, step: 1, value: nil)
+        def render(...)
+          render_time(...)
+        end
+
+        private
+
+        def render_time(format: :h12, step: 1, value: nil)
           @format = format
           @step   = [1, step.to_i].max
           @time   = parse_time(value)
@@ -30,8 +36,6 @@ module StimulusPlumbers
             template.safe_join(drums)
           end
         end
-
-        private
 
         def drums
           cols = [hour_drum, minute_drum]

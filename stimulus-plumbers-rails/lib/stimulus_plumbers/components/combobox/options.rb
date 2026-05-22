@@ -4,12 +4,16 @@ module StimulusPlumbers
   module Components
     class Combobox
       class Options < Plumber::Base
-        def render(items, value: nil, &block)
-          @selected_value = value.to_s
-          template.safe_join(items.filter_map { |item| render_item(item, &block) })
+        def render(...)
+          render_options(...)
         end
 
         private
+
+        def render_options(items, value: nil, &block)
+          @selected_value = value.to_s
+          template.safe_join(items.filter_map { |item| render_item(item, &block) })
+        end
 
         def render_item(item, &block)
           attrs = normalize_item(item)

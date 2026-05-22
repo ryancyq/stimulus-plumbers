@@ -7,7 +7,13 @@ module StimulusPlumbers
         class Turbo < Plumber::Base
           STIMULUS_CONTROLLER = "calendar-month-observer"
 
-          def render(
+          def render(...)
+            render_turbo(...)
+          end
+
+          private
+
+          def render_turbo(
             date: Date.today,
             today: Date.today,
             selectable: false,
@@ -38,8 +44,6 @@ module StimulusPlumbers
               )
             end
           end
-
-          private
 
           def days_of_week(**kwargs)
             Turbo::DaysOfWeek.new(template).render(**kwargs)

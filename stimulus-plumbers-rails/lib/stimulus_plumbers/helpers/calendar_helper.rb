@@ -3,7 +3,8 @@
 module StimulusPlumbers
   module Helpers
     module CalendarHelper
-      def sp_calendar_month(date: nil, **html_options, &block)
+      def sp_calendar_month(**html_options, &block)
+        date = html_options.delete(:date)
         if date
           html_options = html_options.deep_merge(
             data: {

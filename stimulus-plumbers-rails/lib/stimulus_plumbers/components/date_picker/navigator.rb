@@ -4,7 +4,13 @@ module StimulusPlumbers
   module Components
     module DatePicker
       class Navigator < Plumber::Base
-        def render(icon: nil, **kwargs)
+        def render(...)
+          render_navigator(...)
+        end
+
+        private
+
+        def render_navigator(icon: nil, **kwargs)
           html_options = merge_html_options(
             { classes: theme.resolve(:calendar_navigation_navigator).fetch(:classes, "") },
             kwargs

@@ -5,7 +5,13 @@ module StimulusPlumbers
     class Combobox
       class Options
         class OptionGroup < Plumber::Base
-          def render(label:, options:, value: nil)
+          def render(...)
+            render_option_group(...)
+          end
+
+          private
+
+          def render_option_group(label:, options:, value: nil)
             attrs = merge_html_options(
               { classes: theme.resolve(:combobox_option_group).fetch(:classes, "") },
               { role: "group", aria: { label: label } }

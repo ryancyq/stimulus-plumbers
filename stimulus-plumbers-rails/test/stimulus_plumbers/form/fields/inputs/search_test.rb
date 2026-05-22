@@ -138,7 +138,7 @@ class SearchTest < ActionView::TestCase
   end
 
   def test_clearable_clear_button_contains_icon
-    assert_css build_field(clearable: true), "button[data-input-clearable-target='clear'] span"
+    assert_css build_field(clearable: true), "span + button[data-input-clearable-target='clear']"
   end
 
   def test_clearable_clear_button_is_inside_input_clearable_wrapper

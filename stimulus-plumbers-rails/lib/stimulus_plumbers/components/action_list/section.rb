@@ -4,8 +4,14 @@ module StimulusPlumbers
   module Components
     class ActionList
       class Section < Plumber::Base
-        def render(title: nil, **kwargs, &block)
-          template.content_tag(:li, **kwargs) do
+        def render(...)
+          render_section(...)
+        end
+
+        private
+
+        def render_section(title: nil, **html_options, &block)
+          template.content_tag(:li, **html_options) do
             ul_opts = {}
             ul_opts[:aria] = { label: title } if title.present?
             template.safe_join(
