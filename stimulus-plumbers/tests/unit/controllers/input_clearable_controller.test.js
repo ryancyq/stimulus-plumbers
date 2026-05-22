@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Application } from '@hotwired/stimulus'
-import InputSearchController from '../../../src/controllers/input_search_controller'
+import InputClearableController from '../../../src/controllers/input_clearable_controller'
 
-describe('InputSearchController', () => {
+describe('InputClearableController', () => {
   let application
 
   const getController = () =>
     application.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller="input-search"]'),
-      'input-search'
+      document.querySelector('[data-controller="input-clearable"]'),
+      'input-clearable'
     )
 
   const setup = async (html) => {
@@ -18,7 +18,7 @@ describe('InputSearchController', () => {
 
   beforeEach(() => {
     application = Application.start()
-    application.register('input-search', InputSearchController)
+    application.register('input-clearable', InputClearableController)
   })
 
   afterEach(() => {
@@ -29,63 +29,63 @@ describe('InputSearchController', () => {
   describe('connect — empty input', () => {
     beforeEach(async () => {
       await setup(`
-        <div data-controller="input-search">
-          <input type="search" value="" data-input-search-target="input">
+        <div data-controller="input-clearable">
+          <input type="search" value="" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
-                  data-input-search-target="clear"
-                  data-action="click->input-search#clear">
+                  data-input-clearable-target="clear"
+                  data-action="click->input-clearable#clear">
           </button>
         </div>
       `)
     })
 
     it('hides the clear button when input is empty', () => {
-      expect(document.querySelector('[data-input-search-target="clear"]').hidden).toBe(true)
+      expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(true)
     })
   })
 
   describe('connect — pre-filled input', () => {
     beforeEach(async () => {
       await setup(`
-        <div data-controller="input-search">
-          <input type="search" value="rails" data-input-search-target="input">
+        <div data-controller="input-clearable">
+          <input type="search" value="rails" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
-                  data-input-search-target="clear"
-                  data-action="click->input-search#clear">
+                  data-input-clearable-target="clear"
+                  data-action="click->input-clearable#clear">
           </button>
         </div>
       `)
     })
 
     it('shows the clear button when input has a value', () => {
-      expect(document.querySelector('[data-input-search-target="clear"]').hidden).toBe(false)
+      expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(false)
     })
   })
 
   describe('input event', () => {
     beforeEach(async () => {
       await setup(`
-        <div data-controller="input-search"
-             data-action="input->input-search#draw">
-          <input type="search" value="" data-input-search-target="input">
+        <div data-controller="input-clearable"
+             data-action="input->input-clearable#draw">
+          <input type="search" value="" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
-                  data-input-search-target="clear"
-                  data-action="click->input-search#clear">
+                  data-input-clearable-target="clear"
+                  data-action="click->input-clearable#clear">
           </button>
         </div>
       `)
     })
 
     it('shows the clear button when input receives a value', async () => {
-      const input = document.querySelector('[data-input-search-target="input"]')
+      const input = document.querySelector('[data-input-clearable-target="input"]')
       input.value = 'hello'
       input.dispatchEvent(new Event('input', { bubbles: true }))
       await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(document.querySelector('[data-input-search-target="clear"]').hidden).toBe(false)
+      expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(false)
     })
 
     it('hides the clear button when input is cleared', async () => {
-      const input = document.querySelector('[data-input-search-target="input"]')
+      const input = document.querySelector('[data-input-clearable-target="input"]')
       input.value = 'hello'
       input.dispatchEvent(new Event('input', { bubbles: true }))
       await new Promise((resolve) => setTimeout(resolve, 10))
@@ -93,18 +93,18 @@ describe('InputSearchController', () => {
       input.value = ''
       input.dispatchEvent(new Event('input', { bubbles: true }))
       await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(document.querySelector('[data-input-search-target="clear"]').hidden).toBe(true)
+      expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(true)
     })
   })
 
   describe('clear()', () => {
     beforeEach(async () => {
       await setup(`
-        <div data-controller="input-search">
-          <input type="search" value="hello" data-input-search-target="input">
+        <div data-controller="input-clearable">
+          <input type="search" value="hello" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
-                  data-input-search-target="clear"
-                  data-action="click->input-search#clear">
+                  data-input-clearable-target="clear"
+                  data-action="click->input-clearable#clear">
           </button>
         </div>
       `)
@@ -112,16 +112,16 @@ describe('InputSearchController', () => {
 
     it('sets input value to empty string', () => {
       getController().clear()
-      expect(document.querySelector('[data-input-search-target="input"]').value).toBe('')
+      expect(document.querySelector('[data-input-clearable-target="input"]').value).toBe('')
     })
 
     it('hides the clear button', () => {
       getController().clear()
-      expect(document.querySelector('[data-input-search-target="clear"]').hidden).toBe(true)
+      expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(true)
     })
 
     it('dispatches a bubbling input event on the input element', () => {
-      const input = document.querySelector('[data-input-search-target="input"]')
+      const input = document.querySelector('[data-input-clearable-target="input"]')
       const spy = vi.fn()
       document.body.addEventListener('input', spy)
       getController().clear()
@@ -130,7 +130,7 @@ describe('InputSearchController', () => {
     })
 
     it('returns focus to the input', () => {
-      const input = document.querySelector('[data-input-search-target="input"]')
+      const input = document.querySelector('[data-input-clearable-target="input"]')
       getController().clear()
       expect(document.activeElement).toBe(input)
     })
@@ -139,18 +139,18 @@ describe('InputSearchController', () => {
   describe('Escape key', () => {
     beforeEach(async () => {
       await setup(`
-        <div data-controller="input-search">
-          <input type="search" value="hello" data-input-search-target="input">
+        <div data-controller="input-clearable">
+          <input type="search" value="hello" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
-                  data-input-search-target="clear"
-                  data-action="click->input-search#clear">
+                  data-input-clearable-target="clear"
+                  data-action="click->input-clearable#clear">
           </button>
         </div>
       `)
     })
 
     it('clears the input when Escape is pressed with a value', () => {
-      const input = document.querySelector('[data-input-search-target="input"]')
+      const input = document.querySelector('[data-input-clearable-target="input"]')
       const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
       input.dispatchEvent(event)
       expect(input.value).toBe('')
@@ -158,7 +158,7 @@ describe('InputSearchController', () => {
     })
 
     it('does nothing when Escape is pressed on an empty input', () => {
-      const input = document.querySelector('[data-input-search-target="input"]')
+      const input = document.querySelector('[data-input-clearable-target="input"]')
       input.value = ''
       const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
       input.dispatchEvent(event)
@@ -166,7 +166,7 @@ describe('InputSearchController', () => {
     })
 
     it('ignores non-Escape keys', () => {
-      const input = document.querySelector('[data-input-search-target="input"]')
+      const input = document.querySelector('[data-input-clearable-target="input"]')
       const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
       input.dispatchEvent(event)
       expect(input.value).toBe('hello')
@@ -175,7 +175,7 @@ describe('InputSearchController', () => {
 
   describe('missing targets', () => {
     beforeEach(async () => {
-      await setup(`<div data-controller="input-search"></div>`)
+      await setup(`<div data-controller="input-clearable"></div>`)
     })
 
     it('does not throw on connect when targets are absent', () => {
@@ -190,18 +190,18 @@ describe('InputSearchController', () => {
   describe('inputTargetDisconnected', () => {
     beforeEach(async () => {
       await setup(`
-        <div data-controller="input-search">
-          <input type="search" value="" data-input-search-target="input">
+        <div data-controller="input-clearable">
+          <input type="search" value="" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
-                  data-input-search-target="clear"
-                  data-action="click->input-search#clear">
+                  data-input-clearable-target="clear"
+                  data-action="click->input-clearable#clear">
           </button>
         </div>
       `)
     })
 
     it('removes input and keydown listeners when input target disconnects', async () => {
-      const input = document.querySelector('[data-input-search-target="input"]')
+      const input = document.querySelector('[data-input-clearable-target="input"]')
       const spy = vi.spyOn(input, 'removeEventListener')
 
       input.remove()

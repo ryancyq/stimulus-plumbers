@@ -8,7 +8,7 @@ import ComboboxDropdownController      from '../../src/controllers/combobox_drop
 import ComboboxTimeController          from '../../src/controllers/combobox_time_controller'
 import ComboboxDateController          from '../../src/controllers/combobox_date_controller'
 import InputFormatterController        from '../../src/controllers/input_formatter_controller'
-import InputSearchController           from '../../src/controllers/input_search_controller'
+import InputClearableController        from '../../src/controllers/input_clearable_controller'
 import CalendarMonthController         from '../../src/controllers/calendar_month_controller'
 import CalendarMonthObserverController from '../../src/controllers/calendar_month_observer_controller'
 
@@ -37,7 +37,7 @@ describe('Ruby action binding contract', () => {
       ['combobox-time',           ComboboxTimeController,          ['select', 'onNavigate']],
       ['combobox-date',           ComboboxDateController,          ['onSelect']],
       ['input-formatter',         InputFormatterController,        ['format', 'toggle']],
-      ['input-search',            InputSearchController,           ['clear']],
+      ['input-clearable',         InputClearableController,        ['clear']],
       ['calendar-month',          CalendarMonthController,         ['onSelect']],
       ['calendar-month-observer', CalendarMonthObserverController, ['onSelect', 'select']],
     ]

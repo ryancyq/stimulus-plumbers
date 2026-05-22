@@ -37,7 +37,7 @@ module StimulusPlumbers
           private
 
           def render_search_input(html_opts, opts, error, clearable:, &block)
-            data         = clearable ? { data: { input_search_target: "input" } } : {}
+            data         = clearable ? { data: { input_clearable_target: "input" } } : {}
             html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error), data)
             input_html   = @template.capture(html_options, &block)
 
@@ -46,7 +46,7 @@ module StimulusPlumbers
             render_input_group(
               trailing: method(:clear_button),
               error:    !!error,
-              **merge_html_options(field_theme(:form_input_search), { data: { controller: "input-search" } })
+              **merge_html_options(field_theme(:form_input_clearable), { data: { controller: "input-clearable" } })
             ) { input_html }
           end
 
@@ -55,7 +55,7 @@ module StimulusPlumbers
             input_id      = html_opts[:id]
             opts          = Components::Combobox::Autocomplete.default_opts.deep_merge(
               input:   { value: current_value },
-              trigger: { data: clearable ? { input_search_target: "input" } : {}, aria: html_opts[:aria] },
+              trigger: { data: clearable ? { input_clearable_target: "input" } : {}, aria: html_opts[:aria] },
               popover: { data: url ? { combobox_dropdown_url_value: url } : {} }
             )
 
@@ -65,7 +65,7 @@ module StimulusPlumbers
             render_input_group(
               trailing: method(:clear_button),
               error:    !!error,
-              **merge_html_options(field_theme(:form_input_search), { data: { controller: "input-search" } })
+              **merge_html_options(field_theme(:form_input_clearable), { data: { controller: "input-clearable" } })
             ) { combobox_html }
           end
 
@@ -90,7 +90,7 @@ module StimulusPlumbers
                 {
                   aria:   { label: "Clear search" },
                   hidden: true,
-                  data:   { input_search_target: "clear", action: "click->input-search#clear" }
+                  data:   { input_clearable_target: "clear", action: "click->input-clearable#clear" }
                 }
               )
             )

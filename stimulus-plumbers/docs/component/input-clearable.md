@@ -1,6 +1,6 @@
-# input-search
+# input-clearable
 
-Shows a clear button when a search input has a value, hides it when empty, and clears the input on demand. Keyboard users can also press Escape inside the input to clear it.
+Shows a clear button when an input has a value, hides it when empty, and clears the input on demand. Keyboard users can also press Escape inside the input to clear it.
 
 ## Targets
 
@@ -20,13 +20,13 @@ Shows a clear button when a search input has a value, hides it when empty, and c
 ## Example
 
 ```html
-<div data-controller="input-search">
-  <input type="search" data-input-search-target="input" />
+<div data-controller="input-clearable">
+  <input type="search" data-input-clearable-target="input" />
   <button
     type="button"
     aria-label="Clear search"
-    data-input-search-target="clear"
-    data-action="click->input-search#clear"
+    data-input-clearable-target="clear"
+    data-action="click->input-clearable#clear"
   ></button>
 </div>
 ```

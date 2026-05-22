@@ -143,13 +143,13 @@ Renders an editable autocomplete listbox backed by `combobox-autocomplete`. Supp
 <%= f.search_field :city, clearable: true %>
 ```
 
-| Option      | Type    | Default | Description                                                |
-| ----------- | ------- | ------- | ---------------------------------------------------------- |
-| `options`   | Array   | `[]`    | Initial `[[label, value], …]` options to populate          |
-| `url`       | String  | `nil`   | Endpoint for server-side filtering via `combobox-dropdown` |
-| `clearable` | Boolean | `false` | Adds a clear button wired to the `input-search` controller |
+| Option      | Type    | Default | Description                                                   |
+| ----------- | ------- | ------- | ------------------------------------------------------------- |
+| `options`   | Array   | `[]`    | Initial `[[label, value], …]` options to populate             |
+| `url`       | String  | `nil`   | Endpoint for server-side filtering via `combobox-dropdown`    |
+| `clearable` | Boolean | `false` | Adds a clear button wired to the `input-clearable` controller |
 
-When `clearable: true`, the field is wrapped in an `input-search` controller div. The combobox trigger receives `data-input-search-target="input"` and a `<button aria-label="Clear search">` is appended with `data-input-search-target="clear"`. The button starts hidden and is shown by the controller whenever the input has a value; pressing it clears the input and returns focus. Escape also clears the input when it has a value.
+When `clearable: true`, the field is wrapped in an `input-clearable` controller div. The combobox trigger receives `data-input-clearable-target="input"` and a `<button aria-label="Clear search">` is appended with `data-input-clearable-target="clear"`. The button starts hidden and is shown by the controller whenever the input has a value; pressing it clears the input and returns focus. Escape also clears the input when it has a value.
 
 ## Password field
 

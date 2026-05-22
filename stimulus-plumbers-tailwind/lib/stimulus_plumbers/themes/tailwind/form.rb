@@ -90,7 +90,7 @@ module StimulusPlumbers
           { classes: "" }
         end
 
-        def form_input_search_classes
+        def form_input_clearable_classes
           { classes: "" }
         end
 
