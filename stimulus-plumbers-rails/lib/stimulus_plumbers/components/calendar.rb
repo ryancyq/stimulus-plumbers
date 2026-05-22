@@ -7,7 +7,10 @@ module StimulusPlumbers
       OBSERVER_STIMULUS_CONTROLLER = "calendar-month-observer"
       STIMULUS_DATA                = {
         controller: "#{STIMULUS_CONTROLLER} #{OBSERVER_STIMULUS_CONTROLLER}",
-        action:     "click->#{OBSERVER_STIMULUS_CONTROLLER}#select"
+        action:     [
+          "click->#{OBSERVER_STIMULUS_CONTROLLER}#onSelect",
+          "#{OBSERVER_STIMULUS_CONTROLLER}:selected->#{STIMULUS_CONTROLLER}#onSelect"
+        ].join(" ")
       }.freeze
 
       def month(**kwargs)
