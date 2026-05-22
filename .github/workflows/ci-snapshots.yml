@@ -79,7 +79,7 @@ jobs:
 
       - name: Regenerate baselines
         if: ${{ inputs.update_snapshots }}
-        run: npm run test:snapshots:update
+        run: npm run clean:snapshots && npm run test:snapshots:update
 
       - uses: ryancyq/github-signed-commit@v1
         if: ${{ inputs.update_snapshots }}
