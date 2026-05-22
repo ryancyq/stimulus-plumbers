@@ -28,7 +28,7 @@ module StimulusPlumbers
                   url:       url,
                   clearable: clearable
                 ) do |combobox_opts, input_id, current_value|
-                  render_search_autocomplete(attribute, input_id, combobox_opts, error, choices, current_value)
+                  render_search_typeahead(attribute, input_id, combobox_opts, error, choices, current_value)
                 end
               end
             end
@@ -53,7 +53,7 @@ module StimulusPlumbers
           def render_search_combobox(attribute, html_opts, error, url:, clearable:, &block)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             input_id      = html_opts[:id]
-            opts          = Components::Combobox::Autocomplete.default_opts.deep_merge(
+            opts          = Components::Combobox::Typeahead.default_opts.deep_merge(
               input:   { value: current_value },
               trigger: { data: clearable ? { input_clearable_target: "input" } : {}, aria: html_opts[:aria] },
               popover: { data: url ? { combobox_dropdown_url_value: url } : {} }
@@ -69,7 +69,7 @@ module StimulusPlumbers
             ) { combobox_html }
           end
 
-          def render_search_autocomplete(attribute, input_id, combobox_opts, error, choices, current_value)
+          def render_search_typeahead(attribute, input_id, combobox_opts, error, choices, current_value)
             render_combobox(
               attribute,
               input_id: input_id,
@@ -79,7 +79,7 @@ module StimulusPlumbers
                 input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.popover_id_for(input_id)}",
                 action:                                  "input->input-combobox#onInput"
               }
-            ) { Components::Combobox::Autocomplete.new(@template).render(options: choices, value: current_value, labelledby: Field.label_id(input_id)) }
+            ) { Components::Combobox::Typeahead.new(@template).render(options: choices, value: current_value, labelledby: Field.label_id(input_id)) }
           end
 
           def clear_button

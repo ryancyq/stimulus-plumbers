@@ -51,7 +51,7 @@ Use `bundle show stimulus_plumbers_tailwind` to get the exact installed path.
 | `Tailwind::Button` | Button |
 | `Tailwind::Calendar` | Calendar grid, date picker |
 | `Tailwind::Card` | Card |
-| `Tailwind::Combobox` | Combobox (date, time, dropdown, autocomplete) |
+| `Tailwind::Combobox` | Combobox (date, time, dropdown, typeahead) |
 | `Tailwind::Form` | Form fields, labels, errors |
 | `Tailwind::Layout` | Layout primitives |
 

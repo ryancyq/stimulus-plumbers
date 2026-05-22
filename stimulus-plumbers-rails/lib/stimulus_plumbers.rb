@@ -49,7 +49,7 @@ require_relative "stimulus_plumbers/components/combobox/options/option"
 require_relative "stimulus_plumbers/components/combobox/options/option_group"
 require_relative "stimulus_plumbers/components/combobox/date"
 require_relative "stimulus_plumbers/components/combobox/dropdown"
-require_relative "stimulus_plumbers/components/combobox/autocomplete"
+require_relative "stimulus_plumbers/components/combobox/typeahead"
 require_relative "stimulus_plumbers/components/combobox/time"
 require_relative "stimulus_plumbers/components/combobox/time/drum"
 

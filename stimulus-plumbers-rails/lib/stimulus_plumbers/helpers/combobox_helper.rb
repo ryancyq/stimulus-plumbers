@@ -29,9 +29,9 @@ module StimulusPlumbers
         end
       end
 
-      def sp_combobox_autocomplete(label: nil, options: [], value: nil, url: nil, **html_options)
+      def sp_combobox_typeahead(label: nil, options: [], value: nil, url: nil, **html_options)
         id   = sp_dom_id
-        opts = Components::Combobox::Autocomplete.default_opts.deep_merge(
+        opts = Components::Combobox::Typeahead.default_opts.deep_merge(
           input:   { value: value },
           trigger: { id: id, aria_label: label }.compact,
           popover: { data: url ? { combobox_dropdown_url_value: url } : {} }
@@ -44,7 +44,7 @@ module StimulusPlumbers
           },
           **html_options
         ) do
-          Components::Combobox::Autocomplete.new(self).render(options: options, value: value, label: label)
+          Components::Combobox::Typeahead.new(self).render(options: options, value: value, label: label)
         end
       end
 

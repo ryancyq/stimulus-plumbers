@@ -3,7 +3,7 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      class Autocomplete < Plumber::Base
+      class Typeahead < Plumber::Base
         def self.default_opts
           Dropdown.default_opts.deep_merge(
             trigger: { aria_autocomplete: "list", readonly: false }
@@ -26,7 +26,7 @@ module StimulusPlumbers
           template.content_tag(
             :div,
             **merge_html_options(
-              { classes: theme.resolve(:combobox_autocomplete_loading).fetch(:classes, "") },
+              { classes: theme.resolve(:combobox_typeahead_loading).fetch(:classes, "") },
               { hidden: "", aria: { live: "polite" }, data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
             )
           ) { "" }
@@ -36,7 +36,7 @@ module StimulusPlumbers
           template.content_tag(
             :div,
             **merge_html_options(
-              { classes: theme.resolve(:combobox_autocomplete_empty).fetch(:classes, "") },
+              { classes: theme.resolve(:combobox_typeahead_empty).fetch(:classes, "") },
               { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "empty" } }
             )
           ) { "No results" }
