@@ -7,12 +7,12 @@ module StimulusPlumbers
         action_list_renderer.render(**html_options, &block)
       end
 
-      def sp_action_list_section(title: nil, **html_options, &block)
-        action_list_renderer.section(title: title, **html_options, &block)
+      def sp_action_list_section(**html_options, &block)
+        action_list_renderer.section(**html_options, &block)
       end
 
-      def sp_action_list_item(content = nil, url: nil, external: false, active: false, **html_options, &block)
-        action_list_renderer.item(content, url: url, external: external, active: active, **html_options, &block)
+      def sp_action_list_item(content = nil, **html_options, &block)
+        action_list_renderer.item(content, **html_options, &block)
       end
 
       private

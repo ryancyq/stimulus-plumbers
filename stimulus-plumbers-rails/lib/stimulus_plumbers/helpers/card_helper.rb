@@ -3,12 +3,12 @@
 module StimulusPlumbers
   module Helpers
     module CardHelper
-      def sp_card(title: nil, **html_options, &block)
-        card_renderer.render(title: title, **html_options, &block)
+      def sp_card(**html_options, &block)
+        card_renderer.render(**html_options, &block)
       end
 
-      def sp_card_section(title: nil, **html_options, &block)
-        card_renderer.section(title: title, **html_options, &block)
+      def sp_card_section(**html_options, &block)
+        card_renderer.section(**html_options, &block)
       end
 
       private

@@ -26,15 +26,19 @@ module StimulusPlumbers
               @show_other_months = show_other_months
             end
 
-            def render(**kwargs)
-              html_options = merge_html_options(
-                { classes: theme.resolve(:calendar_days_of_month).fetch(:classes, "") },
-                kwargs
-              )
-              template.content_tag(:div, **html_options, role: "rowgroup") { weeks_of_month }
+            def render(...)
+              render_days_of_month(...)
             end
 
             private
+
+            def render_days_of_month(**html_options)
+              html_options = merge_html_options(
+                { classes: theme.resolve(:calendar_days_of_month).fetch(:classes, "") },
+                html_options
+              )
+              template.content_tag(:div, **html_options, role: "rowgroup") { weeks_of_month }
+            end
 
             def weeks_of_month
               week_options = merge_html_options(

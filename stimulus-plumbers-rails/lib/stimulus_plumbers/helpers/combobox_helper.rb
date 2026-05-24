@@ -3,9 +3,11 @@
 module StimulusPlumbers
   module Helpers
     module ComboboxHelper
-      def sp_combobox_date(label: nil, value: nil, **html_options)
-        id   = sp_dom_id
-        opts = Components::Combobox::Date.default_opts.deep_merge(
+      def sp_combobox_date(**html_options)
+        label = html_options.delete(:label)
+        value = html_options.delete(:value)
+        id    = sp_dom_id
+        opts  = Components::Combobox::Date.default_opts.deep_merge(
           input:   { value: value },
           trigger: { id: id, aria_label: label }.compact
         )
@@ -18,9 +20,12 @@ module StimulusPlumbers
         end
       end
 
-      def sp_combobox_dropdown(label: nil, options: [], value: nil, **html_options)
-        id   = sp_dom_id
-        opts = Components::Combobox::Dropdown.default_opts.deep_merge(
+      def sp_combobox_dropdown(**html_options)
+        label   = html_options.delete(:label)
+        value   = html_options.delete(:value)
+        options = html_options.delete(:options) { [] }
+        id      = sp_dom_id
+        opts    = Components::Combobox::Dropdown.default_opts.deep_merge(
           input:   { value: value },
           trigger: { id: id, aria_label: label }.compact
         )
@@ -29,9 +34,13 @@ module StimulusPlumbers
         end
       end
 
-      def sp_combobox_typeahead(label: nil, options: [], value: nil, url: nil, **html_options)
-        id   = sp_dom_id
-        opts = Components::Combobox::Typeahead.default_opts.deep_merge(
+      def sp_combobox_typeahead(**html_options)
+        label   = html_options.delete(:label)
+        value   = html_options.delete(:value)
+        options = html_options.delete(:options) { [] }
+        url     = html_options.delete(:url)
+        id      = sp_dom_id
+        opts    = Components::Combobox::Typeahead.default_opts.deep_merge(
           input:   { value: value },
           trigger: { id: id, aria_label: label }.compact,
           popover: { data: url ? { combobox_dropdown_url_value: url } : {} }
@@ -48,9 +57,13 @@ module StimulusPlumbers
         end
       end
 
-      def sp_combobox_time(format: :h12, label: nil, step: 1, value: nil, **html_options)
-        id   = sp_dom_id
-        opts = Components::Combobox::Time.default_opts.deep_merge(
+      def sp_combobox_time(**html_options)
+        format = html_options.delete(:format) { :h12 }
+        label  = html_options.delete(:label)
+        step   = html_options.delete(:step) { 1 }
+        value  = html_options.delete(:value)
+        id     = sp_dom_id
+        opts   = Components::Combobox::Time.default_opts.deep_merge(
           input:   { value: value },
           trigger: { id: id, aria_label: label }.compact
         )

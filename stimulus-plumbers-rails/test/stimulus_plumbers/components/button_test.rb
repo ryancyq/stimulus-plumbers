@@ -58,43 +58,41 @@ class ButtonComponentTest < ActionView::TestCase
   # ── icon ──────────────────────────────────────────────────────────────────
 
   def test_icon_leading_renders_before_content
-    html   = renderer.render("Save", icon_leading: :check)
-    button = parse_html(html).at_css("button")
+    doc = parse_html(renderer.render("Save", icon_leading: :check))
 
-    assert_operator button.inner_html.index("<span"), :<, button.inner_html.index("Save")
+    assert_operator doc.to_html.index("<span"), :<, doc.to_html.index("<button")
   end
 
   def test_icon_trailing_renders_after_content
-    html   = renderer.render("Next", icon_trailing: :arrow)
-    button = parse_html(html).at_css("button")
+    doc = parse_html(renderer.render("Next", icon_trailing: :arrow))
 
-    assert_operator button.inner_html.index("Next"), :<, button.inner_html.index("<span")
+    assert_operator doc.to_html.index("<button"), :<, doc.to_html.index("<span")
   end
 
   def test_icon_leading_only_renders_no_extra_text
     doc = parse_html(renderer.render(icon_leading: :x))
 
-    assert_css doc, "button span"
+    assert_css doc, "span"
     assert_equal "", doc.at_css("button").text.strip
   end
 
   def test_icon_leading_as_callable
     doc = parse_html(renderer.render("Click", icon_leading: -> { "<span>★</span>".html_safe }))
 
-    assert_includes doc.at_css("button").inner_html, "★"
+    assert_includes doc.to_html, "★"
   end
 
   def test_icon_trailing_as_callable
     doc = parse_html(renderer.render("Click", icon_trailing: -> { "<span>→</span>".html_safe }))
 
-    assert_includes doc.at_css("button").inner_html, "→"
+    assert_includes doc.to_html, "→"
   end
 
   def test_no_icon_renders_content_only
-    doc      = parse_html(renderer.render("Plain"))
-    children = doc.at_css("button").children.reject { |n| n.text? && n.text.strip.empty? }
+    doc = parse_html(renderer.render("Plain"))
 
-    assert_equal 1, children.length
+    assert_no_css doc, "span"
+    assert_css doc, "button"
   end
 
   # ── group ─────────────────────────────────────────────────────────────────

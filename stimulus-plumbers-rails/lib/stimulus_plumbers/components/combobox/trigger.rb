@@ -4,7 +4,13 @@ module StimulusPlumbers
   module Components
     class Combobox
       class Trigger < Plumber::Base
-        def render(
+        def render(...)
+          render_trigger(...)
+        end
+
+        private
+
+        def render_trigger(
           stimulus_controller:,
           popover_id:,
           haspopup:,
@@ -35,8 +41,9 @@ module StimulusPlumbers
                 readonly: (readonly ? true : nil),
                 role:     "combobox",
                 aria:     trigger_aria.deep_merge(aria),
-                data:     merge_data_options(stimulus_data, data)
+                data:     stimulus_data
               },
+              { data: data },
               kwargs
             )
           )

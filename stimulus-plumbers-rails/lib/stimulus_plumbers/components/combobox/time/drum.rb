@@ -5,7 +5,13 @@ module StimulusPlumbers
     class Combobox
       class Time
         class Drum < Plumber::Base
-          def render(stimulus_controller:, target:, label:, items:, selected: nil)
+          def render(...)
+            render_drum(...)
+          end
+
+          private
+
+          def render_drum(stimulus_controller:, target:, label:, items:, selected: nil)
             template.content_tag(
               :ul,
               **merge_html_options(

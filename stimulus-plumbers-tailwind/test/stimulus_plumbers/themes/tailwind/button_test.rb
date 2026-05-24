@@ -158,4 +158,46 @@ class TailwindThemeButtonTest < Minitest::Test
   def test_button_group_col_includes_alignment_class_for_right
     assert_includes classes_for(:button_group, direction: :col, alignment: :right), "items-end"
   end
+
+  # :button fab variant
+
+  def test_button_fab_variant_includes_rounded_full
+    result = classes_for(:button, variant: :fab)
+
+    assert_includes result, "rounded-full"
+  end
+
+  def test_button_fab_variant_includes_shadow
+    result = classes_for(:button, variant: :fab)
+
+    assert_includes result, "shadow-lg"
+  end
+
+  def test_button_fab_variant_includes_primary_background
+    result = classes_for(:button, variant: :fab)
+
+    assert_includes result, "bg-(--sp-color-primary)"
+    assert_includes result, "text-(--sp-color-primary-fg)"
+  end
+
+  def test_button_fab_variant_includes_hover_shadow
+    assert_includes classes_for(:button, variant: :fab), "hover:shadow-xl"
+  end
+
+  # :button dashed variant
+
+  def test_button_dashed_variant_includes_dashed_border
+    result = classes_for(:button, variant: :dashed)
+
+    assert_includes result, "border-dashed"
+    assert_includes result, "border-(--sp-color-border)"
+  end
+
+  def test_button_dashed_variant_includes_transparent_background
+    assert_includes classes_for(:button, variant: :dashed), "bg-transparent"
+  end
+
+  def test_button_dashed_variant_includes_muted_hover
+    assert_includes classes_for(:button, variant: :dashed), "hover:bg-(--sp-color-muted)"
+  end
 end

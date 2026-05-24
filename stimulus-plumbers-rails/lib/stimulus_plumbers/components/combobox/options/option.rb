@@ -5,7 +5,13 @@ module StimulusPlumbers
     class Combobox
       class Options
         class Option < Plumber::Base
-          def render(label:, value:, description: nil, disabled: false, selected: false)
+          def render(...)
+            render_option(...)
+          end
+
+          private
+
+          def render_option(label:, value:, description: nil, disabled: false, selected: false)
             aria = { selected: selected ? "true" : "false" }
             aria[:disabled] = "true" if disabled
 

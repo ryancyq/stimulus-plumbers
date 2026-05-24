@@ -44,6 +44,8 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 
 | Component | Helper(s) | Docs |
 |-----------|-----------|------|
+| Button | `sp_button`, `sp_button_group` | [docs/component/button.md](docs/component/button.md) |
+| Action List | `sp_action_list`, `sp_action_list_item`, `sp_action_list_section` | [docs/component/action_list.md](docs/component/action_list.md) |
 | Combobox — date | `sp_combobox_date` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_date) |
 | Combobox — dropdown | `sp_combobox_dropdown` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_dropdown) |
 | Combobox — typeahead | `sp_combobox_typeahead` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_typeahead) |

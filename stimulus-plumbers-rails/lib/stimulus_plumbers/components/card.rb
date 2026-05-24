@@ -3,7 +3,17 @@
 module StimulusPlumbers
   module Components
     class Card < Plumber::Base
-      def render(title: nil, title_tag: :h2, **kwargs, &block)
+      def render(...)
+        render_card(...)
+      end
+
+      def section(...)
+        Card::Section.new(template).render(...)
+      end
+
+      private
+
+      def render_card(title: nil, title_tag: :h2, **kwargs, &block)
         html_options = merge_html_options(
           { classes: theme.resolve(:card).fetch(:classes, "") },
           kwargs
@@ -17,10 +27,6 @@ module StimulusPlumbers
             ]
           )
         end
-      end
-
-      def section(title: nil, **kwargs, &block)
-        Card::Section.new(template).render(title: title, **kwargs, &block)
       end
     end
   end

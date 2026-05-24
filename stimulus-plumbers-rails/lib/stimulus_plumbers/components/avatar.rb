@@ -3,7 +3,13 @@
 module StimulusPlumbers
   module Components
     class Avatar < Plumber::Base
-      def render(name: nil, initials: nil, url: nil, color: nil, size: :md, **kwargs, &block)
+      def render(...)
+        render_avatar(...)
+      end
+
+      private
+
+      def render_avatar(name: nil, initials: nil, url: nil, color: nil, size: :md, **html_options, &block)
         color_css = resolve_color(color, name, initials) unless url || block_given?
 
         html_options = merge_html_options(
@@ -12,15 +18,15 @@ module StimulusPlumbers
             "aria-label": name,
             role:         "img"
           },
-          kwargs
+          html_options
         )
 
-        template.content_tag(:span, inner(name, initials, url, &block), **html_options)
+        template.content_tag(:span, **html_options) do
+          build_avatar(name, initials, url, &block)
+        end
       end
 
-      private
-
-      def inner(name, initials, url, &block)
+      def build_avatar(name, initials, url, &block)
         if block_given?
           template.capture(&block)
         elsif url

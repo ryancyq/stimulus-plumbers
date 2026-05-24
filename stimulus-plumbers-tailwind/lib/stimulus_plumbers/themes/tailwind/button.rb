@@ -28,7 +28,17 @@ module StimulusPlumbers
             hover:bg-(--sp-color-destructive)/90
           ].freeze,
           ghost:       %w[hover:bg-(--sp-color-muted) text-(--sp-color-fg)].freeze,
-          link:        %w[text-(--sp-color-primary) underline-offset-4 hover:underline].freeze
+          link:        %w[text-(--sp-color-primary) underline-offset-4 hover:underline].freeze,
+          fab:         %w[
+            rounded-full shadow-lg
+            bg-(--sp-color-primary) text-(--sp-color-primary-fg)
+            hover:bg-(--sp-color-primary)/90 hover:shadow-xl
+          ].freeze,
+          dashed:      %w[
+            border border-dashed border-(--sp-color-border)
+            bg-transparent text-(--sp-color-fg)
+            hover:bg-(--sp-color-muted)
+          ].freeze
         }.freeze
 
         SIZES = {

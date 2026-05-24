@@ -4,22 +4,25 @@ module StimulusPlumbers
   module Components
     class ActionList
       class Item < Plumber::Base
-        def render(content = nil, url: nil, external: false, active: false, **kwargs, &block)
-          content      = template.capture(&block) if block_given?
+        def render(content = nil, **kwargs, &block)
+          render_item(content, **kwargs, &block)
+        end
+
+        private
+
+        def render_item(content, url: nil, external: false, active: false, **html_options, &block)
           html_options = merge_html_options(
             { classes: theme.resolve(:action_list_item, active: active).fetch(:classes, "") },
-            kwargs
+            html_options
           )
 
-          inner = if url
-                    html_options[:target] = "_blank" if external
-                    template.content_tag(:a, content, href: url, **html_options)
-                  else
-                    html_options[:type] ||= "button"
-                    template.content_tag(:button, content, **html_options)
-                  end
+          template.content_tag(:li) do
+            render_button(content, url: url, external: external, **html_options, &block)
+          end
+        end
 
-          template.content_tag(:li, inner)
+        def render_button(content, url: nil, external: false, **html_options, &block)
+          Components::Button.new(template).render(content, url: url, external: external, **html_options, &block)
         end
       end
     end
