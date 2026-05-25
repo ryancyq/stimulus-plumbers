@@ -7,7 +7,7 @@ module StimulusPlumbers
         GRID = %w[w-full].freeze
 
         DAYS_OF_WEEK = %w[
-          grid grid-cols-7 text-center text-(--sp-text-xs)
+          grid grid-cols-7 text-center text-(length:--sp-text-xs)
           font-medium text-(--sp-color-muted-fg) mb-(--sp-space-1)
         ].freeze
 
@@ -15,7 +15,7 @@ module StimulusPlumbers
 
         DAY = %w[
           size-(--sp-calendar-day-size) rounded-(--sp-radius-md)
-          flex items-center justify-center text-(--sp-text-sm)
+          flex items-center justify-center text-(length:--sp-text-sm)
           hover:bg-(--sp-color-muted) cursor-pointer
           aria-[current=date]:font-bold
           aria-selected:bg-(--sp-color-primary)

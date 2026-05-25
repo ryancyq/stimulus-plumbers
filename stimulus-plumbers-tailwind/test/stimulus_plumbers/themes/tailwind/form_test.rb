@@ -48,7 +48,7 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_label_includes_base_classes
     result = classes_for(:form_label)
 
-    assert_includes result, "text-(--sp-text-sm)"
+    assert_includes result, "text-(length:--sp-text-sm)"
     assert_includes result, "font-medium"
     assert_includes result, "text-(--sp-color-fg)"
   end
@@ -75,7 +75,7 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_details_includes_base_classes
     result = classes_for(:form_details)
 
-    assert_includes result, "text-(--sp-text-xs)"
+    assert_includes result, "text-(length:--sp-text-xs)"
     assert_includes result, "text-(--sp-color-muted-fg)"
   end
 
@@ -84,7 +84,7 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_error_includes_base_classes
     result = classes_for(:form_error)
 
-    assert_includes result, "text-(--sp-text-xs)"
+    assert_includes result, "text-(length:--sp-text-xs)"
     assert_includes result, "text-(--sp-color-error)"
   end
 
@@ -95,7 +95,7 @@ class TailwindThemeFormTest < Minitest::Test
 
     assert_includes result, "w-full"
     assert_includes result, "rounded-(--sp-radius-md)"
-    assert_includes result, "text-(--sp-text-sm)"
+    assert_includes result, "text-(length:--sp-text-sm)"
   end
 
   def test_form_input_includes_default_border_when_no_error

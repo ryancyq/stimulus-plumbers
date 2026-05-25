@@ -42,9 +42,11 @@ module StimulusPlumbers
         }.freeze
 
         SIZES = {
-          sm: %w[h-8 px-(--sp-space-3) text-(--sp-text-sm)].freeze,
-          md: %w[h-9 px-(--sp-space-4) text-(--sp-text-base)].freeze,
-          lg: %w[h-11 px-(--sp-space-6) text-(--sp-text-lg)].freeze
+          xs: %w[h-7 px-(--sp-space-2) text-(length:--sp-text-xs)].freeze,
+          sm: %w[h-8 px-(--sp-space-3) text-(length:--sp-text-sm)].freeze,
+          md: %w[h-9 px-(--sp-space-4) text-(length:--sp-text-base)].freeze,
+          lg: %w[h-11 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze,
+          xl: %w[h-14 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze
         }.freeze
 
         FLEX_ALIGN = {

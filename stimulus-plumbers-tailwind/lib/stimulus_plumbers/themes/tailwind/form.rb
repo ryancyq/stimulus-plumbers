@@ -5,7 +5,7 @@ module StimulusPlumbers
     module Tailwind
       module Form
         INPUT_BASE = %w[
-          w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2) text-(--sp-text-sm) text-(--sp-color-fg)
+          w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-fg)
           bg-(--sp-color-bg) focus:outline-none focus:ring-2 focus:ring-offset-0
           [.sp-form-input-group_&]:border-0 [.sp-form-input-group_&]:rounded-none
           [.sp-form-input-group_&]:bg-transparent [.sp-form-input-group_&]:shadow-none
@@ -17,10 +17,10 @@ module StimulusPlumbers
         GROUP_BASE    = %w[flex gap-(--sp-space-1) mb-(--sp-space-3)].freeze
         GROUP_INLINE  = %w[flex-row items-center].freeze
 
-        LABEL         = %w[text-(--sp-text-sm) font-medium text-(--sp-color-fg)].freeze
+        LABEL         = %w[text-(length:--sp-text-sm) font-medium text-(--sp-color-fg)].freeze
         REQUIRED_MARK = %w[text-(--sp-color-error) ml-(--sp-space-0-5)].freeze
-        DETAILS       = %w[text-(--sp-text-xs) text-(--sp-color-muted-fg)].freeze
-        ERROR_TEXT    = %w[text-(--sp-text-xs) text-(--sp-color-error)].freeze
+        DETAILS       = %w[text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
+        ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
         CHECKBOX      = %w[size-(--sp-control-size) rounded border-(--sp-color-muted-fg) text-(--sp-color-primary)].freeze
         RADIO         = %w[size-(--sp-control-size) border-(--sp-color-muted-fg) text-(--sp-color-primary)].freeze
 
@@ -28,12 +28,12 @@ module StimulusPlumbers
         INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
         BUTTON_REVEAL = %w[
-          self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg) hover:text-(--sp-color-fg) text-(--sp-text-sm)
+          self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg) hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
         ].freeze
         BUTTON_CLEAR = %w[
-          self-stretch border-0 bg-transparent px-(--sp-space-2) cursor-pointer text-(--sp-color-muted-fg) hover:text-(--sp-color-fg) text-(--sp-text-sm)
+          self-stretch border-0 bg-transparent px-(--sp-space-2) cursor-pointer text-(--sp-color-muted-fg) hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
         ].freeze
-        SUBMIT_LINK = %w[cursor-pointer text-(--sp-text-sm) font-medium text-(--sp-color-fg) hover:underline].freeze
+        SUBMIT_LINK = %w[cursor-pointer text-(length:--sp-text-sm) font-medium text-(--sp-color-fg) hover:underline].freeze
 
         private
 

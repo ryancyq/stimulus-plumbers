@@ -7,7 +7,7 @@ module StimulusPlumbers
         TRIGGER = %w[
           w-full rounded-(--sp-radius-md) border border-(--sp-color-muted-fg)
           px-(--sp-space-3) py-(--sp-space-2)
-          text-(--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
+          text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
           focus:outline-none focus:ring-2 focus:ring-(--sp-focus-ring-color)
           [.sp-form-combobox_&]:border-0 [.sp-form-combobox_&]:rounded-none
           [.sp-form-combobox_&]:px-0 [.sp-form-combobox_&]:py-0
@@ -36,7 +36,7 @@ module StimulusPlumbers
         OPTION_BASE = %w[
           flex items-center gap-(--sp-space-2) w-full
           px-(--sp-space-2) py-(--sp-space-1)
-          rounded-(--sp-radius-sm) text-(--sp-text-sm)
+          rounded-(--sp-radius-sm) text-(length:--sp-text-sm)
           cursor-pointer select-none outline-none
           hover:bg-(--sp-color-muted) focus:bg-(--sp-color-muted)
         ].freeze
@@ -53,12 +53,12 @@ module StimulusPlumbers
 
         TYPEAHEAD_LOADING = %w[
           flex items-center justify-center
-          py-(--sp-space-2) text-(--sp-text-sm) text-(--sp-color-muted-fg)
+          py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
         TYPEAHEAD_EMPTY = %w[
           flex items-center justify-center
-          py-(--sp-space-2) text-(--sp-text-sm) text-(--sp-color-muted-fg)
+          py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
         TIME = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
