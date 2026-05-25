@@ -17,8 +17,8 @@ class TailwindThemeFormTest < Minitest::Test
     result = classes_for(:form_group)
 
     assert_includes result, "flex"
-    assert_includes result, "gap-1"
-    assert_includes result, "mb-3"
+    assert_includes result, "gap-(--sp-space-1)"
+    assert_includes result, "mb-(--sp-space-3)"
   end
 
   def test_form_group_stacked_layout_includes_flex_col
@@ -48,9 +48,9 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_label_includes_base_classes
     result = classes_for(:form_label)
 
-    assert_includes result, "text-sm"
+    assert_includes result, "text-(--sp-text-sm)"
     assert_includes result, "font-medium"
-    assert_includes result, "text-gray-900"
+    assert_includes result, "text-(--sp-color-fg)"
   end
 
   def test_form_label_hidden_includes_sr_only
@@ -66,8 +66,8 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_required_mark_includes_base_classes
     result = classes_for(:form_required_mark)
 
-    assert_includes result, "text-red-700"
-    assert_includes result, "ml-0.5"
+    assert_includes result, "text-(--sp-color-error)"
+    assert_includes result, "ml-(--sp-space-0-5)"
   end
 
   # :form_details
@@ -75,8 +75,8 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_details_includes_base_classes
     result = classes_for(:form_details)
 
-    assert_includes result, "text-xs"
-    assert_includes result, "text-gray-600"
+    assert_includes result, "text-(--sp-text-xs)"
+    assert_includes result, "text-(--sp-color-muted-fg)"
   end
 
   # :form_error
@@ -84,8 +84,8 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_error_includes_base_classes
     result = classes_for(:form_error)
 
-    assert_includes result, "text-xs"
-    assert_includes result, "text-red-700"
+    assert_includes result, "text-(--sp-text-xs)"
+    assert_includes result, "text-(--sp-color-error)"
   end
 
   # :form_input
@@ -94,66 +94,66 @@ class TailwindThemeFormTest < Minitest::Test
     result = classes_for(:form_input)
 
     assert_includes result, "w-full"
-    assert_includes result, "rounded-md"
-    assert_includes result, "text-sm"
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "text-(--sp-text-sm)"
   end
 
   def test_form_input_includes_default_border_when_no_error
-    assert_includes classes_for(:form_input), "border-gray-500"
+    assert_includes classes_for(:form_input), "border-(--sp-color-muted-fg)"
   end
 
   def test_form_input_excludes_error_border_when_no_error
-    refute_includes classes_for(:form_input), "border-red-700"
+    refute_includes classes_for(:form_input), "border-(--sp-color-error)"
   end
 
   def test_form_input_includes_error_border_when_error
-    assert_includes classes_for(:form_input, error: true), "border-red-700"
+    assert_includes classes_for(:form_input, error: true), "border-(--sp-color-error)"
   end
 
   def test_form_input_excludes_default_border_when_error
-    refute_includes classes_for(:form_input, error: true), "border-gray-500"
+    refute_includes classes_for(:form_input, error: true), "border-(--sp-color-muted-fg)"
   end
 
   # :form_textarea
 
   def test_form_textarea_includes_default_border_when_no_error
-    assert_includes classes_for(:form_textarea), "border-gray-500"
+    assert_includes classes_for(:form_textarea), "border-(--sp-color-muted-fg)"
   end
 
   def test_form_textarea_includes_error_border_when_error
-    assert_includes classes_for(:form_textarea, error: true), "border-red-700"
+    assert_includes classes_for(:form_textarea, error: true), "border-(--sp-color-error)"
   end
 
   def test_form_textarea_excludes_default_border_when_error
-    refute_includes classes_for(:form_textarea, error: true), "border-gray-500"
+    refute_includes classes_for(:form_textarea, error: true), "border-(--sp-color-muted-fg)"
   end
 
   # :form_file
 
   def test_form_file_includes_default_border_when_no_error
-    assert_includes classes_for(:form_file), "border-gray-500"
+    assert_includes classes_for(:form_file), "border-(--sp-color-muted-fg)"
   end
 
   def test_form_file_includes_error_border_when_error
-    assert_includes classes_for(:form_file, error: true), "border-red-700"
+    assert_includes classes_for(:form_file, error: true), "border-(--sp-color-error)"
   end
 
   def test_form_file_excludes_default_border_when_error
-    refute_includes classes_for(:form_file, error: true), "border-gray-500"
+    refute_includes classes_for(:form_file, error: true), "border-(--sp-color-muted-fg)"
   end
 
   # :form_select
 
   def test_form_select_includes_default_border_when_no_error
-    assert_includes classes_for(:form_select), "border-gray-500"
+    assert_includes classes_for(:form_select), "border-(--sp-color-muted-fg)"
   end
 
   def test_form_select_includes_error_border_when_error
-    assert_includes classes_for(:form_select, error: true), "border-red-700"
+    assert_includes classes_for(:form_select, error: true), "border-(--sp-color-error)"
   end
 
   def test_form_select_excludes_default_border_when_error
-    refute_includes classes_for(:form_select, error: true), "border-gray-500"
+    refute_includes classes_for(:form_select, error: true), "border-(--sp-color-muted-fg)"
   end
 
   # :form_checkbox
@@ -161,9 +161,9 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_checkbox_includes_base_classes
     result = classes_for(:form_checkbox)
 
-    assert_includes result, "size-4"
+    assert_includes result, "size-(--sp-control-size)"
     assert_includes result, "rounded"
-    assert_includes result, "border-gray-500"
+    assert_includes result, "border-(--sp-color-muted-fg)"
   end
 
   # :form_radio
@@ -171,22 +171,22 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_radio_includes_base_classes
     result = classes_for(:form_radio)
 
-    assert_includes result, "size-4"
-    assert_includes result, "border-gray-500"
+    assert_includes result, "size-(--sp-control-size)"
+    assert_includes result, "border-(--sp-color-muted-fg)"
   end
 
   # :form_combobox
 
   def test_form_combobox_includes_default_border_when_no_error
-    assert_includes classes_for(:form_combobox), "border-gray-500"
+    assert_includes classes_for(:form_combobox), "border-(--sp-color-muted-fg)"
   end
 
   def test_form_combobox_includes_error_border_when_error
-    assert_includes classes_for(:form_combobox, error: true), "border-red-700"
+    assert_includes classes_for(:form_combobox, error: true), "border-(--sp-color-error)"
   end
 
   def test_form_combobox_excludes_default_border_when_error
-    refute_includes classes_for(:form_combobox, error: true), "border-gray-500"
+    refute_includes classes_for(:form_combobox, error: true), "border-(--sp-color-muted-fg)"
   end
 
   # :form_input_reveal

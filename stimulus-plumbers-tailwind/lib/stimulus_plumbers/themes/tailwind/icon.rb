@@ -25,7 +25,7 @@ module StimulusPlumbers
         private
 
         def icon_classes
-          { classes: "size-6" }
+          { classes: "size-(--sp-icon-default)" }
         end
       end
     end

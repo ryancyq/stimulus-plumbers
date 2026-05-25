@@ -65,7 +65,7 @@ module StimulusPlumbers
         }.freeze
 
         BASE = %w[
-          inline-flex items-center justify-center gap-2 font-medium
+          inline-flex items-center justify-center gap-(--sp-space-2) font-medium
           rounded-(--sp-radius-md) transition-colors
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
           disabled:pointer-events-none disabled:opacity-50
@@ -95,7 +95,7 @@ module StimulusPlumbers
         end
 
         def button_icon_classes
-          { classes: klasses("size-4", "stroke-current") }
+          { classes: klasses("size-(--sp-control-size)", "stroke-current") }
         end
       end
     end

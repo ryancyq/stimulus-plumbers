@@ -8,7 +8,7 @@ module StimulusPlumbers
 
         DAYS_OF_WEEK = %w[
           grid grid-cols-7 text-center text-(--sp-text-xs)
-          font-medium text-(--sp-color-muted-fg) mb-1
+          font-medium text-(--sp-color-muted-fg) mb-(--sp-space-1)
         ].freeze
 
         DAYS_OF_MONTH = %w[grid grid-cols-7 justify-items-center].freeze
@@ -23,7 +23,7 @@ module StimulusPlumbers
           aria-selected:hover:bg-(--sp-color-primary)/90
         ].freeze
 
-        NAV = %w[flex items-center justify-between gap-1 mb-2].freeze
+        NAV = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
 
         NAV_BTN = %w[
           inline-flex items-center justify-center
