@@ -84,7 +84,7 @@ module StimulusPlumbers
 
           def clear_button
             Components::Button.new(@template).render(
-              icon_leading: :x,
+              icon_leading: "close",
               **merge_html_options(
                 field_theme(:form_button_clear),
                 {

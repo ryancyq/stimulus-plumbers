@@ -9,7 +9,7 @@ module StimulusPlumbers
           kwargs
         )
 
-        icon_data = Themes::Schema::Icon.resolve(theme.icons[name])
+        icon_data = Themes::Schema::Icon.resolve(theme.icons[name.to_s])
         if icon_data
           svg_icon(icon_data, html_options)
         else
