@@ -1,13 +1,24 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-VERSION=$1
+VERSION = ARGV[0]
 
-if [ -z "$VERSION" ]; then
-  echo "Usage: $0 <version>"
+if VERSION.nil? || VERSION.empty?
+  warn "Usage: #{$PROGRAM_NAME} <version>"
   exit 1
-fi
+end
 
-printf "# frozen_string_literal: true\n\nmodule StimulusPlumbers\n  VERSION = \"$VERSION\"\nend\n" > ./lib/stimulus_plumbers/version.rb
-bundle > /dev/null
+OUTPUT_FILE = File.expand_path("../lib/stimulus_plumbers/version.rb", __dir__)
 
-echo "$VERSION"
+output = <<~RUBY
+  # frozen_string_literal: true
+
+  module StimulusPlumbers
+    VERSION = "#{VERSION}"
+  end
+RUBY
+
+File.write(OUTPUT_FILE, output)
+system("bundle > /dev/null")
+
+puts VERSION
