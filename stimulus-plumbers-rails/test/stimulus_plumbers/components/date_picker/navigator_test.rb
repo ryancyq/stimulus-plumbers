@@ -28,6 +28,6 @@ class DatePickerNavigatorTest < ActionView::TestCase
   end
 
   def test_renders_icon_when_provided
-    assert_css parse_html(navigator(icon: "arrow-left")), "span + button"
+    assert_css parse_html(navigator(icon: "arrow-left")), "button span"
   end
 end

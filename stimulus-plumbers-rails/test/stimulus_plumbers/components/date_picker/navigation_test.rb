@@ -32,10 +32,10 @@ class DatePickerNavigationTest < ActionView::TestCase
   end
 
   def test_previous_button_contains_icon
-    assert_css parse_html(navigation), "span + button[aria-label='Previous Month']"
+    assert_css parse_html(navigation), "button[aria-label='Previous Month'] span"
   end
 
   def test_next_button_contains_icon
-    assert_css parse_html(navigation), "span + button[aria-label='Next Month']"
+    assert_css parse_html(navigation), "button[aria-label='Next Month'] span"
   end
 end

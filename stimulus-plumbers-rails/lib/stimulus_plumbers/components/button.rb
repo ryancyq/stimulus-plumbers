@@ -3,9 +3,11 @@
 module StimulusPlumbers
   module Components
     class Button < Plumber::Base
-      def render(content = nil, **kwargs, &block)
-        render_button_with_layout(**kwargs) do |opts|
-          render_button(**opts) { build_button(content, &block) }
+      def render(content = nil, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
+        render_button(**kwargs) do
+          build_layout(icon_leading: icon_leading, icon_trailing: icon_trailing) do
+            build_button(content, &block)
+          end
         end
       end
 
@@ -23,11 +25,11 @@ module StimulusPlumbers
         end
       end
 
-      def render_button_with_layout(icon_leading: nil, icon_trailing: nil, **kwargs, &block)
+      def build_layout(icon_leading: nil, icon_trailing: nil, &block)
         template.safe_join(
           [
             icon_leading.respond_to?(:call) ? icon_leading.call : render_icon(icon_leading),
-            template.capture(kwargs, &block),
+            template.capture(&block),
             icon_trailing.respond_to?(:call) ? icon_trailing.call : render_icon(icon_trailing)
           ]
         )
