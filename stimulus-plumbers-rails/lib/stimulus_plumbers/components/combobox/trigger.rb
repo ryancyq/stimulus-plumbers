@@ -20,6 +20,31 @@ module StimulusPlumbers
           aria: {},
           id: nil,
           data: {},
+          icon_leading: nil,
+          icon_trailing: nil,
+          **kwargs
+        )
+          input_html = render_input(
+            stimulus_controller:, popover_id:, haspopup:,
+            readonly:, aria_autocomplete:, aria_label:,
+            aria:, id:, data:, **kwargs
+          )
+
+          return input_html unless icon_leading || icon_trailing
+
+          render_trigger_group(icon_leading, icon_trailing) { input_html }
+        end
+
+        def render_input(
+          stimulus_controller:,
+          popover_id:,
+          haspopup:,
+          readonly:,
+          aria_autocomplete:,
+          aria_label:,
+          aria:,
+          id:,
+          data:,
           **kwargs
         )
           stimulus_data = {
@@ -47,6 +72,18 @@ module StimulusPlumbers
               kwargs
             )
           )
+        end
+
+        def render_trigger_group(icon_leading, icon_trailing, &block)
+          InputGroup.new(template).render(
+            leading:  icon_leading  ? -> { render_trigger_icon(icon_leading) }  : nil,
+            trailing: icon_trailing ? -> { render_trigger_icon(icon_trailing) } : nil,
+            **theme.resolve(:combobox_trigger_group)
+          ) { template.capture(&block) }
+        end
+
+        def render_trigger_icon(name)
+          Icon.new(template).render(name: name, aria: { hidden: "true" })
         end
       end
     end

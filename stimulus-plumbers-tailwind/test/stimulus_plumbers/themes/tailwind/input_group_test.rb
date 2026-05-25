@@ -18,23 +18,23 @@ class TailwindThemeInputGroupTest < Minitest::Test
 
     assert_includes result, "flex"
     assert_includes result, "items-center"
-    assert_includes result, "rounded-md"
+    assert_includes result, "rounded-(--sp-radius-md)"
     assert_includes result, "border"
   end
 
   def test_input_group_includes_default_border_when_no_error
-    assert_includes classes_for(:input_group), "border-gray-500"
+    assert_includes classes_for(:input_group), "border-(--sp-color-muted-fg)"
   end
 
   def test_input_group_excludes_error_border_when_no_error
-    refute_includes classes_for(:input_group), "border-red-700"
+    refute_includes classes_for(:input_group), "border-(--sp-color-error)"
   end
 
   def test_input_group_includes_error_border_when_error
-    assert_includes classes_for(:input_group, error: true), "border-red-700"
+    assert_includes classes_for(:input_group, error: true), "border-(--sp-color-error)"
   end
 
   def test_input_group_excludes_default_border_when_error
-    refute_includes classes_for(:input_group, error: true), "border-gray-500"
+    refute_includes classes_for(:input_group, error: true), "border-(--sp-color-muted-fg)"
   end
 end

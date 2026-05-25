@@ -7,13 +7,22 @@ module StimulusPlumbers
         module Select
           module Timezone
             def time_zone_select(attribute, priority_zones = nil, options = {}, html_options = {})
-              html_native = options.delete(:html_native) { false }
+              html_native   = options.delete(:html_native) { false }
+              icon_leading  = options.delete(:icon_leading)
+              icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
               Field.new(@template, **options).render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error|
                 merged_html_opts = merge_html_options(html_options, html_opts, field_theme(:form_select, error: error))
                 if html_native
                   super(attribute, priority_zones, opts, merged_html_opts)
                 else
-                  render_select_dropdown(attribute, opts, merged_html_opts, err: error) do
+                  render_select_dropdown(
+                    attribute,
+                    opts,
+                    merged_html_opts,
+                    err:           error,
+                    icon_leading:  icon_leading,
+                    icon_trailing: icon_trailing
+                  ) do
                     model = opts.delete(:model) { ActiveSupport::TimeZone }
                     build_zone_choices(priority_zones, model.all)
                   end

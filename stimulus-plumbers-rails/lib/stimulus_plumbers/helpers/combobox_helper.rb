@@ -9,7 +9,7 @@ module StimulusPlumbers
         id    = sp_dom_id
         opts  = Components::Combobox::Date.default_opts.deep_merge(
           input:   { value: value },
-          trigger: { id: id, aria_label: label }.compact
+          trigger: { id: id, aria_label: label, icon_trailing: "calendar" }.compact
         )
         Components::Combobox.new(self).render(
           **opts,
@@ -27,7 +27,7 @@ module StimulusPlumbers
         id      = sp_dom_id
         opts    = Components::Combobox::Dropdown.default_opts.deep_merge(
           input:   { value: value },
-          trigger: { id: id, aria_label: label }.compact
+          trigger: { id: id, aria_label: label, icon_trailing: "chevron-down" }.compact
         )
         Components::Combobox.new(self).render(**opts, **kwargs) do
           Components::Combobox::Dropdown.new(self).render(options: options, value: value, label: label)
@@ -65,7 +65,7 @@ module StimulusPlumbers
         id     = sp_dom_id
         opts   = Components::Combobox::Time.default_opts.deep_merge(
           input:   { value: value },
-          trigger: { id: id, aria_label: label }.compact
+          trigger: { id: id, aria_label: label, icon_trailing: "clock" }.compact
         )
         Components::Combobox.new(self).render(
           **opts,

@@ -9,6 +9,24 @@ module StimulusPlumbers
           px-(--sp-space-3) py-(--sp-space-2)
           text-(--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
           focus:outline-none focus:ring-2 focus:ring-(--sp-focus-ring-color)
+          [.sp-form-combobox_&]:border-0 [.sp-form-combobox_&]:rounded-none
+          [.sp-form-combobox_&]:px-0 [.sp-form-combobox_&]:py-0
+          [.sp-form-combobox_&]:bg-transparent [.sp-form-combobox_&]:shadow-none
+          [.sp-form-combobox_&]:focus:ring-0
+          [.sp-combobox-group_&]:border-0 [.sp-combobox-group_&]:rounded-none
+          [.sp-combobox-group_&]:px-0 [.sp-combobox-group_&]:py-0
+          [.sp-combobox-group_&]:bg-transparent [.sp-combobox-group_&]:shadow-none
+          [.sp-combobox-group_&]:focus:ring-0
+        ].freeze
+
+        TRIGGER_GROUP = %w[
+          flex items-center gap-(--sp-space-2) overflow-hidden
+          rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) bg-(--sp-color-bg)
+          px-(--sp-space-3) py-(--sp-space-2)
+          focus-within:outline-none focus-within:ring-2 focus-within:ring-(--sp-focus-ring-color)
+          sp-combobox-group
+          [.sp-form-combobox_&]:border-0 [.sp-form-combobox_&]:rounded-none
+          [.sp-form-combobox_&]:focus-within:ring-0
         ].freeze
 
         LISTBOX = %w[
@@ -49,6 +67,10 @@ module StimulusPlumbers
 
         def combobox_trigger_classes
           { classes: klasses(*TRIGGER) }
+        end
+
+        def combobox_trigger_group_classes
+          { classes: klasses(*TRIGGER_GROUP) }
         end
 
         def combobox_listbox_classes

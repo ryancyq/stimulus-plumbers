@@ -16,7 +16,9 @@ module StimulusPlumbers
               options = {},
               html_options = {}
             )
-              html_native = options.delete(:html_native) { false }
+              html_native   = options.delete(:html_native) { false }
+              icon_leading  = options.delete(:icon_leading)
+              icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
               Field.new(@template, **options).render(
                 object,
                 attribute,
@@ -35,7 +37,14 @@ module StimulusPlumbers
                     merged_html_opts
                   )
                 else
-                  render_select_dropdown(attribute, opts, merged_html_opts, err: error) do
+                  render_select_dropdown(
+                    attribute,
+                    opts,
+                    merged_html_opts,
+                    err:           error,
+                    icon_leading:  icon_leading,
+                    icon_trailing: icon_trailing
+                  ) do
                     collection.map do |group|
                       {
                         label:   group.public_send(group_label_method),

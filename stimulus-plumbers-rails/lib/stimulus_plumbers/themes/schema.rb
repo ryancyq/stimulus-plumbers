@@ -54,6 +54,7 @@ module StimulusPlumbers
 
       COMBOBOX = {
         combobox_trigger:           {}.freeze,
+        combobox_trigger_group:     {}.freeze,
         combobox_option:            {
           selected: { default: false, validate: Ranges::BOOL },
           disabled: { default: false, validate: Ranges::BOOL }

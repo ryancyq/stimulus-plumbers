@@ -6,7 +6,9 @@ module StimulusPlumbers
       module Inputs
         module Select
           def select(attribute, choices = nil, options = {}, html_options = {})
-            html_native = options.delete(:html_native) { false }
+            html_native   = options.delete(:html_native) { false }
+            icon_leading  = options.delete(:icon_leading)
+            icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
             Field.new(@template, **options).render(
               object,
               attribute,
@@ -16,7 +18,16 @@ module StimulusPlumbers
               if html_native
                 super(attribute, choices, opts, merged_html_opts)
               else
-                render_select_dropdown(attribute, opts, merged_html_opts, err: error) { Array(choices) }
+                render_select_dropdown(
+                  attribute,
+                  opts,
+                  merged_html_opts,
+                  err:           error,
+                  icon_leading:  icon_leading,
+                  icon_trailing: icon_trailing
+                ) do
+                  Array(choices)
+                end
               end
             end
           end
@@ -29,7 +40,9 @@ module StimulusPlumbers
             options = {},
             html_options = {}
           )
-            html_native = options.delete(:html_native) { false }
+            html_native   = options.delete(:html_native) { false }
+            icon_leading  = options.delete(:icon_leading)
+            icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
             Field.new(@template, **options).render(
               object,
               attribute,
@@ -39,7 +52,14 @@ module StimulusPlumbers
               if html_native
                 super(attribute, collection, value_method, text_method, opts, merged_html_opts)
               else
-                render_select_dropdown(attribute, opts, merged_html_opts, err: error) do
+                render_select_dropdown(
+                  attribute,
+                  opts,
+                  merged_html_opts,
+                  err:           error,
+                  icon_leading:  icon_leading,
+                  icon_trailing: icon_trailing
+                ) do
                   collection.map { |item| [item.public_send(text_method), item.public_send(value_method)] }
                 end
               end
@@ -48,13 +68,18 @@ module StimulusPlumbers
 
           private
 
-          def render_select_dropdown(attribute, opts, html_opts, err:)
+          def render_select_dropdown(attribute, opts, html_opts, err:, icon_leading:, icon_trailing:)
             include_blank = opts.delete(:include_blank)
             prompt        = opts.delete(:prompt)
             current_value = opts.delete(:selected) { object.respond_to?(attribute) ? object.public_send(attribute) : nil }
             choices       = build_select_dropdown_choices(yield(current_value), include_blank: include_blank, prompt: prompt)
 
-            combobox_opts = build_select_dropdown_opts(html_opts, current_value)
+            combobox_opts = build_select_dropdown_opts(
+              html_opts,
+              current_value,
+              icon_leading:  icon_leading,
+              icon_trailing: icon_trailing
+            )
             render_combobox(attribute, input_id: html_opts[:id], opts: combobox_opts, err: err) do
               Components::Combobox::Dropdown.new(@template).render(
                 options:    choices,
@@ -64,10 +89,10 @@ module StimulusPlumbers
             end
           end
 
-          def build_select_dropdown_opts(html_opts, current_value)
+          def build_select_dropdown_opts(html_opts, current_value, icon_leading:, icon_trailing:)
             Components::Combobox::Dropdown.default_opts.deep_merge(
               input:   { value: current_value },
-              trigger: html_opts
+              trigger: html_opts.merge({ icon_leading: icon_leading, icon_trailing: icon_trailing }.compact)
             )
           end
 

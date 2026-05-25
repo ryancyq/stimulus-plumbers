@@ -8,7 +8,9 @@ module StimulusPlumbers
           module Weekday
             if ActionView.version >= Gem::Version.new("7.1")
               def weekday_select(attribute, options = {}, html_options = {})
-                html_native = options.delete(:html_native) { false }
+                html_native   = options.delete(:html_native) { false }
+                icon_leading  = options.delete(:icon_leading)
+                icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
                 Field.new(@template, **options).render(
                   object,
                   attribute,
@@ -18,7 +20,14 @@ module StimulusPlumbers
                   if html_native
                     super(attribute, opts, merged_html_opts)
                   else
-                    render_select_dropdown(attribute, opts, merged_html_opts, err: error) do
+                    render_select_dropdown(
+                      attribute,
+                      opts,
+                      merged_html_opts,
+                      err:           error,
+                      icon_leading:  icon_leading,
+                      icon_trailing: icon_trailing
+                    ) do
                       build_weekday_choices(opts)
                     end
                   end

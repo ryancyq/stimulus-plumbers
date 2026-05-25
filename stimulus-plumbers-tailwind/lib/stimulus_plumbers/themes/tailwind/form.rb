@@ -7,6 +7,9 @@ module StimulusPlumbers
         INPUT_BASE = %w[
           w-full rounded-md border px-3 py-2 text-sm text-gray-900
           bg-white focus:outline-none focus:ring-2 focus:ring-offset-0
+          [.sp-form-input-group_&]:border-0 [.sp-form-input-group_&]:rounded-none
+          [.sp-form-input-group_&]:bg-transparent [.sp-form-input-group_&]:shadow-none
+          [.sp-form-input-group_&]:focus:ring-0
         ].freeze
         INPUT_ERROR   = %w[border-red-700 focus:ring-red-700].freeze
         INPUT_DEFAULT = %w[border-gray-500 focus:ring-blue-700].freeze
@@ -21,8 +24,8 @@ module StimulusPlumbers
         CHECKBOX      = %w[size-4 rounded border-gray-500 text-blue-700].freeze
         RADIO         = %w[size-4 border-gray-500 text-blue-700].freeze
 
-        INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-md border].freeze
-        INPUT_GROUP_BORDER = { error: "border-red-700", default: "border-gray-500" }.freeze
+        INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
+        INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
         BUTTON_REVEAL = %w[
           self-stretch border-0 bg-transparent px-3 cursor-pointer text-gray-600 hover:text-gray-900 text-sm
@@ -83,15 +86,15 @@ module StimulusPlumbers
         end
 
         def form_combobox_classes(error: false)
-          form_input_classes(error: error)
+          { classes: klasses(*INPUT_BASE, *(error ? INPUT_ERROR : INPUT_DEFAULT), "sp-form-combobox") }
         end
 
         def form_input_reveal_classes(**)
-          { classes: "" }
+          { classes: "sp-form-input-group" }
         end
 
         def form_input_clearable_classes
-          { classes: "" }
+          { classes: "sp-form-input-group" }
         end
 
         def form_button_reveal_classes
