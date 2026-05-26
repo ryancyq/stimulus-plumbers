@@ -41,12 +41,10 @@ module StimulusPlumbers
         end
 
         def build_fieldset_aria(field, object, attribute, input_id, error)
-          opts = {}
-          db = field.described_by(object, attribute, input_id)
-          opts[:"aria-describedby"] = db      if db
-          opts[:"aria-invalid"]     = "true"  if error
-          opts[:"aria-required"]    = "true"  if field.required
-          opts
+          aria = {}
+          aria[:describedby] = field.described_by(object, attribute, input_id)
+          aria[:invalid]     = "true" if error
+          { aria: aria.compact }
         end
       end
     end

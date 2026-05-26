@@ -11,7 +11,9 @@ class SignUp
                 :birth_date,
                 :newsletter,
                 :gender,
-                :country
+                :country,
+                :resume,
+                :interests
 
   def self.model_name
     ActiveModel::Name.new(self, nil, "SignUp")

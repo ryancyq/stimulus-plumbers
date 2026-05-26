@@ -82,10 +82,10 @@ class FieldsetTest < ActionView::TestCase
     assert_equal "sign_in_form_email_hint", doc.at_css("fieldset")["aria-describedby"]
   end
 
-  def test_fieldset_has_aria_required_when_required
+  def test_fieldset_does_not_set_aria_required
     doc = render_inputs(component(required: true))
 
-    assert_equal "true", doc.at_css("fieldset")["aria-required"]
+    assert_nil doc.at_css("fieldset")["aria-required"]
   end
 
   # ── hint ──────────────────────────────────────────────────────────────────

@@ -13,10 +13,13 @@ Rails.application.routes.draw do
     get :action_list
     get :card
     get :popover
+    get :avatar
+    get :divider
   end
 
   scope "/form", controller: "form" do
     get :sign_up
     get :field_error
+    get :fieldset
   end
 end

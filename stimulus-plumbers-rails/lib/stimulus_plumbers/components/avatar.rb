@@ -14,9 +14,9 @@ module StimulusPlumbers
 
         html_options = merge_html_options(
           {
-            classes:      [theme.resolve(:avatar, size: size).fetch(:classes, ""), color_css],
-            "aria-label": name,
-            role:         "img"
+            classes: [theme.resolve(:avatar, size: size).fetch(:classes, ""), color_css],
+            aria:    { label: name },
+            role:    "img"
           },
           kwargs
         )

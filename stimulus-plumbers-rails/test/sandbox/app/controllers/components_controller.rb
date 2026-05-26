@@ -25,4 +25,8 @@ class ComponentsController < ApplicationController
   def card; end
 
   def popover; end
+
+  def avatar; end
+
+  def divider; end
 end
