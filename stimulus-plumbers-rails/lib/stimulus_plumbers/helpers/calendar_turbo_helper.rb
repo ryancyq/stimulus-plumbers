@@ -3,8 +3,8 @@
 module StimulusPlumbers
   module Helpers
     module CalendarTurboHelper
-      def sp_calendar_month_turbo(**html_options)
-        calendar_month_turbo_renderer.render(**html_options)
+      def sp_calendar_month_turbo(**kwargs)
+        calendar_month_turbo_renderer.render(**kwargs)
       end
 
       private

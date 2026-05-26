@@ -9,7 +9,7 @@ module StimulusPlumbers
 
       private
 
-      def render_avatar(name: nil, initials: nil, url: nil, color: nil, size: :md, **html_options, &block)
+      def render_avatar(name: nil, initials: nil, url: nil, color: nil, size: :md, **kwargs, &block)
         color_css = resolve_color(color, name, initials) unless url || block_given?
 
         html_options = merge_html_options(
@@ -18,7 +18,7 @@ module StimulusPlumbers
             "aria-label": name,
             role:         "img"
           },
-          html_options
+          kwargs
         )
 
         template.content_tag(:span, **html_options) do

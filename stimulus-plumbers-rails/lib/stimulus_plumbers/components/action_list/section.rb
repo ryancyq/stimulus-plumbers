@@ -10,8 +10,8 @@ module StimulusPlumbers
 
         private
 
-        def render_section(title: nil, **html_options, &block)
-          template.content_tag(:li, **html_options) do
+        def render_section(title: nil, **kwargs, &block)
+          template.content_tag(:li, **kwargs) do
             ul_opts = {}
             ul_opts[:aria] = { label: title } if title.present?
             template.safe_join(

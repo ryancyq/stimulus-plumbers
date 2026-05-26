@@ -3,8 +3,8 @@
 module StimulusPlumbers
   module Helpers
     module PopoverHelper
-      def sp_popover(**html_options, &block)
-        popover_renderer.render(**html_options, &block)
+      def sp_popover(...)
+        popover_renderer.render(...)
       end
 
       private

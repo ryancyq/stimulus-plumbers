@@ -3,16 +3,16 @@
 module StimulusPlumbers
   module Helpers
     module ActionListHelper
-      def sp_action_list(**html_options, &block)
-        action_list_renderer.render(**html_options, &block)
+      def sp_action_list(...)
+        action_list_renderer.render(...)
       end
 
-      def sp_action_list_section(**html_options, &block)
-        action_list_renderer.section(**html_options, &block)
+      def sp_action_list_section(...)
+        action_list_renderer.section(...)
       end
 
-      def sp_action_list_item(content = nil, **html_options, &block)
-        action_list_renderer.item(content, **html_options, &block)
+      def sp_action_list_item(content = nil, **kwargs, &block)
+        action_list_renderer.item(content, **kwargs, &block)
       end
 
       private

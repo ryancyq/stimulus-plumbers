@@ -3,12 +3,12 @@
 module StimulusPlumbers
   module Helpers
     module ButtonHelper
-      def sp_button(content = nil, **html_options, &block)
-        button_renderer.render(content, **html_options, &block)
+      def sp_button(content = nil, **kwargs, &block)
+        button_renderer.render(content, **kwargs, &block)
       end
 
-      def sp_button_group(**html_options, &block)
-        button_renderer.group(**html_options, &block)
+      def sp_button_group(...)
+        button_renderer.group(...)
       end
 
       private

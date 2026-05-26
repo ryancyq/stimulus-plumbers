@@ -10,10 +10,10 @@ module StimulusPlumbers
 
         private
 
-        def render_group(alignment: :left, direction: :row, **html_options, &block)
+        def render_group(alignment: :left, direction: :row, **kwargs, &block)
           html_options = merge_html_options(
             { classes: theme.resolve(:button_group, alignment: alignment, direction: direction).fetch(:classes, "") },
-            html_options
+            kwargs
           )
           template.content_tag(:div, template.capture(&block), **html_options)
         end

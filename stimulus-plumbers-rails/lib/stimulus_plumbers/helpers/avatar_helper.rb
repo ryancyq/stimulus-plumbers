@@ -3,8 +3,8 @@
 module StimulusPlumbers
   module Helpers
     module AvatarHelper
-      def sp_avatar(**html_options, &block)
-        avatar_renderer.render(**html_options, &block)
+      def sp_avatar(...)
+        avatar_renderer.render(...)
       end
 
       private

@@ -3,10 +3,10 @@
 module StimulusPlumbers
   module Helpers
     module CalendarHelper
-      def sp_calendar_month(**html_options, &block)
-        date = html_options.delete(:date)
+      def sp_calendar_month(**kwargs, &block)
+        date = kwargs.delete(:date)
         if date
-          html_options = html_options.deep_merge(
+          html_options = kwargs.deep_merge(
             data: {
               "calendar-month-year-value":  date.year,
               "calendar-month-month-value": date.month - 1,
