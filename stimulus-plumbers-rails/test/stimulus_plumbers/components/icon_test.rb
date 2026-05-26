@@ -11,6 +11,30 @@ class IconComponentTest < ActionView::TestCase
     renderer.render(name: name, **kwargs)
   end
 
+  def icon_theme
+    Class.new(StimulusPlumbers::Themes::Base) do
+      def icons
+        { "check" => { elements: [{ tag: :path, d: "M1 2" }] } }
+      end
+
+      private
+
+      def icon_classes(**) = { classes: "size-6" }
+    end.new
+  end
+
+  def test_renders_svg_for_known_icon
+    StimulusPlumbers.config.theme.stub(:current, icon_theme) do
+      assert_includes render_icon(name: "check"), "<svg"
+    end
+  end
+
+  def test_svg_contains_path_element
+    StimulusPlumbers.config.theme.stub(:current, icon_theme) do
+      assert_includes render_icon(name: "check"), "<path"
+    end
+  end
+
   def test_renders_span_for_unknown_icon
     html = render_icon(name: "nonexistent")
 

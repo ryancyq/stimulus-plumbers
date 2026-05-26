@@ -7,6 +7,14 @@ class ConfigurationTest < Minitest::Test
     @config = StimulusPlumbers::Configuration.new
   end
 
+  # StimulusPlumbers.configure
+  def test_configure_yields_config_object
+    yielded = nil
+    StimulusPlumbers.configure { |c| yielded = c }
+
+    assert_same StimulusPlumbers.config, yielded
+  end
+
   # #theme
   def test_theme_returns_a_theme_configuration
     assert_instance_of StimulusPlumbers::Themes::Configuration, @config.theme

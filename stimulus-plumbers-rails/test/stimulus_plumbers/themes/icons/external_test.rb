@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "tempfile"
 require_relative "../../../../lib/stimulus_plumbers/themes/icons/external"
 
 class IconsExternalTest < Minitest::Test
@@ -52,5 +53,45 @@ class IconsExternalTest < Minitest::Test
     elements = source.send(:parse_elements, doc.root)
 
     assert_equal "round", elements.first[:stroke_linecap]
+  end
+
+  # ── include? ──────────────────────────────────────────────────────────────
+
+  def test_include_returns_false_when_file_missing
+    refute_includes source, "missing"
+  end
+
+  def test_include_returns_true_when_file_exists
+    with_svg_file('<svg viewBox="0 0 24 24"><path d="M1 2"/></svg>') do |src|
+      assert_includes src, "icon"
+    end
+  end
+
+  # ── fetch ─────────────────────────────────────────────────────────────────
+
+  def test_fetch_returns_nil_when_file_missing
+    assert_nil source.fetch("missing")
+  end
+
+  def test_fetch_returns_hash_when_file_exists
+    with_svg_file('<svg viewBox="0 0 24 24"><path d="M1 2"/></svg>') do |src|
+      assert_instance_of Hash, src.fetch("icon")
+    end
+  end
+
+  def test_fetch_parses_svg_viewbox_attribute
+    with_svg_file('<svg viewBox="0 0 24 24"><path d="M1 2"/></svg>') do |src|
+      assert_equal "0 0 24 24", src.fetch("icon")[:view_box]
+    end
+  end
+
+  def with_svg_file(content)
+    Tempfile.open(["icon", ".svg"]) do |f|
+      f.write(content)
+      f.flush
+      src = TestSource.new
+      src.define_singleton_method(:svg_path) { |_| f.path }
+      yield src
+    end
   end
 end
