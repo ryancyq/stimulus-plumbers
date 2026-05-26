@@ -20,12 +20,20 @@ stimulus-plumbers-tailwind/
 │               ├── card.rb                 # Card CSS classes
 │               ├── combobox.rb             # Combobox CSS classes
 │               ├── form.rb                 # Form CSS classes
+│               ├── icon.rb                 # Icon CSS classes + ALIASES + Registry wiring
+│               ├── icons/
+│               │   ├── heroicon.rb         # Heroicons source (bundled SVGs or heroicons gem)
+│               │   ├── custom.rb           # Custom icons from icons/customs/
+│               │   ├── heroicons/          # Bundled heroicon SVGs (outline/ + solid/)
+│               │   └── customs/            # Custom icon SVGs (e.g. spinner.svg)
 │               └── layout.rb              # Layout CSS classes
 ├── test/
 │   ├── stimulus_plumbers/
 │   │   └── themes/
 │   │       ├── tailwind_test.rb            # TailwindTheme integration tests
 │   │       └── tailwind/                   # Per-module unit tests
+│   │           ├── icons/                  # Unit tests for icon sources + registry
+│   │           └── ...
 │   ├── snapshots/                          # Playwright visual snapshot specs
 │   ├── sandbox/                            # Minimal Rails app for snapshot tests
 │   │   ├── app/views/                      # ERB views (components + form pages)
@@ -51,7 +59,7 @@ stimulus-plumbers-tailwind/
 
 ## Theme Architecture
 
-`StimulusPlumbers::Themes::TailwindTheme` extends `StimulusPlumbers::Themes::Base` and is split into 8 concern modules under `StimulusPlumbers::Themes::Tailwind::*`. Each module provides CSS class resolution for one component family.
+`StimulusPlumbers::Themes::TailwindTheme` extends `StimulusPlumbers::Themes::Base` and is split into 9 concern modules under `StimulusPlumbers::Themes::Tailwind::*`. Each module provides CSS class resolution for one component family. The `Icon` module also owns the icon registry (`icons/`) which lazily parses SVG files from the bundled heroicons set and a `customs/` directory.
 
 The theme is registered on load (via the Engine initializer in Rails, or directly otherwise):
 

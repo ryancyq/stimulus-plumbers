@@ -10,7 +10,7 @@ Rails helpers for rendering themed, accessible buttons and links.
 <%= sp_button "Save" %>
 <%= sp_button "Visit", url: root_path %>
 <%= sp_button "Docs",  url: "https://example.com", external: true %>
-<%= sp_button(icon_leading: :check) { "Confirm" } %>
+<%= sp_button(icon_leading: "check") { "Confirm" } %>
 <%= sp_button "Delete", variant: :danger, size: :sm %>
 ```
 
@@ -22,13 +22,13 @@ Rails helpers for rendering themed, accessible buttons and links.
 | `target`         | `nil`      | Explicit `target` attribute for the anchor (overridden by `external:`)         |
 | `variant`        | `:primary` | Theme variant — values depend on the active theme (e.g. `:primary`, `:danger`) |
 | `size`           | `:md`      | Theme size — values depend on the active theme (e.g. `:sm`, `:md`, `:lg`)      |
-| `icon_leading`   | `nil`      | Icon rendered **before** the button — symbol name or callable                  |
-| `icon_trailing`  | `nil`      | Icon rendered **after** the button — symbol name or callable                   |
+| `icon_leading`   | `nil`      | Icon rendered **before** the button — icon name (string or symbol) or callable |
+| `icon_trailing`  | `nil`      | Icon rendered **after** the button — icon name (string or symbol) or callable  |
 | `**html_options` | —          | Forwarded to the `<button>` or `<a>` element                                   |
 
 **Icon values:**
 
-- Symbol — resolved through `sp_icon` with `button_icon` theme classes applied
+- String or symbol — resolved by name through the active theme's icon registry, rendered via `sp_icon` with `button_icon` theme classes applied
 - Callable (e.g. `-> { tag.span "★" }`) — rendered as-is, no theme applied
 
 ### `sp_button_group`

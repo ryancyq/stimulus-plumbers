@@ -98,3 +98,66 @@ StimulusPlumbers.configure do |c|
   c.theme.use(:my_theme)
 end
 ```
+
+### Providing icons
+
+Override `icons` to supply icons to the `Icon` component. The return value must respond to `[]` and `key?`:
+
+```ruby
+class MyTheme < StimulusPlumbers::Themes::Base
+  def icons
+    @icons ||= {
+      "check" => {
+        elements: [{ tag: :path, d: "M5 13l4 4L19 7", stroke_linecap: :round, stroke_linejoin: :round }]
+      }
+    }
+  end
+end
+```
+
+Each icon is a hash with optional SVG-level keys (`fill:`, `stroke:`, `view_box:`, `stroke_width:`, `width:`, `height:`) and a required `elements:` array. Each element needs a `tag:` (`:path`, `:circle`, `:rect`, etc.) and its attributes (`d:`, `fill:`, `opacity:`, `stroke_linecap:`, etc.). Unknown keys are ignored; missing SVG keys fall back to defaults (`fill: "none"`, `stroke: "currentColor"`, `view_box: "0 0 24 24"`, `stroke_width: 1.5`).
+
+If `icons[name]` returns `nil`, `Icon` renders an empty `<span>` fallback.
+
+#### File-based icon sources
+
+For SVG-file-backed icon sources, the core gem provides two utilities in `StimulusPlumbers::Themes::Icons`:
+
+**`Icons::External`** — a module that parses SVG files into icon hashes. Include it into any module that implements `svg_path(key)`:
+
+```ruby
+module MyIcons
+  include StimulusPlumbers::Themes::Icons::External
+  extend self
+
+  private
+
+  def svg_path(key)
+    File.expand_path("#{key}.svg", __dir__)
+  end
+end
+```
+
+`External` exposes `include?(key)` and `fetch(key)`, where `fetch` returns the parsed icon hash or `nil` if the file doesn't exist. Override `svg_defaults(key)` to inject source-specific SVG attribute defaults.
+
+**`Icons::Registry`** — a lazy-loading `SimpleDelegator` wrapping a `Hash`. Results are memoized on first access. Takes `sources:` (array of icon source modules) and optional `aliases:`:
+
+```ruby
+ICONS = StimulusPlumbers::Themes::Icons::Registry.new(
+  sources: [MyIcons],
+  aliases: { "close" => "x-mark" }
+)
+```
+
+Sources are tried in order; the first non-nil result wins. Aliases are resolved before querying sources, so `icons["close"]` fetches `"x-mark"` from the sources.
+
+### Schema validators
+
+When defining a custom schema (advanced), the `validate:` key accepts:
+
+| Type          | Behaviour                                                                        |
+| ------------- | -------------------------------------------------------------------------------- |
+| Array / Range | Value must be `include?`-d                                                       |
+| Symbol        | Method called on the theme; return must respond to `include?` or be truthy/falsy |
+| Proc          | Called via `instance_exec`; same return conventions                              |
+| `nil`         | No validation — any value accepted                                               |
