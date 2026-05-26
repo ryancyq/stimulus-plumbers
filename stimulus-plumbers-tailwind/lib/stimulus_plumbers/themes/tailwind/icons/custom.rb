@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative "external"
+require "stimulus_plumbers/themes/icons/external"
 
 module StimulusPlumbers
   module Themes
     module Tailwind
       module Icons
         module Custom
-          include External
+          include StimulusPlumbers::Themes::Icons::External
           extend self
 
           private

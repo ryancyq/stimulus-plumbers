@@ -2,7 +2,7 @@
 
 require_relative "icons/heroicon"
 require_relative "icons/custom"
-require_relative "icons/registry"
+require "stimulus_plumbers/themes/icons/registry"
 
 module StimulusPlumbers
   module Themes
@@ -13,7 +13,10 @@ module StimulusPlumbers
           "calendar" => "calendar-days"
         }.freeze
 
-        ICONS = Icons::Registry.new(aliases: ALIASES)
+        ICONS = StimulusPlumbers::Themes::Icons::Registry.new(
+          sources: [Icons::Custom, Icons::Heroicon],
+          aliases: ALIASES
+        )
 
         def icons
           ICONS

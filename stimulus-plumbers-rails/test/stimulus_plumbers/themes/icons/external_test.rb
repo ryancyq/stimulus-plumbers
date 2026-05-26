@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require_relative "../../../../lib/stimulus_plumbers/themes/icons/external"
 
-class TailwindIconsExternalTest < Minitest::Test
+class IconsExternalTest < Minitest::Test
   class TestSource
-    include StimulusPlumbers::Themes::Tailwind::Icons::External
+    include StimulusPlumbers::Themes::Icons::External
 
     def svg_path(_key) = ""
   end

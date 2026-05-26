@@ -3,10 +3,15 @@
 require "test_helper"
 
 class TailwindIconsRegistryTest < Minitest::Test
-  Registry = StimulusPlumbers::Themes::Tailwind::Icons::Registry
+  Registry = StimulusPlumbers::Themes::Icons::Registry
+
+  SOURCES = [
+    StimulusPlumbers::Themes::Tailwind::Icons::Custom,
+    StimulusPlumbers::Themes::Tailwind::Icons::Heroicon
+  ].freeze
 
   def registry
-    @registry ||= Registry.new(aliases: { "close" => "x-mark" })
+    @registry ||= Registry.new(sources: SOURCES, aliases: { "close" => "x-mark" })
   end
 
   # ── aliases ───────────────────────────────────────────────────────────────
