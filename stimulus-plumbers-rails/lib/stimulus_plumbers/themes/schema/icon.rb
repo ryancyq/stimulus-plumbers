@@ -4,6 +4,8 @@ module StimulusPlumbers
   module Themes
     module Schema
       module Icon
+        extend self
+
         SVG_ATTR_DEFAULTS = {
           xmlns:        "http://www.w3.org/2000/svg",
           fill:         "none",
@@ -32,31 +34,39 @@ module StimulusPlumbers
         ELEMENT_ATTR_NAMES = {
           fill_rule:       "fill-rule",
           clip_rule:       "clip-rule",
+          stroke_width:    "stroke-width",
           stroke_linecap:  "stroke-linecap",
           stroke_linejoin: "stroke-linejoin"
         }.freeze
 
-        def self.resolve(icon_data)
+        def resolve(icon_data)
           return unless icon_data.is_a?(Hash)
 
           elements = Array(icon_data[:elements]).filter_map do |element|
             next unless element.is_a?(Hash) && ELEMENT_ATTRS.key?(element[:tag])
 
-            attrs = element.slice(*ELEMENT_ATTRS[element[:tag]])
-                           .transform_keys { |k| ELEMENT_ATTR_NAMES.fetch(k, k.to_s) }
-                           .transform_values(&:to_s)
-
-            { tag: element[:tag] }.merge(attrs)
+            { tag: element[:tag] }.merge(resolve_element_attrs(element))
           end
+          return if elements.empty?
 
-          return if elements.blank?
+          resolve_svg_attrs(icon_data).tap do |attrs|
+            attrs[:elements] = elements
+          end
+        end
 
-          svg_attrs = SVG_ATTR_DEFAULTS
-                      .merge(icon_data.slice(*SVG_ATTR_DEFAULTS.keys))
-                      .transform_keys { |k| SVG_ATTR_NAMES.fetch(k, k.to_s) }
+        private
+
+        def resolve_svg_attrs(svg_data)
+          SVG_ATTR_DEFAULTS
+            .merge(svg_data.slice(*SVG_ATTR_DEFAULTS.keys))
+            .transform_keys { |key| SVG_ATTR_NAMES.fetch(key, key.to_s) }
+            .transform_values(&:to_s)
+        end
+
+        def resolve_element_attrs(element_data)
+          element_data.slice(*ELEMENT_ATTRS[element_data[:tag]])
+                      .transform_keys { |key| ELEMENT_ATTR_NAMES.fetch(key, key.to_s) }
                       .transform_values(&:to_s)
-
-          svg_attrs.merge(elements: elements)
         end
       end
     end

@@ -34,6 +34,16 @@ class SchemaIconTest < Minitest::Test
     assert_equal "stroke-width", Icon::SVG_ATTR_NAMES[:stroke_width]
   end
 
+  # ── ELEMENT_ATTR_NAMES ────────────────────────────────────────────────────
+
+  def test_element_attr_names_renames_all_hyphenated_keys
+    assert_equal "fill-rule",       Icon::ELEMENT_ATTR_NAMES[:fill_rule]
+    assert_equal "clip-rule",       Icon::ELEMENT_ATTR_NAMES[:clip_rule]
+    assert_equal "stroke-width",    Icon::ELEMENT_ATTR_NAMES[:stroke_width]
+    assert_equal "stroke-linecap",  Icon::ELEMENT_ATTR_NAMES[:stroke_linecap]
+    assert_equal "stroke-linejoin", Icon::ELEMENT_ATTR_NAMES[:stroke_linejoin]
+  end
+
   # ── ELEMENT_ATTRS ─────────────────────────────────────────────────────────
 
   def test_element_attrs_are_keyed_by_tag
