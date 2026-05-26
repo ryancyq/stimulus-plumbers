@@ -18,9 +18,9 @@ module StimulusPlumbers
       def build_input_group(leading, trailing, &block)
         template.safe_join(
           [
-            leading.respond_to?(:call) ? leading.call : leading,
+            leading.respond_to?(:call) ? template.capture(&leading) : leading,
             template.capture(&block),
-            trailing.respond_to?(:call) ? trailing.call : trailing
+            trailing.respond_to?(:call) ? template.capture(&trailing) : trailing
           ]
         )
       end

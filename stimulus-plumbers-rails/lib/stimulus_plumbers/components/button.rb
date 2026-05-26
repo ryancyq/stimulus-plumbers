@@ -28,9 +28,9 @@ module StimulusPlumbers
       def build_layout(icon_leading: nil, icon_trailing: nil, &block)
         template.safe_join(
           [
-            icon_leading.respond_to?(:call) ? icon_leading.call : render_icon(icon_leading),
+            icon_leading.respond_to?(:call) ? template.capture(&icon_leading) : render_icon(icon_leading),
             template.capture(&block),
-            icon_trailing.respond_to?(:call) ? icon_trailing.call : render_icon(icon_trailing)
+            icon_trailing.respond_to?(:call) ? template.capture(&icon_trailing) : render_icon(icon_trailing)
           ]
         )
       end
