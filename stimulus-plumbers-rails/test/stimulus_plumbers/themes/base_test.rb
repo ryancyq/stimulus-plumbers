@@ -79,10 +79,15 @@ class BaseThemeTest < Minitest::Test
     refute @theme.send(:valid?, ->(name) { name.start_with?("hero-") }, "custom-check")
   end
 
-  def test_valid_proc_can_call_theme_methods_via_instance_exec
+  def test_valid_proc_accepts_value_when_instance_method_collection_includes_it
     theme = Class.new(StimulusPlumbers::Themes::Base) { def allowed = %w[red blue] }.new
 
     assert theme.send(:valid?, ->(v) { allowed.include?(v) }, "red")
+  end
+
+  def test_valid_proc_rejects_value_when_instance_method_collection_excludes_it
+    theme = Class.new(StimulusPlumbers::Themes::Base) { def allowed = %w[red blue] }.new
+
     refute theme.send(:valid?, ->(v) { allowed.include?(v) }, "green")
   end
 
