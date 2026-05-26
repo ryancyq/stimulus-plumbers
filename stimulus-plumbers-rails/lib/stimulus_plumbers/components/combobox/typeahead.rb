@@ -29,7 +29,9 @@ module StimulusPlumbers
               { classes: theme.resolve(:combobox_typeahead_loading).fetch(:classes, "") },
               { hidden: "", aria: { live: "polite" }, data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
             )
-          ) { "" }
+          ) do
+            Icon.new(template).render(name: "spinner", classes: "size-(--sp-icon-size) animate-spin")
+          end
         end
 
         def empty
