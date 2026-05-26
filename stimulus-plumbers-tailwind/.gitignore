@@ -1,3 +1,15 @@
+# Gem build artifacts
+/pkg/
+*.gem
+
+# Coverage reports
+/coverage/
+
+# IDE files
+.DS_Store
+.idea/
+.vscode/
+
 # Bundler
 /.bundle/
 /vendor/bundle/

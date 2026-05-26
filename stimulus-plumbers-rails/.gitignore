@@ -2,9 +2,6 @@
 /pkg/
 *.gem
 
-# RSpec
-.rspec_status
-
 # Coverage reports
 /coverage/
 
