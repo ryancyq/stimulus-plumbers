@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.3.3](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.3.2..stimulus-plumbers/v0.3.3) - 2026-05-26
+
+### Bug Fixes
+
+- both stimulus/turbo calendar will render aria-current=date on today date. tailwind theme will apply today css style via aria attribute ([#77](https://github.com/ryancyq/stimulus-plumbers/issues/77)) - ([29da3cd](https://github.com/ryancyq/stimulus-plumbers/commit/29da3cdf81a069fb4fdfbee3a6d4ac57c9ed9a16)) - Ryan Chang
+- untested examples ([#79](https://github.com/ryancyq/stimulus-plumbers/issues/79)) - ([a99e887](https://github.com/ryancyq/stimulus-plumbers/commit/a99e887be863508d08c8657757f5ec32d931580e)) - Ryan Chang
+- rename conflicts with stimulus value/target/class result in ambiguous definitions ([#81](https://github.com/ryancyq/stimulus-plumbers/issues/81)) - ([60d47a7](https://github.com/ryancyq/stimulus-plumbers/commit/60d47a7a907878b45a10f07e82bf647b815b47f0)) - Ryan Chang
+- rename autocomplete to typeahead for accurate naming ([#83](https://github.com/ryancyq/stimulus-plumbers/issues/83)) - ([ff5ff26](https://github.com/ryancyq/stimulus-plumbers/commit/ff5ff26143aba80c85b3e638e060c294c92dcc31)) - Ryan Chang
+
+### Dependencies
+
+- **(deps-dev)** bump eslint from 10.3.0 to 10.4.0 in /stimulus-plumbers ([#76](https://github.com/ryancyq/stimulus-plumbers/issues/76)) - ([da5d927](https://github.com/ryancyq/stimulus-plumbers/commit/da5d927c07be8692a7494be44a4513c473b6ee20)) - dependabot[bot]
+
+### Features
+
+- calendar month selected ([#78](https://github.com/ryancyq/stimulus-plumbers/issues/78)) - ([d826697](https://github.com/ryancyq/stimulus-plumbers/commit/d8266979fff9041474b29ffa937acfec94e95ca3)) - Ryan Chang
+
+---
 ## [0.3.1](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.3.0..stimulus-plumbers/v0.3.1) - 2026-05-19
 
 ### Features
