@@ -19,6 +19,73 @@ class BaseThemeTest < Minitest::Test
     assert_equal([], @theme.avatar_color_range)
   end
 
+  def test_valid_nil_validator_accepts_any_value
+    assert @theme.send(:valid?, nil, :anything)
+  end
+
+  def test_valid_array_accepts_included_value
+    assert @theme.send(:valid?, %i[xs sm md], :sm)
+  end
+
+  def test_valid_array_rejects_excluded_value
+    refute @theme.send(:valid?, %i[xs sm md], :xl)
+  end
+
+  def test_valid_range_accepts_included_value
+    assert @theme.send(:valid?, 1..10, 5)
+  end
+
+  def test_valid_range_rejects_excluded_value
+    refute @theme.send(:valid?, 1..10, 11)
+  end
+
+  def test_valid_symbol_0arg_accepts_value_in_collection
+    theme = Class.new(StimulusPlumbers::Themes::Base) { def color_range = %w[red blue] }.new
+
+    assert theme.send(:valid?, :color_range, "red")
+  end
+
+  def test_valid_symbol_0arg_rejects_value_not_in_collection
+    theme = Class.new(StimulusPlumbers::Themes::Base) { def color_range = %w[red blue] }.new
+
+    refute theme.send(:valid?, :color_range, "green")
+  end
+
+  def test_valid_symbol_1arg_accepts_when_predicate_returns_true
+    theme = Class.new(StimulusPlumbers::Themes::Base) { def icon_valid?(name) = name.start_with?("hero-") }.new
+
+    assert theme.send(:valid?, :icon_valid?, "hero-check")
+  end
+
+  def test_valid_symbol_1arg_rejects_when_predicate_returns_false
+    theme = Class.new(StimulusPlumbers::Themes::Base) { def icon_valid?(name) = name.start_with?("hero-") }.new
+
+    refute theme.send(:valid?, :icon_valid?, "custom-check")
+  end
+
+  def test_valid_proc_0arg_accepts_value_in_collection
+    assert @theme.send(:valid?, -> { %w[red blue] }, "red")
+  end
+
+  def test_valid_proc_0arg_rejects_value_not_in_collection
+    refute @theme.send(:valid?, -> { %w[red blue] }, "green")
+  end
+
+  def test_valid_proc_1arg_accepts_when_predicate_returns_true
+    assert @theme.send(:valid?, ->(name) { name.start_with?("hero-") }, "hero-check")
+  end
+
+  def test_valid_proc_1arg_rejects_when_predicate_returns_false
+    refute @theme.send(:valid?, ->(name) { name.start_with?("hero-") }, "custom-check")
+  end
+
+  def test_valid_proc_can_call_theme_methods_via_instance_exec
+    theme = Class.new(StimulusPlumbers::Themes::Base) { def allowed = %w[red blue] }.new
+
+    assert theme.send(:valid?, ->(v) { allowed.include?(v) }, "red")
+    refute theme.send(:valid?, ->(v) { allowed.include?(v) }, "green")
+  end
+
   def test_resolve_returns_empty_hash_and_warns_for_all_known_components
     mock_logger = Minitest::Mock.new
     StimulusPlumbers::Themes::Base::SCHEMA.each_key do |_component|
