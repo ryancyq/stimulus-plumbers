@@ -14,9 +14,9 @@ class BaseThemeButtonTest < StubThemeTestCase
 
   def test_coerces_invalid_size_to_default_and_warns
     mock_logger = Minitest::Mock.new
-    mock_logger.expect(:warn, nil, [%r{unknown value :xl}])
+    mock_logger.expect(:warn, nil, [%r{unknown value :huge}])
     Rails.stub(:logger, mock_logger) do
-      @theme.resolve(:button, size: :xl)
+      @theme.resolve(:button, size: :huge)
     end
     mock_logger.verify
   end

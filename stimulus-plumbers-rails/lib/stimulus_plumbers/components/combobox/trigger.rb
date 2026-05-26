@@ -15,11 +15,37 @@ module StimulusPlumbers
           popover_id:,
           haspopup:,
           readonly: true,
-          aria_autocomplete: nil,
-          aria_label: nil,
           aria: {},
           id: nil,
           data: {},
+          icon_leading: nil,
+          icon_trailing: nil,
+          **kwargs
+        )
+          input_html = render_input(
+            stimulus_controller: stimulus_controller,
+            popover_id:          popover_id,
+            haspopup:            haspopup,
+            readonly:            readonly,
+            aria:                aria,
+            id:                  id,
+            data:                data,
+            **kwargs
+          )
+
+          return input_html unless icon_leading || icon_trailing
+
+          render_trigger_group(icon_leading, icon_trailing) { input_html }
+        end
+
+        def render_input(
+          stimulus_controller:,
+          popover_id:,
+          haspopup:,
+          readonly:,
+          aria:,
+          id:,
+          data:,
           **kwargs
         )
           stimulus_data = {
@@ -29,8 +55,6 @@ module StimulusPlumbers
           }
 
           trigger_aria = { haspopup: haspopup, expanded: "false", controls: popover_id }
-          trigger_aria[:autocomplete] = aria_autocomplete if aria_autocomplete
-          trigger_aria[:label]        = aria_label        if aria_label
 
           template.tag.input(
             **merge_html_options(
@@ -47,6 +71,18 @@ module StimulusPlumbers
               kwargs
             )
           )
+        end
+
+        def render_trigger_group(icon_leading, icon_trailing, &block)
+          InputGroup.new(template).render(
+            leading:  icon_leading  ? -> { render_trigger_icon(icon_leading) }  : nil,
+            trailing: icon_trailing ? -> { render_trigger_icon(icon_trailing) } : nil,
+            **theme.resolve(:combobox_trigger_group)
+          ) { template.capture(&block) }
+        end
+
+        def render_trigger_icon(name)
+          Icon.new(template).render(name: name, aria: { hidden: "true" })
         end
       end
     end

@@ -22,7 +22,7 @@ module StimulusPlumbers
         SIZES = {
           sm: "size-(--sp-icon-size)",
           md: "size-(--sp-avatar-size)",
-          lg: "size-12"
+          lg: "size-(--sp-avatar-size-lg)"
         }.freeze
 
         BASE = %w[rounded-(--sp-radius-full) overflow-hidden inline-flex items-center justify-center].freeze

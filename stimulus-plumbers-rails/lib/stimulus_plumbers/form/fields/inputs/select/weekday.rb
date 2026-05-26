@@ -8,17 +8,15 @@ module StimulusPlumbers
           module Weekday
             if ActionView.version >= Gem::Version.new("7.1")
               def weekday_select(attribute, options = {}, html_options = {})
-                html_native = options.delete(:html_native) { false }
-                Field.new(@template, **options).render(
-                  object,
-                  attribute,
-                  input_id: field_id(attribute)
-                ) do |html_opts, opts, error|
-                  merged_html_opts = merge_html_options(html_options, html_opts, field_theme(:form_select, error: error))
+                html_native   = options.delete(:html_native) { false }
+                icon_leading  = options.delete(:icon_leading)
+                icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
+                icons         = { icon_leading: icon_leading, icon_trailing: icon_trailing }
+                with_select_field(attribute, options, html_options) do |opts, merged, error|
                   if html_native
-                    super(attribute, opts, merged_html_opts)
+                    super(attribute, opts, merged)
                   else
-                    render_select_dropdown(attribute, opts, merged_html_opts, err: error) do
+                    render_select_dropdown(attribute, opts, merged, err: error, **icons) do
                       build_weekday_choices(opts)
                     end
                   end

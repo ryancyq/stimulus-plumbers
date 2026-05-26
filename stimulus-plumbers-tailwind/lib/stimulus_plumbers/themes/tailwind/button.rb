@@ -42,9 +42,11 @@ module StimulusPlumbers
         }.freeze
 
         SIZES = {
-          sm: %w[h-8 px-(--sp-space-3) text-(--sp-text-sm)].freeze,
-          md: %w[h-9 px-(--sp-space-4) text-(--sp-text-base)].freeze,
-          lg: %w[h-11 px-(--sp-space-6) text-(--sp-text-lg)].freeze
+          xs: %w[h-7 px-(--sp-space-2) text-(length:--sp-text-xs)].freeze,
+          sm: %w[h-8 px-(--sp-space-3) text-(length:--sp-text-sm)].freeze,
+          md: %w[h-9 px-(--sp-space-4) text-(length:--sp-text-base)].freeze,
+          lg: %w[h-11 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze,
+          xl: %w[h-14 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze
         }.freeze
 
         FLEX_ALIGN = {
@@ -65,7 +67,7 @@ module StimulusPlumbers
         }.freeze
 
         BASE = %w[
-          inline-flex items-center justify-center gap-2 font-medium
+          inline-flex items-center justify-center gap-(--sp-space-2) font-medium
           rounded-(--sp-radius-md) transition-colors
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
           disabled:pointer-events-none disabled:opacity-50
@@ -95,7 +97,7 @@ module StimulusPlumbers
         end
 
         def button_icon_classes
-          { classes: klasses("size-4", "stroke-current") }
+          { classes: klasses("size-(--sp-control-size)", "stroke-current") }
         end
       end
     end

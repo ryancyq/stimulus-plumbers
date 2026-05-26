@@ -60,13 +60,13 @@ class ButtonComponentTest < ActionView::TestCase
   def test_icon_leading_renders_before_content
     doc = parse_html(renderer.render("Save", icon_leading: :check))
 
-    assert_operator doc.to_html.index("<span"), :<, doc.to_html.index("<button")
+    assert_operator doc.to_html.index("<span"), :<, doc.to_html.index("Save")
   end
 
   def test_icon_trailing_renders_after_content
     doc = parse_html(renderer.render("Next", icon_trailing: :arrow))
 
-    assert_operator doc.to_html.index("<button"), :<, doc.to_html.index("<span")
+    assert_operator doc.to_html.index("Next"), :<, doc.to_html.index("<span")
   end
 
   def test_icon_leading_only_renders_no_extra_text

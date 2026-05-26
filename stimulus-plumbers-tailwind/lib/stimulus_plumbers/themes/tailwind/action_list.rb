@@ -8,7 +8,7 @@ module StimulusPlumbers
         LIST_ITEM_BASE   = %w[
           flex items-center gap-(--sp-space-2) w-full
           px-(--sp-space-2) py-(--sp-space-1)
-          rounded-(--sp-radius-sm) text-(--sp-text-sm)
+          rounded-(--sp-radius-sm) text-(length:--sp-text-sm)
           cursor-pointer select-none outline-none
           hover:bg-(--sp-color-muted) focus:bg-(--sp-color-muted) focus:text-(--sp-color-fg)
         ].freeze

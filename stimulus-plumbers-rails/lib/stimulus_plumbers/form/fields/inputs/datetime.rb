@@ -6,7 +6,9 @@ module StimulusPlumbers
       module Inputs
         module Datetime
           def date_field(attribute, options = {})
-            html_native = options.delete(:html_native) { false }
+            html_native   = options.delete(:html_native) { false }
+            icon_leading  = options.delete(:icon_leading)
+            icon_trailing = options.delete(:icon_trailing) { "calendar" }
             Field.new(@template, **options).render(
               object,
               attribute,
@@ -16,15 +18,17 @@ module StimulusPlumbers
                 html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error))
                 super(attribute, html_options)
               else
-                render_date_combobox(attribute, html_opts, error)
+                render_date_combobox(attribute, html_opts, error, icon_leading: icon_leading, icon_trailing: icon_trailing)
               end
             end
           end
 
           def time_field(attribute, options = {})
-            html_native = options.delete(:html_native) { false }
-            format      = options.delete(:format) { :h12 }
-            step        = options.delete(:step) { 1 }
+            html_native   = options.delete(:html_native) { false }
+            format        = options.delete(:format) { :h12 }
+            step          = options.delete(:step) { 1 }
+            icon_leading  = options.delete(:icon_leading)
+            icon_trailing = options.delete(:icon_trailing) { "clock" }
             Field.new(@template, **options).render(
               object,
               attribute,
@@ -34,18 +38,26 @@ module StimulusPlumbers
                 html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error))
                 super(attribute, html_options)
               else
-                render_time_combobox(attribute, html_opts, error, format: format, step: step)
+                render_time_combobox(
+                  attribute,
+                  html_opts,
+                  error,
+                  format:        format,
+                  step:          step,
+                  icon_leading:  icon_leading,
+                  icon_trailing: icon_trailing
+                )
               end
             end
           end
 
           private
 
-          def render_date_combobox(attribute, html_opts, error)
+          def render_date_combobox(attribute, html_opts, error, icon_leading:, icon_trailing:)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             opts = Components::Combobox::Date.default_opts.deep_merge(
               input:   { value: current_value, data: { combobox_date_date_value: current_value } },
-              trigger: { aria: html_opts[:aria] },
+              trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
               popover: { labelledby: Field.label_id(html_opts[:id]) }
             )
             render_combobox(
@@ -59,11 +71,11 @@ module StimulusPlumbers
             end
           end
 
-          def render_time_combobox(attribute, html_opts, error, format:, step:)
+          def render_time_combobox(attribute, html_opts, error, format:, step:, icon_leading:, icon_trailing:)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             opts = Components::Combobox::Time.default_opts.deep_merge(
               input:   { value: current_value },
-              trigger: { aria: html_opts[:aria] },
+              trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
               popover: { labelledby: Field.label_id(html_opts[:id]) }
             )
             render_combobox(

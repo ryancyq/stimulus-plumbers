@@ -6,7 +6,7 @@ module StimulusPlumbers
       class Typeahead < Plumber::Base
         def self.default_opts
           Dropdown.default_opts.deep_merge(
-            trigger: { aria_autocomplete: "list", readonly: false }
+            trigger: { aria: { autocomplete: "list" }, readonly: false }
           )
         end
 
@@ -29,7 +29,9 @@ module StimulusPlumbers
               { classes: theme.resolve(:combobox_typeahead_loading).fetch(:classes, "") },
               { hidden: "", aria: { live: "polite" }, data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
             )
-          ) { "" }
+          ) do
+            Icon.new(template).render(name: "spinner", classes: "size-(--sp-icon-size) animate-spin")
+          end
         end
 
         def empty

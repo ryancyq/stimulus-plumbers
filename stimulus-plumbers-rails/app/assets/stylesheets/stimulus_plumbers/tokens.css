@@ -17,6 +17,8 @@
   --sp-color-destructive:    oklch(55% 0.22 25);
   --sp-color-destructive-fg: oklch(98% 0.01 25);
 
+  --sp-color-error:          oklch(40% 0.20 25);
+
   --sp-color-muted:          oklch(96% 0.02 250);
   --sp-color-muted-fg:       oklch(45% 0.05 250);
 
@@ -46,11 +48,12 @@
 
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
-  --sp-space-1: 0.25rem;  /*  4px */
-  --sp-space-2: 0.5rem;   /*  8px */
-  --sp-space-3: 0.75rem;  /* 12px */
-  --sp-space-4: 1rem;     /* 16px */
-  --sp-space-6: 1.5rem;   /* 24px */
+  --sp-space-0-5: 0.125rem; /*  2px */
+  --sp-space-1:   0.25rem;  /*  4px */
+  --sp-space-2:   0.5rem;   /*  8px */
+  --sp-space-3:   0.75rem;  /* 12px */
+  --sp-space-4:   1rem;     /* 16px */
+  --sp-space-6:   1.5rem;   /* 24px */
 
 
   /* ── Border radius ───────────────────────────────────────────────────── */
@@ -67,6 +70,7 @@
 
 
   /* ── Typography ──────────────────────────────────────────────────────── */
+  --sp-text-xs:   0.75rem;
   --sp-text-sm:   0.875rem;
   --sp-text-base: 1rem;
   --sp-text-lg:   1.125rem;
@@ -74,7 +78,10 @@
 
   /* ── Sizing ──────────────────────────────────────────────────────────── */
   --sp-avatar-size:       2rem;   /* 32px */
-  --sp-icon-size:         1.5rem; /* 24px */
+  --sp-avatar-size-lg:    3rem;   /* 48px */
+  --sp-icon-size:         1.25rem; /* 20px — icon slot within other components */
+  --sp-icon-default:      1.5rem;  /* 24px — standalone icon */
+  --sp-control-size:      1rem;   /* 16px — checkbox, radio */
   --sp-calendar-day-size: 2rem;   /* 32px */
 
 

@@ -25,7 +25,7 @@ class TailwindThemeAvatarTest < Minitest::Test
     assert_includes result, "rounded-(--sp-radius-full)"
   end
 
-  StimulusPlumbers::Themes::Schema::Ranges::SIZE.each do |size|
+  StimulusPlumbers::Themes::Tailwind::Avatar::SIZES.each_key do |size|
     define_method("test_avatar_resolves_#{size}_size") do
       size_class = StimulusPlumbers::Themes::Tailwind::Avatar::SIZES[size]
 

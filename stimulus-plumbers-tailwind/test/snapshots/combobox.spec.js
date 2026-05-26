@@ -39,3 +39,27 @@ test("typeahead open", async ({ page }) => {
   await expect(trigger).toHaveAttribute("aria-expanded", "true");
   await expect(page).toHaveScreenshot("typeahead-open.png");
 });
+
+test("typeahead loading", async ({ page }) => {
+  const trigger = page.getByRole("combobox", { name: "City" });
+  await trigger.click();
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+
+  const popoverId = await trigger.getAttribute("aria-controls");
+  const loading = page.locator(`#${popoverId} [data-combobox-dropdown-target="loading"]`);
+  await loading.evaluate((el) => el.removeAttribute("hidden"));
+
+  await expect(page).toHaveScreenshot("typeahead-loading.png");
+});
+
+test("typeahead empty", async ({ page }) => {
+  const trigger = page.getByRole("combobox", { name: "City" });
+  await trigger.click();
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+
+  const popoverId = await trigger.getAttribute("aria-controls");
+  const empty = page.locator(`#${popoverId} [data-combobox-dropdown-target="empty"]`);
+  await empty.evaluate((el) => el.removeAttribute("hidden"));
+
+  await expect(page).toHaveScreenshot("typeahead-empty.png");
+});

@@ -20,9 +20,9 @@ module StimulusPlumbers
           return nil if attrs.nil?
 
           if attrs.key?(:optgroup)
-            block ? block.call(attrs) : OptionGroup.new(template).render(**attrs[:optgroup], value: @selected_value)
+            block ? template.capture(attrs, &block) : OptionGroup.new(template).render(**attrs[:optgroup], value: @selected_value)
           else
-            block ? block.call(attrs) : Option.new(template).render(**attrs)
+            block ? template.capture(attrs, &block) : Option.new(template).render(**attrs)
           end
         end
 

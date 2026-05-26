@@ -5,32 +5,37 @@ module StimulusPlumbers
     module Tailwind
       module Form
         INPUT_BASE = %w[
-          w-full rounded-md border px-3 py-2 text-sm text-gray-900
-          bg-white focus:outline-none focus:ring-2 focus:ring-offset-0
+          w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2) text-(length:--sp-text-sm)
+          text-(--sp-color-fg) bg-(--sp-color-bg) focus:outline-none focus:ring-2 focus:ring-offset-0
+          [.sp-form-input-group_&]:border-0 [.sp-form-input-group_&]:rounded-none
+          [.sp-form-input-group_&]:bg-transparent [.sp-form-input-group_&]:shadow-none
+          [.sp-form-input-group_&]:focus:ring-0
         ].freeze
-        INPUT_ERROR   = %w[border-red-700 focus:ring-red-700].freeze
-        INPUT_DEFAULT = %w[border-gray-500 focus:ring-blue-700].freeze
+        INPUT_ERROR   = %w[border-(--sp-color-error) focus:ring-(--sp-color-error)].freeze
+        INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:ring-(--sp-focus-ring-color)].freeze
 
-        GROUP_BASE    = %w[flex gap-1 mb-3].freeze
+        GROUP_BASE    = %w[flex gap-(--sp-space-1) mb-(--sp-space-3)].freeze
         GROUP_INLINE  = %w[flex-row items-center].freeze
 
-        LABEL         = %w[text-sm font-medium text-gray-900].freeze
-        REQUIRED_MARK = %w[text-red-700 ml-0.5].freeze
-        DETAILS       = %w[text-xs text-gray-600].freeze
-        ERROR_TEXT    = %w[text-xs text-red-700].freeze
-        CHECKBOX      = %w[size-4 rounded border-gray-500 text-blue-700].freeze
-        RADIO         = %w[size-4 border-gray-500 text-blue-700].freeze
+        LABEL         = %w[text-(length:--sp-text-sm) font-medium text-(--sp-color-fg)].freeze
+        REQUIRED_MARK = %w[text-(--sp-color-error) ml-(--sp-space-0-5)].freeze
+        DETAILS       = %w[text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
+        ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
+        CHECKBOX      = %w[size-(--sp-control-size) rounded border-(--sp-color-muted-fg) text-(--sp-color-primary)].freeze
+        RADIO         = %w[size-(--sp-control-size) border-(--sp-color-muted-fg) text-(--sp-color-primary)].freeze
 
-        INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-md border].freeze
-        INPUT_GROUP_BORDER = { error: "border-red-700", default: "border-gray-500" }.freeze
+        INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
+        INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
         BUTTON_REVEAL = %w[
-          self-stretch border-0 bg-transparent px-3 cursor-pointer text-gray-600 hover:text-gray-900 text-sm
+          self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg)
+          hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
         ].freeze
         BUTTON_CLEAR = %w[
-          self-stretch border-0 bg-transparent px-2 cursor-pointer text-gray-500 hover:text-gray-900 text-sm
+          self-stretch border-0 bg-transparent px-(--sp-space-2) cursor-pointer text-(--sp-color-muted-fg)
+          hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
         ].freeze
-        SUBMIT_LINK = %w[cursor-pointer text-sm font-medium text-gray-900 hover:underline].freeze
+        SUBMIT_LINK = %w[cursor-pointer text-(length:--sp-text-sm) font-medium text-(--sp-color-fg) hover:underline].freeze
 
         private
 
@@ -78,20 +83,20 @@ module StimulusPlumbers
           { classes: klasses(*RADIO) }
         end
 
-        def form_input_group_classes(error: false)
+        def input_group_classes(error: false)
           { classes: klasses(*INPUT_GROUP_BASE, INPUT_GROUP_BORDER[error ? :error : :default]) }
         end
 
         def form_combobox_classes(error: false)
-          form_input_classes(error: error)
+          { classes: klasses(*INPUT_BASE, *(error ? INPUT_ERROR : INPUT_DEFAULT), "sp-form-combobox") }
         end
 
         def form_input_reveal_classes(**)
-          { classes: "" }
+          { classes: "sp-form-input-group" }
         end
 
         def form_input_clearable_classes
-          { classes: "" }
+          { classes: "sp-form-input-group" }
         end
 
         def form_button_reveal_classes

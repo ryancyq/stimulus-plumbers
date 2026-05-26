@@ -42,7 +42,7 @@ module StimulusPlumbers
       end
 
       def render_input_group(error:, leading: nil, trailing: nil, **wrapper_opts, &block)
-        Fields::InputGroup.new(@template).render(leading: leading, trailing: trailing, error: error, **wrapper_opts, &block)
+        Components::InputGroup.new(@template).render(leading: leading, trailing: trailing, error: error, **wrapper_opts, &block)
       end
 
       def render_combobox(attribute, input_id:, opts:, err:, **wrapper_opts, &block)
