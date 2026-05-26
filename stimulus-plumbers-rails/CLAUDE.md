@@ -93,11 +93,14 @@ stimulus-plumbers-rails/
 │       │   ├── base.rb                   # Base theme (no-op default)
 │       │   ├── configuration.rb          # Theme registry
 │       │   ├── schema.rb                 # Theme key schema
-│       │   └── schema/
-│       │       ├── icon.rb
-│       │       ├── ranges.rb
-│       │       └── form/
-│       │           └── ranges.rb
+│       │   ├── schema/
+│       │   │   ├── icon.rb
+│       │   │   ├── ranges.rb
+│       │   │   └── form/
+│       │   │       └── ranges.rb
+│       │   └── icons/
+│       │       ├── external.rb           # SVG file parser (include into any icon source module)
+│       │       └── registry.rb           # Lazy-loading Registry < SimpleDelegator (source-injected)
 │       ├── configuration.rb
 │       ├── engine.rb
 │       ├── logger.rb

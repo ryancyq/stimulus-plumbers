@@ -3,8 +3,25 @@
 require "test_helper"
 
 class BaseThemeTest < Minitest::Test
+  class NamedBarTheme < StimulusPlumbers::Themes::Base; end
+
   def setup
     @theme = StimulusPlumbers::Themes::Base.new
+  end
+
+  def test_name_returns_demodulized_class_name_without_theme_suffix
+    assert_equal "NamedBar", NamedBarTheme.new.name
+  end
+
+  def test_attribute_names_returns_keys_for_known_component
+    keys = @theme.attribute_names(:button)
+
+    assert_includes keys, :variant
+    assert_includes keys, :size
+  end
+
+  def test_attribute_names_returns_empty_array_for_unknown_component
+    assert_empty @theme.attribute_names(:nonexistent)
   end
 
   def test_resolve_returns_empty_hash_for_an_unknown_component

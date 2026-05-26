@@ -81,6 +81,12 @@ class PlumberHtmlOptionsTest < Minitest::Test
     assert_equal "bar",   result[:foo]
   end
 
+  def test_merge_data_options_overwrites_duplicate_non_stimulus_keys
+    result = instance.merge_data_options({ target: "old" }, { target: "new" })
+
+    assert_equal "new", result[:target]
+  end
+
   def test_converts_classes_to_class
     result = instance.merge_html_options({ classes: "btn btn-primary" })
 
@@ -103,6 +109,12 @@ class PlumberHtmlOptionsTest < Minitest::Test
 
     assert_includes result[:class], "theme-class"
     assert_includes result[:class], "user-class"
+  end
+
+  def test_class_hash_includes_only_truthy_keys
+    result = instance.merge_html_options({ class: { "active" => true, "disabled" => false } })
+
+    assert_equal "active", result[:class]
   end
 
   def test_preserves_other_top_level_keys

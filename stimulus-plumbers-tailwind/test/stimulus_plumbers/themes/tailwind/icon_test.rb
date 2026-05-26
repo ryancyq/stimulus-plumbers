@@ -30,10 +30,32 @@ class TailwindThemeIconTest < ActionView::TestCase
     assert @theme.icons.key?("arrow-right")
   end
 
+  def test_theme_provides_alias_close_icon
+    assert @theme.icons.key?("close")
+  end
+
+  def test_theme_provides_custom_spinner_icon
+    assert @theme.icons.key?("spinner")
+  end
+
   # ── svg rendering ─────────────────────────────────────────────────────────
 
   def test_renders_svg_for_known_icon
     assert_includes render_icon(name: "arrow-left"), "<svg"
+  end
+
+  def test_renders_svg_for_aliased_icon
+    assert_includes render_icon(name: "close"), "<svg"
+  end
+
+  def test_renders_svg_for_custom_icon
+    assert_includes render_icon(name: "spinner"), "<svg"
+  end
+
+  # ── unknown icon fallback ─────────────────────────────────────────────────
+
+  def test_renders_span_for_unknown_icon
+    assert_includes render_icon(name: "does-not-exist"), "<span"
   end
 
   def test_renders_path_with_d_attribute

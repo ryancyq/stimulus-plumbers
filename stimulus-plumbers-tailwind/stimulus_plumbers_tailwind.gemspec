@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
     ls.readlines("\x0", chomp: true).select do |f|
       f.start_with?(*%w[app/ lib/ LICENSE README.md CHANGELOG.md])
     end
-  end + Dir.glob("app/**/*", base: __dir__).reject { |f| File.directory?(File.join(__dir__, f)) }
+  end
 
   spec.require_paths = ["lib"]
 

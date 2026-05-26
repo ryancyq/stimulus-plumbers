@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
+require_relative "icons/heroicon"
+require_relative "icons/custom"
+require "stimulus_plumbers/themes/icons/registry"
+
 module StimulusPlumbers
   module Themes
     module Tailwind
       module Icon
-        ICONS = {
-          "arrow-left"  => { d: "M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" },
-          "arrow-right" => { d: "M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" }
+        ALIASES = {
+          "close"    => "x-mark",
+          "calendar" => "calendar-days"
         }.freeze
+
+        ICONS = StimulusPlumbers::Themes::Icons::Registry.new(
+          sources: [Icons::Custom, Icons::Heroicon],
+          aliases: ALIASES
+        )
 
         def icons
           ICONS
@@ -16,7 +25,7 @@ module StimulusPlumbers
         private
 
         def icon_classes
-          { classes: "" }
+          { classes: "size-6" }
         end
       end
     end

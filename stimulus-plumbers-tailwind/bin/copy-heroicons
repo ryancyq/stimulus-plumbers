@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Copies heroicon SVGs into the gem's vendored directory.
+# Source priority:
+#   1. heroicons Ruby gem (if installed: `gem install heroicons`)
+#   2. raw heroicons checkout (ARGV[0] or sibling ../../heroicons/optimized/24)
+
+require "fileutils"
+
+OUTPUT_DIR = File.expand_path("../lib/stimulus_plumbers/themes/tailwind/icons/heroicons", __dir__)
+
+gem_dir = begin
+  require "heroicons"
+  File.join(Heroicons.root, "app/assets/images/heroicons")
+rescue LoadError
+  nil
+end
+
+if gem_dir
+  puts "Source: heroicons gem (#{gem_dir})"
+  src_for = ->(variant) { File.join(gem_dir, variant) }
+else
+  raw = ARGV[0] || File.expand_path("../../../heroicons/optimized/24", __dir__)
+  abort "heroicons not found at #{raw}" unless Dir.exist?(raw)
+  puts "Source: raw heroicons (#{raw})"
+  src_for = ->(variant) { File.join(raw, variant) }
+end
+
+%w[outline solid].each do |variant|
+  dst = File.join(OUTPUT_DIR, variant)
+  FileUtils.mkdir_p(dst)
+  copied = Dir.glob("#{src_for.call(variant)}/*.svg").count do |f|
+    FileUtils.cp(f, File.join(dst, File.basename(f)))
+    true
+  end
+  puts "  #{variant}: #{copied} files → #{dst}"
+end

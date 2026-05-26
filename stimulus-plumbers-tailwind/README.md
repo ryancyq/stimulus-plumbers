@@ -53,9 +53,30 @@ Use `bundle show stimulus_plumbers_tailwind` to get the exact installed path.
 | `Tailwind::Card` | Card |
 | `Tailwind::Combobox` | Combobox (date, time, dropdown, typeahead) |
 | `Tailwind::Form` | Form fields, labels, errors |
+| `Tailwind::Icon` | Icon (SVG rendering, icon registry) |
 | `Tailwind::Layout` | Layout primitives |
 
 Custom themes can subclass `TailwindTheme` to override individual methods, or subclass `StimulusPlumbers::Themes::Base` directly.
+
+## Icons
+
+The theme bundles the [Heroicons](https://heroicons.com/) 2.x set. Pass a kebab-case icon name to `sp_icon` or any component accepting `icon_leading:` / `icon_trailing:`. Append `/solid` for the filled variant:
+
+```erb
+<%= sp_icon "arrow-left" %>
+<%= sp_icon "arrow-left/solid" %>
+<%= sp_button "Next", icon_trailing: "arrow-right" %>
+```
+
+Icons render as inline `<svg>` with `size-6` by default. Override with `class:`:
+
+```erb
+<%= sp_icon "arrow-left", class: "size-4 text-gray-500" %>
+```
+
+**Built-in aliases:** `"close"` → `"x-mark"`, `"calendar"` → `"calendar-days"`.
+
+**Optional `heroicons` gem:** add `gem "heroicons"` to your `Gemfile` to load icons from the gem instead of the bundled files. The theme detects it automatically.
 
 ## Development
 

@@ -9,7 +9,7 @@ module StimulusPlumbers
           kwargs
         )
 
-        icon_data = Themes::Schema::Icon.resolve(theme.icons[name])
+        icon_data = Themes::Schema::Icon.resolve(theme.icons[name.to_s])
         if icon_data
           svg_icon(icon_data, html_options)
         else
@@ -20,21 +20,11 @@ module StimulusPlumbers
       private
 
       def svg_icon(icon_data, html_options)
-        template.content_tag(
-          :svg,
-          xmlns:          "http://www.w3.org/2000/svg",
-          fill:           icon_data[:fill],
-          viewBox:        icon_data[:view_box],
-          width:          icon_data[:width],
-          height:         icon_data[:height],
-          stroke:         icon_data[:stroke],
-          "stroke-width": icon_data[:stroke_width],
-          **html_options
-        ) do
-          template.tag.path(
-            "stroke-linecap":  icon_data[:stroke_linecap],
-            "stroke-linejoin": icon_data[:stroke_linejoin],
-            d:                 icon_data[:d]
+        template.content_tag(:svg, nil, icon_data.except(:elements).merge(html_options)) do
+          template.safe_join(
+            icon_data[:elements].map do |element|
+              template.content_tag(element[:tag], nil, element.except(:tag))
+            end
           )
         end
       end
