@@ -5,8 +5,8 @@ module StimulusPlumbers
     module Tailwind
       module Form
         INPUT_BASE = %w[
-          w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-fg)
-          bg-(--sp-color-bg) focus:outline-none focus:ring-2 focus:ring-offset-0
+          w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2) text-(length:--sp-text-sm)
+          text-(--sp-color-fg) bg-(--sp-color-bg) focus:outline-none focus:ring-2 focus:ring-offset-0
           [.sp-form-input-group_&]:border-0 [.sp-form-input-group_&]:rounded-none
           [.sp-form-input-group_&]:bg-transparent [.sp-form-input-group_&]:shadow-none
           [.sp-form-input-group_&]:focus:ring-0
@@ -28,10 +28,12 @@ module StimulusPlumbers
         INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
         BUTTON_REVEAL = %w[
-          self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg) hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
+          self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg)
+          hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
         ].freeze
         BUTTON_CLEAR = %w[
-          self-stretch border-0 bg-transparent px-(--sp-space-2) cursor-pointer text-(--sp-color-muted-fg) hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
+          self-stretch border-0 bg-transparent px-(--sp-space-2) cursor-pointer text-(--sp-color-muted-fg)
+          hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
         ].freeze
         SUBMIT_LINK = %w[cursor-pointer text-(length:--sp-text-sm) font-medium text-(--sp-color-fg) hover:underline].freeze
 

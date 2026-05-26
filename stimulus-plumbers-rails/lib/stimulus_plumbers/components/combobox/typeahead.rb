@@ -6,7 +6,7 @@ module StimulusPlumbers
       class Typeahead < Plumber::Base
         def self.default_opts
           Dropdown.default_opts.deep_merge(
-            trigger: { aria_autocomplete: "list", readonly: false }
+            trigger: { aria: { autocomplete: "list" }, readonly: false }
           )
         end
 

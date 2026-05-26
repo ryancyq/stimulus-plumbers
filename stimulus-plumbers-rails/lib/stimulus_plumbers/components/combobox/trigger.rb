@@ -15,8 +15,6 @@ module StimulusPlumbers
           popover_id:,
           haspopup:,
           readonly: true,
-          aria_autocomplete: nil,
-          aria_label: nil,
           aria: {},
           id: nil,
           data: {},
@@ -25,9 +23,14 @@ module StimulusPlumbers
           **kwargs
         )
           input_html = render_input(
-            stimulus_controller:, popover_id:, haspopup:,
-            readonly:, aria_autocomplete:, aria_label:,
-            aria:, id:, data:, **kwargs
+            stimulus_controller: stimulus_controller,
+            popover_id:          popover_id,
+            haspopup:            haspopup,
+            readonly:            readonly,
+            aria:                aria,
+            id:                  id,
+            data:                data,
+            **kwargs
           )
 
           return input_html unless icon_leading || icon_trailing
@@ -40,8 +43,6 @@ module StimulusPlumbers
           popover_id:,
           haspopup:,
           readonly:,
-          aria_autocomplete:,
-          aria_label:,
           aria:,
           id:,
           data:,
@@ -54,8 +55,6 @@ module StimulusPlumbers
           }
 
           trigger_aria = { haspopup: haspopup, expanded: "false", controls: popover_id }
-          trigger_aria[:autocomplete] = aria_autocomplete if aria_autocomplete
-          trigger_aria[:label]        = aria_label        if aria_label
 
           template.tag.input(
             **merge_html_options(

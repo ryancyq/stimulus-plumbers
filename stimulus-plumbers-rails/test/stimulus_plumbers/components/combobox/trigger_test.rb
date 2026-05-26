@@ -49,7 +49,7 @@ class ComboboxTriggerTest < ActionView::TestCase
   end
 
   def test_aria_autocomplete_when_set
-    assert_css parse_html(render_trigger(aria_autocomplete: "list")), "input[aria-autocomplete='list']"
+    assert_css parse_html(render_trigger(aria: { autocomplete: "list" })), "input[aria-autocomplete='list']"
   end
 
   def test_aria_autocomplete_omitted_when_nil
@@ -57,7 +57,7 @@ class ComboboxTriggerTest < ActionView::TestCase
   end
 
   def test_aria_label_when_set
-    assert_css parse_html(render_trigger(aria_label: "Country")), "input[aria-label='Country']"
+    assert_css parse_html(render_trigger(aria: { label: "Country" })), "input[aria-label='Country']"
   end
 
   def test_aria_invalid_forwarded_via_aria_kwarg
