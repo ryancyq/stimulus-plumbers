@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rails/rails.git
-  revision: e1d8b5f889df2177a7e4c64e494d0d5f12c092cf
+  revision: b5270673a754808984f7cc1afb36c0b72cb1ed3f
   branch: main
   specs:
     actioncable (8.2.0.alpha)
@@ -103,7 +103,7 @@ GIT
 PATH
   remote: ..
   specs:
-    stimulus_plumbers (0.3.2)
+    stimulus_plumbers (0.3.3)
       actionview (>= 6.1, < 8.2)
 
 GEM
@@ -170,7 +170,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    marcel (1.1.1)
+    marcel (1.2.1)
     matrix (0.4.3)
     mini_mime (1.1.5)
     minitest (5.27.0)
@@ -290,7 +290,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.8.1)
+    zeitwerk (2.8.2)
 
 PLATFORMS
   aarch64-linux-gnu
