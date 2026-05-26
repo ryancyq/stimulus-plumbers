@@ -57,11 +57,11 @@ class BaseThemeFormTest < StubThemeTestCase
     mock_logger.verify
   end
 
-  def test_coerces_invalid_form_input_group_error_to_default_and_warns
+  def test_coerces_invalid_input_group_error_to_default_and_warns
     mock_logger = Minitest::Mock.new
     mock_logger.expect(:warn, nil, [%r{unknown value "yes"}])
     Rails.stub(:logger, mock_logger) do
-      @theme.resolve(:form_input_group, error: "yes")
+      @theme.resolve(:input_group, error: "yes")
     end
     mock_logger.verify
   end

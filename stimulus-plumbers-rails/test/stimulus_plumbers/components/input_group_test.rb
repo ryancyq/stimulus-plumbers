@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class FormFieldsInputGroupTest < ActionView::TestCase
+class ComponentsInputGroupTest < ActionView::TestCase
   def input_group(...)
-    StimulusPlumbers::Form::Fields::InputGroup.new(self).render(...)
+    StimulusPlumbers::Components::InputGroup.new(self).render(...)
   end
 
   def test_renders_div_wrapper

@@ -15,6 +15,7 @@ module StimulusPlumbers
         **Schema::COMBOBOX,
         **Schema::FORM,
         **Schema::ICON,
+        **Schema::INPUT_GROUP,
         **Schema::LAYOUT
       }.freeze
 

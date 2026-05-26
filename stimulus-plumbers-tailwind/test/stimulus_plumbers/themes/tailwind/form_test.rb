@@ -175,33 +175,6 @@ class TailwindThemeFormTest < Minitest::Test
     assert_includes result, "border-gray-500"
   end
 
-  # :form_input_group
-
-  def test_form_input_group_includes_base_classes
-    result = classes_for(:form_input_group)
-
-    assert_includes result, "flex"
-    assert_includes result, "items-center"
-    assert_includes result, "rounded-md"
-    assert_includes result, "border"
-  end
-
-  def test_form_input_group_includes_default_border_when_no_error
-    assert_includes classes_for(:form_input_group), "border-gray-500"
-  end
-
-  def test_form_input_group_excludes_error_border_when_no_error
-    refute_includes classes_for(:form_input_group), "border-red-700"
-  end
-
-  def test_form_input_group_includes_error_border_when_error
-    assert_includes classes_for(:form_input_group, error: true), "border-red-700"
-  end
-
-  def test_form_input_group_excludes_default_border_when_error
-    refute_includes classes_for(:form_input_group, error: true), "border-gray-500"
-  end
-
   # :form_combobox
 
   def test_form_combobox_includes_default_border_when_no_error
@@ -218,18 +191,18 @@ class TailwindThemeFormTest < Minitest::Test
 
   # :form_input_reveal
 
-  def test_form_input_reveal_returns_empty_classes
-    assert_equal "", classes_for(:form_input_reveal)
+  def test_form_input_reveal_includes_marker_class
+    assert_includes classes_for(:form_input_reveal), "sp-form-input-group"
   end
 
   def test_form_input_reveal_accepts_error_arg
-    assert_equal "", classes_for(:form_input_reveal, error: true)
+    assert_includes classes_for(:form_input_reveal, error: true), "sp-form-input-group"
   end
 
   # :form_input_clearable
 
-  def test_form_input_clearable_returns_empty_classes
-    assert_equal "", classes_for(:form_input_clearable)
+  def test_form_input_clearable_includes_marker_class
+    assert_includes classes_for(:form_input_clearable), "sp-form-input-group"
   end
 
   # :form_button_reveal

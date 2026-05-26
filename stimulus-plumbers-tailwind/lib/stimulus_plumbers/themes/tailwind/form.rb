@@ -78,7 +78,7 @@ module StimulusPlumbers
           { classes: klasses(*RADIO) }
         end
 
-        def form_input_group_classes(error: false)
+        def input_group_classes(error: false)
           { classes: klasses(*INPUT_GROUP_BASE, INPUT_GROUP_BORDER[error ? :error : :default]) }
         end
 

@@ -83,7 +83,6 @@ module StimulusPlumbers
         form_select:          { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_checkbox:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_radio:           { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_input_group:     { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_combobox:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_input_reveal:    { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_input_clearable: {}.freeze,
@@ -96,6 +95,10 @@ module StimulusPlumbers
 
       ICON = {
         icon: {}.freeze
+      }.freeze
+
+      INPUT_GROUP = {
+        input_group: { error: { default: false, validate: Ranges::BOOL } }.freeze
       }.freeze
 
       LAYOUT = {
