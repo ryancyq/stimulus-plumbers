@@ -30,10 +30,6 @@ class TailwindThemeIconTest < ActionView::TestCase
     assert @theme.icons.key?("arrow-right")
   end
 
-  def test_icon_range_matches_icons_keys
-    assert_equal @theme.icons.keys, @theme.icon_range
-  end
-
   # ── svg rendering ─────────────────────────────────────────────────────────
 
   def test_renders_svg_for_known_icon

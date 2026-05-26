@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "schema"
+require_relative "../plumber/dispatcher"
 
 module StimulusPlumbers
   module Themes
@@ -33,10 +34,6 @@ module StimulusPlumbers
         {}
       end
 
-      def icon_range
-        icons.keys
-      end
-
       def attribute_names(component)
         SCHEMA.fetch(component, {}).keys
       end
@@ -51,36 +48,37 @@ module StimulusPlumbers
           return {}
         end
 
-        send(method_name, **validate_args(component.to_sym, args))
+        send(method_name, **validate(component.to_sym, args))
       end
 
       private
 
-      def validate_args(component, args)
+      def validate(component, args)
         schema = SCHEMA.fetch(component, {})
         args.slice(*schema.keys).each_with_object({}) do |(key, value), result|
-          result[key] = coerce_arg(component, key, value, schema[key])
+          result[key] = cast(component, key, value, schema[key])
         end
       end
 
-      def coerce_arg(component, key, value, schema)
+      def cast(component, key, value, schema)
         return value unless schema
-
-        range = range_for(schema)
-        return value if range.empty? || range.include?(value)
+        return value if value.nil? || valid?(schema[:validate], value)
 
         StimulusPlumbers::Logger.warn(
           "#{component}##{key} received unknown value #{value.inspect}. " \
-          "Range: #{schema[:range].inspect}. Falling back to: #{schema[:default].inspect}"
+          "Validator: #{schema[:validate].inspect}. Falling back to: #{schema[:default].inspect}"
         )
         schema[:default]
       end
 
-      def range_for(schema)
-        if schema[:range].is_a?(Symbol)
-          respond_to?(schema[:range], true) ? send(schema[:range]) : []
+      def valid?(validator, value)
+        return true if validator.nil?
+
+        if validator.respond_to?(:include?)
+          validator.include?(value)
         else
-          schema[:range]
+          result = Plumber::Dispatcher.build(validator, value).call(self)
+          result.respond_to?(:include?) ? result.include?(value) : result
         end
       end
     end
