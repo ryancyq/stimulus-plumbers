@@ -48,10 +48,12 @@ class SchemaIconTest < Minitest::Test
 
   def test_path_element_attrs
     assert_includes Icon::ELEMENT_ATTRS[:path], :d
+    assert_includes Icon::ELEMENT_ATTRS[:path], :fill
     assert_includes Icon::ELEMENT_ATTRS[:path], :fill_rule
     assert_includes Icon::ELEMENT_ATTRS[:path], :clip_rule
     assert_includes Icon::ELEMENT_ATTRS[:path], :stroke_linecap
     assert_includes Icon::ELEMENT_ATTRS[:path], :stroke_linejoin
+    assert_includes Icon::ELEMENT_ATTRS[:path], :opacity
   end
 
   # ── resolve — nil cases ───────────────────────────────────────────────────
@@ -159,5 +161,17 @@ class SchemaIconTest < Minitest::Test
 
     refute_includes el, "stroke-linecap"
     refute_includes el, "stroke-linejoin"
+  end
+
+  def test_resolve_passes_through_fill_on_path_element
+    result = Icon.resolve({ elements: [{ tag: :path, d: "M1 2", fill: "currentColor" }] })
+
+    assert_equal "currentColor", result[:elements].first["fill"]
+  end
+
+  def test_resolve_passes_through_opacity_on_path_element
+    result = Icon.resolve({ elements: [{ tag: :path, d: "M1 2", opacity: "0.25" }] })
+
+    assert_equal "0.25", result[:elements].first["opacity"]
   end
 end

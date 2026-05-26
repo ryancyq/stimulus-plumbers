@@ -20,7 +20,7 @@ module StimulusPlumbers
         }.freeze
 
         ELEMENT_ATTRS = {
-          path:     %i[d fill_rule clip_rule stroke_linecap stroke_linejoin].freeze,
+          path:     %i[d fill fill_rule clip_rule stroke_linecap stroke_linejoin opacity].freeze,
           circle:   %i[cx cy r].freeze,
           ellipse:  %i[cx cy rx ry].freeze,
           rect:     %i[x y width height rx ry].freeze,
