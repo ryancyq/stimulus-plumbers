@@ -16,4 +16,17 @@
 
   <h2>Visually hidden label</h2>
   <%= f.text_field :name, label: "Search query", label_visibility: :exclusive %>
+
+  <h2>Textarea with error</h2>
+  <%= f.text_area :bio, label: "Bio" %>
+
+  <h2>Select with error</h2>
+  <% countries = [["Australia", "au"], ["New Zealand", "nz"], ["Singapore", "sg"]] %>
+  <%= f.select :country, countries, { label: "Country" }, {} %>
+
+  <h2>Checkbox with error</h2>
+  <%= f.check_box :newsletter, label: "Subscribe to newsletter" %>
+
+  <h2>File with error</h2>
+  <%= f.file_field :resume, label: "Resume" %>
 <% end %>

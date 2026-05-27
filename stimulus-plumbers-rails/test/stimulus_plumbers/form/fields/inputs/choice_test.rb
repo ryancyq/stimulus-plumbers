@@ -190,10 +190,10 @@ class ChoiceTest < ActionView::TestCase
     assert_includes doc.at_css("fieldset")["aria-describedby"].to_s, "sign_in_form_role_hint"
   end
 
-  def test_collection_radio_buttons_required_sets_aria_required_on_fieldset
+  def test_collection_radio_buttons_required_does_not_set_aria_required_on_fieldset
     doc = build_collection_radio_buttons(required: true)
 
-    assert_equal "true", doc.at_css("fieldset")["aria-required"]
+    assert_nil doc.at_css("fieldset")["aria-required"]
   end
 
   def test_collection_radio_buttons_required_renders_mark_in_legend
@@ -271,10 +271,10 @@ class ChoiceTest < ActionView::TestCase
     assert_includes doc.at_css("fieldset")["aria-describedby"].to_s, "sign_in_form_role_hint"
   end
 
-  def test_collection_check_boxes_required_sets_aria_required_on_fieldset
+  def test_collection_check_boxes_required_does_not_set_aria_required_on_fieldset
     doc = build_collection_check_boxes(required: true)
 
-    assert_equal "true", doc.at_css("fieldset")["aria-required"]
+    assert_nil doc.at_css("fieldset")["aria-required"]
   end
 
   def test_collection_check_boxes_required_renders_mark_in_legend

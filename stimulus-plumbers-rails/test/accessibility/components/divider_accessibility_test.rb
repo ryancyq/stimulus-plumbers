@@ -2,9 +2,9 @@
 
 require_relative "../application_accessibility_test_case"
 
-class FieldErrorAccessibilityTest < ApplicationAccessibilityTestCase
+class DividerAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag
-    visit "/form/field_error"
+    visit "/components/divider"
 
     assert_accessible
   end

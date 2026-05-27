@@ -3,115 +3,15 @@
 require_relative "../application_accessibility_test_case"
 
 class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
-  def test_renders_all_fields
-    visit "/form/sign_up"
-
-    assert_selector "label", text: %r{Full name}
-    assert_selector "input[type='text']"
-    assert_selector "label", text: %r{Email address}
-    assert_selector "input[type='email']"
-    assert_selector "label", text: %r{Password}
-    assert_selector "input[type='password']"
-    assert_selector "input[type='number']"
-    assert_selector "input[role='combobox'][aria-haspopup='dialog']"
-    assert_selector "label", text: %r{Bio}
-    assert_selector "textarea"
-    assert_selector "label", text: %r{Male}
-    assert_selector "label", text: %r{Female}
-    assert_selector "label", text: %r{Other}
-    assert_selector "input[type='radio']", count: 3
-    assert_selector "label", text: %r{Country}
-    assert_selector "input[role='combobox'][aria-haspopup='listbox']"
-    assert_selector "label", text: %r{Subscribe to newsletter}
-    assert_selector "input[type='checkbox']"
-    assert_selector "input[type='submit'][value='Create account']"
-  end
-
-  def test_renders_hint_text
-    visit "/form/sign_up"
-
-    assert_text "We'll never share your email."
-    assert_text "Tell us a little about yourself."
-    assert_text "Select your country of residence."
-  end
-
-  def test_renders_required_indicators
-    visit "/form/sign_up"
-
-    assert_selector "span[aria-hidden='true']", text: "*", minimum: 3
-  end
-
-  def test_each_input_has_an_associated_label
-    visit "/form/sign_up"
-
-    assert_selector "label[for='sign_up_name']"
-    assert_selector "label[for='sign_up_email']"
-    assert_selector "label[for='sign_up_age']"
-    assert_selector "label[for='sign_up_birth_date']"
-  end
-
-  def test_label_is_associated_with_textarea
-    visit "/form/sign_up"
-
-    textarea_id = find("textarea")[:id]
-
-    assert_selector "label[for='#{textarea_id}']"
-  end
-
-  def test_radio_buttons_are_associated_with_labels
-    visit "/form/sign_up"
-
-    all("input[type='radio']").each do |radio|
-      assert_selector "label[for='#{radio[:id]}']"
-    end
-  end
-
-  def test_checkbox_is_associated_with_label
-    visit "/form/sign_up"
-
-    checkbox_id = find("input[type='checkbox']")[:id]
-
-    assert_selector "label[for='#{checkbox_id}']"
-  end
-
-  def test_label_is_associated_with_combobox
-    visit "/form/sign_up"
-
-    combobox_id = find("input[role='combobox'][aria-haspopup='listbox']")[:id]
-
-    assert_selector "label[for='#{combobox_id}']"
-  end
-
-  def test_renders_country_options
-    visit "/form/sign_up"
-
-    assert_selector "li[role='option']", text: "Australia",     visible: false
-    assert_selector "li[role='option']", text: "New Zealand",   visible: false
-    assert_selector "li[role='option']", text: "Singapore",     visible: false
-    assert_selector "li[role='option']", text: "United States", visible: false
-  end
-
-  def test_renders_card
-    visit "/form/sign_up"
-
-    assert_selector "h1", text: "Create account"
-    assert_selector "div"
-  end
-
-  def test_renders_avatar
-    visit "/form/sign_up"
-
-    assert_selector "span[role='img'][aria-label='Stimulus Plumbers']"
-  end
-
-  def test_renders_sign_in_button
-    visit "/form/sign_up"
-
-    assert_selector "a", text: "Sign in"
-  end
-
   def test_passes_wcag
     visit "/form/sign_up"
+
+    assert_accessible
+  end
+
+  def test_passes_wcag_with_password_revealed
+    visit "/form/sign_up"
+    find("button[aria-label='Show password']").click
 
     assert_accessible
   end

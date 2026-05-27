@@ -9,6 +9,17 @@ class FormController < ApplicationController
     @form = SignUp.new.tap do |f|
       f.errors.add(:email, "is already taken")
       f.errors.add(:name, "can't be blank")
+      f.errors.add(:bio, "can't be blank")
+      f.errors.add(:country, "is invalid")
+      f.errors.add(:newsletter, "must be accepted")
+      f.errors.add(:resume, "is required")
+    end
+  end
+
+  def fieldset
+    @form = SignUp.new.tap do |f|
+      f.errors.add(:gender, "can't be blank")
+      f.errors.add(:interests, "must select at least one")
     end
   end
 end
