@@ -1,71 +1,50 @@
 # frozen_string_literal: true
 
+require_relative "combobox"
+
 module StimulusPlumbers
   module Form
     module Fields
       module Inputs
-        module Select
+        module Select # rubocop:disable Metrics/ModuleLength
+          include Combobox
+
           def select(attribute, choices = nil, options = {}, html_options = {})
-            html_native   = options.delete(:html_native) { false }
-            icon_leading  = options.delete(:icon_leading)
-            icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
-            icons         = { icon_leading: icon_leading, icon_trailing: icon_trailing }
-            with_select_field(attribute, options, html_options) do |opts, merged, error|
-              if html_native
-                super(attribute, choices, opts, merged)
-              else
-                render_select_dropdown(attribute, opts, merged, err: error, **icons) do
-                  Array(choices)
-                end
-              end
-            end
+            merged = merge_html_options(html_options, field_theme(:form_select))
+            super(attribute, choices, options, merged)
           end
 
-          def collection_select(
-            attribute,
-            collection,
-            value_method,
-            text_method,
-            options = {},
-            html_options = {}
-          )
-            html_native   = options.delete(:html_native) { false }
-            icon_leading  = options.delete(:icon_leading)
-            icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
-            icons         = { icon_leading: icon_leading, icon_trailing: icon_trailing }
-            with_select_field(attribute, options, html_options) do |opts, merged, error|
-              if html_native
-                super(attribute, collection, value_method, text_method, opts, merged)
-              else
-                render_select_dropdown(attribute, opts, merged, err: error, **icons) do
-                  collection.map { |item| [item.public_send(text_method), item.public_send(value_method)] }
-                end
-              end
-            end
+          def collection_select(attribute, collection, value_method, text_method, options = {}, html_options = {})
+            merged = merge_html_options(html_options, field_theme(:form_select))
+            super(attribute, collection, value_method, text_method, options, merged)
           end
 
           private
 
-          def with_select_field(attribute, options, html_options)
-            Field.new(@template, **options).render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error|
-              yield opts, merge_html_options(html_options, html_opts, field_theme(:form_select, error: error)), error
+          # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+          def render_combobox_dropdown(attribute, html_opts, _opts, error,
+                                        icon_leading: nil, icon_trailing: "chevron-down",
+                                        choices: [], include_blank: nil, prompt: nil, selected: nil, **_)
+            current_value = selected || (object.respond_to?(attribute) ? object.public_send(attribute) : nil)
+            all_choices   = build_select_dropdown_choices(Array(choices), include_blank: include_blank, prompt: prompt)
+            combobox_opts = build_select_dropdown_opts(
+              html_opts, current_value, icon_leading: icon_leading, icon_trailing: icon_trailing
+            )
+            render_combobox(attribute, input_id: html_opts[:id], opts: combobox_opts, err: error) do
+              render_dropdown_component(all_choices, current_value, html_opts[:id])
             end
           end
+          # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-          def render_select_dropdown(attribute, opts, html_opts, err:, icon_leading:, icon_trailing:)
-            include_blank = opts.delete(:include_blank)
-            prompt        = opts.delete(:prompt)
-            current_value = opts.delete(:selected) { object.respond_to?(attribute) ? object.public_send(attribute) : nil }
-            choices       = build_select_dropdown_choices(yield(current_value), include_blank: include_blank, prompt: prompt)
-            combobox_opts = build_select_dropdown_opts(
-              html_opts,
-              current_value,
-              icon_leading:  icon_leading,
-              icon_trailing: icon_trailing
-            )
-            render_combobox(attribute, input_id: html_opts[:id], opts: combobox_opts, err: err) do
-              render_dropdown_component(choices, current_value, html_opts[:id])
-            end
+          def render_collection_combobox_dropdown(attribute, collection, value_method, text_method, field_opts, **input_opts)
+            choices = collection.map { |item| [item.public_send(text_method), item.public_send(value_method)] }
+            render_field(:select, attribute, field_opts, input_opts.merge(choices: choices))
+          end
+
+          def render_grouped_collection_combobox_dropdown(attribute, collection, value_method, text_method, field_opts,
+                                                           group_method:, group_label_method:, **input_opts)
+            choices = build_grouped_choices(collection, group_label_method, group_method, value_method, text_method)
+            render_field(:select, attribute, field_opts, input_opts.merge(choices: choices))
           end
 
           def render_dropdown_component(choices, value, input_id)

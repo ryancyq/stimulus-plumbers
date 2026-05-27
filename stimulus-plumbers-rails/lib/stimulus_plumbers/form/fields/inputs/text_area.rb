@@ -6,14 +6,15 @@ module StimulusPlumbers
       module Inputs
         module TextArea
           def text_area(attribute, options = {})
-            Field.new(@template, **options).render(
-              object,
-              attribute,
-              input_id: field_id(attribute)
-            ) do |html_opts, opts, error|
-              html_options = merge_html_options(opts, html_opts, field_theme(:form_textarea, error: error))
-              super(attribute, html_options)
-            end
+            html_options = merge_html_options(options, field_theme(:form_textarea))
+            super(attribute, html_options)
+          end
+
+          private
+
+          def render_text_area_input(attribute, html_opts, opts, error, **_)
+            html_options = merge_html_options(opts, html_opts, field_theme(:form_textarea, error: error))
+            @template.text_area(@object_name, attribute, objectify_options(html_options))
           end
         end
       end

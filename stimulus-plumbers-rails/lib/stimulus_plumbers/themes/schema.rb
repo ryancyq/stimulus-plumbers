@@ -91,8 +91,16 @@ module StimulusPlumbers
         form_input_reveal:    { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_input_clearable: {}.freeze,
         form_button_reveal:   {}.freeze,
-        form_button_clear:    {}.freeze,
-        form_submit:          {
+        form_button_clear:        {}.freeze,
+        form_collection_label:        {}.freeze,
+        form_choice_item_description: {}.freeze,
+        form_field:               {
+          as: { validate: Form::Ranges::FIELD_TYPE }
+        }.freeze,
+        form_collection_field:    {
+          as: { validate: Form::Ranges::COLLECTION_FIELD_TYPE }
+        }.freeze,
+        form_submit:              {
           variant: { default: :default, validate: Form::Ranges::SUBMIT_VARIANT }
         }.freeze
       }.freeze

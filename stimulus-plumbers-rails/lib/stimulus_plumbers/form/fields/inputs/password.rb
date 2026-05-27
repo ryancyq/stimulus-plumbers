@@ -7,23 +7,27 @@ module StimulusPlumbers
         module Password
           def password_field(attribute, options = {})
             reveal = options.delete(:reveal) { false }
-            Field.new(@template, **options).render(
-              object,
-              attribute,
-              input_id: field_id(attribute)
-            ) do |html_opts, opts, error|
-              if reveal
-                render_reveal_password(merge_html_options(opts, html_opts), error) do |html_options|
-                  super(attribute, html_options)
-                end
-              else
-                html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error))
-                super(attribute, html_options)
-              end
+            merged = merge_html_options(options, field_theme(:form_input))
+            if reveal
+              render_reveal_password(merged, false) { |html_options| super(attribute, html_options) }
+            else
+              super(attribute, merged)
             end
           end
 
           private
+
+          def render_password_input(attribute, html_opts, opts, error, reveal: false, **_)
+            merged = merge_html_options(opts, html_opts)
+            if reveal
+              render_reveal_password(merged, error) do |html_options|
+                @template.password_field(@object_name, attribute, html_options)
+              end
+            else
+              html_options = merge_html_options(merged, field_theme(:form_input, error: error))
+              @template.password_field(@object_name, attribute, objectify_options(html_options))
+            end
+          end
 
           def render_reveal_password(html_opts, error, &block)
             html_options = merge_html_options(
