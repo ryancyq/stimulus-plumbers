@@ -28,7 +28,7 @@ class CustomThemeIntegrationTest < ActionView::TestCase
 
   def build_field(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
-      f.text_field(:email, **opts)
+      f.field(:email, as: :text, **opts)
     end
     parse_html(html)
   end

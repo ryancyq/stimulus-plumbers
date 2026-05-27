@@ -2,31 +2,31 @@
 
 <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
   <h2>Required</h2>
-  <%= f.text_field :name, label: "Full name", required: true %>
+  <%= f.field :name, as: :text, label: "Full name", required: true %>
 
   <h2>With hint</h2>
-  <%= f.email_field :email, label: "Email", hint: "We'll never share your email." %>
+  <%= f.field :email, as: :email, label: "Email", hint: "We'll never share your email." %>
 
   <h2>Error from model</h2>
   <%# @form already has errors on :email and :name added in the controller %>
-  <%= f.text_field :name, label: "Name" %>
+  <%= f.field :name, as: :text, label: "Name" %>
 
   <h2>Error override</h2>
-  <%= f.text_field :name, label: "Username", error: "This field is required." %>
+  <%= f.field :name, as: :text, label: "Username", error: "This field is required." %>
 
   <h2>Visually hidden label</h2>
-  <%= f.text_field :name, label: "Search query", label_visibility: :exclusive %>
+  <%= f.field :name, as: :text, label: "Search query", hide_label: true %>
 
   <h2>Textarea with error</h2>
-  <%= f.text_area :bio, label: "Bio" %>
+  <%= f.field :bio, as: :text_area, label: "Bio" %>
 
   <h2>Select with error</h2>
   <% countries = [["Australia", "au"], ["New Zealand", "nz"], ["Singapore", "sg"]] %>
-  <%= f.select :country, countries, { label: "Country" }, {} %>
+  <%= f.field :country, as: :select, label: "Country", choices: countries %>
 
   <h2>Checkbox with error</h2>
-  <%= f.check_box :newsletter, label: "Subscribe to newsletter" %>
+  <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
 
   <h2>File with error</h2>
-  <%= f.file_field :resume, label: "Resume" %>
+  <%= f.field :resume, as: :file, label: "Resume" %>
 <% end %>

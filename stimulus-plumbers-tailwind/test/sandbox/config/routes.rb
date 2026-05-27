@@ -21,5 +21,6 @@ Rails.application.routes.draw do
     get :sign_up
     get :field_error
     get :fieldset
+    get :choices
   end
 end

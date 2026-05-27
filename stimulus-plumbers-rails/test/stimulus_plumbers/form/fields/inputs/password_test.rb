@@ -8,88 +8,116 @@ class PasswordTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  def build_field(**opts)
+  # native ActionView helper — reveal: is input-level; no label/hint/error wrapper
+  def build_native(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.password_field(:password, **opts)
     end
     parse_html(html)
   end
 
-  # ── default (no reveal) ───────────────────────────────────────────────────
-
-  def test_renders_password_input
-    assert_css build_field, "input[type='password']"
+  # f.field — full wrapper: label + input + hint + error
+  def build_field(**opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.field(:password, as: :password, **opts)
+    end
+    parse_html(html)
   end
 
-  def test_renders_label
-    assert_css build_field, "label[for='sign_in_form_password']"
+  # ── native password_field (no reveal) ────────────────────────────────────
+
+  def test_renders_password_input
+    assert_css build_native, "input[type='password']"
   end
 
   def test_does_not_render_input_group_wrapper
-    assert_no_css build_field, "[data-controller='input-formatter']"
+    assert_no_css build_native, "[data-controller='input-formatter']"
   end
 
   def test_does_not_render_toggle_button
-    assert_no_css build_field, "button[data-input-formatter-target='toggle']"
+    assert_no_css build_native, "button[data-input-formatter-target='toggle']"
   end
 
   def test_reveal_option_does_not_leak_into_html_attributes
-    assert_nil build_field(reveal: false).at_css("input[type='password']")["reveal"]
+    assert_nil build_native(reveal: false).at_css("input[type='password']")["reveal"]
   end
 
-  # ── reveal: true ──────────────────────────────────────────────────────────
+  # ── native password_field reveal: true ───────────────────────────────────
 
   def test_reveal_renders_input_group_with_stimulus_controller
-    assert_css build_field(reveal: true), "[data-controller='input-formatter']"
+    assert_css build_native(reveal: true), "[data-controller='input-formatter']"
   end
 
   def test_reveal_input_group_has_password_format_value
-    assert_css build_field(reveal: true), "[data-input-formatter-format-value='password']"
+    assert_css build_native(reveal: true), "[data-input-formatter-format-value='password']"
   end
 
   def test_reveal_input_has_stimulus_target
-    assert_css build_field(reveal: true), "input[data-input-formatter-target='input']"
+    assert_css build_native(reveal: true), "input[data-input-formatter-target='input']"
   end
 
   def test_reveal_renders_toggle_button
-    assert_css build_field(reveal: true), "button[data-input-formatter-target='toggle']"
+    assert_css build_native(reveal: true), "button[data-input-formatter-target='toggle']"
   end
 
   def test_reveal_toggle_button_has_action
-    assert_css build_field(reveal: true), "button[data-action='click->input-formatter#toggle']"
+    assert_css build_native(reveal: true), "button[data-action='click->input-formatter#toggle']"
   end
 
   def test_reveal_toggle_button_has_aria_label
-    assert_css build_field(reveal: true), "button[aria-label='Show password']"
+    assert_css build_native(reveal: true), "button[aria-label='Show password']"
   end
 
   def test_reveal_toggle_button_has_aria_pressed_false
-    assert_css build_field(reveal: true), "button[aria-pressed='false']"
+    assert_css build_native(reveal: true), "button[aria-pressed='false']"
   end
 
   def test_reveal_toggle_button_type_is_button
-    assert_css build_field(reveal: true), "button[type='button']"
+    assert_css build_native(reveal: true), "button[type='button']"
   end
 
   def test_reveal_input_is_inside_input_group
-    group = build_field(reveal: true).at_css("[data-controller='input-formatter']")
+    group = build_native(reveal: true).at_css("[data-controller='input-formatter']")
 
     assert_not_nil group
     assert_css Nokogiri::HTML.fragment(group.to_html), "input[type='password']"
   end
 
   def test_reveal_button_is_inside_input_group
-    group = build_field(reveal: true).at_css("[data-controller='input-formatter']")
+    group = build_native(reveal: true).at_css("[data-controller='input-formatter']")
 
     assert_not_nil group
     assert_css Nokogiri::HTML.fragment(group.to_html), "button"
   end
 
+  # ── html option forwarding ─────────────────────────────────────────────────
+
+  def test_forwards_autocomplete_to_input
+    input = build_native(autocomplete: "current-password").at_css("input[type='password']")
+
+    assert_equal "current-password", input["autocomplete"]
+  end
+
+  def test_reveal_forwards_autocomplete_to_input
+    input = build_native(reveal: true, autocomplete: "current-password").at_css("input[type='password']")
+
+    assert_equal "current-password", input["autocomplete"]
+  end
+
+  def test_forwards_data_attributes_to_input
+    assert_equal "validator",
+                 build_native(data: { controller: "validator" }).at_css("input[type='password']")["data-controller"]
+  end
+
+  # ── f.field(as: :password) — label + input + hint + error ────────────────
+
+  def test_renders_label
+    assert_css build_field, "label[for='sign_in_form_password']"
+  end
+
   def test_reveal_still_renders_label
     assert_css build_field(reveal: true), "label[for='sign_in_form_password']"
   end
-
-  # ── error state ───────────────────────────────────────────────────────────
 
   def test_renders_error_message
     @form.errors.add(:password, "is too short")
@@ -109,8 +137,6 @@ class PasswordTest < ActionView::TestCase
     assert_equal "true", build_field(reveal: true).at_css("input[type='password']")["aria-invalid"]
   end
 
-  # ── field options ─────────────────────────────────────────────────────────
-
   def test_required_renders_required_attribute
     assert_equal "required", build_field(required: true).at_css("input[type='password']")["required"]
   end
@@ -123,8 +149,6 @@ class PasswordTest < ActionView::TestCase
     assert_includes build_field(label: "Secret").text, "Secret"
   end
 
-  # ── hint ──────────────────────────────────────────────────────────────────
-
   def test_renders_hint
     assert_css build_field(hint: "Min 8 characters"), "#sign_in_form_password_hint"
   end
@@ -133,27 +157,7 @@ class PasswordTest < ActionView::TestCase
     assert_css build_field(reveal: true, hint: "Min 8 characters"), "#sign_in_form_password_hint"
   end
 
-  # ── hide_label ────────────────────────────────────────────────────────────
-
   def test_hide_label_keeps_label_in_dom
     assert_css build_field(hide_label: true), "label[for='sign_in_form_password']"
-  end
-
-  # ── html option forwarding ─────────────────────────────────────────────────
-
-  def test_forwards_autocomplete_to_input
-    input = build_field(autocomplete: "current-password").at_css("input[type='password']")
-
-    assert_equal "current-password", input["autocomplete"]
-  end
-
-  def test_reveal_forwards_autocomplete_to_input
-    input = build_field(reveal: true, autocomplete: "current-password").at_css("input[type='password']")
-
-    assert_equal "current-password", input["autocomplete"]
-  end
-
-  def test_forwards_data_attributes_to_input
-    assert_equal "validator", build_field(data: { controller: "validator" }).at_css("input[type='password']")["data-controller"]
   end
 end
