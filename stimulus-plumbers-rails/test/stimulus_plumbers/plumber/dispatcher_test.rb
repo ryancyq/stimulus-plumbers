@@ -30,6 +30,10 @@ class PlumberDispatcherTest < Minitest::Test
       arg
     end
 
+    def with_block(arg)
+      block_given? ? yield(arg) : arg
+    end
+
     private
 
     def private_method
@@ -51,6 +55,10 @@ class PlumberDispatcherTest < Minitest::Test
 
     def render_with_options(label, style:)
       "#{label}[#{style}]"
+    end
+
+    def render_with_block(label)
+      block_given? ? yield(label) : "rendered:#{label}"
     end
   end
 
@@ -98,6 +106,20 @@ class PlumberDispatcherTest < Minitest::Test
     def test_raises_for_invalid_method_name
       assert_raises(ArgumentError) { Dispatcher::MethodCall.new(123) }
     end
+
+    def test_forwards_block_to_method
+      result = Dispatcher::MethodCall.new(:with_block, "hello") { |v| "wrapped:#{v}" }.call(target)
+
+      assert_equal "wrapped:hello", result
+    end
+
+    def test_method_receives_no_block_when_none_given
+      assert_equal "hello", Dispatcher::MethodCall.new(:with_block, "hello").call(target)
+    end
+
+    def test_block_reader_returns_nil_when_not_given
+      assert_nil Dispatcher::MethodCall.new(:no_args).block
+    end
   end
 
   class InstanceExecTest < PlumberDispatcherTest
@@ -144,6 +166,17 @@ class PlumberDispatcherTest < Minitest::Test
     def test_raises_for_non_proc
       assert_raises(ArgumentError) { Dispatcher::InstanceExec.new("not a proc") }
     end
+
+    # The proc is the callable; compose further blocks via positional args.
+    def test_secondary_callable_passed_as_positional_arg
+      wrapper = ->(v) { "wrapped:#{v}" }
+      result = Dispatcher::InstanceExec.new(
+        proc { |inner| inner.call(greeting) },
+        wrapper
+      ).call(target)
+
+      assert_equal "wrapped:hello", result
+    end
   end
 
   class KlassProxyTest < PlumberDispatcherTest
@@ -187,6 +220,26 @@ class PlumberDispatcherTest < Minitest::Test
 
     def test_raises_for_invalid_method_name
       assert_raises(ArgumentError) { Dispatcher::KlassProxy.new(FakeRenderer, 123) }
+    end
+
+    def test_forwards_block_to_method
+      proxy = Dispatcher::KlassProxy.new(
+        FakeRenderer, :render_with_block, "hello", init_args: ["tmpl"]
+      ) { |v| "wrapped:#{v}" }
+
+      assert_equal "wrapped:hello", proxy.call(target)
+    end
+
+    def test_method_receives_no_block_when_none_given
+      proxy = Dispatcher::KlassProxy.new(FakeRenderer, :render_with_block, "hello", init_args: ["tmpl"])
+
+      assert_equal "rendered:hello", proxy.call(target)
+    end
+
+    def test_block_reader_returns_nil_when_not_given
+      proxy = Dispatcher::KlassProxy.new(FakeRenderer, :render_item, "hello", init_args: ["tmpl"])
+
+      assert_nil proxy.block
     end
   end
 
@@ -241,6 +294,30 @@ class PlumberDispatcherTest < Minitest::Test
 
       assert_equal ["tmpl"], result.init_args
       assert_equal({ extra: "x" }, result.init_kwargs)
+    end
+
+    def test_threads_block_to_method_call
+      blk = proc { |v| "wrapped:#{v}" }
+      result = Dispatcher.build(:some_method, &blk)
+
+      assert_equal blk, result.block
+    end
+
+    def test_threads_block_to_klass_proxy
+      blk = proc { |v| "wrapped:#{v}" }
+      result = Dispatcher.build(FakeRenderer, method_name: :render_item, init_args: ["tmpl"], &blk)
+
+      assert_equal blk, result.block
+    end
+
+    def test_does_not_thread_block_to_instance_exec
+      # When callable is a Proc, it is the block — &block passed to build is ignored.
+      callable = proc { "the callable" }
+      ignored  = proc { "ignored" }
+      result = Dispatcher.build(callable, &ignored)
+
+      assert_instance_of Dispatcher::InstanceExec, result
+      assert_equal callable, result.block
     end
   end
 end

@@ -6,12 +6,13 @@ module StimulusPlumbers
       class MethodCall
         include CallableInspector
 
-        attr_reader :method_name, :args, :kwargs
+        attr_reader :method_name, :args, :kwargs, :block
 
-        def initialize(method_name, *args, **kwargs)
+        def initialize(method_name, *args, **kwargs, &block)
           @method_name = method_name
           @args        = args
           @kwargs      = kwargs
+          @block       = block
           validate!
         end
 
@@ -20,7 +21,7 @@ module StimulusPlumbers
 
           method_call = target.method(method_name)
           dispatched  = args_for(method_call)
-          accepts_kwargs?(method_call) ? method_call.call(*dispatched, **kwargs) : method_call.call(*dispatched)
+          accepts_kwargs?(method_call) ? method_call.call(*dispatched, **kwargs, &@block) : method_call.call(*dispatched, &@block)
         end
 
         private
