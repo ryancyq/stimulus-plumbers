@@ -11,7 +11,11 @@ module StimulusPlumbers
         private
 
         def render_section(title: nil, **kwargs, &block)
-          template.content_tag(:li, **kwargs) do
+          html_options = merge_html_options(
+            { classes: theme.resolve(:action_list_section).fetch(:classes, "") },
+            kwargs
+          )
+          template.content_tag(:li, **html_options) do
             ul_opts = {}
             ul_opts[:aria] = { label: title } if title.present?
             template.safe_join(

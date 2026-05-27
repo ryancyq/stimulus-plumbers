@@ -17,7 +17,7 @@ module StimulusPlumbers
           )
 
           template.content_tag(:li) do
-            render_button(content, url: url, external: external, variant: :outline, **html_options, &block)
+            render_button(content, url: url, external: external, variant: :ghost, **html_options, &block)
           end
         end
 

@@ -15,6 +15,13 @@ class TailwindThemeActionListTest < Minitest::Test
     assert_includes classes_for(:action_list), "py-(--sp-space-1)"
   end
 
+  def test_action_list_includes_section_divider
+    result = classes_for(:action_list)
+
+    assert_includes result, "divide-y"
+    assert_includes result, "divide-(--sp-color-border)"
+  end
+
   def test_action_list_item_returns_a_classes_string
     result = classes_for(:action_list_item)
 
@@ -39,5 +46,16 @@ class TailwindThemeActionListTest < Minitest::Test
 
     assert_includes result, "bg-(--sp-color-primary)/10"
     assert_includes result, "text-(--sp-color-primary)"
+  end
+
+  def test_action_list_section_returns_a_classes_string
+    result = classes_for(:action_list_section)
+
+    assert_instance_of String, result
+    assert_predicate result, :present?
+  end
+
+  def test_action_list_section_includes_padding
+    assert_includes classes_for(:action_list_section), "py-(--sp-space-2)"
   end
 end

@@ -23,10 +23,17 @@ class TailwindThemeCardTest < Minitest::Test
 
     assert_includes result, "border"
     assert_includes result, "bg-(--sp-color-bg)"
-    assert_includes result, "rounded-(--sp-radius-lg)"
+    assert_includes result, "rounded-(--sp-radius-md)"
   end
 
   def test_card_section_returns_a_classes_string_with_padding
     assert_includes classes_for(:card_section), "p-(--sp-space-6)"
+  end
+
+  def test_card_section_includes_divider_between_sections
+    result = classes_for(:card_section)
+
+    assert_includes result, "[&:not(:first-child)]:border-t"
+    assert_includes result, "[&:not(:first-child)]:border-(--sp-color-border)"
   end
 end

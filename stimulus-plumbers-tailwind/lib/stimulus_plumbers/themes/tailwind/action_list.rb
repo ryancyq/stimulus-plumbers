@@ -16,7 +16,11 @@ module StimulusPlumbers
         private
 
         def action_list_classes
-          { classes: klasses("py-(--sp-space-1)") }
+          { classes: klasses("py-(--sp-space-1) divide-y divide-(--sp-color-border)") }
+        end
+
+        def action_list_section_classes
+          { classes: klasses("py-(--sp-space-2)") }
         end
 
         def action_list_item_classes(active: false)

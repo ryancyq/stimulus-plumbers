@@ -162,8 +162,11 @@ class TailwindThemeFormTest < Minitest::Test
     result = classes_for(:form_checkbox)
 
     assert_includes result, "size-(--sp-control-size)"
-    assert_includes result, "rounded"
+    assert_includes result, "rounded-(--sp-radius-sm)"
+    assert_includes result, "border"
     assert_includes result, "border-(--sp-color-muted-fg)"
+    assert_includes result, "focus:ring-2"
+    assert_includes result, "focus:ring-(--sp-focus-ring-color)"
   end
 
   # :form_radio
@@ -172,7 +175,11 @@ class TailwindThemeFormTest < Minitest::Test
     result = classes_for(:form_radio)
 
     assert_includes result, "size-(--sp-control-size)"
+    assert_includes result, "border"
     assert_includes result, "border-(--sp-color-muted-fg)"
+    assert_includes result, "focus:ring-2"
+    assert_includes result, "focus:ring-(--sp-focus-ring-color)"
+    assert_includes result, "focus:outline-none"
   end
 
   # :form_combobox

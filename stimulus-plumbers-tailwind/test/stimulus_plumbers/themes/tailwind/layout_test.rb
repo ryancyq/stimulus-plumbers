@@ -29,7 +29,7 @@ class TailwindThemeLayoutTest < Minitest::Test
   def test_popover_includes_all_classes
     result = classes_for(:popover)
 
-    assert_includes result, "rounded-(--sp-radius-lg)"
+    assert_includes result, "rounded-(--sp-radius-md)"
     assert_includes result, "border"
     assert_includes result, "border-(--sp-color-border)"
     assert_includes result, "bg-(--sp-color-bg)"
