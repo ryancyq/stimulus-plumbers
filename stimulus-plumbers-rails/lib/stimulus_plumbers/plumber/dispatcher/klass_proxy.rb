@@ -4,20 +4,21 @@ module StimulusPlumbers
   module Plumber
     module Dispatcher
       class KlassProxy
-        attr_reader :klass, :method_name, :args, :kwargs, :init_args, :init_kwargs
+        attr_reader :klass, :method_name, :args, :kwargs, :init_args, :init_kwargs, :block
 
-        def initialize(klass, method_name, *args, init_args: [], init_kwargs: {}, **kwargs)
+        def initialize(klass, method_name, *args, init_args: [], init_kwargs: {}, **kwargs, &block)
           @klass       = klass
           @method_name = method_name
           @args        = args
           @kwargs      = kwargs
           @init_args   = init_args
           @init_kwargs = init_kwargs
+          @block       = block
           validate!
         end
 
         def call(_target)
-          klass.new(*init_args, **init_kwargs).public_send(method_name, *args, **kwargs)
+          klass.new(*init_args, **init_kwargs).public_send(method_name, *args, **kwargs, &@block)
         end
 
         private
