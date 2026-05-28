@@ -9,10 +9,17 @@ Rails.application.routes.draw do
     get :calendar_turbo
     get :combobox
     get :search
+    get :action_list
+    get :avatar
+    get :button
+    get :card
+    get :divider
+    get :popover
   end
 
   scope "/form", controller: "form" do
     get :sign_up
     get :field_error
+    get :fieldset
   end
 end

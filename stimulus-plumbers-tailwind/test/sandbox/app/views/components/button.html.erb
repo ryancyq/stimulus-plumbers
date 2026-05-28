@@ -1,0 +1,20 @@
+<h1>Button components</h1>
+
+<%# ── Variants ──────────────────────────────────────────────────────── %>
+<%= sp_button("Primary") %>
+<%= sp_button("Secondary", variant: :secondary) %>
+<%= sp_button("Danger", variant: :danger) %>
+
+<%# ── Link ───────────────────────────────────────────────────────────── %>
+<%= sp_button("Go to home", url: "/") %>
+<%= sp_button("External", url: "https://example.com", external: true) %>
+
+<%# ── Group ──────────────────────────────────────────────────────────── %>
+<%= sp_button_group do %>
+  <%= sp_button("Save") %>
+  <%= sp_button("Cancel", variant: :secondary) %>
+<% end %>
+
+<%# ── Disabled ─────────────────────────────────────────────────────────── %>
+<%= sp_button("Disabled", disabled: true) %>
+<%= sp_button("Disabled secondary", variant: :secondary, disabled: true) %>

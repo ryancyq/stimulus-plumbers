@@ -20,6 +20,18 @@ class ComponentsController < ApplicationController
 
   def search; end
 
+  def action_list; end
+
+  def avatar; end
+
+  def button; end
+
+  def card; end
+
+  def divider; end
+
+  def popover; end
+
   private
 
   def month_date_from_params(year_key, month_key)
