@@ -57,8 +57,9 @@ stimulus-plumbers-rails/
 │       │   ├── plumber_helper.rb         # sp_dom_id
 │       │   └── popover_helper.rb         # sp_popover
 │       ├── form/
-│       │   ├── builder.rb                # Form builder (ActionView::Helpers::FormBuilder subclass)
-│       │   ├── field.rb                  # Field wrapper: label, hint, error, aria
+│       │   ├── builder.rb                # Form builder: FIELD_RENDERER/COLLECTION_FIELD_RENDERER/CHOICE_RENDERER constants + f.field/collection_field/choice
+│       │   ├── base.rb                   # Form::Base — shared init, error?, described_by, render_hint/errors
+│       │   ├── field.rb                  # Form::Field < Base — label + input + hint + error; TYPES, COLLECTION_TYPES, hide_label
 │       │   └── fields/
 │       │       ├── error.rb
 │       │       ├── fieldset.rb
@@ -67,18 +68,20 @@ stimulus-plumbers-rails/
 │       │       ├── input_group.rb
 │       │       ├── label.rb
 │       │       └── inputs/
-│       │           ├── choice.rb         # check_box, radio_button, collection_check_boxes, collection_radio_buttons
-│       │           ├── datetime.rb       # date_field, time_field, datetime_local_field (combobox-backed)
-│       │           ├── file.rb           # file_field
-│       │           ├── password.rb       # password_field
-│       │           ├── search.rb         # search_field
-│       │           ├── select.rb         # select, collection_select, grouped_collection_select
+│       │           ├── checkbox.rb       # check_box, collection_check_boxes (native); render_check_box, render_collection_check_box
+│       │           ├── radio.rb          # radio_button, collection_radio_buttons (native); render_collection_radio_button
+│       │           ├── datetime.rb       # date_field, time_field (native); render_combobox_date, render_combobox_time
+│       │           ├── file.rb           # file_field (native); render_file_input
+│       │           ├── password.rb       # password_field + reveal: (native); render_password_input
+│       │           ├── search.rb         # search_field + clearable: (native); render_combobox_typeahead
+│       │           ├── select.rb         # select, collection_select (native); render_combobox_dropdown, render_collection/grouped_combobox_dropdown
 │       │           ├── select/
-│       │           │   ├── timezone.rb   # time_zone_select
-│       │           │   └── weekday.rb    # weekday_select (Rails 7.1+)
+│       │           │   ├── grouped.rb    # grouped_collection_select (native); build_grouped_choices
+│       │           │   ├── timezone.rb   # time_zone_select (native)
+│       │           │   └── weekday.rb    # weekday_select (native, Rails 7.1+)
 │       │           ├── submit.rb         # submit
-│       │           ├── text.rb           # text_field, email_field, url_field, tel_field, number_field, …
-│       │           └── text_area.rb      # text_area
+│       │           ├── text.rb           # text/email/url/tel/number/range/color/month/week/datetime_local_field (native + render_*_input per type)
+│       │           └── text_area.rb      # text_area (native); render_text_area_input
 │       ├── plumber/
 │       │   ├── base.rb                   # Plumber::Base (template accessor, theme helper)
 │       │   ├── dispatcher.rb             # Dispatcher for block-based component DSL
@@ -135,7 +138,44 @@ stimulus-plumbers-rails/
 - **Lint tests** using Rubocop (`rake rubocop`)
 - **Always run linting** after appraisal command
 
+## Form Builder Convention
+
+The form builder operates at two levels:
+
+### Level 1 — Native ActionView overrides (theme classes only)
+
+Standard Rails helpers (`email_field`, `text_area`, `check_box`, `select`, `date_field`, etc.) are overridden to apply theme CSS classes but render **no** label, hint, or error wrapper. Use them when controlling surrounding markup manually.
+
+```erb
+<%= f.email_field :email %>
+<%= f.select      :country, options %>
+<%= f.check_box   :agree %>
+```
+
+`password_field` additionally supports `reveal: true` at the input level (renders an input-formatter wrapper). `search_field` additionally supports `clearable: true`.
+
+### Level 2 — Full-field helpers (label + input + hint + error)
+
+Four builder methods provide the complete accessible field pattern:
+
+| Method | Renderer constant | `as:` values |
+| --- | --- | --- |
+| `f.field(attr, as:)` | `FIELD_RENDERER` | `:text`, `:email`, `:number`, `:url`, `:tel`, `:color`, `:month`, `:week`, `:range`, `:datetime_local`, `:text_area`, `:file`, `:password`, `:date`, `:time`, `:select`, `:search`, `:check_box` |
+| `f.collection_field(attr, as:, collection:, value_method:, text_method:)` | `COLLECTION_FIELD_RENDERER` | `:collection_select`, `:grouped_collection_select` |
+| `f.choice(attr, as:, collection:, value_method:, text_method:)` | `CHOICE_RENDERER` | `:radio`, `:check_box` |
+
+Field-chrome options (`label:`, `hint:`, `error:`, `required:`, `hide_label:`, `layout:`) are only meaningful on the full-field helpers — they are **not** processed by native overrides.
+
+### Private render methods
+
+Each module under `fields/inputs/` exposes private `render_*` methods that map 1:1 to renderer constant entries. These are called by the builder via `Plumber::Dispatcher` — never called directly. The naming convention is:
+
+- `render_<type>_input` for text-like fields (e.g. `render_email_input`)
+- `render_combobox_<type>` for combobox fields (e.g. `render_combobox_date`)
+- `render_collection_<type>` for collection variants
+
 ## Component Architecture
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
+> Key internal docs: `plumber.md` (Base / Renderer / HtmlOptions), `dispatcher.md` (Dispatcher strategies), `form_builder.md` (two-level field API).
 > Ensure examples provided are tested.
