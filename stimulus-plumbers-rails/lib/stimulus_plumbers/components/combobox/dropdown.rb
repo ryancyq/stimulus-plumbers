@@ -14,9 +14,14 @@ module StimulusPlumbers
         def self.default_opts
           {
             popover: {
-              tag:      :div,
+              tag:      :ul,
               haspopup: "listbox",
-              data:     { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION }
+              role:     "listbox",
+              data:     {
+                controller:               STIMULUS_CONTROLLER,
+                action:                   STIMULUS_ACTION,
+                combobox_dropdown_target: "listbox"
+              }
             }
           }
         end
@@ -27,20 +32,8 @@ module StimulusPlumbers
 
         private
 
-        def render_dropdown(options: [], value: nil, label: nil, labelledby: nil)
-          listbox_attrs = merge_html_options(
-            { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
-            { role: "listbox", data: { "#{STIMULUS_CONTROLLER}_target": "listbox" } }
-          )
-          if labelledby
-            listbox_attrs[:aria] = { labelledby: labelledby }
-          elsif label
-            listbox_attrs[:aria] = { label: label }
-          end
-
-          template.content_tag(:ul, **listbox_attrs) do
-            Options.new(template).render(options, value: value)
-          end
+        def render_dropdown(options: [], value: nil)
+          Options.new(template).render(options, value: value)
         end
       end
     end

@@ -41,7 +41,7 @@ class ComboboxPopoverTest < ActionView::TestCase
   end
 
   def test_aria_label_when_set
-    assert_css parse_html(render_popover(label: "Picker")), "[aria-label='Picker']"
+    assert_css parse_html(render_popover(aria: { label: "Picker" })), "[aria-label='Picker']"
   end
 
   def test_aria_label_omitted_when_nil
@@ -49,18 +49,11 @@ class ComboboxPopoverTest < ActionView::TestCase
   end
 
   def test_aria_labelledby_when_set
-    assert_css parse_html(render_popover(labelledby: "picker_label")), "[aria-labelledby='picker_label']"
+    assert_css parse_html(render_popover(aria: { labelledby: "picker_label" })), "[aria-labelledby='picker_label']"
   end
 
   def test_aria_labelledby_omitted_when_nil
     assert_no_css parse_html(render_popover), "[aria-labelledby]"
-  end
-
-  def test_labelledby_takes_precedence_over_label
-    doc = parse_html(render_popover(label: "Picker", labelledby: "picker_label"))
-
-    assert_css    doc, "[aria-labelledby='picker_label']"
-    assert_no_css doc, "[aria-label]"
   end
 
   # ── content ───────────────────────────────────────────────────────────────
@@ -74,10 +67,6 @@ class ComboboxPopoverTest < ActionView::TestCase
     render_popover { |id| received_id = id }
 
     assert_equal "combo_popover", received_id
-  end
-
-  def test_renders_content_kwarg
-    assert_includes parse_html(render_popover(content: "Static content")).text, "Static content"
   end
 
   # ── stimulus ──────────────────────────────────────────────────────────────

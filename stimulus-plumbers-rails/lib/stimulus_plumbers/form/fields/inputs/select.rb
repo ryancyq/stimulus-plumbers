@@ -40,7 +40,7 @@ module StimulusPlumbers
               html_opts, current_value, opts: opts, icon_leading: icon_leading, icon_trailing: icon_trailing
             )
             render_combobox(attribute, input_id: html_opts[:id], opts: combobox_opts, err: error) do
-              render_dropdown_component(all_choices, current_value, html_opts[:id], **kwargs)
+              render_dropdown_component(all_choices, current_value, **kwargs)
             end
           end
 
@@ -70,11 +70,10 @@ module StimulusPlumbers
             render_field(:select, attribute, field_opts, { choices: choices, **kwargs })
           end
 
-          def render_dropdown_component(choices, value, input_id, **kwargs)
+          def render_dropdown_component(choices, value, **kwargs)
             Components::Combobox::Dropdown.new(@template).render(
-              options:    choices,
-              value:      value,
-              labelledby: Field.label_id(input_id),
+              options: choices,
+              value:   value,
               **kwargs
             )
           end
@@ -83,6 +82,7 @@ module StimulusPlumbers
             Components::Combobox::Dropdown.default_opts.deep_merge(
               input:   { value: current_value },
               trigger: html_opts.merge({ icon_leading: icon_leading, icon_trailing: icon_trailing }.compact),
+              popover: { aria: { labelledby: Field.label_id(html_opts[:id]) } },
               **opts
             )
           end

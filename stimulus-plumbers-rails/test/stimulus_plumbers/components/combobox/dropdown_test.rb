@@ -7,16 +7,6 @@ class ComboboxDropdownTest < ActionView::TestCase
     StimulusPlumbers::Components::Combobox::Dropdown.new(self).render(**opts)
   end
 
-  # ── structure ─────────────────────────────────────────────────────────────
-
-  def test_renders_ul_element
-    assert_css parse_html(render_dropdown), "ul"
-  end
-
-  def test_role_is_listbox
-    assert_css parse_html(render_dropdown), "ul[role='listbox']"
-  end
-
   # ── options ───────────────────────────────────────────────────────────────
 
   def test_renders_options
@@ -33,34 +23,21 @@ class ComboboxDropdownTest < ActionView::TestCase
     assert_css doc, "li[data-value='us'][aria-selected='false']"
   end
 
-  # ── aria ──────────────────────────────────────────────────────────────────
-
-  def test_aria_label_when_set
-    assert_css parse_html(render_dropdown(label: "Choose country")), "ul[aria-label='Choose country']"
+  def test_renders_nothing_when_no_options
+    assert_empty render_dropdown.strip
   end
 
-  def test_aria_label_omitted_when_nil
-    assert_no_css parse_html(render_dropdown), "ul[aria-label]"
+  # ── default_opts ──────────────────────────────────────────────────────────
+
+  def test_default_opts_panel_tag_is_ul
+    assert_equal :ul, StimulusPlumbers::Components::Combobox::Dropdown.default_opts.dig(:popover, :tag)
   end
 
-  def test_aria_labelledby_when_set
-    assert_css parse_html(render_dropdown(labelledby: "country_label")), "ul[aria-labelledby='country_label']"
+  def test_default_opts_panel_role_is_listbox
+    assert_equal "listbox", StimulusPlumbers::Components::Combobox::Dropdown.default_opts.dig(:popover, :role)
   end
 
-  def test_aria_labelledby_omitted_when_nil
-    assert_no_css parse_html(render_dropdown), "ul[aria-labelledby]"
-  end
-
-  def test_labelledby_takes_precedence_over_label
-    doc = parse_html(render_dropdown(label: "Choose country", labelledby: "country_label"))
-
-    assert_css    doc, "ul[aria-labelledby='country_label']"
-    assert_no_css doc, "ul[aria-label]"
-  end
-
-  # ── stimulus ──────────────────────────────────────────────────────────────
-
-  def test_stimulus_listbox_target
-    assert_css parse_html(render_dropdown), "[data-combobox-dropdown-target~='listbox']"
+  def test_default_opts_panel_haspopup_is_listbox
+    assert_equal "listbox", StimulusPlumbers::Components::Combobox::Dropdown.default_opts.dig(:popover, :haspopup)
   end
 end

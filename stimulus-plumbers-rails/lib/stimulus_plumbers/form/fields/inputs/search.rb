@@ -31,7 +31,10 @@ module StimulusPlumbers
             combobox_opts = Components::Combobox::Typeahead.default_opts.deep_merge(
               input:   { value: current_value },
               trigger: { data: clearable ? { input_clearable_target: "input" } : {}, aria: html_opts[:aria] },
-              popover: { data: url ? { combobox_dropdown_url_value: url } : {} },
+              popover: {
+                data: url ? { combobox_dropdown_url_value: url } : {},
+                aria: { labelledby: Field.label_id(input_id) }
+              },
               **opts
             )
             combobox_html = render_combobox(
@@ -44,7 +47,7 @@ module StimulusPlumbers
                 action:                                  "input->input-combobox#onInput"
               },
               **kwargs
-            ) { Components::Combobox::Typeahead.new(@template).render(options: choices, value: current_value, labelledby: Field.label_id(input_id)) }
+            ) { Components::Combobox::Typeahead.new(@template).render(options: choices, value: current_value) }
 
             return combobox_html unless clearable
 

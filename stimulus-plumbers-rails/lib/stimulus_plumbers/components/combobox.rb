@@ -17,21 +17,46 @@ module StimulusPlumbers
 
       private
 
+      # rubocop:disable Metrics/AbcSize
       def render_combobox(trigger: {}, input: {}, popover: {}, **kwargs, &block)
+        panel_id     = self.class.popover_id_for(trigger[:id])
         html_options = merge_html_options(
-          { classes: theme.resolve(:combobox).fetch(:classes, ""), data: build_stimulus_data(input[:value]) },
+          { classes: theme.resolve(:combobox).fetch(:classes, ""),
+            data:    build_stimulus_data(input[:value])
+},
           kwargs
         )
+        haspopup = popover.delete(:haspopup) { popover[:role] || "dialog" }
 
         template.content_tag(:div, **html_options) do
-          template.safe_join(
-            [
-              combobox_trigger(trigger, popover),
-              hidden_input(input),
-              combobox_popover(trigger, popover, &block)
-            ]
-          )
+          Components::Popover.new(template).build(panel_id: panel_id) do |p|
+            p.trigger(haspopup: haspopup) { |attrs| build_combobox_trigger(attrs, trigger, input) }
+            p.panel(**build_panel_options(popover), &block)
+          end
         end
+      end
+      # rubocop:enable Metrics/AbcSize
+
+      def build_combobox_trigger(attrs, trigger, input)
+        template.safe_join(
+          [
+            Combobox::Trigger.new(template).render(
+              stimulus_controller: STIMULUS_CONTROLLER,
+              popover_id:          attrs[:panel_id],
+              haspopup:            attrs[:aria][:haspopup],
+              **trigger
+            ),
+            hidden_input(input)
+          ]
+        )
+      end
+
+      def build_panel_options(popover)
+        merge_html_options(
+          { classes: theme.resolve(:combobox_popover).fetch(:classes, "") },
+          { data:    { "#{STIMULUS_CONTROLLER}_target": "popover" } },
+          popover
+        )
       end
 
       def build_stimulus_data(initial_value)
@@ -41,24 +66,6 @@ module StimulusPlumbers
         }.tap do |data|
           data[:input_combobox_value_value] = initial_value if initial_value.present?
         end
-      end
-
-      def combobox_trigger(trigger, popover)
-        Combobox::Trigger.new(template).render(
-          stimulus_controller: STIMULUS_CONTROLLER,
-          popover_id:          self.class.popover_id_for(trigger[:id]),
-          haspopup:            popover.delete(:haspopup) { popover[:role] || "dialog" },
-          **trigger
-        )
-      end
-
-      def combobox_popover(trigger, popover, &block)
-        Combobox::Popover.new(template).render(
-          stimulus_controller: STIMULUS_CONTROLLER,
-          id:                  self.class.popover_id_for(trigger[:id]),
-          **popover,
-          &block
-        )
       end
 
       def hidden_input(input)

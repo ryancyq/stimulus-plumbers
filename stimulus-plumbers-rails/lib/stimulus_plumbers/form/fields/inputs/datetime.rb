@@ -26,7 +26,7 @@ module StimulusPlumbers
             combobox_opts = Components::Combobox::Date.default_opts.deep_merge(
               input:   { value: current_value, data: { combobox_date_date_value: current_value } },
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
-              popover: { labelledby: Field.label_id(html_opts[:id]) },
+              popover: { aria: { labelledby: Field.label_id(html_opts[:id]) } },
               **opts
             )
             render_combobox(
@@ -56,7 +56,7 @@ module StimulusPlumbers
             combobox_opts = Components::Combobox::Time.default_opts.deep_merge(
               input:   { value: current_value },
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
-              popover: { labelledby: Field.label_id(html_opts[:id]) },
+              popover: { aria: { labelledby: Field.label_id(html_opts[:id]) } },
               **opts
             )
             render_combobox(

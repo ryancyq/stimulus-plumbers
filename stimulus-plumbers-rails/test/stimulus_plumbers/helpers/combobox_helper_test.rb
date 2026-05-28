@@ -346,11 +346,8 @@ class ComboboxHelperTest < ActionView::TestCase
       assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
     end
 
-    def test_popover_is_empty_by_default
-      popover = parse_html(sp_combobox_typeahead).at_css("[role='listbox']")
-
-      assert_not_nil popover
-      assert_equal "", popover.inner_html.strip
+    def test_popover_has_no_options_by_default
+      assert_no_css parse_html(sp_combobox_typeahead), "[role='listbox'] li[role='option']"
     end
 
     def test_renders_loading_indicator

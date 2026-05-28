@@ -27,10 +27,11 @@ module StimulusPlumbers
         id      = sp_dom_id
         opts    = Components::Combobox::Dropdown.default_opts.deep_merge(
           input:   { value: value },
-          trigger: { id: id, aria: ({ label: label } if label), icon_trailing: "chevron-down" }.compact
+          trigger: { id: id, aria: ({ label: label } if label), icon_trailing: "chevron-down" }.compact,
+          popover: { aria: ({ label: label } if label) }.compact
         )
         Components::Combobox.new(self).render(**opts, **kwargs) do
-          Components::Combobox::Dropdown.new(self).render(options: options, value: value, label: label)
+          Components::Combobox::Dropdown.new(self).render(options: options, value: value)
         end
       end
 
@@ -43,7 +44,10 @@ module StimulusPlumbers
         opts    = Components::Combobox::Typeahead.default_opts.deep_merge(
           input:   { value: value },
           trigger: { id: id, aria: ({ label: label } if label) }.compact,
-          popover: { data: url ? { combobox_dropdown_url_value: url } : {} }
+          popover: {
+            data: url ? { combobox_dropdown_url_value: url } : {},
+            **(label ? { aria: { label: label } } : {})
+          }
         )
         Components::Combobox.new(self).render(
           **opts,
@@ -53,7 +57,7 @@ module StimulusPlumbers
           },
           **kwargs
         ) do
-          Components::Combobox::Typeahead.new(self).render(options: options, value: value, label: label)
+          Components::Combobox::Typeahead.new(self).render(options: options, value: value)
         end
       end
 

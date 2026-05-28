@@ -10,10 +10,10 @@ module StimulusPlumbers
           )
         end
 
-        def render(options: [], value: nil, label: nil, labelledby: nil)
+        def render(options: [], value: nil)
           template.safe_join(
             [
-              Dropdown.new(template).render(options: options, value: value, label: label, labelledby: labelledby),
+              Options.new(template).render(options, value: value),
               loading,
               empty
             ]
@@ -24,7 +24,7 @@ module StimulusPlumbers
 
         def loading
           template.content_tag(
-            :div,
+            :li,
             **merge_html_options(
               { classes: theme.resolve(:combobox_typeahead_loading).fetch(:classes, "") },
               { hidden: "", aria: { live: "polite" }, data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
@@ -36,7 +36,7 @@ module StimulusPlumbers
 
         def empty
           template.content_tag(
-            :div,
+            :li,
             **merge_html_options(
               { classes: theme.resolve(:combobox_typeahead_empty).fetch(:classes, "") },
               { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "empty" } }

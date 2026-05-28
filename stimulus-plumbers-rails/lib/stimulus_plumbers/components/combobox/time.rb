@@ -8,7 +8,7 @@ module StimulusPlumbers
 
         def self.default_opts
           {
-            popover: { label: "Picker", role: "dialog", tag: :div }
+            popover: { aria: { label: "Picker" }, role: "dialog", tag: :div }
           }
         end
 

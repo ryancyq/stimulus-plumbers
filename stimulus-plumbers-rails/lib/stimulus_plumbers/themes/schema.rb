@@ -116,6 +116,8 @@ module StimulusPlumbers
         divider:           {}.freeze,
         divider_separator: {}.freeze,
         divider_label:     {}.freeze,
+        popover_wrapper:   {}.freeze,
+        popover_trigger:   {}.freeze,
         popover:           {}.freeze
       }.freeze
     end

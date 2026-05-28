@@ -10,7 +10,7 @@ module StimulusPlumbers
         def self.default_opts
           {
             input:   { data: { combobox_date_date_value: nil } },
-            popover: { label: "Picker", role: "dialog", tag: :div }
+            popover: { aria: { label: "Picker" }, role: "dialog", tag: :div }
           }
         end
 
