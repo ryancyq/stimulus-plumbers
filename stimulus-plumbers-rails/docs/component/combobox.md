@@ -45,12 +45,12 @@ Read-only combobox with a static listbox popover.
 [["Unavailable",   "x",  { disabled: true }], ...]
 ```
 
-| Option           | Description                       |
-| ---------------- | --------------------------------- |
-| `options`        | Option rows (see formats above)   |
-| `value`          | Pre-selected value                |
-| `label`          | `aria-label` on the trigger input |
-| `**html_options` | Forwarded to the wrapper `div`    |
+| Option           | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `options`        | Option rows (see formats above)                           |
+| `value`          | Pre-selected value                                        |
+| `label`          | `aria-label` on the trigger input and the listbox panel   |
+| `**html_options` | Forwarded to the wrapper `div`                            |
 
 ---
 
@@ -71,7 +71,7 @@ Editable trigger that filters options as the user types. Supports client-side fu
 | `options`        | Initial options rendered on page load (same formats as dropdown) |
 | `value`          | Pre-selected value                                               |
 | `url`            | URL for server-side filtering                                    |
-| `label`          | `aria-label` on the trigger input                                |
+| `label`          | `aria-label` on the trigger input and the listbox panel          |
 | `**html_options` | Forwarded to the wrapper `div`                                   |
 
 ---
@@ -156,21 +156,30 @@ All variants share the same wrapper pattern:
 </div>
 ```
 
-**dropdown / typeahead** — a `<div>` popover wrapping a `<ul role="listbox">`:
+**dropdown / typeahead** — the popover element IS the `<ul role="listbox">`:
 
 ```html
-<div
+<ul
   id="[id]_popover"
   hidden
+  role="listbox"
+  aria-label="[label]"
   data-input-combobox-target="popover"
   data-controller="combobox-dropdown"
   data-action="click->combobox-dropdown#select keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect"
+  data-combobox-dropdown-target="listbox"
 >
-  <ul role="listbox" data-combobox-dropdown-target="listbox">
-    <li role="option" data-value="us" aria-selected="false">United States</li>
-    <li role="option" data-value="ca" aria-selected="false">Canada</li>
-  </ul>
-</div>
+  <li role="option" data-value="us" aria-selected="false">United States</li>
+  <li role="option" data-value="ca" aria-selected="false">Canada</li>
+</ul>
 ```
 
-For typeahead, `loading` and `empty` state elements are appended alongside the `<ul>` inside the popover `<div>`.
+For typeahead, `loading` and `empty` state elements are rendered as `<li>` siblings inside the same `<ul>`:
+
+```html
+<ul id="[id]_popover" hidden role="listbox" ...>
+  <li role="option" ...>Paris</li>
+  <li hidden aria-live="polite" data-combobox-dropdown-target="loading"><!-- spinner --></li>
+  <li hidden role="status" data-combobox-dropdown-target="empty">No results</li>
+</ul>
+```
