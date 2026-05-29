@@ -12,8 +12,8 @@ module StimulusPlumbers
 
           private
 
-          def render_text_area_input(attribute, html_opts, opts, error, **_)
-            html_options = merge_html_options(opts, html_opts, field_theme(:form_textarea, error: error))
+          def render_text_area_input(attribute, html_opts, opts, error, **kwargs)
+            html_options = merge_html_options(opts, html_opts, kwargs, field_theme(:form_textarea, error: error))
             @template.text_area(@object_name, attribute, objectify_options(html_options))
           end
         end

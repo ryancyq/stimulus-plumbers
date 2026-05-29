@@ -4,7 +4,6 @@ require "action_view/version"
 
 require_relative "base"
 require_relative "field"
-require_relative "choice"
 require_relative "fields/fieldset"
 require_relative "fields/inputs/checkbox"
 require_relative "fields/inputs/combobox"
@@ -57,7 +56,8 @@ module StimulusPlumbers
         date:           :render_combobox_date,
         time:           :render_combobox_time,
         select:         :render_combobox_dropdown,
-        search:         :render_combobox_typeahead
+        search:         :render_combobox_typeahead,
+        check_box:      :render_check_box
       }.freeze
 
       COLLECTION_FIELD_RENDERER = {
@@ -65,11 +65,7 @@ module StimulusPlumbers
         grouped_collection_select: :render_grouped_collection_combobox_dropdown
       }.freeze
 
-      CHOICE_FIELD_RENDERER = {
-        check_box: :render_check_box
-      }.freeze
-
-      COLLECTION_CHOICE_RENDERER = {
+      CHOICE_RENDERER = {
         radio:     :render_collection_radio_button,
         check_box: :render_collection_check_box
       }.freeze
@@ -86,16 +82,10 @@ module StimulusPlumbers
         render_collection_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
       end
 
-      def choice(attribute, as:, **options)
-        field_opts = options.slice(*Choice::OPTIONS)
-        input_opts = options.except(*Choice::OPTIONS)
-        render_choice_field(as, attribute, field_opts, input_opts)
-      end
-
-      def collection_choice(attribute, as:, collection:, value_method:, text_method:, **options)
+      def choice(attribute, as:, collection:, value_method:, text_method:, **options)
         field_opts = options.slice(*Field::OPTIONS)
         input_opts = options.except(*Field::OPTIONS)
-        render_collection_choice_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
+        render_choice_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
       end
 
       private
@@ -133,22 +123,11 @@ module StimulusPlumbers
         ).call(self)
       end
 
-      def render_choice_field(as, attribute, field_opts, input_opts)
-        raise ArgumentError, "unknown choice field type: #{as.inspect}" unless CHOICE_FIELD_RENDERER.key?(as)
-
-        choice = Choice.new(@template, **field_opts)
-        choice.render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error, label_text|
-          Plumber::Dispatcher.build(
-            CHOICE_FIELD_RENDERER.fetch(as), attribute, html_opts, opts, error, label_text, **input_opts
-          ).call(self)
-        end
-      end
-
-      def render_collection_choice_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
-        raise ArgumentError, "unknown collection choice type: #{as.inspect}" unless COLLECTION_CHOICE_RENDERER.key?(as)
+      def render_choice_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
+        raise ArgumentError, "unknown choice type: #{as.inspect}" unless CHOICE_RENDERER.key?(as)
 
         Plumber::Dispatcher.build(
-          COLLECTION_CHOICE_RENDERER.fetch(as),
+          CHOICE_RENDERER.fetch(as),
           attribute,
           collection,
           value_method,

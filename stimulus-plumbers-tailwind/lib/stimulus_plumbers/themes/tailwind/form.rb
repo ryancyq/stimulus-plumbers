@@ -117,10 +117,6 @@ module StimulusPlumbers
           { classes: klasses(*COLLECTION_ITEM_LABEL) }
         end
 
-        def form_choice_item_description_classes
-          { classes: klasses(*CHOICE_ITEM_DESCRIPTION) }
-        end
-
         def form_button_reveal_classes
           { classes: klasses(*BUTTON_REVEAL) }
         end

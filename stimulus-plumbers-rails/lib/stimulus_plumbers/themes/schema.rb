@@ -70,37 +70,36 @@ module StimulusPlumbers
       }.freeze
 
       FORM = {
-        form_group:           {
+        form_group:            {
           layout: { default: :stacked, validate: Form::Ranges::LAYOUT },
           error:  { default: false,    validate: Ranges::BOOL }
         }.freeze,
-        form_label:           {
+        form_label:            {
           required: { default: false, validate: Ranges::BOOL },
           hidden:   { default: false, validate: Ranges::BOOL }
         }.freeze,
-        form_required_mark:   {}.freeze,
-        form_details:         {}.freeze,
-        form_error:           {}.freeze,
-        form_input:           { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_textarea:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_file:            { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_select:          { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_checkbox:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_radio:           { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_combobox:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_input_reveal:    { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_input_clearable: {}.freeze,
-        form_button_reveal:   {}.freeze,
-        form_button_clear:        {}.freeze,
-        form_collection_label:        {}.freeze,
-        form_choice_item_description: {}.freeze,
-        form_field:               {
+        form_required_mark:    {}.freeze,
+        form_details:          {}.freeze,
+        form_error:            {}.freeze,
+        form_input:            { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_textarea:         { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_file:             { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_select:           { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_checkbox:         { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_radio:            { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_combobox:         { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_input_reveal:     { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_input_clearable:  {}.freeze,
+        form_button_reveal:    {}.freeze,
+        form_button_clear:     {}.freeze,
+        form_collection_label: {}.freeze,
+        form_field:            {
           as: { validate: Form::Ranges::FIELD_TYPE }
         }.freeze,
-        form_collection_field:    {
+        form_collection_field: {
           as: { validate: Form::Ranges::COLLECTION_FIELD_TYPE }
         }.freeze,
-        form_submit:              {
+        form_submit:           {
           variant: { default: :default, validate: Form::Ranges::SUBMIT_VARIANT }
         }.freeze
       }.freeze

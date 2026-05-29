@@ -65,12 +65,6 @@ class BuilderTest < ActionView::TestCase
     end
   end
 
-  def test_field_raises_for_choice_type
-    assert_raises ArgumentError do
-      build_field(:field, :newsletter, as: :check_box)
-    end
-  end
-
   def test_field_renders_hint
     doc = build_field(:field, :email, as: :text, hint: "Enter your email")
 
@@ -90,37 +84,27 @@ class BuilderTest < ActionView::TestCase
     assert_css doc, "label[for='sign_in_form_email']"
   end
 
-  # ── f.choice ──────────────────────────────────────────────────────────────
+  # ── f.field (check_box) ───────────────────────────────────────────────────
 
-  def test_choice_check_box_renders_label_wrapping_input
-    doc = build_field(:choice, :newsletter, as: :check_box)
+  def test_field_check_box_renders_explicit_label_and_input
+    doc = build_field(:field, :newsletter, as: :check_box)
 
-    assert_css doc, "label input[type='checkbox']"
-  end
-
-  def test_choice_check_box_renders_checkbox
-    doc = build_field(:choice, :newsletter, as: :check_box)
-
+    assert_css doc, "label[for='sign_in_form_newsletter']"
     assert_css doc, "input[type='checkbox'][name='sign_in_form[newsletter]']"
+    assert_no_css doc, "label input[type='checkbox']"
   end
 
-  def test_choice_renders_hint
-    doc = build_field(:choice, :newsletter, as: :check_box, hint: "Optional")
+  def test_field_check_box_renders_hint
+    doc = build_field(:field, :newsletter, as: :check_box, hint: "Optional")
 
     assert_includes doc.text, "Optional"
   end
 
-  def test_choice_renders_error_override
-    doc = build_field(:choice, :newsletter, as: :check_box, error: "Must be accepted")
+  def test_field_check_box_renders_error_override
+    doc = build_field(:field, :newsletter, as: :check_box, error: "Must be accepted")
 
     assert_css doc, "p[role='alert']"
     assert_includes doc.text, "Must be accepted"
-  end
-
-  def test_choice_raises_for_unknown_type
-    assert_raises ArgumentError do
-      build_field(:choice, :newsletter, as: :unknown_type)
-    end
   end
 
   # ── f.collection_field ────────────────────────────────────────────────────
@@ -137,12 +121,12 @@ class BuilderTest < ActionView::TestCase
     end
   end
 
-  # ── f.collection_choice ───────────────────────────────────────────────────
+  # ── f.choice ──────────────────────────────────────────────────────────────
 
-  def test_collection_choice_radio_renders_fieldset_with_options
+  def test_choice_radio_renders_fieldset_with_options
     collection = [%w[admin Admin], %w[user User]]
     doc = build_field(
-      :collection_choice,
+      :choice,
       :role,
       as:           :radio,
       label:        "Role",
@@ -157,10 +141,10 @@ class BuilderTest < ActionView::TestCase
     assert_css doc, "input[type='radio'][value='user']"
   end
 
-  def test_collection_choice_check_box_renders_fieldset_with_options
+  def test_choice_check_box_renders_fieldset_with_options
     collection = [%w[ruby Ruby], %w[rails Rails]]
     doc = build_field(
-      :collection_choice,
+      :choice,
       :interests,
       as:           :check_box,
       label:        "Interests",
@@ -174,9 +158,9 @@ class BuilderTest < ActionView::TestCase
     assert_css doc, "input[type='checkbox'][value='rails']"
   end
 
-  def test_collection_choice_raises_for_unknown_type
+  def test_choice_raises_for_unknown_type
     assert_raises ArgumentError do
-      build_field(:collection_choice, :role, as: :unknown_type, collection: [], value_method: :id, text_method: :name)
+      build_field(:choice, :role, as: :unknown_type, collection: [], value_method: :id, text_method: :name)
     end
   end
 

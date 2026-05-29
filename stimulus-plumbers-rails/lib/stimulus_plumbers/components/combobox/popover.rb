@@ -31,9 +31,9 @@ module StimulusPlumbers
           end
 
           html_options = merge_html_options(
-            { id: id, hidden: "",
-classes: [theme.resolve(:popover).fetch(:classes, ""), theme.resolve(:combobox_popover).fetch(:classes, "")].join(" ")
-},
+            { id: id, hidden: "" },
+            { classes: theme.resolve(:popover).fetch(:classes, "") },
+            { classes: theme.resolve(:combobox_popover).fetch(:classes, "") },
             { data: { "#{stimulus_controller}_target": "popover" } },
             { data: data },
             opts,

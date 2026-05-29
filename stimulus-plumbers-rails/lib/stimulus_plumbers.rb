@@ -56,7 +56,6 @@ require_relative "stimulus_plumbers/components/combobox/time/drum"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field"
-require_relative "stimulus_plumbers/form/fields/choice"
 require_relative "stimulus_plumbers/form/fields/error"
 require_relative "stimulus_plumbers/form/fields/group"
 require_relative "stimulus_plumbers/form/fields/hint"

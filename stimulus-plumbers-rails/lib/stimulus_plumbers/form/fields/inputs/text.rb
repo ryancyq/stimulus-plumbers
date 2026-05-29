@@ -19,7 +19,7 @@ module StimulusPlumbers
           }.freeze
 
           # Public ActionView overrides — native, just adds theme classes
-          TEXT_FIELD_METHODS.each do |_as_key, template_method|
+          TEXT_FIELD_METHODS.each_value do |template_method|
             define_method(template_method) do |attribute, options = {}|
               html_options = merge_html_options(options, field_theme(:form_input))
               super(attribute, html_options)
@@ -30,13 +30,13 @@ module StimulusPlumbers
 
           # Private render methods for f.field dispatch
           TEXT_FIELD_METHODS.each do |as_key, template_method|
-            define_method(:"render_#{as_key}_input") do |attribute, html_opts, opts, error, **_|
-              render_native_text(attribute, html_opts, opts, error, template_method)
+            define_method(:"render_#{as_key}_input") do |attribute, html_opts, opts, error, **kwargs|
+              render_text(attribute, html_opts, opts, error, template_method, **kwargs)
             end
           end
 
-          def render_native_text(attribute, html_opts, opts, error, template_method)
-            html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error))
+          def render_text(attribute, html_opts, opts, error, template_method, **kwargs)
+            html_options = merge_html_options(opts, html_opts, kwargs, field_theme(:form_input, error: error))
             @template.public_send(template_method, @object_name, attribute, objectify_options(html_options))
           end
         end

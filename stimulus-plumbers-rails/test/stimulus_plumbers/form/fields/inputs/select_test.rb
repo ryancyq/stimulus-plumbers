@@ -47,17 +47,30 @@ class SelectTest < ActionView::TestCase
 
   def build_collection_combobox(attribute, collection, value_method, text_method, **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
-      f.collection_field(attribute, as: :collection_select,
-                         collection: collection, value_method: value_method, text_method: text_method, **opts)
+      f.collection_field(
+        attribute,
+        as:           :collection_select,
+        collection:   collection,
+        value_method: value_method,
+        text_method:  text_method,
+        **opts
+      )
     end
     parse_html(html)
   end
 
   def build_grouped_combobox(attribute, collection, **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
-      f.collection_field(attribute, as: :grouped_collection_select,
-                         collection: collection, value_method: :code, text_method: :name,
-                         group_method: :countries, group_label_method: :continent_name, **opts)
+      f.collection_field(
+        attribute,
+        as:                 :grouped_collection_select,
+        collection:         collection,
+        value_method:       :code,
+        text_method:        :name,
+        group_method:       :countries,
+        group_label_method: :continent_name,
+        **opts
+      )
     end
     parse_html(html)
   end

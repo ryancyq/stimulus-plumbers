@@ -12,8 +12,8 @@ module StimulusPlumbers
 
           private
 
-          def render_file_input(attribute, html_opts, opts, error, **_)
-            html_options = merge_html_options(opts, html_opts, field_theme(:form_file, error: error))
+          def render_file_input(attribute, html_opts, opts, error, **kwargs)
+            html_options = merge_html_options(opts, html_opts, kwargs, field_theme(:form_file, error: error))
             @template.file_field(@object_name, attribute, objectify_options(html_options))
           end
         end

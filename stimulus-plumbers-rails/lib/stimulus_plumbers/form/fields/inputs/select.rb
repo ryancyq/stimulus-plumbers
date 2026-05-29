@@ -6,7 +6,7 @@ module StimulusPlumbers
   module Form
     module Fields
       module Inputs
-        module Select # rubocop:disable Metrics/ModuleLength
+        module Select
           include Combobox
 
           def select(attribute, choices = nil, options = {}, html_options = {})
@@ -21,44 +21,69 @@ module StimulusPlumbers
 
           private
 
-          # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-          def render_combobox_dropdown(attribute, html_opts, _opts, error,
-                                        icon_leading: nil, icon_trailing: "chevron-down",
-                                        choices: [], include_blank: nil, prompt: nil, selected: nil, **_)
+          def render_combobox_dropdown(
+            attribute,
+            html_opts,
+            opts,
+            error,
+            icon_leading: nil,
+            icon_trailing: "chevron-down",
+            choices: [],
+            include_blank: nil,
+            prompt: nil,
+            selected: nil,
+            **kwargs
+          )
             current_value = selected || (object.respond_to?(attribute) ? object.public_send(attribute) : nil)
             all_choices   = build_select_dropdown_choices(Array(choices), include_blank: include_blank, prompt: prompt)
             combobox_opts = build_select_dropdown_opts(
-              html_opts, current_value, icon_leading: icon_leading, icon_trailing: icon_trailing
+              html_opts, current_value, opts: opts, icon_leading: icon_leading, icon_trailing: icon_trailing
             )
             render_combobox(attribute, input_id: html_opts[:id], opts: combobox_opts, err: error) do
-              render_dropdown_component(all_choices, current_value, html_opts[:id])
+              render_dropdown_component(all_choices, current_value, html_opts[:id], **kwargs)
             end
           end
-          # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-          def render_collection_combobox_dropdown(attribute, collection, value_method, text_method, field_opts, **input_opts)
+          def render_collection_combobox_dropdown(
+            attribute,
+            collection,
+            value_method,
+            text_method,
+            field_opts,
+            **kwargs
+          )
             choices = collection.map { |item| [item.public_send(text_method), item.public_send(value_method)] }
-            render_field(:select, attribute, field_opts, input_opts.merge(choices: choices))
+            render_field(:select, attribute, field_opts, { choices: choices, **kwargs })
           end
 
-          def render_grouped_collection_combobox_dropdown(attribute, collection, value_method, text_method, field_opts,
-                                                           group_method:, group_label_method:, **input_opts)
+          def render_grouped_collection_combobox_dropdown(
+            attribute,
+            collection,
+            value_method,
+            text_method,
+            field_opts,
+            group_method:,
+            group_label_method:,
+            **kwargs
+          )
             choices = build_grouped_choices(collection, group_label_method, group_method, value_method, text_method)
-            render_field(:select, attribute, field_opts, input_opts.merge(choices: choices))
+            render_field(:select, attribute, field_opts, { choices: choices, **kwargs })
           end
 
-          def render_dropdown_component(choices, value, input_id)
+          def render_dropdown_component(choices, value, input_id, **kwargs)
             Components::Combobox::Dropdown.new(@template).render(
               options:    choices,
               value:      value,
-              labelledby: Field.label_id(input_id)
+              labelledby: Field.label_id(input_id),
+              **kwargs
             )
           end
 
-          def build_select_dropdown_opts(html_opts, current_value, icon_leading:, icon_trailing:)
+          def build_select_dropdown_opts(html_opts, current_value, opts:, icon_leading:, icon_trailing:)
             Components::Combobox::Dropdown.default_opts.deep_merge(
               input:   { value: current_value },
-              trigger: html_opts.merge({ icon_leading: icon_leading, icon_trailing: icon_trailing }.compact)
+              trigger: html_opts.merge({ icon_leading: icon_leading, icon_trailing: icon_trailing }.compact),
+              **opts
             )
           end
 

@@ -5,7 +5,7 @@ module StimulusPlumbers
     class Base
       OPTIONS = %i[label hint error required layout].freeze
 
-      attr_reader *OPTIONS
+      attr_reader(*OPTIONS)
 
       def initialize(
         template,
