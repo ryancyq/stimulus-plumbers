@@ -69,13 +69,13 @@ HTML attributes. The panel is hidden by default and revealed by the Stimulus con
 <% end %>
 ```
 
-`p.build_panel` — the **caller** renders the element; the block receives
-`(panel_id, panel_attrs)` to spread onto its own root. Use it when the panel needs a
+`p.build_panel` — the **caller** renders the element; the block receives `panel_attrs`
+(including the panel `id`) to spread onto its own root. Use it when the panel needs a
 structure of its own (e.g. combobox typeahead: a wrapper around a listbox plus sibling
 status regions).
 
 ```ruby
-p.build_panel(classes: "...") do |panel_id, panel_attrs|
+p.build_panel(classes: "...") do |panel_attrs|
   content_tag(:div, **panel_attrs) { safe_join([listbox_html, status_html]) }
 end
 ```
@@ -94,7 +94,7 @@ end
 ```
 
 `Popover::Panel` exposes the same pair: `#render` (builds the wired element) and `#build`
-(yields `panel_id` + attrs for the caller to wire).
+(yields `panel_attrs` for the caller to wire).
 
 ---
 

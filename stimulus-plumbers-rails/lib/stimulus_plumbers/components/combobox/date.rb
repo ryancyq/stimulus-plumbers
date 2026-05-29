@@ -24,8 +24,8 @@ module StimulusPlumbers
 
         private
 
-        def render_date(panel_id: nil, panel_attrs: {}, value: nil, label: "Picker", labelledby: nil)
-          calendar_id = self.class.calendar_id_for(panel_id)
+        def render_date(panel_attrs: {}, value: nil, label: "Picker", labelledby: nil)
+          calendar_id = self.class.calendar_id_for(panel_attrs[:id])
 
           data = {
             controller:          STIMULUS_CONTROLLER,

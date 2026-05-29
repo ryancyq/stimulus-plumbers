@@ -18,11 +18,10 @@ module StimulusPlumbers
 
         private
 
-        # rubocop:disable Metrics/ParameterLists
-        def render_typeahead(panel_id: nil, panel_attrs: {}, options: [], value: nil, labelledby: nil, label: nil, url: nil)
+        def render_typeahead(panel_attrs: {}, options: [], value: nil, labelledby: nil, label: nil, url: nil)
           template.content_tag(
             :div,
-            template.safe_join([listbox(panel_id, options, value, labelledby, label), loading, empty]),
+            template.safe_join([listbox(panel_attrs[:id], options, value, labelledby, label), loading, empty]),
             **merge_html_options(
               panel_attrs,
               { data: {
@@ -34,7 +33,6 @@ module StimulusPlumbers
             )
           )
         end
-        # rubocop:enable Metrics/ParameterLists
 
         def listbox(panel_id, options, value, labelledby, label)
           template.content_tag(

@@ -46,9 +46,9 @@ module StimulusPlumbers
                 action:                                  "input->input-combobox#onInput"
               },
               **kwargs
-            ) do |pid, panel_attrs|
+            ) do |panel_attrs|
               Components::Combobox::Typeahead.new(@template).render(
-                panel_id: pid, panel_attrs: panel_attrs, options: choices, value: current_value, labelledby: labelledby, url: url
+                panel_attrs: panel_attrs, options: choices, value: current_value, labelledby: labelledby, url: url
               )
             end
 

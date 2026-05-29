@@ -51,7 +51,7 @@ class ComboboxDateTest < ActionView::TestCase
   # ── panel_id threading ──────────────────────────────────────────────────────
 
   def test_outlet_selector_matches_calendar_id_when_panel_id_given
-    doc             = parse_html(render_date(panel_id: "test_panel"))
+    doc             = parse_html(render_date(panel_attrs: { id: "test_panel" }))
     date_controller = doc.at_css("[data-controller~='combobox-date']")
     calendar        = doc.at_css("[data-controller~='calendar-month']")
 

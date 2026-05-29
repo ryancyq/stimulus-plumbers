@@ -13,7 +13,7 @@ module StimulusPlumbers
         end
 
         def build(panel_id:, **kwargs, &block)
-          template.capture(panel_id, panel_attrs(panel_id, **kwargs), &block)
+          template.capture(panel_attrs(panel_id, **kwargs), &block)
         end
 
         private

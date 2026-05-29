@@ -58,16 +58,11 @@ class PopoverBuilderTest < ActionView::TestCase
     assert_css parse_html(b.panel_html), "#p1[data-popover-target='panel'][hidden]"
   end
 
-  def test_build_panel_yields_panel_id_and_attrs_to_caller
+  def test_build_panel_yields_panel_attrs_to_caller
     b             = builder(panel_id: "p1")
-    yielded_id    = nil
     yielded_attrs = nil
-    b.build_panel do |panel_id, attrs|
-      yielded_id    = panel_id
-      yielded_attrs = attrs
-    end
+    b.build_panel { |attrs| yielded_attrs = attrs }
 
-    assert_equal "p1",    yielded_id
     assert_equal "p1",    yielded_attrs[:id]
     assert_equal "panel", yielded_attrs.dig(:data, :popover_target)
   end

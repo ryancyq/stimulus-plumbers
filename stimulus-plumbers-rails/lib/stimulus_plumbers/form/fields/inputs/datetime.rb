@@ -37,9 +37,9 @@ module StimulusPlumbers
               err:      error,
               data:     { input_formatter_format_value: "date" },
               **kwargs
-            ) do |pid, panel_attrs|
+            ) do |panel_attrs|
               Components::Combobox::Date.new(@template).render(
-                panel_id: pid, panel_attrs: panel_attrs, value: current_value, labelledby: labelledby
+                panel_attrs: panel_attrs, value: current_value, labelledby: labelledby
               )
             end
           end
@@ -70,7 +70,7 @@ module StimulusPlumbers
               err:      error,
               data:     { input_formatter_format_value: "time", input_formatter_options_value: { format: format }.to_json },
               **kwargs
-            ) do |_pid, panel_attrs|
+            ) do |panel_attrs|
               Components::Combobox::Time.new(@template).render(
                 panel_attrs: panel_attrs, format: format, step: step, value: current_value, labelledby: labelledby
               )

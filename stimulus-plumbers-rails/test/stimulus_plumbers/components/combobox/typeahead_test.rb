@@ -10,20 +10,20 @@ class ComboboxTypeaheadTest < ActionView::TestCase
   # ── listbox ─────────────────────────────────────────────────────────────────
 
   def test_panel_wraps_a_listbox
-    doc = parse_html(render_typeahead(panel_id: "p1"))
+    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }))
 
     assert_css doc, "div[data-controller~='combobox-dropdown'] > ul[role='listbox']"
   end
 
   def test_listbox_id_is_derived_from_panel_id
-    listbox = parse_html(render_typeahead(panel_id: "p1")).at_css("ul[role='listbox']")
+    listbox = parse_html(render_typeahead(panel_attrs: { id: "p1" })).at_css("ul[role='listbox']")
 
     assert_equal "p1_listbox", listbox["id"]
     assert_equal "listbox",    listbox["data-combobox-dropdown-target"]
   end
 
   def test_options_are_the_only_listbox_children
-    doc = parse_html(render_typeahead(panel_id: "p1", options: [%w[London lon]]))
+    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }, options: [%w[London lon]]))
 
     assert_css doc, "ul[role='listbox'] > li[role='option'][data-value='lon']"
     assert_no_css doc, "ul[role='listbox'] [role='status']"
@@ -33,7 +33,7 @@ class ComboboxTypeaheadTest < ActionView::TestCase
   # ── loading ───────────────────────────────────────────────────────────────
 
   def test_loading_is_a_sibling_live_region_hidden_by_default
-    doc = parse_html(render_typeahead(panel_id: "p1"))
+    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }))
 
     assert_css doc, "div[aria-live='polite'][hidden][data-combobox-dropdown-target='loading']"
     assert_no_css doc, "ul[role='listbox'] [data-combobox-dropdown-target='loading']"
@@ -42,7 +42,7 @@ class ComboboxTypeaheadTest < ActionView::TestCase
   # ── empty state ─────────────────────────────────────────────────────────────
 
   def test_empty_is_a_sibling_status_region_hidden_by_default
-    doc = parse_html(render_typeahead(panel_id: "p1"))
+    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }))
 
     assert_css doc, "div[role='status'][hidden][data-combobox-dropdown-target='empty']"
     assert_no_css doc, "ul[role='listbox'] [data-combobox-dropdown-target='empty']"
@@ -64,7 +64,7 @@ class ComboboxTypeaheadTest < ActionView::TestCase
   # ── url ─────────────────────────────────────────────────────────────────────
 
   def test_url_sets_combobox_dropdown_url_value_on_panel
-    doc = parse_html(render_typeahead(panel_id: "p1", url: "/search"))
+    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }, url: "/search"))
 
     assert_css doc, "div[data-controller~='combobox-dropdown'][data-combobox-dropdown-url-value='/search']"
   end

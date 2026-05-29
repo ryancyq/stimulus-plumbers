@@ -18,8 +18,8 @@ module StimulusPlumbers
           popup_id: Components::Combobox::Date.popup_id(panel_id),
           data:     { input_formatter_format_value: "date" },
           **kwargs
-        ) do |pid, panel_attrs|
-          Components::Combobox::Date.new(self).render(panel_id: pid, panel_attrs: panel_attrs, value: value)
+        ) do |panel_attrs|
+          Components::Combobox::Date.new(self).render(panel_attrs: panel_attrs, value: value)
         end
       end
 
@@ -38,7 +38,7 @@ module StimulusPlumbers
           haspopup: Components::Combobox::Dropdown.haspopup,
           popup_id: Components::Combobox::Dropdown.popup_id(panel_id),
           **kwargs
-        ) do |_pid, panel_attrs|
+        ) do |panel_attrs|
           Components::Combobox::Dropdown.new(self).render(
             panel_attrs: panel_attrs, options: options, value: value, label: label
           )
@@ -66,9 +66,9 @@ module StimulusPlumbers
             action:                                  "input->input-combobox#onInput"
           },
           **kwargs
-        ) do |pid, panel_attrs|
+        ) do |panel_attrs|
           Components::Combobox::Typeahead.new(self).render(
-            panel_id: pid, panel_attrs: panel_attrs, options: options, value: value, label: label, url: url
+            panel_attrs: panel_attrs, options: options, value: value, label: label, url: url
           )
         end
       end
@@ -91,7 +91,7 @@ module StimulusPlumbers
           popup_id: Components::Combobox::Time.popup_id(panel_id),
           data:     { input_formatter_format_value: "time", input_formatter_options_value: { format: format }.to_json },
           **kwargs
-        ) do |_pid, panel_attrs|
+        ) do |panel_attrs|
           Components::Combobox::Time.new(self).render(
             panel_attrs: panel_attrs, format: format, step: step, value: value
           )

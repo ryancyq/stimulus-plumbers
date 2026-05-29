@@ -45,7 +45,7 @@ stimulus-plumbers-rails/
 │       │   └── popover/
 │       │       ├── builder.rb            # Builder DSL: p.trigger / p.panel (auto-wired) / p.build_panel (caller-wired) — yielded by render/build
 │       │       ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
-│       │       └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_id + attrs for caller to wire)
+│       │       └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_attrs for caller to wire)
 │       ├── helpers/
 │       │   ├── action_list_helper.rb     # sp_action_list, sp_action_list_section, sp_action_list_item
 │       │   ├── avatar_helper.rb          # sp_avatar
