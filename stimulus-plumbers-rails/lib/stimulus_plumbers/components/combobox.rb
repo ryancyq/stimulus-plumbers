@@ -21,7 +21,9 @@ module StimulusPlumbers
         popover_id    = self.class.popover_id_for(trigger[:id])
         initial_value = input[:value]
         haspopup      = popover.delete(:haspopup) { popover[:role] || "dialog" }
-        html_options  = merge_html_options({ data: build_stimulus_data(initial_value) }, kwargs)
+        html_options  = merge_html_options(
+          { classes: theme.resolve(:combobox).fetch(:classes, ""), data: build_stimulus_data(initial_value) }, kwargs
+        )
 
         template.content_tag(:div, **html_options) do
           template.safe_join(

@@ -63,7 +63,18 @@ module StimulusPlumbers
 
         TIME = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
 
+        CONTAINER = %w[relative].freeze
+        POPOVER   = %w[absolute top-full left-0 min-w-full].freeze
+
         private
+
+        def combobox_classes
+          { classes: klasses(*CONTAINER) }
+        end
+
+        def combobox_popover_classes
+          { classes: klasses(*POPOVER) }
+        end
 
         def combobox_trigger_classes
           { classes: klasses(*TRIGGER) }

@@ -8,10 +8,11 @@ module StimulusPlumbers
   module Themes
     module Schema
       ACTION_LIST = {
-        action_list_item: {
+        action_list:         {}.freeze,
+        action_list_item:    {
           active: { default: false, validate: Ranges::BOOL }
         }.freeze,
-        action_list:      {}.freeze
+        action_list_section: {}.freeze
       }.freeze
 
       AVATAR = {
@@ -53,6 +54,8 @@ module StimulusPlumbers
       }.freeze
 
       COMBOBOX = {
+        combobox:                   {}.freeze,
+        combobox_popover:           {}.freeze,
         combobox_trigger:           {}.freeze,
         combobox_trigger_group:     {}.freeze,
         combobox_option:            {

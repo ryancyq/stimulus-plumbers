@@ -115,8 +115,10 @@ class TailwindThemeButtonTest < Minitest::Test
   def test_button_group_includes_flex_base_classes
     result = classes_for(:button_group)
 
-    assert_includes result, "flex"
-    assert_includes result, "gap-(--sp-space-2)"
+    assert_includes result, "inline-flex"
+    assert_includes result, "overflow-hidden"
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "shadow-(--sp-shadow-sm)"
   end
 
   # :button_group alignments (row direction)

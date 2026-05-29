@@ -24,6 +24,12 @@
     <%= f.radio_button   :gender, "male",   label: "Male" %>
     <%= f.radio_button   :gender, "female", label: "Female" %>
     <%= f.radio_button   :gender, "other",  label: "Other" %>
+    <%= f.collection_radio_buttons :role,
+          [["admin", "Admin"], ["user", "User"], ["guest", "Guest"]], :first, :last,
+          label: "Role" %>
+    <%= f.collection_check_boxes :interests,
+          [["ruby", "Ruby"], ["rails", "Rails"], ["js", "JavaScript"]], :first, :last,
+          label: "Interests" %>
     <%= f.select         :country, countries,
                          { label: "Country", details: "Select your country of residence." },
                          {} %>

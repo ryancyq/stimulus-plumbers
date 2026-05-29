@@ -73,7 +73,10 @@ module StimulusPlumbers
           disabled:pointer-events-none disabled:opacity-50
         ].freeze
 
-        GROUP_BASE = %w[flex gap-(--sp-space-2)].freeze
+        GROUP_BASE = %w[
+          inline-flex overflow-hidden rounded-(--sp-radius-md) shadow-(--sp-shadow-sm)
+          [&>*:not(:first-child)]:-ml-px
+        ].freeze
 
         private
 

@@ -21,8 +21,14 @@ module StimulusPlumbers
         REQUIRED_MARK = %w[text-(--sp-color-error) ml-(--sp-space-0-5)].freeze
         DETAILS       = %w[text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
         ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
-        CHECKBOX      = %w[size-(--sp-control-size) rounded border-(--sp-color-muted-fg) text-(--sp-color-primary)].freeze
-        RADIO         = %w[size-(--sp-control-size) border-(--sp-color-muted-fg) text-(--sp-color-primary)].freeze
+        CHECKBOX      = %w[
+          size-(--sp-control-size) rounded-(--sp-radius-sm) border border-(--sp-color-muted-fg)
+          text-(--sp-color-primary) focus:ring-2 focus:ring-(--sp-focus-ring-color)
+        ].freeze
+        RADIO = %w[
+          size-(--sp-control-size) border border-(--sp-color-muted-fg) text-(--sp-color-primary)
+          focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+        ].freeze
 
         INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
         INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
