@@ -33,6 +33,14 @@ module StimulusPlumbers
         INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
         INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
+        COLLECTION_ITEM_LABEL = %w[
+          flex items-center gap-(--sp-space-2)
+          text-(length:--sp-text-sm) text-(--sp-color-fg) cursor-pointer py-(--sp-space-0-5)
+        ].freeze
+        CHOICE_ITEM_DESCRIPTION = %w[
+          block text-(length:--sp-text-xs) text-(--sp-color-muted-fg)
+        ].freeze
+
         BUTTON_REVEAL = %w[
           self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg)
           hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
@@ -103,6 +111,10 @@ module StimulusPlumbers
 
         def form_input_clearable_classes
           { classes: "sp-form-input-group" }
+        end
+
+        def form_collection_label_classes
+          { classes: klasses(*COLLECTION_ITEM_LABEL) }
         end
 
         def form_button_reveal_classes

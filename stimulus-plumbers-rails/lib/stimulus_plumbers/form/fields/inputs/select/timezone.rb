@@ -7,51 +7,8 @@ module StimulusPlumbers
         module Select
           module Timezone
             def time_zone_select(attribute, priority_zones = nil, options = {}, html_options = {})
-              html_native   = options.delete(:html_native) { false }
-              icon_leading  = options.delete(:icon_leading)
-              icon_trailing = options.delete(:icon_trailing) { "chevron-down" }
-              icons         = { icon_leading: icon_leading, icon_trailing: icon_trailing }
-              with_select_field(attribute, options, html_options) do |opts, merged, error|
-                if html_native
-                  super(attribute, priority_zones, opts, merged)
-                else
-                  render_select_dropdown(attribute, opts, merged, err: error, **icons) do
-                    model = opts.delete(:model) { ActiveSupport::TimeZone }
-                    build_zone_choices(priority_zones, model.all)
-                  end
-                end
-              end
-            end
-
-            private
-
-            def build_zone_choices(priority_zones, all_zones)
-              return zone_options(all_zones) unless priority_zones
-
-              priority       = filter_priority_zones(priority_zones, all_zones)
-              priority_names = priority.to_set(&:name)
-              remaining      = all_zones.reject { |z| priority_names.include?(z.name) }
-              [
-                {
-                  label:   I18n.t("helpers.time_zone_select.priority_zones", default: "Suggested"),
-                  options: zone_options(priority)
-                },
-                {
-                  label:   I18n.t("helpers.time_zone_select.other_zones", default: "Other"),
-                  options: zone_options(remaining)
-                }
-              ]
-            end
-
-            def filter_priority_zones(priority_zones, all_zones)
-              case priority_zones
-              when Regexp then all_zones.select { |z| z.name.match?(priority_zones) }
-              else Array(priority_zones)
-              end
-            end
-
-            def zone_options(zones)
-              zones.map { |z| [z.to_s, z.name] }
+              merged = merge_html_options(html_options, field_theme(:form_select))
+              super(attribute, priority_zones, options, merged)
             end
           end
         end

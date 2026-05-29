@@ -15,20 +15,26 @@ module StimulusPlumbers
           kwargs
         )
 
-        builder = Popover::Builder.new(template)
-        template.capture(builder, &block)
-
         template.content_tag(:div, **html_options) do
-          template.safe_join([builder.activator_html, wrap_content(interactive, builder)])
+          render_popover_with_builder(interactive, &block)
         end
       end
 
-      def wrap_content(interactive, builder)
-        if interactive
-          template.content_tag(:template, builder.content_html)
-        else
-          builder.content_html
-        end
+      def render_popover_with_builder(interactive, &block)
+        builder = Popover::Builder.new(template)
+        yield builder
+
+        content_html = if interactive
+                         template.content_tag(:template, builder.content_html)
+                       else
+                         builder.content_html
+                       end
+        template.safe_join(
+          [
+            builder.activator_html,
+            content_html
+          ]
+        )
       end
     end
   end

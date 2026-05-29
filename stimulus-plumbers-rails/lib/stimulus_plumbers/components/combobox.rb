@@ -18,19 +18,17 @@ module StimulusPlumbers
       private
 
       def render_combobox(trigger: {}, input: {}, popover: {}, **kwargs, &block)
-        popover_id    = self.class.popover_id_for(trigger[:id])
-        initial_value = input[:value]
-        haspopup      = popover.delete(:haspopup) { popover[:role] || "dialog" }
-        html_options  = merge_html_options(
-          { classes: theme.resolve(:combobox).fetch(:classes, ""), data: build_stimulus_data(initial_value) }, kwargs
+        html_options = merge_html_options(
+          { classes: theme.resolve(:combobox).fetch(:classes, ""), data: build_stimulus_data(input[:value]) },
+          kwargs
         )
 
         template.content_tag(:div, **html_options) do
           template.safe_join(
             [
-              combobox_trigger(popover_id, trigger, haspopup),
+              combobox_trigger(trigger, popover),
               hidden_input(input),
-              combobox_popover(popover_id, popover, &block)
+              combobox_popover(trigger, popover, &block)
             ]
           )
         end
@@ -45,19 +43,19 @@ module StimulusPlumbers
         end
       end
 
-      def combobox_trigger(popover_id, trigger, haspopup)
+      def combobox_trigger(trigger, popover)
         Combobox::Trigger.new(template).render(
           stimulus_controller: STIMULUS_CONTROLLER,
-          popover_id:          popover_id,
-          haspopup:            haspopup,
+          popover_id:          self.class.popover_id_for(trigger[:id]),
+          haspopup:            popover.delete(:haspopup) { popover[:role] || "dialog" },
           **trigger
         )
       end
 
-      def combobox_popover(popover_id, popover, &block)
+      def combobox_popover(trigger, popover, &block)
         Combobox::Popover.new(template).render(
           stimulus_controller: STIMULUS_CONTROLLER,
-          id:                  popover_id,
+          id:                  self.class.popover_id_for(trigger[:id]),
           **popover,
           &block
         )

@@ -55,6 +55,10 @@ Metrics/ClassLength:
   Exclude:
     - test/stimulus_plumbers/themes/**/*_test.rb
 
+Metrics/ModuleLength:
+  Exclude:
+    - lib/stimulus_plumbers/themes/tailwind/form.rb
+
 Metrics/MethodLength:
   Max: 15
 

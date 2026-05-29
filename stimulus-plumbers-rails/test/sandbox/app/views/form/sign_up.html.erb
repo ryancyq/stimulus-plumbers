@@ -13,21 +13,23 @@
   <%= sp_avatar(initials: "SP", name: "Stimulus Plumbers") %>
 
   <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <%= f.text_field     :name,       label: "Full name",     required: true %>
-    <%= f.email_field    :email,      label: "Email address", required: true,
-                                      hint: "We'll never share your email." %>
-    <%= f.password_field :password,   label: "Password",      required: true, reveal: true %>
-    <%= f.number_field   :age,        label: "Age" %>
-    <%= f.date_field     :birth_date, label: "Date of birth" %>
-    <%= f.text_area      :bio,        label: "Bio",
-                                      hint: "Tell us a little about yourself." %>
-    <%= f.radio_button   :gender, "male",   label: "Male" %>
-    <%= f.radio_button   :gender, "female", label: "Female" %>
-    <%= f.radio_button   :gender, "other",  label: "Other" %>
-    <%= f.select         :country, countries,
-                         { label: "Country", hint: "Select your country of residence." },
-                         {} %>
-    <%= f.check_box      :newsletter, label: "Subscribe to newsletter" %>
+    <%= f.field     :name,       as: :text,     label: "Full name",     required: true %>
+    <%= f.field     :email,      as: :email,    label: "Email address", required: true,
+                                                hint: "We'll never share your email." %>
+    <%= f.field     :password,   as: :password, label: "Password",      required: true, revealable: true %>
+    <%= f.field     :age,        as: :number,   label: "Age" %>
+    <%= f.field     :birth_date, as: :date,     label: "Date of birth" %>
+    <%= f.field     :bio,        as: :text_area, label: "Bio",
+                                                hint: "Tell us a little about yourself." %>
+    <%= f.choice :gender, as: :radio,
+          label:        "Gender",
+          collection:   [["male", "Male"], ["female", "Female"], ["other", "Other"]],
+          value_method: :first,
+          text_method:  :last %>
+    <%= f.field     :country,    as: :select,   label: "Country",
+                                                hint: "Select your country of residence.",
+                                                choices: countries %>
+    <%= f.field     :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
     <%= f.submit "Create account" %>
   <% end %>
 

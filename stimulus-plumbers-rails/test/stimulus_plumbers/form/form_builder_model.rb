@@ -9,6 +9,8 @@ class FormBuilderModel
                 :password,
                 :remember_me,
                 :role,
+                :interests,
+                :newsletter,
                 :birthday,
                 :country,
                 :city,

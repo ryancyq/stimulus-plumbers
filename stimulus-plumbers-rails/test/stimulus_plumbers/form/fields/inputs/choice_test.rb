@@ -29,6 +29,13 @@ class ChoiceTest < ActionView::TestCase
     parse_html(html)
   end
 
+  def build_field_check_box(**opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.field(:remember_me, as: :check_box, **opts)
+    end
+    parse_html(html)
+  end
+
   def build_collection_radio_buttons(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.collection_radio_buttons(:role, ROLES, :id, :name, **opts)
@@ -43,39 +50,17 @@ class ChoiceTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # ── check_box ─────────────────────────────────────────────────────────────
+  def build_choice(as:, **opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.choice(:role, as: as, collection: ROLES, value_method: :id, text_method: :name, **opts)
+    end
+    parse_html(html)
+  end
+
+  # ── check_box (ActionView native) ────────────────────────────────────────
 
   def test_check_box_renders_input
     assert_css build_check_box, "input[type='checkbox']"
-  end
-
-  def test_check_box_renders_label
-    assert_css build_check_box, "label[for='sign_in_form_remember_me']"
-  end
-
-  def test_check_box_has_aria_invalid_on_error
-    @form.errors.add(:remember_me, "must be accepted")
-
-    assert_equal "true", build_check_box.at_css("input[type='checkbox']")["aria-invalid"]
-  end
-
-  def test_check_box_has_aria_describedby_on_error
-    @form.errors.add(:remember_me, "must be accepted")
-
-    assert_includes build_check_box.at_css("input[type='checkbox']")["aria-describedby"].to_s,
-                    "sign_in_form_remember_me_error"
-  end
-
-  def test_check_box_required_sets_required_and_aria_required
-    doc   = build_check_box(required: true)
-    input = doc.at_css("input[type='checkbox']")
-
-    assert_equal "required", input["required"]
-    assert_equal "true", input["aria-required"]
-  end
-
-  def test_check_box_renders_hint
-    assert_css build_check_box(hint: "You must accept"), "#sign_in_form_remember_me_hint"
   end
 
   def test_check_box_forwards_data_attributes
@@ -88,31 +73,10 @@ class ChoiceTest < ActionView::TestCase
     assert_css doc, "input[type='checkbox'][value='yes']"
   end
 
-  # ── radio_button ──────────────────────────────────────────────────────────
+  # ── radio_button (ActionView native) ─────────────────────────────────────
 
   def test_radio_button_renders_input
     assert_css build_radio_button, "input[type='radio']"
-  end
-
-  def test_radio_button_renders_label
-    assert_css build_radio_button, "label[for='sign_in_form_role_admin']"
-  end
-
-  def test_radio_button_has_aria_invalid_on_error
-    @form.errors.add(:role, "is not included in the list")
-
-    assert_equal "true", build_radio_button.at_css("input[type='radio']")["aria-invalid"]
-  end
-
-  def test_radio_button_has_aria_describedby_on_error
-    @form.errors.add(:role, "is not included in the list")
-
-    assert_includes build_radio_button.at_css("input[type='radio']")["aria-describedby"].to_s,
-                    "sign_in_form_role_admin_error"
-  end
-
-  def test_radio_button_renders_hint
-    assert_css build_radio_button("admin", hint: "Select your role"), "#sign_in_form_role_admin_hint"
   end
 
   def test_radio_button_forwards_data_attributes
@@ -121,164 +85,261 @@ class ChoiceTest < ActionView::TestCase
     assert_equal "selector", input["data-controller"]
   end
 
-  # ── collection_radio_buttons ──────────────────────────────────────────────
+  # ── f.field(:..., as: :check_box) ────────────────────────────────────────
 
-  def test_collection_radio_buttons_renders_fieldset
-    assert_css build_collection_radio_buttons, "fieldset"
+  def test_field_check_box_renders_input
+    assert_css build_field_check_box, "input[type='checkbox']"
   end
 
-  def test_collection_radio_buttons_renders_legend
-    assert_css build_collection_radio_buttons, "fieldset legend"
-    assert_includes build_collection_radio_buttons.at_css("legend").text, "Role"
+  def test_field_check_box_renders_explicit_label
+    doc = build_field_check_box
+    label = doc.at_css("label")
+
+    assert_not_nil label
+    assert_equal "sign_in_form_remember_me", label["for"]
   end
 
-  def test_collection_radio_buttons_renders_inputs_inside_fieldset
-    assert_css build_collection_radio_buttons, "fieldset input[type='radio']"
+  def test_field_check_box_label_does_not_wrap_input
+    assert_no_css build_field_check_box, "label input[type='checkbox']"
   end
 
-  def test_collection_radio_buttons_renders_custom_legend_text
-    assert_includes build_collection_radio_buttons(label: "User Role").at_css("legend").text, "User Role"
+  def test_field_check_box_has_aria_invalid_on_error
+    @form.errors.add(:remember_me, "must be accepted")
+
+    assert_equal "true", build_field_check_box.at_css("input[type='checkbox']")["aria-invalid"]
   end
 
-  def test_collection_radio_buttons_renders_details_hint
-    assert_css build_collection_radio_buttons(hint: "Choose a role"), "#sign_in_form_role_hint"
+  def test_field_check_box_has_aria_describedby_on_error
+    @form.errors.add(:remember_me, "must be accepted")
+
+    assert_includes build_field_check_box.at_css("input[type='checkbox']")["aria-describedby"].to_s,
+                    "sign_in_form_remember_me_error"
   end
 
-  def test_collection_radio_buttons_renders_error_message
+  def test_field_check_box_required_sets_required_and_aria_required
+    doc   = build_field_check_box(required: true)
+    input = doc.at_css("input[type='checkbox']")
+
+    assert_equal "required", input["required"]
+    assert_equal "true", input["aria-required"]
+  end
+
+  def test_field_check_box_renders_hint
+    assert_css build_field_check_box(hint: "You must accept"), "#sign_in_form_remember_me_hint"
+  end
+
+  def test_field_check_box_hint_adds_aria_describedby
+    doc = build_field_check_box(hint: "You must accept")
+
+    assert_includes doc.at_css("input[type='checkbox']")["aria-describedby"].to_s,
+                    "sign_in_form_remember_me_hint"
+  end
+
+  def test_field_check_box_forwards_checked_value
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.field(:remember_me, as: :check_box, checked_value: "yes", unchecked_value: "no")
+    end
+    doc = parse_html(html)
+
+    assert_css doc, "input[type='checkbox'][value='yes']"
+  end
+
+  # ── collection_radio_buttons (ActionView native) ──────────────────────────
+
+  def test_collection_radio_buttons_renders_inputs
+    assert_css build_collection_radio_buttons, "input[type='radio']"
+  end
+
+  def test_collection_radio_buttons_renders_explicit_labels
+    doc = build_collection_radio_buttons
+
+    assert_css doc, "label[for]"
+    assert_no_css doc, "label input[type='radio']"
+  end
+
+  # ── collection_check_boxes (ActionView native) ────────────────────────────
+
+  def test_collection_check_boxes_renders_inputs
+    assert_css build_collection_check_boxes, "input[type='checkbox']"
+  end
+
+  def test_collection_check_boxes_renders_explicit_labels
+    doc = build_collection_check_boxes
+
+    assert_css doc, "label[for]"
+    assert_no_css doc, "label input[type='checkbox']"
+  end
+
+  # ── f.choice(as: :radio) ─────────────────────────────────────────────────
+
+  def test_choice_radio_renders_fieldset
+    assert_css build_choice(as: :radio), "fieldset"
+  end
+
+  def test_choice_radio_renders_legend
+    assert_css build_choice(as: :radio), "fieldset legend"
+    assert_includes build_choice(as: :radio).at_css("legend").text, "Role"
+  end
+
+  def test_choice_radio_renders_inputs_inside_fieldset
+    assert_css build_choice(as: :radio), "fieldset input[type='radio']"
+  end
+
+  def test_choice_radio_renders_explicit_labels
+    doc = build_choice(as: :radio)
+
+    assert_css doc, "fieldset label[for]"
+    assert_no_css doc, "fieldset label input[type='radio']"
+  end
+
+  def test_choice_radio_renders_custom_legend_text
+    assert_includes build_choice(as: :radio, label: "User Role").at_css("legend").text, "User Role"
+  end
+
+  def test_choice_radio_renders_hint
+    assert_css build_choice(as: :radio, hint: "Choose a role"), "#sign_in_form_role_hint"
+  end
+
+  def test_choice_radio_renders_error_message
     @form.errors.add(:role, "must be selected")
 
-    assert_css build_collection_radio_buttons, "p[role='alert']"
-    assert_includes build_collection_radio_buttons.text, "must be selected"
+    assert_css build_choice(as: :radio), "p[role='alert']"
+    assert_includes build_choice(as: :radio).text, "must be selected"
   end
 
-  def test_collection_radio_buttons_has_aria_invalid_on_fieldset_when_error
+  def test_choice_radio_has_aria_invalid_on_fieldset_when_error
     @form.errors.add(:role, "must be selected")
 
-    assert_equal "true", build_collection_radio_buttons.at_css("fieldset")["aria-invalid"]
+    assert_equal "true", build_choice(as: :radio).at_css("fieldset")["aria-invalid"]
   end
 
-  def test_collection_radio_buttons_has_aria_describedby_on_fieldset_when_error
+  def test_choice_radio_has_aria_describedby_on_fieldset_when_error
     @form.errors.add(:role, "must be selected")
 
-    assert_includes build_collection_radio_buttons.at_css("fieldset")["aria-describedby"].to_s,
+    assert_includes build_choice(as: :radio).at_css("fieldset")["aria-describedby"].to_s,
                     "sign_in_form_role_error"
   end
 
-  def test_collection_radio_buttons_aria_describedby_references_all_error_ids_for_multiple_errors
+  def test_choice_radio_aria_describedby_references_all_error_ids_for_multiple_errors
     @form.errors.add(:role, "must be selected")
     @form.errors.add(:role, "is not included in the list")
-    doc = build_collection_radio_buttons
-
+    doc          = build_choice(as: :radio)
     described_by = doc.at_css("fieldset")["aria-describedby"].to_s
 
     assert_includes described_by, "sign_in_form_role_error_1"
     assert_includes described_by, "sign_in_form_role_error_2"
   end
 
-  def test_collection_radio_buttons_multiple_error_elements_have_matching_ids
+  def test_choice_radio_multiple_error_elements_have_matching_ids
     @form.errors.add(:role, "must be selected")
     @form.errors.add(:role, "is not included in the list")
-    doc = build_collection_radio_buttons
+    doc = build_choice(as: :radio)
 
     assert_css doc, "#sign_in_form_role_error_1"
     assert_css doc, "#sign_in_form_role_error_2"
   end
 
-  def test_collection_radio_buttons_has_aria_describedby_on_fieldset_when_hint
-    doc = build_collection_radio_buttons(hint: "Choose a role")
+  def test_choice_radio_has_aria_describedby_on_fieldset_when_hint
+    doc = build_choice(as: :radio, hint: "Choose a role")
 
     assert_includes doc.at_css("fieldset")["aria-describedby"].to_s, "sign_in_form_role_hint"
   end
 
-  def test_collection_radio_buttons_required_does_not_set_aria_required_on_fieldset
-    doc = build_collection_radio_buttons(required: true)
+  def test_choice_radio_required_does_not_set_aria_required_on_fieldset
+    doc = build_choice(as: :radio, required: true)
 
     assert_nil doc.at_css("fieldset")["aria-required"]
   end
 
-  def test_collection_radio_buttons_required_renders_mark_in_legend
-    doc = build_collection_radio_buttons(required: true)
+  def test_choice_radio_required_renders_mark_in_legend
+    doc = build_choice(as: :radio, required: true)
 
     assert_css doc, "legend span[aria-hidden='true']"
   end
 
-  # ── collection_check_boxes ────────────────────────────────────────────────
+  # ── f.choice(as: :check_box) ─────────────────────────────────────────────
 
-  def test_collection_check_boxes_renders_fieldset
-    assert_css build_collection_check_boxes, "fieldset"
+  def test_choice_check_box_renders_fieldset
+    assert_css build_choice(as: :check_box), "fieldset"
   end
 
-  def test_collection_check_boxes_renders_legend
-    assert_css build_collection_check_boxes, "fieldset legend"
-    assert_includes build_collection_check_boxes.at_css("legend").text, "Role"
+  def test_choice_check_box_renders_legend
+    assert_css build_choice(as: :check_box), "fieldset legend"
+    assert_includes build_choice(as: :check_box).at_css("legend").text, "Role"
   end
 
-  def test_collection_check_boxes_renders_inputs_inside_fieldset
-    assert_css build_collection_check_boxes, "fieldset input[type='checkbox']"
+  def test_choice_check_box_renders_inputs_inside_fieldset
+    assert_css build_choice(as: :check_box), "fieldset input[type='checkbox']"
   end
 
-  def test_collection_check_boxes_renders_custom_legend_text
-    assert_includes build_collection_check_boxes(label: "Permissions").at_css("legend").text, "Permissions"
+  def test_choice_check_box_renders_explicit_labels
+    doc = build_choice(as: :check_box)
+
+    assert_css doc, "fieldset label[for]"
+    assert_no_css doc, "fieldset label input[type='checkbox']"
   end
 
-  def test_collection_check_boxes_renders_details_hint
-    assert_css build_collection_check_boxes(hint: "Select all that apply"), "#sign_in_form_role_hint"
+  def test_choice_check_box_renders_custom_legend_text
+    assert_includes build_choice(as: :check_box, label: "Permissions").at_css("legend").text, "Permissions"
   end
 
-  def test_collection_check_boxes_renders_error_message
+  def test_choice_check_box_renders_hint
+    assert_css build_choice(as: :check_box, hint: "Select all that apply"), "#sign_in_form_role_hint"
+  end
+
+  def test_choice_check_box_renders_error_message
     @form.errors.add(:role, "is invalid")
 
-    assert_css build_collection_check_boxes, "p[role='alert']"
-    assert_includes build_collection_check_boxes.text, "is invalid"
+    assert_css build_choice(as: :check_box), "p[role='alert']"
+    assert_includes build_choice(as: :check_box).text, "is invalid"
   end
 
-  def test_collection_check_boxes_has_aria_invalid_on_fieldset_when_error
+  def test_choice_check_box_has_aria_invalid_on_fieldset_when_error
     @form.errors.add(:role, "is invalid")
 
-    assert_equal "true", build_collection_check_boxes.at_css("fieldset")["aria-invalid"]
+    assert_equal "true", build_choice(as: :check_box).at_css("fieldset")["aria-invalid"]
   end
 
-  def test_collection_check_boxes_has_aria_describedby_on_fieldset_when_error
+  def test_choice_check_box_has_aria_describedby_on_fieldset_when_error
     @form.errors.add(:role, "is invalid")
 
-    assert_includes build_collection_check_boxes.at_css("fieldset")["aria-describedby"].to_s,
+    assert_includes build_choice(as: :check_box).at_css("fieldset")["aria-describedby"].to_s,
                     "sign_in_form_role_error"
   end
 
-  def test_collection_check_boxes_aria_describedby_references_all_error_ids_for_multiple_errors
+  def test_choice_check_box_aria_describedby_references_all_error_ids_for_multiple_errors
     @form.errors.add(:role, "is invalid")
     @form.errors.add(:role, "must be selected")
-    doc = build_collection_check_boxes
-
+    doc          = build_choice(as: :check_box)
     described_by = doc.at_css("fieldset")["aria-describedby"].to_s
 
     assert_includes described_by, "sign_in_form_role_error_1"
     assert_includes described_by, "sign_in_form_role_error_2"
   end
 
-  def test_collection_check_boxes_multiple_error_elements_have_matching_ids
+  def test_choice_check_box_multiple_error_elements_have_matching_ids
     @form.errors.add(:role, "is invalid")
     @form.errors.add(:role, "must be selected")
-    doc = build_collection_check_boxes
+    doc = build_choice(as: :check_box)
 
     assert_css doc, "#sign_in_form_role_error_1"
     assert_css doc, "#sign_in_form_role_error_2"
   end
 
-  def test_collection_check_boxes_has_aria_describedby_on_fieldset_when_hint
-    doc = build_collection_check_boxes(hint: "Select all that apply")
+  def test_choice_check_box_has_aria_describedby_on_fieldset_when_hint
+    doc = build_choice(as: :check_box, hint: "Select all that apply")
 
     assert_includes doc.at_css("fieldset")["aria-describedby"].to_s, "sign_in_form_role_hint"
   end
 
-  def test_collection_check_boxes_required_does_not_set_aria_required_on_fieldset
-    doc = build_collection_check_boxes(required: true)
+  def test_choice_check_box_required_does_not_set_aria_required_on_fieldset
+    doc = build_choice(as: :check_box, required: true)
 
     assert_nil doc.at_css("fieldset")["aria-required"]
   end
 
-  def test_collection_check_boxes_required_renders_mark_in_legend
-    doc = build_collection_check_boxes(required: true)
+  def test_choice_check_box_required_renders_mark_in_legend
+    doc = build_choice(as: :check_box, required: true)
 
     assert_css doc, "legend span[aria-hidden='true']"
   end

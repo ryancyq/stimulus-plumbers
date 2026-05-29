@@ -2,10 +2,13 @@
 
 require "action_view/version"
 
+require_relative "base"
 require_relative "field"
 require_relative "fields/fieldset"
-require_relative "fields/inputs/choice"
+require_relative "fields/inputs/checkbox"
+require_relative "fields/inputs/combobox"
 require_relative "fields/inputs/datetime"
+require_relative "fields/inputs/radio"
 require_relative "fields/inputs/file"
 require_relative "fields/inputs/password"
 require_relative "fields/inputs/search"
@@ -22,8 +25,9 @@ module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
       include Plumber::HtmlOptions
-      include Fields::Inputs::Choice
+      include Fields::Inputs::Checkbox
       include Fields::Inputs::Datetime
+      include Fields::Inputs::Radio
       include Fields::Inputs::File
       include Fields::Inputs::Password
       include Fields::Inputs::Search
@@ -35,28 +39,56 @@ module StimulusPlumbers
       include Fields::Inputs::Text
       include Fields::Inputs::TextArea
 
+      FIELD_RENDERER = {
+        text:           :render_text_input,
+        email:          :render_email_input,
+        number:         :render_number_input,
+        url:            :render_url_input,
+        tel:            :render_tel_input,
+        color:          :render_color_input,
+        month:          :render_month_input,
+        week:           :render_week_input,
+        range:          :render_range_input,
+        datetime_local: :render_datetime_local_input,
+        text_area:      :render_text_area_input,
+        file:           :render_file_input,
+        password:       :render_password_input,
+        date:           :render_combobox_date,
+        time:           :render_combobox_time,
+        select:         :render_combobox_dropdown,
+        search:         :render_combobox_typeahead,
+        check_box:      :render_check_box
+      }.freeze
+
+      COLLECTION_FIELD_RENDERER = {
+        collection_select:         :render_collection_combobox_dropdown,
+        grouped_collection_select: :render_grouped_collection_combobox_dropdown
+      }.freeze
+
+      CHOICE_RENDERER = {
+        radio:     :render_collection_radio_button,
+        check_box: :render_collection_check_box
+      }.freeze
+
+      def field(attribute, as:, **options)
+        field_opts = options.slice(*Field::OPTIONS)
+        input_opts = options.except(*Field::OPTIONS)
+        render_field(as, attribute, field_opts, input_opts)
+      end
+
+      def collection_field(attribute, as:, collection:, value_method:, text_method:, **options)
+        field_opts = options.slice(*Field::OPTIONS)
+        input_opts = options.except(*Field::OPTIONS)
+        render_collection_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
+      end
+
+      def choice(attribute, as:, collection:, value_method:, text_method:, **options)
+        field_opts = options.slice(*Field::OPTIONS)
+        input_opts = options.except(*Field::OPTIONS)
+        render_choice_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
+      end
+
       private
-
-      def render_fieldset(attribute, field, &block)
-        Fields::Fieldset.new(@template).render(object, attribute, field_id(attribute), field, &block)
-      end
-
-      def render_input_group(error:, leading: nil, trailing: nil, **wrapper_opts, &block)
-        Components::InputGroup.new(@template).render(leading: leading, trailing: trailing, error: error, **wrapper_opts, &block)
-      end
-
-      def render_combobox(attribute, input_id:, opts:, err:, **wrapper_opts, &block)
-        combobox_opts = opts.deep_merge(
-          input:   { name: field_name(attribute) },
-          trigger: { id: input_id }
-        )
-
-        Components::Combobox.new(@template).render(
-          **combobox_opts,
-          **merge_html_options(wrapper_opts, field_theme(:form_combobox, error: err)),
-          &block
-        )
-      end
 
       def field_theme(key, **variants)
         { class: theme.resolve(key, **variants).fetch(:classes, "") }
@@ -64,6 +96,53 @@ module StimulusPlumbers
 
       def theme
         StimulusPlumbers.config.theme.current
+      end
+
+      def render_field(as, attribute, field_opts, input_opts)
+        raise ArgumentError, "unknown field type: #{as.inspect}" unless FIELD_RENDERER.key?(as)
+
+        field = Field.new(@template, **field_opts)
+        field.render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error|
+          Plumber::Dispatcher.build(
+            FIELD_RENDERER.fetch(as), attribute, html_opts, opts, error, **input_opts
+          ).call(self)
+        end
+      end
+
+      def render_collection_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
+        raise ArgumentError, "unknown collection field type: #{as.inspect}" unless COLLECTION_FIELD_RENDERER.key?(as)
+
+        Plumber::Dispatcher.build(
+          COLLECTION_FIELD_RENDERER.fetch(as),
+          attribute,
+          collection,
+          value_method,
+          text_method,
+          field_opts,
+          **input_opts
+        ).call(self)
+      end
+
+      def render_choice_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
+        raise ArgumentError, "unknown choice type: #{as.inspect}" unless CHOICE_RENDERER.key?(as)
+
+        Plumber::Dispatcher.build(
+          CHOICE_RENDERER.fetch(as),
+          attribute,
+          collection,
+          value_method,
+          text_method,
+          field_opts,
+          **input_opts
+        ).call(self)
+      end
+
+      def render_fieldset(attribute, field, &block)
+        Fields::Fieldset.new(@template).render(object, attribute, field_id(attribute), field, &block)
+      end
+
+      def render_input_group(error:, leading: nil, trailing: nil, **wrapper_opts, &block)
+        Components::InputGroup.new(@template).render(leading: leading, trailing: trailing, error: error, **wrapper_opts, &block)
       end
 
       # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity

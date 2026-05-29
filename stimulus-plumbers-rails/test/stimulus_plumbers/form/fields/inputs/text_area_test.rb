@@ -8,34 +8,57 @@ class TextAreaTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  def build_field(**opts)
+  # native ActionView helper — theme classes only, no label/hint/error wrapper
+  def build_native(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.text_area(:email, **opts)
     end
     parse_html(html)
   end
 
-  # ── structure ─────────────────────────────────────────────────────────────
+  # f.field — full wrapper: label + textarea + hint + error
+  def build_field(**opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.field(:email, as: :text_area, **opts)
+    end
+    parse_html(html)
+  end
+
+  # ── native textarea ────────────────────────────────────────────────────────
 
   def test_renders_textarea_element
-    assert_css build_field, "textarea"
+    assert_css build_native, "textarea"
   end
+
+  def test_renders_textarea_with_correct_name
+    assert_css build_native, "textarea[name='sign_in_form[email]']"
+  end
+
+  def test_forwards_rows_to_textarea
+    assert_equal "6", build_native(rows: 6).at_css("textarea")["rows"]
+  end
+
+  def test_forwards_cols_to_textarea
+    assert_equal "40", build_native(cols: 40).at_css("textarea")["cols"]
+  end
+
+  def test_forwards_placeholder_to_textarea
+    assert_equal "Write here", build_native(placeholder: "Write here").at_css("textarea")["placeholder"]
+  end
+
+  def test_forwards_data_attributes_to_textarea
+    assert_equal "autogrow", build_native(data: { controller: "autogrow" }).at_css("textarea")["data-controller"]
+  end
+
+  # ── f.field(as: :text_area) — label + textarea + hint + error ───────────
 
   def test_renders_label
     assert_css build_field, "label[for='sign_in_form_email']"
   end
 
-  def test_renders_textarea_with_correct_name
-    assert_css build_field, "textarea[name='sign_in_form[email]']"
-  end
-
-  # ── hint ──────────────────────────────────────────────────────────────────
-
   def test_renders_hint_when_details_given
     assert_css build_field(hint: "Enter your message"), "#sign_in_form_email_hint"
   end
-
-  # ── error state ───────────────────────────────────────────────────────────
 
   def test_renders_error_message
     @form.errors.add(:email, "is too short")
@@ -56,51 +79,21 @@ class TextAreaTest < ActionView::TestCase
                     "sign_in_form_email_error"
   end
 
-  # ── required ──────────────────────────────────────────────────────────────
-
   def test_required_sets_required_attribute
-    textarea = build_field(required: true).at_css("textarea")
-
-    assert_equal "required", textarea["required"]
+    assert_equal "required", build_field(required: true).at_css("textarea")["required"]
   end
 
   def test_required_sets_aria_required
-    textarea = build_field(required: true).at_css("textarea")
-
-    assert_equal "true", textarea["aria-required"]
+    assert_equal "true", build_field(required: true).at_css("textarea")["aria-required"]
   end
-
-  # ── label option ──────────────────────────────────────────────────────────
 
   def test_label_option_overrides_label_text
     assert_includes build_field(label: "Your message").text, "Your message"
   end
 
-  # ── html option forwarding ─────────────────────────────────────────────────
-
-  def test_forwards_rows_to_textarea
-    assert_equal "6", build_field(rows: 6).at_css("textarea")["rows"]
-  end
-
-  def test_forwards_cols_to_textarea
-    assert_equal "40", build_field(cols: 40).at_css("textarea")["cols"]
-  end
-
-  def test_forwards_placeholder_to_textarea
-    assert_equal "Write here", build_field(placeholder: "Write here").at_css("textarea")["placeholder"]
-  end
-
-  def test_forwards_data_attributes_to_textarea
-    assert_equal "autogrow", build_field(data: { controller: "autogrow" }).at_css("textarea")["data-controller"]
-  end
-
-  # ── hide_label ────────────────────────────────────────────────────────────
-
   def test_hide_label_keeps_label_in_dom
     assert_css build_field(hide_label: true), "label[for='sign_in_form_email']"
   end
-
-  # ── error override ────────────────────────────────────────────────────────
 
   def test_error_override_renders_error_message
     assert_includes build_field(error: "Too short").text, "Too short"

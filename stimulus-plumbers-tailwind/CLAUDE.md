@@ -56,6 +56,7 @@ stimulus-plumbers-tailwind/
 - **Unit tests** using Rails minitest (`rake test:unit`)
 - **Snapshot tests** using Playwright (`npm run test:snapshots`); update baselines with `npm run test:snapshots:update`
 - **Lint tests** using Rubocop (`rake rubocop`)
+- **Snapshot tests must be a superset of `stimulus-plumbers-rails` a11y tests** — every page + interactive state covered by an a11y test must also have a corresponding snapshot test. When adding a11y tests in the core gem, add matching snapshot coverage here.
 
 ## Theme Architecture
 

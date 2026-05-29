@@ -5,30 +5,39 @@ module StimulusPlumbers
     module Fields
       module Inputs
         module Text
-          FIELD_TYPES = %i[
-            color_field
-            datetime_local_field
-            email_field
-            month_field
-            number_field
-            range_field
-            telephone_field
-            text_field
-            url_field
-            week_field
-          ].freeze
+          TEXT_FIELD_METHODS = {
+            text:           :text_field,
+            email:          :email_field,
+            number:         :number_field,
+            url:            :url_field,
+            tel:            :telephone_field,
+            color:          :color_field,
+            month:          :month_field,
+            week:           :week_field,
+            range:          :range_field,
+            datetime_local: :datetime_local_field
+          }.freeze
 
-          FIELD_TYPES.each do |method_name|
-            define_method(method_name) do |attribute, options = {}|
-              Field.new(@template, **options).render(
-                object,
-                attribute,
-                input_id: field_id(attribute)
-              ) do |html_opts, opts, error|
-                html_options = merge_html_options(opts, html_opts, field_theme(:form_input, error: error))
-                super(attribute, html_options)
-              end
+          # Public ActionView overrides — native, just adds theme classes
+          TEXT_FIELD_METHODS.each_value do |template_method|
+            define_method(template_method) do |attribute, options = {}|
+              html_options = merge_html_options(options, field_theme(:form_input))
+              super(attribute, html_options)
             end
+          end
+
+          private
+
+          # Private render methods for f.field dispatch
+          TEXT_FIELD_METHODS.each do |as_key, template_method|
+            define_method(:"render_#{as_key}_input") do |attribute, html_opts, opts, error, **kwargs|
+              render_text(attribute, html_opts, opts, error, template_method, **kwargs)
+            end
+          end
+
+          def render_text(attribute, html_opts, opts, error, template_method, **kwargs)
+            html_options = merge_html_options(opts, html_opts, kwargs, field_theme(:form_input, error: error))
+            @template.public_send(template_method, @object_name, attribute, objectify_options(html_options))
           end
         end
       end

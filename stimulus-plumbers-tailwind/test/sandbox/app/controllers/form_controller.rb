@@ -5,6 +5,10 @@ class FormController < ApplicationController
     @form = SignUp.new
   end
 
+  def choices
+    @form = SignUp.new
+  end
+
   def field_error
     @form = SignUp.new.tap do |f|
       f.errors.add(:email, "is already taken")
