@@ -51,6 +51,27 @@ class PopoverBuilderTest < ActionView::TestCase
     assert_includes b.panel_html, "Popover body"
   end
 
+  def test_panel_renders_wired_element
+    b = builder(panel_id: "p1")
+    b.panel { "body" }
+
+    assert_css parse_html(b.panel_html), "#p1[data-popover-target='panel'][hidden]"
+  end
+
+  def test_build_panel_yields_panel_id_and_attrs_to_caller
+    b             = builder(panel_id: "p1")
+    yielded_id    = nil
+    yielded_attrs = nil
+    b.build_panel do |panel_id, attrs|
+      yielded_id    = panel_id
+      yielded_attrs = attrs
+    end
+
+    assert_equal "p1",    yielded_id
+    assert_equal "p1",    yielded_attrs[:id]
+    assert_equal "panel", yielded_attrs.dig(:data, :popover_target)
+  end
+
   def test_trigger_and_panel_are_independent
     b = builder(panel_id: "p1")
     b.trigger { "trigger" }

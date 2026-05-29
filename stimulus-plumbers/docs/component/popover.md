@@ -6,12 +6,12 @@ This controller is also the visibility/dismissal layer for the combobox family �
 
 ## Targets
 
-| Target     | Description                                                                       |
-| ---------- | --------------------------------------------------------------------------------- |
-| `trigger`  | The activator element — opens/toggles the panel and tracks `aria-expanded`        |
-| `panel`    | The element to show/hide (and load remote content into)                           |
-| `template` | Optional `<template>` or element whose HTML is used as initial content            |
-| `loader`   | Optional element shown during remote load                                         |
+| Target     | Description                                                                |
+| ---------- | -------------------------------------------------------------------------- |
+| `trigger`  | The activator element — opens/toggles the panel and tracks `aria-expanded` |
+| `panel`    | The element to show/hide (and load remote content into)                    |
+| `template` | Optional `<template>` or element whose HTML is used as initial content     |
+| `loader`   | Optional element shown during remote load                                  |
 
 ## Values
 
@@ -25,19 +25,19 @@ This controller is also the visibility/dismissal layer for the combobox family �
 
 ## Methods
 
-| Method                       | Wired via             | Description                                                                                                  |
-| ---------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `open()`                     | `data-action`         | Action — shows the panel                                                                                      |
-| `close()`                    | `data-action`         | Action — hides the panel (used by Esc, close buttons, outside-click)                                         |
-| `toggle()`                   | `data-action`         | Action — shows when hidden, hides when visible                                                                |
-| `closeOnSelect()`            | `data-action`         | Action — hides the panel only when `closeOnSelect` value is `true`; used by selection events                 |
-| `shown()`                    | Visibility plumber    | Plumber callback — triggers `load()`, then moves focus into the panel                                        |
-| `hidden()`                   | Visibility plumber    | Plumber callback — returns focus to the `trigger`                                                            |
+| Method                       | Wired via             | Description                                                                                                 |
+| ---------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `open()`                     | `data-action`         | Action — shows the panel                                                                                    |
+| `close()`                    | `data-action`         | Action — hides the panel (used by Esc, close buttons, outside-click)                                        |
+| `toggle()`                   | `data-action`         | Action — shows when hidden, hides when visible                                                              |
+| `closeOnSelect()`            | `data-action`         | Action — hides the panel only when `closeOnSelect` value is `true`; used by selection events                |
+| `shown()`                    | Visibility plumber    | Plumber callback — triggers `load()`, then moves focus into the panel                                       |
+| `hidden()`                   | Visibility plumber    | Plumber callback — returns focus to the `trigger`                                                           |
 | `dismissed()`                | Dismisser plumber     | Plumber callback — closes the panel on outside click                                                        |
-| `canLoad()`                  | ContentLoader plumber | Plumber callback (gate) — returns `false` for `<turbo-frame>` panels (sets `src` instead); `true` otherwise  |
-| `contentLoading()`           | ContentLoader plumber | Plumber callback — shows the `loader` target while fetching                                                  |
+| `canLoad()`                  | ContentLoader plumber | Plumber callback (gate) — returns `false` for `<turbo-frame>` panels (sets `src` instead); `true` otherwise |
+| `contentLoading()`           | ContentLoader plumber | Plumber callback — shows the `loader` target while fetching                                                 |
 | `contentLoaded({ content })` | ContentLoader plumber | Plumber callback — inserts fetched content into the `panel` target, hides `loader`                          |
-| `contentLoader()`            | ContentLoader plumber | Plumber callback — returns static content from `template` target (if no URL)                                 |
+| `contentLoader()`            | ContentLoader plumber | Plumber callback — returns static content from `template` target (if no URL)                                |
 
 ## Examples
 
@@ -98,7 +98,9 @@ Selection events (from combobox sub-controllers, menu items, etc.) can be wired 
 ```html
 <div data-controller="popover" data-popover-close-on-select-value="false">
   ...
-  <ul data-action="my-list:selected->popover#closeOnSelect">…</ul>
+  <ul data-action="my-list:selected->popover#closeOnSelect">
+    …
+  </ul>
 </div>
 ```
 

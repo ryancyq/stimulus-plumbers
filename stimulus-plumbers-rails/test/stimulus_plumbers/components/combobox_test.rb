@@ -3,13 +3,14 @@
 require "test_helper"
 
 class ComboboxTest < ActionView::TestCase
-  def render_combobox(input: {}, trigger: {}, popover: {}, **kwargs)
+  def render_combobox(input: {}, trigger: {}, **kwargs)
     StimulusPlumbers::Components::Combobox.new(self).render(
       input:   input,
       trigger: trigger,
-      popover: popover,
       **kwargs
-    ) { "popover-content".html_safe }
+    ) do |_panel_id, panel_attrs|
+      content_tag(:ul, "popover-content".html_safe, **panel_attrs)
+    end
   end
 
   # ── stimulus controllers ───────────────────────────────────────────────────

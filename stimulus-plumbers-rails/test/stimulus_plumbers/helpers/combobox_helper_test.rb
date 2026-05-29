@@ -381,14 +381,14 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_equal "United Kingdom", spans[1].text
     end
 
-    def test_trigger_aria_controls_matches_popover_id
+    def test_trigger_aria_controls_matches_listbox_id
       doc     = parse_html(sp_combobox_typeahead)
       trigger = doc.at_css("input[role='combobox']")
-      popover = doc.at_css("[data-popover-target='panel']")
+      listbox = doc.at_css("ul[role='listbox']")
 
       assert_not_nil trigger
-      assert_not_nil popover
-      assert_equal popover["id"], trigger["aria-controls"]
+      assert_not_nil listbox
+      assert_equal listbox["id"], trigger["aria-controls"]
     end
 
     # ── value ─────────────────────────────────────────────────────────────────
@@ -468,8 +468,8 @@ class ComboboxHelperTest < ActionView::TestCase
 
     # ── drums ──────────────────────────────────────────────────────────────────
 
-    def test_time_controller_inside_popover
-      assert_css parse_html(sp_combobox_time), "[role='dialog'] [data-controller='combobox-time']"
+    def test_time_controller_on_popover
+      assert_css parse_html(sp_combobox_time), "[role='dialog'][data-controller='combobox-time']"
     end
 
     def test_renders_hour_minute_period_drums_by_default

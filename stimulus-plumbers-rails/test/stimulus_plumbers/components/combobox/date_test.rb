@@ -38,9 +38,9 @@ class ComboboxDateTest < ActionView::TestCase
 
   # ── calendar_id_for ───────────────────────────────────────────────────────
 
-  def test_calendar_id_for_derives_from_popover_id
-    assert_equal "my_popover_calendar",
-                 StimulusPlumbers::Components::Combobox::Date.calendar_id_for("my_popover")
+  def test_calendar_id_for_derives_from_panel_id
+    assert_equal "my_panel_calendar",
+                 StimulusPlumbers::Components::Combobox::Date.calendar_id_for("my_panel")
   end
 
   def test_calendar_id_for_with_nil_returns_fallback
@@ -48,14 +48,24 @@ class ComboboxDateTest < ActionView::TestCase
                  StimulusPlumbers::Components::Combobox::Date.calendar_id_for(nil)
   end
 
-  # ── popover_id threading ──────────────────────────────────────────────────
+  # ── panel_id threading ──────────────────────────────────────────────────────
 
-  def test_outlet_selector_matches_calendar_id_when_popover_id_given
-    doc             = parse_html(render_date(popover_id: "test_popover"))
+  def test_outlet_selector_matches_calendar_id_when_panel_id_given
+    doc             = parse_html(render_date(panel_id: "test_panel"))
     date_controller = doc.at_css("[data-controller~='combobox-date']")
     calendar        = doc.at_css("[data-controller~='calendar-month']")
 
-    assert_equal "#test_popover_calendar", date_controller["data-combobox-date-calendar-month-outlet"]
-    assert_equal "test_popover_calendar",  calendar["id"]
+    assert_equal "#test_panel_calendar", date_controller["data-combobox-date-calendar-month-outlet"]
+    assert_equal "test_panel_calendar",  calendar["id"]
+  end
+
+  # ── popup_id / haspopup ─────────────────────────────────────────────────────
+
+  def test_haspopup_is_dialog
+    assert_equal "dialog", StimulusPlumbers::Components::Combobox::Date.haspopup
+  end
+
+  def test_popup_id_is_the_panel
+    assert_equal "p1", StimulusPlumbers::Components::Combobox::Date.popup_id("p1")
   end
 end

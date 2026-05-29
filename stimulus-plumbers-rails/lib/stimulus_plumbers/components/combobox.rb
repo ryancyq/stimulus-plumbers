@@ -7,7 +7,7 @@ module StimulusPlumbers
       FORMAT_CONTROLLER   = "input-formatter"
       FORMAT_ACTION       = "input-combobox:changed->input-formatter#format"
 
-      def self.popover_id_for(trigger_id)
+      def self.panel_id_for(trigger_id)
         [trigger_id, "popover"].compact.join("_")
       end
 
@@ -18,20 +18,21 @@ module StimulusPlumbers
       private
 
       # rubocop:disable Metrics/AbcSize
-      def render_combobox(trigger: {}, input: {}, popover: {}, close_on_select: nil, **kwargs, &block)
-        panel_id     = self.class.popover_id_for(trigger[:id])
+      def render_combobox(trigger: {}, input: {}, haspopup: "dialog", popup_id: nil, close_on_select: nil, **kwargs, &block)
+        panel_id     = self.class.panel_id_for(trigger[:id])
         html_options = merge_html_options(
           { classes: theme.resolve(:combobox).fetch(:classes, ""),
             data:    build_stimulus_data(input[:value], close_on_select)
 },
           kwargs
         )
-        haspopup = popover.delete(:haspopup) { popover[:role] || "dialog" }
 
         template.content_tag(:div, **html_options) do
           Components::Popover.new(template).build(panel_id: panel_id) do |p|
-            p.trigger(haspopup: haspopup) { |attrs| build_combobox_trigger(attrs, trigger, input) }
-            p.panel(**build_panel_options(popover), &block)
+            p.trigger(haspopup: haspopup, controls: popup_id || panel_id) do |attrs|
+              build_combobox_trigger(attrs, trigger, input)
+            end
+            p.build_panel(classes: theme.resolve(:combobox_popover).fetch(:classes, ""), &block)
           end
         end
       end
@@ -47,13 +48,6 @@ module StimulusPlumbers
             ),
             hidden_input(input)
           ]
-        )
-      end
-
-      def build_panel_options(popover)
-        merge_html_options(
-          { classes: theme.resolve(:combobox_popover).fetch(:classes, "") },
-          popover
         )
       end
 

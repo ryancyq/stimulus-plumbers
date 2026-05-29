@@ -7,24 +7,45 @@ class ComboboxTypeaheadTest < ActionView::TestCase
     StimulusPlumbers::Components::Combobox::Typeahead.new(self).render(**opts)
   end
 
+  # ── listbox ─────────────────────────────────────────────────────────────────
+
+  def test_panel_wraps_a_listbox
+    doc = parse_html(render_typeahead(panel_id: "p1"))
+
+    assert_css doc, "div[data-controller~='combobox-dropdown'] > ul[role='listbox']"
+  end
+
+  def test_listbox_id_is_derived_from_panel_id
+    listbox = parse_html(render_typeahead(panel_id: "p1")).at_css("ul[role='listbox']")
+
+    assert_equal "p1_listbox", listbox["id"]
+    assert_equal "listbox",    listbox["data-combobox-dropdown-target"]
+  end
+
+  def test_options_are_the_only_listbox_children
+    doc = parse_html(render_typeahead(panel_id: "p1", options: [%w[London lon]]))
+
+    assert_css doc, "ul[role='listbox'] > li[role='option'][data-value='lon']"
+    assert_no_css doc, "ul[role='listbox'] [role='status']"
+    assert_no_css doc, "ul[role='listbox'] [aria-live]"
+  end
+
   # ── loading ───────────────────────────────────────────────────────────────
 
-  def test_renders_loading_region
-    assert_css parse_html(render_typeahead), "li[aria-live='polite']"
+  def test_loading_is_a_sibling_live_region_hidden_by_default
+    doc = parse_html(render_typeahead(panel_id: "p1"))
+
+    assert_css doc, "div[aria-live='polite'][hidden][data-combobox-dropdown-target='loading']"
+    assert_no_css doc, "ul[role='listbox'] [data-combobox-dropdown-target='loading']"
   end
 
-  def test_loading_is_hidden_by_default
-    assert_css parse_html(render_typeahead), "li[aria-live='polite'][hidden]"
-  end
+  # ── empty state ─────────────────────────────────────────────────────────────
 
-  # ── empty state ───────────────────────────────────────────────────────────
+  def test_empty_is_a_sibling_status_region_hidden_by_default
+    doc = parse_html(render_typeahead(panel_id: "p1"))
 
-  def test_renders_empty_state_with_role_status
-    assert_css parse_html(render_typeahead), "li[role='status']"
-  end
-
-  def test_empty_state_is_hidden_by_default
-    assert_css parse_html(render_typeahead), "li[role='status'][hidden]"
+    assert_css doc, "div[role='status'][hidden][data-combobox-dropdown-target='empty']"
+    assert_no_css doc, "ul[role='listbox'] [data-combobox-dropdown-target='empty']"
   end
 
   def test_empty_state_has_no_results_text
@@ -40,8 +61,21 @@ class ComboboxTypeaheadTest < ActionView::TestCase
     assert_css doc, "li[data-value='par']"
   end
 
-  def test_marks_matching_value_as_selected
-    assert_css parse_html(render_typeahead(options: [%w[London lon]], value: "lon")),
-               "li[data-value='lon'][aria-selected='true']"
+  # ── url ─────────────────────────────────────────────────────────────────────
+
+  def test_url_sets_combobox_dropdown_url_value_on_panel
+    doc = parse_html(render_typeahead(panel_id: "p1", url: "/search"))
+
+    assert_css doc, "div[data-controller~='combobox-dropdown'][data-combobox-dropdown-url-value='/search']"
+  end
+
+  # ── popup_id / haspopup ─────────────────────────────────────────────────────
+
+  def test_haspopup_is_listbox
+    assert_equal "listbox", StimulusPlumbers::Components::Combobox::Typeahead.haspopup
+  end
+
+  def test_popup_id_points_at_the_listbox
+    assert_equal "p1_listbox", StimulusPlumbers::Components::Combobox::Typeahead.popup_id("p1")
   end
 end

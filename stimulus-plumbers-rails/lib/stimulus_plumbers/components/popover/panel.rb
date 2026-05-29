@@ -5,13 +5,26 @@ module StimulusPlumbers
     class Popover
       class Panel < Plumber::Base
         def render(panel_id:, tag: :div, **kwargs, &block)
-          html_options = merge_html_options(
+          template.content_tag(
+            tag,
+            block_given? ? template.capture(panel_id, &block) : nil,
+            **panel_attrs(panel_id, **kwargs)
+          )
+        end
+
+        def build(panel_id:, **kwargs, &block)
+          template.capture(panel_id, panel_attrs(panel_id, **kwargs), &block)
+        end
+
+        private
+
+        def panel_attrs(panel_id, **kwargs)
+          merge_html_options(
             { id: panel_id, hidden: "" },
             { classes: theme.resolve(:popover).fetch(:classes, "") },
             { data: { popover_target: "panel" } },
             kwargs
           )
-          template.content_tag(tag, block_given? ? template.capture(panel_id, &block) : nil, **html_options)
         end
       end
     end

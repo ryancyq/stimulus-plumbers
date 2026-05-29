@@ -6,11 +6,8 @@ module StimulusPlumbers
       class Time < Plumber::Base
         STIMULUS_CONTROLLER = "combobox-time"
 
-        def self.default_opts
-          {
-            popover: { aria: { label: "Picker" }, role: "dialog", tag: :div }
-          }
-        end
+        def self.haspopup = "dialog"
+        def self.popup_id(panel_id) = panel_id
 
         def render(...)
           render_time(...)
@@ -18,7 +15,7 @@ module StimulusPlumbers
 
         private
 
-        def render_time(format: :h12, step: 1, value: nil)
+        def render_time(panel_attrs: {}, format: :h12, step: 1, value: nil, label: "Picker", labelledby: nil)
           @format = format
           @step   = [1, step.to_i].max
           @time   = parse_time(value)
@@ -26,8 +23,11 @@ module StimulusPlumbers
           template.content_tag(
             :div,
             **merge_html_options(
+              panel_attrs,
               { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
-              { data: { controller: STIMULUS_CONTROLLER,
+              { role: "dialog",
+                aria: { label: (label unless labelledby), labelledby: labelledby }.compact,
+                data: { controller: STIMULUS_CONTROLLER,
                         action:     [
                           "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
                           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"

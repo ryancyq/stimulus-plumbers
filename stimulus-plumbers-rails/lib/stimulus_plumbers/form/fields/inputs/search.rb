@@ -25,29 +25,32 @@ module StimulusPlumbers
 
           private
 
+          # rubocop:disable Metrics/AbcSize
           def render_combobox_typeahead(attribute, html_opts, opts, error, url: nil, clearable: false, choices: [], **kwargs)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             input_id      = html_opts[:id]
+            labelledby    = Field.label_id(input_id)
             combobox_opts = Components::Combobox::Typeahead.default_opts.deep_merge(
               input:   { value: current_value },
               trigger: { data: clearable ? { input_clearable_target: "input" } : {}, aria: html_opts[:aria] },
-              popover: {
-                data: url ? { combobox_dropdown_url_value: url } : {},
-                aria: { labelledby: Field.label_id(input_id) }
-              },
               **opts
             )
             combobox_html = render_combobox(
               attribute,
               input_id: input_id,
+              klass:    Components::Combobox::Typeahead,
               opts:     combobox_opts,
               err:      error,
               data:     {
-                input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.popover_id_for(input_id)}",
+                input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.panel_id_for(input_id)}",
                 action:                                  "input->input-combobox#onInput"
               },
               **kwargs
-            ) { Components::Combobox::Typeahead.new(@template).render(options: choices, value: current_value) }
+            ) do |pid, panel_attrs|
+              Components::Combobox::Typeahead.new(@template).render(
+                panel_id: pid, panel_attrs: panel_attrs, options: choices, value: current_value, labelledby: labelledby, url: url
+              )
+            end
 
             return combobox_html unless clearable
 
@@ -57,6 +60,7 @@ module StimulusPlumbers
               **merge_html_options(field_theme(:form_input_clearable), { data: { controller: "input-clearable" } })
             ) { combobox_html }
           end
+          # rubocop:enable Metrics/AbcSize
 
           def clear_button
             Components::Button.new(@template).render(

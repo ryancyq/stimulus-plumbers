@@ -15,11 +15,11 @@ module StimulusPlumbers
 
         # No block / zero-arity block: renders a wired <button>; block becomes button content.
         # One-arity block: yields { panel_id:, aria:, data: } — caller wires their own element.
-        def trigger(haspopup: "dialog", **kwargs, &block)
+        def trigger(haspopup: "dialog", controls: @panel_id, **kwargs, &block)
           if block_given? && block.arity == 1
             attrs = {
               panel_id: @panel_id,
-              aria:     { haspopup: haspopup, expanded: "false", controls: @panel_id },
+              aria:     { haspopup: haspopup, expanded: "false", controls: controls },
               data:     { popover_target: "trigger", action: Popover::Trigger::ACTION }
             }
             @trigger_html = @template.capture(attrs, &block)
@@ -32,6 +32,10 @@ module StimulusPlumbers
 
         def panel(**kwargs, &block)
           @panel_html = Popover::Panel.new(@template).render(panel_id: @panel_id, **kwargs, &block)
+        end
+
+        def build_panel(**kwargs, &block)
+          @panel_html = Popover::Panel.new(@template).build(panel_id: @panel_id, **kwargs, &block)
         end
       end
     end

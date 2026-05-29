@@ -8,14 +8,14 @@ module StimulusPlumbers
         CALENDAR_OUTLET = "#{STIMULUS_CONTROLLER}-calendar-month-outlet".freeze
 
         def self.default_opts
-          {
-            input:   { data: { combobox_date_date_value: nil } },
-            popover: { aria: { label: "Picker" }, role: "dialog", tag: :div }
-          }
+          { input: { data: { combobox_date_date_value: nil } } }
         end
 
-        def self.calendar_id_for(popover_id)
-          [popover_id, "calendar"].compact.join("_")
+        def self.haspopup = "dialog"
+        def self.popup_id(panel_id) = panel_id
+
+        def self.calendar_id_for(panel_id)
+          [panel_id, "calendar"].compact.join("_")
         end
 
         def render(...)
@@ -24,8 +24,8 @@ module StimulusPlumbers
 
         private
 
-        def render_date(value: nil, popover_id: nil)
-          calendar_id = self.class.calendar_id_for(popover_id)
+        def render_date(panel_id: nil, panel_attrs: {}, value: nil, label: "Picker", labelledby: nil)
+          calendar_id = self.class.calendar_id_for(panel_id)
 
           data = {
             controller:          STIMULUS_CONTROLLER,
@@ -38,7 +38,12 @@ module StimulusPlumbers
             "#{STIMULUS_CONTROLLER}-date-value" => value
           }.compact
 
-          template.content_tag(:div, data: data) do
+          aria = { label: (label unless labelledby), labelledby: labelledby }.compact
+
+          template.content_tag(
+            :div,
+            **merge_html_options(panel_attrs, { role: "dialog", aria: aria, data: data })
+          ) do
             template.safe_join([navigation, calendar_month(id: calendar_id)])
           end
         end

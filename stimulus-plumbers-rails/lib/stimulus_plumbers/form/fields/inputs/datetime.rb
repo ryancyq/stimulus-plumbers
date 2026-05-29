@@ -23,21 +23,24 @@ module StimulusPlumbers
 
           def render_combobox_date(attribute, html_opts, opts, error, icon_leading: nil, icon_trailing: "calendar", **kwargs)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
+            labelledby    = Field.label_id(html_opts[:id])
             combobox_opts = Components::Combobox::Date.default_opts.deep_merge(
               input:   { value: current_value, data: { combobox_date_date_value: current_value } },
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
-              popover: { aria: { labelledby: Field.label_id(html_opts[:id]) } },
               **opts
             )
             render_combobox(
               attribute,
               input_id: html_opts[:id],
+              klass:    Components::Combobox::Date,
               opts:     combobox_opts,
               err:      error,
               data:     { input_formatter_format_value: "date" },
               **kwargs
-            ) do |popover_id|
-              Components::Combobox::Date.new(@template).render(value: current_value, popover_id: popover_id)
+            ) do |pid, panel_attrs|
+              Components::Combobox::Date.new(@template).render(
+                panel_id: pid, panel_attrs: panel_attrs, value: current_value, labelledby: labelledby
+              )
             end
           end
 
@@ -53,20 +56,25 @@ module StimulusPlumbers
             **kwargs
           )
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
-            combobox_opts = Components::Combobox::Time.default_opts.deep_merge(
+            labelledby    = Field.label_id(html_opts[:id])
+            combobox_opts = {
               input:   { value: current_value },
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
-              popover: { aria: { labelledby: Field.label_id(html_opts[:id]) } },
               **opts
-            )
+            }
             render_combobox(
               attribute,
               input_id: html_opts[:id],
+              klass:    Components::Combobox::Time,
               opts:     combobox_opts,
               err:      error,
               data:     { input_formatter_format_value: "time", input_formatter_options_value: { format: format }.to_json },
               **kwargs
-            ) { Components::Combobox::Time.new(@template).render(format: format, step: step, value: current_value) }
+            ) do |_pid, panel_attrs|
+              Components::Combobox::Time.new(@template).render(
+                panel_attrs: panel_attrs, format: format, step: step, value: current_value, labelledby: labelledby
+              )
+            end
           end
         end
       end

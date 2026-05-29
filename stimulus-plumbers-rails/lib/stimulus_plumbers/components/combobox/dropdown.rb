@@ -12,20 +12,8 @@ module StimulusPlumbers
           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
         ].join(" ").freeze
 
-        def self.default_opts
-          {
-            popover: {
-              tag:      :ul,
-              haspopup: "listbox",
-              role:     "listbox",
-              data:     {
-                controller:               STIMULUS_CONTROLLER,
-                action:                   STIMULUS_ACTION,
-                combobox_dropdown_target: "listbox"
-              }
-            }
-          }
-        end
+        def self.haspopup = "listbox"
+        def self.popup_id(panel_id) = panel_id
 
         def render(...)
           render_dropdown(...)
@@ -33,8 +21,20 @@ module StimulusPlumbers
 
         private
 
-        def render_dropdown(options: [], value: nil)
-          Options.new(template).render(options, value: value)
+        def render_dropdown(panel_attrs: {}, options: [], value: nil, label: nil, labelledby: nil)
+          template.content_tag(
+            :ul,
+            Options.new(template).render(options, value: value),
+            **merge_html_options(
+              panel_attrs,
+              { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
+              {
+                role: "listbox",
+                aria: { label: (label unless labelledby), labelledby: labelledby }.compact,
+                data: { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION, combobox_dropdown_target: "listbox" }
+              }
+            )
+          )
         end
       end
     end

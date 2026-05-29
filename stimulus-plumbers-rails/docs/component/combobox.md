@@ -45,12 +45,12 @@ Read-only combobox with a static listbox popover.
 [["Unavailable",   "x",  { disabled: true }], ...]
 ```
 
-| Option           | Description                                               |
-| ---------------- | --------------------------------------------------------- |
-| `options`        | Option rows (see formats above)                           |
-| `value`          | Pre-selected value                                        |
-| `label`          | `aria-label` on the trigger input and the listbox panel   |
-| `**html_options` | Forwarded to the wrapper `div`                            |
+| Option           | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| `options`        | Option rows (see formats above)                         |
+| `value`          | Pre-selected value                                      |
+| `label`          | `aria-label` on the trigger input and the listbox panel |
+| `**html_options` | Forwarded to the wrapper `div`                          |
 
 ---
 
@@ -129,7 +129,7 @@ owns value/selection/filtering; `input-formatter` formats the displayed value.
     role="combobox"
     aria-haspopup="dialog|listbox"
     aria-expanded="false"
-    aria-controls="[id]_popover"
+    aria-controls="[popup-id]"
     data-popover-target="trigger"
     data-input-combobox-target="trigger"
     data-input-formatter-target="input"
@@ -142,14 +142,20 @@ owns value/selection/filtering; `input-formatter` formats the displayed value.
 </div>
 ```
 
-`aria-haspopup` is `"listbox"` for dropdown/typeahead, `"dialog"` for date/time.
+`aria-haspopup` is `"listbox"` for dropdown/typeahead, `"dialog"` for date/time. The
+`[popup-id]` is `[id]_popover` for dropdown/date/time and `[id]_popover_listbox` for typeahead.
 
 Pass `close_on_select: false` to any `sp_combobox_*` helper to keep the panel open
 after a selection (renders `data-popover-close-on-select-value="false"` on the wrapper).
 
 ### Popover body by variant
 
-**date / time** — a `<div role="dialog">` wrapping the picker content:
+Each variant builds its own panel root via `Popover::Builder#build_panel` (see
+[popover.md](popover.md)), adding its controller and role to the panel wiring. The
+trigger's `aria-controls` points at the popup — the panel for dropdown/date/time, the
+nested `<ul role="listbox">` for typeahead.
+
+**date / time** — the panel IS the `role="dialog"` element and hosts the picker controller:
 
 ```html
 <div
@@ -158,12 +164,14 @@ after a selection (renders `data-popover-close-on-select-value="false"` on the w
   aria-label="[label]"
   hidden
   data-popover-target="panel"
+  data-controller="combobox-date"
+  data-action="combobox-date:selected->input-combobox#onSelect combobox-date:selected->popover#closeOnSelect ..."
 >
   <!-- calendar grid (date) or drum columns (time) -->
 </div>
 ```
 
-**dropdown / typeahead** — the popover element IS the `<ul role="listbox">`:
+**dropdown** — the panel IS the `<ul role="listbox">`; options are its only children:
 
 ```html
 <ul
@@ -181,12 +189,36 @@ after a selection (renders `data-popover-close-on-select-value="false"` on the w
 </ul>
 ```
 
-For typeahead, `loading` and `empty` state elements are rendered as `<li>` siblings inside the same `<ul>`:
+**typeahead** — the panel is a wrapper holding the controller. The `<ul role="listbox">`
+holds only options; the `loading`/`empty` status regions are siblings beside it, since
+`role="listbox"` permits only `option`/`group` children. Status regions stay
+non-focusable (the popover focuses the first focusable element in the panel on open).
 
 ```html
-<ul id="[id]_popover" hidden role="listbox" ...>
-  <li role="option" ...>Paris</li>
-  <li hidden aria-live="polite" data-combobox-dropdown-target="loading"><!-- spinner --></li>
-  <li hidden role="status" data-combobox-dropdown-target="empty">No results</li>
-</ul>
+<div
+  id="[id]_popover"
+  hidden
+  data-popover-target="panel"
+  data-controller="combobox-dropdown"
+  data-action="click->combobox-dropdown#select keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect combobox-dropdown:selected->popover#closeOnSelect"
+  data-combobox-dropdown-url-value="[url]"
+>
+  <ul
+    id="[id]_popover_listbox"
+    role="listbox"
+    aria-labelledby="[label-id]"
+    data-combobox-dropdown-target="listbox"
+  >
+    <li role="option" ...>Paris</li>
+  </ul>
+  <div hidden aria-live="polite" data-combobox-dropdown-target="loading">
+    <!-- spinner -->
+  </div>
+  <div hidden role="status" data-combobox-dropdown-target="empty">
+    No results
+  </div>
+</div>
 ```
+
+The remote `url` endpoint returns options-only HTML — it replaces the listbox's
+`innerHTML`, while the `loading`/`empty` siblings persist.

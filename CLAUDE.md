@@ -77,6 +77,11 @@ stimulus-plumbers-react/   # npm: @stimulus-plumbers/react
 - `aria-controls` linking activator to content id is recommended but optional
 - Escape closes and returns focus to trigger
 
+#### Combobox (`input_combobox_controller`, `combobox/`)
+- Trigger: `<input role="combobox">` with `aria-haspopup` (`listbox`/`dialog`) and `aria-controls` referencing the **popup element** (the `role="listbox"`/`role="dialog"`)
+- `role="listbox"` permits only `option`/`group` children (`aria-required-children`, WCAG 1.3.1). Status messages (loading, "No results") must be `role="status"`/`aria-live` **siblings of the listbox, never children of it** — for typeahead the listbox is nested in a wrapper panel so the status regions can sit beside it
+- Status/loading regions inside the popover panel must stay **non-focusable** (the popover moves focus into the panel on open)
+
 #### Calendar / Date Picker (`calendar_month_controller`, `date_picker/`)
 - Grid: `role="grid"`, `role="row"`, `role="gridcell"`
 - Navigation buttons: `aria-label="Previous month"` / `"Next month"`

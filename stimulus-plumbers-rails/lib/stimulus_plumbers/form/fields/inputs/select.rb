@@ -36,11 +36,14 @@ module StimulusPlumbers
           )
             current_value = selected || (object.respond_to?(attribute) ? object.public_send(attribute) : nil)
             all_choices   = build_select_dropdown_choices(Array(choices), include_blank: include_blank, prompt: prompt)
+            labelledby    = Field.label_id(html_opts[:id])
             combobox_opts = build_select_dropdown_opts(
               html_opts, current_value, opts: opts, icon_leading: icon_leading, icon_trailing: icon_trailing
             )
-            render_combobox(attribute, input_id: html_opts[:id], opts: combobox_opts, err: error) do
-              render_dropdown_component(all_choices, current_value, **kwargs)
+            render_combobox(
+              attribute, input_id: html_opts[:id], klass: Components::Combobox::Dropdown, opts: combobox_opts, err: error
+            ) do |_pid, panel_attrs|
+              render_dropdown_component(all_choices, current_value, panel_attrs: panel_attrs, labelledby: labelledby, **kwargs)
             end
           end
 
@@ -79,12 +82,11 @@ module StimulusPlumbers
           end
 
           def build_select_dropdown_opts(html_opts, current_value, opts:, icon_leading:, icon_trailing:)
-            Components::Combobox::Dropdown.default_opts.deep_merge(
+            {
               input:   { value: current_value },
               trigger: html_opts.merge({ icon_leading: icon_leading, icon_trailing: icon_trailing }.compact),
-              popover: { aria: { labelledby: Field.label_id(html_opts[:id]) } },
               **opts
-            )
+            }
           end
 
           def build_select_dropdown_choices(choices, include_blank:, prompt:)

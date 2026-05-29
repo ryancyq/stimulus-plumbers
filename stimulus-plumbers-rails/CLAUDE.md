@@ -23,17 +23,16 @@ stimulus-plumbers-rails/
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
 │       │   │   └── section.rb
-│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-format
+│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-format; drives p.build_panel, threads haspopup/popup_id
 │       │   ├── combobox/
-│       │   │   ├── typeahead.rb          # combobox-dropdown (typeahead mode) body — renders option + loading/empty <li>
-│       │   │   ├── date.rb               # combobox-date picker body
-│       │   │   ├── dropdown.rb           # combobox-dropdown listbox body — renders option <li> only; panel IS the <ul>
+│       │   │   ├── typeahead.rb          # combobox-dropdown body — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
+│       │   │   ├── date.rb               # combobox-date picker body — panel IS the role=dialog (hosts the controller)
+│       │   │   ├── dropdown.rb           # combobox-dropdown body — panel IS the <ul role=listbox>; options only
 │       │   │   ├── options.rb            # Option list renderer
 │       │   │   ├── options/
 │       │   │   │   ├── option.rb
 │       │   │   │   └── option_group.rb
-│       │   │   ├── popover.rb            # Thin delegator to Popover::Panel; adds combobox_popover theme + Stimulus target
-│       │   │   ├── time.rb               # combobox-time drum picker body
+│       │   │   ├── time.rb               # combobox-time drum picker body — panel IS the role=dialog (hosts the controller)
 │       │   │   ├── time/
 │       │   │   │   └── drum.rb           # Single drum column renderer
 │       │   │   └── trigger.rb            # Combobox trigger input (<input role="combobox">)
@@ -44,9 +43,9 @@ stimulus-plumbers-rails/
 │       │   ├── icon.rb                   # sp_icon renderer (SVG or span fallback)
 │       │   ├── popover.rb                # sp_popover renderer; render (with wrapper) / build (without wrapper)
 │       │   └── popover/
-│       │       ├── builder.rb            # Builder DSL: p.trigger / p.panel — yielded by render/build
+│       │       ├── builder.rb            # Builder DSL: p.trigger / p.panel (auto-wired) / p.build_panel (caller-wired) — yielded by render/build
 │       │       ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
-│       │       └── panel.rb              # Renders hidden panel element (shared by Popover + Combobox)
+│       │       └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_id + attrs for caller to wire)
 │       ├── helpers/
 │       │   ├── action_list_helper.rb     # sp_action_list, sp_action_list_section, sp_action_list_item
 │       │   ├── avatar_helper.rb          # sp_avatar

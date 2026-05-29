@@ -23,21 +23,28 @@ class ComboboxDropdownTest < ActionView::TestCase
     assert_css doc, "li[data-value='us'][aria-selected='false']"
   end
 
-  def test_renders_nothing_when_no_options
-    assert_empty render_dropdown.strip
+  def test_renders_empty_listbox_when_no_options
+    doc = parse_html(render_dropdown)
+
+    assert_css doc, "ul[role='listbox']"
+    assert_no_css doc, "li[role='option']"
   end
 
-  # ── default_opts ──────────────────────────────────────────────────────────
+  # ── panel ─────────────────────────────────────────────────────────────────
 
-  def test_default_opts_panel_tag_is_ul
-    assert_equal :ul, StimulusPlumbers::Components::Combobox::Dropdown.default_opts.dig(:popover, :tag)
+  def test_panel_is_the_listbox
+    doc = parse_html(render_dropdown(panel_attrs: { id: "p1" }, options: [%w[Canada ca]]))
+
+    assert_css doc, "ul#p1[role='listbox'][data-combobox-dropdown-target='listbox']"
   end
 
-  def test_default_opts_panel_role_is_listbox
-    assert_equal "listbox", StimulusPlumbers::Components::Combobox::Dropdown.default_opts.dig(:popover, :role)
+  # ── popup_id / haspopup ─────────────────────────────────────────────────────
+
+  def test_haspopup_is_listbox
+    assert_equal "listbox", StimulusPlumbers::Components::Combobox::Dropdown.haspopup
   end
 
-  def test_default_opts_panel_haspopup_is_listbox
-    assert_equal "listbox", StimulusPlumbers::Components::Combobox::Dropdown.default_opts.dig(:popover, :haspopup)
+  def test_popup_id_is_the_panel
+    assert_equal "p1", StimulusPlumbers::Components::Combobox::Dropdown.popup_id("p1")
   end
 end
