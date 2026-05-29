@@ -46,7 +46,6 @@ require_relative "stimulus_plumbers/components/date_picker/navigation"
 # -- Combobox --
 require_relative "stimulus_plumbers/components/combobox"
 require_relative "stimulus_plumbers/components/combobox/trigger"
-require_relative "stimulus_plumbers/components/combobox/popover"
 require_relative "stimulus_plumbers/components/combobox/options"
 require_relative "stimulus_plumbers/components/combobox/options/option"
 require_relative "stimulus_plumbers/components/combobox/options/option_group"

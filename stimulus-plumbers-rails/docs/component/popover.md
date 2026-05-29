@@ -31,10 +31,11 @@ Rails helper for rendering an accessible popover with a trigger and panel slot.
 <% end %>
 ```
 
-| Option           | Default | Description                                      |
-| ---------------- | ------- | ------------------------------------------------ |
-| `panel_id:`      | auto    | Override the generated panel `id`                |
-| `**html_options` | —       | Forwarded to the outer wrapper `div`             |
+| Option             | Default | Description                                                                       |
+| ------------------ | ------- | --------------------------------------------------------------------------------- |
+| `panel_id:`        | auto    | Override the generated panel `id`                                                 |
+| `close_on_select:` | —       | When `false`, sets `data-popover-close-on-select-value="false"` (panel stays open on selection) |
+| `**html_options`   | —       | Forwarded to the outer wrapper `div`                                              |
 
 ### `p.trigger`
 
@@ -93,7 +94,8 @@ end
           class="[popover_trigger]">
     Open
   </button>
-  <div id="[panel_id]" hidden class="[popover]" role="dialog" aria-label="Options">
+  <div id="[panel_id]" hidden class="[popover]" role="dialog" aria-label="Options"
+       data-popover-target="panel">
     Popover content
   </div>
 </div>

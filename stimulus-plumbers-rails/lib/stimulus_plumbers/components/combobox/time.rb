@@ -28,7 +28,10 @@ module StimulusPlumbers
             **merge_html_options(
               { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
               { data: { controller: STIMULUS_CONTROLLER,
-                        action:     "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
+                        action:     [
+                          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
+                          "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
+                        ].join(" ")
 }
 }
             )

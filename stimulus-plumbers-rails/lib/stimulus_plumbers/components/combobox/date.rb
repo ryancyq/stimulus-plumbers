@@ -32,7 +32,8 @@ module StimulusPlumbers
             CALENDAR_OUTLET  => "##{calendar_id}",
             action:              [
               "calendar-month-observer:selected->#{STIMULUS_CONTROLLER}#onSelect",
-              "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
+              "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
+              "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
             ].join(" "),
             "#{STIMULUS_CONTROLLER}-date-value" => value
           }.compact

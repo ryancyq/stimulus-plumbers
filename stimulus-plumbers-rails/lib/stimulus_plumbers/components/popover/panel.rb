@@ -8,6 +8,7 @@ module StimulusPlumbers
           html_options = merge_html_options(
             { id: panel_id, hidden: "" },
             { classes: theme.resolve(:popover).fetch(:classes, "") },
+            { data: { popover_target: "panel" } },
             kwargs
           )
           template.content_tag(tag, block_given? ? template.capture(panel_id, &block) : nil, **html_options)

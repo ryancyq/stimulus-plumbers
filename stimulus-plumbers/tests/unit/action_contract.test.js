@@ -3,6 +3,7 @@ import { readFileSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
+import PopoverController               from '../../src/controllers/popover_controller'
 import InputComboboxController         from '../../src/controllers/input_combobox_controller'
 import ComboboxDropdownController      from '../../src/controllers/combobox_dropdown_controller'
 import ComboboxTimeController          from '../../src/controllers/combobox_time_controller'
@@ -32,7 +33,8 @@ function identifierFromFile(filename) {
 describe('Ruby action binding contract', () => {
   describe('method names', () => {
     const METHOD_CONTRACT = [
-      ['input-combobox',          InputComboboxController,         ['open', 'close', 'onSelect', 'onInput']],
+      ['popover',                 PopoverController,               ['open', 'close', 'toggle', 'closeOnSelect']],
+      ['input-combobox',          InputComboboxController,         ['onSelect', 'onInput']],
       ['combobox-dropdown',       ComboboxDropdownController,      ['select', 'onNavigate']],
       ['combobox-time',           ComboboxTimeController,          ['select', 'onNavigate']],
       ['combobox-date',           ComboboxDateController,          ['onSelect']],

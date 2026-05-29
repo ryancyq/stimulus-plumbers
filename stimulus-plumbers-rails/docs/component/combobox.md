@@ -114,11 +114,13 @@ All form field methods accept `label:`, `hint:`, `error:`, `required:`, and `hid
 
 ## Rendered HTML Structure
 
-All variants share the same wrapper pattern:
+All variants share the same wrapper pattern. The `popover` controller owns panel
+visibility, `aria-expanded`, outside-click dismissal, and focus; `input-combobox`
+owns value/selection/filtering; `input-formatter` formats the displayed value.
 
 ```html
 <div
-  data-controller="input-combobox input-formatter"
+  data-controller="popover input-combobox input-formatter"
   data-action="input-combobox:changed->input-formatter#format"
   data-input-combobox-value-value="[initial-value]"
 >
@@ -128,8 +130,10 @@ All variants share the same wrapper pattern:
     aria-haspopup="dialog|listbox"
     aria-expanded="false"
     aria-controls="[id]_popover"
+    data-popover-target="trigger"
     data-input-combobox-target="trigger"
     data-input-formatter-target="input"
+    data-action="focus->popover#open keydown.esc->popover#close"
   />
 
   <input type="hidden" name="[name]" data-input-combobox-target="input" />
@@ -139,6 +143,9 @@ All variants share the same wrapper pattern:
 ```
 
 `aria-haspopup` is `"listbox"` for dropdown/typeahead, `"dialog"` for date/time.
+
+Pass `close_on_select: false` to any `sp_combobox_*` helper to keep the panel open
+after a selection (renders `data-popover-close-on-select-value="false"` on the wrapper).
 
 ### Popover body by variant
 
@@ -150,7 +157,7 @@ All variants share the same wrapper pattern:
   role="dialog"
   aria-label="[label]"
   hidden
-  data-input-combobox-target="popover"
+  data-popover-target="panel"
 >
   <!-- calendar grid (date) or drum columns (time) -->
 </div>
@@ -164,9 +171,9 @@ All variants share the same wrapper pattern:
   hidden
   role="listbox"
   aria-label="[label]"
-  data-input-combobox-target="popover"
+  data-popover-target="panel"
   data-controller="combobox-dropdown"
-  data-action="click->combobox-dropdown#select keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect"
+  data-action="click->combobox-dropdown#select keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect combobox-dropdown:selected->popover#closeOnSelect"
   data-combobox-dropdown-target="listbox"
 >
   <li role="option" data-value="us" aria-selected="false">United States</li>

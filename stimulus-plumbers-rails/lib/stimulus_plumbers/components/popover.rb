@@ -17,10 +17,12 @@ module StimulusPlumbers
 
       private
 
-      def render_popover(panel_id: nil, **kwargs, &block)
+      def render_popover(panel_id: nil, close_on_select: nil, **kwargs, &block)
+        data = { controller: STIMULUS_CONTROLLER }
+        data[:popover_close_on_select_value] = close_on_select unless close_on_select.nil?
         html_options = merge_html_options(
           { classes: theme.resolve(:popover_wrapper).fetch(:classes, ""),
-            data:    { controller: STIMULUS_CONTROLLER }
+            data:    data
 },
           kwargs
         )

@@ -1,35 +1,42 @@
 # popover
 
-Shows and hides content with optional remote loading. Backed by the `Visibility` and `ContentLoader` plumbers.
+Shows and hides a panel with optional remote loading. Owns visibility, `aria-expanded`, outside-click dismissal, and focus management. Backed by the `Visibility`, `Dismisser`, and `ContentLoader` plumbers.
+
+This controller is also the visibility/dismissal layer for the combobox family — `input-combobox` runs alongside it and delegates open/close to `popover` (see [combobox docs](./combobox.md)).
 
 ## Targets
 
-| Target      | Description                                                            |
-| ----------- | ---------------------------------------------------------------------- |
-| `content`   | The element to show/hide                                               |
-| `template`  | Optional `<template>` or element whose HTML is used as initial content |
-| `loader`    | Optional element shown during remote load                              |
-| `activator` | Optional element that tracks expanded state (`aria-expanded`)          |
+| Target     | Description                                                                       |
+| ---------- | --------------------------------------------------------------------------------- |
+| `trigger`  | The activator element — opens/toggles the panel and tracks `aria-expanded`        |
+| `panel`    | The element to show/hide (and load remote content into)                           |
+| `template` | Optional `<template>` or element whose HTML is used as initial content            |
+| `loader`   | Optional element shown during remote load                                         |
 
 ## Values
 
-| Value        | Type   | Default   | Description                                          |
-| ------------ | ------ | --------- | ---------------------------------------------------- |
-| `url`        | String | —         | Remote URL to fetch content from                     |
-| `reload`     | String | `"never"` | When to reload: `"never"` \| `"always"` \| `"stale"` |
-| `staleAfter` | Number | `3600`    | Seconds after which content is considered stale      |
-| `loadedAt`   | String | —         | ISO timestamp of last load (set automatically)       |
+| Value           | Type    | Default   | Description                                          |
+| --------------- | ------- | --------- | ---------------------------------------------------- |
+| `url`           | String  | —         | Remote URL to fetch content from                     |
+| `reload`        | String  | `"never"` | When to reload: `"never"` \| `"always"` \| `"stale"` |
+| `staleAfter`    | Number  | `3600`    | Seconds after which content is considered stale      |
+| `loadedAt`      | String  | —         | ISO timestamp of last load (set automatically)       |
+| `closeOnSelect` | Boolean | `true`    | Whether a `#closeOnSelect` call dismisses the panel  |
 
 ## Methods
 
 | Method                       | Wired via             | Description                                                                                                  |
 | ---------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `show()`                     | `data-action`         | Action — shows the content                                                                                   |
-| `hide()`                     | `data-action`         | Action — hides the content                                                                                   |
-| `shown()`                    | Visibility plumber    | Plumber callback — triggers `load()` after the element becomes visible                                       |
-| `canLoad()`                  | ContentLoader plumber | Plumber callback (gate) — returns `false` for `<turbo-frame>` targets (sets `src` instead); `true` otherwise |
+| `open()`                     | `data-action`         | Action — shows the panel                                                                                      |
+| `close()`                    | `data-action`         | Action — hides the panel (used by Esc, close buttons, outside-click)                                         |
+| `toggle()`                   | `data-action`         | Action — shows when hidden, hides when visible                                                                |
+| `closeOnSelect()`            | `data-action`         | Action — hides the panel only when `closeOnSelect` value is `true`; used by selection events                 |
+| `shown()`                    | Visibility plumber    | Plumber callback — triggers `load()`, then moves focus into the panel                                        |
+| `hidden()`                   | Visibility plumber    | Plumber callback — returns focus to the `trigger`                                                            |
+| `dismissed()`                | Dismisser plumber     | Plumber callback — closes the panel on outside click                                                        |
+| `canLoad()`                  | ContentLoader plumber | Plumber callback (gate) — returns `false` for `<turbo-frame>` panels (sets `src` instead); `true` otherwise  |
 | `contentLoading()`           | ContentLoader plumber | Plumber callback — shows the `loader` target while fetching                                                  |
-| `contentLoaded({ content })` | ContentLoader plumber | Plumber callback — inserts fetched content into `content` target, hides `loader`                             |
+| `contentLoaded({ content })` | ContentLoader plumber | Plumber callback — inserts fetched content into the `panel` target, hides `loader`                          |
 | `contentLoader()`            | ContentLoader plumber | Plumber callback — returns static content from `template` target (if no URL)                                 |
 
 ## Examples
@@ -39,17 +46,18 @@ Shows and hides content with optional remote loading. Backed by the `Visibility`
 ```html
 <div data-controller="popover">
   <button
-    data-action="click->popover#show"
-    data-popover-target="activator"
-    aria-expanded="false"
+    data-action="click->popover#toggle keydown.esc->popover#close"
+    data-popover-target="trigger"
     aria-haspopup="dialog"
+    aria-expanded="false"
+    aria-controls="opts"
   >
     Open
   </button>
 
-  <div data-popover-target="content" hidden role="dialog" aria-label="Options">
+  <div id="opts" data-popover-target="panel" hidden role="dialog" aria-label="Options">
     <p>Popover content</p>
-    <button data-action="click->popover#hide">Close</button>
+    <button data-action="click->popover#close">Close</button>
   </div>
 </div>
 ```
@@ -63,9 +71,9 @@ Shows and hides content with optional remote loading. Backed by the `Visibility`
   data-popover-reload-value="stale"
   data-popover-stale-after-value="300"
 >
-  <button data-action="click->popover#show">Help</button>
+  <button data-action="click->popover#toggle" data-popover-target="trigger">Help</button>
 
-  <div data-popover-target="content" hidden>
+  <div data-popover-target="panel" hidden>
     <div data-popover-target="loader" hidden>Loading…</div>
     <div data-popover-target="template"></div>
   </div>
@@ -74,16 +82,28 @@ Shows and hides content with optional remote loading. Backed by the `Visibility`
 
 ### Turbo Frame (lazy load)
 
-When `content` target is a `<turbo-frame>`, `canLoad()` sets its `src` attribute on show rather than fetching HTML directly.
+When the `panel` target is a `<turbo-frame>`, `canLoad()` sets its `src` attribute on show rather than fetching HTML directly.
 
 ```html
 <div data-controller="popover" data-popover-url-value="/preview/123">
-  <button data-action="click->popover#show">Preview</button>
-  <turbo-frame data-popover-target="content" hidden></turbo-frame>
+  <button data-action="click->popover#toggle" data-popover-target="trigger">Preview</button>
+  <turbo-frame data-popover-target="panel" hidden></turbo-frame>
+</div>
+```
+
+### Keep panel open on select
+
+Selection events (from combobox sub-controllers, menu items, etc.) can be wired to `closeOnSelect`. Set `data-popover-close-on-select-value="false"` to keep the panel open after a selection — useful for multi-step pickers (date ranges, multi-select).
+
+```html
+<div data-controller="popover" data-popover-close-on-select-value="false">
+  ...
+  <ul data-action="my-list:selected->popover#closeOnSelect">…</ul>
 </div>
 ```
 
 ## Accessibility
 
-- Trigger should have `aria-haspopup` describing the popup type and `aria-expanded` toggled by the `activator` target
-- Content element should have an appropriate `role` (`dialog`, `tooltip`, `listbox`, etc.)
+- `trigger` should have `aria-haspopup` describing the popup type; `aria-expanded` is toggled automatically.
+- `panel` should have an appropriate `role` (`dialog`, `tooltip`, `listbox`, etc.).
+- Esc and outside-click both close the panel; focus returns to the `trigger` on close.

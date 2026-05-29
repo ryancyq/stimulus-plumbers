@@ -1,47 +1,69 @@
 import { Controller } from '@hotwired/stimulus';
-import { attachContentLoader, attachVisibility } from '../plumbers';
+import { focusFirst } from '../accessibility/focus';
+import { attachContentLoader, attachDismisser, attachVisibility } from '../plumbers';
 
 export default class extends Controller {
-  static targets = ['content', 'template', 'loader', 'activator'];
+  static targets = ['trigger', 'panel', 'template', 'loader'];
   static classes = ['hidden'];
   static values = {
     url: String,
     loadedAt: String,
     reload: { type: String, default: 'never' },
     staleAfter: { type: Number, default: 3600 },
+    closeOnSelect: { type: Boolean, default: true },
   };
 
   connect() {
     attachContentLoader(this, {
-      element: this.hasContentTarget ? this.contentTarget : null,
+      element: this.hasPanelTarget ? this.panelTarget : null,
       url: this.hasUrlValue ? this.urlValue : null,
     });
 
-    if (this.hasContentTarget) {
+    if (this.hasPanelTarget) {
       attachVisibility(this, {
-        element: this.contentTarget,
-        activator: this.hasActivatorTarget ? this.activatorTarget : null,
+        element: this.panelTarget,
+        activator: this.hasTriggerTarget ? this.triggerTarget : null,
       });
+      attachDismisser(this);
     }
     if (this.hasLoaderTarget)
       attachVisibility(this, { element: this.loaderTarget, visibility: 'contentLoaderVisibility' });
   }
 
-  async show() {
+  async dismissed() {
+    await this.close();
+  }
+
+  async open() {
+    if (!this.hasPanelTarget) return;
     await this.visibility.show();
   }
 
-  async hide() {
+  async close() {
+    if (!this.hasPanelTarget) return;
     await this.visibility.hide();
+  }
+
+  async toggle() {
+    this.visibility?.visible ? await this.close() : await this.open();
+  }
+
+  async closeOnSelect() {
+    if (this.closeOnSelectValue) await this.close();
   }
 
   async shown() {
     await this.load();
+    if (this.hasPanelTarget) focusFirst(this.panelTarget);
+  }
+
+  async hidden() {
+    if (this.hasTriggerTarget) this.triggerTarget.focus();
   }
 
   canLoad() {
-    if (this.hasContentTarget && this.contentTarget.tagName.toLowerCase() === 'turbo-frame') {
-      if (this.hasUrlValue) this.contentTarget.setAttribute('src', this.urlValue);
+    if (this.hasPanelTarget && this.panelTarget.tagName.toLowerCase() === 'turbo-frame') {
+      if (this.hasUrlValue) this.panelTarget.setAttribute('src', this.urlValue);
       return false;
     }
     return true;
@@ -52,8 +74,8 @@ export default class extends Controller {
   }
 
   async contentLoaded({ content }) {
-    if (this.hasContentTarget) {
-      this.contentTarget.replaceChildren(this.getContentNode(content));
+    if (this.hasPanelTarget) {
+      this.panelTarget.replaceChildren(this.getContentNode(content));
     }
     if (this.hasLoaderTarget) await this.contentLoaderVisibility.hide();
   }

@@ -17,7 +17,7 @@ class PopoverBuilderTest < ActionView::TestCase
 
   def test_panel_id_generated_when_not_provided
     assert_not_nil builder.panel_id
-    assert_match(/_panel$/, builder.panel_id)
+    assert_match(%r{_panel$}, builder.panel_id)
   end
 
   def test_panel_id_uses_provided_value

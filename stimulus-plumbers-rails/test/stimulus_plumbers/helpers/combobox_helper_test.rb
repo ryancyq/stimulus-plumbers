@@ -170,7 +170,7 @@ class ComboboxHelperTest < ActionView::TestCase
     end
 
     def test_popover_is_hidden_by_default
-      popover = parse_html(sp_combobox_dropdown).at_css("[data-input-combobox-target='popover']")
+      popover = parse_html(sp_combobox_dropdown).at_css("[data-popover-target='panel']")
 
       assert_not_nil popover
       assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
@@ -183,7 +183,7 @@ class ComboboxHelperTest < ActionView::TestCase
     def test_trigger_aria_controls_matches_popover_id
       doc     = parse_html(sp_combobox_dropdown)
       trigger = doc.at_css("input[role='combobox']")
-      popover = doc.at_css("[data-input-combobox-target='popover']")
+      popover = doc.at_css("[data-popover-target='panel']")
 
       assert_not_nil trigger
       assert_not_nil popover
@@ -340,7 +340,7 @@ class ComboboxHelperTest < ActionView::TestCase
     end
 
     def test_popover_is_hidden_by_default
-      popover = parse_html(sp_combobox_typeahead).at_css("[data-input-combobox-target='popover']")
+      popover = parse_html(sp_combobox_typeahead).at_css("[data-popover-target='panel']")
 
       assert_not_nil popover
       assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
@@ -384,7 +384,7 @@ class ComboboxHelperTest < ActionView::TestCase
     def test_trigger_aria_controls_matches_popover_id
       doc     = parse_html(sp_combobox_typeahead)
       trigger = doc.at_css("input[role='combobox']")
-      popover = doc.at_css("[data-input-combobox-target='popover']")
+      popover = doc.at_css("[data-popover-target='panel']")
 
       assert_not_nil trigger
       assert_not_nil popover
