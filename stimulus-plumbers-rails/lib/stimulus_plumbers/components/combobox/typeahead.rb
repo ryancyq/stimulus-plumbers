@@ -81,7 +81,7 @@ module StimulusPlumbers
               { classes: theme.resolve(:combobox_typeahead_empty).fetch(:classes, "") },
               { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "empty" } }
             )
-          ) { "No results" }
+          ) { I18n.t("stimulus_plumbers.combobox.typeahead.empty", default: "No results") }
         end
       end
     end

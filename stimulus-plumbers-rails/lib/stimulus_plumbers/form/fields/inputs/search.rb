@@ -72,7 +72,7 @@ module StimulusPlumbers
               **merge_html_options(
                 field_theme(:form_button_clear),
                 {
-                  aria:   { label: "Clear search" },
+                  aria:   { label: I18n.t("stimulus_plumbers.form.search.clear", default: "Clear search") },
                   hidden: true,
                   data:   { input_clearable_target: "clear", action: "click->input-clearable#clear" }
                 }
