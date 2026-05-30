@@ -5,41 +5,55 @@ module StimulusPlumbers
     class Combobox
       class Date < Plumber::Base
         STIMULUS_CONTROLLER = "combobox-date"
-        CALENDAR_OUTLET = "#{STIMULUS_CONTROLLER}-calendar-month-outlet".freeze
+        CALENDAR_OUTLET     = "#{STIMULUS_CONTROLLER}-calendar-month-outlet".freeze
+        STIMULUS_ACTION     = [
+          "calendar-month-observer:selected->#{STIMULUS_CONTROLLER}#onSelect",
+          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
+          "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
+        ].join(" ").freeze
 
-        def self.default_opts
-          {
-            input:   { data: { combobox_date_date_value: nil } },
-            popover: { label: "Picker", role: "dialog", tag: :div }
-          }
+        def self.calendar_id_for(panel_id)
+          [panel_id, "calendar"].compact.join("_")
         end
 
-        def self.calendar_id_for(popover_id)
-          [popover_id, "calendar"].compact.join("_")
+        def self.variant
+          Combobox.variant(:date)
         end
 
-        def render(...)
-          render_date(...)
+        def self.options(**overrides)
+          variant.opts(**overrides)
         end
+
+        def render(...) = render_date(...)
+        def build(...) = build_date(...)
 
         private
 
-        def render_date(value: nil, popover_id: nil)
-          calendar_id = self.class.calendar_id_for(popover_id)
+        def render_date(panel_attrs: {}, value: nil, label: "Picker", labelledby: nil)
+          calendar_id = self.class.calendar_id_for(panel_attrs[:id])
 
+          template.content_tag(
+            :div,
+            **merge_html_options(panel_attrs, dialog_attrs(value, calendar_id, label, labelledby))
+          ) do
+            template.safe_join([navigation, calendar_month(id: calendar_id)])
+          end
+        end
+
+        def build_date(panel_attrs: {}, value: nil, label: "Picker", labelledby: nil, &block)
+          calendar_id = self.class.calendar_id_for(panel_attrs[:id])
+          template.capture(merge_html_options(panel_attrs, dialog_attrs(value, calendar_id, label, labelledby)), &block)
+        end
+
+        def dialog_attrs(value, calendar_id, label, labelledby)
           data = {
-            controller:          STIMULUS_CONTROLLER,
+            controller:      STIMULUS_CONTROLLER,
             CALENDAR_OUTLET  => "##{calendar_id}",
-            action:              [
-              "calendar-month-observer:selected->#{STIMULUS_CONTROLLER}#onSelect",
-              "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
-            ].join(" "),
+            action:          STIMULUS_ACTION,
             "#{STIMULUS_CONTROLLER}-date-value" => value
           }.compact
 
-          template.content_tag(:div, data: data) do
-            template.safe_join([navigation, calendar_month(id: calendar_id)])
-          end
+          { role: "dialog", aria: labelled_aria(label, labelledby: labelledby), data: data }
         end
 
         def navigation

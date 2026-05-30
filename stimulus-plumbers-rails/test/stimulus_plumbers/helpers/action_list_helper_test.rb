@@ -5,13 +5,9 @@ require "test_helper"
 class ActionListHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::ActionListHelper
 
-  # ── list ──────────────────────────────────────────────────────────────────
-
   def test_renders_container_ul
     assert_css parse_html(sp_action_list { "" }), "ul"
   end
-
-  # ── section ───────────────────────────────────────────────────────────────
 
   def test_renders_section_with_ul
     assert_css parse_html(sp_action_list_section { "" }), "ul"
@@ -27,8 +23,6 @@ class ActionListHelperTest < ActionView::TestCase
   def test_renders_no_title_span_when_absent
     assert_no_css parse_html(sp_action_list_section { "" }), "span[aria-hidden]"
   end
-
-  # ── item ──────────────────────────────────────────────────────────────────
 
   def test_item_renders_button_by_default
     doc = parse_html(sp_action_list_item("Click me"))
@@ -54,8 +48,6 @@ class ActionListHelperTest < ActionView::TestCase
   def test_item_merges_custom_class
     assert_css parse_html(sp_action_list_item("Action", class: "custom")), ".custom"
   end
-
-  # ── composition ───────────────────────────────────────────────────────────
 
   def test_composition
     doc = parse_html(

@@ -5,13 +5,9 @@ require "test_helper"
 class CalendarTurboHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::CalendarTurboHelper
 
-  # ── rendering ─────────────────────────────────────────────────────────────
-
   def test_renders_html
     assert_css parse_html(sp_calendar_month_turbo), "div"
   end
-
-  # ── date ──────────────────────────────────────────────────────────────────
 
   def test_passes_date_to_renderer
     # Feb 2026 starts on Sunday with 28 days — no padding cells
@@ -24,8 +20,6 @@ class CalendarTurboHelperTest < ActionView::TestCase
     assert_css parse_html(sp_calendar_month_turbo(date: Date.new(2026, 4, 1), today: Date.new(2026, 4, 10))),
                "[aria-current='date']"
   end
-
-  # ── options ───────────────────────────────────────────────────────────────
 
   def test_passes_selectable_to_renderer
     assert_css parse_html(sp_calendar_month_turbo(selectable: true)), "button"
@@ -48,8 +42,6 @@ class CalendarTurboHelperTest < ActionView::TestCase
     assert_css parse_html(sp_calendar_month_turbo(date: Date.new(2026, 4, 1), show_other_months: true)),
                "[aria-disabled='true']"
   end
-
-  # ── html options ──────────────────────────────────────────────────────────
 
   def test_passes_html_options_to_renderer
     doc = parse_html(sp_calendar_month_turbo(class: "my-cal", data: { foo: "bar" }))

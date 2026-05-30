@@ -7,8 +7,6 @@ class AvatarComponentTest < ActionView::TestCase
     StimulusPlumbers::Components::Avatar.new(self)
   end
 
-  # ── attr_readers ──────────────────────────────────────────────────────────
-
   def test_exposes_template
     assert_equal self, renderer.template
   end
@@ -16,8 +14,6 @@ class AvatarComponentTest < ActionView::TestCase
   def test_exposes_theme
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
-
-  # ── rendering ─────────────────────────────────────────────────────────────
 
   def test_renders_span_with_role_img
     assert_css parse_html(renderer.render), "span[role='img']"
@@ -67,8 +63,6 @@ class AvatarComponentTest < ActionView::TestCase
   def test_passes_html_options
     assert_css parse_html(renderer.render(id: "my-avatar")), "#my-avatar"
   end
-
-  # ── color logic ───────────────────────────────────────────────────────────
 
   def stub_theme_with_colors(colors)
     Class.new(StimulusPlumbers::Themes::Base) do

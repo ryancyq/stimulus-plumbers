@@ -8,7 +8,6 @@ class DatetimeTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  # native ActionView helpers — theme classes only, no wrapper
   def build_native_date(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.date_field(:birthday, **opts)
@@ -23,7 +22,6 @@ class DatetimeTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # f.field — full wrapper: label + combobox + hint + error
   def build_date_combobox(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.field(:birthday, as: :date, **opts)
@@ -38,8 +36,6 @@ class DatetimeTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # ── date_field native ─────────────────────────────────────────────────────
-
   def test_date_native_renders_date_input
     assert_css build_native_date, "input[type='date']"
   end
@@ -47,8 +43,6 @@ class DatetimeTest < ActionView::TestCase
   def test_date_native_does_not_render_combobox_trigger
     assert_no_css build_native_date, "input[role='combobox']"
   end
-
-  # ── f.field(as: :date) — combobox ────────────────────────────────────────
 
   def test_date_renders_label
     assert_css build_date_combobox, "label[for='sign_in_form_birthday']"
@@ -118,8 +112,6 @@ class DatetimeTest < ActionView::TestCase
     assert_equal "##{calendar["id"]}", date_controller["data-combobox-date-calendar-month-outlet"]
   end
 
-  # ── time_field native ─────────────────────────────────────────────────────
-
   def test_time_native_renders_time_input
     assert_css build_native_time, "input[type='time']"
   end
@@ -127,8 +119,6 @@ class DatetimeTest < ActionView::TestCase
   def test_time_native_does_not_render_combobox_trigger
     assert_no_css build_native_time, "input[role='combobox']"
   end
-
-  # ── f.field(as: :time) — combobox ────────────────────────────────────────
 
   def test_time_renders_label
     assert_css build_time_combobox, "label[for='sign_in_form_meeting_time']"

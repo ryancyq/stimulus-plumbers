@@ -13,8 +13,6 @@ class SubmitTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # ── submit ────────────────────────────────────────────────────────────────
-
   def test_submit_renders_submit_input_with_given_value
     doc = build_form { |f| f.submit "Save" }
 

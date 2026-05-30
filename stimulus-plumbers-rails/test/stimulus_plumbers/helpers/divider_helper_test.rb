@@ -13,8 +13,6 @@ class DividerHelperTest < ActionView::TestCase
     assert_includes sp_divider(class: "separator"), "separator"
   end
 
-  # ── labeled divider ────────────────────────────────────────────────────────
-
   def test_labeled_renders_div_with_role_separator
     doc = parse_html(sp_divider("or"))
 

@@ -5,12 +5,13 @@ module StimulusPlumbers
     class Calendar < Plumber::Base
       STIMULUS_CONTROLLER          = "calendar-month"
       OBSERVER_STIMULUS_CONTROLLER = "calendar-month-observer"
-      STIMULUS_DATA                = {
+      STIMULUS_ACTION              = [
+        "click->#{OBSERVER_STIMULUS_CONTROLLER}#onSelect",
+        "#{OBSERVER_STIMULUS_CONTROLLER}:selected->#{STIMULUS_CONTROLLER}#onSelect"
+      ].join(" ").freeze
+      STIMULUS_DATA = {
         controller: "#{STIMULUS_CONTROLLER} #{OBSERVER_STIMULUS_CONTROLLER}",
-        action:     [
-          "click->#{OBSERVER_STIMULUS_CONTROLLER}#onSelect",
-          "#{OBSERVER_STIMULUS_CONTROLLER}:selected->#{STIMULUS_CONTROLLER}#onSelect"
-        ].join(" ")
+        action:     STIMULUS_ACTION
       }.freeze
 
       def month(**kwargs)

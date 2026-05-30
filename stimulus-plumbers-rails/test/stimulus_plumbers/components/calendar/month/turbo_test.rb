@@ -15,7 +15,6 @@ class CalendarMonthTurboComponentTest < ActionView::TestCase
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
-  # ── structure ────────────────────────────────────────────────────────
   def test_has_calendar_month_observer_controller
     assert_includes renderer.render(date: Date.new(2026, 4, 1)), 'data-controller="calendar-month-observer"'
   end
@@ -39,7 +38,6 @@ class CalendarMonthTurboComponentTest < ActionView::TestCase
     assert_includes renderer.render(date: Date.new(2026, 4, 1), class: "my-cal"), "my-cal"
   end
 
-  # ── days of week ─────────────────────────────────────────────────────
   def test_renders_seven_column_headers
     assert_equal 7, renderer.render(date: Date.new(2026, 4, 1)).scan('role="columnheader"').length
   end
@@ -48,7 +46,6 @@ class CalendarMonthTurboComponentTest < ActionView::TestCase
     assert_includes renderer.render(date: Date.new(2026, 4, 1)), '<div role="row"'
   end
 
-  # ── days of month ────────────────────────────────────────────────────
   def test_days_of_month_has_rowgroup_role
     assert_includes renderer.render(date: Date.new(2026, 4, 1)), 'role="rowgroup"'
   end
@@ -65,7 +62,6 @@ class CalendarMonthTurboComponentTest < ActionView::TestCase
     assert_equal 1, html.scan('tabindex="0"').length
   end
 
-  # ── gridcell counts ──────────────────────────────────────────────────
   def test_renders_28_gridcells_for_month_without_padding
     # Feb 2026: starts Sunday, 28 days, no padding
     html = renderer.render(date: Date.new(2026, 2, 1))
@@ -87,7 +83,6 @@ class CalendarMonthTurboComponentTest < ActionView::TestCase
     assert_equal 42, html.scan('role="gridcell"').length
   end
 
-  # ── show_other_months ────────────────────────────────────────────────
   def test_padding_cells_are_aria_hidden_by_default
     # Apr 2026: 5 padding days (3 prev + 2 next)
     html = renderer.render(date: Date.new(2026, 4, 1))
@@ -104,7 +99,6 @@ class CalendarMonthTurboComponentTest < ActionView::TestCase
     assert_not_includes html, 'aria-hidden="true"'
   end
 
-  # ── selectable ───────────────────────────────────────────────────────
   def test_current_month_cells_are_spans_when_not_selectable
     # Feb 2026: no padding, all gridcells are current-month spans
     html = renderer.render(date: Date.new(2026, 2, 1))

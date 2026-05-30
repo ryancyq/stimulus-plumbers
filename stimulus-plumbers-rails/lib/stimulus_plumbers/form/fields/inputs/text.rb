@@ -18,7 +18,6 @@ module StimulusPlumbers
             datetime_local: :datetime_local_field
           }.freeze
 
-          # Public ActionView overrides — native, just adds theme classes
           TEXT_FIELD_METHODS.each_value do |template_method|
             define_method(template_method) do |attribute, options = {}|
               html_options = merge_html_options(options, field_theme(:form_input))
@@ -28,7 +27,6 @@ module StimulusPlumbers
 
           private
 
-          # Private render methods for f.field dispatch
           TEXT_FIELD_METHODS.each do |as_key, template_method|
             define_method(:"render_#{as_key}_input") do |attribute, html_opts, opts, error, **kwargs|
               render_text(attribute, html_opts, opts, error, template_method, **kwargs)

@@ -8,8 +8,6 @@ class BuilderTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  # ── Helpers ────────────────────────────────────────────────────────────────
-
   def build_field(method_name, attribute, *args, **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.public_send(method_name, attribute, *args, **opts)
@@ -21,8 +19,6 @@ class BuilderTest < ActionView::TestCase
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session", &block)
     parse_html(html)
   end
-
-  # ── ActionView native overrides ───────────────────────────────────────────
 
   def test_email_field_renders_input
     doc = build_field(:email_field, :email)
@@ -37,8 +33,6 @@ class BuilderTest < ActionView::TestCase
     assert_css doc, "input[type='hidden']"
     assert_no_css doc, "label"
   end
-
-  # ── f.field ───────────────────────────────────────────────────────────────
 
   def test_field_text_renders_label_and_input
     doc = build_field(:field, :email, as: :text)
@@ -84,8 +78,6 @@ class BuilderTest < ActionView::TestCase
     assert_css doc, "label[for='sign_in_form_email']"
   end
 
-  # ── f.field (check_box) ───────────────────────────────────────────────────
-
   def test_field_check_box_renders_explicit_label_and_input
     doc = build_field(:field, :newsletter, as: :check_box)
 
@@ -107,8 +99,6 @@ class BuilderTest < ActionView::TestCase
     assert_includes doc.text, "Must be accepted"
   end
 
-  # ── f.collection_field ────────────────────────────────────────────────────
-
   def test_collection_field_raises_for_unknown_type
     assert_raises ArgumentError do
       build_field(:collection_field, :role, as: :unknown_type, collection: [], value_method: :id, text_method: :name)
@@ -120,8 +110,6 @@ class BuilderTest < ActionView::TestCase
       build_field(:collection_field, :role, as: :radio, collection: [], value_method: :first, text_method: :last)
     end
   end
-
-  # ── f.choice ──────────────────────────────────────────────────────────────
 
   def test_choice_radio_renders_fieldset_with_options
     collection = [%w[admin Admin], %w[user User]]
@@ -163,8 +151,6 @@ class BuilderTest < ActionView::TestCase
       build_field(:choice, :role, as: :unknown_type, collection: [], value_method: :id, text_method: :name)
     end
   end
-
-  # ── fields_for ────────────────────────────────────────────────────────────
 
   NestedAddress = Struct.new(:street) do
     def errors

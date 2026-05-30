@@ -19,7 +19,6 @@ class LoggerTest < Minitest::Test
     end
   end
 
-  # custom log_formatter
   def test_applies_the_configured_formatter_before_delegating
     StimulusPlumbers.config.log_formatter = ->(msg) { "CUSTOM: #{msg}" }
     mock_logger = Minitest::Mock.new

@@ -15,8 +15,6 @@ class DividerComponentTest < ActionView::TestCase
     assert_includes renderer.render(class: "my-divider"), "my-divider"
   end
 
-  # ── labeled divider ────────────────────────────────────────────────────────
-
   def test_labeled_renders_div_with_role_separator
     doc = parse_html(renderer.render("or"))
 

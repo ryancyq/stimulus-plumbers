@@ -5,8 +5,6 @@ require "test_helper"
 class SchemaIconTest < Minitest::Test
   Icon = StimulusPlumbers::Themes::Schema::Icon
 
-  # ── SVG_DEFAULTS ──────────────────────────────────────────────────────────
-
   def test_svg_defaults_includes_container_attributes
     assert_includes Icon::SVG_ATTR_DEFAULTS, :xmlns
     assert_includes Icon::SVG_ATTR_DEFAULTS, :fill
@@ -24,8 +22,6 @@ class SchemaIconTest < Minitest::Test
     refute_includes Icon::SVG_ATTR_DEFAULTS, :elements
   end
 
-  # ── SVG_ATTR_NAMES ────────────────────────────────────────────────────────
-
   def test_svg_attr_names_renames_view_box_to_viewbox
     assert_equal "viewBox", Icon::SVG_ATTR_NAMES[:view_box]
   end
@@ -34,8 +30,6 @@ class SchemaIconTest < Minitest::Test
     assert_equal "stroke-width", Icon::SVG_ATTR_NAMES[:stroke_width]
   end
 
-  # ── ELEMENT_ATTR_NAMES ────────────────────────────────────────────────────
-
   def test_element_attr_names_renames_all_hyphenated_keys
     assert_equal "fill-rule",       Icon::ELEMENT_ATTR_NAMES[:fill_rule]
     assert_equal "clip-rule",       Icon::ELEMENT_ATTR_NAMES[:clip_rule]
@@ -43,8 +37,6 @@ class SchemaIconTest < Minitest::Test
     assert_equal "stroke-linecap",  Icon::ELEMENT_ATTR_NAMES[:stroke_linecap]
     assert_equal "stroke-linejoin", Icon::ELEMENT_ATTR_NAMES[:stroke_linejoin]
   end
-
-  # ── ELEMENT_ATTRS ─────────────────────────────────────────────────────────
 
   def test_element_attrs_are_keyed_by_tag
     assert_includes Icon::ELEMENT_ATTRS, :path
@@ -66,8 +58,6 @@ class SchemaIconTest < Minitest::Test
     assert_includes Icon::ELEMENT_ATTRS[:path], :opacity
   end
 
-  # ── resolve — nil cases ───────────────────────────────────────────────────
-
   def test_resolve_returns_nil_for_nil_input
     assert_nil Icon.resolve(nil)
   end
@@ -83,8 +73,6 @@ class SchemaIconTest < Minitest::Test
   def test_resolve_returns_nil_when_all_elements_have_unknown_tags
     assert_nil Icon.resolve({ elements: [{ tag: :unknown, d: "M1 2" }] })
   end
-
-  # ── resolve — structure ───────────────────────────────────────────────────
 
   def test_resolve_returns_hash_with_valid_elements
     result = Icon.resolve({ elements: [{ tag: :path, d: "M1 2 3 4" }] })
@@ -113,8 +101,6 @@ class SchemaIconTest < Minitest::Test
     refute_includes result[:elements].first, "unknown"
   end
 
-  # ── resolve — SVG defaults ────────────────────────────────────────────────
-
   def test_resolve_applies_svg_defaults
     result = Icon.resolve({ elements: [{ tag: :path, d: "M1 2" }] })
 
@@ -140,8 +126,6 @@ class SchemaIconTest < Minitest::Test
     refute_includes result, "unknown"
   end
 
-  # ── resolve — coercion ────────────────────────────────────────────────────
-
   def test_resolve_coerces_svg_attr_values_to_strings
     result = Icon.resolve({ stroke_width: 2, elements: [{ tag: :path, d: "M1 2" }] })
 
@@ -154,8 +138,6 @@ class SchemaIconTest < Minitest::Test
 
     assert_equal "round", result[:elements].first["stroke-linecap"]
   end
-
-  # ── resolve — path element ────────────────────────────────────────────────
 
   def test_resolve_passes_through_linecap_and_linejoin
     result = Icon.resolve({ elements: [{ tag: :path, d: "M1 2", stroke_linecap: :round, stroke_linejoin: :round }] })

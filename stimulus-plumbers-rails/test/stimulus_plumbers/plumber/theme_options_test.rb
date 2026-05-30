@@ -2,10 +2,11 @@
 
 require "test_helper"
 
-class PlumberHtmlOptionsTest < Minitest::Test
+class PlumberThemeOptionsTest < Minitest::Test
   def instance
     obj = Object.new
-    obj.extend(StimulusPlumbers::Plumber::HtmlOptions)
+    obj.extend(StimulusPlumbers::Plumber::ThemeOptions)
+    obj.extend(StimulusPlumbers::Plumber::StimulusOptions)
     obj
   end
 
@@ -58,33 +59,6 @@ class PlumberHtmlOptionsTest < Minitest::Test
     assert_equal "click->base#act keydown->extra#act", result[:data][:action]
     assert_equal "1",                                  result[:data][:foo]
     assert_equal "2",                                  result[:data][:bar]
-  end
-
-  def test_merge_data_options_space_joins_controller_and_action
-    result = instance.merge_data_options(
-      { controller: "base", action: "click->base#act" },
-      { controller: "extra", action: "keydown->extra#act" }
-    )
-
-    assert_equal "base extra",                         result[:controller]
-    assert_equal "click->base#act keydown->extra#act", result[:action]
-  end
-
-  def test_merge_data_options_preserves_non_stimulus_keys
-    result = instance.merge_data_options(
-      { controller: "ctrl", target: "el" },
-      { foo: "bar" }
-    )
-
-    assert_equal "ctrl",  result[:controller]
-    assert_equal "el",    result[:target]
-    assert_equal "bar",   result[:foo]
-  end
-
-  def test_merge_data_options_overwrites_duplicate_non_stimulus_keys
-    result = instance.merge_data_options({ target: "old" }, { target: "new" })
-
-    assert_equal "new", result[:target]
   end
 
   def test_converts_classes_to_class

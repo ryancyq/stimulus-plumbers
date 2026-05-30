@@ -4,12 +4,12 @@ require "active_support/concern"
 
 module StimulusPlumbers
   module Plumber
-    module HtmlOptions
+    module ThemeOptions
       extend ActiveSupport::Concern
 
       def merge_html_options(*hashes)
         class_value = merge_string_option(*extract_classes(*hashes)).presence
-        merged_data = merge_data_options(*hashes.map { |h| h[:data] || {} })
+        merged_data = merge_stimulus_data(*hashes.map { |h| h[:data] || {} })
         rest        = hashes.map { |h| h.except(:class, :classes, :data) }.reduce({}, :deep_merge)
 
         result = class_value ? rest.merge(class: class_value) : rest
@@ -18,20 +18,6 @@ module StimulusPlumbers
 
       def extract_classes(*hashes)
         hashes.flat_map { |h| [h[:class], h[:classes]] }
-      end
-
-      STIMULUS_SPACEJOIN_KEYS = %i[controller action].freeze
-
-      def merge_data_options(*hashes, spacejoin: STIMULUS_SPACEJOIN_KEYS)
-        hashes.reduce({}) do |acc, d|
-          acc.merge(d) do |key, old_val, new_val|
-            if spacejoin.include?(key.to_sym)
-              merge_string_option(old_val, new_val).presence || new_val
-            else
-              new_val
-            end
-          end
-        end
       end
 
       def merge_string_option(*parts, delimiter: " ")

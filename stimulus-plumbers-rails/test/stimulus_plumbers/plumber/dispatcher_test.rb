@@ -167,7 +167,6 @@ class PlumberDispatcherTest < Minitest::Test
       assert_raises(ArgumentError) { Dispatcher::InstanceExec.new("not a proc") }
     end
 
-    # The proc is the callable; compose further blocks via positional args.
     def test_secondary_callable_passed_as_positional_arg
       wrapper = ->(v) { "wrapped:#{v}" }
       result = Dispatcher::InstanceExec.new(
@@ -311,7 +310,6 @@ class PlumberDispatcherTest < Minitest::Test
     end
 
     def test_does_not_thread_block_to_instance_exec
-      # When callable is a Proc, it is the block — &block passed to build is ignored.
       callable = proc { "the callable" }
       ignored  = proc { "ignored" }
       result = Dispatcher.build(callable, &ignored)

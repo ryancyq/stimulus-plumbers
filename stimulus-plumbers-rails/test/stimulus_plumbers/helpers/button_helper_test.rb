@@ -5,8 +5,6 @@ require "test_helper"
 class ButtonHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::ButtonHelper
 
-  # ── button ────────────────────────────────────────────────────────────────
-
   def test_renders_button_by_default
     doc = parse_html(sp_button("Click me"))
 
@@ -48,8 +46,6 @@ class ButtonHelperTest < ActionView::TestCase
     assert_css doc, "#my-btn"
     assert_css doc, "[data-testid='btn']"
   end
-
-  # ── group ─────────────────────────────────────────────────────────────────
 
   def test_button_group_renders_div
     doc = parse_html(sp_button_group { sp_button("One") })

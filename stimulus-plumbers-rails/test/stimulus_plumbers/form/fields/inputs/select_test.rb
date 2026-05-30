@@ -13,8 +13,6 @@ class SelectTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  # ── native select helpers ─────────────────────────────────────────────────
-
   def build_native_select(attribute, choices = [], **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.select(attribute, choices, **opts)
@@ -35,8 +33,6 @@ class SelectTest < ActionView::TestCase
     end
     parse_html(html)
   end
-
-  # ── combobox select helpers ───────────────────────────────────────────────
 
   def build_combobox_select(attribute, choices = [], **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
@@ -75,8 +71,6 @@ class SelectTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # ── native select ─────────────────────────────────────────────────────────
-
   def test_native_select_renders_select_tag
     assert_css build_native_select(:country, SIMPLE_OPTIONS), "select[name='sign_in_form[country]']"
   end
@@ -84,8 +78,6 @@ class SelectTest < ActionView::TestCase
   def test_native_select_does_not_render_combobox_trigger
     assert_no_css build_native_select(:country, []), "input[role='combobox']"
   end
-
-  # ── f.field(as: :select) — combobox dropdown ──────────────────────────────
 
   def test_select_renders_label
     assert_css build_combobox_select(:country), "label[for='sign_in_form_country']"
@@ -175,8 +167,6 @@ class SelectTest < ActionView::TestCase
     assert_css doc, "li[role='option'][data-value='us'][aria-selected='false']"
   end
 
-  # ── native collection_select ──────────────────────────────────────────────
-
   def test_native_collection_select_renders_select_tag
     countries = [Country.new("us", "United States")]
 
@@ -187,8 +177,6 @@ class SelectTest < ActionView::TestCase
   def test_native_collection_select_does_not_render_combobox_trigger
     assert_no_css build_native_collection_select(:country, [], :code, :name), "input[role='combobox']"
   end
-
-  # ── f.collection_field(as: :collection_select) — combobox dropdown ────────
 
   def test_collection_select_renders_label
     assert_css build_collection_combobox(:country, [], :code, :name), "label[for='sign_in_form_country']"
@@ -222,14 +210,10 @@ class SelectTest < ActionView::TestCase
     assert_css build_collection_combobox(:country, [], :code, :name), "p[role='alert']"
   end
 
-  # ── grouped_collection_select ─────────────────────────────────────────────
-
   CONTINENTS = [
     Continent.new("Europe",   [Country.new("fr", "France"), Country.new("de", "Germany")]),
     Continent.new("Americas", [Country.new("us", "United States"), Country.new("ca", "Canada")])
   ].freeze
-
-  # ── native grouped_collection_select ─────────────────────────────────────
 
   def test_native_grouped_collection_select_renders_select_tag
     assert_css build_native_grouped(:country, CONTINENTS), "select[name='sign_in_form[country]']"
@@ -238,8 +222,6 @@ class SelectTest < ActionView::TestCase
   def test_native_grouped_collection_select_does_not_render_combobox_trigger
     assert_no_css build_native_grouped(:country, CONTINENTS), "input[role='combobox']"
   end
-
-  # ── f.collection_field(as: :grouped_collection_select) — combobox ─────────
 
   def test_grouped_collection_select_renders_label
     assert_css build_grouped_combobox(:country, CONTINENTS), "label[for='sign_in_form_country']"
@@ -282,8 +264,6 @@ class SelectTest < ActionView::TestCase
     assert_css build_grouped_combobox(:country, CONTINENTS), "p[role='alert']"
   end
 
-  # ── time_zone_select ──────────────────────────────────────────────────────
-
   def build_time_zone_select(attribute, priority_zones = nil, **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.time_zone_select(attribute, priority_zones, **opts)
@@ -298,8 +278,6 @@ class SelectTest < ActionView::TestCase
   def test_time_zone_select_does_not_render_combobox_trigger
     assert_no_css build_time_zone_select(:timezone), "input[role='combobox']"
   end
-
-  # ── weekday_select ────────────────────────────────────────────────────────
 
   if ActionView.version >= Gem::Version.new("7.1")
     def build_weekday_select(attribute, **opts)

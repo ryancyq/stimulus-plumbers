@@ -5,8 +5,6 @@ require "test_helper"
 class AvatarHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::AvatarHelper
 
-  # ── rendering ─────────────────────────────────────────────────────────────
-
   def test_renders_span_with_role_img
     assert_css parse_html(sp_avatar), "span[role='img']"
   end

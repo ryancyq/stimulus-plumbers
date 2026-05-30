@@ -6,6 +6,7 @@ module StimulusPlumbers
       module Month
         class Turbo < Plumber::Base
           STIMULUS_CONTROLLER = "calendar-month-observer"
+          STIMULUS_ACTION     = "click->#{STIMULUS_CONTROLLER}#select".freeze
 
           def render(...)
             render_turbo(...)
@@ -24,7 +25,7 @@ module StimulusPlumbers
             html_options = merge_html_options(
               {
                 classes: theme.resolve(:calendar).fetch(:classes, ""),
-                data:    { controller: STIMULUS_CONTROLLER, action: "click->#{STIMULUS_CONTROLLER}#select" }
+                data:    { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION }
               },
               kwargs
             )

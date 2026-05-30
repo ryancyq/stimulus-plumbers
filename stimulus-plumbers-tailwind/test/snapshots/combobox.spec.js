@@ -45,8 +45,8 @@ test("typeahead loading", async ({ page }) => {
   await trigger.click();
   await expect(trigger).toHaveAttribute("aria-expanded", "true");
 
-  const popoverId = await trigger.getAttribute("aria-controls");
-  const loading = page.locator(`#${popoverId} [data-combobox-dropdown-target="loading"]`);
+  const comboboxRoot = page.locator('[data-controller~="input-combobox"]').filter({ has: trigger });
+  const loading = comboboxRoot.locator('[data-combobox-dropdown-target="loading"]');
   await loading.evaluate((el) => el.removeAttribute("hidden"));
 
   await expect(page).toHaveScreenshot("typeahead-loading.png");
@@ -57,8 +57,8 @@ test("typeahead empty", async ({ page }) => {
   await trigger.click();
   await expect(trigger).toHaveAttribute("aria-expanded", "true");
 
-  const popoverId = await trigger.getAttribute("aria-controls");
-  const empty = page.locator(`#${popoverId} [data-combobox-dropdown-target="empty"]`);
+  const comboboxRoot = page.locator('[data-controller~="input-combobox"]').filter({ has: trigger });
+  const empty = comboboxRoot.locator('[data-combobox-dropdown-target="empty"]');
   await empty.evaluate((el) => el.removeAttribute("hidden"));
 
   await expect(page).toHaveScreenshot("typeahead-empty.png");

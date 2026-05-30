@@ -10,7 +10,6 @@ class SearchTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  # native ActionView helper — theme classes only, clearable wrapper supported
   def build_native(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.search_field(:email, **opts)
@@ -26,8 +25,6 @@ class SearchTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # ── native search_field ───────────────────────────────────────────────────
-
   def test_native_renders_search_input
     assert_css build_native, "input[type='search']"
   end
@@ -39,8 +36,6 @@ class SearchTest < ActionView::TestCase
   def test_native_does_not_render_hidden_value_input
     assert_no_css build_native, "input[type='hidden'][name='sign_in_form[email]']"
   end
-
-  # ── native clearable: true ────────────────────────────────────────────────
 
   def test_native_clearable_renders_input_clearable_controller_wrapper
     assert_css build_native(clearable: true), "[data-controller='input-clearable']"
@@ -62,8 +57,6 @@ class SearchTest < ActionView::TestCase
   def test_native_without_clearable_does_not_add_input_clearable_target
     assert_nil build_native.at_css("input[type='search']")["data-input-clearable-target"]
   end
-
-  # ── f.field(as: :search) — combobox structure ─────────────────────────────
 
   def test_renders_label
     assert_css build_field, "label[for='sign_in_form_email']"
@@ -101,16 +94,12 @@ class SearchTest < ActionView::TestCase
     assert_css build_field, "[data-action*='input->input-combobox#onInput']"
   end
 
-  # ── options ───────────────────────────────────────────────────────────────
-
   def test_renders_initial_choices
     doc = build_field(choices: SIMPLE_OPTIONS)
 
     assert_css doc, "li[role='option'][data-value='london']"
     assert_css doc, "li[role='option'][data-value='paris']"
   end
-
-  # ── url (server-side filtering) ───────────────────────────────────────────
 
   def test_url_sets_combobox_dropdown_url_value
     assert_css build_field(url: "/cities"), "[data-combobox-dropdown-url-value='/cities']"
@@ -119,8 +108,6 @@ class SearchTest < ActionView::TestCase
   def test_url_option_does_not_leak_into_html_attributes
     assert_nil build_field(url: "/cities").at_css("[url]")
   end
-
-  # ── field chrome ──────────────────────────────────────────────────────────
 
   def test_renders_custom_label_text
     assert_includes build_field(label: "Search users").text, "Search users"
@@ -142,8 +129,6 @@ class SearchTest < ActionView::TestCase
 
     assert_equal "true", build_field.at_css("input[role='combobox']")["aria-invalid"]
   end
-
-  # ── clearable: true ───────────────────────────────────────────────────────
 
   def test_clearable_renders_input_clearable_controller_wrapper
     assert_css build_field(clearable: true), "[data-controller='input-clearable']"
@@ -217,8 +202,6 @@ class SearchTest < ActionView::TestCase
   def test_clearable_still_renders_hidden_value_input
     assert_css build_field(clearable: true), "input[type='hidden'][name='sign_in_form[email]']"
   end
-
-  # ── model value pre-population ─────────────────────────────────────────────
 
   def test_model_value_sets_hidden_input_value
     @form.define_singleton_method(:email) { "hello@example.com" }

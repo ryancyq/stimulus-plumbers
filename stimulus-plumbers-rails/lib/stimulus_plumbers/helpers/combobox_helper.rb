@@ -7,16 +7,13 @@ module StimulusPlumbers
         label = kwargs.delete(:label)
         value = kwargs.delete(:value)
         id    = sp_dom_id
-        opts  = Components::Combobox::Date.default_opts.deep_merge(
+        opts  = Components::Combobox::Date.options(
           input:   { value: value },
           trigger: { id: id, aria: ({ label: label } if label), icon_trailing: "calendar" }.compact
         )
-        Components::Combobox.new(self).render(
-          **opts,
-          data: { input_formatter_format_value: "date" },
-          **kwargs
-        ) do |popover_id|
-          Components::Combobox::Date.new(self).render(value: value, popover_id: popover_id)
+        extra = { data: { input_formatter_format_value: "date" }, **kwargs }
+        sp_render_combobox(Components::Combobox::Date, id, opts, **extra) do |panel_attrs|
+          Components::Combobox::Date.new(self).render(panel_attrs: panel_attrs, value: value)
         end
       end
 
@@ -25,12 +22,14 @@ module StimulusPlumbers
         value   = kwargs.delete(:value)
         options = kwargs.delete(:options) { [] }
         id      = sp_dom_id
-        opts    = Components::Combobox::Dropdown.default_opts.deep_merge(
+        opts    = Components::Combobox::Dropdown.options(
           input:   { value: value },
           trigger: { id: id, aria: ({ label: label } if label), icon_trailing: "chevron-down" }.compact
         )
-        Components::Combobox.new(self).render(**opts, **kwargs) do
-          Components::Combobox::Dropdown.new(self).render(options: options, value: value, label: label)
+        sp_render_combobox(Components::Combobox::Dropdown, id, opts, **kwargs) do |panel_attrs|
+          Components::Combobox::Dropdown.new(self).render(
+            panel_attrs: panel_attrs, options: options, value: value, label: label
+          )
         end
       end
 
@@ -40,20 +39,14 @@ module StimulusPlumbers
         options = kwargs.delete(:options) { [] }
         url     = kwargs.delete(:url)
         id      = sp_dom_id
-        opts    = Components::Combobox::Typeahead.default_opts.deep_merge(
+        opts    = Components::Combobox::Typeahead.options(
           input:   { value: value },
-          trigger: { id: id, aria: ({ label: label } if label) }.compact,
-          popover: { data: url ? { combobox_dropdown_url_value: url } : {} }
+          trigger: { id: id, aria: ({ label: label } if label) }.compact
         )
-        Components::Combobox.new(self).render(
-          **opts,
-          data: {
-            input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.popover_id_for(id)}",
-            action:                                  "input->input-combobox#onInput"
-          },
-          **kwargs
-        ) do
-          Components::Combobox::Typeahead.new(self).render(options: options, value: value, label: label)
+        sp_render_combobox(Components::Combobox::Typeahead, id, opts, data: typeahead_data(id), **kwargs) do |panel_attrs|
+          Components::Combobox::Typeahead.new(self).render(
+            panel_attrs: panel_attrs, options: options, value: value, label: label, url: url
+          )
         end
       end
 
@@ -63,17 +56,35 @@ module StimulusPlumbers
         step   = kwargs.delete(:step) { 1 }
         value  = kwargs.delete(:value)
         id     = sp_dom_id
-        opts   = Components::Combobox::Time.default_opts.deep_merge(
+        opts   = Components::Combobox::Time.options(
           input:   { value: value },
           trigger: { id: id, aria: ({ label: label } if label), icon_trailing: "clock" }.compact
         )
+        data = { input_formatter_format_value: "time", input_formatter_options_value: { format: format }.to_json }
+        sp_render_combobox(Components::Combobox::Time, id, opts, data: data, **kwargs) do |panel_attrs|
+          Components::Combobox::Time.new(self).render(panel_attrs: panel_attrs, format: format, step: step, value: value)
+        end
+      end
+
+      private
+
+      def sp_render_combobox(variant_class, id, opts, **kwargs, &block)
+        variant  = variant_class.variant
+        panel_id = Components::Combobox.panel_id_for(id)
         Components::Combobox.new(self).render(
           **opts,
-          data: { input_formatter_format_value: "time", input_formatter_options_value: { format: format }.to_json },
-          **kwargs
-        ) do
-          Components::Combobox::Time.new(self).render(format: format, step: step, value: value)
-        end
+          haspopup: variant.haspopup,
+          popup_id: variant.popup_id_for(panel_id),
+          **kwargs,
+          &block
+        )
+      end
+
+      def typeahead_data(id)
+        {
+          input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.panel_id_for(id)}",
+          action:                                  "input->input-combobox#onInput"
+        }
       end
     end
   end

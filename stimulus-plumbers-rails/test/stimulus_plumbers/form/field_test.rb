@@ -14,8 +14,6 @@ class FieldTest < Minitest::Test
     StimulusPlumbers::Form::Field.new(nil, **kwargs)
   end
 
-  # ── error? ────────────────────────────────────────────────────────────────
-
   def test_no_error_without_model_errors
     refute component.error?(@form, :email)
   end
@@ -35,8 +33,6 @@ class FieldTest < Minitest::Test
 
     assert component(error: "Custom error").error?(@form, :email)
   end
-
-  # ── described_by ──────────────────────────────────────────────────────────
 
   def test_described_by_is_nil_with_no_hint_or_errors
     assert_nil component.described_by(@form, :email, INPUT_ID)
@@ -81,13 +77,9 @@ class FieldTest < Minitest::Test
     assert_includes db, "#{INPUT_ID}_error_2"
   end
 
-  # ── label_id ──────────────────────────────────────────────────────────────
-
   def test_label_id_returns_input_id_with_label_suffix
     assert_equal "#{INPUT_ID}_label", StimulusPlumbers::Form::Field.label_id(INPUT_ID)
   end
-
-  # ── label ─────────────────────────────────────────────────────────────────
 
   def test_label_is_nil_without_explicit_label
     assert_nil component.label
@@ -97,8 +89,6 @@ class FieldTest < Minitest::Test
     assert_equal "Email address", component(label: "Email address").label
   end
 
-  # ── label_hidden? ─────────────────────────────────────────────────────────
-
   def test_label_not_hidden_by_default
     refute_predicate component, :label_hidden?
   end
@@ -107,8 +97,6 @@ class FieldTest < Minitest::Test
     assert_predicate component(hide_label: true), :label_hidden?
   end
 
-  # ── layout ────────────────────────────────────────────────────────────────
-
   def test_default_layout_is_stacked
     assert_equal :stacked, component.layout
   end
@@ -116,8 +104,6 @@ class FieldTest < Minitest::Test
   def test_layout_is_inline_when_set
     assert_equal :inline, component(layout: :inline).layout
   end
-
-  # ── required ──────────────────────────────────────────────────────────────
 
   def test_not_required_by_default
     refute_predicate component, :required

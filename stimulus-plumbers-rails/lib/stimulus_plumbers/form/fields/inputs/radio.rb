@@ -34,7 +34,11 @@ module StimulusPlumbers
           def render_collection_radio_button(attribute, collection, value_method, text_method, field_opts, **kwargs)
             field = Field.new(@template, **field_opts)
             render_fieldset(attribute, field) do |error|
-              item_opts = merge_html_options(kwargs, field_theme(:form_radio, error: error))
+              item_opts = merge_html_options(
+                kwargs,
+                field_theme(:form_radio, error: error),
+                field.required ? { aria: { required: "true" } } : {}
+              )
               @template.collection_radio_buttons(
                 @object_name, attribute, collection, value_method, text_method, {}, item_opts
               ) do |b|

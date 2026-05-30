@@ -10,12 +10,12 @@ test("search — empty input", async ({ page }) => {
 });
 
 test("search — populated input", async ({ page }) => {
-  await page.getByLabel("Search").fill("hello");
+  await page.getByRole("combobox", { name: "Search" }).fill("hello");
   await expect(page).toHaveScreenshot("populated.png");
 });
 
 test("search — clear button visible", async ({ page }) => {
-  await page.getByLabel("Search").fill("hello");
+  await page.getByRole("combobox", { name: "Search" }).fill("hello");
   await expect(page.getByRole("button", { name: "Clear search" })).toBeVisible();
   await expect(page).toHaveScreenshot("clear-visible.png");
 });

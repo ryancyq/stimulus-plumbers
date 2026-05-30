@@ -7,8 +7,6 @@ class ActionListComponentTest < ActionView::TestCase
     StimulusPlumbers::Components::ActionList.new(self)
   end
 
-  # ── attr_readers ──────────────────────────────────────────────────────────
-
   def test_exposes_template
     assert_equal self, renderer.template
   end
@@ -16,8 +14,6 @@ class ActionListComponentTest < ActionView::TestCase
   def test_exposes_theme
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
-
-  # ── list ──────────────────────────────────────────────────────────────────
 
   def test_list_renders_ul
     assert_css parse_html(renderer.render { "" }), "ul"
@@ -44,8 +40,6 @@ class ActionListComponentTest < ActionView::TestCase
     assert_css doc, "#nav"
     assert_css doc, "[data-controller='list']"
   end
-
-  # ── section ───────────────────────────────────────────────────────────────
 
   def test_section_renders_li_with_ul
     doc = parse_html(renderer.section { "" })
@@ -83,8 +77,6 @@ class ActionListComponentTest < ActionView::TestCase
   def test_section_inner_ul_has_no_role_group
     assert_no_css parse_html(renderer.section { "" }), "[role='group']"
   end
-
-  # ── item ──────────────────────────────────────────────────────────────────
 
   def test_item_renders_li_with_button
     doc = parse_html(renderer.item("Click me"))

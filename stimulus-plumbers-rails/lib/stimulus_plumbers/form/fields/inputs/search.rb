@@ -27,24 +27,9 @@ module StimulusPlumbers
 
           def render_combobox_typeahead(attribute, html_opts, opts, error, url: nil, clearable: false, choices: [], **kwargs)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
-            input_id      = html_opts[:id]
-            combobox_opts = Components::Combobox::Typeahead.default_opts.deep_merge(
-              input:   { value: current_value },
-              trigger: { data: clearable ? { input_clearable_target: "input" } : {}, aria: html_opts[:aria] },
-              popover: { data: url ? { combobox_dropdown_url_value: url } : {} },
-              **opts
+            combobox_html = render_typeahead_combobox(
+              attribute, html_opts, opts, error, current_value, clearable: clearable, choices: choices, url: url, **kwargs
             )
-            combobox_html = render_combobox(
-              attribute,
-              input_id: input_id,
-              opts:     combobox_opts,
-              err:      error,
-              data:     {
-                input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.popover_id_for(input_id)}",
-                action:                                  "input->input-combobox#onInput"
-              },
-              **kwargs
-            ) { Components::Combobox::Typeahead.new(@template).render(options: choices, value: current_value, labelledby: Field.label_id(input_id)) }
 
             return combobox_html unless clearable
 
@@ -53,6 +38,32 @@ module StimulusPlumbers
               error:    !!error,
               **merge_html_options(field_theme(:form_input_clearable), { data: { controller: "input-clearable" } })
             ) { combobox_html }
+          end
+
+          def render_typeahead_combobox(attribute, html_opts, opts, error, current_value, clearable:, choices:, url:, **kwargs)
+            input_id      = html_opts[:id]
+            labelledby    = Field.label_id(input_id)
+            combobox_opts = Components::Combobox::Typeahead.options(
+              input:   { value: current_value },
+              trigger: { data: clearable ? { input_clearable_target: "input" } : {}, aria: html_opts[:aria] },
+              **opts
+            )
+            render_combobox(
+              attribute,
+              input_id: input_id,
+              variant:  Components::Combobox::Typeahead.variant,
+              opts:     combobox_opts,
+              error:    error,
+              data:     {
+                input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.panel_id_for(input_id)}",
+                action:                                  "input->input-combobox#onInput"
+              },
+              **kwargs
+            ) do |panel_attrs|
+              Components::Combobox::Typeahead.new(@template).render(
+                panel_attrs: panel_attrs, options: choices, value: current_value, labelledby: labelledby, url: url
+              )
+            end
           end
 
           def clear_button

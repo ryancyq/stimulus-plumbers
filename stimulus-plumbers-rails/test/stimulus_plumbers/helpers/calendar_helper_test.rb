@@ -5,13 +5,9 @@ require "test_helper"
 class CalendarHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::CalendarHelper
 
-  # ── rendering ─────────────────────────────────────────────────────────────
-
   def test_renders_calendar_month_controller
     assert_css parse_html(sp_calendar_month), "[data-controller~='calendar-month']"
   end
-
-  # ── date values ───────────────────────────────────────────────────────────
 
   def test_sets_year_value_from_date
     assert_css parse_html(sp_calendar_month(date: Date.new(2026, 4, 15))),
@@ -35,8 +31,6 @@ class CalendarHelperTest < ActionView::TestCase
     assert_no_css doc, "[data-calendar-month-month-value]"
     assert_no_css doc, "[data-calendar-month-day-value]"
   end
-
-  # ── html options ──────────────────────────────────────────────────────────
 
   def test_merges_custom_data_attributes_with_date
     doc = parse_html(sp_calendar_month(date: Date.new(2026, 4, 1), data: { foo: "bar" }))
