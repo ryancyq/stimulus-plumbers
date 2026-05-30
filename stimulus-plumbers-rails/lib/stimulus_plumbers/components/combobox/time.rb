@@ -6,9 +6,6 @@ module StimulusPlumbers
       class Time < Plumber::Base
         STIMULUS_CONTROLLER = "combobox-time"
 
-        def self.haspopup = "dialog"
-        def self.popup_id(panel_id) = panel_id
-
         def render(...)
           render_time(...)
         end
@@ -26,7 +23,7 @@ module StimulusPlumbers
               panel_attrs,
               { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
               { role: "dialog",
-                aria: { label: (label unless labelledby), labelledby: labelledby }.compact,
+                aria: labelled_aria(label, labelledby),
                 data: { controller: STIMULUS_CONTROLLER,
                         action:     [
                           "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",

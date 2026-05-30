@@ -41,7 +41,11 @@ module StimulusPlumbers
               html_opts, current_value, opts: opts, icon_leading: icon_leading, icon_trailing: icon_trailing
             )
             render_combobox(
-              attribute, input_id: html_opts[:id], klass: Components::Combobox::Dropdown, opts: combobox_opts, err: error
+              attribute,
+              input_id: html_opts[:id],
+              variant:  Components::Combobox.variant(:dropdown),
+              opts:     combobox_opts,
+              error:    error
             ) do |panel_attrs|
               render_dropdown_component(all_choices, current_value, panel_attrs: panel_attrs, labelledby: labelledby, **kwargs)
             end

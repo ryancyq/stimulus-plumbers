@@ -24,7 +24,7 @@ module StimulusPlumbers
           def render_combobox_date(attribute, html_opts, opts, error, icon_leading: nil, icon_trailing: "calendar", **kwargs)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             labelledby    = Field.label_id(html_opts[:id])
-            combobox_opts = Components::Combobox::Date.default_opts.deep_merge(
+            combobox_opts = Components::Combobox.variant(:date).opts(
               input:   { value: current_value, data: { combobox_date_date_value: current_value } },
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
               **opts
@@ -32,9 +32,9 @@ module StimulusPlumbers
             render_combobox(
               attribute,
               input_id: html_opts[:id],
-              klass:    Components::Combobox::Date,
+              variant:  Components::Combobox.variant(:date),
               opts:     combobox_opts,
-              err:      error,
+              error:    error,
               data:     { input_formatter_format_value: "date" },
               **kwargs
             ) do |panel_attrs|
@@ -57,17 +57,17 @@ module StimulusPlumbers
           )
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             labelledby    = Field.label_id(html_opts[:id])
-            combobox_opts = {
+            combobox_opts = Components::Combobox.variant(:time).opts(
               input:   { value: current_value },
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
               **opts
-            }
+            )
             render_combobox(
               attribute,
               input_id: html_opts[:id],
-              klass:    Components::Combobox::Time,
+              variant:  Components::Combobox.variant(:time),
               opts:     combobox_opts,
-              err:      error,
+              error:    error,
               data:     { input_formatter_format_value: "time", input_formatter_options_value: { format: format }.to_json },
               **kwargs
             ) do |panel_attrs|

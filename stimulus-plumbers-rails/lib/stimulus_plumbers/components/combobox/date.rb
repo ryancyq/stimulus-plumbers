@@ -7,13 +7,6 @@ module StimulusPlumbers
         STIMULUS_CONTROLLER = "combobox-date"
         CALENDAR_OUTLET = "#{STIMULUS_CONTROLLER}-calendar-month-outlet".freeze
 
-        def self.default_opts
-          { input: { data: { combobox_date_date_value: nil } } }
-        end
-
-        def self.haspopup = "dialog"
-        def self.popup_id(panel_id) = panel_id
-
         def self.calendar_id_for(panel_id)
           [panel_id, "calendar"].compact.join("_")
         end
@@ -38,7 +31,7 @@ module StimulusPlumbers
             "#{STIMULUS_CONTROLLER}-date-value" => value
           }.compact
 
-          aria = { label: (label unless labelledby), labelledby: labelledby }.compact
+          aria = labelled_aria(label, labelledby)
 
           template.content_tag(
             :div,

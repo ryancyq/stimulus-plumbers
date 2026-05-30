@@ -4,6 +4,55 @@
 > Goal: make every theme key accurately, consistently, and cleanly reflect how the
 > component is actually styled, with names cross-referenced to major UI libraries.
 
+## Re-validation (2026-05-30)
+
+Every finding below was re-checked against the current `fix/combobox-popover`
+tree and **still holds**. Concrete evidence:
+
+- **Half-dead `resolve` envelope (finding 1):** `themes/base.rb#resolve` still
+  returns `{ classes:, style? }`; `:style` is never produced by any theme method.
+  `grep -rn '.fetch(:classes, "")' lib` → ~40 hits across components, the form
+  builder (`form/builder.rb#field_theme`), and combobox/popover renderers.
+- **Unstyled popover keys (finding 2):** `stimulus-plumbers-tailwind/.../tailwind/layout.rb`
+  defines only `popover_classes` — no `popover_wrapper_classes` /
+  `popover_trigger_classes`. `components/popover.rb` resolves `:popover_wrapper` and
+  `components/popover/trigger.rb` resolves `:popover_trigger`, both hitting the
+  `Logger.warn` fallback → bare, unstyled wrapper/trigger.
+- **Dead schema keys (finding 3):** `form_field` / `form_collection_field` are in
+  `themes/schema.rb` but no `*_classes` method resolves them.
+- **Ignored variants (finding 4):** e.g. `tailwind/form.rb` `form_checkbox_classes(**)`
+  and `form_radio_classes(**)` swallow the schema-declared `error:` variant;
+  `calendar_day#today/#selected` are styled via `aria-*` CSS, not the theme;
+  `avatar#color` is computed in `components/avatar.rb#resolve_color`, never passed
+  to the theme.
+- **Parallel popover/combobox vocab (finding 5)** and **naming smells (finding 6)**
+  are unchanged.
+
+**Verdict:** the architecture is sound — a single-source `Base::SCHEMA`, validated
+`resolve`, and pluggable per-theme `*_classes` methods keep theme logic out of the
+components. Convolution is *localized*: the unused return envelope, schema↔impl
+drift, the two naming vocabularies, and avatar color leaking into the component.
+None of it is structural; all of it is addressable without redesigning the system.
+
+## Recommended sequencing (non-breaking first)
+
+This pass does **not** modify theme code (scope: re-validate + document). When the
+work is scheduled, land it in this order so downstream custom themes are not broken
+all at once:
+
+1. **Phase 1 — drop the envelope (non-breaking, internal only).** `resolve` and the
+   `*_classes` methods return a bare class String; delete the ~40 `.fetch(:classes, "")`.
+   No public key changes.
+2. **Phase 2 — schema honesty (non-breaking).** Remove the dead keys and the ~8
+   ignored variants; add the **bidirectional schema↔method coverage test**; fill the
+   missing `popover_root` / `popover_trigger` implementations so popovers ship styled.
+3. **Phase 3 — public key renames (breaking).** The `popover_*` / `combobox_*` /
+   `calendar_*` / `form_*` renames in the tables below. Gate behind a version bump
+   and a CHANGELOG/upgrade note, since they break custom `*_classes` overrides.
+
+The detailed phase plan and rename tables below remain the reference for the
+eventual implementation.
+
 ## How `theme.resolve` works today
 
 - `Themes::Base#resolve(component, **args)` validates `args` against `Base::SCHEMA`,

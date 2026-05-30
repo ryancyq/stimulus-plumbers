@@ -41,10 +41,10 @@ class ComboboxDropdownTest < ActionView::TestCase
   # ── popup_id / haspopup ─────────────────────────────────────────────────────
 
   def test_haspopup_is_listbox
-    assert_equal "listbox", StimulusPlumbers::Components::Combobox::Dropdown.haspopup
+    assert_equal "listbox", StimulusPlumbers::Components::Combobox.variant(:dropdown).haspopup
   end
 
   def test_popup_id_is_the_panel
-    assert_equal "p1", StimulusPlumbers::Components::Combobox::Dropdown.popup_id("p1")
+    assert_equal "p1", StimulusPlumbers::Components::Combobox.variant(:dropdown).popup_id("p1")
   end
 end

@@ -12,9 +12,6 @@ module StimulusPlumbers
           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
         ].join(" ").freeze
 
-        def self.haspopup = "listbox"
-        def self.popup_id(panel_id) = panel_id
-
         def render(...)
           render_dropdown(...)
         end
@@ -30,7 +27,7 @@ module StimulusPlumbers
               { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
               {
                 role: "listbox",
-                aria: { label: (label unless labelledby), labelledby: labelledby }.compact,
+                aria: labelled_aria(label, labelledby),
                 data: { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION, combobox_dropdown_target: "listbox" }
               }
             )

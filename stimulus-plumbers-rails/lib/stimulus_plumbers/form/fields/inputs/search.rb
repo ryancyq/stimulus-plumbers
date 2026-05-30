@@ -25,22 +25,35 @@ module StimulusPlumbers
 
           private
 
-          # rubocop:disable Metrics/AbcSize
           def render_combobox_typeahead(attribute, html_opts, opts, error, url: nil, clearable: false, choices: [], **kwargs)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
+            combobox_html = render_typeahead_combobox(
+              attribute, html_opts, opts, error, current_value, clearable: clearable, choices: choices, url: url, **kwargs
+            )
+
+            return combobox_html unless clearable
+
+            render_input_group(
+              trailing: method(:clear_button),
+              error:    !!error,
+              **merge_html_options(field_theme(:form_input_clearable), { data: { controller: "input-clearable" } })
+            ) { combobox_html }
+          end
+
+          def render_typeahead_combobox(attribute, html_opts, opts, error, current_value, clearable:, choices:, url:, **kwargs)
             input_id      = html_opts[:id]
             labelledby    = Field.label_id(input_id)
-            combobox_opts = Components::Combobox::Typeahead.default_opts.deep_merge(
+            combobox_opts = Components::Combobox.variant(:typeahead).opts(
               input:   { value: current_value },
               trigger: { data: clearable ? { input_clearable_target: "input" } : {}, aria: html_opts[:aria] },
               **opts
             )
-            combobox_html = render_combobox(
+            render_combobox(
               attribute,
               input_id: input_id,
-              klass:    Components::Combobox::Typeahead,
+              variant:  Components::Combobox.variant(:typeahead),
               opts:     combobox_opts,
-              err:      error,
+              error:    error,
               data:     {
                 input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.panel_id_for(input_id)}",
                 action:                                  "input->input-combobox#onInput"
@@ -51,16 +64,7 @@ module StimulusPlumbers
                 panel_attrs: panel_attrs, options: choices, value: current_value, labelledby: labelledby, url: url
               )
             end
-
-            return combobox_html unless clearable
-
-            render_input_group(
-              trailing: method(:clear_button),
-              error:    !!error,
-              **merge_html_options(field_theme(:form_input_clearable), { data: { controller: "input-clearable" } })
-            ) { combobox_html }
           end
-          # rubocop:enable Metrics/AbcSize
 
           def clear_button
             Components::Button.new(@template).render(

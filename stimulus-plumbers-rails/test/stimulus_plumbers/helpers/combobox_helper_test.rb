@@ -351,7 +351,7 @@ class ComboboxHelperTest < ActionView::TestCase
     end
 
     def test_renders_loading_indicator
-      assert_css parse_html(sp_combobox_typeahead), "[aria-live='polite'][hidden]"
+      assert_css parse_html(sp_combobox_typeahead), "[role='status'][hidden][data-combobox-dropdown-target='loading']"
     end
 
     def test_renders_empty_state_element

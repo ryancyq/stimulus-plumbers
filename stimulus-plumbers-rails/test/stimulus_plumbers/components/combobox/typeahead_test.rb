@@ -32,10 +32,10 @@ class ComboboxTypeaheadTest < ActionView::TestCase
 
   # ── loading ───────────────────────────────────────────────────────────────
 
-  def test_loading_is_a_sibling_live_region_hidden_by_default
+  def test_loading_is_a_sibling_status_region_hidden_by_default
     doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }))
 
-    assert_css doc, "div[aria-live='polite'][hidden][data-combobox-dropdown-target='loading']"
+    assert_css doc, "div[role='status'][hidden][data-combobox-dropdown-target='loading']"
     assert_no_css doc, "ul[role='listbox'] [data-combobox-dropdown-target='loading']"
   end
 
@@ -72,10 +72,10 @@ class ComboboxTypeaheadTest < ActionView::TestCase
   # ── popup_id / haspopup ─────────────────────────────────────────────────────
 
   def test_haspopup_is_listbox
-    assert_equal "listbox", StimulusPlumbers::Components::Combobox::Typeahead.haspopup
+    assert_equal "listbox", StimulusPlumbers::Components::Combobox.variant(:typeahead).haspopup
   end
 
   def test_popup_id_points_at_the_listbox
-    assert_equal "p1_listbox", StimulusPlumbers::Components::Combobox::Typeahead.popup_id("p1")
+    assert_equal "p1_listbox", StimulusPlumbers::Components::Combobox.variant(:typeahead).popup_id("p1")
   end
 end

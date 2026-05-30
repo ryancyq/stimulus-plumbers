@@ -4,13 +4,7 @@ module StimulusPlumbers
   module Components
     class Combobox
       class Typeahead < Plumber::Base
-        def self.default_opts
-          { trigger: { aria: { autocomplete: "list" }, readonly: false } }
-        end
-
-        def self.haspopup = "listbox"
-
-        def self.popup_id(panel_id) = [panel_id, "listbox"].compact.join("_")
+        LISTBOX_ID_SUFFIX = "listbox"
 
         def render(...)
           render_typeahead(...)
@@ -41,9 +35,9 @@ module StimulusPlumbers
             **merge_html_options(
               { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
               {
-                id:   Typeahead.popup_id(panel_id),
+                id:   [panel_id, LISTBOX_ID_SUFFIX].compact.join("_"),
                 role: "listbox",
-                aria: { label: (label unless labelledby), labelledby: labelledby }.compact,
+                aria: labelled_aria(label, labelledby),
                 data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "listbox" }
               }
             )
@@ -55,7 +49,7 @@ module StimulusPlumbers
             :div,
             **merge_html_options(
               { classes: theme.resolve(:combobox_typeahead_loading).fetch(:classes, "") },
-              { hidden: "", aria: { live: "polite" }, data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
+              { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
             )
           ) do
             Icon.new(template).render(name: "spinner", classes: "size-(--sp-icon-size) animate-spin")

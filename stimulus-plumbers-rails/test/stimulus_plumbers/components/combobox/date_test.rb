@@ -62,10 +62,10 @@ class ComboboxDateTest < ActionView::TestCase
   # ── popup_id / haspopup ─────────────────────────────────────────────────────
 
   def test_haspopup_is_dialog
-    assert_equal "dialog", StimulusPlumbers::Components::Combobox::Date.haspopup
+    assert_equal "dialog", StimulusPlumbers::Components::Combobox.variant(:date).haspopup
   end
 
   def test_popup_id_is_the_panel
-    assert_equal "p1", StimulusPlumbers::Components::Combobox::Date.popup_id("p1")
+    assert_equal "p1", StimulusPlumbers::Components::Combobox.variant(:date).popup_id("p1")
   end
 end
