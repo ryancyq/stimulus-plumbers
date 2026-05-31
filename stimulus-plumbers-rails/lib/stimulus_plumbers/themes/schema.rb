@@ -82,6 +82,17 @@ module StimulusPlumbers
         form_details:          {}.freeze,
         form_error:            {}.freeze,
         form_input:            { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_floating_input:   {
+          error:   { default: false, validate: Ranges::BOOL },
+          variant: { default: nil,   validate: Form::Ranges::FLOATING_VARIANT }
+        }.freeze,
+        form_floating_group:   {
+          variant: { default: nil, validate: Form::Ranges::FLOATING_VARIANT }
+        }.freeze,
+        form_floating_label:   {
+          variant: { default: nil,   validate: Form::Ranges::FLOATING_VARIANT },
+          error:   { default: false, validate: Ranges::BOOL }
+        }.freeze,
         form_textarea:         { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_file:             { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_select:           { error: { default: false, validate: Ranges::BOOL } }.freeze,

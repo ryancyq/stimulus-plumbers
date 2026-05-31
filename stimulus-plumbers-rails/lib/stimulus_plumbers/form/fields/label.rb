@@ -10,7 +10,13 @@ module StimulusPlumbers
             theme.resolve(:form_required_mark)
           )
           html_options = merge_html_options(theme.resolve(:form_label, required: required, hidden: hidden))
-          template.content_tag(tag, for: for_id, id: id, **html_options) do
+          render_label(text, mark_options, tag, for: for_id, id: id, **html_options)
+        end
+
+        private
+
+        def render_label(text, mark_options, tag, **html_options)
+          template.content_tag(tag, **html_options) do
             template.safe_join(
               [
                 text,

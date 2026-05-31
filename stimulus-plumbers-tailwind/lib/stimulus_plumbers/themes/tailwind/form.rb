@@ -14,6 +14,62 @@ module StimulusPlumbers
         INPUT_ERROR   = %w[border-(--sp-color-error) focus:ring-(--sp-color-error)].freeze
         INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:ring-(--sp-focus-ring-color)].freeze
 
+        FLOATING_INPUT_BASE = %w[
+          w-full text-(length:--sp-text-sm) text-(--sp-color-fg) appearance-none
+          focus:outline-none focus:ring-0
+        ].freeze
+        FLOATING_INPUT_VARIANTS = {
+          floating_filled:   %w[
+            rounded-t-(--sp-radius-md) px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-5)
+            bg-(--sp-color-bg-muted) border-0 border-b-2
+          ].freeze,
+          floating_outlined: %w[
+            px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-4)
+            bg-transparent rounded-(--sp-radius-md) border
+          ].freeze,
+          floating_standard: %w[
+            py-(--sp-space-2-5) px-0
+            bg-transparent border-0 border-b-2
+          ].freeze
+        }.freeze
+        FLOATING_INPUT_ERROR   = %w[border-(--sp-color-error)].freeze
+        FLOATING_INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:border-(--sp-color-primary)].freeze
+
+        FLOATING_GROUP_VARIANTS = {
+          floating_filled:   %w[relative].freeze,
+          floating_outlined: %w[relative].freeze,
+          floating_standard: %w[relative z-0].freeze
+        }.freeze
+
+        FLOATING_LABEL_BASE = %w[
+          absolute text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
+          duration-300 transform origin-[0]
+        ].freeze
+        FLOATING_LABEL_FOCUS   = %w[peer-focus:text-(--sp-color-primary)].freeze
+        FLOATING_LABEL_ERROR   = %w[text-(--sp-color-error)].freeze
+        FLOATING_LABEL_VARIANTS = {
+          floating_filled:   %w[
+            -translate-y-(--sp-space-4) scale-75 top-(--sp-space-4) z-10 start-(--sp-space-2-5)
+            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+            peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-4)
+            rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+          ].freeze,
+          floating_outlined: %w[
+            -translate-y-(--sp-space-4) scale-75 top-(--sp-space-2) z-10 start-1
+            bg-(--sp-color-bg) px-(--sp-space-2) peer-focus:px-(--sp-space-2)
+            peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2
+            peer-focus:top-(--sp-space-2) peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-4)
+            rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+          ].freeze,
+          floating_standard: %w[
+            -translate-y-(--sp-space-6) scale-75 top-(--sp-space-3) -z-10 start-0
+            peer-focus:start-0
+            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+            peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-6)
+            rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+          ].freeze
+        }.freeze
+
         GROUP_BASE    = %w[flex gap-(--sp-space-1) mb-(--sp-space-3)].freeze
         GROUP_INLINE  = %w[flex-row items-center].freeze
 
@@ -139,6 +195,25 @@ module StimulusPlumbers
 
         def form_input_classes(error: false)
           { classes: klasses(*INPUT_BASE, *(error ? INPUT_ERROR : INPUT_DEFAULT)) }
+        end
+
+        def form_floating_input_classes(variant: nil, error: false)
+          {
+            classes: klasses(
+              *FLOATING_INPUT_BASE,
+              *FLOATING_INPUT_VARIANTS.fetch(variant, []),
+              *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT)
+            )
+          }
+        end
+
+        def form_floating_group_classes(variant: nil)
+          { classes: klasses(*FLOATING_GROUP_VARIANTS.fetch(variant, [])) }
+        end
+
+        def form_floating_label_classes(variant: nil, error: false)
+          color = error ? FLOATING_LABEL_ERROR : FLOATING_LABEL_FOCUS
+          { classes: klasses(*FLOATING_LABEL_BASE, *FLOATING_LABEL_VARIANTS.fetch(variant, []), *color) }
         end
 
         def form_textarea_classes(error: false)
