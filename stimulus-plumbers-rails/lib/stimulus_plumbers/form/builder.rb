@@ -3,8 +3,7 @@
 require "action_view/version"
 
 require_relative "../plumber/aria_options"
-require_relative "../plumber/stimulus_options"
-require_relative "../plumber/theme_options"
+require_relative "../plumber/html_options"
 
 require_relative "base"
 require_relative "field"
@@ -27,8 +26,7 @@ require_relative "fields/inputs/text_area"
 module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
-      include Plumber::ThemeOptions
-      include Plumber::StimulusOptions
+      include Plumber::HtmlOptions
       include Plumber::AriaOptions
       include Fields::Inputs::Checkbox
       include Fields::Inputs::Datetime
@@ -61,8 +59,7 @@ module StimulusPlumbers
         date:           :render_combobox_date,
         time:           :render_combobox_time,
         select:         :render_combobox_dropdown,
-        search:         :render_combobox_typeahead,
-        check_box:      :render_check_box
+        search:         :render_combobox_typeahead
       }.freeze
 
       COLLECTION_FIELD_RENDERER = {
@@ -72,7 +69,7 @@ module StimulusPlumbers
 
       CHOICE_RENDERER = {
         radio:     :render_collection_radio_button,
-        check_box: :render_collection_check_box
+        check_box: :render_check_box
       }.freeze
 
       def field(attribute, as:, **options)
@@ -87,7 +84,7 @@ module StimulusPlumbers
         render_collection_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
       end
 
-      def choice(attribute, as:, collection:, value_method:, text_method:, **options)
+      def choice(attribute, as:, collection: nil, value_method: nil, text_method: nil, **options)
         field_opts = options.slice(*Field::OPTIONS)
         input_opts = options.except(*Field::OPTIONS)
         render_choice_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)

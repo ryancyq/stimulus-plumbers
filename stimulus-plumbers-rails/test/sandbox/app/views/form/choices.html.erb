@@ -1,0 +1,46 @@
+<%
+  genders   = [["Male", "male"], ["Female", "female"], ["Other", "other"]]
+  interests = [["Reading", "reading"], ["Coding", "coding"], ["Gaming", "gaming"]]
+  coll      = { value_method: :last, text_method: :first }
+%>
+
+<h1>Form choices</h1>
+
+<%# ── Single Checkbox ─────────────────────────────────────────────── %>
+
+<section id="single-checkbox">
+  <h2>Single Checkbox</h2>
+
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+    <%= f.choice :newsletter, as: :check_box,
+          label: "Free shipping",
+          hint:  "We only send weekly product updates" %>
+  <% end %>
+</section>
+
+<%# ── Collection Checkbox ─────────────────────────────────────────── %>
+
+<section id="collection-checkbox">
+  <h2>Collection Checkbox</h2>
+
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          hint:       "Select all that apply",
+          collection: interests, **coll %>
+  <% end %>
+</section>
+
+<%# ── Collection Radio ────────────────────────────────────────────── %>
+
+<section id="collection-radio">
+  <h2>Collection Radio</h2>
+
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label:      "Gender",
+          hint:       "Select the option that best describes you",
+          collection: genders, **coll %>
+  <% end %>
+</section>

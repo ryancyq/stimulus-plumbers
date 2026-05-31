@@ -5,13 +5,15 @@ test.beforeEach(async ({ page }) => {
   await page.waitForSelector("[data-controller='popover']");
 });
 
-test("popover — closed state", async ({ page }) => {
-  await expect(page).toHaveScreenshot("closed.png");
-});
+test.describe("popover", () => {
+  test("closed", async ({ page }) => {
+    await expect(page.locator("#popover")).toHaveScreenshot("closed.png");
+  });
 
-test("popover — open state", async ({ page }) => {
-  const btn = page.getByRole("button", { name: "Open menu" });
-  await btn.click();
-  await expect(btn).toHaveAttribute("aria-expanded", "true");
-  await expect(page).toHaveScreenshot("open.png");
+  test("open", async ({ page }) => {
+    const btn = page.getByRole("button", { name: "Open menu" });
+    await btn.click();
+    await expect(btn).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#popover")).toHaveScreenshot("open.png");
+  });
 });

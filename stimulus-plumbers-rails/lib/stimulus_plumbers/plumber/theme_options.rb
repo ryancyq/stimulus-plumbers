@@ -7,17 +7,8 @@ module StimulusPlumbers
     module ThemeOptions
       extend ActiveSupport::Concern
 
-      def merge_html_options(*hashes)
-        class_value = merge_string_option(*extract_classes(*hashes)).presence
-        merged_data = merge_stimulus_data(*hashes.map { |h| h[:data] || {} })
-        rest        = hashes.map { |h| h.except(:class, :classes, :data) }.reduce({}, :deep_merge)
-
-        result = class_value ? rest.merge(class: class_value) : rest
-        merged_data.present? ? result.merge(data: merged_data) : result
-      end
-
-      def extract_classes(*hashes)
-        hashes.flat_map { |h| [h[:class], h[:classes]] }
+      def merge_theme_options(*hashes)
+        merge_string_option(*hashes.flat_map { |h| [h[:class], h[:classes]] }).presence
       end
 
       def merge_string_option(*parts, delimiter: " ")

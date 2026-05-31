@@ -21,25 +21,89 @@ module StimulusPlumbers
         REQUIRED_MARK = %w[text-(--sp-color-error) ml-(--sp-space-0-5)].freeze
         DETAILS       = %w[text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
         ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
-        CHECKBOX      = %w[
-          size-(--sp-control-size) rounded-(--sp-radius-sm) border border-(--sp-color-muted-fg)
-          text-(--sp-color-primary) focus:ring-2 focus:ring-(--sp-focus-ring-color)
-        ].freeze
-        RADIO = %w[
-          size-(--sp-control-size) border border-(--sp-color-muted-fg) text-(--sp-color-primary)
-          focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
-        ].freeze
+        CHECKBOX_VARIANTS = {
+          default: %w[
+            size-(--sp-control-size) rounded-(--sp-radius-sm)
+            border border-(--sp-color-border) bg-(--sp-color-muted)
+            focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+            disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+          ].freeze,
+          button:  %w[
+            size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
+            border border-(--sp-color-border) bg-(--sp-color-muted)
+            focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+            disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+          ].freeze,
+          card:    %w[
+            size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
+            border border-(--sp-color-border) bg-(--sp-color-muted)
+            focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+            disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+          ].freeze
+        }.freeze
+
+        RADIO_VARIANTS = {
+          default: %w[
+            size-(--sp-control-size) rounded-full
+            border border-(--sp-color-border) bg-(--sp-color-muted)
+            appearance-none cursor-pointer
+            checked:border-(--sp-color-primary)
+            focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+            disabled:opacity-50 disabled:cursor-not-allowed
+          ].freeze,
+          button:  %w[hidden peer].freeze,
+          card:    %w[hidden peer].freeze
+        }.freeze
 
         INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
         INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
-        COLLECTION_ITEM_LABEL = %w[
-          flex items-center gap-(--sp-space-2)
-          text-(length:--sp-text-sm) text-(--sp-color-fg) cursor-pointer py-(--sp-space-0-5)
-        ].freeze
-        CHOICE_ITEM_DESCRIPTION = %w[
-          block text-(length:--sp-text-xs) text-(--sp-color-muted-fg)
-        ].freeze
+        CHECKBOX_LABEL_VARIANTS = {
+          default: %w[
+            flex items-center gap-(--sp-space-2) cursor-pointer py-(--sp-space-0-5) select-none
+            text-(length:--sp-text-sm) text-(--sp-color-fg)
+          ].freeze,
+          button:  %w[
+            flex items-start gap-(--sp-space-3) flex-1 p-(--sp-space-4) cursor-pointer select-none
+            text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
+            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-sm)
+            hover:bg-(--sp-color-muted)
+          ].freeze,
+          card:    %w[
+            flex justify-between items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
+            text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
+            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-sm)
+            hover:bg-(--sp-color-muted)
+          ].freeze
+        }.freeze
+
+        RADIO_LABEL_VARIANTS = {
+          default: %w[
+            flex items-center gap-(--sp-space-2) cursor-pointer py-(--sp-space-0-5) select-none
+            text-(length:--sp-text-sm) text-(--sp-color-fg)
+          ].freeze,
+          button:  %w[
+            inline-flex items-center justify-between flex-1 p-(--sp-space-4) cursor-pointer select-none
+            text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
+            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md)
+            hover:bg-(--sp-color-muted)
+            peer-checked:border-(--sp-color-primary) peer-checked:bg-(--sp-color-primary)/10
+            peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--sp-color-primary)/15
+          ].freeze,
+          card:    %w[
+            flex flex-col items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
+            text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
+            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-sm)
+            hover:bg-(--sp-color-muted)
+            peer-checked:border-(--sp-color-primary) peer-checked:bg-(--sp-color-primary)/10
+            peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--sp-color-primary)/15
+          ].freeze
+        }.freeze
+
+        CHOICE_ITEMS_LAYOUT = {
+          stacked: %w[flex flex-col gap-(--sp-space-1)].freeze,
+          inline:  %w[flex flex-row flex-wrap gap-x-(--sp-space-4) gap-y-(--sp-space-1)].freeze
+        }.freeze
 
         BUTTON_REVEAL = %w[
           self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg)
@@ -89,12 +153,12 @@ module StimulusPlumbers
           form_input_classes(error: error)
         end
 
-        def form_checkbox_classes(**)
-          { classes: klasses(*CHECKBOX) }
+        def form_checkbox_classes(variant: :default, **)
+          { classes: klasses(*CHECKBOX_VARIANTS.fetch(variant)) }
         end
 
-        def form_radio_classes(**)
-          { classes: klasses(*RADIO) }
+        def form_radio_classes(variant: :default, **)
+          { classes: klasses(*RADIO_VARIANTS.fetch(variant)) }
         end
 
         def input_group_classes(error: false)
@@ -113,8 +177,16 @@ module StimulusPlumbers
           { classes: "sp-form-input-group" }
         end
 
-        def form_collection_label_classes
-          { classes: klasses(*COLLECTION_ITEM_LABEL) }
+        def form_checkbox_label_classes(variant: :default)
+          { classes: klasses(*CHECKBOX_LABEL_VARIANTS.fetch(variant)) }
+        end
+
+        def form_radio_label_classes(variant: :default)
+          { classes: klasses(*RADIO_LABEL_VARIANTS.fetch(variant)) }
+        end
+
+        def form_choice_items_classes(layout: :stacked)
+          { classes: klasses(*CHOICE_ITEMS_LAYOUT.fetch(layout)) }
         end
 
         def form_button_reveal_classes

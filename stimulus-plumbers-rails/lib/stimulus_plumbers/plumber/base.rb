@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
+require_relative "html_options"
+require_relative "aria_options"
+require_relative "renderer"
+
 module StimulusPlumbers
   module Plumber
     class Base
-      include ThemeOptions
-      include StimulusOptions
+      include HtmlOptions
       include AriaOptions
       include Renderer
 

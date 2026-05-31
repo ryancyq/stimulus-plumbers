@@ -1,16 +1,18 @@
 <h1>Create account</h1>
 
-<%= sp_card do %>
-  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <%= f.field :name,       as: :text,     label: "Full name",     required: true %>
-    <%= f.field :email,      as: :email,    label: "Email address", required: true,
-                                            hint: "We'll never share your email." %>
-    <%= f.field :password,   as: :password, label: "Password",      required: true, revealable: true %>
-    <%= f.field :birth_date, as: :date,     label: "Date of birth" %>
-    <%= f.field :bio,        as: :text_area, label: "Bio",
-                                            hint: "Tell us a little about yourself." %>
-    <%= f.submit "Create account" %>
-  <% end %>
+<div id="sign-up">
+  <%= sp_card do %>
+    <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name,       as: :text,     label: "Full name",     required: true %>
+      <%= f.field :email,      as: :email,    label: "Email address", required: true,
+                                              hint: "We'll never share your email." %>
+      <%= f.field :password,   as: :password, label: "Password",      required: true, revealable: true %>
+      <%= f.field :birth_date, as: :date,     label: "Date of birth" %>
+      <%= f.field :bio,        as: :text_area, label: "Bio",
+                                              hint: "Tell us a little about yourself." %>
+      <%= f.submit "Create account" %>
+    <% end %>
 
-  <%= sp_button("Sign in", url: "#", variant: :secondary) %>
-<% end %>
+    <%= sp_button("Sign in", url: "#", variant: :secondary) %>
+  <% end %>
+</div>

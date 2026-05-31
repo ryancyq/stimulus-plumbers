@@ -22,4 +22,8 @@ class FormController < ApplicationController
       f.errors.add(:interests, "must select at least one")
     end
   end
+
+  def choices
+    @form = SignUp.new
+  end
 end

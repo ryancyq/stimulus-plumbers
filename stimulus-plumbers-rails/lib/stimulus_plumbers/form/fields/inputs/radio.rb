@@ -23,8 +23,8 @@ module StimulusPlumbers
             if block_given?
               super(attribute, collection, value_method, text_method, options, item_opts, &block)
             else
-              super(attribute, collection, value_method, text_method, options, item_opts) do |b|
-                @template.safe_join([b.label(**field_theme(:form_collection_label)), b.radio_button])
+              super(attribute, collection, value_method, text_method, options, item_opts) do |builder|
+                render_radio_button_label(builder, field_theme(:form_radio_label))
               end
             end
           end
@@ -32,19 +32,24 @@ module StimulusPlumbers
           private
 
           def render_collection_radio_button(attribute, collection, value_method, text_method, field_opts, **kwargs)
-            field = Field.new(@template, **field_opts)
+            variant = kwargs.delete(:variant) { :default }
+            field = Field.new(@template, **{ layout: :inline }.deep_merge(field_opts))
             render_fieldset(attribute, field) do |error|
               item_opts = merge_html_options(
                 kwargs,
-                field_theme(:form_radio, error: error),
+                field_theme(:form_radio, error: error, variant: variant),
                 field.required ? { aria: { required: "true" } } : {}
               )
               @template.collection_radio_buttons(
                 @object_name, attribute, collection, value_method, text_method, {}, item_opts
-              ) do |b|
-                @template.safe_join([b.label(**field_theme(:form_collection_label)), b.radio_button])
+              ) do |builder|
+                render_radio_button_label(builder, field_theme(:form_radio_label, variant: variant))
               end
             end
+          end
+
+          def render_radio_button_label(builder, label_opts)
+            builder.label(**label_opts) { @template.safe_join([builder.radio_button, builder.text]) }
           end
         end
       end

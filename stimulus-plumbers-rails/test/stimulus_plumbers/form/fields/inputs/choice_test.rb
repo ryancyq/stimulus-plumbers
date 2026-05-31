@@ -29,9 +29,9 @@ class ChoiceTest < ActionView::TestCase
     parse_html(html)
   end
 
-  def build_field_check_box(**opts)
+  def build_single_check_box(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
-      f.field(:remember_me, as: :check_box, **opts)
+      f.choice(:remember_me, as: :check_box, **opts)
     end
     parse_html(html)
   end
@@ -81,57 +81,67 @@ class ChoiceTest < ActionView::TestCase
     assert_equal "selector", input["data-controller"]
   end
 
-  def test_field_check_box_renders_input
-    assert_css build_field_check_box, "input[type='checkbox']"
+  def test_single_check_box_renders_input
+    assert_css build_single_check_box, "input[type='checkbox']"
   end
 
-  def test_field_check_box_renders_explicit_label
-    doc = build_field_check_box
+  def test_single_check_box_renders_no_fieldset
+    assert_no_css build_single_check_box, "fieldset"
+  end
+
+  def test_single_check_box_renders_label_for_input
+    doc   = build_single_check_box
     label = doc.at_css("label")
 
     assert_not_nil label
     assert_equal "sign_in_form_remember_me", label["for"]
   end
 
-  def test_field_check_box_label_does_not_wrap_input
-    assert_no_css build_field_check_box, "label input[type='checkbox']"
+  def test_single_check_box_label_does_not_wrap_input
+    assert_no_css build_single_check_box, "label input[type='checkbox']"
   end
 
-  def test_field_check_box_has_aria_invalid_on_error
-    @form.errors.add(:remember_me, "must be accepted")
+  def test_single_check_box_renders_input_before_label
+    nodes = build_single_check_box.css("input[type='checkbox'], label")
 
-    assert_equal "true", build_field_check_box.at_css("input[type='checkbox']")["aria-invalid"]
+    assert_equal "input", nodes.first.name
   end
 
-  def test_field_check_box_has_aria_describedby_on_error
+  def test_single_check_box_has_aria_invalid_on_error
     @form.errors.add(:remember_me, "must be accepted")
 
-    assert_includes build_field_check_box.at_css("input[type='checkbox']")["aria-describedby"].to_s,
+    assert_equal "true", build_single_check_box.at_css("input[type='checkbox']")["aria-invalid"]
+  end
+
+  def test_single_check_box_has_aria_describedby_on_error
+    @form.errors.add(:remember_me, "must be accepted")
+
+    assert_includes build_single_check_box.at_css("input[type='checkbox']")["aria-describedby"].to_s,
                     "sign_in_form_remember_me_error"
   end
 
-  def test_field_check_box_required_sets_required_and_aria_required
-    doc   = build_field_check_box(required: true)
+  def test_single_check_box_required_sets_required_and_aria_required
+    doc   = build_single_check_box(required: true)
     input = doc.at_css("input[type='checkbox']")
 
     assert_equal "required", input["required"]
     assert_equal "true", input["aria-required"]
   end
 
-  def test_field_check_box_renders_hint
-    assert_css build_field_check_box(hint: "You must accept"), "#sign_in_form_remember_me_hint"
+  def test_single_check_box_renders_hint
+    assert_css build_single_check_box(hint: "You must accept"), "#sign_in_form_remember_me_hint"
   end
 
-  def test_field_check_box_hint_adds_aria_describedby
-    doc = build_field_check_box(hint: "You must accept")
+  def test_single_check_box_hint_adds_aria_describedby
+    doc = build_single_check_box(hint: "You must accept")
 
     assert_includes doc.at_css("input[type='checkbox']")["aria-describedby"].to_s,
                     "sign_in_form_remember_me_hint"
   end
 
-  def test_field_check_box_forwards_checked_value
+  def test_single_check_box_forwards_checked_value
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
-      f.field(:remember_me, as: :check_box, checked_value: "yes", unchecked_value: "no")
+      f.choice(:remember_me, as: :check_box, checked_value: "yes", unchecked_value: "no")
     end
     doc = parse_html(html)
 
@@ -143,10 +153,7 @@ class ChoiceTest < ActionView::TestCase
   end
 
   def test_collection_radio_buttons_renders_explicit_labels
-    doc = build_collection_radio_buttons
-
-    assert_css doc, "label[for]"
-    assert_no_css doc, "label input[type='radio']"
+    assert_css build_collection_radio_buttons, "label[for] input[type='radio']"
   end
 
   def test_collection_check_boxes_renders_inputs
@@ -154,10 +161,7 @@ class ChoiceTest < ActionView::TestCase
   end
 
   def test_collection_check_boxes_renders_explicit_labels
-    doc = build_collection_check_boxes
-
-    assert_css doc, "label[for]"
-    assert_no_css doc, "label input[type='checkbox']"
+    assert_css build_collection_check_boxes, "label[for] input[type='checkbox']"
   end
 
   def test_choice_radio_renders_fieldset
@@ -174,10 +178,7 @@ class ChoiceTest < ActionView::TestCase
   end
 
   def test_choice_radio_renders_explicit_labels
-    doc = build_choice(as: :radio)
-
-    assert_css doc, "fieldset label[for]"
-    assert_no_css doc, "fieldset label input[type='radio']"
+    assert_css build_choice(as: :radio), "fieldset label[for] input[type='radio']"
   end
 
   def test_choice_radio_renders_custom_legend_text
@@ -267,10 +268,7 @@ class ChoiceTest < ActionView::TestCase
   end
 
   def test_choice_check_box_renders_explicit_labels
-    doc = build_choice(as: :check_box)
-
-    assert_css doc, "fieldset label[for]"
-    assert_no_css doc, "fieldset label input[type='checkbox']"
+    assert_css build_choice(as: :check_box), "fieldset label[for] input[type='checkbox']"
   end
 
   def test_choice_check_box_renders_custom_legend_text

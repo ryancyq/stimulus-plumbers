@@ -69,4 +69,4 @@ Metrics/ParameterLists:
   Max: 6
 
 Minitest/MultipleAssertions:
-  Max: 8
+  Max: 15

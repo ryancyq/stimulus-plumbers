@@ -7,7 +7,7 @@ module StimulusPlumbers
         def render(object, attribute, input_id, field, &block)
           error         = field.error?(object, attribute)
           fieldset_opts = build_fieldset_aria(field, object, attribute, input_id, error)
-          Group.new(template).render(layout: field.layout, error: error) do
+          Group.new(template).render(layout: :stacked, error: error) do
             template.safe_join(
               [
                 build_fieldset(fieldset_opts, field, attribute, error, &block),
@@ -25,10 +25,15 @@ module StimulusPlumbers
             template.safe_join(
               [
                 legend(field, attribute),
-                template.capture(error, &block)
+                fields_wrapper(field.layout) { template.capture(error, &block) }
               ]
             )
           end
+        end
+
+        def fields_wrapper(layout, &block)
+          html_options = merge_html_options(theme.resolve(:form_choice_items, layout: layout))
+          template.content_tag(:div, **html_options, &block)
         end
 
         def legend(field, attribute)

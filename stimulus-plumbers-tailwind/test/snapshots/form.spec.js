@@ -1,20 +1,32 @@
 import { test, expect } from "@playwright/test";
 
-test("sign up form — default state", async ({ page }) => {
-  await page.goto("/form/sign_up");
-  await page.waitForSelector("form");
-  await expect(page).toHaveScreenshot("sign-up-default.png");
+// ── Sign up form ─────────────────────────────────────────────────────────────
+
+test.describe("sign up form", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/form/sign_up");
+    await page.waitForSelector("form");
+  });
+
+  test("default", async ({ page }) => {
+    await expect(page.locator("#sign-up")).toHaveScreenshot("sign-up-default.png");
+  });
+
+  test("password revealed", async ({ page }) => {
+    await page.getByLabel("Show password").click();
+    await expect(page.locator("#sign-up")).toHaveScreenshot("sign-up-password-revealed.png");
+  });
 });
 
-test("sign up form — password revealed", async ({ page }) => {
-  await page.goto("/form/sign_up");
-  await page.waitForSelector("form");
-  await page.getByLabel("Show password").click();
-  await expect(page).toHaveScreenshot("sign-up-password-revealed.png");
-});
+// ── Field error form ─────────────────────────────────────────────────────────
 
-test("field error form — error state", async ({ page }) => {
-  await page.goto("/form/field_error");
-  await page.waitForSelector("form");
-  await expect(page).toHaveScreenshot("field-error.png");
+test.describe("field error form", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/form/field_error");
+    await page.waitForSelector("form");
+  });
+
+  test("error state", async ({ page }) => {
+    await expect(page.locator("#field-error")).toHaveScreenshot("field-error.png");
+  });
 });

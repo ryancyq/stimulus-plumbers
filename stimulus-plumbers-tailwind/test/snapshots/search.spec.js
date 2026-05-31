@@ -5,17 +5,19 @@ test.beforeEach(async ({ page }) => {
   await page.waitForSelector("input[role='combobox']");
 });
 
-test("search — empty input", async ({ page }) => {
-  await expect(page).toHaveScreenshot("empty.png");
-});
+test.describe("search", () => {
+  test("empty", async ({ page }) => {
+    await expect(page.locator("#search")).toHaveScreenshot("empty.png");
+  });
 
-test("search — populated input", async ({ page }) => {
-  await page.getByRole("combobox", { name: "Search" }).fill("hello");
-  await expect(page).toHaveScreenshot("populated.png");
-});
+  test("populated", async ({ page }) => {
+    await page.getByRole("combobox", { name: "Search" }).fill("hello");
+    await expect(page.locator("#search")).toHaveScreenshot("populated.png");
+  });
 
-test("search — clear button visible", async ({ page }) => {
-  await page.getByRole("combobox", { name: "Search" }).fill("hello");
-  await expect(page.getByRole("button", { name: "Clear search" })).toBeVisible();
-  await expect(page).toHaveScreenshot("clear-visible.png");
+  test("clear — visible", async ({ page }) => {
+    await page.getByRole("combobox", { name: "Search" }).fill("hello");
+    await expect(page.getByRole("button", { name: "Clear search" })).toBeVisible();
+    await expect(page.locator("#search")).toHaveScreenshot("clear-visible.png");
+  });
 });
