@@ -3,7 +3,6 @@
 require "test_helper"
 
 class EngineTest < Minitest::Test
-  # stimulus_plumbers.assets initializer
   def test_assets_initializer_skips_precompile_when_assets_config_is_absent
     app = Struct.new(:config).new(Object.new)
 

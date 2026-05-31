@@ -7,8 +7,6 @@ class ButtonComponentTest < ActionView::TestCase
     StimulusPlumbers::Components::Button.new(self)
   end
 
-  # ── attr_readers ──────────────────────────────────────────────────────────
-
   def test_exposes_template
     assert_equal self, renderer.template
   end
@@ -16,8 +14,6 @@ class ButtonComponentTest < ActionView::TestCase
   def test_exposes_theme
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
-
-  # ── button ────────────────────────────────────────────────────────────────
 
   def test_button_renders_button_element
     doc = parse_html(renderer.render("Click me"))
@@ -54,8 +50,6 @@ class ButtonComponentTest < ActionView::TestCase
   def test_button_passes_html_options
     assert_css parse_html(renderer.render("Click", id: "my-btn")), "#my-btn"
   end
-
-  # ── icon ──────────────────────────────────────────────────────────────────
 
   def test_icon_leading_renders_before_content
     doc = parse_html(renderer.render("Save", icon_leading: :check))
@@ -94,8 +88,6 @@ class ButtonComponentTest < ActionView::TestCase
     assert_no_css doc, "span"
     assert_css doc, "button"
   end
-
-  # ── group ─────────────────────────────────────────────────────────────────
 
   def test_group_renders_div
     doc = parse_html(renderer.group { renderer.render("One") })

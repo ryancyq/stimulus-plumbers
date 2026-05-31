@@ -23,28 +23,30 @@ stimulus-plumbers-rails/
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
 │       │   │   └── section.rb
-│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-format
+│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-format; drives p.build_panel, threads haspopup/popup_id
 │       │   ├── combobox/
-│       │   │   ├── typeahead.rb          # combobox-dropdown (typeahead mode) body
-│       │   │   ├── date.rb               # combobox-date picker body
-│       │   │   ├── dropdown.rb           # combobox-dropdown listbox body
+│       │   │   ├── typeahead.rb          # combobox-dropdown body — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
+│       │   │   ├── date.rb               # combobox-date picker body — panel IS the role=dialog (hosts the controller)
+│       │   │   ├── dropdown.rb           # combobox-dropdown body — panel IS the <ul role=listbox>; options only
 │       │   │   ├── options.rb            # Option list renderer
 │       │   │   ├── options/
 │       │   │   │   ├── option.rb
 │       │   │   │   └── option_group.rb
-│       │   │   ├── popover.rb            # Combobox popover wrapper
-│       │   │   ├── time.rb               # combobox-time drum picker body
+│       │   │   ├── time.rb               # combobox-time drum picker body — panel IS the role=dialog (hosts the controller)
 │       │   │   ├── time/
 │       │   │   │   └── drum.rb           # Single drum column renderer
-│       │   │   └── trigger.rb            # Combobox trigger input
+│       │   │   ├── trigger.rb            # Combobox trigger input (<input role="combobox">)
+│       │   │   └── variant.rb            # Immutable popup metadata per variant (haspopup, panel_class, popup_id_suffix, default_opts)
 │       │   ├── date_picker/
 │       │   │   ├── navigation.rb         # Month navigation bar (prev/next buttons)
 │       │   │   └── navigator.rb          # Individual prev/next button
 │       │   ├── divider.rb                # sp_divider renderer
 │       │   ├── icon.rb                   # sp_icon renderer (SVG or span fallback)
-│       │   └── popover.rb                # sp_popover renderer (activator + content)
+│       │   ├── popover.rb                # sp_popover renderer; render (with wrapper) / build (without wrapper)
 │       │   └── popover/
-│       │       └── builder.rb            # Builder DSL yielded to sp_popover block
+│       │       ├── builder.rb            # Builder DSL: p.trigger / p.panel (auto-wired) / p.build_panel (caller-wired) — yielded by render/build
+│       │       ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
+│       │       └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_attrs for caller to wire)
 │       ├── helpers/
 │       │   ├── action_list_helper.rb     # sp_action_list, sp_action_list_section, sp_action_list_item
 │       │   ├── avatar_helper.rb          # sp_avatar
@@ -69,6 +71,7 @@ stimulus-plumbers-rails/
 │       │       ├── label.rb
 │       │       └── inputs/
 │       │           ├── checkbox.rb       # check_box, collection_check_boxes (native); render_check_box, render_collection_check_box
+│       │           ├── combobox.rb       # Shared render_combobox — wires variant, panel_id, aria into Components::Combobox
 │       │           ├── radio.rb          # radio_button, collection_radio_buttons (native); render_collection_radio_button
 │       │           ├── datetime.rb       # date_field, time_field (native); render_combobox_date, render_combobox_time
 │       │           ├── file.rb           # file_field (native); render_file_input
@@ -83,14 +86,16 @@ stimulus-plumbers-rails/
 │       │           ├── text.rb           # text/email/url/tel/number/range/color/month/week/datetime_local_field (native + render_*_input per type)
 │       │           └── text_area.rb      # text_area (native); render_text_area_input
 │       ├── plumber/
-│       │   ├── base.rb                   # Plumber::Base (template accessor, theme helper)
+│       │   ├── base.rb                   # Plumber::Base (template accessor; includes ThemeOptions, StimulusOptions, AriaOptions)
 │       │   ├── dispatcher.rb             # Dispatcher for block-based component DSL
 │       │   ├── dispatcher/
 │       │   │   ├── callable_inspector.rb
 │       │   │   ├── instance_exec.rb
 │       │   │   ├── klass_proxy.rb
 │       │   │   └── method_call.rb
-│       │   ├── html_options.rb           # merge_html_options helper
+│       │   ├── aria_options.rb           # labelled_aria helper (label vs labelledby)
+│       │   ├── stimulus_options.rb       # merge_stimulus_data (space-joins controller/action)
+│       │   ├── theme_options.rb          # merge_html_options, extract_classes, merge_string_option
 │       │   └── renderer.rb              # Plumber::Renderer base
 │       ├── themes/
 │       │   ├── base.rb                   # Base theme (no-op default)
@@ -152,7 +157,7 @@ Standard Rails helpers (`email_field`, `text_area`, `check_box`, `select`, `date
 <%= f.check_box   :agree %>
 ```
 
-`password_field` additionally supports `reveal: true` at the input level (renders an input-formatter wrapper). `search_field` additionally supports `clearable: true`.
+`password_field` additionally supports `revealable: true` at the input level (renders an input-formatter wrapper). `search_field` additionally supports `clearable: true`.
 
 ### Level 2 — Full-field helpers (label + input + hint + error)
 
@@ -179,3 +184,6 @@ Each module under `fields/inputs/` exposes private `render_*` methods that map 1
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
 > Key internal docs: `plumber.md` (Base / Renderer / HtmlOptions), `dispatcher.md` (Dispatcher strategies), `form_builder.md` (two-level field API).
 > Ensure examples provided are tested.
+
+## Doc Update Rule
+- When changing component API (targets, values, options, HTML structure, form builder keywords), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.

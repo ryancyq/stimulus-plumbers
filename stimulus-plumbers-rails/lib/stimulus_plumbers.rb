@@ -11,9 +11,11 @@ require_relative "stimulus_plumbers/helpers"
 require_relative "stimulus_plumbers/logger"
 
 # -- Plumber base --
-require_relative "stimulus_plumbers/plumber/html_options"
+require_relative "stimulus_plumbers/plumber/aria_options"
 require_relative "stimulus_plumbers/plumber/dispatcher"
 require_relative "stimulus_plumbers/plumber/renderer"
+require_relative "stimulus_plumbers/plumber/stimulus_options"
+require_relative "stimulus_plumbers/plumber/theme_options"
 require_relative "stimulus_plumbers/plumber/base"
 
 # -- UI components --
@@ -29,6 +31,8 @@ require_relative "stimulus_plumbers/components/action_list/item"
 require_relative "stimulus_plumbers/components/divider"
 require_relative "stimulus_plumbers/components/input_group"
 require_relative "stimulus_plumbers/components/popover"
+require_relative "stimulus_plumbers/components/popover/trigger"
+require_relative "stimulus_plumbers/components/popover/panel"
 require_relative "stimulus_plumbers/components/popover/builder"
 
 # -- Calendar --
@@ -43,8 +47,8 @@ require_relative "stimulus_plumbers/components/date_picker/navigation"
 
 # -- Combobox --
 require_relative "stimulus_plumbers/components/combobox"
+require_relative "stimulus_plumbers/components/combobox/variant"
 require_relative "stimulus_plumbers/components/combobox/trigger"
-require_relative "stimulus_plumbers/components/combobox/popover"
 require_relative "stimulus_plumbers/components/combobox/options"
 require_relative "stimulus_plumbers/components/combobox/options/option"
 require_relative "stimulus_plumbers/components/combobox/options/option_group"

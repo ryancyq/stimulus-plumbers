@@ -49,7 +49,11 @@ module StimulusPlumbers
           def render_collection_check_box(attribute, collection, value_method, text_method, field_opts, **kwargs)
             field = Field.new(@template, **field_opts)
             render_fieldset(attribute, field) do |error|
-              item_opts = merge_html_options(kwargs, field_theme(:form_checkbox, error: error))
+              item_opts = merge_html_options(
+                kwargs,
+                field_theme(:form_checkbox, error: error),
+                field.required ? { aria: { required: "true" } } : {}
+              )
               @template.collection_check_boxes(
                 @object_name, attribute, collection, value_method, text_method, {}, item_opts
               ) do |b|

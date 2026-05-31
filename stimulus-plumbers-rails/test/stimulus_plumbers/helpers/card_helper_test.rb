@@ -5,8 +5,6 @@ require "test_helper"
 class CardHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::CardHelper
 
-  # ── card ──────────────────────────────────────────────────────────────────
-
   def test_renders_card_div
     doc = parse_html(sp_card { "Content" })
 
@@ -40,8 +38,6 @@ class CardHelperTest < ActionView::TestCase
     assert_css parse_html(sp_card(id: "main-card") { "" }), "#main-card"
   end
 
-  # ── section ───────────────────────────────────────────────────────────────
-
   def test_section_renders_div
     doc = parse_html(sp_card_section { "Section content" })
 
@@ -70,8 +66,6 @@ class CardHelperTest < ActionView::TestCase
   def test_section_merges_custom_class
     assert_css parse_html(sp_card_section(class: "bordered") { "" }), ".bordered"
   end
-
-  # ── composition ───────────────────────────────────────────────────────────
 
   def test_composition
     doc = parse_html(

@@ -39,6 +39,10 @@ stimulus-plumbers-react/   # npm: @stimulus-plumbers/react
 ## Design Principle
 - Follow WCAG 2.1 Level AA standards and work with screen readers
 
+## Doc Update Rule
+- When changing component API (targets, values, options, HTML structure), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.
+- Keep docs concise — match the style of existing entries (one-line bullets, minimal prose).
+
 ## Testing Guideline
 - **Keyboard navigation tests** (Tab, Enter, Space, Escape, Arrows)
 - **Focus management tests** (focus traps, restoration)
@@ -70,12 +74,17 @@ stimulus-plumbers-react/   # npm: @stimulus-plumbers/react
 - Focus moves into dialog on open; returns to trigger on close
 - Focus trapped inside — Tab/Shift+Tab cycle within; Escape closes
 
-#### Popover (`popover_controller`, `popover/renderer`)
+#### Popover (`popover_controller`)
 - `role="dialog"` or `role="tooltip"` depending on interactivity
-- Activator (trigger): must be a `<button>` with `aria-haspopup="dialog"` and `aria-expanded="false"` initially
-- `aria-expanded` must toggle to `"true"` on open and back to `"false"` on close — managed by the controller via the `activator` Stimulus target
-- `aria-controls` linking activator to content id is recommended but optional
+- Trigger: `<button>` with `aria-haspopup="dialog"` and `aria-expanded="false"` initially
+- `aria-expanded` toggled to `"true"` / `"false"` by the controller via the `trigger` Stimulus target
+- `aria-controls` linking trigger to panel id is recommended but optional
 - Escape closes and returns focus to trigger
+
+#### Combobox (`input_combobox_controller`, `combobox/`)
+- Trigger: `<input role="combobox">` with `aria-haspopup` (`listbox`/`dialog`) and `aria-controls` referencing the **popup element** (the `role="listbox"`/`role="dialog"`)
+- `role="listbox"` permits only `option`/`group` children (`aria-required-children`, WCAG 1.3.1). Status messages (loading, "No results") must be `role="status"`/`aria-live` **siblings of the listbox, never children of it** — for typeahead the listbox is nested in a wrapper panel so the status regions can sit beside it
+- Status/loading regions inside the popover panel must stay **non-focusable** (the popover moves focus into the panel on open)
 
 #### Calendar / Date Picker (`calendar_month_controller`, `date_picker/`)
 - Grid: `role="grid"`, `role="row"`, `role="gridcell"`

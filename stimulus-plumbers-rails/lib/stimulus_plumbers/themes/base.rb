@@ -39,9 +39,6 @@ module StimulusPlumbers
         SCHEMA.fetch(component, {}).keys
       end
 
-      # Resolves presentational classes for a component slot.
-      # Returns a Hash with :classes (String) and optionally :style (String).
-      # Returns {} when no mapping exists for the given component.
       def resolve(component, **args)
         method_name = :"#{component}_classes"
         unless respond_to?(method_name, true)

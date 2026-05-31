@@ -7,8 +7,6 @@ class ComboboxOptionsTest < ActionView::TestCase
     StimulusPlumbers::Components::Combobox::Options.new(self).render(items, value: value, &block)
   end
 
-  # ── array tuple ───────────────────────────────────────────────────────────
-
   def test_renders_option_from_array_tuple
     doc = parse_html(render_options([["United States", "us"]]))
 
@@ -20,8 +18,6 @@ class ComboboxOptionsTest < ActionView::TestCase
 
     assert_css doc, "li[role='option'][data-value='x'][aria-disabled='true']"
   end
-
-  # ── hash option ───────────────────────────────────────────────────────────
 
   def test_renders_option_from_hash
     doc = parse_html(render_options([{ label: "Canada", value: "ca" }]))
@@ -36,8 +32,6 @@ class ComboboxOptionsTest < ActionView::TestCase
     assert_not_nil option
     assert_equal 2, option.css("span").length
   end
-
-  # ── optgroup ──────────────────────────────────────────────────────────────
 
   def test_renders_optgroup_from_hash_with_options_key
     items = [{ label: "Americas", options: [["United States", "us"]] }]
@@ -55,8 +49,6 @@ class ComboboxOptionsTest < ActionView::TestCase
     assert_css doc, "li[role='group'] li[data-value='us'][aria-selected='false']"
   end
 
-  # ── selection ─────────────────────────────────────────────────────────────
-
   def test_marks_matching_option_as_selected
     doc = parse_html(render_options([["Canada", "ca"], ["United States", "us"]], value: "ca"))
 
@@ -70,8 +62,6 @@ class ComboboxOptionsTest < ActionView::TestCase
     assert_no_css doc, "li[aria-selected='true']"
   end
 
-  # ── unknown type ──────────────────────────────────────────────────────────
-
   def test_skips_unknown_item_type_and_logs_warning
     mock_logger = Minitest::Mock.new
     mock_logger.expect(:warn, nil, [%r{unrecognized item type Integer}])
@@ -84,8 +74,6 @@ class ComboboxOptionsTest < ActionView::TestCase
 
     mock_logger.verify
   end
-
-  # ── block override ────────────────────────────────────────────────────────
 
   def test_block_overrides_option_rendering
     doc = parse_html(

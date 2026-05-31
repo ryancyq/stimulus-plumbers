@@ -3,16 +3,18 @@
 require "test_helper"
 
 class ComboboxTriggerTest < ActionView::TestCase
-  def render_trigger(**opts)
+  def render_trigger(popover: {}, **opts)
+    default_popover = {
+      panel_id: "combo_popover",
+      aria:     { haspopup: "listbox", expanded: "false", controls: "combo_popover" },
+      data:     { popover_target: "trigger" }
+    }
     StimulusPlumbers::Components::Combobox::Trigger.new(self).render(
       stimulus_controller: "input-combobox",
-      popover_id:          "combo_popover",
-      haspopup:            "listbox",
+      popover:             default_popover.deep_merge(popover),
       **opts
     )
   end
-
-  # ── structure ─────────────────────────────────────────────────────────────
 
   def test_renders_input_element
     assert_css parse_html(render_trigger), "input"
@@ -34,14 +36,12 @@ class ComboboxTriggerTest < ActionView::TestCase
     assert_no_css parse_html(render_trigger(readonly: false)), "input[readonly]"
   end
 
-  # ── aria ──────────────────────────────────────────────────────────────────
-
   def test_aria_expanded_is_false
     assert_css parse_html(render_trigger), "input[aria-expanded='false']"
   end
 
   def test_aria_haspopup
-    assert_css parse_html(render_trigger(haspopup: "listbox")), "input[aria-haspopup='listbox']"
+    assert_css parse_html(render_trigger(popover: { aria: { haspopup: "dialog" } })), "input[aria-haspopup='dialog']"
   end
 
   def test_aria_controls_points_to_popover
@@ -72,9 +72,18 @@ class ComboboxTriggerTest < ActionView::TestCase
     assert_css doc, "input[aria-controls='combo_popover']"
   end
 
-  # ── stimulus ──────────────────────────────────────────────────────────────
-
   def test_stimulus_target_data_attribute
     assert_css parse_html(render_trigger), "[data-input-combobox-target~='trigger']"
+  end
+
+  def test_popover_trigger_target
+    assert_css parse_html(render_trigger), "[data-popover-target~='trigger']"
+  end
+
+  def test_popover_open_close_action
+    input = parse_html(render_trigger).at_css("input")
+
+    assert_includes input["data-action"], "focus->popover#open"
+    assert_includes input["data-action"], "keydown.esc->popover#close"
   end
 end

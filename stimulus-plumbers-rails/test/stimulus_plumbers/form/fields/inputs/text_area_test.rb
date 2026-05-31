@@ -8,7 +8,6 @@ class TextAreaTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  # native ActionView helper — theme classes only, no label/hint/error wrapper
   def build_native(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.text_area(:email, **opts)
@@ -16,15 +15,12 @@ class TextAreaTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # f.field — full wrapper: label + textarea + hint + error
   def build_field(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.field(:email, as: :text_area, **opts)
     end
     parse_html(html)
   end
-
-  # ── native textarea ────────────────────────────────────────────────────────
 
   def test_renders_textarea_element
     assert_css build_native, "textarea"
@@ -49,8 +45,6 @@ class TextAreaTest < ActionView::TestCase
   def test_forwards_data_attributes_to_textarea
     assert_equal "autogrow", build_native(data: { controller: "autogrow" }).at_css("textarea")["data-controller"]
   end
-
-  # ── f.field(as: :text_area) — label + textarea + hint + error ───────────
 
   def test_renders_label
     assert_css build_field, "label[for='sign_in_form_email']"

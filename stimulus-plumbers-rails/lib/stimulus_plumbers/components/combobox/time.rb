@@ -5,36 +5,52 @@ module StimulusPlumbers
     class Combobox
       class Time < Plumber::Base
         STIMULUS_CONTROLLER = "combobox-time"
+        STIMULUS_ACTION     = [
+          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
+          "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
+        ].join(" ").freeze
 
-        def self.default_opts
-          {
-            popover: { label: "Picker", role: "dialog", tag: :div }
-          }
+        def self.variant
+          Combobox.variant(:time)
         end
 
-        def render(...)
-          render_time(...)
+        def self.options(**overrides)
+          variant.opts(**overrides)
         end
+
+        def render(...) = render_time(...)
+        def build(...) = build_time(...)
 
         private
 
-        def render_time(format: :h12, step: 1, value: nil)
+        def render_time(panel_attrs: {}, format: :h12, step: 1, value: nil, label: "Picker", labelledby: nil)
           @format = format
           @step   = [1, step.to_i].max
           @time   = parse_time(value)
 
-          template.content_tag(
-            :div,
-            **merge_html_options(
-              { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
-              { data: { controller: STIMULUS_CONTROLLER,
-                        action:     "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
-}
-}
-            )
-          ) do
-            template.safe_join(drums)
-          end
+          attrs = merge_html_options(
+            panel_attrs,
+            { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
+            dialog_attrs(label, labelledby)
+          )
+          template.content_tag(:div, **attrs) { template.safe_join(drums) }
+        end
+
+        def build_time(panel_attrs: {}, label: "Picker", labelledby: nil, **_kwargs, &block)
+          attrs = merge_html_options(
+            panel_attrs,
+            { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
+            dialog_attrs(label, labelledby)
+          )
+          template.capture(attrs, &block)
+        end
+
+        def dialog_attrs(label, labelledby)
+          {
+            role: "dialog",
+            aria: labelled_aria(label, labelledby: labelledby),
+            data: { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION }
+          }
         end
 
         def drums
@@ -43,50 +59,35 @@ module StimulusPlumbers
           cols
         end
 
-        def hour_drum
+        def render_drum(target, label, items, selected)
           drum.render(
             stimulus_controller: STIMULUS_CONTROLLER,
-            target:              "hour",
-            label:               "Hour",
-            items:               hour_items,
-            selected:            current_hour
-          )
-        end
-
-        def minute_drum
-          items = (0...60).step(@step).map do |m|
-            s = m.to_s.rjust(2, "0")
-            [s, s]
-          end
-          selected = @time ? snap_minute(@time.min).to_s.rjust(2, "0") : nil
-          drum.render(
-            stimulus_controller: STIMULUS_CONTROLLER,
-            target:              "minute",
-            label:               "Minute",
+            target:              target,
+            label:               label,
             items:               items,
             selected:            selected
           )
         end
 
+        def hour_drum
+          render_drum("hour", "Hour", hour_items, current_hour)
+        end
+
+        def minute_drum
+          items    = (0...60).step(@step).map { |m| [m.to_s.rjust(2, "0")] * 2 }
+          selected = @time ? snap_minute(@time.min).to_s.rjust(2, "0") : nil
+          render_drum("minute", "Minute", items, selected)
+        end
+
         def period_drum
-          selected = @time && (@time.hour < 12 ? "AM" : "PM")
-          drum.render(
-            stimulus_controller: STIMULUS_CONTROLLER,
-            target:              "period",
-            label:               "Period",
-            items:               [%w[AM AM], %w[PM PM]],
-            selected:            selected
-          )
+          render_drum("period", "Period", [%w[AM AM], %w[PM PM]], @time && (@time.hour < 12 ? "AM" : "PM"))
         end
 
         def hour_items
           if @format == :h12
             (1..12).map { |h| [h.to_s, h.to_s] }
           else
-            (0..23).map do |h|
-              s = h.to_s.rjust(2, "0")
-              [s, s]
-            end
+            (0..23).map { |h| [h.to_s.rjust(2, "0")] * 2 }
           end
         end
 

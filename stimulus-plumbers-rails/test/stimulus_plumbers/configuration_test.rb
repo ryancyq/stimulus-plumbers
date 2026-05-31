@@ -7,7 +7,6 @@ class ConfigurationTest < Minitest::Test
     @config = StimulusPlumbers::Configuration.new
   end
 
-  # StimulusPlumbers.configure
   def test_configure_yields_config_object
     yielded = nil
     StimulusPlumbers.configure { |c| yielded = c }
@@ -15,7 +14,6 @@ class ConfigurationTest < Minitest::Test
     assert_same StimulusPlumbers.config, yielded
   end
 
-  # #theme
   def test_theme_returns_a_theme_configuration
     assert_instance_of StimulusPlumbers::Themes::Configuration, @config.theme
   end
@@ -24,7 +22,6 @@ class ConfigurationTest < Minitest::Test
     assert_same @config.theme, @config.theme
   end
 
-  # #theme.current
   def test_theme_current_defaults_to_a_base_instance
     assert_instance_of StimulusPlumbers::Themes::Base, @config.theme.current
   end
@@ -33,7 +30,6 @@ class ConfigurationTest < Minitest::Test
     assert_same @config.theme.current, @config.theme.current
   end
 
-  # #theme.register
   def test_theme_register_accepts_a_base_subclass
     custom_klass = Class.new(StimulusPlumbers::Themes::Base)
     @config.theme.register(:custom, custom_klass)
@@ -59,7 +55,6 @@ class ConfigurationTest < Minitest::Test
     assert_same @config.theme, result
   end
 
-  # #theme.use
   def test_theme_use_accepts_a_registered_name
     custom_klass = Class.new(StimulusPlumbers::Themes::Base)
     @config.theme.register(:custom, custom_klass)
@@ -88,7 +83,6 @@ class ConfigurationTest < Minitest::Test
     assert_same @config.theme, result
   end
 
-  # #log_formatter
   def test_log_formatter_defaults_to_the_built_in_prefix_formatter
     assert_equal "[StimulusPlumbers] hello", @config.log_formatter.call("hello")
   end
@@ -97,7 +91,6 @@ class ConfigurationTest < Minitest::Test
     assert_same @config.log_formatter, @config.log_formatter
   end
 
-  # #log_formatter=
   def test_log_formatter_setter_accepts_any_callable
     @config.log_formatter = ->(msg) { "PREFIX: #{msg}" }
 

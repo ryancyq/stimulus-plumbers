@@ -11,17 +11,17 @@
 
 <%= sp_card do %>
   <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <%= f.collection_choice :gender, as: :radio,
+    <%= f.choice :gender, as: :radio,
           label:        "Gender",
           collection:   [["male", "Male"], ["female", "Female"], ["other", "Other"]],
           value_method: :first,
           text_method:  :last %>
-    <%= f.collection_choice :role, as: :radio,
+    <%= f.choice :role, as: :radio,
           label:        "Role",
           collection:   [["admin", "Admin"], ["user", "User"], ["guest", "Guest"]],
           value_method: :first,
           text_method:  :last %>
-    <%= f.collection_choice :interests, as: :check_box,
+    <%= f.choice :interests, as: :check_box,
           label:        "Interests",
           collection:   [["ruby", "Ruby"], ["rails", "Rails"], ["js", "JavaScript"]],
           value_method: :first,
@@ -30,7 +30,7 @@
           label:   "Country",
           hint:    "Select your country of residence.",
           choices: countries %>
-    <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+    <%= f.field :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
     <%= f.submit "Save preferences" %>
   <% end %>
 <% end %>

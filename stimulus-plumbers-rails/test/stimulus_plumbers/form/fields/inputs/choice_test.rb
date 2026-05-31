@@ -57,8 +57,6 @@ class ChoiceTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # ── check_box (ActionView native) ────────────────────────────────────────
-
   def test_check_box_renders_input
     assert_css build_check_box, "input[type='checkbox']"
   end
@@ -73,8 +71,6 @@ class ChoiceTest < ActionView::TestCase
     assert_css doc, "input[type='checkbox'][value='yes']"
   end
 
-  # ── radio_button (ActionView native) ─────────────────────────────────────
-
   def test_radio_button_renders_input
     assert_css build_radio_button, "input[type='radio']"
   end
@@ -84,8 +80,6 @@ class ChoiceTest < ActionView::TestCase
 
     assert_equal "selector", input["data-controller"]
   end
-
-  # ── f.field(:..., as: :check_box) ────────────────────────────────────────
 
   def test_field_check_box_renders_input
     assert_css build_field_check_box, "input[type='checkbox']"
@@ -144,8 +138,6 @@ class ChoiceTest < ActionView::TestCase
     assert_css doc, "input[type='checkbox'][value='yes']"
   end
 
-  # ── collection_radio_buttons (ActionView native) ──────────────────────────
-
   def test_collection_radio_buttons_renders_inputs
     assert_css build_collection_radio_buttons, "input[type='radio']"
   end
@@ -157,8 +149,6 @@ class ChoiceTest < ActionView::TestCase
     assert_no_css doc, "label input[type='radio']"
   end
 
-  # ── collection_check_boxes (ActionView native) ────────────────────────────
-
   def test_collection_check_boxes_renders_inputs
     assert_css build_collection_check_boxes, "input[type='checkbox']"
   end
@@ -169,8 +159,6 @@ class ChoiceTest < ActionView::TestCase
     assert_css doc, "label[for]"
     assert_no_css doc, "label input[type='checkbox']"
   end
-
-  # ── f.choice(as: :radio) ─────────────────────────────────────────────────
 
   def test_choice_radio_renders_fieldset
     assert_css build_choice(as: :radio), "fieldset"
@@ -251,13 +239,19 @@ class ChoiceTest < ActionView::TestCase
     assert_nil doc.at_css("fieldset")["aria-required"]
   end
 
+  def test_choice_radio_required_sets_aria_required_on_inputs
+    doc = build_choice(as: :radio, required: true)
+
+    doc.css("input[type='radio']").each do |input|
+      assert_equal "true", input["aria-required"]
+    end
+  end
+
   def test_choice_radio_required_renders_mark_in_legend
     doc = build_choice(as: :radio, required: true)
 
     assert_css doc, "legend span[aria-hidden='true']"
   end
-
-  # ── f.choice(as: :check_box) ─────────────────────────────────────────────
 
   def test_choice_check_box_renders_fieldset
     assert_css build_choice(as: :check_box), "fieldset"
@@ -336,6 +330,14 @@ class ChoiceTest < ActionView::TestCase
     doc = build_choice(as: :check_box, required: true)
 
     assert_nil doc.at_css("fieldset")["aria-required"]
+  end
+
+  def test_choice_check_box_required_sets_aria_required_on_inputs
+    doc = build_choice(as: :check_box, required: true)
+
+    doc.css("input[type='checkbox']").each do |input|
+      assert_equal "true", input["aria-required"]
+    end
   end
 
   def test_choice_check_box_required_renders_mark_in_legend

@@ -20,8 +20,6 @@ class FieldsetTest < ActionView::TestCase
     )
   end
 
-  # ── structure ─────────────────────────────────────────────────────────────
-
   def test_renders_fieldset
     assert_css render_inputs(component), "fieldset"
   end
@@ -44,8 +42,6 @@ class FieldsetTest < ActionView::TestCase
     assert_css doc, "fieldset input[type='radio']"
   end
 
-  # ── legend required mark ───────────────────────────────────────────────────
-
   def test_renders_required_mark_in_legend
     doc = render_inputs(component(required: true))
 
@@ -59,15 +55,11 @@ class FieldsetTest < ActionView::TestCase
     assert_nil doc.at_css("legend span[aria-hidden='true']")
   end
 
-  # ── hidden legend ──────────────────────────────────────────────────────────
-
   def test_renders_legend_when_hide_label
     doc = render_inputs(component(hide_label: true))
 
     assert_css doc, "legend"
   end
-
-  # ── fieldset aria ──────────────────────────────────────────────────────────
 
   def test_fieldset_has_aria_invalid_when_error
     @form.errors.add(:email, "is invalid")
@@ -88,16 +80,12 @@ class FieldsetTest < ActionView::TestCase
     assert_nil doc.at_css("fieldset")["aria-required"]
   end
 
-  # ── hint ──────────────────────────────────────────────────────────────────
-
   def test_renders_hint_outside_fieldset
     doc = render_inputs(component(hint: "Pick one"))
 
     assert_css doc, "#sign_in_form_email_hint"
     assert_nil doc.at_css("fieldset #sign_in_form_email_hint")
   end
-
-  # ── error ─────────────────────────────────────────────────────────────────
 
   def test_renders_error_outside_fieldset
     @form.errors.add(:email, "is invalid")

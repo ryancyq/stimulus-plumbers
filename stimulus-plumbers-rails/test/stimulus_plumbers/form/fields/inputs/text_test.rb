@@ -8,7 +8,6 @@ class TextTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  # native ActionView helpers — theme classes only, no label/hint/error wrapper
   def build_native(method, attribute = :email, **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.public_send(method, attribute, **opts)
@@ -16,15 +15,12 @@ class TextTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # f.field — full wrapper: label + input + hint + error
   def build_field(attribute = :email, as:, **opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.field(attribute, as: as, **opts)
     end
     parse_html(html)
   end
-
-  # ── shared field chrome (tested once via as: :email) ─────────────────────
 
   def test_renders_label
     assert_css build_field(as: :email), "label[for='sign_in_form_email']"
@@ -111,8 +107,6 @@ class TextTest < ActionView::TestCase
     assert_equal "true", build_field(as: :email, error: "bad").at_css("input[type='email']")["aria-invalid"]
   end
 
-  # ── html option forwarding ─────────────────────────────────────────────────
-
   def test_forwards_placeholder_to_input
     input = build_native(:email_field, :email, placeholder: "you@example.com").at_css("input[type='email']")
 
@@ -153,8 +147,6 @@ class TextTest < ActionView::TestCase
     assert_equal "1",   input["min"]
     assert_equal "100", input["max"]
   end
-
-  # ── native input types ────────────────────────────────────────────────────
 
   def test_text_field_renders_text_input
     assert_css build_native(:text_field), "input[type='text']"

@@ -3,7 +3,9 @@
 module StimulusPlumbers
   module Plumber
     class Base
-      include HtmlOptions
+      include ThemeOptions
+      include StimulusOptions
+      include AriaOptions
       include Renderer
 
       attr_reader :template

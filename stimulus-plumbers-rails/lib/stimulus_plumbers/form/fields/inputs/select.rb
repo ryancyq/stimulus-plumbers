@@ -36,11 +36,18 @@ module StimulusPlumbers
           )
             current_value = selected || (object.respond_to?(attribute) ? object.public_send(attribute) : nil)
             all_choices   = build_select_dropdown_choices(Array(choices), include_blank: include_blank, prompt: prompt)
+            labelledby    = Field.label_id(html_opts[:id])
             combobox_opts = build_select_dropdown_opts(
               html_opts, current_value, opts: opts, icon_leading: icon_leading, icon_trailing: icon_trailing
             )
-            render_combobox(attribute, input_id: html_opts[:id], opts: combobox_opts, err: error) do
-              render_dropdown_component(all_choices, current_value, html_opts[:id], **kwargs)
+            render_combobox(
+              attribute,
+              input_id: html_opts[:id],
+              variant:  Components::Combobox::Dropdown.variant,
+              opts:     combobox_opts,
+              error:    error
+            ) do |panel_attrs|
+              render_dropdown_component(all_choices, current_value, panel_attrs: panel_attrs, labelledby: labelledby, **kwargs)
             end
           end
 
@@ -70,21 +77,20 @@ module StimulusPlumbers
             render_field(:select, attribute, field_opts, { choices: choices, **kwargs })
           end
 
-          def render_dropdown_component(choices, value, input_id, **kwargs)
+          def render_dropdown_component(choices, value, **kwargs)
             Components::Combobox::Dropdown.new(@template).render(
-              options:    choices,
-              value:      value,
-              labelledby: Field.label_id(input_id),
+              options: choices,
+              value:   value,
               **kwargs
             )
           end
 
           def build_select_dropdown_opts(html_opts, current_value, opts:, icon_leading:, icon_trailing:)
-            Components::Combobox::Dropdown.default_opts.deep_merge(
+            {
               input:   { value: current_value },
               trigger: html_opts.merge({ icon_leading: icon_leading, icon_trailing: icon_trailing }.compact),
               **opts
-            )
+            }
           end
 
           def build_select_dropdown_choices(choices, include_blank:, prompt:)

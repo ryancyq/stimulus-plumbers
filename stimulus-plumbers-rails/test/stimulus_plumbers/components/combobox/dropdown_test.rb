@@ -7,18 +7,6 @@ class ComboboxDropdownTest < ActionView::TestCase
     StimulusPlumbers::Components::Combobox::Dropdown.new(self).render(**opts)
   end
 
-  # ── structure ─────────────────────────────────────────────────────────────
-
-  def test_renders_ul_element
-    assert_css parse_html(render_dropdown), "ul"
-  end
-
-  def test_role_is_listbox
-    assert_css parse_html(render_dropdown), "ul[role='listbox']"
-  end
-
-  # ── options ───────────────────────────────────────────────────────────────
-
   def test_renders_options
     doc = parse_html(render_dropdown(options: [["Canada", "ca"], ["United States", "us"]]))
 
@@ -33,34 +21,24 @@ class ComboboxDropdownTest < ActionView::TestCase
     assert_css doc, "li[data-value='us'][aria-selected='false']"
   end
 
-  # ── aria ──────────────────────────────────────────────────────────────────
+  def test_renders_empty_listbox_when_no_options
+    doc = parse_html(render_dropdown)
 
-  def test_aria_label_when_set
-    assert_css parse_html(render_dropdown(label: "Choose country")), "ul[aria-label='Choose country']"
+    assert_css doc, "ul[role='listbox']"
+    assert_no_css doc, "li[role='option']"
   end
 
-  def test_aria_label_omitted_when_nil
-    assert_no_css parse_html(render_dropdown), "ul[aria-label]"
+  def test_panel_is_the_listbox
+    doc = parse_html(render_dropdown(panel_attrs: { id: "p1" }, options: [%w[Canada ca]]))
+
+    assert_css doc, "ul#p1[role='listbox'][data-combobox-dropdown-target='listbox']"
   end
 
-  def test_aria_labelledby_when_set
-    assert_css parse_html(render_dropdown(labelledby: "country_label")), "ul[aria-labelledby='country_label']"
+  def test_haspopup_is_listbox
+    assert_equal "listbox", StimulusPlumbers::Components::Combobox.variant(:dropdown).haspopup
   end
 
-  def test_aria_labelledby_omitted_when_nil
-    assert_no_css parse_html(render_dropdown), "ul[aria-labelledby]"
-  end
-
-  def test_labelledby_takes_precedence_over_label
-    doc = parse_html(render_dropdown(label: "Choose country", labelledby: "country_label"))
-
-    assert_css    doc, "ul[aria-labelledby='country_label']"
-    assert_no_css doc, "ul[aria-label]"
-  end
-
-  # ── stimulus ──────────────────────────────────────────────────────────────
-
-  def test_stimulus_listbox_target
-    assert_css parse_html(render_dropdown), "[data-combobox-dropdown-target~='listbox']"
+  def test_popup_id_is_the_panel
+    assert_equal "p1", StimulusPlumbers::Components::Combobox.variant(:dropdown).popup_id_for("p1")
   end
 end

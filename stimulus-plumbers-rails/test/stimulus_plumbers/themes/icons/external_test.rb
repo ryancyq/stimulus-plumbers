@@ -15,8 +15,6 @@ class IconsExternalTest < Minitest::Test
     @source ||= TestSource.new
   end
 
-  # ── parse_elements — group flattening ─────────────────────────────────────
-
   def test_parse_elements_flattens_g_group
     doc = REXML::Document.new('<svg><g><path d="M1 2"/></g></svg>')
     elements = source.send(:parse_elements, doc.root)
@@ -39,8 +37,6 @@ class IconsExternalTest < Minitest::Test
     assert_equal 2, elements.size
   end
 
-  # ── parse_elements — hyphenated attributes ────────────────────────────────
-
   def test_parse_elements_maps_stroke_width_to_underscore_symbol
     doc = REXML::Document.new('<svg><path d="M1 2" stroke-width="2"/></svg>')
     elements = source.send(:parse_elements, doc.root)
@@ -55,8 +51,6 @@ class IconsExternalTest < Minitest::Test
     assert_equal "round", elements.first[:stroke_linecap]
   end
 
-  # ── include? ──────────────────────────────────────────────────────────────
-
   def test_include_returns_false_when_file_missing
     refute_includes source, "missing"
   end
@@ -66,8 +60,6 @@ class IconsExternalTest < Minitest::Test
       assert_includes src, "icon"
     end
   end
-
-  # ── fetch ─────────────────────────────────────────────────────────────────
 
   def test_fetch_returns_nil_when_file_missing
     assert_nil source.fetch("missing")

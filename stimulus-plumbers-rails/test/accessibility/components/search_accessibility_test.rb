@@ -8,8 +8,6 @@ class SearchAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/search"
   end
 
-  # ── WCAG / axe ────────────────────────────────────────────────────────────
-
   def test_passes_wcag_with_empty_input
     assert_accessible
   end
@@ -19,8 +17,6 @@ class SearchAccessibilityTest < ApplicationAccessibilityTestCase
 
     assert_accessible
   end
-
-  # ── clear button visibility ───────────────────────────────────────────────
 
   def test_clear_button_hidden_when_input_is_empty
     assert_selector "button[aria-label='Clear search']", visible: :hidden
@@ -39,8 +35,6 @@ class SearchAccessibilityTest < ApplicationAccessibilityTestCase
 
     assert_selector "button[aria-label='Clear search']", visible: :hidden
   end
-
-  # ── clear action ──────────────────────────────────────────────────────────
 
   def test_clicking_clear_empties_the_input
     fill_in "Search", with: "hello"

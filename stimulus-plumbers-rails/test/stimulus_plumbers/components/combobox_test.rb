@@ -3,16 +3,15 @@
 require "test_helper"
 
 class ComboboxTest < ActionView::TestCase
-  def render_combobox(input: {}, trigger: {}, popover: {}, **kwargs)
+  def render_combobox(input: {}, trigger: {}, **kwargs)
     StimulusPlumbers::Components::Combobox.new(self).render(
       input:   input,
       trigger: trigger,
-      popover: popover,
       **kwargs
-    ) { "popover-content".html_safe }
+    ) do |panel_attrs|
+      content_tag(:ul, "popover-content".html_safe, **panel_attrs)
+    end
   end
-
-  # ── stimulus controllers ───────────────────────────────────────────────────
 
   def test_wrapper_includes_input_combobox_controller
     doc = parse_html(render_combobox)
@@ -31,8 +30,6 @@ class ComboboxTest < ActionView::TestCase
 
     assert_css doc, "[data-action~='input-combobox:changed->input-formatter#format']"
   end
-
-  # ── initial value wiring ───────────────────────────────────────────────────
 
   def test_value_data_attribute_set_when_input_value_present
     doc = parse_html(render_combobox(input: { value: "2024-03-15" }))
@@ -58,8 +55,6 @@ class ComboboxTest < ActionView::TestCase
     assert_no_css doc, "[data-input-combobox-value-value]"
   end
 
-  # ── hidden input ───────────────────────────────────────────────────────────
-
   def test_hidden_input_value_reflects_input_value
     doc = parse_html(render_combobox(input: { value: "us" }))
 
@@ -72,8 +67,6 @@ class ComboboxTest < ActionView::TestCase
     assert_css doc, "input[type='hidden'][name='country']"
   end
 
-  # ── popover id linkage ─────────────────────────────────────────────────────
-
   def test_trigger_aria_controls_matches_popover_id
     doc     = parse_html(render_combobox(trigger: { id: "combo" }))
     trigger = doc.at_css("input[role='combobox']")
@@ -83,8 +76,6 @@ class ComboboxTest < ActionView::TestCase
     assert_not_nil popover
     assert_equal "combo_popover", trigger["aria-controls"]
   end
-
-  # ── html options passthrough ───────────────────────────────────────────────
 
   def test_extra_html_options_forwarded_to_wrapper
     doc = parse_html(render_combobox(class: "my-combobox"))

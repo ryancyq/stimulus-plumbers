@@ -4,6 +4,11 @@ module StimulusPlumbers
   module Components
     class Combobox
       class Trigger < Plumber::Base
+        STIMULUS_ACTION = [
+          "focus->#{Components::Popover::STIMULUS_CONTROLLER}#open",
+          "keydown.esc->#{Components::Popover::STIMULUS_CONTROLLER}#close"
+        ].join(" ").freeze
+
         def render(...)
           render_trigger(...)
         end
@@ -12,8 +17,7 @@ module StimulusPlumbers
 
         def render_trigger(
           stimulus_controller:,
-          popover_id:,
-          haspopup:,
+          popover:,
           readonly: true,
           aria: {},
           id: nil,
@@ -24,8 +28,7 @@ module StimulusPlumbers
         )
           input_html = render_input(
             stimulus_controller: stimulus_controller,
-            popover_id:          popover_id,
-            haspopup:            haspopup,
+            popover:             popover,
             readonly:            readonly,
             aria:                aria,
             id:                  id,
@@ -40,8 +43,7 @@ module StimulusPlumbers
 
         def render_input(
           stimulus_controller:,
-          popover_id:,
-          haspopup:,
+          popover:,
           readonly:,
           aria:,
           id:,
@@ -49,12 +51,11 @@ module StimulusPlumbers
           **kwargs
         )
           stimulus_data = {
+            popover_target:                  popover.dig(:data, :popover_target),
             "#{stimulus_controller}_target": "trigger",
             input_formatter_target:          "input",
-            action:                          "focus->#{stimulus_controller}#open keydown.esc->#{stimulus_controller}#close"
+            action:                          STIMULUS_ACTION
           }
-
-          trigger_aria = { haspopup: haspopup, expanded: "false", controls: popover_id }
 
           template.tag.input(
             **merge_html_options(
@@ -64,7 +65,7 @@ module StimulusPlumbers
                 type:     "text",
                 readonly: (readonly ? true : nil),
                 role:     "combobox",
-                aria:     trigger_aria.deep_merge(aria),
+                aria:     popover.fetch(:aria, {}).deep_merge(aria),
                 data:     stimulus_data
               },
               { data: data },

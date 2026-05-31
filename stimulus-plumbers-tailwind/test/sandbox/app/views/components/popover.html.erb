@@ -1,20 +1,14 @@
 <h1>Popover components</h1>
 
 <%# ── Interactive popover ─────────────────────────────────────────────── %>
-<%= sp_popover interactive: true, data: { controller: "popover" } do |p| %>
-  <% p.activator do %>
-    <%= sp_button("Open menu",
-          data: { action: "click->popover#show", "popover-target": "activator" },
-          aria: { expanded: "false", haspopup: "dialog" }) %>
-  <% end %>
-  <% p.content do %>
-    <div data-popover-target="content" role="dialog" aria-label="Menu options" hidden="hidden">
-      <%= sp_action_list do %>
-        <%= sp_action_list_section do %>
-          <%= sp_action_list_item("Edit",   url: "#") %>
-          <%= sp_action_list_item("Delete") %>
-        <% end %>
+<%= sp_popover do |p| %>
+  <% p.trigger { "Open menu" } %>
+  <% p.panel(role: "dialog", aria: { label: "Menu options" }) do %>
+    <%= sp_action_list do %>
+      <%= sp_action_list_section do %>
+        <%= sp_action_list_item("Edit",   url: "#") %>
+        <%= sp_action_list_item("Delete") %>
       <% end %>
-    </div>
+    <% end %>
   <% end %>
 <% end %>

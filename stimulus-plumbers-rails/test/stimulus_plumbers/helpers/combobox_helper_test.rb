@@ -6,8 +6,6 @@ class ComboboxHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::ComboboxHelper
 
   class DateTest < ComboboxHelperTest
-    # ── structure ──────────────────────────────────────────────────────────────
-
     def test_renders_combobox_wrapper_with_stimulus_controller
       assert_css parse_html(sp_combobox_date), "[data-controller~='input-combobox']"
     end
@@ -61,8 +59,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css parse_html(sp_combobox_date), "[role='dialog'] [data-controller~='calendar-month']"
     end
 
-    # ── aria linkage ──────────────────────────────────────────────────────────
-
     def test_trigger_aria_controls_matches_popover_id
       doc     = parse_html(sp_combobox_date)
       trigger = doc.at_css("input[role='combobox']")
@@ -72,8 +68,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_not_nil popover
       assert_equal popover["id"], trigger["aria-controls"]
     end
-
-    # ── cross-wiring ──────────────────────────────────────────────────────────
 
     def test_trigger_input_is_input_formatter_target
       trigger = parse_html(sp_combobox_date).at_css("input[role='combobox']")
@@ -97,8 +91,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_equal "##{calendar["id"]}", date_controller["data-combobox-date-calendar-month-outlet"]
     end
 
-    # ── ids ───────────────────────────────────────────────────────────────────
-
     def test_generates_unique_id_per_render
       popover_id1 = sp_combobox_date[%r{aria-controls="([^"]+)"}, 1]
       popover_id2 = sp_combobox_date[%r{aria-controls="([^"]+)"}, 1]
@@ -106,8 +98,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_not_nil popover_id1
       assert_not_equal popover_id1, popover_id2
     end
-
-    # ── value ─────────────────────────────────────────────────────────────────
 
     def test_no_name_attribute_on_hidden_input
       hidden = parse_html(sp_combobox_date).at_css("input[type='hidden']")
@@ -120,13 +110,9 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css parse_html(sp_combobox_date(value: "2024-03-15")), "input[type='hidden'][value='2024-03-15']"
     end
 
-    # ── html options ──────────────────────────────────────────────────────────
-
     def test_forwards_html_options_to_wrapper
       assert_css parse_html(sp_combobox_date(class: "my-combobox")), "[data-controller~='input-combobox'].my-combobox"
     end
-
-    # ── label ─────────────────────────────────────────────────────────────────
 
     def test_label_sets_trigger_aria_label
       assert_css parse_html(sp_combobox_date(label: "Pick a date")), "input[aria-label='Pick a date']"
@@ -143,8 +129,6 @@ class ComboboxHelperTest < ActionView::TestCase
       ["United States", "us", { description: "North America" }],
       ["Canada",        "ca", { description: "North America" }]
     ].freeze
-
-    # ── structure ──────────────────────────────────────────────────────────────
 
     def test_renders_combobox_wrapper_with_stimulus_controller
       assert_css parse_html(sp_combobox_dropdown), "[data-controller~='input-combobox']"
@@ -170,7 +154,7 @@ class ComboboxHelperTest < ActionView::TestCase
     end
 
     def test_popover_is_hidden_by_default
-      popover = parse_html(sp_combobox_dropdown).at_css("[data-input-combobox-target='popover']")
+      popover = parse_html(sp_combobox_dropdown).at_css("[data-popover-target='panel']")
 
       assert_not_nil popover
       assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
@@ -183,14 +167,12 @@ class ComboboxHelperTest < ActionView::TestCase
     def test_trigger_aria_controls_matches_popover_id
       doc     = parse_html(sp_combobox_dropdown)
       trigger = doc.at_css("input[role='combobox']")
-      popover = doc.at_css("[data-input-combobox-target='popover']")
+      popover = doc.at_css("[data-popover-target='panel']")
 
       assert_not_nil trigger
       assert_not_nil popover
       assert_equal popover["id"], trigger["aria-controls"]
     end
-
-    # ── options ────────────────────────────────────────────────────────────────
 
     def test_renders_options
       assert_css parse_html(sp_combobox_dropdown(options: SIMPLE_OPTIONS)), "li[role='option']"
@@ -208,8 +190,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css doc, "li[role='option'][data-value='ca'][aria-selected='true']"
       assert_css doc, "li[role='option'][data-value='us'][aria-selected='false']"
     end
-
-    # ── description ───────────────────────────────────────────────────────────
 
     def test_option_with_description_renders_label_and_description_spans
       option = parse_html(sp_combobox_dropdown(options: OPTIONS_WITH_DESCRIPTION)).at_css("li[role='option'][data-value='us']")
@@ -229,8 +209,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_empty option.css("span")
     end
 
-    # ── disabled ──────────────────────────────────────────────────────────────
-
     def test_disabled_option_has_aria_disabled_true
       options = [["Disabled", "x", { disabled: true }], %w[Enabled y]]
       doc     = parse_html(sp_combobox_dropdown(options: options))
@@ -238,8 +216,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css doc, "li[role='option'][data-value='x'][aria-disabled='true']"
       assert_no_css doc, "li[role='option'][data-value='y'][aria-disabled]"
     end
-
-    # ── hash options ──────────────────────────────────────────────────────────
 
     def test_hash_option_renders_label_and_value
       assert_css parse_html(sp_combobox_dropdown(options: [{ label: "United States", value: "us" }])),
@@ -254,8 +230,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_not_nil option
       assert_equal 2, option.css("span").length
     end
-
-    # ── grouping ──────────────────────────────────────────────────────────────
 
     def test_renders_groups
       doc = parse_html(sp_combobox_dropdown(options: GROUPED_OPTIONS))
@@ -282,8 +256,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_equal expected, options.length
     end
 
-    # ── value ─────────────────────────────────────────────────────────────────
-
     def test_value_from_explicit_option
       doc = parse_html(sp_combobox_dropdown(value: "us", options: SIMPLE_OPTIONS))
 
@@ -291,14 +263,10 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css doc, "li[role='option'][data-value='us'][aria-selected='true']"
     end
 
-    # ── html options ──────────────────────────────────────────────────────────
-
     def test_forwards_html_options_to_wrapper
       assert_css parse_html(sp_combobox_dropdown(class: "my-dropdown")),
                  "[data-controller~='input-combobox'].my-dropdown"
     end
-
-    # ── ids ───────────────────────────────────────────────────────────────────
 
     def test_generates_unique_id_per_render
       popover_id1 = sp_combobox_dropdown[%r{aria-controls="([^"]+)"}, 1]
@@ -310,8 +278,6 @@ class ComboboxHelperTest < ActionView::TestCase
   end
 
   class TypeaheadTest < ComboboxHelperTest
-    # ── structure ──────────────────────────────────────────────────────────────
-
     def test_renders_combobox_wrapper_with_stimulus_controller
       assert_css parse_html(sp_combobox_typeahead), "[data-controller~='input-combobox']"
     end
@@ -340,21 +306,18 @@ class ComboboxHelperTest < ActionView::TestCase
     end
 
     def test_popover_is_hidden_by_default
-      popover = parse_html(sp_combobox_typeahead).at_css("[data-input-combobox-target='popover']")
+      popover = parse_html(sp_combobox_typeahead).at_css("[data-popover-target='panel']")
 
       assert_not_nil popover
       assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
     end
 
-    def test_popover_is_empty_by_default
-      popover = parse_html(sp_combobox_typeahead).at_css("[role='listbox']")
-
-      assert_not_nil popover
-      assert_equal "", popover.inner_html.strip
+    def test_popover_has_no_options_by_default
+      assert_no_css parse_html(sp_combobox_typeahead), "[role='listbox'] li[role='option']"
     end
 
     def test_renders_loading_indicator
-      assert_css parse_html(sp_combobox_typeahead), "[aria-live='polite'][hidden]"
+      assert_css parse_html(sp_combobox_typeahead), "[role='status'][hidden][data-combobox-dropdown-target='loading']"
     end
 
     def test_renders_empty_state_element
@@ -384,30 +347,24 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_equal "United Kingdom", spans[1].text
     end
 
-    def test_trigger_aria_controls_matches_popover_id
+    def test_trigger_aria_controls_matches_listbox_id
       doc     = parse_html(sp_combobox_typeahead)
       trigger = doc.at_css("input[role='combobox']")
-      popover = doc.at_css("[data-input-combobox-target='popover']")
+      listbox = doc.at_css("ul[role='listbox']")
 
       assert_not_nil trigger
-      assert_not_nil popover
-      assert_equal popover["id"], trigger["aria-controls"]
+      assert_not_nil listbox
+      assert_equal listbox["id"], trigger["aria-controls"]
     end
-
-    # ── value ─────────────────────────────────────────────────────────────────
 
     def test_value_from_explicit_option
       assert_css parse_html(sp_combobox_typeahead(value: "london")), "input[type='hidden'][value='london']"
     end
 
-    # ── html options ──────────────────────────────────────────────────────────
-
     def test_forwards_html_options_to_wrapper
       assert_css parse_html(sp_combobox_typeahead(class: "my-typeahead")),
                  "[data-controller~='input-combobox'].my-typeahead"
     end
-
-    # ── ids ───────────────────────────────────────────────────────────────────
 
     def test_generates_unique_id_per_render
       popover_id1 = sp_combobox_typeahead[%r{aria-controls="([^"]+)"}, 1]
@@ -419,8 +376,6 @@ class ComboboxHelperTest < ActionView::TestCase
   end
 
   class TimeTest < ComboboxHelperTest
-    # ── structure ──────────────────────────────────────────────────────────────
-
     def test_renders_combobox_wrapper_with_stimulus_controller
       assert_css parse_html(sp_combobox_time), "[data-controller~='input-combobox']"
     end
@@ -469,10 +424,8 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_not_nil parse_html(sp_combobox_time).at_css("[role='dialog']")["aria-label"]
     end
 
-    # ── drums ──────────────────────────────────────────────────────────────────
-
-    def test_time_controller_inside_popover
-      assert_css parse_html(sp_combobox_time), "[role='dialog'] [data-controller='combobox-time']"
+    def test_time_controller_on_popover
+      assert_css parse_html(sp_combobox_time), "[role='dialog'][data-controller='combobox-time']"
     end
 
     def test_renders_hour_minute_period_drums_by_default
@@ -536,8 +489,6 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css doc, "ul[aria-label='Period'] li[role='option'][data-value='PM']"
     end
 
-    # ── pre-selection ─────────────────────────────────────────────────────────
-
     def test_pre_selects_from_value
       doc = parse_html(sp_combobox_time(value: "14:30"))
 
@@ -572,20 +523,14 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_no_css doc, "ul[aria-label='Period'] li[aria-selected='true']"
     end
 
-    # ── value ─────────────────────────────────────────────────────────────────
-
     def test_value_in_hidden_input
       assert_css parse_html(sp_combobox_time(value: "09:00")), "input[type='hidden'][value='09:00']"
     end
-
-    # ── html options ──────────────────────────────────────────────────────────
 
     def test_forwards_html_options_to_wrapper
       assert_css parse_html(sp_combobox_time(class: "my-timepicker")),
                  "[data-controller~='input-combobox'].my-timepicker"
     end
-
-    # ── ids ───────────────────────────────────────────────────────────────────
 
     def test_generates_unique_id_per_render
       popover_id1 = sp_combobox_time[%r{aria-controls="([^"]+)"}, 1]

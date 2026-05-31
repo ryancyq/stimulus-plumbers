@@ -7,8 +7,6 @@ class CardComponentTest < ActionView::TestCase
     StimulusPlumbers::Components::Card.new(self)
   end
 
-  # ── attr_readers ──────────────────────────────────────────────────────────
-
   def test_exposes_template
     assert_equal self, renderer.template
   end
@@ -16,8 +14,6 @@ class CardComponentTest < ActionView::TestCase
   def test_exposes_theme
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
-
-  # ── card ──────────────────────────────────────────────────────────────────
 
   def test_card_renders_div
     doc = parse_html(renderer.render { "Content" })
@@ -51,8 +47,6 @@ class CardComponentTest < ActionView::TestCase
   def test_card_passes_html_options
     assert_css parse_html(renderer.render(id: "main-card") { "" }), "#main-card"
   end
-
-  # ── section ───────────────────────────────────────────────────────────────
 
   def test_section_renders_div
     doc = parse_html(renderer.section { "Section content" })

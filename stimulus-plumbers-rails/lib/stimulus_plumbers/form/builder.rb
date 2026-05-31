@@ -2,6 +2,10 @@
 
 require "action_view/version"
 
+require_relative "../plumber/aria_options"
+require_relative "../plumber/stimulus_options"
+require_relative "../plumber/theme_options"
+
 require_relative "base"
 require_relative "field"
 require_relative "fields/fieldset"
@@ -19,12 +23,13 @@ require_relative "fields/inputs/select/weekday"
 require_relative "fields/inputs/submit"
 require_relative "fields/inputs/text"
 require_relative "fields/inputs/text_area"
-require_relative "../plumber/html_options"
 
 module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
-      include Plumber::HtmlOptions
+      include Plumber::ThemeOptions
+      include Plumber::StimulusOptions
+      include Plumber::AriaOptions
       include Fields::Inputs::Checkbox
       include Fields::Inputs::Datetime
       include Fields::Inputs::Radio
@@ -173,7 +178,6 @@ module StimulusPlumbers
 
           names = method_names.map! { |name| "[#{name}]" }.join
 
-          # a little duplication to construct fewer strings
           if object_name.blank?
             "#{method_name}#{names}#{"[]" if multiple}"
           elsif index

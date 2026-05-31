@@ -8,7 +8,6 @@ class PasswordTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  # native ActionView helper — revealable: is input-level; no label/hint/error wrapper
   def build_native(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.password_field(:password, **opts)
@@ -16,15 +15,12 @@ class PasswordTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # f.field — full wrapper: label + input + hint + error
   def build_field(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.field(:password, as: :password, **opts)
     end
     parse_html(html)
   end
-
-  # ── native password_field (no revealable) ────────────────────────────────
 
   def test_renders_password_input
     assert_css build_native, "input[type='password']"
@@ -41,8 +37,6 @@ class PasswordTest < ActionView::TestCase
   def test_revealable_option_does_not_leak_into_html_attributes
     assert_nil build_native(revealable: false).at_css("input[type='password']")["revealable"]
   end
-
-  # ── native password_field revealable: true ───────────────────────────────────
 
   def test_reveal_renders_input_group_with_stimulus_controller
     assert_css build_native(revealable: true), "[data-controller='input-formatter']"
@@ -90,8 +84,6 @@ class PasswordTest < ActionView::TestCase
     assert_css Nokogiri::HTML.fragment(group.to_html), "button"
   end
 
-  # ── html option forwarding ─────────────────────────────────────────────────
-
   def test_forwards_autocomplete_to_input
     input = build_native(autocomplete: "current-password").at_css("input[type='password']")
 
@@ -108,8 +100,6 @@ class PasswordTest < ActionView::TestCase
     assert_equal "validator",
                  build_native(data: { controller: "validator" }).at_css("input[type='password']")["data-controller"]
   end
-
-  # ── f.field(as: :password) — label + input + hint + error ────────────────
 
   def test_renders_label
     assert_css build_field, "label[for='sign_in_form_password']"

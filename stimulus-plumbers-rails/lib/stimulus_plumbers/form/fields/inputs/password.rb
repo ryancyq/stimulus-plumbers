@@ -53,7 +53,7 @@ module StimulusPlumbers
               field_theme(:form_button_reveal),
               {
                 type: "button",
-                aria: { label: "Show password", pressed: "false" },
+                aria: { label: I18n.t("stimulus_plumbers.form.password.show", default: "Show password"), pressed: "false" },
                 data: { input_formatter_target: "toggle", action: "click->input-formatter#toggle" }
               }
             )

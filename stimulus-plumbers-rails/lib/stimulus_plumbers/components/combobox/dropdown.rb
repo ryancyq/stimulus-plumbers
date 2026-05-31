@@ -8,39 +8,45 @@ module StimulusPlumbers
         STIMULUS_ACTION     = [
           "click->#{STIMULUS_CONTROLLER}#select",
           "keydown->#{STIMULUS_CONTROLLER}#onNavigate",
-          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
+          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
+          "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
         ].join(" ").freeze
 
-        def self.default_opts
-          {
-            popover: {
-              tag:      :div,
-              haspopup: "listbox",
-              data:     { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION }
-            }
-          }
+        def self.variant
+          Combobox.variant(:dropdown)
         end
 
-        def render(...)
-          render_dropdown(...)
+        def self.options(**overrides)
+          variant.opts(**overrides)
         end
+
+        def render(...) = render_dropdown(...)
+        def build(...) = build_dropdown(...)
 
         private
 
-        def render_dropdown(options: [], value: nil, label: nil, labelledby: nil)
-          listbox_attrs = merge_html_options(
-            { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
-            { role: "listbox", data: { "#{STIMULUS_CONTROLLER}_target": "listbox" } }
+        def render_dropdown(panel_attrs: {}, options: [], value: nil, label: nil, labelledby: nil)
+          template.content_tag(
+            :ul,
+            Options.new(template).render(options, value: value),
+            **listbox_attrs(panel_attrs: panel_attrs, label: label, labelledby: labelledby)
           )
-          if labelledby
-            listbox_attrs[:aria] = { labelledby: labelledby }
-          elsif label
-            listbox_attrs[:aria] = { label: label }
-          end
+        end
 
-          template.content_tag(:ul, **listbox_attrs) do
-            Options.new(template).render(options, value: value)
-          end
+        def build_dropdown(panel_attrs: {}, label: nil, labelledby: nil, **_kwargs, &block)
+          template.capture(listbox_attrs(panel_attrs: panel_attrs, label: label, labelledby: labelledby), &block)
+        end
+
+        def listbox_attrs(panel_attrs: {}, label: nil, labelledby: nil)
+          merge_html_options(
+            panel_attrs,
+            { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
+            {
+              role: "listbox",
+              aria: labelled_aria(label, labelledby: labelledby),
+              data: { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION, combobox_dropdown_target: "listbox" }
+            }
+          )
         end
       end
     end

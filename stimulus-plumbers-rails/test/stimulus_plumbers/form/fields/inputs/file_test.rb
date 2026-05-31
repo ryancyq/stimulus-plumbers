@@ -8,7 +8,6 @@ class FileFieldTest < ActionView::TestCase
     @form = FormBuilderModel.new
   end
 
-  # native ActionView helper — theme classes only, no label/hint/error wrapper
   def build_native(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.file_field(:email, **opts)
@@ -16,15 +15,12 @@ class FileFieldTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # f.field — full wrapper: label + input + hint + error
   def build_field(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.field(:email, as: :file, **opts)
     end
     parse_html(html)
   end
-
-  # ── native file input ──────────────────────────────────────────────────────
 
   def test_renders_file_input
     assert_css build_native, "input[type='file']"
@@ -42,8 +38,6 @@ class FileFieldTest < ActionView::TestCase
     assert_equal "uploader",
                  build_native(data: { controller: "uploader" }).at_css("input[type='file']")["data-controller"]
   end
-
-  # ── f.field(as: :file) — label + input + hint + error ───────────────────
 
   def test_renders_label
     assert_css build_field, "label[for='sign_in_form_email']"

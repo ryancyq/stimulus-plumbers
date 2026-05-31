@@ -1,0 +1,10 @@
+en:
+  stimulus_plumbers:
+    combobox:
+      typeahead:
+        empty: "No results"
+    form:
+      password:
+        show: "Show password"
+      search:
+        clear: "Clear search"
