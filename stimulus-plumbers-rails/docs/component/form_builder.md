@@ -54,14 +54,44 @@ Four builder methods render a complete accessible field: a visible label, the in
 
 All full-field helpers accept these options in addition to their own:
 
-| Option       | Type                   | Default                  | Description                                                      |
-| ------------ | ---------------------- | ------------------------ | ---------------------------------------------------------------- |
-| `label`      | String                 | Humanised attribute name | Override label text                                              |
-| `hint`       | String                 | `nil`                    | Hint text rendered below the field                               |
-| `error`      | String / Array         | `nil`                    | Override error message(s); defaults to `model.errors[attribute]` |
-| `required`   | Boolean                | `false`                  | Adds `required` + `aria-required="true"`                         |
-| `hide_label` | Boolean                | `false`                  | Renders label for screen readers only (visually hidden)          |
-| `layout`     | `:stacked` / `:inline` | `:stacked`               | Stacked puts label above input; inline puts it beside            |
+| Option       | Type                                                                          | Default                  | Description                                                      |
+| ------------ | ----------------------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------- |
+| `label`      | String                                                                        | Humanised attribute name | Override label text                                              |
+| `hint`       | String                                                                        | `nil`                    | Hint text rendered below the field                               |
+| `error`      | String / Array                                                                | `nil`                    | Override error message(s); defaults to `model.errors[attribute]` |
+| `required`   | Boolean                                                                       | `false`                  | Adds `required` + `aria-required="true"`                         |
+| `hide_label` | Boolean                                                                       | `false`                  | Renders label for screen readers only (visually hidden)          |
+| `layout`     | `:stacked` / `:inline`                                                        | `:stacked`               | Stacked puts label above input; inline puts it beside            |
+| `variant`    | `:default` / `:floating_filled` / `:floating_outlined` / `:floating_standard` | `:default`               | Floating label style; label animates above the input on focus    |
+
+## Floating label fields
+
+Three visual styles are available via `variant:`. The label starts inside the input and animates above it on focus or when the field has a value. Only compatible with text-like inputs.
+
+| Variant              | Style                                                |
+| -------------------- | ---------------------------------------------------- |
+| `:floating_filled`   | Filled background, bottom border only                |
+| `:floating_outlined` | Full border, label clips through the border on float |
+| `:floating_standard` | Bottom border only, no background                    |
+
+```erb
+<%= f.field :email,    as: :email, label: "Email",    variant: :floating_filled %>
+<%= f.field :username, as: :text,  label: "Username", variant: :floating_outlined %>
+<%= f.field :name,     as: :text,  label: "Name",     variant: :floating_standard, required: true %>
+```
+
+HTML structure (theme classes omitted):
+
+```html
+<div>
+  <div>
+    <input id="…" placeholder=" " aria-… />
+    <label for="…" id="…">Email</label>
+  </div>
+  <p id="…_hint">…</p>
+  <p id="…_error" role="alert">…</p>
+</div>
+```
 
 ## f.field
 

@@ -61,7 +61,7 @@ stimulus-plumbers-rails/
 │       ├── form/
 │       │   ├── builder.rb                # Form builder: FIELD_RENDERER/COLLECTION_FIELD_RENDERER/CHOICE_RENDERER constants + f.field/collection_field/choice
 │       │   ├── base.rb                   # Form::Base — shared init, error?, described_by, render_hint/errors
-│       │   ├── field.rb                  # Form::Field < Base — label + input + hint + error; TYPES, COLLECTION_TYPES, hide_label
+│       │   ├── field.rb                  # Form::Field < Base — label + input + hint + error; TYPES, COLLECTION_TYPES, VARIANTS, hide_label
 │       │   └── fields/
 │       │       ├── error.rb
 │       │       ├── fieldset.rb
@@ -69,6 +69,8 @@ stimulus-plumbers-rails/
 │       │       ├── hint.rb
 │       │       ├── input_group.rb
 │       │       ├── label.rb
+│       │       ├── label/
+│       │       │   └── floating.rb       # Fields::Label::Floating — wrapper div + block-captured input before label; used by render_floating_field
 │       │       └── inputs/
 │       │           ├── checkbox.rb       # check_box, collection_check_boxes (native); render_check_box, render_collection_check_box
 │       │           ├── combobox.rb       # Shared render_combobox — wires variant, panel_id, aria into Components::Combobox
