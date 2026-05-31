@@ -74,14 +74,16 @@ stimulus-plumbers-react/   # npm: @stimulus-plumbers/react
 - Focus moves into dialog on open; returns to trigger on close
 - Focus trapped inside — Tab/Shift+Tab cycle within; Escape closes
 
-#### Popover (`popover_controller`)
+#### Popover (`popover_controller`, `popover/builder`)
 - `role="dialog"` or `role="tooltip"` depending on interactivity
-- Trigger: `<button>` with `aria-haspopup="dialog"` and `aria-expanded="false"` initially
-- `aria-expanded` toggled to `"true"` / `"false"` by the controller via the `trigger` Stimulus target
+- Trigger: must be a `<button>` (or `<input role="combobox">`) with `aria-haspopup` and `aria-expanded="false"` initially
+- `aria-expanded` must toggle to `"true"` on open and back to `"false"` on close — managed by the controller via the `trigger` Stimulus target
 - `aria-controls` linking trigger to panel id is recommended but optional
 - Escape closes and returns focus to trigger
+- Rails DSL: `p.trigger` / `p.panel` (builder renders wired element); `p.build_panel` (caller renders using yielded `panel_attrs`) — used by combobox variants that need sibling status regions beside the listbox
 
 #### Combobox (`input_combobox_controller`, `combobox/`)
+- Controller stack: `data-controller="popover input-combobox input-formatter"` — `popover` owns visibility/`aria-expanded`/outside-click dismissal; `input-combobox` owns value + filtering; `input-formatter` handles display formatting
 - Trigger: `<input role="combobox">` with `aria-haspopup` (`listbox`/`dialog`) and `aria-controls` referencing the **popup element** (the `role="listbox"`/`role="dialog"`)
 - `role="listbox"` permits only `option`/`group` children (`aria-required-children`, WCAG 1.3.1). Status messages (loading, "No results") must be `role="status"`/`aria-live` **siblings of the listbox, never children of it** — for typeahead the listbox is nested in a wrapper panel so the status regions can sit beside it
 - Status/loading regions inside the popover panel must stay **non-focusable** (the popover moves focus into the panel on open)
