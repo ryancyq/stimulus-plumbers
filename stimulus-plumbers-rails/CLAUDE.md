@@ -187,3 +187,61 @@ Each module under `fields/inputs/` exposes private `render_*` methods that map 1
 
 ## Doc Update Rule
 - When changing component API (targets, values, options, HTML structure, form builder keywords), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.
+
+## Namespace Conventions
+
+All classes live under `StimulusPlumbers::`:
+- `StimulusPlumbers::Components::*` — renderer classes (e.g. `Components::Button`)
+- `StimulusPlumbers::Helpers::*` — view helpers (e.g. `Helpers::ButtonHelper`)
+- `StimulusPlumbers::Form::*` — form builder and field classes
+- `StimulusPlumbers::Plumber::Base` / `Plumber::Renderer` — base classes
+- `StimulusPlumbers::Themes::*` — theme system
+
+## `renders` DSL (`Plumber::Renderer`)
+
+Renderers declare sub-components via `renders`:
+
+```ruby
+class ActionList < Plumber::Base
+  include Plumber::Renderer
+  renders :section, with: ActionList::Section
+  renders :item,    with: ActionList::Item
+end
+```
+
+`renders :section, with: SomeClass` defines a `section(...)` method that instantiates `SomeClass` and dispatches it through the render chain. Sub-renderers also inherit from `Plumber::Base`.
+
+## Helper Inclusion
+
+```ruby
+# Per-module opt-in:
+module ApplicationHelper
+  include StimulusPlumbers::Helpers::ButtonHelper
+  include StimulusPlumbers::Helpers::PopoverHelper
+  include StimulusPlumbers::Helpers::ComboboxHelper
+  # etc.
+end
+
+# Or include all at once:
+module ApplicationHelper
+  include StimulusPlumbers::Helpers
+end
+```
+
+`PlumberHelper` (provides `sp_dom_id`) is always auto-included via the Engine.
+
+## Rails Version Support
+
+Supported via Appraisal: Rails 6.1, 7.0, 7.1, 7.2, 8.0, 8.1, and edge.
+
+Run tests against a specific version:
+```bash
+BUNDLE_GEMFILE=gemfiles/rails_8.0.gemfile bundle exec rake test:unit
+```
+
+## Accessibility Test Details
+
+- Uses Capybara + cuprite (headless Chrome) + axe-core
+- Sandbox app: `test/sandbox/`
+- Test files: `test/accessibility/**/*_accessibility_test.rb`
+- Always run both `rake test:unit` and `rake test:accessibility` before merging
