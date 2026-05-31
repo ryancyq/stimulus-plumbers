@@ -6,6 +6,6 @@ class FieldErrorAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag
     visit "/form/field_error"
 
-    assert_accessible
+    assert_accessible context: "#field-error"
   end
 end

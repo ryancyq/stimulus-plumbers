@@ -11,11 +11,7 @@ require_relative "stimulus_plumbers/helpers"
 require_relative "stimulus_plumbers/logger"
 
 # -- Plumber base --
-require_relative "stimulus_plumbers/plumber/aria_options"
 require_relative "stimulus_plumbers/plumber/dispatcher"
-require_relative "stimulus_plumbers/plumber/renderer"
-require_relative "stimulus_plumbers/plumber/stimulus_options"
-require_relative "stimulus_plumbers/plumber/theme_options"
 require_relative "stimulus_plumbers/plumber/base"
 
 # -- UI components --

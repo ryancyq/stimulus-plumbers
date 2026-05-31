@@ -1,5 +1,7 @@
 <h1>Search field</h1>
 
-<%= form_with url: "#", scope: :search, builder: StimulusPlumbers::Form::Builder do |f| %>
-  <%= f.field :query, as: :search, label: "Search", clearable: true %>
-<% end %>
+<div id="search">
+  <%= form_with url: "#", scope: :search, builder: StimulusPlumbers::Form::Builder do |f| %>
+    <%= f.field :query, as: :search, label: "Search", clearable: true %>
+  <% end %>
+</div>

@@ -143,6 +143,21 @@ stimulus-plumbers-rails/
 - **Lint tests** using Rubocop (`rake rubocop`)
 - **Always run linting** after appraisal command
 
+## Accessibility Test Convention
+
+Always pass `context:` to `assert_accessible` to scope axe to the component, not the full page:
+
+```ruby
+assert_accessible context: "#combobox-date"
+```
+
+Sandbox views must have matching wrapper IDs:
+- Single-component pages: `<div id="component-name">` around all variants
+- Multi-variant pages: outer `<div id="component">` + inner `<section id="component-variant">` per variant
+- Form pages: `<div id="page-name">` around the form
+
+Panels are rendered inline (not portaled), so the nearest wrapper always contains the open panel.
+
 ## Form Builder Convention
 
 The form builder operates at two levels:

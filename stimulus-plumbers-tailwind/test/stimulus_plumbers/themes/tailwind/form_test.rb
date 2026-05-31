@@ -158,28 +158,164 @@ class TailwindThemeFormTest < Minitest::Test
 
   # :form_checkbox
 
-  def test_form_checkbox_includes_base_classes
+  def test_form_checkbox_default_variant
     result = classes_for(:form_checkbox)
 
     assert_includes result, "size-(--sp-control-size)"
     assert_includes result, "rounded-(--sp-radius-sm)"
     assert_includes result, "border"
-    assert_includes result, "border-(--sp-color-muted-fg)"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "bg-(--sp-color-muted)"
     assert_includes result, "focus:ring-2"
     assert_includes result, "focus:ring-(--sp-focus-ring-color)"
+    assert_includes result, "focus:outline-none"
+    assert_includes result, "cursor-pointer"
+    assert_includes result, "disabled:opacity-50"
+  end
+
+  def test_form_checkbox_button_variant
+    result = classes_for(:form_checkbox, variant: :button)
+
+    assert_includes result, "size-(--sp-control-size)"
+    assert_includes result, "shrink-0"
+    refute_includes result, "mt-(--sp-space-4)"
+  end
+
+  def test_form_checkbox_card_variant
+    result = classes_for(:form_checkbox, variant: :card)
+
+    assert_includes result, "size-(--sp-control-size)"
+    assert_includes result, "shrink-0"
+    refute_includes result, "mt-(--sp-space-4)"
+    refute_includes result, "me-(--sp-space-4)"
+  end
+
+  # :form_checkbox_label
+
+  def test_form_checkbox_label_default_variant
+    result = classes_for(:form_checkbox_label)
+
+    assert_includes result, "flex"
+    assert_includes result, "items-center"
+    assert_includes result, "gap-(--sp-space-2)"
+    assert_includes result, "cursor-pointer"
+    assert_includes result, "text-(--sp-color-fg)"
+  end
+
+  def test_form_checkbox_label_button_variant
+    result = classes_for(:form_checkbox_label, variant: :button)
+
+    assert_includes result, "flex"
+    assert_includes result, "items-start"
+    assert_includes result, "p-(--sp-space-4)"
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "hover:bg-(--sp-color-muted)"
+    refute_includes result, "justify-between"
+  end
+
+  def test_form_checkbox_label_card_variant
+    result = classes_for(:form_checkbox_label, variant: :card)
+
+    assert_includes result, "flex"
+    assert_includes result, "justify-between"
+    assert_includes result, "items-start"
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "hover:bg-(--sp-color-muted)"
   end
 
   # :form_radio
 
-  def test_form_radio_includes_base_classes
+  def test_form_radio_default_variant
     result = classes_for(:form_radio)
 
     assert_includes result, "size-(--sp-control-size)"
+    assert_includes result, "rounded-full"
     assert_includes result, "border"
-    assert_includes result, "border-(--sp-color-muted-fg)"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "bg-(--sp-color-muted)"
+    assert_includes result, "appearance-none"
+    assert_includes result, "checked:border-(--sp-color-primary)"
     assert_includes result, "focus:ring-2"
     assert_includes result, "focus:ring-(--sp-focus-ring-color)"
     assert_includes result, "focus:outline-none"
+    assert_includes result, "cursor-pointer"
+    assert_includes result, "disabled:opacity-50"
+  end
+
+  def test_form_radio_button_variant
+    result = classes_for(:form_radio, variant: :button)
+
+    assert_includes result, "hidden"
+    assert_includes result, "peer"
+  end
+
+  def test_form_radio_card_variant
+    result = classes_for(:form_radio, variant: :card)
+
+    assert_includes result, "hidden"
+    assert_includes result, "peer"
+  end
+
+  # :form_radio_label
+
+  def test_form_radio_label_default_variant
+    result = classes_for(:form_radio_label)
+
+    assert_includes result, "flex"
+    assert_includes result, "items-center"
+    assert_includes result, "gap-(--sp-space-2)"
+    assert_includes result, "cursor-pointer"
+    assert_includes result, "text-(--sp-color-fg)"
+  end
+
+  def test_form_radio_label_button_variant
+    result = classes_for(:form_radio_label, variant: :button)
+
+    assert_includes result, "inline-flex"
+    assert_includes result, "justify-between"
+    assert_includes result, "p-(--sp-space-4)"
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "peer-checked:border-(--sp-color-primary)"
+    assert_includes result, "peer-checked:bg-(--sp-color-primary)/10"
+    assert_includes result, "peer-checked:text-(--sp-color-fg)"
+    assert_includes result, "hover:bg-(--sp-color-muted)"
+  end
+
+  def test_form_radio_label_card_variant
+    result = classes_for(:form_radio_label, variant: :card)
+
+    assert_includes result, "flex"
+    assert_includes result, "flex-col"
+    assert_includes result, "items-start"
+    assert_includes result, "shadow-(--sp-shadow-sm)"
+    assert_includes result, "peer-checked:border-(--sp-color-primary)"
+    assert_includes result, "peer-checked:bg-(--sp-color-primary)/10"
+  end
+
+  # :form_choice_items
+
+  def test_form_choice_items_stacked_layout
+    result = classes_for(:form_choice_items)
+
+    assert_includes result, "flex"
+    assert_includes result, "flex-col"
+    assert_includes result, "gap-(--sp-space-1)"
+  end
+
+  def test_form_choice_items_inline_layout
+    result = classes_for(:form_choice_items, layout: :inline)
+
+    assert_includes result, "flex"
+    assert_includes result, "flex-row"
+    assert_includes result, "flex-wrap"
+    assert_includes result, "gap-x-(--sp-space-4)"
+    assert_includes result, "gap-y-(--sp-space-1)"
   end
 
   # :form_combobox

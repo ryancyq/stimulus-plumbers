@@ -6,6 +6,6 @@ class AvatarAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag
     visit "/components/avatar"
 
-    assert_accessible
+    assert_accessible context: "#avatar"
   end
 end

@@ -1,7 +1,12 @@
 import { test, expect } from "@playwright/test";
 
-test("action list — default state", async ({ page }) => {
+test.beforeEach(async ({ page }) => {
   await page.goto("/components/action_list");
   await page.waitForSelector("[role='list']");
-  await expect(page).toHaveScreenshot("default.png");
+});
+
+test.describe("action list", () => {
+  test("default", async ({ page }) => {
+    await expect(page.locator("#action-list")).toHaveScreenshot("default.png");
+  });
 });

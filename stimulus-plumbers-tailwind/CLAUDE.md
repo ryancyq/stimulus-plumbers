@@ -52,6 +52,9 @@ stimulus-plumbers-tailwind/
 
 > See [README.md](README.md) for installation and developer setup.
 
+## Styling Guidelines
+- **Always use CSS custom properties (CSS variables) instead of hardcoded values** — colors, spacing, sizing, and other design tokens must reference CSS variables (e.g., `var(--color-primary)`) so consumers can theme the library without overriding classes.
+
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
 - **Snapshot tests** using Playwright (`npm run test:snapshots`); update baselines with `npm run test:snapshots:update`

@@ -78,22 +78,22 @@ class BuilderTest < ActionView::TestCase
     assert_css doc, "label[for='sign_in_form_email']"
   end
 
-  def test_field_check_box_renders_explicit_label_and_input
-    doc = build_field(:field, :newsletter, as: :check_box)
+  def test_single_check_box_renders_explicit_label_and_input
+    doc = build_field(:choice, :newsletter, as: :check_box)
 
     assert_css doc, "label[for='sign_in_form_newsletter']"
     assert_css doc, "input[type='checkbox'][name='sign_in_form[newsletter]']"
     assert_no_css doc, "label input[type='checkbox']"
   end
 
-  def test_field_check_box_renders_hint
-    doc = build_field(:field, :newsletter, as: :check_box, hint: "Optional")
+  def test_single_check_box_renders_hint
+    doc = build_field(:choice, :newsletter, as: :check_box, hint: "Optional")
 
     assert_includes doc.text, "Optional"
   end
 
-  def test_field_check_box_renders_error_override
-    doc = build_field(:field, :newsletter, as: :check_box, error: "Must be accepted")
+  def test_single_check_box_renders_error_override
+    doc = build_field(:choice, :newsletter, as: :check_box, error: "Must be accepted")
 
     assert_css doc, "p[role='alert']"
     assert_includes doc.text, "Must be accepted"

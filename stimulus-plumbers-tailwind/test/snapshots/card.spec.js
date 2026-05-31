@@ -1,7 +1,12 @@
 import { test, expect } from "@playwright/test";
 
-test("card — default state", async ({ page }) => {
+test.beforeEach(async ({ page }) => {
   await page.goto("/components/card");
   await page.waitForSelector("h1");
-  await expect(page).toHaveScreenshot("default.png");
+});
+
+test.describe("card", () => {
+  test("default", async ({ page }) => {
+    await expect(page.locator("#card")).toHaveScreenshot("default.png");
+  });
 });

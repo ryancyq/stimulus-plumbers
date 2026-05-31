@@ -6,6 +6,6 @@ class ActionListAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag
     visit "/components/action_list"
 
-    assert_accessible
+    assert_accessible context: "#action-list"
   end
 end
