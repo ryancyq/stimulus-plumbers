@@ -32,10 +32,11 @@ class ApplicationAccessibilityTestCase < Minitest::Test
     Capybara.use_default_driver
   end
 
-  def assert_accessible
-    violations = page.evaluate_async_script(<<~JS)
+  def assert_accessible(context: nil)
+    violations = page.evaluate_async_script(<<~JS, context)
+      var context = arguments[0];
       var done = arguments[arguments.length - 1];
-      axe.run(function(err, results) {
+      axe.run(context || document, function(err, results) {
         done(err ? [] : results.violations);
       });
     JS

@@ -1,32 +1,34 @@
 <h1>Field error</h1>
 
-<%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-  <h2>Required</h2>
-  <%= f.field :name, as: :text, label: "Full name", required: true %>
+<div id="field-error">
+  <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <h2>Required</h2>
+    <%= f.field :name, as: :text, label: "Full name", required: true %>
 
-  <h2>With hint</h2>
-  <%= f.field :email, as: :email, label: "Email", hint: "We'll never share your email." %>
+    <h2>With hint</h2>
+    <%= f.field :email, as: :email, label: "Email", hint: "We'll never share your email." %>
 
-  <h2>Error from model</h2>
-  <%# @form already has errors on :email and :name added in the controller %>
-  <%= f.field :name, as: :text, label: "Name" %>
+    <h2>Error from model</h2>
+    <%# @form already has errors on :email and :name added in the controller %>
+    <%= f.field :name, as: :text, label: "Name" %>
 
-  <h2>Error override</h2>
-  <%= f.field :name, as: :text, label: "Username", error: "This field is required." %>
+    <h2>Error override</h2>
+    <%= f.field :name, as: :text, label: "Username", error: "This field is required." %>
 
-  <h2>Visually hidden label</h2>
-  <%= f.field :name, as: :text, label: "Search query", hide_label: true %>
+    <h2>Visually hidden label</h2>
+    <%= f.field :name, as: :text, label: "Search query", hide_label: true %>
 
-  <h2>Textarea with error</h2>
-  <%= f.field :bio, as: :text_area, label: "Bio" %>
+    <h2>Textarea with error</h2>
+    <%= f.field :bio, as: :text_area, label: "Bio" %>
 
-  <h2>Select with error</h2>
-  <% countries = [["Australia", "au"], ["New Zealand", "nz"], ["Singapore", "sg"]] %>
-  <%= f.field :country, as: :select, label: "Country", choices: countries %>
+    <h2>Select with error</h2>
+    <% countries = [["Australia", "au"], ["New Zealand", "nz"], ["Singapore", "sg"]] %>
+    <%= f.field :country, as: :select, label: "Country", choices: countries %>
 
-  <h2>Checkbox with error</h2>
-  <%= f.field :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+    <h2>Checkbox with error</h2>
+    <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
 
-  <h2>File with error</h2>
-  <%= f.field :resume, as: :file, label: "Resume" %>
-<% end %>
+    <h2>File with error</h2>
+    <%= f.field :resume, as: :file, label: "Resume" %>
+  <% end %>
+</div>

@@ -9,29 +9,31 @@
 
 <h1>Create account</h1>
 
-<%= sp_card do %>
-  <%= sp_avatar(initials: "SP", name: "Stimulus Plumbers") %>
+<div id="sign-up">
+  <%= sp_card do %>
+    <%= sp_avatar(initials: "SP", name: "Stimulus Plumbers") %>
 
-  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <%= f.field     :name,       as: :text,     label: "Full name",     required: true %>
-    <%= f.field     :email,      as: :email,    label: "Email address", required: true,
-                                                hint: "We'll never share your email." %>
-    <%= f.field     :password,   as: :password, label: "Password",      required: true, revealable: true %>
-    <%= f.field     :age,        as: :number,   label: "Age" %>
-    <%= f.field     :birth_date, as: :date,     label: "Date of birth" %>
-    <%= f.field     :bio,        as: :text_area, label: "Bio",
-                                                hint: "Tell us a little about yourself." %>
-    <%= f.choice :gender, as: :radio,
-          label:        "Gender",
-          collection:   [["male", "Male"], ["female", "Female"], ["other", "Other"]],
-          value_method: :first,
-          text_method:  :last %>
-    <%= f.field     :country,    as: :select,   label: "Country",
-                                                hint: "Select your country of residence.",
-                                                choices: countries %>
-    <%= f.field     :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
-    <%= f.submit "Create account" %>
+    <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field     :name,       as: :text,     label: "Full name",     required: true %>
+      <%= f.field     :email,      as: :email,    label: "Email address", required: true,
+                                                  hint: "We'll never share your email." %>
+      <%= f.field     :password,   as: :password, label: "Password",      required: true, revealable: true %>
+      <%= f.field     :age,        as: :number,   label: "Age" %>
+      <%= f.field     :birth_date, as: :date,     label: "Date of birth" %>
+      <%= f.field     :bio,        as: :text_area, label: "Bio",
+                                                  hint: "Tell us a little about yourself." %>
+      <%= f.choice :gender, as: :radio,
+            label:        "Gender",
+            collection:   [["male", "Male"], ["female", "Female"], ["other", "Other"]],
+            value_method: :first,
+            text_method:  :last %>
+      <%= f.field     :country,    as: :select,   label: "Country",
+                                                  hint: "Select your country of residence.",
+                                                  choices: countries %>
+      <%= f.choice    :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+      <%= f.submit "Create account" %>
+    <% end %>
+
+    <%= sp_button("Sign in", url: "#", variant: :secondary) %>
   <% end %>
-
-  <%= sp_button("Sign in", url: "#", variant: :secondary) %>
-<% end %>
+</div>

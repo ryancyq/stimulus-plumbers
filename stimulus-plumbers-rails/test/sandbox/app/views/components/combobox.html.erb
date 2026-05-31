@@ -1,16 +1,26 @@
 <h1>Combobox components</h1>
 
-<%# ── Date ──────────────────────────────────────────────────────────── %>
-<%= sp_combobox_date(label: "Birthday") %>
+<div id="combobox">
+  <%# ── Date ──────────────────────────────────────────────────────────── %>
+  <section id="combobox-date">
+    <%= sp_combobox_date(label: "Birthday") %>
+  </section>
 
-<%# ── Time ──────────────────────────────────────────────────────────── %>
-<%= sp_combobox_time(label: "Meeting Time") %>
+  <%# ── Time ──────────────────────────────────────────────────────────── %>
+  <section id="combobox-time">
+    <%= sp_combobox_time(label: "Meeting Time") %>
+  </section>
 
-<%# ── Dropdown ───────────────────────────────────────────────────────── %>
-<%= sp_combobox_dropdown(
-      label:   "Country",
-      options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
-    ) %>
+  <%# ── Dropdown ───────────────────────────────────────────────────────── %>
+  <section id="combobox-dropdown">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
+        ) %>
+  </section>
 
-<%# ── Typeahead ───────────────────────────────────────────────────────── %>
-<%= sp_combobox_typeahead(label: "City") %>
+  <%# ── Typeahead ──────────────────────────────────────────────────────── %>
+  <section id="combobox-typeahead">
+    <%= sp_combobox_typeahead(label: "City") %>
+  </section>
+</div>

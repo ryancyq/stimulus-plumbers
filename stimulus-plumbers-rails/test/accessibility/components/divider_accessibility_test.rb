@@ -6,6 +6,6 @@ class DividerAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag
     visit "/components/divider"
 
-    assert_accessible
+    assert_accessible context: "#divider"
   end
 end

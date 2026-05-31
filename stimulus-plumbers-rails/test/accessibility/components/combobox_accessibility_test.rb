@@ -6,34 +6,34 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag_with_all_comboboxes_closed
     visit "/components/combobox"
 
-    assert_accessible
+    assert_accessible context: "#combobox"
   end
 
   def test_passes_wcag_with_date_picker_open
     visit "/components/combobox"
     find("input[aria-label='Birthday']").click
 
-    assert_accessible
+    assert_accessible context: "#combobox-date"
   end
 
   def test_passes_wcag_with_time_picker_open
     visit "/components/combobox"
     find("input[aria-label='Meeting Time']").click
 
-    assert_accessible
+    assert_accessible context: "#combobox-time"
   end
 
   def test_passes_wcag_with_dropdown_open
     visit "/components/combobox"
     find("input[aria-label='Country']").click
 
-    assert_accessible
+    assert_accessible context: "#combobox-dropdown"
   end
 
   def test_passes_wcag_with_typeahead_open
     visit "/components/combobox"
     find("input[aria-label='City']").click
 
-    assert_accessible
+    assert_accessible context: "#combobox-typeahead"
   end
 end

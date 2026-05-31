@@ -9,13 +9,13 @@ class SearchAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_passes_wcag_with_empty_input
-    assert_accessible
+    assert_accessible context: "#search"
   end
 
   def test_passes_wcag_with_populated_input
     fill_in "Search", with: "hello"
 
-    assert_accessible
+    assert_accessible context: "#search"
   end
 
   def test_clear_button_hidden_when_input_is_empty

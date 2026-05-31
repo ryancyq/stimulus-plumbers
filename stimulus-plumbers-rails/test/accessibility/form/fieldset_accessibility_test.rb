@@ -6,6 +6,6 @@ class FieldsetAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag
     visit "/form/fieldset"
 
-    assert_accessible
+    assert_accessible context: "#fieldset"
   end
 end

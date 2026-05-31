@@ -3,49 +3,51 @@
 <% genders = [["male", "Male"], ["female", "Female"], ["other", "Other"]] %>
 <% hobbies = [["reading", "Reading"], ["coding", "Coding"], ["gaming", "Gaming"]] %>
 
-<%# ── Collection radio buttons, no error ─────────────────────────────── %>
-<h2>Collection radio buttons</h2>
-<% fresh = SignUp.new %>
-<%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-  <%= f.choice :gender, as: :radio,
-        label: "Gender", collection: genders, value_method: :first, text_method: :last %>
-<% end %>
+<div id="fieldset">
+  <%# ── Collection radio buttons, no error ─────────────────────────────── %>
+  <h2>Collection radio buttons</h2>
+  <% fresh = SignUp.new %>
+  <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label: "Gender", collection: genders, value_method: :first, text_method: :last %>
+  <% end %>
 
-<%# ── Collection radio buttons with error ─────────────────────────────── %>
-<h2>Collection radio buttons with error</h2>
-<%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-  <%= f.choice :gender, as: :radio,
-        label: "Gender", collection: genders, value_method: :first, text_method: :last %>
-<% end %>
+  <%# ── Collection radio buttons with error ─────────────────────────────── %>
+  <h2>Collection radio buttons with error</h2>
+  <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label: "Gender", collection: genders, value_method: :first, text_method: :last %>
+  <% end %>
 
-<%# ── Collection radio buttons required ──────────────────────────────── %>
-<h2>Collection radio buttons required</h2>
-<% required_form = SignUp.new %>
-<%= form_with(model: required_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-  <%= f.choice :gender, as: :radio,
-        label: "Gender", collection: genders, value_method: :first, text_method: :last, required: true %>
-<% end %>
+  <%# ── Collection radio buttons required ──────────────────────────────── %>
+  <h2>Collection radio buttons required</h2>
+  <% required_form = SignUp.new %>
+  <%= form_with(model: required_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label: "Gender", collection: genders, value_method: :first, text_method: :last, required: true %>
+  <% end %>
 
-<%# ── Collection radio buttons with hint ──────────────────────────────── %>
-<h2>Collection radio buttons with hint</h2>
-<% hint_form = SignUp.new %>
-<%= form_with(model: hint_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-  <%= f.choice :gender, as: :radio,
-        label: "Gender", collection: genders, value_method: :first, text_method: :last,
-        hint: "Select the option that best describes you." %>
-<% end %>
+  <%# ── Collection radio buttons with hint ──────────────────────────────── %>
+  <h2>Collection radio buttons with hint</h2>
+  <% hint_form = SignUp.new %>
+  <%= form_with(model: hint_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label: "Gender", collection: genders, value_method: :first, text_method: :last,
+          hint: "Select the option that best describes you." %>
+  <% end %>
 
-<%# ── Collection check boxes, no error ────────────────────────────────── %>
-<h2>Collection check boxes</h2>
-<% fresh2 = SignUp.new %>
-<%= form_with(model: fresh2, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-  <%= f.choice :interests, as: :check_box,
-        label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>
-<% end %>
+  <%# ── Collection check boxes, no error ────────────────────────────────── %>
+  <h2>Collection check boxes</h2>
+  <% fresh2 = SignUp.new %>
+  <%= form_with(model: fresh2, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>
+  <% end %>
 
-<%# ── Collection check boxes with error ───────────────────────────────── %>
-<h2>Collection check boxes with error</h2>
-<%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-  <%= f.choice :interests, as: :check_box,
-        label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>
-<% end %>
+  <%# ── Collection check boxes with error ───────────────────────────────── %>
+  <h2>Collection check boxes with error</h2>
+  <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>
+  <% end %>
+</div>

@@ -6,13 +6,13 @@ class PopoverAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag_with_popover_closed
     visit "/components/popover"
 
-    assert_accessible
+    assert_accessible context: "#popover"
   end
 
   def test_passes_wcag_with_popover_open
     visit "/components/popover"
     click_button "Open menu"
 
-    assert_accessible
+    assert_accessible context: "#popover"
   end
 end

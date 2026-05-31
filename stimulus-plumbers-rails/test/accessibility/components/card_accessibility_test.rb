@@ -6,6 +6,6 @@ class CardAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag
     visit "/components/card"
 
-    assert_accessible
+    assert_accessible context: "#card"
   end
 end

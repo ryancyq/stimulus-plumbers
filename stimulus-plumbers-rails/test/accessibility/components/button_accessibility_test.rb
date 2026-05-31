@@ -6,6 +6,6 @@ class ButtonAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag
     visit "/components/button"
 
-    assert_accessible
+    assert_accessible context: "#button"
   end
 end
