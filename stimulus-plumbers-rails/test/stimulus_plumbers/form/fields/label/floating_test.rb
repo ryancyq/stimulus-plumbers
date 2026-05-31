@@ -14,14 +14,14 @@ class FormFieldsLabelFloatingTest < ActionView::TestCase
   LABEL_ID = "user_email_label"
   VARIANT  = :floating_filled
 
+  DEFAULT_ARGS = { text: "Email", for_id: INPUT_ID, id: LABEL_ID, variant: VARIANT, required: false, error: false }.freeze
+
   def test_renders_wrapper_div
-    assert_css parse_html(floating_label(text: "Email", for_id: INPUT_ID, id: LABEL_ID, variant: VARIANT, required: false, error: false)),
-               "div"
+    assert_css parse_html(floating_label(**DEFAULT_ARGS)), "div"
   end
 
   def test_input_rendered_before_label
-    html     = floating_label(text: "Email", for_id: INPUT_ID, id: LABEL_ID, variant: VARIANT, required: false, error: false)
-    doc      = parse_html(html)
+    doc      = parse_html(floating_label(**DEFAULT_ARGS))
     children = doc.at_css("div").children.reject { |n| n.text? && n.text.strip.empty? }
 
     assert_equal "input", children[0].name
@@ -29,23 +29,19 @@ class FormFieldsLabelFloatingTest < ActionView::TestCase
   end
 
   def test_label_has_for_attribute
-    assert_css parse_html(floating_label(text: "Email", for_id: INPUT_ID, id: LABEL_ID, variant: VARIANT, required: false, error: false)),
-               "label[for='#{INPUT_ID}']"
+    assert_css parse_html(floating_label(**DEFAULT_ARGS)), "label[for='#{INPUT_ID}']"
   end
 
   def test_label_has_id_attribute
-    assert_css parse_html(floating_label(text: "Email", for_id: INPUT_ID, id: LABEL_ID, variant: VARIANT, required: false, error: false)),
-               "label[id='#{LABEL_ID}']"
+    assert_css parse_html(floating_label(**DEFAULT_ARGS)), "label[id='#{LABEL_ID}']"
   end
 
   def test_renders_label_text
-    assert_includes floating_label(text: "Email", for_id: INPUT_ID, id: LABEL_ID, variant: VARIANT, required: false, error: false),
-                    "Email"
+    assert_includes floating_label(**DEFAULT_ARGS), "Email"
   end
 
   def test_omits_required_mark_by_default
-    refute_includes floating_label(text: "Email", for_id: INPUT_ID, id: LABEL_ID, variant: VARIANT, required: false, error: false),
-                    "*"
+    refute_includes floating_label(**DEFAULT_ARGS), "*"
   end
 
   def test_renders_required_mark_when_required
