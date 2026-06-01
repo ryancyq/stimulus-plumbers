@@ -34,7 +34,8 @@ module StimulusPlumbers
           end
 
           def render_text(attribute, html_opts, opts, error, template_method, **kwargs)
-            html_options = merge_html_options(opts, html_opts, kwargs, field_theme(:form_input, error: error))
+            theme_classes = html_opts[:class].present? ? {} : field_theme(:form_input, error: error)
+            html_options  = merge_html_options(opts, html_opts, kwargs, theme_classes)
             @template.public_send(template_method, @object_name, attribute, objectify_options(html_options))
           end
         end

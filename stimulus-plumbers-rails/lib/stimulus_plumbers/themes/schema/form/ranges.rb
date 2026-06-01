@@ -7,10 +7,11 @@ module StimulusPlumbers
     module Schema
       module Form
         module Ranges
-          LAYOUT                = %i[stacked inline].freeze
-          SUBMIT_VARIANT        = %i[default button].freeze
-          CHOICE_VARIANT        = %i[default button card].freeze
-          FIELD_TYPE            = StimulusPlumbers::Form::Field::TYPES
+          LAYOUT           = %i[stacked inline].freeze
+          SUBMIT_VARIANT   = %i[default button].freeze
+          CHOICE_VARIANT   = %i[default button card].freeze
+          FLOATING_VARIANT = StimulusPlumbers::Form::Field::VARIANTS - [:default]
+          FIELD_TYPE       = StimulusPlumbers::Form::Field::TYPES
           COLLECTION_FIELD_TYPE = StimulusPlumbers::Form::Field::COLLECTION_TYPES
         end
       end

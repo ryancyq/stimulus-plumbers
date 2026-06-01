@@ -3,7 +3,7 @@
 module StimulusPlumbers
   module Form
     class Base
-      OPTIONS = %i[label hint error required layout].freeze
+      OPTIONS = %i[label hint error required layout variant].freeze
 
       attr_reader(*OPTIONS)
 
@@ -14,6 +14,7 @@ module StimulusPlumbers
         error: nil,
         required: false,
         layout: :stacked,
+        variant: :default,
         **kwargs
       )
         @template = template
@@ -22,7 +23,12 @@ module StimulusPlumbers
         @error    = error
         @required = required
         @layout   = layout.to_sym
+        @variant  = variant
         @kwargs   = kwargs
+      end
+
+      def theme
+        StimulusPlumbers.config.theme.current
       end
 
       def error?(object, attribute)

@@ -26,4 +26,10 @@ class FormController < ApplicationController
   def choices
     @form = SignUp.new
   end
+
+  def floating_label
+    @form = SignUp.new.tap do |f|
+      f.errors.add(:name, "can't be blank")
+    end
+  end
 end

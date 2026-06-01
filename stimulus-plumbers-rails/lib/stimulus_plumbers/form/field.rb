@@ -10,7 +10,8 @@ module StimulusPlumbers
         text_area file password date time select search
       ].freeze
       COLLECTION_TYPES = %i[radio check_box collection_select grouped_collection_select].freeze
-      OPTIONS = (Base::OPTIONS + %i[hide_label]).freeze
+      VARIANTS         = %i[default floating_filled floating_outlined floating_standard].freeze
+      OPTIONS          = (Base::OPTIONS + %i[hide_label]).freeze
 
       attr_reader :hide_label
 
@@ -29,10 +30,21 @@ module StimulusPlumbers
 
       def render(object, attribute, input_id:, &block)
         @label ||= attribute.to_s.humanize
+        case @variant
+        when :floating_filled, :floating_outlined, :floating_standard
+          render_floating_field(object, attribute, input_id, &block)
+        else
+          render_default_field(object, attribute, input_id, &block)
+        end
+      end
+
+      private
+
+      def render_default_field(object, attribute, input_id, &block)
         error_override = error?(object, attribute)
         aria           = build_aria(object, attribute, input_id)
-        generated_opts = build_html_options(input_id, aria)
-        field_html     = @template.capture(generated_opts, @kwargs, error_override, &block)
+        field_opts = build_html_options(input_id, aria)
+        field_html = @template.capture(field_opts, @kwargs, error_override, &block)
         Fields::Group.new(@template).render(layout: @layout, error: error_override) do
           @template.safe_join(
             [
@@ -45,8 +57,6 @@ module StimulusPlumbers
         end
       end
 
-      private
-
       def field_label(input_id)
         Fields::Label.new(@template).render(
           text:     @label,
@@ -54,6 +64,36 @@ module StimulusPlumbers
           id:       self.class.label_id(input_id),
           required: @required,
           hidden:   @hide_label
+        )
+      end
+
+      def render_floating_field(object, attribute, input_id, &block)
+        error_override = error?(object, attribute)
+        aria           = build_aria(object, attribute, input_id)
+        input_classes  = theme.resolve(:form_floating_input, variant: @variant, error: error_override)[:classes]
+        field_opts     = build_html_options(input_id, aria).merge(class: input_classes, placeholder: " ")
+        Fields::Group.new(@template).render(layout: @layout, error: error_override) do
+          @template.safe_join(
+            [
+              floating_field_label(input_id, error: error_override) do
+                @template.capture(field_opts, @kwargs, error_override, &block)
+              end,
+              render_hint(input_id),
+              render_errors(object, attribute, input_id)
+            ]
+          )
+        end
+      end
+
+      def floating_field_label(input_id, error:, &block)
+        Fields::Label::Floating.new(@template).render(
+          text:     @label,
+          for_id:   input_id,
+          id:       self.class.label_id(input_id),
+          variant:  @variant,
+          required: @required,
+          error:    error,
+          &block
         )
       end
     end
