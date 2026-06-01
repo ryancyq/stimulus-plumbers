@@ -1,15 +1,36 @@
 <h1>Button components</h1>
 
 <div id="button-variants">
-  <%# ── Variants ──────────────────────────────────────────────────────── %>
+  <%# ── default variant (primary color) ──────────────────────────────────── %>
   <%= sp_button("Primary") %>
-  <%= sp_button("Secondary",   variant: :secondary) %>
-  <%= sp_button("Outline",     variant: :outline) %>
-  <%= sp_button("Destructive", variant: :destructive) %>
-  <%= sp_button("Ghost",       variant: :ghost) %>
-  <%= sp_button("Link",        variant: :link) %>
-  <%= sp_button("FAB",         variant: :fab) %>
-  <%= sp_button("Dashed",      variant: :dashed) %>
+  <%= sp_button("Secondary",  type: :secondary) %>
+  <%= sp_button("Tertiary",   type: :tertiary) %>
+  <%= sp_button("Outline",    type: :outline) %>
+  <%= sp_button("Ghost",      type: :ghost) %>
+  <%= sp_button("Link",       type: :link) %>
+  <%= sp_button("FAB",        type: :fab) %>
+  <%= sp_button("Dashed",     type: :dashed) %>
+</div>
+
+<div id="button-semantic">
+  <%# ── type:primary × all variants ─────────────────────────────────────── %>
+  <%= sp_button("Default",     type: :primary) %>
+  <%= sp_button("Success",     type: :primary, variant: :success) %>
+  <%= sp_button("Destructive", type: :primary, variant: :destructive) %>
+  <%= sp_button("Warning",     type: :primary, variant: :warning) %>
+  <%= sp_button("Info",        type: :primary, variant: :info) %>
+  <%# ── type:outline × all variants ─────────────────────────────────────── %>
+  <%= sp_button("Default",     type: :outline) %>
+  <%= sp_button("Success",     type: :outline, variant: :success) %>
+  <%= sp_button("Destructive", type: :outline, variant: :destructive) %>
+  <%= sp_button("Warning",     type: :outline, variant: :warning) %>
+  <%= sp_button("Info",        type: :outline, variant: :info) %>
+  <%# ── type:ghost × all variants ────────────────────────────────────────── %>
+  <%= sp_button("Default",     type: :ghost) %>
+  <%= sp_button("Success",     type: :ghost, variant: :success) %>
+  <%= sp_button("Destructive", type: :ghost, variant: :destructive) %>
+  <%= sp_button("Warning",     type: :ghost, variant: :warning) %>
+  <%= sp_button("Info",        type: :ghost, variant: :info) %>
 </div>
 
 <div id="button-sizes">
@@ -24,9 +45,31 @@
 <div id="button-group">
   <%# ── Group ──────────────────────────────────────────────────────────── %>
   <%= sp_button_group do %>
-    <%= sp_button("Save") %>
-    <%= sp_button("Cancel", variant: :secondary) %>
+    <%= sp_button("Profile",  type: :outline) %>
+    <%= sp_button("Settings", type: :outline) %>
+    <%= sp_button("Messages", type: :outline) %>
   <% end %>
+</div>
+
+<div id="button-icons" style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-start">
+  <%# ── Icon leading ───────────────────────────────────────────────────── %>
+  <div style="display:flex;gap:0.5rem;align-items:center">
+    <%= sp_button("New item",      icon_leading: "plus") %>
+    <%= sp_button("Notifications", icon_leading: "bell",  type: :secondary) %>
+    <%= sp_button("Delete",        icon_leading: "trash", type: :primary, variant: :destructive) %>
+  </div>
+  <%# ── Icon trailing ──────────────────────────────────────────────────── %>
+  <div style="display:flex;gap:0.5rem;align-items:center">
+    <%= sp_button("Download",   icon_trailing: "arrow-down-tray") %>
+    <%= sp_button("Next",       icon_trailing: "arrow-right") %>
+    <%= sp_button("Send",       icon_leading: "envelope", icon_trailing: "arrow-right") %>
+  </div>
+  <%# ── Icon only ──────────────────────────────────────────────────────── %>
+  <div style="display:flex;gap:0.5rem;align-items:center">
+    <%= sp_button(icon_leading: "plus",   aria: { label: "Add" }) %>
+    <%= sp_button(icon_leading: "pencil", aria: { label: "Edit" },   type: :secondary) %>
+    <%= sp_button(icon_leading: "trash",  aria: { label: "Delete" }, type: :primary, variant: :destructive) %>
+  </div>
 </div>
 
 <div id="button-link">
@@ -38,7 +81,7 @@
 <div id="button-disabled">
   <%# ── Disabled ─────────────────────────────────────────────────────────── %>
   <%= sp_button("Primary",     disabled: true) %>
-  <%= sp_button("Secondary",   variant: :secondary,   disabled: true) %>
-  <%= sp_button("Outline",     variant: :outline,     disabled: true) %>
-  <%= sp_button("Destructive", variant: :destructive, disabled: true) %>
+  <%= sp_button("Secondary",   type: :secondary,                    disabled: true) %>
+  <%= sp_button("Outline",     type: :outline,                      disabled: true) %>
+  <%= sp_button("Destructive", type: :primary, variant: :destructive, disabled: true) %>
 </div>

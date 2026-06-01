@@ -1,10 +1,10 @@
 <h1>Button components</h1>
 
 <div id="button">
-  <%# ── Variants ──────────────────────────────────────────────────────── %>
+  <%# ── Types ──────────────────────────────────────────────────────────── %>
   <%= sp_button("Primary") %>
-  <%= sp_button("Secondary", variant: :secondary) %>
-  <%= sp_button("Danger", variant: :danger) %>
+  <%= sp_button("Secondary",   type: :secondary) %>
+  <%= sp_button("Destructive", type: :primary, variant: :destructive) %>
 
   <%# ── Link ───────────────────────────────────────────────────────────── %>
   <%= sp_button("Go to home", url: "/") %>
@@ -13,10 +13,10 @@
   <%# ── Group ──────────────────────────────────────────────────────────── %>
   <%= sp_button_group do %>
     <%= sp_button("Save") %>
-    <%= sp_button("Cancel", variant: :secondary) %>
+    <%= sp_button("Cancel", type: :secondary) %>
   <% end %>
 
-  <%# ── Disabled ─────────────────────────────────────────────────────────── %>
-  <%= sp_button("Disabled", disabled: true) %>
-  <%= sp_button("Disabled secondary", variant: :secondary, disabled: true) %>
+  <%# ── Disabled ────────────────────────────────────────────────────────── %>
+  <%= sp_button("Disabled",           disabled: true) %>
+  <%= sp_button("Disabled secondary", type: :secondary, disabled: true) %>
 </div>

@@ -35,9 +35,9 @@ module StimulusPlumbers
         )
       end
 
-      def render_button(url: nil, external: false, target: nil, variant: :primary, size: :md, **kwargs, &block)
+      def render_button(url: nil, external: false, target: nil, type: :primary, variant: :default, size: :md, **kwargs, &block)
         html_options = merge_html_options(
-          { classes: theme.resolve(:button, variant: variant, size: size).fetch(:classes, "") },
+          { classes: theme.resolve(:button, type: type, variant: variant, size: size).fetch(:classes, "") },
           kwargs
         )
         if url.present?

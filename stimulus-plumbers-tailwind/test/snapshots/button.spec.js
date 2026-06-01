@@ -12,12 +12,22 @@ test.describe("button", () => {
     );
   });
 
+  test("semantic", async ({ page }) => {
+    await expect(page.locator("#button-semantic")).toHaveScreenshot(
+      "semantic.png",
+    );
+  });
+
   test("sizes", async ({ page }) => {
     await expect(page.locator("#button-sizes")).toHaveScreenshot("sizes.png");
   });
 
   test("group", async ({ page }) => {
     await expect(page.locator("#button-group")).toHaveScreenshot("group.png");
+  });
+
+  test("icons", async ({ page }) => {
+    await expect(page.locator("#button-icons")).toHaveScreenshot("icons.png");
   });
 
   test("link", async ({ page }) => {

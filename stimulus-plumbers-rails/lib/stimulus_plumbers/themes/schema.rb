@@ -24,7 +24,8 @@ module StimulusPlumbers
 
       BUTTON = {
         button:       {
-          variant: { default: :primary, validate: Ranges::BUTTON_VARIANT },
+          type:    { default: :primary, validate: Ranges::BUTTON_TYPE },
+          variant: { default: :default, validate: Ranges::BUTTON_VARIANT },
           size:    { default: :md,      validate: Ranges::SIZE }
         }.freeze,
         button_group: {

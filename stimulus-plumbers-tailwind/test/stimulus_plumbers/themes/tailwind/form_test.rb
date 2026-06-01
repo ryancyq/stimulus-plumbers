@@ -293,7 +293,7 @@ class TailwindThemeFormTest < Minitest::Test
     assert_includes result, "flex"
     assert_includes result, "flex-col"
     assert_includes result, "items-start"
-    assert_includes result, "shadow-(--sp-shadow-sm)"
+    assert_includes result, "shadow-(--sp-shadow-xs)"
     assert_includes result, "peer-checked:border-(--sp-color-primary)"
     assert_includes result, "peer-checked:bg-(--sp-color-primary)/10"
   end

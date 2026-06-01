@@ -4,40 +4,86 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Button
+        # Variant sets --btn-bg/fg/ring CSS variables; type references them.
         VARIANTS = {
-          primary:     %w[
-            bg-(--sp-color-primary)
-            text-(--sp-color-primary-fg)
-            hover:bg-(--sp-color-primary)/90
-            focus-visible:ring-(--sp-focus-ring-color)
+          default:     %w[
+            [--btn-bg:var(--sp-color-primary)]
+            [--btn-fg:var(--sp-color-primary-fg)]
+            [--btn-ring:var(--sp-color-primary)]
           ].freeze,
-          secondary:   %w[
-            bg-(--sp-color-muted)
-            text-(--sp-color-fg)
-            hover:bg-(--sp-color-border)
-          ].freeze,
-          outline:     %w[
-            border border-(--sp-color-border)
-            bg-transparent
-            text-(--sp-color-fg)
-            hover:bg-(--sp-color-muted)
+          success:     %w[
+            [--btn-bg:var(--sp-color-success)]
+            [--btn-fg:var(--sp-color-success-fg)]
+            [--btn-ring:var(--sp-color-success-ring)]
           ].freeze,
           destructive: %w[
-            bg-(--sp-color-destructive)
-            text-(--sp-color-destructive-fg)
-            hover:bg-(--sp-color-destructive)/90
+            [--btn-bg:var(--sp-color-destructive)]
+            [--btn-fg:var(--sp-color-destructive-fg)]
+            [--btn-ring:var(--sp-color-destructive)]
           ].freeze,
-          ghost:       %w[hover:bg-(--sp-color-muted) text-(--sp-color-fg)].freeze,
-          link:        %w[text-(--sp-color-primary) underline-offset-4 hover:underline].freeze,
-          fab:         %w[
+          warning:     %w[
+            [--btn-bg:var(--sp-color-warning)]
+            [--btn-fg:var(--sp-color-warning-fg)]
+            [--btn-ring:var(--sp-color-warning-ring)]
+          ].freeze,
+          info:        %w[
+            [--btn-bg:var(--sp-color-info)]
+            [--btn-fg:var(--sp-color-info-fg)]
+            [--btn-ring:var(--sp-color-info-ring)]
+          ].freeze
+        }.freeze
+
+        TYPES = {
+          # ── Filled ────────────────────────────────────────────────────────
+          primary:   %w[
+            bg-(--btn-bg) text-(--btn-fg)
+            border border-transparent
+            hover:bg-(--btn-bg)/90
+            focus-visible:ring-(--btn-ring)
+          ].freeze,
+          secondary: %w[
+            bg-(--btn-bg)/15 text-(--btn-bg)
+            border border-(--btn-bg)/25
+            hover:bg-(--btn-bg)/25
+            focus-visible:ring-(--btn-ring)
+          ].freeze,
+          tertiary:  %w[
+            bg-(--sp-color-bg) text-(--btn-bg)
+            border border-(--btn-bg)/40
+            hover:bg-(--btn-bg)/10
+            focus-visible:ring-(--btn-ring)
+          ].freeze,
+          # ── Outline ───────────────────────────────────────────────────────
+          outline:   %w[
+            bg-(--sp-color-bg) text-(--btn-bg)
+            border border-(--btn-bg)
+            hover:bg-(--btn-bg) hover:text-(--btn-fg)
+            focus-visible:ring-(--btn-ring)
+          ].freeze,
+          # ── Special ───────────────────────────────────────────────────────
+          ghost:     %w[
+            bg-transparent text-(--btn-bg)
+            border border-transparent
+            hover:bg-(--btn-bg)/10
+            focus-visible:ring-(--btn-ring)
+          ].freeze,
+          link:      %w[
+            bg-transparent text-(--btn-bg)
+            border border-transparent
+            underline underline-offset-4 hover:opacity-80
+          ].freeze,
+          fab:       %w[
             rounded-full shadow-lg
-            bg-(--sp-color-primary) text-(--sp-color-primary-fg)
-            hover:bg-(--sp-color-primary)/90 hover:shadow-xl
+            bg-(--btn-bg) text-(--btn-fg)
+            border border-transparent
+            hover:bg-(--btn-bg)/90 hover:shadow-xl
+            focus-visible:ring-(--btn-ring)
           ].freeze,
-          dashed:      %w[
-            border border-dashed border-(--sp-color-border)
-            bg-transparent text-(--sp-color-fg)
-            hover:bg-(--sp-color-muted)
+          dashed:    %w[
+            bg-transparent text-(--btn-bg)
+            border border-dashed border-(--btn-bg)/60
+            hover:bg-(--btn-bg)/10
+            focus-visible:ring-(--btn-ring)
           ].freeze
         }.freeze
 
@@ -71,20 +117,25 @@ module StimulusPlumbers
           rounded-(--sp-radius-md) transition-colors
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
           disabled:pointer-events-none disabled:opacity-50
+          [.sp-button-group_&]:rounded-none
+          [.sp-button-group_&:first-child]:rounded-s-(--sp-radius-md)
+          [.sp-button-group_&:last-child]:rounded-e-(--sp-radius-md)
         ].freeze
 
         GROUP_BASE = %w[
-          inline-flex overflow-hidden rounded-(--sp-radius-md) shadow-(--sp-shadow-sm)
+          sp-button-group
+          inline-flex shadow-(--sp-shadow-xs)
           [&>*:not(:first-child)]:-ml-px
         ].freeze
 
         private
 
-        def button_classes(variant: :primary, size: :md)
+        def button_classes(type: :primary, variant: :default, size: :md)
           {
             classes: klasses(
               *BASE,
-              *VARIANTS.fetch(variant, []),
+              *VARIANTS.fetch(variant, VARIANTS[:default]),
+              *TYPES.fetch(type, TYPES[:primary]),
               *SIZES.fetch(size, [])
             )
           }
