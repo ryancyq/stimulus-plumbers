@@ -6,7 +6,27 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("button", () => {
-  test("default", async ({ page }) => {
-    await expect(page.locator("#button")).toHaveScreenshot("default.png");
+  test("variants", async ({ page }) => {
+    await expect(page.locator("#button-variants")).toHaveScreenshot(
+      "variants.png",
+    );
+  });
+
+  test("sizes", async ({ page }) => {
+    await expect(page.locator("#button-sizes")).toHaveScreenshot("sizes.png");
+  });
+
+  test("group", async ({ page }) => {
+    await expect(page.locator("#button-group")).toHaveScreenshot("group.png");
+  });
+
+  test("link", async ({ page }) => {
+    await expect(page.locator("#button-link")).toHaveScreenshot("link.png");
+  });
+
+  test("disabled", async ({ page }) => {
+    await expect(page.locator("#button-disabled")).toHaveScreenshot(
+      "disabled.png",
+    );
   });
 });

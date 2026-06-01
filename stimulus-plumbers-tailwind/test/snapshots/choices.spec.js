@@ -9,29 +9,33 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("choices overview", () => {
   test("default", async ({ page }) => {
-    await expect(page.locator("#choices-default")).toHaveScreenshot("choices-default.png");
+    await expect(page.locator("#choices-default")).toHaveScreenshot(
+      "choices-default.png",
+    );
   });
 });
 
 // ── Single Checkbox ───────────────────────────────────────────────────────
 
 test.describe("single checkbox", () => {
-  test("default", async ({ page }) => {
+  test("unchecked", async ({ page }) => {
     await expect(page.locator("#single-checkbox-default")).toHaveScreenshot(
-      "single-checkbox-default.png"
+      "single-checkbox-unchecked.png",
     );
   });
 
   test("with hint", async ({ page }) => {
     await expect(page.locator("#single-checkbox-hint")).toHaveScreenshot(
-      "single-checkbox-hint.png"
+      "single-checkbox-hint.png",
     );
   });
 
   test("checked", async ({ page }) => {
-    await page.locator('#single-checkbox-default input[type="checkbox"]').check();
+    await page
+      .locator('#single-checkbox-default input[type="checkbox"]')
+      .check();
     await expect(page.locator("#single-checkbox-default")).toHaveScreenshot(
-      "single-checkbox-checked.png"
+      "single-checkbox-checked.png",
     );
   });
 });
@@ -39,85 +43,237 @@ test.describe("single checkbox", () => {
 // ── Collection Checkbox ───────────────────────────────────────────────────
 
 test.describe("collection checkbox", () => {
-  test("stacked — default", async ({ page }) => {
-    await expect(page.locator("#collection-checkbox-stacked")).toHaveScreenshot(
-      "collection-checkbox-stacked-default.png"
-    );
+  test.describe("default", () => {
+    test.describe("inline", () => {
+      test("unchecked", async ({ page }) => {
+        await expect(
+          page.locator("#collection-checkbox-default-inline"),
+        ).toHaveScreenshot("collection-checkbox-default-inline-unchecked.png");
+      });
+
+      test("checked", async ({ page }) => {
+        await page
+          .locator('#collection-checkbox-default-inline input[type="checkbox"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-checkbox-default-inline"),
+        ).toHaveScreenshot("collection-checkbox-default-inline-checked.png");
+      });
+    });
+
+    test.describe("stacked", () => {
+      test("unchecked", async ({ page }) => {
+        await expect(
+          page.locator("#collection-checkbox-default-stacked"),
+        ).toHaveScreenshot("collection-checkbox-default-stacked-unchecked.png");
+      });
+
+      test("checked", async ({ page }) => {
+        await page
+          .locator(
+            '#collection-checkbox-default-stacked input[type="checkbox"]',
+          )
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-checkbox-default-stacked"),
+        ).toHaveScreenshot("collection-checkbox-default-stacked-checked.png");
+      });
+    });
   });
 
-  test("stacked — checked", async ({ page }) => {
-    await page.locator('#collection-checkbox-stacked input[type="checkbox"]').first().check();
-    await expect(page.locator("#collection-checkbox-stacked")).toHaveScreenshot(
-      "collection-checkbox-stacked-checked.png"
-    );
+  test.describe("button", () => {
+    test.describe("inline", () => {
+      test("unchecked", async ({ page }) => {
+        await expect(
+          page.locator("#collection-checkbox-button-inline"),
+        ).toHaveScreenshot("collection-checkbox-button-inline-unchecked.png");
+      });
+
+      test("checked", async ({ page }) => {
+        await page
+          .locator('#collection-checkbox-button-inline input[type="checkbox"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-checkbox-button-inline"),
+        ).toHaveScreenshot("collection-checkbox-button-inline-checked.png");
+      });
+    });
+
+    test.describe("stacked", () => {
+      test("unchecked", async ({ page }) => {
+        await expect(
+          page.locator("#collection-checkbox-button-stacked"),
+        ).toHaveScreenshot("collection-checkbox-button-stacked-unchecked.png");
+      });
+
+      test("checked", async ({ page }) => {
+        await page
+          .locator('#collection-checkbox-button-stacked input[type="checkbox"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-checkbox-button-stacked"),
+        ).toHaveScreenshot("collection-checkbox-button-stacked-checked.png");
+      });
+    });
   });
 
-  test("button — default", async ({ page }) => {
-    await expect(page.locator("#collection-checkbox-button")).toHaveScreenshot(
-      "collection-checkbox-button-default.png"
-    );
-  });
+  test.describe("card", () => {
+    test.describe("inline", () => {
+      test("unchecked", async ({ page }) => {
+        await expect(
+          page.locator("#collection-checkbox-card-inline"),
+        ).toHaveScreenshot("collection-checkbox-card-inline-unchecked.png");
+      });
 
-  test("button — checked", async ({ page }) => {
-    await page.locator('#collection-checkbox-button input[type="checkbox"]').first().check();
-    await expect(page.locator("#collection-checkbox-button")).toHaveScreenshot(
-      "collection-checkbox-button-checked.png"
-    );
-  });
+      test("checked", async ({ page }) => {
+        await page
+          .locator('#collection-checkbox-card-inline input[type="checkbox"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-checkbox-card-inline"),
+        ).toHaveScreenshot("collection-checkbox-card-inline-checked.png");
+      });
+    });
 
-  test("card — default", async ({ page }) => {
-    await expect(page.locator("#collection-checkbox-card")).toHaveScreenshot(
-      "collection-checkbox-card-default.png"
-    );
-  });
+    test.describe("stacked", () => {
+      test("unchecked", async ({ page }) => {
+        await expect(
+          page.locator("#collection-checkbox-card-stacked"),
+        ).toHaveScreenshot("collection-checkbox-card-stacked-unchecked.png");
+      });
 
-  test("card — checked", async ({ page }) => {
-    await page.locator('#collection-checkbox-card input[type="checkbox"]').first().check();
-    await expect(page.locator("#collection-checkbox-card")).toHaveScreenshot(
-      "collection-checkbox-card-checked.png"
-    );
+      test("checked", async ({ page }) => {
+        await page
+          .locator('#collection-checkbox-card-stacked input[type="checkbox"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-checkbox-card-stacked"),
+        ).toHaveScreenshot("collection-checkbox-card-stacked-checked.png");
+      });
+    });
   });
 });
 
 // ── Collection Radio ──────────────────────────────────────────────────────
 
 test.describe("collection radio", () => {
-  test("stacked — default", async ({ page }) => {
-    await expect(page.locator("#collection-radio-stacked")).toHaveScreenshot(
-      "collection-radio-stacked-default.png"
-    );
+  test.describe("default", () => {
+    test.describe("inline", () => {
+      test("unselected", async ({ page }) => {
+        await expect(
+          page.locator("#collection-radio-default-inline"),
+        ).toHaveScreenshot("collection-radio-default-inline-unselected.png");
+      });
+
+      test("selected", async ({ page }) => {
+        await page
+          .locator('#collection-radio-default-inline input[type="radio"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-radio-default-inline"),
+        ).toHaveScreenshot("collection-radio-default-inline-selected.png");
+      });
+    });
+
+    test.describe("stacked", () => {
+      test("unselected", async ({ page }) => {
+        await expect(
+          page.locator("#collection-radio-default-stacked"),
+        ).toHaveScreenshot("collection-radio-default-stacked-unselected.png");
+      });
+
+      test("selected", async ({ page }) => {
+        await page
+          .locator('#collection-radio-default-stacked input[type="radio"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-radio-default-stacked"),
+        ).toHaveScreenshot("collection-radio-default-stacked-selected.png");
+      });
+    });
   });
 
-  test("stacked — selected", async ({ page }) => {
-    await page.locator('#collection-radio-stacked input[type="radio"]').first().check();
-    await expect(page.locator("#collection-radio-stacked")).toHaveScreenshot(
-      "collection-radio-stacked-selected.png"
-    );
+  test.describe("button", () => {
+    test.describe("inline", () => {
+      test("unselected", async ({ page }) => {
+        await expect(
+          page.locator("#collection-radio-button-inline"),
+        ).toHaveScreenshot("collection-radio-button-inline-unselected.png");
+      });
+
+      test("selected", async ({ page }) => {
+        await page
+          .locator('#collection-radio-button-inline input[type="radio"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-radio-button-inline"),
+        ).toHaveScreenshot("collection-radio-button-inline-selected.png");
+      });
+    });
+
+    test.describe("stacked", () => {
+      test("unselected", async ({ page }) => {
+        await expect(
+          page.locator("#collection-radio-button-stacked"),
+        ).toHaveScreenshot("collection-radio-button-stacked-unselected.png");
+      });
+
+      test("selected", async ({ page }) => {
+        await page
+          .locator('#collection-radio-button-stacked input[type="radio"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-radio-button-stacked"),
+        ).toHaveScreenshot("collection-radio-button-stacked-selected.png");
+      });
+    });
   });
 
-  test("button — default", async ({ page }) => {
-    await expect(page.locator("#collection-radio-button")).toHaveScreenshot(
-      "collection-radio-button-default.png"
-    );
-  });
+  test.describe("card", () => {
+    test.describe("inline", () => {
+      test("unselected", async ({ page }) => {
+        await expect(
+          page.locator("#collection-radio-card-inline"),
+        ).toHaveScreenshot("collection-radio-card-inline-unselected.png");
+      });
 
-  test("button — selected", async ({ page }) => {
-    await page.locator("#collection-radio-button label").first().click();
-    await expect(page.locator("#collection-radio-button")).toHaveScreenshot(
-      "collection-radio-button-selected.png"
-    );
-  });
+      test("selected", async ({ page }) => {
+        await page
+          .locator('#collection-radio-card-inline input[type="radio"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-radio-card-inline"),
+        ).toHaveScreenshot("collection-radio-card-inline-selected.png");
+      });
+    });
 
-  test("card — default", async ({ page }) => {
-    await expect(page.locator("#collection-radio-card")).toHaveScreenshot(
-      "collection-radio-card-default.png"
-    );
-  });
+    test.describe("stacked", () => {
+      test("unselected", async ({ page }) => {
+        await expect(
+          page.locator("#collection-radio-card-stacked"),
+        ).toHaveScreenshot("collection-radio-card-stacked-unselected.png");
+      });
 
-  test("card — selected", async ({ page }) => {
-    await page.locator("#collection-radio-card label").first().click();
-    await expect(page.locator("#collection-radio-card")).toHaveScreenshot(
-      "collection-radio-card-selected.png"
-    );
+      test("selected", async ({ page }) => {
+        await page
+          .locator('#collection-radio-card-stacked input[type="radio"]')
+          .first()
+          .check();
+        await expect(
+          page.locator("#collection-radio-card-stacked"),
+        ).toHaveScreenshot("collection-radio-card-stacked-selected.png");
+      });
+    });
   });
 });

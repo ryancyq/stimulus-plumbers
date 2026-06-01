@@ -6,7 +6,21 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("action list", () => {
-  test("default", async ({ page }) => {
-    await expect(page.locator("#action-list")).toHaveScreenshot("default.png");
+  test("plain", async ({ page }) => {
+    await expect(page.locator("#action-list-plain")).toHaveScreenshot(
+      "plain.png",
+    );
+  });
+
+  test("with links", async ({ page }) => {
+    await expect(page.locator("#action-list-with-links")).toHaveScreenshot(
+      "with-links.png",
+    );
+  });
+
+  test("active item", async ({ page }) => {
+    await expect(page.locator("#action-list-active")).toHaveScreenshot(
+      "active-item.png",
+    );
   });
 });

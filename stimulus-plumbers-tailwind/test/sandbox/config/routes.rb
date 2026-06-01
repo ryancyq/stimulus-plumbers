@@ -22,5 +22,6 @@ Rails.application.routes.draw do
     get :field_error
     get :fieldset
     get :choices
+    get :floating_label
   end
 end

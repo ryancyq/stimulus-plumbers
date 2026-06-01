@@ -1,22 +1,44 @@
 <h1>Button components</h1>
 
-<div id="button">
+<div id="button-variants">
   <%# ── Variants ──────────────────────────────────────────────────────── %>
   <%= sp_button("Primary") %>
-  <%= sp_button("Secondary", variant: :secondary) %>
-  <%= sp_button("Danger", variant: :danger) %>
+  <%= sp_button("Secondary",   variant: :secondary) %>
+  <%= sp_button("Outline",     variant: :outline) %>
+  <%= sp_button("Destructive", variant: :destructive) %>
+  <%= sp_button("Ghost",       variant: :ghost) %>
+  <%= sp_button("Link",        variant: :link) %>
+  <%= sp_button("FAB",         variant: :fab) %>
+  <%= sp_button("Dashed",      variant: :dashed) %>
+</div>
 
-  <%# ── Link ───────────────────────────────────────────────────────────── %>
-  <%= sp_button("Go to home", url: "/") %>
-  <%= sp_button("External", url: "https://example.com", external: true) %>
+<div id="button-sizes">
+  <%# ── Sizes ──────────────────────────────────────────────────────────── %>
+  <%= sp_button("XSmall", size: :xs) %>
+  <%= sp_button("Small",  size: :sm) %>
+  <%= sp_button("Medium", size: :md) %>
+  <%= sp_button("Large",  size: :lg) %>
+  <%= sp_button("XLarge", size: :xl) %>
+</div>
 
+<div id="button-group">
   <%# ── Group ──────────────────────────────────────────────────────────── %>
   <%= sp_button_group do %>
     <%= sp_button("Save") %>
     <%= sp_button("Cancel", variant: :secondary) %>
   <% end %>
+</div>
 
+<div id="button-link">
+  <%# ── Link ───────────────────────────────────────────────────────────── %>
+  <%= sp_button("Go to home", url: "/") %>
+  <%= sp_button("External",   url: "https://example.com", external: true) %>
+</div>
+
+<div id="button-disabled">
   <%# ── Disabled ─────────────────────────────────────────────────────────── %>
-  <%= sp_button("Disabled", disabled: true) %>
-  <%= sp_button("Disabled secondary", variant: :secondary, disabled: true) %>
+  <%= sp_button("Primary",     disabled: true) %>
+  <%= sp_button("Secondary",   variant: :secondary,   disabled: true) %>
+  <%= sp_button("Outline",     variant: :outline,     disabled: true) %>
+  <%= sp_button("Destructive", variant: :destructive, disabled: true) %>
 </div>

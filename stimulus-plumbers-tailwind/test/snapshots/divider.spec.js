@@ -6,7 +6,13 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("divider", () => {
-  test("default", async ({ page }) => {
-    await expect(page.locator("#divider")).toHaveScreenshot("default.png");
+  test("plain", async ({ page }) => {
+    await expect(page.locator("#divider-plain")).toHaveScreenshot("plain.png");
+  });
+
+  test("labeled", async ({ page }) => {
+    await expect(page.locator("#divider-labeled")).toHaveScreenshot(
+      "labeled.png",
+    );
   });
 });

@@ -1,0 +1,61 @@
+<h1>Floating label</h1>
+
+<%# ── Filled ──────────────────────────────────────────────────────────── %>
+
+<section id="floating-filled">
+  <h2>Filled</h2>
+  <%= sp_card do %>
+    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, variant: :floating_filled %>
+    <% end %>
+  <% end %>
+</section>
+
+<section id="floating-filled-error">
+  <h2>Filled — error</h2>
+  <%= sp_card do %>
+    <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, variant: :floating_filled %>
+    <% end %>
+  <% end %>
+</section>
+
+<%# ── Outlined ─────────────────────────────────────────────────────────── %>
+
+<section id="floating-outlined">
+  <h2>Outlined</h2>
+  <%= sp_card do %>
+    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, variant: :floating_outlined %>
+    <% end %>
+  <% end %>
+</section>
+
+<section id="floating-outlined-error">
+  <h2>Outlined — error</h2>
+  <%= sp_card do %>
+    <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, variant: :floating_outlined %>
+    <% end %>
+  <% end %>
+</section>
+
+<%# ── Standard ─────────────────────────────────────────────────────────── %>
+
+<section id="floating-standard">
+  <h2>Standard</h2>
+  <%= sp_card do %>
+    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, variant: :floating_standard %>
+    <% end %>
+  <% end %>
+</section>
+
+<section id="floating-standard-error">
+  <h2>Standard — error</h2>
+  <%= sp_card do %>
+    <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, variant: :floating_standard %>
+    <% end %>
+  <% end %>
+</section>
