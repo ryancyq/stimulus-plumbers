@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     get :avatar
     get :button
     get :card
+    get :link
     get :divider
     get :popover
   end
@@ -22,5 +23,6 @@ Rails.application.routes.draw do
     get :field_error
     get :fieldset
     get :choices
+    get :floating_label
   end
 end

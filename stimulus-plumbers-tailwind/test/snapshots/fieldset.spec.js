@@ -6,23 +6,37 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("fieldset", () => {
-  test("radio buttons", async ({ page }) => {
-    await expect(page.locator("#fieldset-radio")).toHaveScreenshot("fieldset-radio.png");
+  test.describe("radio buttons", () => {
+    test("default", async ({ page }) => {
+      await expect(page.locator("#fieldset-radio")).toHaveScreenshot(
+        "fieldset-radio.png",
+      );
+    });
+
+    test("error", async ({ page }) => {
+      await expect(page.locator("#fieldset-radio-error")).toHaveScreenshot(
+        "fieldset-radio-error.png",
+      );
+    });
+
+    test("required", async ({ page }) => {
+      await expect(page.locator("#fieldset-radio-required")).toHaveScreenshot(
+        "fieldset-radio-required.png",
+      );
+    });
   });
 
-  test("radio buttons with error", async ({ page }) => {
-    await expect(page.locator("#fieldset-radio-error")).toHaveScreenshot("fieldset-radio-error.png");
-  });
+  test.describe("check boxes", () => {
+    test("default", async ({ page }) => {
+      await expect(page.locator("#fieldset-checkbox")).toHaveScreenshot(
+        "fieldset-checkbox.png",
+      );
+    });
 
-  test("radio buttons required", async ({ page }) => {
-    await expect(page.locator("#fieldset-radio-required")).toHaveScreenshot("fieldset-radio-required.png");
-  });
-
-  test("check boxes", async ({ page }) => {
-    await expect(page.locator("#fieldset-checkbox")).toHaveScreenshot("fieldset-checkbox.png");
-  });
-
-  test("check boxes with error", async ({ page }) => {
-    await expect(page.locator("#fieldset-checkbox-error")).toHaveScreenshot("fieldset-checkbox-error.png");
+    test("error", async ({ page }) => {
+      await expect(page.locator("#fieldset-checkbox-error")).toHaveScreenshot(
+        "fieldset-checkbox-error.png",
+      );
+    });
   });
 });

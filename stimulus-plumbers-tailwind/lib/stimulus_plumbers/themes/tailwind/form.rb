@@ -122,13 +122,13 @@ module StimulusPlumbers
           button:  %w[
             flex items-start gap-(--sp-space-3) flex-1 p-(--sp-space-4) cursor-pointer select-none
             text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
-            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-sm)
+            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
             hover:bg-(--sp-color-muted)
           ].freeze,
           card:    %w[
             flex justify-between items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
             text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
-            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-sm)
+            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
             hover:bg-(--sp-color-muted)
           ].freeze
         }.freeze
@@ -149,7 +149,7 @@ module StimulusPlumbers
           card:    %w[
             flex flex-col items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
             text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
-            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-sm)
+            bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
             hover:bg-(--sp-color-muted)
             peer-checked:border-(--sp-color-primary) peer-checked:bg-(--sp-color-primary)/10
             peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--sp-color-primary)/15

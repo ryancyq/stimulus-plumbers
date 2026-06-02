@@ -8,7 +8,9 @@ module StimulusPlumbers
         SIZE           = %i[xs sm md lg xl].freeze
         FLEX_ALIGN     = %i[left center right top bottom].freeze
         FLEX_DIRECTION = %i[row col].freeze
-        BUTTON_VARIANT = %i[primary secondary outline destructive ghost link fab dashed].freeze
+        BUTTON_TYPE    = %i[primary secondary tertiary outline ghost fab dashed].freeze
+        BUTTON_VARIANT = %i[default success destructive warning info].freeze
+        LINK_VARIANT   = %i[default success destructive warning info].freeze
       end
     end
   end

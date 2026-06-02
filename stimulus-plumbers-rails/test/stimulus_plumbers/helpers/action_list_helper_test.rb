@@ -36,8 +36,8 @@ class ActionListHelperTest < ActionView::TestCase
     assert_css parse_html(sp_action_list_item("Home", url: "/")), "a[href='/']"
   end
 
-  def test_item_renders_external_link
-    assert_css parse_html(sp_action_list_item("External", url: "https://example.com", external: true)),
+  def test_item_renders_link_with_target_blank
+    assert_css parse_html(sp_action_list_item("External", url: "https://example.com", target: "_blank")),
                "a[target='_blank']"
   end
 

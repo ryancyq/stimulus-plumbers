@@ -23,12 +23,12 @@ class ButtonHelperTest < ActionView::TestCase
     assert_includes doc.text, "Go"
   end
 
-  def test_renders_external_link_with_target_blank
-    assert_css parse_html(sp_button("External", url: "https://example.com", external: true)),
+  def test_renders_link_with_target_blank
+    assert_css parse_html(sp_button("External", url: "https://example.com", target: "_blank")),
                "a[target='_blank']"
   end
 
-  def test_does_not_add_target_blank_for_internal_links
+  def test_omits_target_when_not_given
     assert_no_css parse_html(sp_button("Internal", url: "/path")), "a[target]"
   end
 
@@ -50,7 +50,7 @@ class ButtonHelperTest < ActionView::TestCase
   def test_button_group_renders_div
     doc = parse_html(sp_button_group { sp_button("One") })
 
-    assert_css doc, "div"
+    assert_css doc, "div[role='group']"
     assert_includes doc.text, "One"
   end
 end

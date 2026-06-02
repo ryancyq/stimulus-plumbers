@@ -6,7 +6,23 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("avatar", () => {
-  test("default", async ({ page }) => {
-    await expect(page.locator("#avatar")).toHaveScreenshot("default.png");
+  test("initials", async ({ page }) => {
+    await expect(page.locator("#avatar-initials")).toHaveScreenshot(
+      "initials.png",
+    );
+  });
+
+  test("image", async ({ page }) => {
+    await expect(page.locator("#avatar-image")).toHaveScreenshot("image.png");
+  });
+
+  test("fallback", async ({ page }) => {
+    await expect(page.locator("#avatar-fallback")).toHaveScreenshot(
+      "fallback.png",
+    );
+  });
+
+  test("sizes", async ({ page }) => {
+    await expect(page.locator("#avatar-sizes")).toHaveScreenshot("sizes.png");
   });
 });

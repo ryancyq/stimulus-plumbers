@@ -22,4 +22,8 @@ class FormController < ApplicationController
       f.errors.add(:interests, "must select at least one")
     end
   end
+
+  def floating_label
+    @error_form = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") }
+  end
 end

@@ -17,7 +17,9 @@ test.describe("search", () => {
 
   test("clear — visible", async ({ page }) => {
     await page.getByRole("combobox", { name: "Search" }).fill("hello");
-    await expect(page.getByRole("button", { name: "Clear search" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Clear search" }),
+    ).toBeVisible();
     await expect(page.locator("#search")).toHaveScreenshot("clear-visible.png");
   });
 });

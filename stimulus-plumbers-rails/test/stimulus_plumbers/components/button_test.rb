@@ -30,12 +30,12 @@ class ButtonComponentTest < ActionView::TestCase
     assert_css parse_html(renderer.render("Go", url: "/dashboard")), "a[href='/dashboard']"
   end
 
-  def test_button_renders_external_link_with_target_blank
-    assert_css parse_html(renderer.render("External", url: "https://example.com", external: true)),
+  def test_button_renders_link_with_target_blank
+    assert_css parse_html(renderer.render("External", url: "https://example.com", target: "_blank")),
                "a[target='_blank']"
   end
 
-  def test_button_does_not_add_target_blank_for_internal_links
+  def test_button_omits_target_when_not_given
     assert_no_css parse_html(renderer.render("Internal", url: "/path")), "a[target]"
   end
 

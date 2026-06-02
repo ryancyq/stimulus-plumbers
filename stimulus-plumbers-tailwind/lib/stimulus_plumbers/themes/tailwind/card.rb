@@ -6,7 +6,7 @@ module StimulusPlumbers
       module Card
         BASE = %w[
           rounded-(--sp-radius-md) border border-(--sp-color-border)
-          bg-(--sp-color-bg) shadow-(--sp-shadow-sm)
+          bg-(--sp-color-bg) shadow-(--sp-shadow-xs)
         ].freeze
 
         SECTION_BASE = %w[

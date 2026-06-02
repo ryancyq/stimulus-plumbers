@@ -9,6 +9,7 @@ require_relative "helpers/calendar_turbo_helper"
 require_relative "helpers/card_helper"
 require_relative "helpers/combobox_helper"
 require_relative "helpers/divider_helper"
+require_relative "helpers/link_helper"
 require_relative "helpers/popover_helper"
 
 module StimulusPlumbers
@@ -22,6 +23,7 @@ module StimulusPlumbers
     include CardHelper
     include ComboboxHelper
     include DividerHelper
+    include LinkHelper
     include PopoverHelper
   end
 end

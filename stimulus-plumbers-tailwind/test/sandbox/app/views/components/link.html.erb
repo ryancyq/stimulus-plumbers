@@ -1,0 +1,30 @@
+<h1>Link components</h1>
+
+<div id="link-variants">
+  <%# ── Variants ──────────────────────────────────────────────────────────── %>
+  <%= sp_link("Default",     url: "#") %>
+  <%= sp_link("Success",     url: "#", variant: :success) %>
+  <%= sp_link("Destructive", url: "#", variant: :destructive) %>
+  <%= sp_link("Warning",     url: "#", variant: :warning) %>
+  <%= sp_link("Info",        url: "#", variant: :info) %>
+</div>
+
+<div id="link-inline">
+  <%# ── Inline text usage ──────────────────────────────────────────────────── %>
+  <p>500,000 people & companies have made over a million apps.
+    <%= sp_link("Read their stories", url: "#") %>
+  </p>
+</div>
+
+<div id="link-icons">
+  <%# ── Icon trailing ───────────────────────────────────────────────────────── %>
+  <%= sp_link("Read their stories", url: "#", icon_trailing: "arrow-right") %>
+  <%# ── Icon leading ────────────────────────────────────────────────────────── %>
+  <%= sp_link("Back", url: "#", icon_leading: "arrow-left") %>
+</div>
+
+<div id="link-navigation">
+  <%# ── Navigation ─────────────────────────────────────────────────────────── %>
+  <%= sp_link("Go to home", url: "/") %>
+  <%= sp_link("External",   url: "https://example.com", target: "_blank") %>
+</div>
