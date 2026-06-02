@@ -14,9 +14,9 @@ module StimulusPlumbers
               option_key_method,
               option_value_method,
               options = {},
-              html_options = {}
+              html_opts = {}
             )
-              merged = merge_html_options(html_options, field_theme(:form_select))
+              html_options = merge_html_options(theme.resolve(:form_select), html_opts)
               super(
                 attribute,
                 collection,
@@ -25,7 +25,7 @@ module StimulusPlumbers
                 option_key_method,
                 option_value_method,
                 options,
-                merged
+                html_options
               )
             end
 

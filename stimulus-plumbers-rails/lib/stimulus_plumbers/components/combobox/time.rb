@@ -30,7 +30,7 @@ module StimulusPlumbers
 
           attrs = merge_html_options(
             panel_attrs,
-            { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
+            theme.resolve(:combobox_time),
             dialog_attrs(label, labelledby)
           )
           template.content_tag(:div, **attrs) { template.safe_join(drums) }
@@ -39,7 +39,7 @@ module StimulusPlumbers
         def build_time(panel_attrs: {}, label: "Picker", labelledby: nil, **_kwargs, &block)
           attrs = merge_html_options(
             panel_attrs,
-            { classes: theme.resolve(:combobox_time).fetch(:classes, "") },
+            theme.resolve(:combobox_time),
             dialog_attrs(label, labelledby)
           )
           template.capture(attrs, &block)

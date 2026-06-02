@@ -12,7 +12,7 @@ module StimulusPlumbers
 
         def render_section(title, **kwargs, &block)
           html_options = merge_html_options(
-            { classes: theme.resolve(:action_list_section).fetch(:classes, "") },
+            theme.resolve(:action_list_section),
             kwargs
           )
           template.content_tag(:li, **html_options) do

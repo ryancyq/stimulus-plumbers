@@ -5,13 +5,12 @@ module StimulusPlumbers
     class Divider < Plumber::Base
       def render(label = nil, **kwargs)
         divider_opts = merge_html_options(
-          { classes: theme.resolve(:divider).fetch(:classes, "") },
+          theme.resolve(:divider),
           kwargs
         )
         template.content_tag(:div, role: "separator", **divider_opts) do
           if label.blank?
-            hr_classes = theme.resolve(:divider_separator).fetch(:classes, "")
-            template.tag.hr(class: hr_classes)
+            template.tag.hr(**divider_separator_opts)
           else
             render_with(label)
           end
@@ -21,15 +20,17 @@ module StimulusPlumbers
       private
 
       def render_with(label)
-        hr_classes = theme.resolve(:divider_separator).fetch(:classes, "")
-        label_classes = theme.resolve(:divider_label).fetch(:classes, "")
         template.safe_join(
           [
-            template.tag.hr(class: hr_classes),
-            template.content_tag(:span, label, class: label_classes),
-            template.tag.hr(class: hr_classes)
+            template.tag.hr(**divider_separator_opts),
+            template.content_tag(:span, label, **merge_html_options(theme.resolve(:divider_label))),
+            template.tag.hr(**divider_separator_opts)
           ]
         )
+      end
+
+      def divider_separator_opts
+        merge_html_options(theme.resolve(:divider_separator))
       end
     end
   end

@@ -10,12 +10,12 @@ module StimulusPlumbers
           include Combobox
 
           def select(attribute, choices = nil, options = {}, html_options = {})
-            merged = merge_html_options(html_options, field_theme(:form_select))
+            merged = merge_html_options(theme.resolve(:form_select), html_options)
             super(attribute, choices, options, merged)
           end
 
           def collection_select(attribute, collection, value_method, text_method, options = {}, html_options = {})
-            merged = merge_html_options(html_options, field_theme(:form_select))
+            merged = merge_html_options(theme.resolve(:form_select), html_options)
             super(attribute, collection, value_method, text_method, options, merged)
           end
 

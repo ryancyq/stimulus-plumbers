@@ -57,11 +57,9 @@ module StimulusPlumbers
 
       def combobox_attrs(input, close_on_select, kwargs)
         merge_html_options(
-          {
-            classes: theme.resolve(:combobox).fetch(:classes, ""),
-            data:    stimulus_data(input[:value], close_on_select)
-          },
-          kwargs
+          theme.resolve(:combobox),
+          kwargs,
+          { data: stimulus_data(input[:value], close_on_select) }
         )
       end
 

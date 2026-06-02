@@ -18,7 +18,7 @@ module StimulusPlumbers
               **combobox_opts,
               haspopup: variant.haspopup,
               popup_id: variant.popup_id_for(panel_id),
-              **merge_html_options(kwargs, field_theme(:form_combobox, error: error)),
+              **merge_html_options(theme.resolve(:form_combobox, error: error), kwargs),
               &block
             )
           end

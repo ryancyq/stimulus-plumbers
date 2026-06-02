@@ -56,7 +56,7 @@ module StimulusPlumbers
 
       def render_link(url:, target: nil, variant: :default, size: :md, **kwargs, &block)
         html_options = merge_html_options(
-          { classes: theme.resolve(:button_link, variant: variant, size: size).fetch(:classes, "") },
+          theme.resolve(:button_link, variant: variant, size: size),
           kwargs
         )
         template.content_tag(:a, href: url, target: target, **html_options) do

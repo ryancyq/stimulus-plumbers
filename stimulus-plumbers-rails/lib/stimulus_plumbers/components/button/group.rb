@@ -12,7 +12,7 @@ module StimulusPlumbers
 
         def render_group(alignment: :left, direction: :row, **kwargs, &block)
           html_options = merge_html_options(
-            { classes: theme.resolve(:button_group, alignment: alignment, direction: direction).fetch(:classes, "") },
+            theme.resolve(:button_group, alignment: alignment, direction: direction),
             kwargs,
             { role: "group" }
           )

@@ -13,12 +13,9 @@ module StimulusPlumbers
         color_css = resolve_color(color, name, initials) unless url || block_given?
 
         html_options = merge_html_options(
-          {
-            classes: [theme.resolve(:avatar, size: size).fetch(:classes, ""), color_css],
-            aria:    { label: name },
-            role:    "img"
-          },
-          kwargs
+          theme.resolve(:avatar, size: size),
+          kwargs,
+          { class: color_css, aria: { label: name }, role: "img" }
         )
 
         template.content_tag(:span, **html_options) do

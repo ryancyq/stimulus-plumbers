@@ -40,7 +40,7 @@ module StimulusPlumbers
         def listbox_attrs(panel_attrs: {}, label: nil, labelledby: nil)
           merge_html_options(
             panel_attrs,
-            { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
+            theme.resolve(:combobox_listbox),
             {
               role: "listbox",
               aria: labelled_aria(label, labelledby: labelledby),

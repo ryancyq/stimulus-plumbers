@@ -12,7 +12,7 @@ module StimulusPlumbers
 
         def render_item(content, active: false, **kwargs, &block)
           html_options = merge_html_options(
-            { classes: theme.resolve(:action_list_item, active: active).fetch(:classes, "") },
+            theme.resolve(:action_list_item, active: active),
             kwargs
           )
 

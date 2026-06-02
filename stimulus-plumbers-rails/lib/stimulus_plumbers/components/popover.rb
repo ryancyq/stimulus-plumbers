@@ -21,11 +21,9 @@ module StimulusPlumbers
         data = { controller: STIMULUS_CONTROLLER }
         data[:popover_close_on_select_value] = close_on_select unless close_on_select.nil?
         html_options = merge_html_options(
-          {
-            classes: theme.resolve(:popover_wrapper).fetch(:classes, ""),
-            data:    data
-          },
-          kwargs
+          theme.resolve(:popover_wrapper),
+          kwargs,
+          { data: data }
         )
         template.content_tag(:div, **html_options) do
           build(panel_id: panel_id, &block)
