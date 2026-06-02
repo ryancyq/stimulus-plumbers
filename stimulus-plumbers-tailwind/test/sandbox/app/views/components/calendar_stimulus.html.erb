@@ -1,5 +1,12 @@
 <h1>Calendar (Stimulus / CSR)</h1>
 
-<div id="calendar">
-  <%= sp_calendar_month(date: @date) %>
+<div data-controller="combobox-date"
+     data-combobox-date-calendar-month-outlet="[data-controller~='calendar-month']">
+  <button data-combobox-date-target="viewSwitch"
+          data-action="click->combobox-date#drillUp"
+          type="button"></button>
+
+  <div id="calendar">
+    <%= sp_calendar_month(date: @date) %>
+  </div>
 </div>

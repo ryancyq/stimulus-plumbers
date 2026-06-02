@@ -11,7 +11,7 @@ import ComboboxDateController          from '../../src/controllers/combobox_date
 import InputFormatterController        from '../../src/controllers/input_formatter_controller'
 import InputClearableController        from '../../src/controllers/input_clearable_controller'
 import CalendarMonthController         from '../../src/controllers/calendar_month_controller'
-import CalendarMonthObserverController from '../../src/controllers/calendar_month_observer_controller'
+import CalendarObserverController from '../../src/controllers/calendar_observer_controller'
 
 const CONTROLLERS_DIR = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -41,7 +41,7 @@ describe('Ruby action binding contract', () => {
       ['input-formatter',         InputFormatterController,        ['format', 'toggle']],
       ['input-clearable',         InputClearableController,        ['clear']],
       ['calendar-month',          CalendarMonthController,         ['onSelect']],
-      ['calendar-month-observer', CalendarMonthObserverController, ['onSelect', 'select']],
+      ['calendar-observer', CalendarObserverController, ['onSelect', 'select']],
     ]
 
     for (const [identifier, Controller, methods] of METHOD_CONTRACT) {
@@ -62,7 +62,7 @@ describe('Ruby action binding contract', () => {
 
   describe('custom event names', () => {
     const DISPATCH_CONTRACT = [
-      ['calendar-month-observer', 'calendar_month_observer_controller.js', 'selected'],
+      ['calendar-observer', 'calendar_observer_controller.js', 'selected'],
       ['combobox-date',           'combobox_date_controller.js',           'selected'],
       ['combobox-dropdown',       'combobox_dropdown_controller.js',       'selected'],
       ['combobox-time',           'combobox_time_controller.js',           'selected'],

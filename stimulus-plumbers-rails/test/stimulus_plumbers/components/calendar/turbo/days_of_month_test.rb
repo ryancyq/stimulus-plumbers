@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class CalendarMonthTurboDaysOfMonthTest < ActionView::TestCase
+class CalendarTurboDaysOfMonthTest < ActionView::TestCase
   def renderer(date: Date.new(2026, 4, 1), **opts)
-    StimulusPlumbers::Components::Calendar::Month::Turbo::DaysOfMonth.new(self, date: date, **opts)
+    StimulusPlumbers::Components::Calendar::Turbo::DaysOfMonth.new(self, date: date, **opts)
   end
 
   def test_renders_rowgroup

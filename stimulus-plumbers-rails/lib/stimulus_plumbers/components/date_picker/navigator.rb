@@ -10,12 +10,12 @@ module StimulusPlumbers
 
         private
 
-        def render_navigator(icon: nil, **kwargs)
+        def render_navigator(icon: nil, **kwargs, &block)
           html_options = merge_html_options(
-            { classes: theme.resolve(:calendar_navigation_navigator).fetch(:classes, "") },
+            theme.resolve(:calendar_navigation_navigator),
             kwargs
           )
-          Components::Button.new(template).render(variant: :ghost, size: nil, icon_leading: icon, **html_options)
+          Components::Button.new(template).render(variant: :ghost, size: nil, icon_leading: icon, **html_options, &block)
         end
       end
     end

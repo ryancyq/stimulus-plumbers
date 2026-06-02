@@ -34,9 +34,11 @@ require_relative "stimulus_plumbers/components/popover/builder"
 
 # -- Calendar --
 require_relative "stimulus_plumbers/components/calendar"
-require_relative "stimulus_plumbers/components/calendar/month/turbo"
-require_relative "stimulus_plumbers/components/calendar/month/turbo/days_of_week"
-require_relative "stimulus_plumbers/components/calendar/month/turbo/days_of_month"
+require_relative "stimulus_plumbers/components/calendar/turbo"
+require_relative "stimulus_plumbers/components/calendar/turbo/days_of_week"
+require_relative "stimulus_plumbers/components/calendar/turbo/days_of_month"
+require_relative "stimulus_plumbers/components/calendar/turbo/months_of_year"
+require_relative "stimulus_plumbers/components/calendar/turbo/years_of_decade"
 
 # -- Date picker --
 require_relative "stimulus_plumbers/components/date_picker/navigator"

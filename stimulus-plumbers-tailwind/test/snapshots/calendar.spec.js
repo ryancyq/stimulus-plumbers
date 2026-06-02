@@ -47,6 +47,41 @@ test.describe("stimulus calendar", () => {
   });
 });
 
+// ── Stimulus calendar drill-down ─────────────────────────────────────────────
+
+test.describe("stimulus calendar drill-down", () => {
+  test("month picker view", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_stimulus?year=${FIXED_YEAR}&month=${FIXED_MONTH}`,
+    );
+    await page.waitForSelector("[role='grid']");
+    await page.waitForSelector("[data-combobox-date-target='monthGrid']", { state: "attached" });
+    await page.locator("[data-combobox-date-target='viewSwitch']").dispatchEvent("click");
+    await page.waitForFunction(
+      () => !document.querySelector("[data-combobox-date-target='monthGrid']")?.hidden,
+    );
+    await expect(page.locator("[data-combobox-date-target='monthGrid']")).toHaveScreenshot(
+      "stimulus-month-picker.png",
+    );
+  });
+
+  test("year picker view", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_stimulus?year=${FIXED_YEAR}&month=${FIXED_MONTH}`,
+    );
+    await page.waitForSelector("[role='grid']");
+    await page.waitForSelector("[data-combobox-date-target='yearGrid']", { state: "attached" });
+    await page.locator("[data-combobox-date-target='viewSwitch']").dispatchEvent("click");
+    await page.locator("[data-combobox-date-target='viewSwitch']").dispatchEvent("click");
+    await page.waitForFunction(
+      () => !document.querySelector("[data-combobox-date-target='yearGrid']")?.hidden,
+    );
+    await expect(page.locator("[data-combobox-date-target='yearGrid']")).toHaveScreenshot(
+      "stimulus-year-picker.png",
+    );
+  });
+});
+
 // ── Turbo calendar ───────────────────────────────────────────────────────────
 
 test.describe("turbo calendar", () => {
@@ -85,6 +120,32 @@ test.describe("turbo calendar", () => {
     await page.waitForSelector("[role='grid']");
     await expect(page.locator("#calendar")).toHaveScreenshot(
       "turbo-selectable-other-months.png",
+    );
+  });
+});
+
+// ── SSR month/year picker (standalone) ───────────────────────────────────────
+
+test.describe("SSR month picker", () => {
+  test("month grid", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_month_picker?year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+    );
+    await page.waitForSelector("[role='grid']");
+    await expect(page.locator("#month-picker")).toHaveScreenshot(
+      "ssr-month-picker.png",
+    );
+  });
+});
+
+test.describe("SSR year picker", () => {
+  test("year grid", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_year_picker?year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+    );
+    await page.waitForSelector("[role='grid']");
+    await expect(page.locator("#year-picker")).toHaveScreenshot(
+      "ssr-year-picker.png",
     );
   });
 });

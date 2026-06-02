@@ -4,7 +4,7 @@ import { tryParseDate } from '../plumbers/plumber/date';
 
 export default class extends Controller {
   static targets = ['daysOfWeek', 'daysOfMonth'];
-  static classes = ['dayOfWeek', 'dayOfMonth', 'week'];
+  static classes = ['dayOfWeek', 'dayOfMonth', 'row'];
   static values = {
     locales: { type: Array, default: ['default'] },
     weekdayFormat: { type: String, default: 'short' },
@@ -81,7 +81,7 @@ export default class extends Controller {
     }
     const row = document.createElement('div');
     row.setAttribute('role', 'row');
-    if (this.hasWeekClass) row.classList.add(...this.weekClasses);
+    if (this.hasRowClass) row.classList.add(...this.rowClasses);
     row.replaceChildren(...daysOfWeek);
     this.daysOfWeekTarget.replaceChildren(row);
   }
@@ -116,7 +116,7 @@ export default class extends Controller {
     for (let i = 0; i < daysOfMonth.length; i += 7) {
       const row = document.createElement('div');
       row.setAttribute('role', 'row');
-      if (this.hasWeekClass) row.classList.add(...this.weekClasses);
+      if (this.hasRowClass) row.classList.add(...this.rowClasses);
       for (const day of daysOfMonth.slice(i, i + 7)) {
         day.setAttribute('role', 'gridcell');
         row.appendChild(day);

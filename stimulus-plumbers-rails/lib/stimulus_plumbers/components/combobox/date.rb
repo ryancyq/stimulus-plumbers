@@ -7,7 +7,7 @@ module StimulusPlumbers
         STIMULUS_CONTROLLER = "combobox-date"
         CALENDAR_OUTLET     = "#{STIMULUS_CONTROLLER}-calendar-month-outlet".freeze
         STIMULUS_ACTION     = [
-          "calendar-month-observer:selected->#{STIMULUS_CONTROLLER}#onSelect",
+          "calendar-observer:selected->#{STIMULUS_CONTROLLER}#onSelect",
           "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
         ].join(" ").freeze
@@ -36,7 +36,7 @@ module StimulusPlumbers
             :div,
             **merge_html_options(panel_attrs, dialog_attrs(value, calendar_id, label, labelledby))
           ) do
-            template.safe_join([navigation, calendar_month(id: calendar_id)])
+            template.safe_join([navigation, calendar(id: calendar_id)])
           end
         end
 
@@ -63,8 +63,8 @@ module StimulusPlumbers
           )
         end
 
-        def calendar_month(**kwargs)
-          Calendar.new(template).month(**kwargs)
+        def calendar(**kwargs)
+          Calendar.new(template).render(**kwargs)
         end
       end
     end
