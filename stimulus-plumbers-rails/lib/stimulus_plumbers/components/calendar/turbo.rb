@@ -11,6 +11,7 @@ module StimulusPlumbers
           date: Date.today,
           today: Date.today,
           show_other_months: false,
+          weekday_format: :short,
           **kwargs
         )
           selectable = kwargs.delete(:selectable) { false }
@@ -23,7 +24,7 @@ module StimulusPlumbers
           template.content_tag(:div, role: "grid", **html_options) do
             template.safe_join(
               [
-                Turbo::DaysOfWeek.new(template).render,
+                Turbo::DaysOfWeek.new(template, format: weekday_format).render,
                 Turbo::DaysOfMonth.new(
                   template,
                   date:              date,

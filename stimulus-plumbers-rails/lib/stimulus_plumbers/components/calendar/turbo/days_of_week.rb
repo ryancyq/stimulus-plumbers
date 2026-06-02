@@ -5,6 +5,15 @@ module StimulusPlumbers
     class Calendar
       class Turbo
         class DaysOfWeek < Plumber::Base
+          WEEKDAY_FORMATS = %i[narrow short long].freeze
+
+          attr_reader :format
+
+          def initialize(template, format: :short)
+            super(template)
+            @format = format
+          end
+
           def render(...)
             render_days_of_week(...)
           end
@@ -26,8 +35,20 @@ module StimulusPlumbers
             )
             template.content_tag(:div, **week_options) do
               template.safe_join(
-                day_names.map { |abbr, full| template.content_tag(:span, abbr, role: "columnheader", abbr: full) }
+                day_names.map do |abbr, full|
+                  options = { role: "columnheader" }
+                  options[:aria] = { label: abbr } if format == :narrow
+                  template.content_tag(:span, display_name(abbr, full), **options)
+                end
               )
+            end
+          end
+
+          def display_name(abbr, full)
+            case format
+            when :narrow then abbr[0, 1]
+            when :long   then full
+            else              abbr
             end
           end
 
