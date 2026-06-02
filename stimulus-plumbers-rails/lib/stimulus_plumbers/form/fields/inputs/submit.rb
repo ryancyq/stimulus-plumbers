@@ -15,7 +15,7 @@ module StimulusPlumbers
             @template.tag.input(
               type:  "submit",
               value: value,
-              **merge_html_options(field_theme(:form_submit, variant: variant), options)
+              **merge_html_options(theme.resolve(:form_submit, variant: variant), options)
             )
           end
         end

@@ -51,7 +51,7 @@ module StimulusPlumbers
             :ul,
             Options.new(template).render(options, value: value),
             **merge_html_options(
-              { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
+              theme.resolve(:combobox_listbox),
               {
                 id:   self.class.listbox_id_for(panel_id),
                 role: "listbox",
@@ -66,7 +66,7 @@ module StimulusPlumbers
           template.content_tag(
             :div,
             **merge_html_options(
-              { classes: theme.resolve(:combobox_typeahead_loading).fetch(:classes, "") },
+              theme.resolve(:combobox_typeahead_loading),
               { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
             )
           ) do
@@ -78,7 +78,7 @@ module StimulusPlumbers
           template.content_tag(
             :div,
             **merge_html_options(
-              { classes: theme.resolve(:combobox_typeahead_empty).fetch(:classes, "") },
+              theme.resolve(:combobox_typeahead_empty),
               { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "empty" } }
             )
           ) { I18n.t("stimulus_plumbers.combobox.typeahead.empty", default: "No results") }

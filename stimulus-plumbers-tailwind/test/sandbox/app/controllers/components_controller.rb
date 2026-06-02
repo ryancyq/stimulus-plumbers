@@ -9,6 +9,16 @@ class ComponentsController < ApplicationController
     @date = year && month ? Date.new(year, month, 1) : nil
   end
 
+  def calendar_month_picker
+    @date  = month_date_from_params(:year, :month) || Date.today
+    @today = full_date_from_params(:today_year, :today_month, :today_day) || Date.today
+  end
+
+  def calendar_year_picker
+    @date  = month_date_from_params(:year, :month) || Date.today
+    @today = full_date_from_params(:today_year, :today_month, :today_day) || Date.today
+  end
+
   def calendar_turbo
     @selectable        = params[:selectable] == "true"
     @show_other_months = params[:show_other_months] == "true"

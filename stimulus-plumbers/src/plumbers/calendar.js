@@ -77,6 +77,7 @@ export class Calendar extends Plumber {
     this.daysOfWeek = this.buildDaysOfWeek();
     this.daysOfMonth = this.buildDaysOfMonth();
     this.monthsOfYear = this.buildMonthsOfYear();
+    this.yearsOfDecade = this.buildYearsOfDecade();
   }
 
   /**
@@ -160,6 +161,24 @@ export class Calendar extends Plumber {
       });
     }
     return monthsOfYear;
+  }
+
+  /**
+   * Builds array of year objects spanning the decade containing the current year.
+   * Returns 12 entries: decade start - 1 (buffer) through decade start + 10 (buffer).
+   * @returns {Array<Object>} Array of year objects
+   */
+  buildYearsOfDecade() {
+    const decadeStart = Math.floor(this.year / 10) * 10;
+    const yearsOfDecade = [];
+    for (let i = decadeStart - 1; i <= decadeStart + 10; i++) {
+      yearsOfDecade.push({
+        value: i,
+        current: i === this.year,
+        outside: i < decadeStart || i > decadeStart + 9,
+      });
+    }
+    return yearsOfDecade;
   }
 
   /**
@@ -379,6 +398,9 @@ export class Calendar extends Plumber {
           },
           get monthsOfYear() {
             return context.monthsOfYear;
+          },
+          get yearsOfDecade() {
+            return context.yearsOfDecade;
           },
           navigate: async (to) => await context.navigate(to),
           step: async (type, value) => await context.step(type, value),

@@ -279,6 +279,49 @@ describe('Calendar', () => {
     })
   })
 
+  describe('buildYearsOfDecade', () => {
+    it('builds 12 year entries', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01' })
+
+      expect(calendar.yearsOfDecade).toHaveLength(12)
+    })
+
+    it('starts one year before the decade start', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01' })
+
+      expect(calendar.yearsOfDecade[0].value).toBe(2019)
+    })
+
+    it('ends one year after the decade end', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01' })
+
+      expect(calendar.yearsOfDecade[11].value).toBe(2030)
+    })
+
+    it('marks the current year as current', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01' })
+      const current = calendar.yearsOfDecade.filter((y) => y.current)
+
+      expect(current).toHaveLength(1)
+      expect(current[0].value).toBe(2026)
+    })
+
+    it('marks buffer years as outside', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01' })
+      const outside = calendar.yearsOfDecade.filter((y) => y.outside)
+
+      expect(outside).toHaveLength(2)
+      expect(outside.map((y) => y.value)).toEqual([2019, 2030])
+    })
+
+    it('does not mark decade years as outside', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01' })
+      const inside = calendar.yearsOfDecade.filter((y) => !y.outside)
+
+      expect(inside).toHaveLength(10)
+    })
+  })
+
   describe('current', () => {
     it('returns current date', () => {
       const calendar = new Calendar(mockController, {
@@ -658,6 +701,7 @@ describe('Calendar', () => {
       expect(cal.daysOfWeek).toHaveLength(7)
       expect(cal.daysOfMonth.length).toBeGreaterThan(0)
       expect(cal.monthsOfYear).toHaveLength(12)
+      expect(cal.yearsOfDecade).toHaveLength(12)
     })
   })
 

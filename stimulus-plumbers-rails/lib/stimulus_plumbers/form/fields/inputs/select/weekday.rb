@@ -7,9 +7,9 @@ module StimulusPlumbers
         module Select
           module Weekday
             if ActionView.version >= Gem::Version.new("7.1")
-              def weekday_select(attribute, options = {}, html_options = {})
-                merged = merge_html_options(html_options, field_theme(:form_select))
-                super(attribute, options, merged)
+              def weekday_select(attribute, options = {}, html_opts = {})
+                html_options = merge_html_options(theme.resolve(:form_select), html_opts)
+                super(attribute, options, html_options)
               end
             end
           end

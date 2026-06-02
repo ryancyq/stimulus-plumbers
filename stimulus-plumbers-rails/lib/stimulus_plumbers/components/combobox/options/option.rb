@@ -16,7 +16,7 @@ module StimulusPlumbers
             aria[:disabled] = "true" if disabled
 
             attrs = merge_html_options(
-              { classes: theme.resolve(:combobox_option, selected: selected, disabled: disabled).fetch(:classes, "") },
+              theme.resolve(:combobox_option, selected: selected, disabled: disabled),
               { role: "option", aria: aria, data: { value: value } }
             )
 

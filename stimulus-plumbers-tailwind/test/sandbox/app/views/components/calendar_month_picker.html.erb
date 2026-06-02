@@ -1,0 +1,5 @@
+<h1>Calendar Month Picker (SSR)</h1>
+
+<div id="month-picker">
+  <%= StimulusPlumbers::Components::Calendar::Turbo::MonthsOfYear.new(self, date: @date, today: @today).render %>
+</div>

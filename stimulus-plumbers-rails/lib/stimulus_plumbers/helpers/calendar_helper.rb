@@ -3,7 +3,7 @@
 module StimulusPlumbers
   module Helpers
     module CalendarHelper
-      def sp_calendar_month(**kwargs, &block)
+      def sp_calendar_month(**kwargs)
         date = kwargs.delete(:date)
         html_options = if date
                          kwargs.deep_merge(
@@ -16,7 +16,7 @@ module StimulusPlumbers
                        else
                          kwargs
                        end
-        calendar_renderer.month(**html_options, &block)
+        calendar_renderer.render(**html_options)
       end
 
       private

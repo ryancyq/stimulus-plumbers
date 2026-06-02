@@ -15,7 +15,7 @@ module StimulusPlumbers
             template.content_tag(
               :ul,
               **merge_html_options(
-                { classes: theme.resolve(:combobox_listbox).fetch(:classes, "") },
+                theme.resolve(:combobox_listbox),
                 {
                   role:     "listbox",
                   tabindex: "0",

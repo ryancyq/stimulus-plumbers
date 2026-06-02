@@ -5,7 +5,7 @@ module StimulusPlumbers
     class Icon < Plumber::Base
       def render(name:, **kwargs)
         html_options = merge_html_options(
-          { classes: theme.resolve(:icon).fetch(:classes, "") },
+          theme.resolve(:icon),
           kwargs
         )
 

@@ -11,7 +11,7 @@ module StimulusPlumbers
 
         def render(panel_id:, haspopup: "dialog", **kwargs, &block)
           html_options = merge_html_options(
-            { classes: theme.resolve(:popover_trigger).fetch(:classes, "") },
+            theme.resolve(:popover_trigger),
             {
               type: "button",
               aria: { haspopup: haspopup, expanded: "false", controls: panel_id },

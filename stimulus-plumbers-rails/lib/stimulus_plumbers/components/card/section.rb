@@ -12,7 +12,7 @@ module StimulusPlumbers
 
         def render_section(title: nil, title_tag: :h3, **kwargs, &block)
           html_options = merge_html_options(
-            { classes: theme.resolve(:card_section).fetch(:classes, "") },
+            theme.resolve(:card_section),
             kwargs
           )
 

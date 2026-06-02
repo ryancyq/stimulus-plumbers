@@ -21,6 +21,8 @@ module StimulusPlumbers
           aria-selected:bg-(--sp-color-primary)
           aria-selected:text-(--sp-color-primary-fg)
           aria-selected:hover:bg-(--sp-color-primary)/90
+          aria-[hidden=true]:pointer-events-none
+          aria-[hidden=true]:hover:bg-transparent
         ].freeze
 
         NAV = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
@@ -34,6 +36,22 @@ module StimulusPlumbers
           disabled:pointer-events-none disabled:opacity-50
         ].freeze
 
+        PICKER_CELL = %w[
+          rounded-(--sp-radius-md) flex items-center justify-center
+          text-(length:--sp-text-sm) h-10 flex-1
+          hover:bg-(--sp-color-muted) cursor-pointer
+          aria-selected:bg-(--sp-color-primary)
+          aria-selected:text-(--sp-color-primary-fg)
+          aria-selected:hover:bg-(--sp-color-primary)/90
+          aria-disabled:pointer-events-none aria-disabled:text-(--sp-color-disabled-fg)
+        ].freeze
+
+        PICKER_GRID = %w[grid grid-cols-4].freeze
+
+        MONTH_CELL = [*PICKER_CELL, "aria-[current=month]:font-bold"].freeze
+
+        YEAR_CELL = [*PICKER_CELL, "aria-[current=year]:font-bold"].freeze
+
         private
 
         def calendar_classes
@@ -44,21 +62,37 @@ module StimulusPlumbers
           { classes: klasses(*DAYS_OF_WEEK) }
         end
 
-        def calendar_week_classes
-          { classes: "contents" }
-        end
-
         def calendar_days_of_month_classes
           { classes: klasses(*DAYS_OF_MONTH) }
         end
 
-        def calendar_day_classes(outside: false)
+        def calendar_months_of_year_classes
+          {}
+        end
+
+        def calendar_years_of_decade_classes
+          {}
+        end
+
+        def calendar_row_classes
+          { classes: "contents" }
+        end
+
+        def calendar_day_classes(outside: false, **)
           {
             classes: klasses(
               *DAY,
-              *(outside ? %w[text-(--sp-color-muted-fg) opacity-50] : [])
+              *(outside ? %w[text-(--sp-color-disabled-fg)] : [])
             )
           }
+        end
+
+        def calendar_month_cell_classes(**)
+          { classes: klasses(*MONTH_CELL) }
+        end
+
+        def calendar_year_cell_classes(**)
+          { classes: klasses(*YEAR_CELL) }
         end
 
         def calendar_navigation_classes
@@ -67,6 +101,10 @@ module StimulusPlumbers
 
         def calendar_navigation_navigator_classes
           { classes: klasses(*NAV_BTN) }
+        end
+
+        def calendar_picker_grid_classes
+          { classes: klasses(*PICKER_GRID) }
         end
       end
     end

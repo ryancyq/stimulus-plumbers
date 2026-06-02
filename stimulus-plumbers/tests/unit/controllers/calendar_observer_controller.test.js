@@ -1,19 +1,19 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-import CalendarMonthObserverController from '../../../src/controllers/calendar_month_observer_controller';
+import CalendarObserverController from '../../../src/controllers/calendar_observer_controller';
 
-describe('CalendarMonthObserverController', () => {
+describe('CalendarObserverController', () => {
   let application;
 
   beforeEach(async () => {
     application = Application.start();
-    application.register('calendar-month-observer', CalendarMonthObserverController);
+    application.register('calendar-observer', CalendarObserverController);
 
     document.body.innerHTML = `
       <div
         role="grid"
-        data-controller="calendar-month-observer"
-        data-action="click->calendar-month-observer#onSelect"
+        data-controller="calendar-observer"
+        data-action="click->calendar-observer#onSelect"
       >
         <button role="gridcell" tabindex="0">
           <time datetime="2026-04-01">1</time>
@@ -38,15 +38,15 @@ describe('CalendarMonthObserverController', () => {
     document.body.innerHTML = '';
   });
 
-  const grid = () => document.querySelector('[data-controller="calendar-month-observer"]');
+  const grid = () => document.querySelector('[data-controller="calendar-observer"]');
   const button = () => document.querySelector('button[role="gridcell"]:not([disabled])');
 
   describe('onSelect', () => {
     it('dispatches selecting and selected events when clicking a gridcell button', () => {
       const selectingSpy = vi.fn();
       const selectedSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
-      grid().addEventListener('calendar-month-observer:selected', selectedSpy);
+      grid().addEventListener('calendar-observer:selecting', selectingSpy);
+      grid().addEventListener('calendar-observer:selected', selectedSpy);
 
       button().click();
 
@@ -56,7 +56,7 @@ describe('CalendarMonthObserverController', () => {
 
     it('selected event detail includes epoch and iso', () => {
       let detail;
-      grid().addEventListener('calendar-month-observer:selected', e => { detail = e.detail; });
+      grid().addEventListener('calendar-observer:selected', e => { detail = e.detail; });
 
       button().click();
 
@@ -66,7 +66,7 @@ describe('CalendarMonthObserverController', () => {
 
     it('epoch and iso correspond to the clicked cell datetime', () => {
       let detail;
-      grid().addEventListener('calendar-month-observer:selected', e => { detail = e.detail; });
+      grid().addEventListener('calendar-observer:selected', e => { detail = e.detail; });
 
       button().click();
 
@@ -79,8 +79,8 @@ describe('CalendarMonthObserverController', () => {
     it('dispatches when clicking the time child element inside a button', () => {
       const selectingSpy = vi.fn();
       const selectedSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
-      grid().addEventListener('calendar-month-observer:selected', selectedSpy);
+      grid().addEventListener('calendar-observer:selecting', selectingSpy);
+      grid().addEventListener('calendar-observer:selected', selectedSpy);
 
       button().querySelector('time').click();
 
@@ -90,7 +90,7 @@ describe('CalendarMonthObserverController', () => {
 
     it('does not dispatch when clicking a disabled button', () => {
       const selectingSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
+      grid().addEventListener('calendar-observer:selecting', selectingSpy);
 
       document.querySelector('button[disabled]').click();
 
@@ -99,7 +99,7 @@ describe('CalendarMonthObserverController', () => {
 
     it('does not dispatch when clicking an aria-disabled cell', () => {
       const selectingSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
+      grid().addEventListener('calendar-observer:selecting', selectingSpy);
 
       document.querySelector('[aria-disabled="true"]').click();
 
@@ -109,8 +109,8 @@ describe('CalendarMonthObserverController', () => {
     it('dispatches selecting but not selected when cell has no time element', () => {
       const selectingSpy = vi.fn();
       const selectedSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
-      grid().addEventListener('calendar-month-observer:selected', selectedSpy);
+      grid().addEventListener('calendar-observer:selecting', selectingSpy);
+      grid().addEventListener('calendar-observer:selected', selectedSpy);
 
       const btn = document.createElement('button');
       btn.setAttribute('role', 'gridcell');
@@ -123,7 +123,7 @@ describe('CalendarMonthObserverController', () => {
 
     it('does not block dispatch when aria-disabled is false', () => {
       const selectingSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selecting', selectingSpy);
+      grid().addEventListener('calendar-observer:selecting', selectingSpy);
 
       const btn = document.createElement('button');
       btn.setAttribute('role', 'gridcell');
@@ -139,7 +139,7 @@ describe('CalendarMonthObserverController', () => {
 
     it('does not dispatch selected when time datetime is unparseable', () => {
       const selectedSpy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selected', selectedSpy);
+      grid().addEventListener('calendar-observer:selected', selectedSpy);
 
       const btn = document.createElement('button');
       btn.setAttribute('role', 'gridcell');
@@ -156,9 +156,9 @@ describe('CalendarMonthObserverController', () => {
   describe('select', () => {
     it('dispatches selected with epoch and iso for a valid iso string', () => {
       const spy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selected', spy);
+      grid().addEventListener('calendar-observer:selected', spy);
 
-      const ctrl = application.getControllerForElementAndIdentifier(grid(), 'calendar-month-observer');
+      const ctrl = application.getControllerForElementAndIdentifier(grid(), 'calendar-observer');
       ctrl.select('2026-04-10T00:00:00.000Z');
 
       expect(spy).toHaveBeenCalledTimes(1);
@@ -168,9 +168,9 @@ describe('CalendarMonthObserverController', () => {
 
     it('does not dispatch when iso is unparseable', () => {
       const spy = vi.fn();
-      grid().addEventListener('calendar-month-observer:selected', spy);
+      grid().addEventListener('calendar-observer:selected', spy);
 
-      const ctrl = application.getControllerForElementAndIdentifier(grid(), 'calendar-month-observer');
+      const ctrl = application.getControllerForElementAndIdentifier(grid(), 'calendar-observer');
       ctrl.select('not-a-date');
 
       expect(spy).not.toHaveBeenCalled();

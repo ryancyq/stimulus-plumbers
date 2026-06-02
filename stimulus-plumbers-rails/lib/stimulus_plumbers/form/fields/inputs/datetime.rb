@@ -10,12 +10,12 @@ module StimulusPlumbers
           include Combobox
 
           def date_field(attribute, options = {})
-            html_options = merge_html_options(options, field_theme(:form_input))
+            html_options = merge_html_options(theme.resolve(:form_input), options)
             super(attribute, html_options)
           end
 
           def time_field(attribute, options = {})
-            html_options = merge_html_options(options, field_theme(:form_input))
+            html_options = merge_html_options(theme.resolve(:form_input), options)
             super(attribute, html_options)
           end
 

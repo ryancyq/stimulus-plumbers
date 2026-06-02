@@ -12,14 +12,14 @@ module StimulusPlumbers
           def search_field(attribute, options = {})
             clearable    = options.delete(:clearable) { false }
             data         = clearable ? { data: { input_clearable_target: "input" } } : {}
-            html_options = merge_html_options(options, field_theme(:form_input), data)
+            html_options = merge_html_options(theme.resolve(:form_input), options, data)
             input_html   = super(attribute, html_options)
             return input_html unless clearable
 
             render_input_group(
               trailing: method(:clear_button),
               error:    false,
-              **merge_html_options(field_theme(:form_input_clearable), { data: { controller: "input-clearable" } })
+              **merge_html_options(theme.resolve(:form_input_clearable), { data: { controller: "input-clearable" } })
             ) { input_html }
           end
 
@@ -36,7 +36,7 @@ module StimulusPlumbers
             render_input_group(
               trailing: method(:clear_button),
               error:    !!error,
-              **merge_html_options(field_theme(:form_input_clearable), { data: { controller: "input-clearable" } })
+              **merge_html_options(theme.resolve(:form_input_clearable), { data: { controller: "input-clearable" } })
             ) { combobox_html }
           end
 
@@ -70,7 +70,7 @@ module StimulusPlumbers
             Components::Button.new(@template).render(
               icon_leading: "close",
               **merge_html_options(
-                field_theme(:form_button_clear),
+                theme.resolve(:form_button_clear),
                 {
                   aria:   { label: I18n.t("stimulus_plumbers.form.search.clear", default: "Clear search") },
                   hidden: true,

@@ -53,10 +53,10 @@ Layout/HashAlignment:
 
 Metrics/ClassLength:
   Exclude:
-    - lib/stimulus_plumbers/components/calendar/*/turbo/*.rb
+    - lib/stimulus_plumbers/components/calendar/turbo/*.rb
     - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/field.rb
-    - test/stimulus_plumbers/components/calendar/*/turbo_test.rb
+    - test/stimulus_plumbers/components/calendar/turbo_test.rb
     - test/stimulus_plumbers/form/**/*_test.rb
     - test/stimulus_plumbers/helpers/*_test.rb
     - test/stimulus_plumbers/plumber/*_test.rb
@@ -69,7 +69,7 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Max: 15
   Exclude:
-    - lib/stimulus_plumbers/components/calendar/*/turbo.rb
+    - lib/stimulus_plumbers/components/calendar/turbo.rb
     - lib/stimulus_plumbers/components/combobox/**/*.rb
     - lib/stimulus_plumbers/form/fields/inputs/datetime.rb
     - lib/stimulus_plumbers/form/fields/inputs/search.rb

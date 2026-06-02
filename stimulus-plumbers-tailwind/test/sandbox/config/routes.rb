@@ -7,6 +7,8 @@ Rails.application.routes.draw do
     get :profile
     get :calendar_stimulus
     get :calendar_turbo
+    get :calendar_month_picker
+    get :calendar_year_picker
     get :combobox
     get :search
     get :action_list

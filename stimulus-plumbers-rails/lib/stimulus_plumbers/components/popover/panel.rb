@@ -21,7 +21,7 @@ module StimulusPlumbers
         def panel_attrs(panel_id, **kwargs)
           merge_html_options(
             { id: panel_id, hidden: "" },
-            { classes: theme.resolve(:popover).fetch(:classes, "") },
+            theme.resolve(:popover),
             { data: { popover_target: "panel" } },
             kwargs
           )

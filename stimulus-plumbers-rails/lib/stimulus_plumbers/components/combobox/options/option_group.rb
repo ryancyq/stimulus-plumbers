@@ -13,7 +13,7 @@ module StimulusPlumbers
 
           def render_option_group(label:, options:, value: nil)
             attrs = merge_html_options(
-              { classes: theme.resolve(:combobox_option_group).fetch(:classes, "") },
+              theme.resolve(:combobox_option_group),
               { role: "group", aria: { label: label } }
             )
 

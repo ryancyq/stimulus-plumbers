@@ -15,7 +15,7 @@ module StimulusPlumbers
 
       def render_card(title: nil, title_tag: :h2, **kwargs, &block)
         html_options = merge_html_options(
-          { classes: theme.resolve(:card).fetch(:classes, "") },
+          theme.resolve(:card),
           kwargs
         )
 

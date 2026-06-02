@@ -42,15 +42,24 @@ module StimulusPlumbers
       CALENDAR = {
         calendar:                      {}.freeze,
         calendar_days_of_week:         {}.freeze,
-        calendar_week:                 {}.freeze,
         calendar_days_of_month:        {}.freeze,
+        calendar_months_of_year:       {}.freeze,
+        calendar_years_of_decade:      {}.freeze,
+        calendar_row:                  {}.freeze,
         calendar_day:                  {
           today:    { default: false, validate: Ranges::BOOL },
           selected: { default: false, validate: Ranges::BOOL },
           outside:  { default: false, validate: Ranges::BOOL }
         }.freeze,
+        calendar_month_cell:           {
+          outside: { default: false, validate: Ranges::BOOL }
+        }.freeze,
+        calendar_year_cell:            {
+          outside: { default: false, validate: Ranges::BOOL }
+        }.freeze,
         calendar_navigation:           {}.freeze,
-        calendar_navigation_navigator: {}.freeze
+        calendar_navigation_navigator: {}.freeze,
+        calendar_picker_grid:          {}.freeze
       }.freeze
 
       CARD = {

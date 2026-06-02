@@ -3,55 +3,95 @@
 module StimulusPlumbers
   module Components
     class Calendar < Plumber::Base
-      STIMULUS_CONTROLLER          = "calendar-month"
-      OBSERVER_STIMULUS_CONTROLLER = "calendar-month-observer"
-      STIMULUS_ACTION              = [
-        "click->#{OBSERVER_STIMULUS_CONTROLLER}#onSelect",
-        "#{OBSERVER_STIMULUS_CONTROLLER}:selected->#{STIMULUS_CONTROLLER}#onSelect"
-      ].join(" ").freeze
-      STIMULUS_DATA = {
-        controller: "#{STIMULUS_CONTROLLER} #{OBSERVER_STIMULUS_CONTROLLER}",
-        action:     STIMULUS_ACTION
-      }.freeze
+      MONTH_STIMULUS_CONTROLLER  = "calendar-month"
+      YEAR_STIMULUS_CONTROLLER   = "calendar-year"
+      DECADE_STIMULUS_CONTROLLER = "calendar-decade"
+      OBSERVER_STIMULUS_CONTROLLER = "calendar-observer"
+      STIMULUS_ACTION = "click->#{OBSERVER_STIMULUS_CONTROLLER}#onSelect".freeze
 
-      def month(**kwargs)
-        template.content_tag(:div, role: "grid", **month_html_options(kwargs)) do
-          template.safe_join([template.tag.div(**dow_options), template.tag.div(**dom_options)])
+      def render(**kwargs)
+        html_options = merge_html_options(
+          theme.resolve(:calendar),
+          kwargs,
+          {
+            data: {
+              controller: "#{MONTH_STIMULUS_CONTROLLER} #{OBSERVER_STIMULUS_CONTROLLER}",
+              action:     STIMULUS_ACTION
+            }
+          }
+        )
+        template.content_tag(:div, **html_options, role: "grid") do
+          template.safe_join([month, year, decade])
         end
+      end
+
+      def month
+        template.content_tag(:div, **month_options) do
+          template.safe_join(
+            [
+              template.tag.div(**dow_options),
+              template.tag.div(**dom_options)
+            ]
+          )
+        end
+      end
+
+      def year
+        template.tag.div(**year_options)
+      end
+
+      def decade
+        template.tag.div(**decade_options)
       end
 
       private
 
-      def month_html_options(kwargs)
+      def month_options
         merge_html_options(
           {
-            classes: theme.resolve(:calendar).fetch(:classes, ""),
-            data:    month_stimulus_data
-          },
-          kwargs
+            data: {
+              "#{MONTH_STIMULUS_CONTROLLER}-row-class":          theme.resolve(:calendar_row).fetch(:classes, ""),
+              "#{MONTH_STIMULUS_CONTROLLER}-day-of-month-class": theme.resolve(:calendar_day).fetch(:classes, "")
+            }
+          }
         )
-      end
-
-      def month_stimulus_data
-        STIMULUS_DATA.merge(
-          calendar_month_week_class:         theme.resolve(:calendar_week).fetch(:classes, ""),
-          calendar_month_day_of_month_class: theme.resolve(:calendar_day).fetch(:classes, "")
-        ).compact_blank
       end
 
       def dow_options
         merge_html_options(
-          { classes: theme.resolve(:calendar_days_of_week).fetch(:classes, "") },
-          { data: { "#{STIMULUS_CONTROLLER}-target": "daysOfWeek" } }
+          theme.resolve(:calendar_days_of_week),
+          { data: { "#{MONTH_STIMULUS_CONTROLLER}-target": "daysOfWeek" } }
         )
       end
 
       def dom_options
         merge_html_options(
-          { classes: theme.resolve(:calendar_days_of_month).fetch(:classes, "") },
+          theme.resolve(:calendar_days_of_month),
           {
             role: "rowgroup",
-            data: { "#{STIMULUS_CONTROLLER}-target": "daysOfMonth" }
+            data: { "#{MONTH_STIMULUS_CONTROLLER}-target": "daysOfMonth" }
+          }
+        )
+      end
+
+      def year_options
+        merge_html_options(
+          { hidden: true, data: { controller: YEAR_STIMULUS_CONTROLLER } },
+          {
+            data: {
+              "#{YEAR_STIMULUS_CONTROLLER}-month-class": theme.resolve(:calendar_month_cell).fetch(:classes, "")
+            }
+          }
+        )
+      end
+
+      def decade_options
+        merge_html_options(
+          { hidden: true, data: { controller: DECADE_STIMULUS_CONTROLLER } },
+          {
+            data: {
+              "#{DECADE_STIMULUS_CONTROLLER}-year-class": theme.resolve(:calendar_year_cell).fetch(:classes, "")
+            }
           }
         )
       end

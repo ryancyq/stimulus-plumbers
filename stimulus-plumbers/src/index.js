@@ -18,7 +18,7 @@ export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
 
 // Export Stimulus controllers
 export { default as CalendarMonthController } from './controllers/calendar_month_controller.js';
-export { default as CalendarMonthObserverController } from './controllers/calendar_month_observer_controller.js';
+export { default as CalendarObserverController } from './controllers/calendar_observer_controller.js';
 export { default as ClipboardController } from './controllers/clipboard_controller.js';
 export { default as ComboboxDateController } from './controllers/combobox_date_controller.js';
 export { default as ComboboxDropdownController } from './controllers/combobox_dropdown_controller.js';

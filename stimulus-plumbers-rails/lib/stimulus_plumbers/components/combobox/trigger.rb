@@ -59,7 +59,7 @@ module StimulusPlumbers
 
           template.tag.input(
             **merge_html_options(
-              { classes: theme.resolve(:combobox_trigger).fetch(:classes, "") },
+              theme.resolve(:combobox_trigger),
               {
                 id:       id,
                 type:     "text",

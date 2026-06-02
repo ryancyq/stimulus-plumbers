@@ -92,10 +92,6 @@ module StimulusPlumbers
 
       private
 
-      def field_theme(key, **variants)
-        { class: theme.resolve(key, **variants).fetch(:classes, "") }
-      end
-
       def theme
         StimulusPlumbers.config.theme.current
       end
