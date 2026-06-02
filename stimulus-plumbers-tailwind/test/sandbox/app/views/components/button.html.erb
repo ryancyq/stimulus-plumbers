@@ -7,7 +7,6 @@
   <%= sp_button("Tertiary",   type: :tertiary) %>
   <%= sp_button("Outline",    type: :outline) %>
   <%= sp_button("Ghost",      type: :ghost) %>
-  <%= sp_button("Link",       type: :link) %>
   <%= sp_button("FAB",        type: :fab) %>
   <%= sp_button("Dashed",     type: :dashed) %>
 </div>
@@ -75,7 +74,7 @@
 <div id="button-link">
   <%# ── Link ───────────────────────────────────────────────────────────── %>
   <%= sp_button("Go to home", url: "/") %>
-  <%= sp_button("External",   url: "https://example.com", external: true) %>
+  <%= sp_button("External",   url: "https://example.com", target: "_blank") %>
 </div>
 
 <div id="button-disabled">

@@ -91,15 +91,6 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_includes result, "hover:bg-(--btn-bg)/10"
   end
 
-  def test_button_link_type_uses_underline
-    result = classes_for(:button, type: :link)
-
-    assert_includes result, "text-(--btn-bg)"
-    assert_includes result, "underline"
-    assert_includes result, "underline-offset-4"
-    refute_includes result, "bg-(--btn-bg)"
-  end
-
   # :button variants
 
   def test_button_destructive_variant_sets_destructive_css_variables
@@ -271,5 +262,76 @@ class TailwindThemeButtonTest < Minitest::Test
 
   def test_button_dashed_type_includes_tinted_hover
     assert_includes classes_for(:button, type: :dashed), "hover:bg-(--btn-bg)/10"
+  end
+
+  # :button_link base
+
+  def test_button_link_returns_a_classes_string
+    result = classes_for(:button_link)
+
+    assert_instance_of String, result
+    assert_predicate result, :present?
+  end
+
+  def test_button_link_includes_base_layout_classes
+    result = classes_for(:button_link)
+
+    assert_includes result, "inline-flex"
+    assert_includes result, "items-center"
+    assert_includes result, "justify-center"
+    assert_includes result, "font-medium"
+  end
+
+  def test_button_link_uses_neutral_surface
+    result = classes_for(:button_link)
+
+    assert_includes result, "bg-(--sp-color-bg-muted)"
+    assert_includes result, "text-(--sp-color-fg)"
+    assert_includes result, "border-(--sp-color-border)"
+  end
+
+  def test_button_link_does_not_use_btn_bg_for_background
+    result = classes_for(:button_link)
+
+    refute_includes result, "bg-(--btn-bg)"
+    refute_includes result, "text-(--btn-fg)"
+  end
+
+  def test_button_link_includes_focus_ring_from_variant
+    assert_includes classes_for(:button_link), "focus-visible:ring-(--btn-ring)"
+  end
+
+  def test_button_link_does_not_include_button_group_selectors
+    result = classes_for(:button_link)
+
+    refute_includes result, "sp-button-group"
+  end
+
+  # :button_link variants (focus ring only)
+
+  def test_button_link_default_variant_sets_primary_ring
+    assert_includes classes_for(:button_link), "[--btn-ring:var(--sp-color-primary)]"
+  end
+
+  def test_button_link_destructive_variant_sets_destructive_ring
+    assert_includes classes_for(:button_link, variant: :destructive), "[--btn-ring:var(--sp-color-destructive)]"
+  end
+
+  def test_button_link_falls_back_to_default_variant_for_unknown
+    assert_includes classes_for(:button_link, variant: :unknown), "[--btn-ring:var(--sp-color-primary)]"
+  end
+
+  # :button_link sizes
+
+  def test_button_link_includes_medium_size_by_default
+    assert_includes classes_for(:button_link), "h-9"
+  end
+
+  StimulusPlumbers::Themes::Schema::Ranges::SIZE.each do |size|
+    define_method("test_button_link_resolves_#{size}_size") do
+      height = { xs: "h-7", sm: "h-8", md: "h-9", lg: "h-11", xl: "h-14" }
+
+      assert_includes classes_for(:button_link, size: size), height[size]
+    end
   end
 end

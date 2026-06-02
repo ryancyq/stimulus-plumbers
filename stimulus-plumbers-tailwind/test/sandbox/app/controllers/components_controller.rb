@@ -28,6 +28,8 @@ class ComponentsController < ApplicationController
 
   def card; end
 
+  def link; end
+
   def divider; end
 
   def popover; end

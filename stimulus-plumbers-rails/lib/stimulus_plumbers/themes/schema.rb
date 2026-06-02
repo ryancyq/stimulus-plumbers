@@ -32,7 +32,11 @@ module StimulusPlumbers
           alignment: { default: :left, validate: Ranges::FLEX_ALIGN },
           direction: { default: :row,  validate: Ranges::FLEX_DIRECTION }
         }.freeze,
-        button_icon:  {}.freeze
+        button_icon:  {}.freeze,
+        button_link:  {
+          variant: { default: :default, validate: Ranges::BUTTON_VARIANT },
+          size:    { default: :md,      validate: Ranges::SIZE }
+        }.freeze
       }.freeze
 
       CALENDAR = {
@@ -136,6 +140,13 @@ module StimulusPlumbers
 
       INPUT_GROUP = {
         input_group: { error: { default: false, validate: Ranges::BOOL } }.freeze
+      }.freeze
+
+      LINK = {
+        link:      {
+          variant: { default: :default, validate: Ranges::LINK_VARIANT }
+        }.freeze,
+        link_icon: {}.freeze
       }.freeze
 
       LAYOUT = {

@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Components
     class Button < Plumber::Base
       def render(content = nil, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
-        render_button(**kwargs) do
+        render_button_or_link(**kwargs) do
           build_layout(icon_leading: icon_leading, icon_trailing: icon_trailing) do
             build_button(content, &block)
           end
@@ -35,20 +35,32 @@ module StimulusPlumbers
         )
       end
 
-      def render_button(url: nil, external: false, target: nil, type: :primary, variant: :default, size: :md, **kwargs, &block)
+      def render_button_or_link(url: nil, **kwargs, &block)
+        if url.present?
+          render_link(url: url, **kwargs, &block)
+        else
+          render_button(**kwargs, &block)
+        end
+      end
+
+      def render_button(type: :primary, variant: :default, size: :md, **kwargs, &block)
         html_options = merge_html_options(
-          { classes: theme.resolve(:button, type: type, variant: variant, size: size).fetch(:classes, "") },
+          theme.resolve(:button, type: type, variant: variant, size: size),
           kwargs
         )
-        if url.present?
-          target = "_blank" if external
-          template.content_tag(:a, href: url, target: target, **html_options) do
-            template.capture(&block)
-          end
-        else
-          template.content_tag(:button, type: "button", **html_options) do
-            template.capture(&block)
-          end
+
+        template.content_tag(:button, type: "button", **html_options) do
+          template.capture(&block)
+        end
+      end
+
+      def render_link(url:, target: nil, variant: :default, size: :md, **kwargs, &block)
+        html_options = merge_html_options(
+          { classes: theme.resolve(:button_link, variant: variant, size: size).fetch(:classes, "") },
+          kwargs
+        )
+        template.content_tag(:a, href: url, target: target, **html_options) do
+          template.capture(&block)
         end
       end
 

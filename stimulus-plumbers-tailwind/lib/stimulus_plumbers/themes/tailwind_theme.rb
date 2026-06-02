@@ -9,6 +9,7 @@ require_relative "tailwind/combobox"
 require_relative "tailwind/form"
 require_relative "tailwind/icon"
 require_relative "tailwind/layout"
+require_relative "tailwind/link"
 
 module StimulusPlumbers
   module Themes
@@ -22,6 +23,7 @@ module StimulusPlumbers
       include Tailwind::Form
       include Tailwind::Icon
       include Tailwind::Layout
+      include Tailwind::Link
 
       private
 

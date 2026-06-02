@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     get :avatar
     get :button
     get :card
+    get :link
     get :divider
     get :popover
   end

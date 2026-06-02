@@ -94,8 +94,8 @@ class ActionListComponentTest < ActionView::TestCase
     assert_css parse_html(renderer.item("Home", url: "/")), "a[href='/']"
   end
 
-  def test_item_renders_external_link_with_target_blank
-    assert_css parse_html(renderer.item("External", url: "https://example.com", external: true)),
+  def test_item_renders_link_with_target_blank
+    assert_css parse_html(renderer.item("External", url: "https://example.com", target: "_blank")),
                "a[target='_blank']"
   end
 
