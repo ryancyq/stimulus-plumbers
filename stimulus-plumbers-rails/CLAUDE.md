@@ -182,7 +182,7 @@ Four builder methods provide the complete accessible field pattern:
 
 | Method | Renderer constant | `as:` values |
 | --- | --- | --- |
-| `f.field(attr, as:)` | `FIELD_RENDERER` | `:text`, `:email`, `:number`, `:url`, `:tel`, `:color`, `:month`, `:week`, `:range`, `:datetime_local`, `:text_area`, `:file`, `:password`, `:date`, `:time`, `:select`, `:search`, `:check_box` |
+| `f.field(attr, as:)` | `FIELD_RENDERER` | `:text`, `:email`, `:number`, `:url`, `:tel`, `:color`, `:month`, `:week`, `:range`, `:datetime_local`, `:text_area`, `:file`, `:password`, `:date`, `:time`, `:select`, `:search` |
 | `f.collection_field(attr, as:, collection:, value_method:, text_method:)` | `COLLECTION_FIELD_RENDERER` | `:collection_select`, `:grouped_collection_select` |
 | `f.choice(attr, as:, collection:, value_method:, text_method:)` | `CHOICE_RENDERER` | `:radio`, `:check_box` |
 

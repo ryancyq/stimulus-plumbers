@@ -44,11 +44,11 @@ All native HTML options (`placeholder:`, `autocomplete:`, `class:`, `data:`, etc
 
 Four builder methods render a complete accessible field: a visible label, the input widget, an optional hint, and inline error messages wired automatically to the model.
 
-| Method                                                                            | Purpose                                                       |
-| --------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `f.field(attr, as:, **opts)`                                                      | Text-like inputs, check box, combobox date/time/select/search |
-| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | Combobox from a collection                                    |
-| `f.choice(attr, as:, collection:, value_method:, text_method:, **opts)`           | Group of radio buttons or check boxes in a `<fieldset>`       |
+| Method                                                                            | Purpose                                                |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `f.field(attr, as:, **opts)`                                                      | Text-like inputs, combobox date/time/select/search     |
+| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | Combobox from a collection                             |
+| `f.choice(attr, as:, collection:, value_method:, text_method:, **opts)`           | Single check box or group of radio buttons/check boxes |
 
 ## Field options
 
@@ -106,10 +106,10 @@ HTML structure (theme classes omitted):
 <%= f.field :volume,     as: :range,    min: 0, max: 100 %>
 <%= f.field :bio,        as: :text_area, hint: "Tell us about yourself." %>
 <%= f.field :avatar,     as: :file %>
-<%= f.field :password,   as: :password, reveal: true %>
+<%= f.field :password,   as: :password, revealable: true %>
 ```
 
-Valid `as:` values for `f.field`: `:text`, `:email`, `:number`, `:url`, `:tel`, `:color`, `:month`, `:week`, `:range`, `:datetime_local`, `:text_area`, `:file`, `:password`, `:check_box`.
+Valid `as:` values for `f.field`: `:text`, `:email`, `:number`, `:url`, `:tel`, `:color`, `:month`, `:week`, `:range`, `:datetime_local`, `:text_area`, `:file`, `:password`, `:date`, `:time`, `:select`, `:search`.
 
 ### Date field
 
@@ -201,17 +201,17 @@ To render a plain `<input type="search">` without field chrome use the native he
 
 ```erb
 <%= f.field :password, as: :password %>
-<%= f.field :password, as: :password, reveal: true %>
+<%= f.field :password, as: :password, revealable: true %>
 ```
 
-| Option   | Type    | Default | Description                                                                          |
-| -------- | ------- | ------- | ------------------------------------------------------------------------------------ |
-| `reveal` | Boolean | `false` | Wraps the input in an input-group with a show/hide button wired to `input-formatter` |
+| Option       | Type    | Default | Description                                                                          |
+| ------------ | ------- | ------- | ------------------------------------------------------------------------------------ |
+| `revealable` | Boolean | `false` | Wraps the input in an input-group with a show/hide button wired to `input-formatter` |
 
-`reveal:` also works with the native helper (no field chrome):
+`revealable:` also works with the native helper (no field chrome):
 
 ```erb
-<%= f.password_field :password, reveal: true %>
+<%= f.password_field :password, revealable: true %>
 ```
 
 ## f.collection_field
@@ -247,26 +247,21 @@ To render native `<select>`/`<optgroup>` elements without field chrome use the n
 <%= f.weekday_select            :weekday %>
 ```
 
-## f.field (check_box)
-
-Renders a single check box with an explicit `<label for="…">` associated via `for`/`id`.
-
-```erb
-<%= f.field :agree,      as: :check_box %>
-<%= f.field :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
-<%= f.field :terms,      as: :check_box, required: true, hint: "You must accept the terms." %>
-```
-
 ## f.choice
 
-Renders a group of inputs inside a `<fieldset>`/`<legend>` for accessibility. The `label:` option overrides the `<legend>` text. Each item uses an explicit `<label for="…">` associated via `for`/`id`.
+Renders a group of inputs inside a `<fieldset>`/`<legend>` for accessibility, or a single check box with an explicit `<label for="…">`. The `label:` option overrides the `<legend>`/label text. Each item uses an explicit `<label for="…">` associated via `for`/`id`.
 
 ```erb
+<%# Single check box %>
+<%= f.choice :agree,      as: :check_box %>
+<%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+<%= f.choice :terms,      as: :check_box, required: true, hint: "You must accept the terms." %>
+
 <%# Radio buttons %>
 <%= f.choice :plan, as: :radio,
       collection: Plan.all, value_method: :id, text_method: :name %>
 
-<%# Check boxes %>
+<%# Check boxes (collection) %>
 <%= f.choice :roles, as: :check_box,
       collection: Role.all, value_method: :id, text_method: :name %>
 

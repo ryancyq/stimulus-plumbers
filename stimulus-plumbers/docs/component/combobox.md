@@ -21,8 +21,7 @@ Owns the trigger input, popover visibility, and hidden value. Always co-located 
 | Target    | Element              | Description                                     |
 | --------- | -------------------- | ----------------------------------------------- |
 | `trigger` | `input[type=text]`   | The combobox input (display + focus management) |
-| `popover` | `div`                | Shown/hidden on open/close                      |
-| `value`   | `input[type=hidden]` | Holds the submitted value                       |
+| `input`   | `input[type=hidden]` | Holds the submitted value                       |
 
 **Values**
 
@@ -39,13 +38,10 @@ Owns the trigger input, popover visibility, and hidden value. Always co-located 
 
 **Methods**
 
-| Method            | Wired via             | Description                                                                      |
-| ----------------- | --------------------- | -------------------------------------------------------------------------------- |
-| `open()`          | `data-action`         | Action — opens popover, moves focus to first focusable element inside            |
-| `close()`         | `data-action`         | Action — closes popover, returns focus to trigger                                |
-| `toggle()`        | `data-action`         | Action — toggles open/close                                                      |
-| `onSelect(event)` | `combobox-*:selected` | Event adapter — writes `event.detail.value` to `valueValue`, then closes         |
-| `onInput(event)`  | `input` on trigger    | Event adapter — extracts query, relays to `comboboxDropdownOutlet.filter(query)` |
+| Method            | Wired via             | Description                                                                        |
+| ----------------- | --------------------- | ---------------------------------------------------------------------------------- |
+| `onSelect(event)` | `combobox-*:selected` | Event adapter — writes `event.detail.value` to `valueValue`; popover handles close |
+| `onInput(event)`  | `input` on trigger    | Event adapter — extracts query, relays to `comboboxDropdownOutlet.filter(query)`   |
 
 **Dispatches**
 
@@ -70,7 +66,7 @@ Formats and displays values. Always co-located with `input-combobox`.
 
 | Value      | Type    | Default   | Description                                               |
 | ---------- | ------- | --------- | --------------------------------------------------------- |
-| `type`     | String  | `"plain"` | `plain` \| `password` \| `creditCard` \| `date` \| `time` |
+| `format`   | String  | `"plain"` | `plain` \| `password` \| `creditCard` \| `date` \| `time` |
 | `options`  | Object  | `{}`      | Formatter options (e.g. `{ format: "h12" }` for time)     |
 | `revealed` | Boolean | `false`   | Whether a masked value is currently revealed              |
 
@@ -93,15 +89,28 @@ Formats and displays values. Always co-located with `input-combobox`.
 
 ## combobox-date
 
-Navigates a calendar grid. Requires a `calendar-month` outlet.
+Navigates a calendar grid with day, month, and year views. Requires a `calendar-month` outlet.
 
-**Targets:** `previous`, `next`, `day`, `month`, `year`
+**Targets**
+
+| Target      | Description                                                            |
+| ----------- | ---------------------------------------------------------------------- |
+| `previous`  | Button that steps backward (one month / one year / one decade by view) |
+| `next`      | Button that steps forward (one month / one year / one decade by view)  |
+| `viewTitle` | Text node showing the current view label (e.g. "June 2025" / "2025")   |
+| `day`       | Rendered day label element (display only)                              |
+| `month`     | Rendered month label element (display only)                            |
+| `year`      | Rendered year label element (display only)                             |
+| `dayView`   | Container shown only in day view; hidden in month/year views           |
+| `monthView` | Container shown only in month view; each cell calls `selectMonth()`    |
+| `yearView`  | Container shown only in year view; each cell calls `selectYear()`      |
 
 **Values**
 
 | Value         | Type   | Default       | Description                                                 |
 | ------------- | ------ | ------------- | ----------------------------------------------------------- |
 | `date`        | String | `""`          | ISO 8601 initial date; navigates calendar on outlet connect |
+| `view`        | String | `"day"`       | Current view — `"day"` \| `"month"` \| `"year"`             |
 | `locales`     | Array  | `["default"]` | `Intl.DateTimeFormat` locales                               |
 | `dayFormat`   | String | `"numeric"`   | Day label format                                            |
 | `monthFormat` | String | `"long"`      | Month label format                                          |
@@ -109,11 +118,14 @@ Navigates a calendar grid. Requires a `calendar-month` outlet.
 
 **Methods**
 
-| Method            | Wired via                          | Description                                                                |
-| ----------------- | ---------------------------------- | -------------------------------------------------------------------------- |
-| `previous()`      | click on `previous` target         | Action — steps calendar back one month                                     |
-| `next()`          | click on `next` target             | Action — steps calendar forward one month                                  |
-| `onSelect(event)` | `calendar-month-observer:selected` | Event adapter — updates `dateValue`, redraws labels, dispatches `selected` |
+| Method            | Wired via                          | Description                                                                        |
+| ----------------- | ---------------------------------- | ---------------------------------------------------------------------------------- |
+| `previous()`      | click on `previous` target         | Steps back: one month (day view), one year (month view), one decade (year view)    |
+| `next()`          | click on `next` target             | Steps forward: one month (day view), one year (month view), one decade (year view) |
+| `drillUp()`       | click on `viewTitle` target        | Zooms out: day → month → year view                                                 |
+| `selectMonth()`   | click on `monthView` cell          | Selects a month and switches to day view                                           |
+| `selectYear()`    | click on `yearView` cell           | Selects a year and switches to month view                                          |
+| `onSelect(event)` | `calendar-month-observer:selected` | Event adapter — updates `dateValue`, redraws labels, dispatches `selected`         |
 
 **Dispatches**
 
@@ -202,15 +214,16 @@ Listbox with client-side fuzzy filter or server-side fetch. Used by both dropdow
 user picks value
   └─ combobox-*:selected { value }
        └─ input-combobox#onSelect       ← event adapter
-            ├─ valueValue = value        → valueValueChanged
-            │    ├─ valueTarget.value = value
-            │    └─ dispatch input-combobox:changed { value }
-            │         └─ input-formatter#onChange  ← event adapter
-            │              └─ format(value)       ← programmatic API
-            │                   ├─ formats value
-            │                   ├─ writes to inputTarget
-            │                   └─ dispatch input-formatter:formatted { value }
-            └─ close()
+            └─ valueValue = value        → valueValueChanged
+                 ├─ inputTarget.value = value
+                 └─ dispatch input-combobox:changed { value }
+                      └─ input-formatter#onChange  ← event adapter
+                           └─ format(value)       ← programmatic API
+                                ├─ formats value
+                                ├─ writes to inputTarget
+                                └─ dispatch input-formatter:formatted { value }
+
+(popover closes separately via popover#closeOnSelect)
 ```
 
 ---

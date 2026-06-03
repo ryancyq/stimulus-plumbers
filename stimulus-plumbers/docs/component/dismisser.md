@@ -4,9 +4,9 @@ Closes/hides an element when the user clicks outside it. Backed by the `Dismisse
 
 ## Targets
 
-| Target    | Description                                                                                   |
-| --------- | --------------------------------------------------------------------------------------------- |
-| `trigger` | Optional — click outside this element triggers dismissal. Defaults to the controller element. |
+| Target    | Description                                                                                                                                                   |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trigger` | Optional — passed as `{ target }` context to the `dismissed()` callback. Does not change the click-outside boundary (which is always the controller element). |
 
 ## Methods
 
@@ -34,6 +34,6 @@ async dismissed() {
 
 ## Notes
 
-- The Dismisser plumber attaches a document-level `mousedown` listener. When a click lands outside the `trigger` target (or the controller element if no trigger), it calls `dismissed()` on the controller.
+- The Dismisser plumber attaches a document-level `mousedown` listener. When a click lands outside the **controller element**, it calls `dismissed()`. If a `trigger` target is present, it is passed to `dismissed()` as `{ target }` context — it does not change the boundary.
 - Used internally by `modal` (custom overlay mode) and `form-field` to handle click-outside-to-close.
 - `dismissed()` is not called when clicking on the trigger element itself.

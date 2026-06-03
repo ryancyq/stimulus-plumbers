@@ -10,9 +10,9 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 
 ## Values
 
-| Value  | Type   | Default        | Description                                                                                                      |
-| ------ | ------ | -------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `type` | String | `"text/plain"` | MIME type to extract from `clipboardData` on paste. Common: `"text/plain"` \| `"text/html"` \| `"text/uri-list"` |
+| Value         | Type   | Default        | Description                                                                                                      |
+| ------------- | ------ | -------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `contentType` | String | `"text/plain"` | MIME type to extract from `clipboardData` on paste. Common: `"text/plain"` \| `"text/html"` \| `"text/uri-list"` |
 
 ## Methods
 
@@ -36,7 +36,7 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 <input
   data-controller="clipboard"
   data-action="paste->clipboard#onPaste clipboard:pasted->input-formatter#onPaste"
-  data-clipboard-type-value="text/plain"
+  data-clipboard-content-type-value="text/plain"
 />
 ```
 
@@ -58,4 +58,4 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 ## Notes
 
 - `paste` calls `event.preventDefault()` — the original paste is suppressed
-- Use `clipboard:pasted->input-formatter#onPasted` to forward pasted content for formatting
+- Use `clipboard:pasted->input-formatter#onPaste` to forward pasted content for formatting

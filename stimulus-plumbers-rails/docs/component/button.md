@@ -11,20 +11,45 @@ Rails helpers for rendering themed, accessible buttons and links.
 <%= sp_button "Visit", url: root_path %>
 <%= sp_button "Docs",  url: "https://example.com", external: true %>
 <%= sp_button(icon_leading: "check") { "Confirm" } %>
-<%= sp_button "Delete", variant: :danger, size: :sm %>
+<%= sp_button "Delete", type: :primary, variant: :destructive, size: :sm %>
 ```
 
-| Option           | Default    | Description                                                                    |
-| ---------------- | ---------- | ------------------------------------------------------------------------------ |
-| `content`        | `nil`      | Button label — positional arg or block                                         |
-| `url`            | `nil`      | Renders an `<a>` instead of `<button>`                                         |
-| `external`       | `false`    | Adds `target="_blank"` (only used when `url:` is set)                          |
-| `target`         | `nil`      | Explicit `target` attribute for the anchor (overridden by `external:`)         |
-| `variant`        | `:primary` | Theme variant — values depend on the active theme (e.g. `:primary`, `:danger`) |
-| `size`           | `:md`      | Theme size — values depend on the active theme (e.g. `:sm`, `:md`, `:lg`)      |
-| `icon_leading`   | `nil`      | Icon rendered **before** the button — icon name (string or symbol) or callable |
-| `icon_trailing`  | `nil`      | Icon rendered **after** the button — icon name (string or symbol) or callable  |
-| `**html_options` | —          | Forwarded to the `<button>` or `<a>` element                                   |
+| Option           | Default    | Description                                                                                               |
+| ---------------- | ---------- | --------------------------------------------------------------------------------------------------------- |
+| `content`        | `nil`      | Button label — positional arg or block                                                                    |
+| `url`            | `nil`      | Renders an `<a>` instead of `<button>`                                                                    |
+| `external`       | `false`    | Adds `target="_blank"` (only used when `url:` is set)                                                     |
+| `target`         | `nil`      | Explicit `target` attribute for the anchor (overridden by `external:`)                                    |
+| `type`           | `:primary` | Visual style — `:primary` \| `:secondary` \| `:tertiary` \| `:outline` \| `:ghost` \| `:fab` \| `:dashed` |
+| `variant`        | `:default` | Color semantic — `:default` \| `:success` \| `:destructive` \| `:warning` \| `:info`                      |
+| `size`           | `:md`      | Size — `:xs` \| `:sm` \| `:md` \| `:lg` \| `:xl`                                                          |
+| `icon_leading`   | `nil`      | Icon rendered **before** the button — icon name (string or symbol) or callable                            |
+| `icon_trailing`  | `nil`      | Icon rendered **after** the button — icon name (string or symbol) or callable                             |
+| `**html_options` | —          | Forwarded to the `<button>` or `<a>` element                                                              |
+
+> **Note:** `url:` renders an `<a>` which uses only `variant:` and `size:` (no `type:`).
+
+**`type:` — visual style**
+
+| Value        | Appearance                                             |
+| ------------ | ------------------------------------------------------ |
+| `:primary`   | Filled — solid background from `variant` color         |
+| `:secondary` | Tinted — low-opacity background, colored text          |
+| `:tertiary`  | White background, colored border and text              |
+| `:outline`   | Transparent with full border; fills solid on hover     |
+| `:ghost`     | Transparent, no border; subtle fill on hover           |
+| `:fab`       | Floating action button — rounded full, elevated shadow |
+| `:dashed`    | Dashed border, transparent background                  |
+
+**`variant:` — color semantic**
+
+| Value          | Color role           |
+| -------------- | -------------------- |
+| `:default`     | Primary brand color  |
+| `:success`     | Green / positive     |
+| `:destructive` | Red / danger         |
+| `:warning`     | Amber / caution      |
+| `:info`        | Blue / informational |
 
 **Icon values:**
 
@@ -37,7 +62,7 @@ Wraps buttons in a themed container `<div>`.
 
 ```erb
 <%= sp_button_group do %>
-  <%= sp_button "Cancel", variant: :secondary %>
+  <%= sp_button "Cancel", type: :secondary %>
   <%= sp_button "Save" %>
 <% end %>
 

@@ -15,7 +15,7 @@ Formats, masks, and reveals values written to an input element. Handles password
 
 | Value      | Type    | Default   | Description                                                          |
 | ---------- | ------- | --------- | -------------------------------------------------------------------- |
-| `type`     | String  | `"plain"` | Formatter type — see [Formatters](#formatters) for valid identifiers |
+| `format`   | String  | `"plain"` | Formatter type — see [Formatters](#formatters) for valid identifiers |
 | `options`  | Object  | `{}`      | Formatter-specific options (e.g. `{ locale: "en-US" }` for currency) |
 | `revealed` | Boolean | `false`   | Whether a masked value is currently revealed; managed by `toggle()`  |
 
@@ -24,7 +24,7 @@ Formats, masks, and reveals values written to an input element. Handles password
 | Method            | Wired via                | Description                                                                                    |
 | ----------------- | ------------------------ | ---------------------------------------------------------------------------------------------- |
 | `format(value)`   | —                        | Programmatic API — normalises, formats/masks, writes to `input` target, dispatches `formatted` |
-| `toggle()`        | `data-action`            | Action — flips `revealedValue`; no-op unless `type` is `"password"` or formatter is maskable   |
+| `toggle()`        | `data-action`            | Action — flips `revealedValue`; no-op unless `format` is `"password"` or formatter is maskable |
 | `onChange(event)` | `input-combobox:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`                           |
 | `onPaste(event)`  | `clipboard:pasted`       | Event adapter — normalises and validates pasted text, calls `format(value)`                    |
 
@@ -63,7 +63,7 @@ Formatter.register('iban', {
 ### Password reveal
 
 ```html
-<div data-controller="input-formatter" data-input-formatter-type-value="password">
+<div data-controller="input-formatter" data-input-formatter-format-value="password">
   <input type="password" data-input-formatter-target="input" />
   <button
     type="button"
@@ -78,7 +78,7 @@ Formatter.register('iban', {
 ### Credit card formatting
 
 ```html
-<div data-controller="input-formatter" data-input-formatter-type-value="creditCard">
+<div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
   <input type="text" data-input-formatter-target="input" />
 </div>
 ```

@@ -63,18 +63,18 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Other components
 
-| Key                | Component                                                       | Variants                                                                                      |
-| ------------------ | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `button`           | `Button`                                                        | `variant: :primary\|:secondary\|:outline\|:destructive\|:ghost\|:link`, `size: :sm\|:md\|:lg` |
-| `button_group`     | `Button::Group`                                                 | `alignment:`, `direction: :row\|:col`                                                         |
-| `button_icon`      | `Button` (icon rendered via `icon_leading:` / `icon_trailing:`) | —                                                                                             |
-| `action_list`      | `ActionList`                                                    | — _(accepts `role:` at render time, default `"list"`)_                                        |
-| `action_list_item` | `ActionList::Item`                                              | `active: bool`                                                                                |
-| `avatar`           | `Avatar`                                                        | `size:`                                                                                       |
-| `card`             | `Card`                                                          | —                                                                                             |
-| `card_section`     | `Card::Section`                                                 | —                                                                                             |
-| `icon`             | `Icon`                                                          | —                                                                                             |
-| `popover`          | `Popover`                                                       | —                                                                                             |
+| Key                | Component                                                       | Variants                                                                                                                                                                |
+| ------------------ | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `button`           | `Button`                                                        | `type: :primary\|:secondary\|:tertiary\|:outline\|:ghost\|:fab\|:dashed`, `variant: :default\|:success\|:destructive\|:warning\|:info`, `size: :xs\|:sm\|:md\|:lg\|:xl` |
+| `button_group`     | `Button::Group`                                                 | `alignment:`, `direction: :row\|:col`                                                                                                                                   |
+| `button_icon`      | `Button` (icon rendered via `icon_leading:` / `icon_trailing:`) | —                                                                                                                                                                       |
+| `action_list`      | `ActionList`                                                    | — _(accepts `role:` at render time, default `"list"`)_                                                                                                                  |
+| `action_list_item` | `ActionList::Item`                                              | `active: bool`                                                                                                                                                          |
+| `avatar`           | `Avatar`                                                        | `size:`                                                                                                                                                                 |
+| `card`             | `Card`                                                          | —                                                                                                                                                                       |
+| `card_section`     | `Card::Section`                                                 | —                                                                                                                                                                       |
+| `icon`             | `Icon`                                                          | —                                                                                                                                                                       |
+| `popover`          | `Popover`                                                       | —                                                                                                                                                                       |
 
 ## Custom theme
 

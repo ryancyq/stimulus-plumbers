@@ -32,24 +32,34 @@ Returns a `Calendar` instance; the controller accesses it via `this.calendar`.
 
 ## Calendar instance properties
 
-| Property  | Type     | Description                      |
-| --------- | -------- | -------------------------------- |
-| `year`    | Number   | Currently displayed year         |
-| `month`   | Number   | Currently displayed month (0–11) |
-| `day`     | Number   | Currently selected day           |
-| `today`   | Date     | Resolved today date              |
-| `locales` | String[] | Active locale list               |
+| Property           | Type     | Description                              |
+| ------------------ | -------- | ---------------------------------------- |
+| `today`            | Date     | Resolved today date                      |
+| `current`          | Date     | Currently displayed month/year as a Date |
+| `year`             | Number   | Currently displayed year                 |
+| `month`            | Number   | Currently displayed month (0–11)         |
+| `day`              | Number   | Currently selected day                   |
+| `since`            | Date     | Earliest selectable date (from options)  |
+| `till`             | Date     | Latest selectable date (from options)    |
+| `firstDayOfWeek`   | Number   | First day of week (0 = Sunday)           |
+| `disabledDates`    | Date[]   | Specific disabled dates                  |
+| `disabledWeekdays` | Number[] | Disabled weekday numbers                 |
+| `disabledDays`     | Number[] | Disabled days-of-month                   |
+| `disabledMonths`   | Number[] | Disabled month numbers (0–11)            |
+| `disabledYears`    | Number[] | Disabled years                           |
+| `daysOfWeek`       | Array    | Formatted weekday header labels          |
+| `daysOfMonth`      | Array    | Grid cells for the current month         |
+| `monthsOfYear`     | Array    | Month cells for the month view           |
+| `yearsOfDecade`    | Array    | Year cells for the year view             |
 
 ## Calendar instance methods
 
-| Method                         | Returns         | Description                                                      |
-| ------------------------------ | --------------- | ---------------------------------------------------------------- |
-| `navigate(date)`               | `Promise<void>` | Navigate to the month containing `date`                          |
-| `step(unit, delta)`            | `Promise<void>` | Step by `delta` months or years (`unit: 'month' \| 'year'`)      |
-| `isDisabled(year, month, day)` | `boolean`       | True if the given date matches any disabled rule or range        |
-| `isToday(year, month, day)`    | `boolean`       | True if the given date is today                                  |
-| `daysInMonth(year, month)`     | `number`        | Number of days in the given month                                |
-| `monthGrid()`                  | `Array[]`       | 2D grid of `{ year, month, day, outside }` objects for rendering |
+| Method                | Returns         | Description                                                 |
+| --------------------- | --------------- | ----------------------------------------------------------- |
+| `navigate(date)`      | `Promise<void>` | Navigate to the month containing `date`                     |
+| `step(unit, delta)`   | `Promise<void>` | Step by `delta` months or years (`unit: 'month' \| 'year'`) |
+| `isDisabled(date)`    | `boolean`       | True if `date` matches any disabled rule or range           |
+| `isWithinRange(date)` | `boolean`       | True if `date` falls within `since`…`till` (inclusive)      |
 
 ## Dispatches & callbacks
 
