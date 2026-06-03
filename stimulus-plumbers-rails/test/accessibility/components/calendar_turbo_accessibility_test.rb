@@ -32,4 +32,25 @@ class CalendarTurboAccessibilityTest < ApplicationAccessibilityTestCase
 
     assert_accessible context: "#calendar"
   end
+
+  def test_passes_wcag_with_month_view
+    # sp_calendar_turbo_month directly: days-of-month grid
+    visit "/components/calendar_turbo?view=month"
+
+    assert_accessible context: "#calendar"
+  end
+
+  def test_passes_wcag_with_year_view
+    # sp_calendar_turbo_year directly: months-of-year grid
+    visit "/components/calendar_turbo?view=year"
+
+    assert_accessible context: "#calendar"
+  end
+
+  def test_passes_wcag_with_decade_view
+    # sp_calendar_turbo_decade directly: years-of-decade grid
+    visit "/components/calendar_turbo?view=decade"
+
+    assert_accessible context: "#calendar"
+  end
 end

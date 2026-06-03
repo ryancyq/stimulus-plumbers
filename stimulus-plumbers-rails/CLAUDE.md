@@ -52,10 +52,11 @@ stimulus-plumbers-rails/
 │       │   ├── avatar_helper.rb          # sp_avatar
 │       │   ├── button_helper.rb          # sp_button, sp_button_group
 │       │   ├── calendar_helper.rb        # sp_calendar_month
-│       │   ├── calendar_turbo_helper.rb  # sp_calendar_month_turbo
+│       │   ├── calendar_turbo_helper.rb  # sp_calendar_turbo, sp_calendar_turbo_month/year/decade
 │       │   ├── card_helper.rb            # sp_card, sp_card_section
 │       │   ├── combobox_helper.rb        # sp_combobox_date/time/dropdown/typeahead
 │       │   ├── divider_helper.rb         # sp_divider
+│       │   ├── link_helper.rb            # sp_link
 │       │   ├── plumber_helper.rb         # sp_dom_id
 │       │   └── popover_helper.rb         # sp_popover
 │       ├── form/
@@ -67,7 +68,6 @@ stimulus-plumbers-rails/
 │       │       ├── fieldset.rb
 │       │       ├── group.rb
 │       │       ├── hint.rb
-│       │       ├── input_group.rb
 │       │       ├── label.rb
 │       │       ├── label/
 │       │       │   └── floating.rb       # Fields::Label::Floating — wrapper div + block-captured input before label; used by render_floating_field
@@ -157,8 +157,13 @@ Sandbox views must have matching wrapper IDs:
 - Single-component pages: `<div id="component-name">` around all variants
 - Multi-variant pages: outer `<div id="component">` + inner `<section id="component-variant">` per variant
 - Form pages: `<div id="page-name">` around the form
+- State variants (error, required, etc.) get their own `<section id="component-state">` so tests can scope axe to that state alone
 
 Panels are rendered inline (not portaled), so the nearest wrapper always contains the open panel.
+
+When a component has meaningfully different ARIA in an interactive state (e.g., a dialog panel opens), test both closed and open states as separate test cases. Use Capybara interactions (`find(...).click`) before calling `assert_accessible`.
+
+When a page renders multiple sub-component views (e.g., calendar month/year/decade), use a controller query param (e.g., `?view=month`) to expose each view unhidden so axe can scan it directly.
 
 ## Form Builder Convention
 

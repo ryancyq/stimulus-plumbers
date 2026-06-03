@@ -19,4 +19,11 @@
   <%# ── Disabled ────────────────────────────────────────────────────────── %>
   <%= sp_button("Disabled",           disabled: true) %>
   <%= sp_button("Disabled secondary", type: :secondary, disabled: true) %>
+
+  <%# ── With icons ─────────────────────────────────────────────────────────── %>
+  <%= sp_button("Save",   icon_leading: :check) %>
+  <%= sp_button("Delete", icon_trailing: :x) %>
+
+  <%# ── Icon only (must have accessible name) ──────────────────────────────── %>
+  <%= sp_button(icon_leading: :x, aria: { label: "Close" }) %>
 </div>

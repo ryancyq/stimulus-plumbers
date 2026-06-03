@@ -44,3 +44,51 @@
           collection: genders, **coll %>
   <% end %>
 </section>
+
+<%# ── Single Checkbox (with error) ────────────────────────────────── %>
+
+<section id="single-checkbox-error">
+  <h2>Single Checkbox with error</h2>
+
+  <% single_cb_error = SignUp.new.tap { |f| f.errors.add(:newsletter, "must be accepted") } %>
+  <%= form_with(model: single_cb_error, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+  <% end %>
+</section>
+
+<%# ── Single Checkbox (required) ─────────────────────────────────── %>
+
+<section id="single-checkbox-required">
+  <h2>Single Checkbox required</h2>
+
+  <% single_cb_required = SignUp.new %>
+  <%= form_with(model: single_cb_required, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter", required: true %>
+  <% end %>
+</section>
+
+<%# ── Collection Checkbox (with error) ───────────────────────────── %>
+
+<section id="collection-checkbox-error">
+  <h2>Collection Checkbox with error</h2>
+
+  <% coll_cb_error = SignUp.new.tap { |f| f.errors.add(:interests, "must select at least one") } %>
+  <%= form_with(model: coll_cb_error, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          collection: interests, **coll %>
+  <% end %>
+</section>
+
+<%# ── Collection Radio (with error) ──────────────────────────────── %>
+
+<section id="collection-radio-error">
+  <h2>Collection Radio with error</h2>
+
+  <% coll_radio_error = SignUp.new.tap { |f| f.errors.add(:gender, "can't be blank") } %>
+  <%= form_with(model: coll_radio_error, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label:      "Gender",
+          collection: genders, **coll %>
+  <% end %>
+</section>

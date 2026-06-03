@@ -50,4 +50,22 @@
     <%= f.choice :interests, as: :check_box,
           label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>
   <% end %>
+
+  <%# ── Collection check boxes required ─────────────────────────────────── %>
+  <h2>Collection check boxes required</h2>
+  <% required_checkboxes = SignUp.new %>
+  <%= form_with(model: required_checkboxes, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label: "Interests", collection: hobbies, value_method: :first, text_method: :last,
+          required: true %>
+  <% end %>
+
+  <%# ── Collection check boxes with hint ────────────────────────────────── %>
+  <h2>Collection check boxes with hint</h2>
+  <% hint_checkboxes = SignUp.new %>
+  <%= form_with(model: hint_checkboxes, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label: "Interests", collection: hobbies, value_method: :first, text_method: :last,
+          hint: "Select all that apply." %>
+  <% end %>
 </div>
