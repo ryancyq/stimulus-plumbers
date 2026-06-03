@@ -29,7 +29,7 @@ module StimulusPlumbers
                 { data: { input_formatter_target: "input" } }
               )
               render_revealable_password(error) do
-                @template.password_field(@object_name, attribute, html_options)
+                @template.password_field(@object_name, attribute, objectify_options(html_options))
               end
             else
               html_options = merge_html_options(theme.resolve(:form_input, error: error), opts, html_opts, kwargs)

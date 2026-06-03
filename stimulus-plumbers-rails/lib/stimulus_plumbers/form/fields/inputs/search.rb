@@ -35,7 +35,7 @@ module StimulusPlumbers
 
             render_input_group(
               trailing: method(:clear_button),
-              error:    !!error,
+              error:    error,
               **merge_html_options(theme.resolve(:form_input_clearable), { data: { controller: "input-clearable" } })
             ) { combobox_html }
           end
