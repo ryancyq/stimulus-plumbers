@@ -3,7 +3,7 @@
 require "test_helper"
 require_relative "form_field_model"
 
-class FieldTest < Minitest::Test
+class FormFieldTest < Minitest::Test
   INPUT_ID = "sign_in_form_email"
 
   def setup
@@ -111,5 +111,29 @@ class FieldTest < Minitest::Test
 
   def test_required_when_set
     assert_predicate component(required: true), :required
+  end
+
+  def test_hint_is_nil_by_default
+    assert_nil component.hint
+  end
+
+  def test_hint_stores_value_when_set
+    assert_equal "Enter your email", component(hint: "Enter your email").hint
+  end
+
+  def test_error_is_nil_by_default
+    assert_nil component.error
+  end
+
+  def test_error_stores_override_message
+    assert_equal "Something went wrong", component(error: "Something went wrong").error
+  end
+
+  def test_default_variant_is_default
+    assert_equal :default, component.variant
+  end
+
+  def test_variant_when_set
+    assert_equal :floating_filled, component(variant: :floating_filled).variant
   end
 end

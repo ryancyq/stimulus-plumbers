@@ -3,7 +3,7 @@
 require "test_helper"
 require_relative "form_builder_model"
 
-class BuilderTest < ActionView::TestCase
+class FormBuilderTest < ActionView::TestCase
   def setup
     @form = FormBuilderModel.new
   end
@@ -72,13 +72,21 @@ class BuilderTest < ActionView::TestCase
     assert_includes doc.text, "Something went wrong"
   end
 
+  def test_field_error_override_suppresses_model_errors
+    @form.errors.add(:email, "is invalid")
+    doc = build_field(:field, :email, as: :text, error: "Custom error")
+
+    assert_includes doc.text, "Custom error"
+    refute_includes doc.text, "is invalid"
+  end
+
   def test_field_text_hide_label_keeps_label_in_dom
     doc = build_field(:field, :email, as: :text, hide_label: true)
 
     assert_css doc, "label[for='sign_in_form_email']"
   end
 
-  def test_single_check_box_renders_explicit_label_and_input
+  def test_choice_check_box_renders_explicit_label_and_input
     doc = build_field(:choice, :newsletter, as: :check_box)
 
     assert_css doc, "label[for='sign_in_form_newsletter']"
@@ -86,17 +94,33 @@ class BuilderTest < ActionView::TestCase
     assert_no_css doc, "label input[type='checkbox']"
   end
 
-  def test_single_check_box_renders_hint
+  def test_choice_check_box_renders_hint
     doc = build_field(:choice, :newsletter, as: :check_box, hint: "Optional")
 
     assert_includes doc.text, "Optional"
   end
 
-  def test_single_check_box_renders_error_override
+  def test_choice_check_box_renders_error_override
     doc = build_field(:choice, :newsletter, as: :check_box, error: "Must be accepted")
 
     assert_css doc, "p[role='alert']"
     assert_includes doc.text, "Must be accepted"
+  end
+
+  def test_collection_field_collection_select_renders_options
+    collection = [%w[admin Admin], %w[user User]]
+    doc = build_field(
+      :collection_field,
+      :role,
+      as:           :collection_select,
+      collection:   collection,
+      value_method: :first,
+      text_method:  :last
+    )
+
+    assert_css doc, "input[role='combobox']"
+    assert_css doc, "li[role='option'][data-value='admin']"
+    assert_css doc, "li[role='option'][data-value='user']"
   end
 
   def test_collection_field_raises_for_unknown_type

@@ -11,10 +11,53 @@ class TailwindThemeComboboxTest < Minitest::Test
     @theme.resolve(component, **args)[:classes]
   end
 
+  # ── container ─────────────────────────────────────────────────────────────
+
+  def test_combobox_returns_relative_positioning_class
+    assert_includes classes_for(:combobox), "relative"
+  end
+
+  # ── popover ───────────────────────────────────────────────────────────────
+
+  def test_combobox_popover_includes_absolute_positioning_classes
+    result = classes_for(:combobox_popover)
+
+    assert_includes result, "absolute"
+    assert_includes result, "top-full"
+    assert_includes result, "left-0"
+    assert_includes result, "min-w-full"
+  end
+
   # ── trigger ───────────────────────────────────────────────────────────────
 
-  def test_combobox_trigger_is_in_schema
-    assert StimulusPlumbers::Themes::Base::SCHEMA.key?(:combobox_trigger)
+  def test_combobox_trigger_includes_base_input_classes
+    result = classes_for(:combobox_trigger)
+
+    assert_includes result, "w-full"
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "focus:ring-2"
+    assert_includes result, "focus:ring-(--sp-focus-ring-color)"
+  end
+
+  # ── trigger group ─────────────────────────────────────────────────────────
+
+  def test_combobox_trigger_group_includes_flex_layout_classes
+    result = classes_for(:combobox_trigger_group)
+
+    assert_includes result, "flex"
+    assert_includes result, "items-center"
+    assert_includes result, "gap-(--sp-space-2)"
+  end
+
+  def test_combobox_trigger_group_includes_marker_class
+    assert_includes classes_for(:combobox_trigger_group), "sp-combobox-group"
+  end
+
+  def test_combobox_trigger_group_includes_focus_ring_classes
+    result = classes_for(:combobox_trigger_group)
+
+    assert_includes result, "focus-within:ring-2"
+    assert_includes result, "focus-within:ring-(--sp-focus-ring-color)"
   end
 
   # ── listbox ───────────────────────────────────────────────────────────────
@@ -70,27 +113,26 @@ class TailwindThemeComboboxTest < Minitest::Test
 
   # ── option group ──────────────────────────────────────────────────────────
 
-  def test_combobox_option_group_returns_a_classes_string
-    result = classes_for(:combobox_option_group)
-
-    assert_instance_of String, result
-    assert_predicate result, :present?
+  def test_combobox_option_group_includes_padding_class
+    assert_includes classes_for(:combobox_option_group), "py-(--sp-space-1)"
   end
 
   # ── typeahead ─────────────────────────────────────────────────────────────
 
-  def test_combobox_typeahead_loading_returns_a_classes_string
+  def test_combobox_typeahead_loading_includes_layout_classes
     result = classes_for(:combobox_typeahead_loading)
 
-    assert_instance_of String, result
-    assert_predicate result, :present?
+    assert_includes result, "flex"
+    assert_includes result, "items-center"
+    assert_includes result, "justify-center"
   end
 
-  def test_combobox_typeahead_empty_returns_a_classes_string
+  def test_combobox_typeahead_empty_includes_layout_classes
     result = classes_for(:combobox_typeahead_empty)
 
-    assert_instance_of String, result
-    assert_predicate result, :present?
+    assert_includes result, "flex"
+    assert_includes result, "items-center"
+    assert_includes result, "justify-center"
   end
 
   # ── time ──────────────────────────────────────────────────────────────────

@@ -3,7 +3,7 @@
 require "test_helper"
 require_relative "../../form_builder_model"
 
-class TextTest < ActionView::TestCase
+class FormFieldsTextTest < ActionView::TestCase
   def setup
     @form = FormBuilderModel.new
   end
@@ -30,7 +30,7 @@ class TextTest < ActionView::TestCase
     assert_includes build_field(as: :email, label: "E-mail").text, "E-mail"
   end
 
-  def test_renders_hint_when_details_option_given
+  def test_renders_hint_when_details_given
     assert_css build_field(as: :email, hint: "We'll never share your email"), "#sign_in_form_email_hint"
   end
 
@@ -53,7 +53,7 @@ class TextTest < ActionView::TestCase
     assert_equal "true", build_field(as: :email).at_css("input[type='email']")["aria-invalid"]
   end
 
-  def test_has_aria_describedby_referencing_error_id
+  def test_has_aria_describedby_pointing_to_error_id
     @form.errors.add(:email, "is invalid")
 
     assert_includes build_field(as: :email).at_css("input[type='email']")["aria-describedby"].to_s,
@@ -85,7 +85,15 @@ class TextTest < ActionView::TestCase
     assert_equal "required", input["required"]
   end
 
-  def test_required_sets_aria_required_attribute
+  def test_not_required_omits_required_attribute
+    assert_nil build_field(as: :email).at_css("input[type='email']")["required"]
+  end
+
+  def test_not_required_omits_aria_required
+    assert_nil build_field(as: :email).at_css("input[type='email']")["aria-required"]
+  end
+
+  def test_required_sets_aria_required
     input = build_field(as: :email, required: true).at_css("input[type='email']")
 
     assert_equal "true", input["aria-required"]
@@ -186,5 +194,32 @@ class TextTest < ActionView::TestCase
 
   def test_datetime_local_field_renders_datetime_local_input
     assert_css build_native(:datetime_local_field), "input[type='datetime-local']"
+  end
+
+  def test_floating_filled_variant_renders_input_before_label
+    doc = build_field(as: :text, variant: :floating_filled)
+
+    assert_operator doc.to_html.index("<input"), :<, doc.to_html.index("<label")
+  end
+
+  def test_floating_outlined_variant_renders_input_before_label
+    doc = build_field(as: :text, variant: :floating_outlined)
+
+    assert_operator doc.to_html.index("<input"), :<, doc.to_html.index("<label")
+  end
+
+  def test_floating_standard_variant_renders_input_before_label
+    doc = build_field(as: :text, variant: :floating_standard)
+
+    assert_operator doc.to_html.index("<input"), :<, doc.to_html.index("<label")
+  end
+
+  def test_aria_describedby_references_hint_and_error_ids
+    @form.errors.add(:email, "is invalid")
+    doc          = build_field(as: :email, hint: "We'll never share your email")
+    described_by = doc.at_css("input[type='email']")["aria-describedby"].to_s
+
+    assert_includes described_by, "sign_in_form_email_hint"
+    assert_includes described_by, "sign_in_form_email_error"
   end
 end

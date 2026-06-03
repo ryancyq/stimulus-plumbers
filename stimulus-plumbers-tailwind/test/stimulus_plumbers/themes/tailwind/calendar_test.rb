@@ -89,15 +89,11 @@ class TailwindThemeCalendarTest < Minitest::Test
     assert_includes result, "disabled:opacity-50"
   end
 
-  def test_calendar_row_returns_a_classes_string
-    result = classes_for(:calendar_row)
+  def test_calendar_picker_grid_includes_grid_classes
+    result = classes_for(:calendar_picker_grid)
 
-    assert_instance_of String, result
-    assert_predicate result, :present?
-  end
-
-  def test_calendar_row_includes_contents_class
-    assert_includes classes_for(:calendar_row), "contents"
+    assert_includes result, "grid"
+    assert_includes result, "grid-cols-4"
   end
 
   def test_calendar_month_cell_returns_a_classes_string

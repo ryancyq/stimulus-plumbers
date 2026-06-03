@@ -386,4 +386,114 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_submit_button_variant_excludes_link_classes
     refute_includes classes_for(:form_submit, variant: :button), "hover:underline"
   end
+
+  # :form_floating_input
+
+  def test_form_floating_input_includes_base_classes
+    result = classes_for(:form_floating_input, variant: :floating_filled)
+
+    assert_includes result, "w-full"
+    assert_includes result, "text-(--sp-color-fg)"
+    assert_includes result, "appearance-none"
+    assert_includes result, "focus:ring-0"
+  end
+
+  def test_form_floating_input_filled_includes_variant_classes
+    result = classes_for(:form_floating_input, variant: :floating_filled)
+
+    assert_includes result, "rounded-t-(--sp-radius-md)"
+    assert_includes result, "bg-(--sp-color-bg-muted)"
+    assert_includes result, "border-b-2"
+    assert_includes result, "border-0"
+  end
+
+  def test_form_floating_input_outlined_includes_variant_classes
+    result = classes_for(:form_floating_input, variant: :floating_outlined)
+
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "border"
+    assert_includes result, "bg-transparent"
+  end
+
+  def test_form_floating_input_standard_includes_variant_classes
+    result = classes_for(:form_floating_input, variant: :floating_standard)
+
+    assert_includes result, "px-0"
+    assert_includes result, "bg-transparent"
+    assert_includes result, "border-b-2"
+  end
+
+  def test_form_floating_input_includes_default_border_when_no_error
+    assert_includes classes_for(:form_floating_input, variant: :floating_filled), "border-(--sp-color-muted-fg)"
+  end
+
+  def test_form_floating_input_includes_error_border_when_error
+    assert_includes classes_for(:form_floating_input, variant: :floating_filled, error: true), "border-(--sp-color-error)"
+  end
+
+  def test_form_floating_input_excludes_default_border_when_error
+    refute_includes classes_for(:form_floating_input, variant: :floating_filled, error: true), "border-(--sp-color-muted-fg)"
+  end
+
+  # :form_floating_group
+
+  def test_form_floating_group_filled_includes_relative_class
+    assert_includes classes_for(:form_floating_group, variant: :floating_filled), "relative"
+  end
+
+  def test_form_floating_group_outlined_includes_relative_class
+    assert_includes classes_for(:form_floating_group, variant: :floating_outlined), "relative"
+  end
+
+  def test_form_floating_group_standard_includes_z_index_class
+    result = classes_for(:form_floating_group, variant: :floating_standard)
+
+    assert_includes result, "relative"
+    assert_includes result, "z-0"
+  end
+
+  # :form_floating_label
+
+  def test_form_floating_label_includes_base_classes
+    result = classes_for(:form_floating_label, variant: :floating_filled)
+
+    assert_includes result, "absolute"
+    assert_includes result, "text-(--sp-color-muted-fg)"
+    assert_includes result, "duration-300"
+    assert_includes result, "transform"
+  end
+
+  def test_form_floating_label_filled_includes_peer_placeholder_classes
+    result = classes_for(:form_floating_label, variant: :floating_filled)
+
+    assert_includes result, "peer-placeholder-shown:scale-100"
+    assert_includes result, "peer-focus:scale-75"
+  end
+
+  def test_form_floating_label_outlined_includes_peer_placeholder_classes
+    result = classes_for(:form_floating_label, variant: :floating_outlined)
+
+    assert_includes result, "peer-placeholder-shown:scale-100"
+    assert_includes result, "peer-focus:scale-75"
+  end
+
+  def test_form_floating_label_standard_includes_peer_placeholder_classes
+    result = classes_for(:form_floating_label, variant: :floating_standard)
+
+    assert_includes result, "peer-placeholder-shown:scale-100"
+    assert_includes result, "peer-focus:scale-75"
+  end
+
+  def test_form_floating_label_includes_focus_color_when_no_error
+    assert_includes classes_for(:form_floating_label, variant: :floating_filled), "peer-focus:text-(--sp-color-primary)"
+  end
+
+  def test_form_floating_label_includes_error_color_when_error
+    assert_includes classes_for(:form_floating_label, variant: :floating_filled, error: true), "text-(--sp-color-error)"
+  end
+
+  def test_form_floating_label_excludes_focus_color_when_error
+    refute_includes classes_for(:form_floating_label, variant: :floating_filled, error: true),
+                    "peer-focus:text-(--sp-color-primary)"
+  end
 end
