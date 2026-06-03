@@ -247,6 +247,34 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_includes classes_for(:button, type: :fab), "hover:shadow-xl"
   end
 
+  # :button fab_outline type
+
+  def test_button_fab_outline_type_includes_rounded_full
+    assert_includes classes_for(:button, type: :fab_outline), "rounded-full"
+  end
+
+  def test_button_fab_outline_type_includes_shadow
+    assert_includes classes_for(:button, type: :fab_outline), "shadow-lg"
+  end
+
+  def test_button_fab_outline_type_references_btn_border_and_text
+    result = classes_for(:button, type: :fab_outline)
+
+    assert_includes result, "border-(--btn-bg)"
+    assert_includes result, "text-(--btn-bg)"
+  end
+
+  def test_button_fab_outline_type_hover_fills
+    result = classes_for(:button, type: :fab_outline)
+
+    assert_includes result, "hover:bg-(--btn-bg)"
+    assert_includes result, "hover:text-(--btn-fg)"
+  end
+
+  def test_button_fab_outline_type_includes_hover_shadow
+    assert_includes classes_for(:button, type: :fab_outline), "hover:shadow-xl"
+  end
+
   # :button dashed type
 
   def test_button_dashed_type_includes_dashed_border

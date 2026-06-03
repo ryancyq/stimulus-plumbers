@@ -35,46 +35,53 @@ module StimulusPlumbers
 
         TYPES = {
           # ── Filled ────────────────────────────────────────────────────────
-          primary:   %w[
+          primary:     %w[
             bg-(--btn-bg) text-(--btn-fg)
             border border-transparent
             hover:bg-(--btn-bg)/90
             focus-visible:ring-(--btn-ring)
           ].freeze,
-          secondary: %w[
+          secondary:   %w[
             bg-(--btn-bg)/15 text-(--btn-bg)
             border border-(--btn-bg)/25
             hover:bg-(--btn-bg)/25
             focus-visible:ring-(--btn-ring)
           ].freeze,
-          tertiary:  %w[
+          tertiary:    %w[
             bg-(--sp-color-bg) text-(--btn-bg)
             border border-(--btn-bg)/40
             hover:bg-(--btn-bg)/10
             focus-visible:ring-(--btn-ring)
           ].freeze,
           # ── Outline ───────────────────────────────────────────────────────
-          outline:   %w[
+          outline:     %w[
             bg-(--sp-color-bg) text-(--btn-bg)
             border border-(--btn-bg)
             hover:bg-(--btn-bg) hover:text-(--btn-fg)
             focus-visible:ring-(--btn-ring)
           ].freeze,
           # ── Special ───────────────────────────────────────────────────────
-          ghost:     %w[
+          ghost:       %w[
             bg-transparent text-(--btn-bg)
             border border-transparent
             hover:bg-(--btn-bg)/10
             focus-visible:ring-(--btn-ring)
           ].freeze,
-          fab:       %w[
+          fab:         %w[
             rounded-full shadow-lg
             bg-(--btn-bg) text-(--btn-fg)
             border border-transparent
             hover:bg-(--btn-bg)/90 hover:shadow-xl
             focus-visible:ring-(--btn-ring)
           ].freeze,
-          dashed:    %w[
+          fab_outline: %w[
+            rounded-full shadow-lg
+            bg-(--sp-color-bg) text-(--btn-bg)
+            border border-(--btn-bg)
+            hover:bg-(--btn-bg) hover:text-(--btn-fg) hover:shadow-xl
+            focus-visible:ring-(--btn-ring)
+          ].freeze,
+          dashed:      %w[
             bg-transparent text-(--btn-bg)
             border border-dashed border-(--btn-bg)/60
             hover:bg-(--btn-bg)/10
