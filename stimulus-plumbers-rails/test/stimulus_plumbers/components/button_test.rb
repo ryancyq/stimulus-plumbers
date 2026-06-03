@@ -27,6 +27,34 @@ class ButtonTest < ActionView::TestCase
                "a[target='_blank']"
   end
 
+  def test_button_link_target_blank_adds_trailing_icon
+    doc = parse_html(renderer.render("External", url: "https://example.com", target: "_blank"))
+    a = doc.at_css("a")
+
+    assert_css doc, "a[target='_blank'] span"
+    assert_operator a.to_html.index("External"), :<, a.to_html.index("<span")
+  end
+
+  def test_button_link_target_blank_does_not_override_explicit_icon_trailing
+    doc = parse_html(
+      renderer.render(
+        "External",
+        url:           "https://example.com",
+        target:        "_blank",
+        icon_trailing: "arrow-right"
+      )
+    )
+
+    assert_css doc, "a[target='_blank'] span"
+    assert_equal 1, doc.css("a span").length
+  end
+
+  def test_button_link_internal_does_not_add_trailing_icon
+    doc = parse_html(renderer.render("Internal", url: "/path"))
+
+    assert_no_css doc, "a span"
+  end
+
   def test_button_omits_target_when_not_given
     assert_no_css parse_html(renderer.render("Internal", url: "/path")), "a[target]"
   end
