@@ -145,6 +145,20 @@ stimulus-plumbers-rails/
 - **Lint tests** using Rubocop (`rake rubocop`)
 - **Always run linting** after appraisal command
 
+## Unit Test Convention
+
+**Naming:** class name is CamelCase of the path under `test/stimulus_plumbers/`, with the `components/` segment dropped for component tests:
+- `components/button/group_test.rb` → `ButtonGroupTest`
+- `form/fields/inputs/text_test.rb` → `FormFieldsTextTest`
+- `form/builder_test.rb` → `FormBuilderTest`
+
+**Component tests** assert HTML structure and ARIA — not CSS classes (those belong in the tailwind gem). Cover all constructor options that branch the output (`type:`, `variant:`, `size:`, `hidden:`, `tag:`), and any delegation/convenience methods.
+
+**Form field unit tests** cover both builder levels:
+- Native override (`email_field`, `text_area`, …) — element type and forwarded HTML attributes
+- Full-field wrapper (`f.field(as:)`) — label, hint, error message, `aria-invalid`, `aria-describedby`, `required`, `hide_label`, all floating variants (`:floating_filled`, `:floating_outlined`, `:floating_standard`), and combined hint+error `aria-describedby`
+- When `error:` override is set, assert the override message appears **and** model errors are suppressed
+
 ## Accessibility Test Convention
 
 Always pass `context:` to `assert_accessible` to scope axe to the component, not the full page:
@@ -158,12 +172,9 @@ Sandbox views must have matching wrapper IDs:
 - Multi-variant pages: outer `<div id="component">` + inner `<section id="component-variant">` per variant
 - Form pages: `<div id="page-name">` around the form
 - State variants (error, required, etc.) get their own `<section id="component-state">` so tests can scope axe to that state alone
-
-Panels are rendered inline (not portaled), so the nearest wrapper always contains the open panel.
-
-When a component has meaningfully different ARIA in an interactive state (e.g., a dialog panel opens), test both closed and open states as separate test cases. Use Capybara interactions (`find(...).click`) before calling `assert_accessible`.
-
-When a page renders multiple sub-component views (e.g., calendar month/year/decade), use a controller query param (e.g., `?view=month`) to expose each view unhidden so axe can scan it directly.
+- Panels render inline (not portaled) — the nearest wrapper always contains the open panel
+- For interactive states (e.g. a dialog opens), test closed and open separately; use `find(...).click` before `assert_accessible`
+- For multi-view pages (e.g. calendar month/year/decade), use a controller query param (`?view=month`) to expose each view unhidden
 
 ## Form Builder Convention
 
@@ -183,7 +194,7 @@ Standard Rails helpers (`email_field`, `text_area`, `check_box`, `select`, `date
 
 ### Level 2 — Full-field helpers (label + input + hint + error)
 
-Four builder methods provide the complete accessible field pattern:
+Three builder methods provide the complete accessible field pattern:
 
 | Method | Renderer constant | `as:` values |
 | --- | --- | --- |
@@ -192,14 +203,6 @@ Four builder methods provide the complete accessible field pattern:
 | `f.choice(attr, as:, collection:, value_method:, text_method:)` | `CHOICE_RENDERER` | `:radio`, `:check_box` |
 
 Field-chrome options (`label:`, `hint:`, `error:`, `required:`, `hide_label:`, `layout:`) are only meaningful on the full-field helpers — they are **not** processed by native overrides.
-
-### Private render methods
-
-Each module under `fields/inputs/` exposes private `render_*` methods that map 1:1 to renderer constant entries. These are called by the builder via `Plumber::Dispatcher` — never called directly. The naming convention is:
-
-- `render_<type>_input` for text-like fields (e.g. `render_email_input`)
-- `render_combobox_<type>` for combobox fields (e.g. `render_combobox_date`)
-- `render_collection_<type>` for collection variants
 
 ## Component Architecture
 

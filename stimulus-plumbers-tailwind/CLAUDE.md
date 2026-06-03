@@ -53,13 +53,33 @@ stimulus-plumbers-tailwind/
 > See [README.md](README.md) for installation and developer setup.
 
 ## Styling Guidelines
-- **Always use CSS custom properties (CSS variables) instead of hardcoded values** — colors, spacing, sizing, and other design tokens must reference CSS variables (e.g., `var(--color-primary)`) so consumers can theme the library without overriding classes.
+- **Always use CSS custom properties (CSS variables) instead of hardcoded values** — colors, spacing, sizing, and other design tokens must reference CSS variables (e.g., `var(--sp-color-primary)`) so consumers can theme the library without overriding classes.
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
 - **Snapshot tests** using Playwright (`npm run test:snapshots`); update baselines with `npm run test:snapshots:update`
 - **Lint tests** using Rubocop (`rake rubocop`)
 - **Snapshot tests must be a superset of `stimulus-plumbers-rails` a11y tests** — every page + interactive state covered by an a11y test must also have a corresponding snapshot test. When adding a11y tests in the core gem, add matching snapshot coverage here.
+
+## Snapshot Test Convention
+
+**Selector scoping:** Always scope element queries to a named container `#id` — use `page.locator("#container-id").getByRole(...)` not `page.getByRole(...)`. Sandbox views must give each component instance a unique `id`. This prevents ambiguity when multiple instances of the same component appear on a page.
+
+**Stimulus target selection:** Use direct CSS `page.locator("#id [data-controller-target='name']")` rather than chained `.filter({ has: trigger })`.
+
+**State coverage:** For each component variant:
+- Static states (default, error, disabled): one screenshot per variant
+- Interactive states (open/close, popover, dropdown): test both closed and open
+- Error + interactive combined: cover both closed and open (e.g. `date-picker-error-closed.png` and `date-picker-error-open.png`)
+- Behavioral transitions (focus restoration, clear button hide/show): test the end state after the interaction
+
+## Unit Test Convention
+
+**Naming:** `TailwindTheme<Module>Test` — e.g. `TailwindThemeFormTest`, `TailwindThemeButtonTest`.
+
+**Pattern:** each test resolves `@theme.resolve(component, **args)[:classes]` and asserts specific Tailwind tokens with `assert_includes` / `refute_includes`.
+
+**Coverage rule:** every resolver param that branches the output (`error:`, `variant:`, `size:`, `selected:`, `disabled:`, `hidden:`, `layout:`) needs both a positive assertion (`assert_includes`) and the corresponding negative case (`refute_includes` for the excluded class when the flag is off).
 
 ## Theme Architecture
 
