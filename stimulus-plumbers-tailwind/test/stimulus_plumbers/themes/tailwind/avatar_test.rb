@@ -55,4 +55,12 @@ class TailwindThemeAvatarTest < Minitest::Test
       assert_equal css_class, @theme.avatar_colors.fetch(key)
     end
   end
+
+  def test_avatar_image_returns_classes_to_fill_container
+    result = @theme.resolve(:avatar_image)[:classes]
+
+    assert_includes result, "w-full"
+    assert_includes result, "h-full"
+    assert_includes result, "object-cover"
+  end
 end

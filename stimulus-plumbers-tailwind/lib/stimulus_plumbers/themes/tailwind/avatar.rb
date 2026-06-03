@@ -46,6 +46,10 @@ module StimulusPlumbers
             )
           }
         end
+
+        def avatar_image_classes
+          { classes: "w-full h-full object-cover" }
+        end
       end
     end
   end

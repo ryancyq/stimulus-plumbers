@@ -16,10 +16,11 @@ module StimulusPlumbers
       }.freeze
 
       AVATAR = {
-        avatar: {
+        avatar:       {
           size:  { default: :md, validate: Ranges::SIZE },
           color: { default: nil, validate: :avatar_color_range }
-        }.freeze
+        }.freeze,
+        avatar_image: {}.freeze
       }.freeze
 
       BUTTON = {
