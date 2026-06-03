@@ -34,6 +34,10 @@ class TailwindThemeIconTest < ActionView::TestCase
     assert @theme.icons.key?("close")
   end
 
+  def test_theme_provides_alias_external_link_icon
+    assert @theme.icons.key?("external-link")
+  end
+
   def test_theme_provides_custom_spinner_icon
     assert @theme.icons.key?("spinner")
   end
@@ -46,6 +50,10 @@ class TailwindThemeIconTest < ActionView::TestCase
 
   def test_renders_svg_for_aliased_icon
     assert_includes render_icon(name: "close"), "<svg"
+  end
+
+  def test_renders_svg_for_external_link_alias
+    assert_includes render_icon(name: "external-link"), "<svg"
   end
 
   def test_renders_svg_for_custom_icon

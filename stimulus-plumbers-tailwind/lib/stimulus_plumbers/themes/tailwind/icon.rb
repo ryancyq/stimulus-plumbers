@@ -9,8 +9,9 @@ module StimulusPlumbers
     module Tailwind
       module Icon
         ALIASES = {
-          "close"    => "x-mark",
-          "calendar" => "calendar-days"
+          "close"         => "x-mark",
+          "calendar"      => "calendar-days",
+          "external-link" => "arrow-top-right-on-square"
         }.freeze
 
         ICONS = StimulusPlumbers::Themes::Icons::Registry.new(

@@ -4,6 +4,7 @@ module StimulusPlumbers
   module Components
     class Button < Plumber::Base
       def render(content = nil, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
+        icon_trailing ||= "external-link" if kwargs[:url].present? && kwargs[:target] == "_blank"
         render_button_or_link(**kwargs) do
           build_layout(icon_leading: icon_leading, icon_trailing: icon_trailing) do
             build_button(content, &block)
