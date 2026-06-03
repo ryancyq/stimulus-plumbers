@@ -2,27 +2,27 @@
 
 <div id="action-list">
   <%# ── Plain list ─────────────────────────────────────────────────────── %>
-  <%= sp_action_list do %>
-    <%= sp_action_list_section do %>
-      <%= sp_action_list_item("Profile") %>
-      <%= sp_action_list_item("Settings") %>
-      <%= sp_action_list_item("Help") %>
+  <%= sp_action_list do |list| %>
+    <%= list.section do %>
+      <%= list.item("Profile") %>
+      <%= list.item("Settings") %>
+      <%= list.item("Help") %>
     <% end %>
   <% end %>
 
   <%# ── With links ─────────────────────────────────────────────────────── %>
-  <%= sp_action_list do %>
-    <%= sp_action_list_section(title: "Navigation") do %>
-      <%= sp_action_list_item("Dashboard", url: "/") %>
-      <%= sp_action_list_item("Reports",   url: "/") %>
+  <%= sp_action_list do |list| %>
+    <%= list.section(title: "Navigation") do %>
+      <%= list.item("Dashboard", url: "/") %>
+      <%= list.item("Reports",   url: "/") %>
     <% end %>
   <% end %>
 
   <%# ── Active item ─────────────────────────────────────────────────────── %>
-  <%= sp_action_list do %>
-    <%= sp_action_list_section do %>
-      <%= sp_action_list_item("Active item", active: true) %>
-      <%= sp_action_list_item("Inactive item") %>
+  <%= sp_action_list do |list| %>
+    <%= list.section do %>
+      <%= list.item("Active item", active: true) %>
+      <%= list.item("Inactive item") %>
     <% end %>
   <% end %>
 </div>

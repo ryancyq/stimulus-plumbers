@@ -5,14 +5,41 @@ module StimulusPlumbers
     class Popover < Plumber::Base
       STIMULUS_CONTROLLER = "popover"
 
+      def self.panel_id_for(trigger_id = nil)
+        [trigger_id || SecureRandom.hex(8), "popover"].join("_")
+      end
+
       def render(...) = render_popover(...)
 
-      # Yields builder; returns trigger + panel HTML with no outer wrapper.
-      # Use this when the caller owns the outer element (e.g. Combobox).
       def build(panel_id: nil, &block)
-        builder = Popover::Builder.new(template, panel_id: panel_id)
-        yield builder
-        template.safe_join([builder.trigger_html, builder.panel_html])
+        @panel_id     = panel_id || self.class.panel_id_for
+        @trigger_html = nil
+        @panel_html   = nil
+        yield self
+        template.safe_join([@trigger_html, @panel_html].compact)
+      end
+
+      def trigger(haspopup: "dialog", controls: @panel_id, **kwargs, &block)
+        if block_given? && block.arity == 1
+          attrs = {
+            panel_id: @panel_id,
+            aria:     { haspopup: haspopup, expanded: "false", controls: controls },
+            data:     { popover_target: "trigger", action: Popover::Trigger::STIMULUS_ACTION }
+          }
+          @trigger_html = template.capture(attrs, &block)
+        else
+          @trigger_html = Popover::Trigger.new(template).render(
+            panel_id: @panel_id, haspopup: haspopup, **kwargs, &block
+          )
+        end
+      end
+
+      def panel(**kwargs, &block)
+        @panel_html = Popover::Panel.new(template).render(panel_id: @panel_id, **kwargs, &block)
+      end
+
+      def build_panel(**kwargs, &block)
+        @panel_html = Popover::Panel.new(template).build(panel_id: @panel_id, **kwargs, &block)
       end
 
       private

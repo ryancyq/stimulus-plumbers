@@ -5,10 +5,10 @@
   <%= sp_popover do |p| %>
     <% p.trigger { "Open menu" } %>
     <% p.panel(role: "dialog", aria: { label: "Menu options" }) do %>
-      <%= sp_action_list do %>
-        <%= sp_action_list_section do %>
-          <%= sp_action_list_item("Edit",   url: "#") %>
-          <%= sp_action_list_item("Delete") %>
+      <%= sp_action_list do |list| %>
+        <%= list.section do %>
+          <%= list.item("Edit",   url: "#") %>
+          <%= list.item("Delete") %>
         <% end %>
       <% end %>
     <% end %>
