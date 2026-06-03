@@ -14,7 +14,7 @@ test.describe("combobox", () => {
   });
 
   test("date picker — open", async ({ page }) => {
-    const trigger = page.getByRole("combobox", { name: "Birthday" });
+    const trigger = page.locator("#combobox-date").getByRole("combobox", { name: "Birthday" });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
     await expect(page.locator("#combobox-date")).toHaveScreenshot(
@@ -23,7 +23,7 @@ test.describe("combobox", () => {
   });
 
   test("time picker — open", async ({ page }) => {
-    const trigger = page.getByRole("combobox", { name: "Meeting Time" });
+    const trigger = page.locator("#combobox-time").getByRole("combobox", { name: "Meeting Time" });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
     await expect(page.locator("#combobox-time")).toHaveScreenshot(
@@ -32,7 +32,7 @@ test.describe("combobox", () => {
   });
 
   test("dropdown — open", async ({ page }) => {
-    const trigger = page.getByRole("combobox", { name: "Country" });
+    const trigger = page.locator("#combobox-dropdown").getByRole("combobox", { name: "Country" });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
     await expect(page.locator("#combobox-dropdown")).toHaveScreenshot(
@@ -41,7 +41,7 @@ test.describe("combobox", () => {
   });
 
   test("typeahead — open", async ({ page }) => {
-    const trigger = page.getByRole("combobox", { name: "City" });
+    const trigger = page.locator("#combobox-typeahead").getByRole("combobox", { name: "City" });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
     await expect(page.locator("#combobox-typeahead")).toHaveScreenshot(
@@ -50,15 +50,12 @@ test.describe("combobox", () => {
   });
 
   test("typeahead — loading", async ({ page }) => {
-    const trigger = page.getByRole("combobox", { name: "City" });
+    const trigger = page.locator("#combobox-typeahead").getByRole("combobox", { name: "City" });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
 
-    const comboboxRoot = page
-      .locator('[data-controller~="input-combobox"]')
-      .filter({ has: trigger });
-    const loading = comboboxRoot.locator(
-      '[data-combobox-dropdown-target="loading"]',
+    const loading = page.locator(
+      "#combobox-typeahead [data-combobox-dropdown-target='loading']",
     );
     await loading.evaluate((el) => el.removeAttribute("hidden"));
 
@@ -68,20 +65,70 @@ test.describe("combobox", () => {
   });
 
   test("typeahead — empty", async ({ page }) => {
-    const trigger = page.getByRole("combobox", { name: "City" });
+    const trigger = page.locator("#combobox-typeahead").getByRole("combobox", { name: "City" });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
 
-    const comboboxRoot = page
-      .locator('[data-controller~="input-combobox"]')
-      .filter({ has: trigger });
-    const empty = comboboxRoot.locator(
-      '[data-combobox-dropdown-target="empty"]',
+    const empty = page.locator(
+      "#combobox-typeahead [data-combobox-dropdown-target='empty']",
     );
     await empty.evaluate((el) => el.removeAttribute("hidden"));
 
     await expect(page.locator("#combobox-typeahead")).toHaveScreenshot(
       "typeahead-empty.png",
+    );
+  });
+
+  test("date picker error — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-date-error")).toHaveScreenshot(
+      "date-picker-error-closed.png",
+    );
+  });
+
+  test("date picker error — open", async ({ page }) => {
+    const trigger = page.locator("#combobox-date-error input[role='combobox']");
+    await trigger.click();
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#combobox-date-error")).toHaveScreenshot(
+      "date-picker-error-open.png",
+    );
+  });
+
+  test("time picker error — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-time-error")).toHaveScreenshot(
+      "time-picker-error-closed.png",
+    );
+  });
+
+  test("time picker error — open", async ({ page }) => {
+    const trigger = page.locator("#combobox-time-error input[role='combobox']");
+    await trigger.click();
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#combobox-time-error")).toHaveScreenshot(
+      "time-picker-error-open.png",
+    );
+  });
+
+  test("dropdown error — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-dropdown-error")).toHaveScreenshot(
+      "dropdown-error-closed.png",
+    );
+  });
+
+  test("dropdown error — open", async ({ page }) => {
+    const trigger = page.locator(
+      "#combobox-dropdown-error input[role='combobox']",
+    );
+    await trigger.click();
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#combobox-dropdown-error")).toHaveScreenshot(
+      "dropdown-error-open.png",
+    );
+  });
+
+  test("typeahead error — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-typeahead-error")).toHaveScreenshot(
+      "typeahead-error-closed.png",
     );
   });
 });

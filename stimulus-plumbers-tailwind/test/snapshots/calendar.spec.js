@@ -124,6 +124,40 @@ test.describe("turbo calendar", () => {
   });
 });
 
+// ── Turbo calendar drill-down ────────────────────────────────────────────────
+
+test.describe("turbo calendar drill-down", () => {
+  test("month view", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_turbo?view=month&year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+    );
+    await page.waitForSelector("[role='grid']");
+    await expect(page.locator("#calendar")).toHaveScreenshot(
+      "turbo-drill-month.png",
+    );
+  });
+
+  test("year view", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_turbo?view=year&year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+    );
+    await page.waitForSelector("[role='grid']");
+    await expect(page.locator("#calendar")).toHaveScreenshot(
+      "turbo-drill-year.png",
+    );
+  });
+
+  test("decade view", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_turbo?view=decade&year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+    );
+    await page.waitForSelector("[role='grid']");
+    await expect(page.locator("#calendar")).toHaveScreenshot(
+      "turbo-drill-decade.png",
+    );
+  });
+});
+
 // ── SSR month/year picker (standalone) ───────────────────────────────────────
 
 test.describe("SSR month picker", () => {

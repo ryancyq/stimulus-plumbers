@@ -1,5 +1,13 @@
 <h1>Calendar (Turbo / SSR)</h1>
 
 <div id="calendar">
-  <%= sp_calendar_turbo(date: @date, today: @today, selectable: @selectable, show_other_months: @show_other_months) %>
+  <% if @view == "month" %>
+    <%= sp_calendar_turbo_month(date: @date, today: @today) %>
+  <% elsif @view == "year" %>
+    <%= sp_calendar_turbo_year(date: @date, today: @today) %>
+  <% elsif @view == "decade" %>
+    <%= sp_calendar_turbo_decade(date: @date, today: @today) %>
+  <% else %>
+    <%= sp_calendar_turbo(date: @date, today: @today, selectable: @selectable, show_other_months: @show_other_months) %>
+  <% end %>
 </div>

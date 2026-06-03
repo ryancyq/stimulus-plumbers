@@ -160,6 +160,34 @@ test.describe("collection checkbox", () => {
   });
 });
 
+// ── Error states ─────────────────────────────────────────────────────────
+
+test.describe("error states", () => {
+  test("single checkbox — error", async ({ page }) => {
+    await expect(page.locator("#single-checkbox-error")).toHaveScreenshot(
+      "single-checkbox-error.png",
+    );
+  });
+
+  test("single checkbox — required", async ({ page }) => {
+    await expect(page.locator("#single-checkbox-required")).toHaveScreenshot(
+      "single-checkbox-required.png",
+    );
+  });
+
+  test("collection checkbox — error", async ({ page }) => {
+    await expect(page.locator("#collection-checkbox-error")).toHaveScreenshot(
+      "collection-checkbox-error.png",
+    );
+  });
+
+  test("collection radio — error", async ({ page }) => {
+    await expect(page.locator("#collection-radio-error")).toHaveScreenshot(
+      "collection-radio-error.png",
+    );
+  });
+});
+
 // ── Collection Radio ──────────────────────────────────────────────────────
 
 test.describe("collection radio", () => {

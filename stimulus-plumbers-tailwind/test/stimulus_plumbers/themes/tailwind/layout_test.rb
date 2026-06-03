@@ -65,4 +65,46 @@ class TailwindThemeLayoutTest < Minitest::Test
     assert_includes result, "whitespace-nowrap"
     assert_includes result, "font-medium"
   end
+
+  # :popover_wrapper
+
+  def test_popover_wrapper_includes_positioning_classes
+    result = classes_for(:popover_wrapper)
+
+    assert_includes result, "relative"
+    assert_includes result, "inline-block"
+  end
+
+  # :popover_trigger
+
+  def test_popover_trigger_includes_button_layout_classes
+    result = classes_for(:popover_trigger)
+
+    assert_includes result, "inline-flex"
+    assert_includes result, "items-center"
+    assert_includes result, "font-medium"
+  end
+
+  def test_popover_trigger_includes_border_and_background
+    result = classes_for(:popover_trigger)
+
+    assert_includes result, "border"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "bg-transparent"
+  end
+
+  def test_popover_trigger_includes_focus_ring
+    result = classes_for(:popover_trigger)
+
+    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
+  end
+
+  def test_popover_trigger_includes_hover_muted_bg
+    assert_includes classes_for(:popover_trigger), "hover:bg-(--sp-color-muted)"
+  end
+
+  def test_popover_trigger_includes_height_class
+    assert_includes classes_for(:popover_trigger), "h-9"
+  end
 end

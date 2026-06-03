@@ -13,4 +13,9 @@ class FormFieldsGroupTest < ActionView::TestCase
     assert_includes html, "<div"
     assert_includes html, "content"
   end
+
+  def test_accepts_layout_and_error_options
+    assert_includes group(layout: :stacked, error: false) { "" }, "<div"
+    assert_includes group(layout: :inline, error: true) { "" }, "<div"
+  end
 end

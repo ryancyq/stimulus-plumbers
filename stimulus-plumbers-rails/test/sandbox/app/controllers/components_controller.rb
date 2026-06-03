@@ -12,6 +12,8 @@ class ComponentsController < ApplicationController
   def calendar_turbo
     @selectable        = params[:selectable] == "true"
     @show_other_months = params[:show_other_months] == "true"
+    @view              = params[:view]
+    @date              = Date.today
   end
 
   def combobox; end

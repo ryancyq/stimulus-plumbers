@@ -8,9 +8,10 @@ class FormFieldsErrorTest < ActionView::TestCase
   end
 
   def test_renders_alert_paragraph
-    doc = parse_html(error(message: "is invalid", id: "field_error"))
+    assert_css parse_html(error(message: "is invalid", id: "field_error")), "p[role='alert']#field_error"
+  end
 
-    assert_css doc, "p[role='alert']#field_error"
-    assert_includes doc.text, "is invalid"
+  def test_renders_message_text
+    assert_includes parse_html(error(message: "is invalid", id: "field_error")).text, "is invalid"
   end
 end

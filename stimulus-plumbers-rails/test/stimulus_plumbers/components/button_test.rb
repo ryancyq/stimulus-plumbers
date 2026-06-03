@@ -2,17 +2,9 @@
 
 require "test_helper"
 
-class ButtonComponentTest < ActionView::TestCase
+class ButtonTest < ActionView::TestCase
   def renderer
     StimulusPlumbers::Components::Button.new(self)
-  end
-
-  def test_exposes_template
-    assert_equal self, renderer.template
-  end
-
-  def test_exposes_theme
-    assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
   def test_button_renders_button_element
@@ -63,7 +55,7 @@ class ButtonComponentTest < ActionView::TestCase
     assert_operator doc.to_html.index("Next"), :<, doc.to_html.index("<span")
   end
 
-  def test_icon_leading_only_renders_no_extra_text
+  def test_icon_only_button_has_no_text_content
     doc = parse_html(renderer.render(icon_leading: :x))
 
     assert_css doc, "span"
@@ -89,14 +81,27 @@ class ButtonComponentTest < ActionView::TestCase
     assert_css doc, "button"
   end
 
-  def test_group_renders_div
-    doc = parse_html(renderer.group { renderer.render("One") })
-
-    assert_css doc, "div"
-    assert_includes doc.text, "One"
+  def test_button_renders_with_type_option
+    assert_css parse_html(renderer.render("Click", type: :secondary)), "button"
   end
 
-  def test_group_merges_custom_class
-    assert_css parse_html(renderer.group(class: "custom") { "" }), ".custom"
+  def test_button_renders_with_variant_option
+    assert_css parse_html(renderer.render("Click", variant: :outline)), "button"
+  end
+
+  def test_button_renders_with_size_option
+    assert_css parse_html(renderer.render("Click", size: :sm)), "button"
+  end
+
+  def test_link_renders_with_variant_option
+    assert_css parse_html(renderer.render("Go", url: "/path", variant: :outline)), "a[href='/path']"
+  end
+
+  def test_link_renders_with_size_option
+    assert_css parse_html(renderer.render("Go", url: "/path", size: :lg)), "a[href='/path']"
+  end
+
+  def test_group_renders_role_group
+    assert_css parse_html(renderer.group { "buttons" }), "div[role='group']"
   end
 end

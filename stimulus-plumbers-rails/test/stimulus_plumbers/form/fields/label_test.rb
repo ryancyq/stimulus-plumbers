@@ -33,4 +33,15 @@ class FormFieldsLabelTest < ActionView::TestCase
     assert_css doc, "span[aria-hidden='true']"
     assert_includes doc.text, "*"
   end
+
+  def test_hidden_label_still_renders_label_element
+    assert_css parse_html(label(text: "Email", for_id: "user_email", hidden: true)), "label[for='user_email']"
+  end
+
+  def test_tag_option_renders_custom_html_tag
+    doc = parse_html(label(text: "Legend", for_id: "user_name", tag: :div))
+
+    assert_css doc, "div"
+    assert_no_css doc, "label"
+  end
 end

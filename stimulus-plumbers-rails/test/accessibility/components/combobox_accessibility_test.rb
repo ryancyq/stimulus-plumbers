@@ -36,4 +36,49 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
 
     assert_accessible context: "#combobox-typeahead"
   end
+
+  def test_passes_wcag_with_date_picker_error
+    visit "/components/combobox"
+
+    assert_accessible context: "#combobox-date-error"
+  end
+
+  def test_passes_wcag_with_date_picker_error_open
+    visit "/components/combobox"
+    find("#combobox-date-error input[role='combobox']").click
+
+    assert_accessible context: "#combobox-date-error"
+  end
+
+  def test_passes_wcag_with_time_picker_error
+    visit "/components/combobox"
+
+    assert_accessible context: "#combobox-time-error"
+  end
+
+  def test_passes_wcag_with_time_picker_error_open
+    visit "/components/combobox"
+    find("#combobox-time-error input[role='combobox']").click
+
+    assert_accessible context: "#combobox-time-error"
+  end
+
+  def test_passes_wcag_with_dropdown_error
+    visit "/components/combobox"
+
+    assert_accessible context: "#combobox-dropdown-error"
+  end
+
+  def test_passes_wcag_with_dropdown_error_open
+    visit "/components/combobox"
+    find("#combobox-dropdown-error input[role='combobox']").click
+
+    assert_accessible context: "#combobox-dropdown-error"
+  end
+
+  def test_passes_wcag_with_typeahead_error
+    visit "/components/combobox"
+
+    assert_accessible context: "#combobox-typeahead-error"
+  end
 end
