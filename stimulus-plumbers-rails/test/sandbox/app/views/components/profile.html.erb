@@ -24,16 +24,16 @@
   <%# ── Preferences card ─────────────────────────────────────────────── %>
   <%= sp_card(title: "Preferences") do %>
     <%= sp_card_section(title: "Preferences") do %>
-      <%= sp_action_list do %>
-        <%= sp_action_list_section(title: "Notifications") do %>
-          <%= sp_action_list_item("Email notifications") %>
-          <%= sp_action_list_item("Push notifications") %>
-          <%= sp_action_list_item("SMS alerts") %>
+      <%= sp_action_list do |list| %>
+        <%= list.section(title: "Notifications") do %>
+          <%= list.item("Email notifications") %>
+          <%= list.item("Push notifications") %>
+          <%= list.item("SMS alerts") %>
         <% end %>
 
-        <%= sp_action_list_section(title: "Account") do %>
-          <%= sp_action_list_item("Privacy settings", url: "#") %>
-          <%= sp_action_list_item("Connected accounts", url: "#") %>
+        <%= list.section(title: "Account") do %>
+          <%= list.item("Privacy settings", url: "#") %>
+          <%= list.item("Connected accounts", url: "#") %>
         <% end %>
       <% end %>
     <% end %>
@@ -43,11 +43,11 @@
   <%= sp_popover do |p| %>
     <% p.trigger { "More options" } %>
     <% p.panel(role: "dialog", aria: { label: "More options" }) do %>
-      <%= sp_action_list do %>
-        <%= sp_action_list_section do %>
-          <%= sp_action_list_item("Export data",       url: "#") %>
-          <%= sp_action_list_item("Download archive",  url: "#") %>
-          <%= sp_action_list_item("Delete account") %>
+      <%= sp_action_list do |list| %>
+        <%= list.section do %>
+          <%= list.item("Export data",       url: "#") %>
+          <%= list.item("Download archive",  url: "#") %>
+          <%= list.item("Delete account") %>
         <% end %>
       <% end %>
     <% end %>

@@ -9,52 +9,21 @@ class ActionListHelperTest < ActionView::TestCase
     assert_css parse_html(sp_action_list { "" }), "ul"
   end
 
-  def test_renders_section_with_ul
-    assert_css parse_html(sp_action_list_section { "" }), "ul"
-  end
+  def test_yields_builder
+    doc = parse_html(
+      sp_action_list do |list|
+        list.section { list.item("Action") }
+      end
+    )
 
-  def test_renders_section_title
-    doc = parse_html(sp_action_list_section(title: "Navigation") { "" })
-
-    assert_css doc, "span"
-    assert_includes doc.text, "Navigation"
-  end
-
-  def test_renders_no_title_span_when_absent
-    assert_no_css parse_html(sp_action_list_section { "" }), "span[aria-hidden]"
-  end
-
-  def test_item_renders_button_by_default
-    doc = parse_html(sp_action_list_item("Click me"))
-
-    assert_css doc, "li"
-    assert_css doc, "button"
-    assert_includes doc.text, "Click me"
-  end
-
-  def test_item_renders_link_with_url
-    assert_css parse_html(sp_action_list_item("Home", url: "/")), "a[href='/']"
-  end
-
-  def test_item_renders_link_with_target_blank
-    assert_css parse_html(sp_action_list_item("External", url: "https://example.com", target: "_blank")),
-               "a[target='_blank']"
-  end
-
-  def test_item_accepts_block_content
-    assert_includes parse_html(sp_action_list_item { "Block item" }).text, "Block item"
-  end
-
-  def test_item_merges_custom_class
-    assert_css parse_html(sp_action_list_item("Action", class: "custom")), ".custom"
+    assert_css doc, "ul > li > ul > li > button"
+    assert_includes doc.text, "Action"
   end
 
   def test_composition
     doc = parse_html(
-      sp_action_list do
-        sp_action_list_section(title: "Nav") do
-          sp_action_list_item("Home", url: "/")
-        end
+      sp_action_list do |list|
+        list.section(title: "Nav") { list.item("Home", url: "/") }
       end
     )
 

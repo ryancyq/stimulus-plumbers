@@ -23,7 +23,7 @@ module StimulusPlumbers
           kwargs,
           { role: role }
         )
-        template.content_tag(:ul, template.capture(&block), **html_options)
+        template.content_tag(:ul, template.capture(self, &block), **html_options)
       end
     end
   end
