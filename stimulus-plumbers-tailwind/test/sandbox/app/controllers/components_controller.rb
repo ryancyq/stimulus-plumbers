@@ -20,6 +20,7 @@ class ComponentsController < ApplicationController
   end
 
   def calendar_turbo
+    @view              = params[:view]
     @selectable        = params[:selectable] == "true"
     @show_other_months = params[:show_other_months] == "true"
     @date  = month_date_from_params(:year, :month) || Date.today
