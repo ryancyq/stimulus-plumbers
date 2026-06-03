@@ -27,7 +27,11 @@ module StimulusPlumbers
         if block_given?
           template.capture(&block)
         elsif url
-          template.tag.img(src: url, alt: name.present? ? "#{name}'s avatar" : "", onerror: "this.src=''")
+          img_options = merge_html_options(
+            theme.resolve(:avatar_image),
+            { src: url, alt: name.present? ? "#{name}'s avatar" : "", onerror: "this.src=''" }
+          )
+          template.tag.img(**img_options)
         elsif initials
           initials_svg(initials)
         else
