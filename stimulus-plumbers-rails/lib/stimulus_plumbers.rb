@@ -30,7 +30,6 @@ require_relative "stimulus_plumbers/components/input_group"
 require_relative "stimulus_plumbers/components/popover"
 require_relative "stimulus_plumbers/components/popover/trigger"
 require_relative "stimulus_plumbers/components/popover/panel"
-require_relative "stimulus_plumbers/components/popover/builder"
 
 # -- Calendar --
 require_relative "stimulus_plumbers/components/calendar"
