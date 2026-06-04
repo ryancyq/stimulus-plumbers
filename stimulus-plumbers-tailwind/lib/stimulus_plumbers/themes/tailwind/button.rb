@@ -97,23 +97,6 @@ module StimulusPlumbers
           xl: %w[h-14 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze
         }.freeze
 
-        FLEX_ALIGN = {
-          row: {
-            left:   "justify-start",
-            center: %w[justify-center items-center].freeze,
-            right:  "justify-end",
-            top:    "items-start",
-            bottom: "items-end"
-          }.freeze,
-          col: {
-            top:    "justify-start",
-            center: %w[justify-center items-center].freeze,
-            bottom: "justify-end",
-            left:   "items-start",
-            right:  "items-end"
-          }.freeze
-        }.freeze
-
         BUTTON_LINK_BASE = %w[
           inline-flex items-center justify-center gap-(--sp-space-2) font-medium
           rounded-(--sp-radius-md) transition-colors
@@ -133,13 +116,15 @@ module StimulusPlumbers
           [.sp-button-group_&]:rounded-none
           [.sp-button-group_&:first-child]:rounded-s-(--sp-radius-md)
           [.sp-button-group_&:last-child]:rounded-e-(--sp-radius-md)
+          [.sp-button-group-stacked_&]:rounded-none
+          [.sp-button-group-stacked_&:first-child]:rounded-t-(--sp-radius-md)
+          [.sp-button-group-stacked_&:last-child]:rounded-b-(--sp-radius-md)
         ].freeze
 
-        GROUP_BASE = %w[
-          sp-button-group
-          inline-flex shadow-(--sp-shadow-xs)
-          [&>*:not(:first-child)]:-ml-px
-        ].freeze
+        GROUP_LAYOUTS = {
+          inline:  %w[sp-button-group inline-flex rounded-(--sp-radius-md) shadow-(--sp-shadow-xs) [&>*:not(:first-child)]:-ml-px].freeze,
+          stacked: %w[sp-button-group-stacked flex flex-col rounded-(--sp-radius-md) shadow-(--sp-shadow-xs) [&>*:not(:first-child)]:-mt-px].freeze
+        }.freeze
 
         private
 
@@ -154,12 +139,9 @@ module StimulusPlumbers
           }
         end
 
-        def button_group_classes(alignment: :left, direction: :row)
+        def button_group_classes(layout: :inline)
           {
-            classes: klasses(
-              *GROUP_BASE,
-              *Array(FLEX_ALIGN.dig(direction, alignment))
-            )
+            classes: klasses(*GROUP_LAYOUTS.fetch(layout, GROUP_LAYOUTS[:inline]))
           }
         end
 

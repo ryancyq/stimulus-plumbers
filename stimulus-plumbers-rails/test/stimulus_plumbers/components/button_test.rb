@@ -140,8 +140,4 @@ class ButtonTest < ActionView::TestCase
   def test_link_renders_with_size_option
     assert_css parse_html(renderer.render("Go", url: "/path", size: :lg)), "a[href='/path']"
   end
-
-  def test_group_renders_role_group
-    assert_css parse_html(renderer.group { "buttons" }), "div[role='group']"
-  end
 end

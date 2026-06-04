@@ -8,15 +8,19 @@ module StimulusPlumbers
           render_group(...)
         end
 
+        def button(content = nil, **kwargs, &block)
+          Button.new(template).render(content, **kwargs, &block)
+        end
+
         private
 
-        def render_group(alignment: :left, direction: :row, **kwargs, &block)
+        def render_group(layout: :inline, **kwargs, &block)
           html_options = merge_html_options(
-            theme.resolve(:button_group, alignment: alignment, direction: direction),
+            theme.resolve(:button_group, layout: layout),
             kwargs,
             { role: "group" }
           )
-          template.content_tag(:div, template.capture(&block), **html_options)
+          template.content_tag(:div, template.capture(self, &block), **html_options)
         end
       end
     end

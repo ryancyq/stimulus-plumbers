@@ -30,8 +30,7 @@ module StimulusPlumbers
           size:    { default: :md,      validate: Ranges::SIZE }
         }.freeze,
         button_group: {
-          alignment: { default: :left, validate: Ranges::FLEX_ALIGN },
-          direction: { default: :row,  validate: Ranges::FLEX_DIRECTION }
+          layout: { default: :inline, validate: Ranges::LAYOUT }
         }.freeze,
         button_icon:  {}.freeze,
         button_link:  {
@@ -86,7 +85,7 @@ module StimulusPlumbers
 
       FORM = {
         form_group:            {
-          layout: { default: :stacked, validate: Form::Ranges::LAYOUT },
+          layout: { default: :stacked, validate: Ranges::LAYOUT },
           error:  { default: false,    validate: Ranges::BOOL }
         }.freeze,
         form_label:            {
@@ -131,7 +130,7 @@ module StimulusPlumbers
           variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
         }.freeze,
         form_choice_items:     {
-          layout: { default: :stacked, validate: Form::Ranges::LAYOUT }
+          layout: { default: :stacked, validate: Ranges::LAYOUT }
         }.freeze,
         form_field:            {
           as: { validate: Form::Ranges::FIELD_TYPE }

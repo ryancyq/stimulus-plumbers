@@ -12,10 +12,6 @@ module StimulusPlumbers
         end
       end
 
-      def group(...)
-        Button::Group.new(template).render(...)
-      end
-
       private
 
       def build_button(content, &block)

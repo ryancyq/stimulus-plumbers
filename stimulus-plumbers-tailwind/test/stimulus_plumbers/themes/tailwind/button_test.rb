@@ -165,65 +165,56 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_predicate result, :present?
   end
 
-  def test_button_group_includes_flex_base_classes
+  def test_button_group_defaults_to_inline_layout
     result = classes_for(:button_group)
 
     assert_includes result, "inline-flex"
     assert_includes result, "shadow-(--sp-shadow-xs)"
   end
 
-  def test_button_group_includes_negative_margin_for_shared_borders
-    assert_includes classes_for(:button_group), "-ml-px"
+  # :button_group layout: :inline
+
+  def test_button_group_inline_uses_horizontal_flex
+    result = classes_for(:button_group, layout: :inline)
+
+    assert_includes result, "inline-flex"
+    refute_includes result, "flex-col"
   end
 
-  # :button_group alignments (row direction)
+  def test_button_group_inline_uses_horizontal_negative_margin
+    result = classes_for(:button_group, layout: :inline)
 
-  def test_button_group_includes_alignment_class_for_left
-    assert_includes classes_for(:button_group, alignment: :left), "justify-start"
+    assert_includes result, "-ml-px"
+    refute_includes result, "-mt-px"
   end
 
-  def test_button_group_includes_alignment_class_for_right
-    assert_includes classes_for(:button_group, alignment: :right), "justify-end"
+  def test_button_group_inline_uses_sp_button_group_class
+    assert_includes classes_for(:button_group, layout: :inline), "sp-button-group"
   end
 
-  def test_button_group_includes_alignment_classes_for_center
-    result = classes_for(:button_group, alignment: :center)
+  # :button_group layout: :stacked
 
-    assert_includes result, "justify-center"
-    assert_includes result, "items-center"
+  def test_button_group_stacked_uses_vertical_flex
+    result = classes_for(:button_group, layout: :stacked)
+
+    assert_includes result, "flex"
+    assert_includes result, "flex-col"
+    refute_includes result, "inline-flex"
   end
 
-  def test_button_group_includes_alignment_class_for_top
-    assert_includes classes_for(:button_group, alignment: :top), "items-start"
+  def test_button_group_stacked_uses_vertical_negative_margin
+    result = classes_for(:button_group, layout: :stacked)
+
+    assert_includes result, "-mt-px"
+    refute_includes result, "-ml-px"
   end
 
-  def test_button_group_includes_alignment_class_for_bottom
-    assert_includes classes_for(:button_group, alignment: :bottom), "items-end"
+  def test_button_group_stacked_uses_sp_button_group_stacked_class
+    assert_includes classes_for(:button_group, layout: :stacked), "sp-button-group-stacked"
   end
 
-  # :button_group alignments (col direction)
-
-  def test_button_group_col_includes_alignment_class_for_top
-    assert_includes classes_for(:button_group, direction: :col, alignment: :top), "justify-start"
-  end
-
-  def test_button_group_col_includes_alignment_classes_for_center
-    result = classes_for(:button_group, direction: :col, alignment: :center)
-
-    assert_includes result, "justify-center"
-    assert_includes result, "items-center"
-  end
-
-  def test_button_group_col_includes_alignment_class_for_bottom
-    assert_includes classes_for(:button_group, direction: :col, alignment: :bottom), "justify-end"
-  end
-
-  def test_button_group_col_includes_alignment_class_for_left
-    assert_includes classes_for(:button_group, direction: :col, alignment: :left), "items-start"
-  end
-
-  def test_button_group_col_includes_alignment_class_for_right
-    assert_includes classes_for(:button_group, direction: :col, alignment: :right), "items-end"
+  def test_button_group_stacked_does_not_include_inline_group_class
+    refute_includes classes_for(:button_group, layout: :stacked), "sp-button-group "
   end
 
   # :button fab type
