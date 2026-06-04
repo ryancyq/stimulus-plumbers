@@ -38,12 +38,7 @@ module StimulusPlumbers
       end
 
       def render_icon(name)
-        return unless name
-
-        Icon.new(template).render(
-          name:    name,
-          classes: theme.resolve(:link_icon).fetch(:classes, "")
-        )
+        super(name, theme_key: :link_icon)
       end
     end
   end

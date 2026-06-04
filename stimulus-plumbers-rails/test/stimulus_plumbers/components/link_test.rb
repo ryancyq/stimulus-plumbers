@@ -50,15 +50,19 @@ class LinkComponentTest < ActionView::TestCase
   end
 
   def test_icon_leading_renders_before_content
-    doc = parse_html(renderer.render("Read more", url: "/", icon_leading: :arrow))
+    with_icon_theme do
+      doc = parse_html(renderer.render("Read more", url: "/", icon_leading: :arrow))
 
-    assert_operator doc.to_html.index("<span"), :<, doc.to_html.index("Read more")
+      assert_operator doc.to_html.index("<svg"), :<, doc.to_html.index("Read more")
+    end
   end
 
   def test_icon_trailing_renders_after_content
-    doc = parse_html(renderer.render("Read more", url: "/", icon_trailing: :arrow))
+    with_icon_theme do
+      doc = parse_html(renderer.render("Read more", url: "/", icon_trailing: :arrow))
 
-    assert_operator doc.to_html.index("Read more"), :<, doc.to_html.index("<span")
+      assert_operator doc.to_html.index("Read more"), :<, doc.to_html.index("<svg")
+    end
   end
 
   def test_icon_leading_as_callable
@@ -76,7 +80,7 @@ class LinkComponentTest < ActionView::TestCase
   def test_no_icon_renders_content_only
     doc = parse_html(renderer.render("Plain", url: "/"))
 
-    assert_no_css doc, "span"
+    assert_no_css doc, "svg[aria-hidden='true']"
     assert_css doc, "a"
   end
 end

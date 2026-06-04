@@ -28,31 +28,35 @@ class ButtonTest < ActionView::TestCase
   end
 
   def test_button_link_target_blank_adds_trailing_icon
-    doc = parse_html(renderer.render("External", url: "https://example.com", target: "_blank"))
-    a = doc.at_css("a")
+    with_icon_theme do
+      doc = parse_html(renderer.render("External", url: "https://example.com", target: "_blank"))
+      a = doc.at_css("a")
 
-    assert_css doc, "a[target='_blank'] span"
-    assert_operator a.to_html.index("External"), :<, a.to_html.index("<span")
+      assert_css doc, "a[target='_blank'] svg[aria-hidden='true']"
+      assert_operator a.to_html.index("External"), :<, a.to_html.index("<svg")
+    end
   end
 
   def test_button_link_target_blank_does_not_override_explicit_icon_trailing
-    doc = parse_html(
-      renderer.render(
-        "External",
-        url:           "https://example.com",
-        target:        "_blank",
-        icon_trailing: "arrow-right"
+    with_icon_theme do
+      doc = parse_html(
+        renderer.render(
+          "External",
+          url:           "https://example.com",
+          target:        "_blank",
+          icon_trailing: "arrow-right"
+        )
       )
-    )
 
-    assert_css doc, "a[target='_blank'] span"
-    assert_equal 1, doc.css("a span").length
+      assert_css doc, "a[target='_blank'] svg[aria-hidden='true']"
+      assert_equal 1, doc.css("a svg[aria-hidden='true']").length
+    end
   end
 
   def test_button_link_internal_does_not_add_trailing_icon
-    doc = parse_html(renderer.render("Internal", url: "/path"))
-
-    assert_no_css doc, "a span"
+    with_icon_theme do
+      assert_no_css parse_html(renderer.render("Internal", url: "/path")), "a svg[aria-hidden='true']"
+    end
   end
 
   def test_button_omits_target_when_not_given
@@ -72,22 +76,28 @@ class ButtonTest < ActionView::TestCase
   end
 
   def test_icon_leading_renders_before_content
-    doc = parse_html(renderer.render("Save", icon_leading: :check))
+    with_icon_theme do
+      doc = parse_html(renderer.render("Save", icon_leading: :check))
 
-    assert_operator doc.to_html.index("<span"), :<, doc.to_html.index("Save")
+      assert_operator doc.to_html.index("<svg"), :<, doc.to_html.index("Save")
+    end
   end
 
   def test_icon_trailing_renders_after_content
-    doc = parse_html(renderer.render("Next", icon_trailing: :arrow))
+    with_icon_theme do
+      doc = parse_html(renderer.render("Next", icon_trailing: :arrow))
 
-    assert_operator doc.to_html.index("Next"), :<, doc.to_html.index("<span")
+      assert_operator doc.to_html.index("Next"), :<, doc.to_html.index("<svg")
+    end
   end
 
   def test_icon_only_button_has_no_text_content
-    doc = parse_html(renderer.render(icon_leading: :x))
+    with_icon_theme do
+      doc = parse_html(renderer.render(icon_leading: :x))
 
-    assert_css doc, "span"
-    assert_equal "", doc.at_css("button").text.strip
+      assert_css doc, "svg[aria-hidden='true']"
+      assert_equal "", doc.at_css("button").text.strip
+    end
   end
 
   def test_icon_leading_as_callable
@@ -103,10 +113,12 @@ class ButtonTest < ActionView::TestCase
   end
 
   def test_no_icon_renders_content_only
-    doc = parse_html(renderer.render("Plain"))
+    with_icon_theme do
+      doc = parse_html(renderer.render("Plain"))
 
-    assert_no_css doc, "span"
-    assert_css doc, "button"
+      assert_no_css doc, "svg[aria-hidden='true']"
+      assert_css doc, "button"
+    end
   end
 
   def test_button_renders_with_type_option
