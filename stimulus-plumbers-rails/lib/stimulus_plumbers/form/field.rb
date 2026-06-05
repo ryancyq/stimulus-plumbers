@@ -10,7 +10,7 @@ module StimulusPlumbers
         text_area file password date time select search
       ].freeze
       COLLECTION_TYPES = %i[radio check_box collection_select grouped_collection_select].freeze
-      TYPES            = %i[default floating_filled floating_outlined floating_standard].freeze
+      FLOATING_TYPES   = %i[standard filled outlined].freeze
       OPTIONS          = (Base::OPTIONS + %i[hide_label]).freeze
 
       attr_reader :hide_label
@@ -30,8 +30,8 @@ module StimulusPlumbers
 
       def render(object, attribute, input_id:, &block)
         @label ||= attribute.to_s.humanize
-        case @type
-        when :floating_filled, :floating_outlined, :floating_standard
+        case @floating
+        when *FLOATING_TYPES
           render_floating_field(object, attribute, input_id, &block)
         else
           render_default_field(object, attribute, input_id, &block)
@@ -70,7 +70,7 @@ module StimulusPlumbers
       def render_floating_field(object, attribute, input_id, &block)
         error_override = error?(object, attribute)
         aria           = build_aria(object, attribute, input_id)
-        input_classes  = theme.resolve(:form_floating_input, type: @type, error: error_override)[:classes]
+        input_classes  = theme.resolve(:form_floating_input, type: @floating, error: error_override)[:classes]
         field_opts     = build_html_options(input_id, aria).merge(class: input_classes, placeholder: " ")
         Fields::Group.new(@template).render(layout: @layout, error: error_override) do
           @template.safe_join(
@@ -90,7 +90,7 @@ module StimulusPlumbers
           text:     @label,
           for_id:   input_id,
           id:       self.class.label_id(input_id),
-          type:     @type,
+          type:     @floating,
           required: @required,
           error:    error,
           &block

@@ -12,7 +12,7 @@ class FormFieldsLabelFloatingTest < ActionView::TestCase
 
   INPUT_ID = "user_email"
   LABEL_ID = "user_email_label"
-  TYPE         = :floating_filled
+  TYPE         = :filled
 
   DEFAULT_ARGS = { text: "Email", for_id: INPUT_ID, id: LABEL_ID, type: TYPE, required: false, error: false }.freeze
 

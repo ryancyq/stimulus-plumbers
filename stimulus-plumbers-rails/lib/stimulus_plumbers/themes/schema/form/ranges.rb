@@ -9,7 +9,7 @@ module StimulusPlumbers
         module Ranges
           SUBMIT_TYPE      = %i[default button].freeze
           CHOICE_TYPE      = %i[default button card].freeze
-          FLOATING_TYPE    = StimulusPlumbers::Form::Field::TYPES - [:default]
+          FLOATING_TYPE    = StimulusPlumbers::Form::Field::FLOATING_TYPES.freeze
           FIELD_TYPE       = StimulusPlumbers::Form::Field::TYPES
           COLLECTION_FIELD_TYPE = StimulusPlumbers::Form::Field::COLLECTION_TYPES
         end
