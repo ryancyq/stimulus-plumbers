@@ -79,7 +79,7 @@ module StimulusPlumbers
         ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
         CHECKBOX_VARIANTS = {
           default: %w[
-            size-(--sp-control-size) rounded-(--sp-radius-sm)
+            size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
             border border-(--sp-color-border) bg-(--sp-color-muted)
             focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
             disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
@@ -93,14 +93,15 @@ module StimulusPlumbers
           card:    %w[
             size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
             border border-(--sp-color-border) bg-(--sp-color-muted)
-            focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+            checked:border-(--card-ring)
+            focus:ring-2 focus:ring-(--card-ring) focus:outline-none
             disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
           ].freeze
         }.freeze
 
         RADIO_VARIANTS = {
           default: %w[
-            size-(--sp-control-size) rounded-full
+            size-(--sp-control-size) rounded-full shrink-0
             border border-(--sp-color-border) bg-(--sp-color-muted)
             appearance-none cursor-pointer
             checked:border-(--sp-color-primary)
@@ -113,6 +114,14 @@ module StimulusPlumbers
 
         INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
         INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
+
+        CARD_VARIANTS = {
+          default:     %w[[--card-ring:var(--sp-color-primary)]].freeze,
+          success:     %w[[--card-ring:var(--sp-color-success)]].freeze,
+          destructive: %w[[--card-ring:var(--sp-color-destructive)]].freeze,
+          warning:     %w[[--card-ring:var(--sp-color-warning)]].freeze,
+          info:        %w[[--card-ring:var(--sp-color-info)]].freeze
+        }.freeze
 
         CHECKBOX_LABEL_VARIANTS = {
           default: %w[
@@ -129,7 +138,9 @@ module StimulusPlumbers
             flex justify-between items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
             text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
             bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
-            hover:bg-(--sp-color-muted)
+            hover:bg-(--sp-color-muted) hover:border-(--sp-color-border-strong) hover:text-(--sp-color-fg)
+            has-[:checked]:border-(--card-ring) has-[:checked]:bg-(--card-ring)/10
+            has-[:checked]:text-(--sp-color-fg) has-[:checked]:hover:bg-(--card-ring)/15
           ].freeze
         }.freeze
 
@@ -147,12 +158,12 @@ module StimulusPlumbers
             peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--sp-color-primary)/15
           ].freeze,
           card:    %w[
-            flex flex-col items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
+            flex items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
             text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
             bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
-            hover:bg-(--sp-color-muted)
-            peer-checked:border-(--sp-color-primary) peer-checked:bg-(--sp-color-primary)/10
-            peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--sp-color-primary)/15
+            hover:bg-(--sp-color-muted) hover:border-(--sp-color-border-strong) hover:text-(--sp-color-fg)
+            peer-checked:border-(--card-ring) peer-checked:bg-(--card-ring)/10
+            peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--card-ring)/15
           ].freeze
         }.freeze
 
@@ -228,11 +239,12 @@ module StimulusPlumbers
           form_input_classes(error: error)
         end
 
-        def form_checkbox_classes(variant: :default, **)
-          { classes: klasses(*CHECKBOX_VARIANTS.fetch(variant)) }
+        def form_checkbox_classes(variant: :default, color: :default, **)
+          card_color = variant == :card ? CARD_VARIANTS.fetch(color, CARD_VARIANTS[:default]) : []
+          { classes: klasses(*CHECKBOX_VARIANTS.fetch(variant), *card_color) }
         end
 
-        def form_radio_classes(variant: :default, **)
+        def form_radio_classes(variant: :default, color: :default, **)
           { classes: klasses(*RADIO_VARIANTS.fetch(variant)) }
         end
 
@@ -252,12 +264,14 @@ module StimulusPlumbers
           { classes: "sp-form-input-group" }
         end
 
-        def form_checkbox_label_classes(variant: :default)
-          { classes: klasses(*CHECKBOX_LABEL_VARIANTS.fetch(variant)) }
+        def form_checkbox_label_classes(variant: :default, color: :default)
+          card_color = variant == :card ? CARD_VARIANTS.fetch(color, CARD_VARIANTS[:default]) : []
+          { classes: klasses(*CHECKBOX_LABEL_VARIANTS.fetch(variant), *card_color) }
         end
 
-        def form_radio_label_classes(variant: :default)
-          { classes: klasses(*RADIO_LABEL_VARIANTS.fetch(variant)) }
+        def form_radio_label_classes(variant: :default, color: :default)
+          card_color = variant == :card ? CARD_VARIANTS.fetch(color, CARD_VARIANTS[:default]) : []
+          { classes: klasses(*RADIO_LABEL_VARIANTS.fetch(variant), *card_color) }
         end
 
         def form_choice_items_classes(layout: :stacked)

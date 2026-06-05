@@ -107,12 +107,14 @@ module StimulusPlumbers
         form_file:             { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_select:           { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_checkbox:         {
-          error:   { default: false, validate: Ranges::BOOL },
-          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
+          error:   { default: false,    validate: Ranges::BOOL },
+          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT },
+          color:   { default: :default, validate: Ranges::BUTTON_VARIANT }
         }.freeze,
         form_radio:            {
-          error:   { default: false, validate: Ranges::BOOL },
-          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
+          error:   { default: false,    validate: Ranges::BOOL },
+          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT },
+          color:   { default: :default, validate: Ranges::BUTTON_VARIANT }
         }.freeze,
         form_combobox:         { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_input_reveal:     { error: { default: false, validate: Ranges::BOOL } }.freeze,
@@ -120,10 +122,12 @@ module StimulusPlumbers
         form_button_reveal:    {}.freeze,
         form_button_clear:     {}.freeze,
         form_checkbox_label:   {
-          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
+          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT },
+          color:   { default: :default, validate: Ranges::BUTTON_VARIANT }
         }.freeze,
         form_radio_label:      {
-          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
+          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT },
+          color:   { default: :default, validate: Ranges::BUTTON_VARIANT }
         }.freeze,
         form_choice_items:     {
           layout: { default: :stacked, validate: Ranges::LAYOUT }

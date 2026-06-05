@@ -38,6 +38,16 @@
   <%= sp_link("Info",        url: "#", type: :button, variant: :info) %>
 </div>
 
+<div id="link-card" style="display:flex;flex-direction:column;gap:0.5rem;max-width:24rem">
+  <%# ── Card type ──────────────────────────────────────────────────── %>
+  <%= sp_link("Get started",        url: "#", type: :card) %>
+  <%= sp_link("Read the docs",      url: "#", type: :card, icon_leading: "book-open", icon_trailing: "arrow-right") %>
+  <%= sp_link("External resource",  url: "https://example.com", target: "_blank", type: :card) %>
+  <%# ── Card type × variants ──────────────────────────────────────── %>
+  <%= sp_link("Success card",       url: "#", type: :card, variant: :success) %>
+  <%= sp_link("Destructive card",   url: "#", type: :card, variant: :destructive) %>
+</div>
+
 <div id="link-button-icons">
   <%# ── type: :button with icons ───────────────────────────────────────────── %>
   <%= sp_link("With icon",   url: "#", icon_leading: "arrow-left",         type: :button) %>

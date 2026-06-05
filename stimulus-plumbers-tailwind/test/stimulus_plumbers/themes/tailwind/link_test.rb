@@ -198,6 +198,89 @@ class TailwindThemeLinkTest < Minitest::Test
     assert_includes result, "[--link-bg:var(--sp-color-primary)]"
   end
 
+  # :link type: :card base
+
+  def test_link_card_type_returns_a_classes_string
+    result = classes_for(:link, type: :card)
+
+    assert_instance_of String, result
+    assert_predicate result, :present?
+  end
+
+  def test_link_card_type_uses_neutral_background_and_text
+    result = classes_for(:link, type: :card)
+
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "text-(--sp-color-muted-fg)"
+  end
+
+  def test_link_card_type_uses_full_padding_not_height
+    result = classes_for(:link, type: :card)
+
+    assert_includes result, "p-(--sp-space-4)"
+    refute_includes result, "h-9"
+  end
+
+  def test_link_card_type_uses_justify_between_layout
+    result = classes_for(:link, type: :card)
+
+    assert_includes result, "justify-between"
+    assert_includes result, "flex-1"
+    assert_includes result, "gap-(--sp-space-3)"
+  end
+
+  def test_link_card_type_includes_border_shadow_and_hover_upgrades
+    result = classes_for(:link, type: :card)
+
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "shadow-(--sp-shadow-xs)"
+    assert_includes result, "hover:border-(--sp-color-border-strong)"
+    assert_includes result, "hover:text-(--sp-color-fg)"
+  end
+
+  def test_link_card_type_sets_default_card_ring
+    result = classes_for(:link, type: :card)
+
+    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "focus-visible:ring-(--card-ring)"
+  end
+
+  def test_link_card_type_does_not_include_hover_underline
+    refute_includes classes_for(:link, type: :card), "hover:underline"
+  end
+
+  def test_link_card_type_does_not_use_link_color_or_bg
+    result = classes_for(:link, type: :card)
+
+    refute_includes result, "--link-color"
+    refute_includes result, "--link-bg"
+  end
+
+  def test_link_card_type_does_not_include_fixed_height
+    refute_includes classes_for(:link, type: :card), "h-9"
+  end
+
+  # :link type: :card variants
+
+  def test_link_card_type_success_variant_sets_card_ring
+    result = classes_for(:link, type: :card, variant: :success)
+
+    assert_includes result, "[--card-ring:var(--sp-color-success)]"
+    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+  end
+
+  def test_link_card_type_destructive_variant_sets_card_ring
+    result = classes_for(:link, type: :card, variant: :destructive)
+
+    assert_includes result, "[--card-ring:var(--sp-color-destructive)]"
+  end
+
+  def test_link_card_type_falls_back_to_default_card_ring_for_unknown_variant
+    result = classes_for(:link, type: :card, variant: :unknown)
+
+    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+  end
+
   # :link_icon
 
   def test_link_icon_returns_a_classes_string

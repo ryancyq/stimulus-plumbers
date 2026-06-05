@@ -225,6 +225,33 @@ class TailwindThemeFormTest < Minitest::Test
     assert_includes result, "border-(--sp-color-border)"
     assert_includes result, "rounded-(--sp-radius-md)"
     assert_includes result, "hover:bg-(--sp-color-muted)"
+    assert_includes result, "hover:border-(--sp-color-border-strong)"
+    assert_includes result, "hover:text-(--sp-color-fg)"
+    assert_includes result, "has-[:checked]:border-(--card-ring)"
+    assert_includes result, "has-[:checked]:bg-(--card-ring)/10"
+    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+  end
+
+  def test_form_checkbox_label_card_variant_with_color
+    result = classes_for(:form_checkbox_label, variant: :card, color: :success)
+
+    assert_includes result, "[--card-ring:var(--sp-color-success)]"
+    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+  end
+
+  def test_form_checkbox_label_non_card_variant_ignores_color
+    result = classes_for(:form_checkbox_label, variant: :default, color: :success)
+
+    refute_includes result, "--card-ring"
+  end
+
+  def test_form_checkbox_card_variant_input
+    result = classes_for(:form_checkbox, variant: :card)
+
+    assert_includes result, "checked:border-(--card-ring)"
+    assert_includes result, "focus:ring-(--card-ring)"
+    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    refute_includes result, "focus:ring-(--sp-focus-ring-color)"
   end
 
   # :form_radio
@@ -291,11 +318,27 @@ class TailwindThemeFormTest < Minitest::Test
     result = classes_for(:form_radio_label, variant: :card)
 
     assert_includes result, "flex"
-    assert_includes result, "flex-col"
+    refute_includes result, "flex-col"
     assert_includes result, "items-start"
     assert_includes result, "shadow-(--sp-shadow-xs)"
-    assert_includes result, "peer-checked:border-(--sp-color-primary)"
-    assert_includes result, "peer-checked:bg-(--sp-color-primary)/10"
+    assert_includes result, "hover:border-(--sp-color-border-strong)"
+    assert_includes result, "hover:text-(--sp-color-fg)"
+    assert_includes result, "peer-checked:border-(--card-ring)"
+    assert_includes result, "peer-checked:bg-(--card-ring)/10"
+    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+  end
+
+  def test_form_radio_label_card_variant_with_color
+    result = classes_for(:form_radio_label, variant: :card, color: :destructive)
+
+    assert_includes result, "[--card-ring:var(--sp-color-destructive)]"
+    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+  end
+
+  def test_form_radio_label_non_card_variant_ignores_color
+    result = classes_for(:form_radio_label, variant: :default, color: :success)
+
+    refute_includes result, "--card-ring"
   end
 
   # :form_choice_items
