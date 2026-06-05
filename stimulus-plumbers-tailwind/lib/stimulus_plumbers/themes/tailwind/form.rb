@@ -18,7 +18,7 @@ module StimulusPlumbers
           w-full text-(length:--sp-text-sm) text-(--sp-color-fg) appearance-none
           focus:outline-none focus:ring-0
         ].freeze
-        FLOATING_INPUT_VARIANTS = {
+        FLOATING_INPUT_TYPES = {
           floating_filled:   %w[
             rounded-t-(--sp-radius-md) px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-5)
             bg-(--sp-color-bg-muted) border-0 border-b-2
@@ -35,7 +35,7 @@ module StimulusPlumbers
         FLOATING_INPUT_ERROR   = %w[border-(--sp-color-error)].freeze
         FLOATING_INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:border-(--sp-color-primary)].freeze
 
-        FLOATING_GROUP_VARIANTS = {
+        FLOATING_GROUP_TYPES = {
           floating_filled:   %w[relative].freeze,
           floating_outlined: %w[relative].freeze,
           floating_standard: %w[relative z-0].freeze
@@ -47,7 +47,7 @@ module StimulusPlumbers
         ].freeze
         FLOATING_LABEL_FOCUS   = %w[peer-focus:text-(--sp-color-primary)].freeze
         FLOATING_LABEL_ERROR   = %w[text-(--sp-color-error)].freeze
-        FLOATING_LABEL_VARIANTS = {
+        FLOATING_LABEL_TYPES = {
           floating_filled:   %w[
             -translate-y-(--sp-space-4) scale-75 top-(--sp-space-4) z-10 start-(--sp-space-2-5)
             peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
@@ -77,7 +77,7 @@ module StimulusPlumbers
         REQUIRED_MARK = %w[text-(--sp-color-error) ml-(--sp-space-0-5)].freeze
         DETAILS       = %w[text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
         ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
-        CHECKBOX_VARIANTS = {
+        CHECKBOX_TYPES = {
           default: %w[
             size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
             border border-(--sp-color-border) bg-(--sp-color-muted)
@@ -99,7 +99,7 @@ module StimulusPlumbers
           ].freeze
         }.freeze
 
-        RADIO_VARIANTS = {
+        RADIO_TYPES = {
           default: %w[
             size-(--sp-control-size) rounded-full shrink-0
             border border-(--sp-color-border) bg-(--sp-color-muted)
@@ -123,7 +123,7 @@ module StimulusPlumbers
           info:        %w[[--card-ring:var(--sp-color-info)]].freeze
         }.freeze
 
-        CHECKBOX_LABEL_VARIANTS = {
+        CHECKBOX_LABEL_TYPES = {
           default: %w[
             flex items-center gap-(--sp-space-2) cursor-pointer py-(--sp-space-0-5) select-none
             text-(length:--sp-text-sm) text-(--sp-color-fg)
@@ -144,7 +144,7 @@ module StimulusPlumbers
           ].freeze
         }.freeze
 
-        RADIO_LABEL_VARIANTS = {
+        RADIO_LABEL_TYPES = {
           default: %w[
             flex items-center gap-(--sp-space-2) cursor-pointer py-(--sp-space-0-5) select-none
             text-(length:--sp-text-sm) text-(--sp-color-fg)
@@ -154,8 +154,8 @@ module StimulusPlumbers
             text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
             bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md)
             hover:bg-(--sp-color-muted)
-            peer-checked:border-(--sp-color-primary) peer-checked:bg-(--sp-color-primary)/10
-            peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--sp-color-primary)/15
+            peer-checked:border-(--card-ring) peer-checked:bg-(--card-ring)/10
+            peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--card-ring)/15
           ].freeze,
           card:    %w[
             flex items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
@@ -208,23 +208,23 @@ module StimulusPlumbers
           { classes: klasses(*INPUT_BASE, *(error ? INPUT_ERROR : INPUT_DEFAULT)) }
         end
 
-        def form_floating_input_classes(variant: nil, error: false)
+        def form_floating_input_classes(type: nil, error: false)
           {
             classes: klasses(
               *FLOATING_INPUT_BASE,
-              *FLOATING_INPUT_VARIANTS.fetch(variant, []),
+              *FLOATING_INPUT_TYPES.fetch(type, []),
               *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT)
             )
           }
         end
 
-        def form_floating_group_classes(variant: nil)
-          { classes: klasses(*FLOATING_GROUP_VARIANTS.fetch(variant, [])) }
+        def form_floating_group_classes(type: nil)
+          { classes: klasses(*FLOATING_GROUP_TYPES.fetch(type, [])) }
         end
 
-        def form_floating_label_classes(variant: nil, error: false)
+        def form_floating_label_classes(type: nil, error: false)
           color = error ? FLOATING_LABEL_ERROR : FLOATING_LABEL_FOCUS
-          { classes: klasses(*FLOATING_LABEL_BASE, *FLOATING_LABEL_VARIANTS.fetch(variant, []), *color) }
+          { classes: klasses(*FLOATING_LABEL_BASE, *FLOATING_LABEL_TYPES.fetch(type, []), *color) }
         end
 
         def form_textarea_classes(error: false)
@@ -239,13 +239,13 @@ module StimulusPlumbers
           form_input_classes(error: error)
         end
 
-        def form_checkbox_classes(variant: :default, color: :default, **)
-          card_color = variant == :card ? CARD_VARIANTS.fetch(color, CARD_VARIANTS[:default]) : []
-          { classes: klasses(*CHECKBOX_VARIANTS.fetch(variant), *card_color) }
+        def form_checkbox_classes(type: :default, variant: :default, **)
+          card_color = type == :card ? CARD_VARIANTS.fetch(variant, CARD_VARIANTS[:default]) : []
+          { classes: klasses(*CHECKBOX_TYPES.fetch(type), *card_color) }
         end
 
-        def form_radio_classes(variant: :default, color: :default, **)
-          { classes: klasses(*RADIO_VARIANTS.fetch(variant)) }
+        def form_radio_classes(type: :default, variant: :default, **)
+          { classes: klasses(*RADIO_TYPES.fetch(type)) }
         end
 
         def input_group_classes(error: false)
@@ -264,14 +264,14 @@ module StimulusPlumbers
           { classes: "sp-form-input-group" }
         end
 
-        def form_checkbox_label_classes(variant: :default, color: :default)
-          card_color = variant == :card ? CARD_VARIANTS.fetch(color, CARD_VARIANTS[:default]) : []
-          { classes: klasses(*CHECKBOX_LABEL_VARIANTS.fetch(variant), *card_color) }
+        def form_checkbox_label_classes(type: :default, variant: :default)
+          card_color = type == :card ? CARD_VARIANTS.fetch(variant, CARD_VARIANTS[:default]) : []
+          { classes: klasses(*CHECKBOX_LABEL_TYPES.fetch(type), *card_color) }
         end
 
-        def form_radio_label_classes(variant: :default, color: :default)
-          card_color = variant == :card ? CARD_VARIANTS.fetch(color, CARD_VARIANTS[:default]) : []
-          { classes: klasses(*RADIO_LABEL_VARIANTS.fetch(variant), *card_color) }
+        def form_radio_label_classes(type: :default, variant: :default)
+          card_color = %i[button card].include?(type) ? CARD_VARIANTS.fetch(variant, CARD_VARIANTS[:default]) : []
+          { classes: klasses(*RADIO_LABEL_TYPES.fetch(type), *card_color) }
         end
 
         def form_choice_items_classes(layout: :stacked)
@@ -286,8 +286,8 @@ module StimulusPlumbers
           { classes: klasses(*BUTTON_CLEAR) }
         end
 
-        def form_submit_classes(variant: :default)
-          case variant
+        def form_submit_classes(type: :default)
+          case type
           when :button
             { classes: klasses(*Button::BASE, *Button::VARIANTS[:primary], *Button::SIZES[:md]) }
           else

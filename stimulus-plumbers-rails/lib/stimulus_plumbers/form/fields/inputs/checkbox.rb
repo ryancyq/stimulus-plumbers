@@ -40,26 +40,26 @@ module StimulusPlumbers
           end
 
           def render_collection_check_box(attribute, collection, value_method, text_method, field_opts, **kwargs)
+            type    = kwargs.delete(:type)    { :default }
             variant = kwargs.delete(:variant) { :default }
-            color   = kwargs.delete(:color)   { :default }
             field   = Field.new(@template, **{ layout: :inline }.deep_merge(field_opts))
             render_fieldset(attribute, field) do |error|
               item_opts = merge_html_options(
-                theme.resolve(:form_checkbox, error: error, variant: variant, color: color),
+                theme.resolve(:form_checkbox, error: error, type: type, variant: variant),
                 kwargs,
                 field.required ? { aria: { required: "true" } } : {}
               )
               @template.collection_check_boxes(
                 @object_name, attribute, collection, value_method, text_method, {}, item_opts
               ) do |builder|
-                render_check_box_label(builder, theme.resolve(:form_checkbox_label, variant: variant, color: color), variant)
+                render_check_box_label(builder, theme.resolve(:form_checkbox_label, type: type, variant: variant), type)
               end
             end
           end
 
-          def render_check_box_label(builder, label_opts, variant = :default)
+          def render_check_box_label(builder, label_opts, type = :default)
             html_options = merge_html_options(label_opts)
-            case variant
+            case type
             when :card
               builder.label(**html_options) { @template.safe_join([builder.text, builder.check_box]) }
             else

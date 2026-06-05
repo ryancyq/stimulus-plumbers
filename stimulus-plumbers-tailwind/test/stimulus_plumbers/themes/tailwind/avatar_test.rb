@@ -33,26 +33,26 @@ class TailwindThemeAvatarTest < Minitest::Test
     end
   end
 
-  def test_avatar_colors_exposes_avatar_colors_as_hash_of_symbol_keys_to_css_class_strings
-    colors = StimulusPlumbers::Themes::Tailwind::Avatar::COLORS
+  def test_avatar_variants_exposes_variants_as_hash_of_symbol_keys_to_css_class_strings
+    variants = StimulusPlumbers::Themes::Tailwind::Avatar::VARIANTS
 
-    assert_instance_of Hash, colors
-    assert_predicate colors, :present?
-    assert colors.keys.all?(Symbol), "expected all keys to be Symbols"
-    assert colors.values.all?(String), "expected all values to be Strings"
+    assert_instance_of Hash, variants
+    assert_predicate variants, :present?
+    assert variants.keys.all?(Symbol), "expected all keys to be Symbols"
+    assert variants.values.all?(String), "expected all values to be Strings"
   end
 
-  def test_avatar_color_range_returns_the_css_class_values_of_avatar_colors
-    assert_equal StimulusPlumbers::Themes::Tailwind::Avatar::COLORS.values, @theme.avatar_color_range
+  def test_avatar_variant_range_returns_the_css_class_values_of_avatar_variants
+    assert_equal StimulusPlumbers::Themes::Tailwind::Avatar::VARIANTS.values, @theme.avatar_variant_range
   end
 
-  def test_avatar_colors_returns_avatar_colors
-    assert_equal StimulusPlumbers::Themes::Tailwind::Avatar::COLORS, @theme.avatar_colors
+  def test_avatar_variants_returns_avatar_variants
+    assert_equal StimulusPlumbers::Themes::Tailwind::Avatar::VARIANTS, @theme.avatar_variants
   end
 
-  def test_avatar_resolves_each_color_key_to_a_css_class_string
-    StimulusPlumbers::Themes::Tailwind::Avatar::COLORS.each do |key, css_class|
-      assert_equal css_class, @theme.avatar_colors.fetch(key)
+  def test_avatar_resolves_each_variant_key_to_a_css_class_string
+    StimulusPlumbers::Themes::Tailwind::Avatar::VARIANTS.each do |key, css_class|
+      assert_equal css_class, @theme.avatar_variants.fetch(key)
     end
   end
 

@@ -7,9 +7,9 @@ module StimulusPlumbers
     module Schema
       module Form
         module Ranges
-          SUBMIT_VARIANT   = %i[default button].freeze
-          CHOICE_VARIANT   = %i[default button card].freeze
-          FLOATING_VARIANT = StimulusPlumbers::Form::Field::VARIANTS - [:default]
+          SUBMIT_TYPE      = %i[default button].freeze
+          CHOICE_TYPE      = %i[default button card].freeze
+          FLOATING_TYPE    = StimulusPlumbers::Form::Field::TYPES - [:default]
           FIELD_TYPE       = StimulusPlumbers::Form::Field::TYPES
           COLLECTION_FIELD_TYPE = StimulusPlumbers::Form::Field::COLLECTION_TYPES
         end

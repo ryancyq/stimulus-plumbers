@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Avatar
-        COLORS = {
+        VARIANTS = {
           amber:   "text-white bg-amber-600",
           lime:    "text-white bg-lime-600",
           sky:     "text-white bg-sky-600",
@@ -27,21 +27,21 @@ module StimulusPlumbers
 
         BASE = %w[rounded-(--sp-radius-full) overflow-hidden inline-flex items-center justify-center].freeze
 
-        def avatar_colors
-          COLORS
+        def avatar_variants
+          VARIANTS
         end
 
-        def avatar_color_range
-          COLORS.values
+        def avatar_variant_range
+          VARIANTS.values
         end
 
         private
 
-        def avatar_classes(size: :md, color: nil)
+        def avatar_classes(size: :md, variant: nil)
           {
             classes: klasses(
               SIZES.fetch(size, SIZES[:md]),
-              COLORS.fetch(color, nil),
+              VARIANTS.fetch(variant, nil),
               *BASE
             )
           }

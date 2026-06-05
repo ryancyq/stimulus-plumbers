@@ -30,11 +30,11 @@ class BaseThemeFormTest < StubThemeTestCase
     mock_logger.verify
   end
 
-  def test_coerces_invalid_form_submit_variant_to_default_and_warns
+  def test_coerces_invalid_form_submit_type_to_default_and_warns
     mock_logger = Minitest::Mock.new
     mock_logger.expect(:warn, nil, [%r{unknown value :icon}])
     Rails.stub(:logger, mock_logger) do
-      @theme.resolve(:form_submit, variant: :icon)
+      @theme.resolve(:form_submit, type: :icon)
     end
     mock_logger.verify
   end

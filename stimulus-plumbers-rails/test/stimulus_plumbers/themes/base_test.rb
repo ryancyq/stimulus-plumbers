@@ -28,12 +28,12 @@ class BaseThemeTest < Minitest::Test
     assert_equal({}, @theme.resolve(:nonexistent))
   end
 
-  def test_avatar_colors_returns_empty_hash
-    assert_equal({}, @theme.avatar_colors)
+  def test_avatar_variants_returns_empty_hash
+    assert_equal({}, @theme.avatar_variants)
   end
 
-  def test_avatar_color_range_returns_empty_array
-    assert_equal([], @theme.avatar_color_range)
+  def test_avatar_variant_range_returns_empty_array
+    assert_equal([], @theme.avatar_variant_range)
   end
 
   def test_valid_nil_validator_accepts_any_value

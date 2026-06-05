@@ -32,19 +32,19 @@ module StimulusPlumbers
           private
 
           def render_collection_radio_button(attribute, collection, value_method, text_method, field_opts, **kwargs)
+            type    = kwargs.delete(:type)    { :default }
             variant = kwargs.delete(:variant) { :default }
-            color   = kwargs.delete(:color)   { :default }
             field = Field.new(@template, **{ layout: :inline }.deep_merge(field_opts))
             render_fieldset(attribute, field) do |error|
               item_opts = merge_html_options(
-                theme.resolve(:form_radio, error: error, variant: variant, color: color),
+                theme.resolve(:form_radio, error: error, type: type, variant: variant),
                 kwargs,
                 field.required ? { aria: { required: "true" } } : {}
               )
               @template.collection_radio_buttons(
                 @object_name, attribute, collection, value_method, text_method, {}, item_opts
               ) do |builder|
-                render_radio_button_label(builder, theme.resolve(:form_radio_label, variant: variant, color: color))
+                render_radio_button_label(builder, theme.resolve(:form_radio_label, type: type, variant: variant))
               end
             end
           end
