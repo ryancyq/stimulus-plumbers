@@ -32,11 +32,7 @@ module StimulusPlumbers
         button_group: {
           layout: { default: :inline, validate: Ranges::LAYOUT }
         }.freeze,
-        button_icon:  {}.freeze,
-        button_link:  {
-          variant: { default: :default, validate: Ranges::BUTTON_VARIANT },
-          size:    { default: :md,      validate: Ranges::SIZE }
-        }.freeze
+        button_icon:  {}.freeze
       }.freeze
 
       CALENDAR = {
@@ -153,6 +149,7 @@ module StimulusPlumbers
 
       LINK = {
         link:      {
+          type:    { default: :default, validate: Ranges::LINK_TYPE },
           variant: { default: :default, validate: Ranges::LINK_VARIANT }
         }.freeze,
         link_icon: {}.freeze

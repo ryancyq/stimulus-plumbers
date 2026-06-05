@@ -18,51 +18,6 @@ class ButtonTest < ActionView::TestCase
     assert_css parse_html(renderer.render("Click me")), "button[type='button']"
   end
 
-  def test_button_renders_link_when_url_given
-    assert_css parse_html(renderer.render("Go", url: "/dashboard")), "a[href='/dashboard']"
-  end
-
-  def test_button_renders_link_with_target_blank
-    assert_css parse_html(renderer.render("External", url: "https://example.com", target: "_blank")),
-               "a[target='_blank']"
-  end
-
-  def test_button_link_target_blank_adds_trailing_icon
-    with_icon_theme do
-      doc = parse_html(renderer.render("External", url: "https://example.com", target: "_blank"))
-      a = doc.at_css("a")
-
-      assert_css doc, "a[target='_blank'] svg[aria-hidden='true']"
-      assert_operator a.to_html.index("External"), :<, a.to_html.index("<svg")
-    end
-  end
-
-  def test_button_link_target_blank_does_not_override_explicit_icon_trailing
-    with_icon_theme do
-      doc = parse_html(
-        renderer.render(
-          "External",
-          url:           "https://example.com",
-          target:        "_blank",
-          icon_trailing: "arrow-right"
-        )
-      )
-
-      assert_css doc, "a[target='_blank'] svg[aria-hidden='true']"
-      assert_equal 1, doc.css("a svg[aria-hidden='true']").length
-    end
-  end
-
-  def test_button_link_internal_does_not_add_trailing_icon
-    with_icon_theme do
-      assert_no_css parse_html(renderer.render("Internal", url: "/path")), "a svg[aria-hidden='true']"
-    end
-  end
-
-  def test_button_omits_target_when_not_given
-    assert_no_css parse_html(renderer.render("Internal", url: "/path")), "a[target]"
-  end
-
   def test_button_accepts_block_content
     assert_includes parse_html(renderer.render { "Block content" }).text, "Block content"
   end
@@ -131,13 +86,5 @@ class ButtonTest < ActionView::TestCase
 
   def test_button_renders_with_size_option
     assert_css parse_html(renderer.render("Click", size: :sm)), "button"
-  end
-
-  def test_link_renders_with_variant_option
-    assert_css parse_html(renderer.render("Go", url: "/path", variant: :outline)), "a[href='/path']"
-  end
-
-  def test_link_renders_with_size_option
-    assert_css parse_html(renderer.render("Go", url: "/path", size: :lg)), "a[href='/path']"
   end
 end

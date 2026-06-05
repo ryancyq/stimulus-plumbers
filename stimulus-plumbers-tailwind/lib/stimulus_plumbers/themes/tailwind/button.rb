@@ -97,17 +97,6 @@ module StimulusPlumbers
           xl: %w[h-14 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze
         }.freeze
 
-        BUTTON_LINK_BASE = %w[
-          inline-flex items-center justify-center gap-(--sp-space-2) font-medium
-          rounded-(--sp-radius-md) transition-colors
-          bg-(--sp-color-bg-muted) text-(--sp-color-fg)
-          border border-(--sp-color-border)
-          hover:bg-(--sp-color-muted) hover:text-(--sp-color-fg) hover:border-(--sp-color-fg-muted)
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
-          focus-visible:ring-(--btn-ring)
-          disabled:pointer-events-none disabled:opacity-50
-        ].freeze
-
         BASE = %w[
           inline-flex items-center justify-center gap-(--sp-space-2) font-medium whitespace-nowrap
           rounded-(--sp-radius-md) transition-colors
@@ -153,16 +142,6 @@ module StimulusPlumbers
 
         def button_icon_classes
           { classes: klasses("size-(--sp-control-size)", "stroke-current") }
-        end
-
-        def button_link_classes(variant: :default, size: :md)
-          {
-            classes: klasses(
-              *BUTTON_LINK_BASE,
-              *VARIANTS.fetch(variant, VARIANTS[:default]),
-              *SIZES.fetch(size, [])
-            )
-          }
         end
       end
     end

@@ -64,9 +64,9 @@
 </div>
 
 <div id="button-link">
-  <%# ── Link ───────────────────────────────────────────────────────────── %>
-  <%= sp_button("Go to home", url: "/") %>
-  <%= sp_button("External",   url: "https://example.com", target: "_blank") %>
+  <%# ── Link (use sp_link with type: :button for link-styled buttons) ── %>
+  <%= sp_link("Go to home", url: "/",                                      type: :button) %>
+  <%= sp_link("External",   url: "https://example.com", target: "_blank",  type: :button) %>
 </div>
 
 <div id="button-disabled">

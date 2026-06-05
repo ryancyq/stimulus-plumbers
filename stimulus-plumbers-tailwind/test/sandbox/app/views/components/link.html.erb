@@ -1,7 +1,7 @@
 <h1>Link components</h1>
 
 <div id="link-variants">
-  <%# ── Variants ──────────────────────────────────────────────────────────── %>
+  <%# ── type: :default × all variants ──────────────────────────────────── %>
   <%= sp_link("Default",     url: "#") %>
   <%= sp_link("Success",     url: "#", variant: :success) %>
   <%= sp_link("Destructive", url: "#", variant: :destructive) %>
@@ -16,15 +16,31 @@
   </p>
 </div>
 
-<div id="link-icons">
+<div id="link-icons" style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-start">
   <%# ── Icon trailing ───────────────────────────────────────────────────────── %>
   <%= sp_link("Read their stories", url: "#", icon_trailing: "arrow-right") %>
   <%# ── Icon leading ────────────────────────────────────────────────────────── %>
   <%= sp_link("Back", url: "#", icon_leading: "arrow-left") %>
 </div>
 
-<div id="link-navigation">
+<div id="link-navigation" style="display:flex;gap:1rem;align-items:center">
   <%# ── Navigation ─────────────────────────────────────────────────────────── %>
   <%= sp_link("Go to home", url: "/") %>
   <%= sp_link("External",   url: "https://example.com", target: "_blank") %>
+</div>
+
+<div id="link-button">
+  <%# ── type: :button × all variants ──────────────────────────────────────── %>
+  <%= sp_link("Default",     url: "#", type: :button) %>
+  <%= sp_link("Success",     url: "#", type: :button, variant: :success) %>
+  <%= sp_link("Destructive", url: "#", type: :button, variant: :destructive) %>
+  <%= sp_link("Warning",     url: "#", type: :button, variant: :warning) %>
+  <%= sp_link("Info",        url: "#", type: :button, variant: :info) %>
+</div>
+
+<div id="link-button-icons">
+  <%# ── type: :button with icons ───────────────────────────────────────────── %>
+  <%= sp_link("With icon",   url: "#", icon_leading: "arrow-left",         type: :button) %>
+  <%= sp_link("Download",    url: "#", icon_trailing: "arrow-down-tray",   type: :button) %>
+  <%= sp_link("External",    url: "https://example.com", target: "_blank", type: :button) %>
 </div>
