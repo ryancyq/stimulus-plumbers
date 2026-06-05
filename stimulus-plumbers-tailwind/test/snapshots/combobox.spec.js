@@ -2,6 +2,21 @@ import { test, expect } from "@playwright/test";
 
 const FIXED_DATE = new Date("2024-02-29T12:00:00Z");
 
+// Union the section and its open popover panel into a single clip rect.
+async function screenshotWithPanel(page, sectionLocator, filename) {
+  const panel = sectionLocator.locator("[data-popover-target='panel']");
+  await panel.waitFor({ state: "visible" });
+  const sBox = await sectionLocator.boundingBox();
+  const pBox = await panel.boundingBox();
+  const x = Math.min(sBox.x, pBox.x);
+  const y = Math.min(sBox.y, pBox.y);
+  const right  = Math.max(sBox.x + sBox.width,  pBox.x + pBox.width);
+  const bottom = Math.max(sBox.y + sBox.height, pBox.y + pBox.height);
+  await expect(page).toHaveScreenshot(filename, {
+    clip: { x, y, width: right - x, height: bottom - y },
+  });
+}
+
 test.beforeEach(async ({ page }) => {
   await page.clock.setFixedTime(FIXED_DATE);
   await page.goto("/components/combobox");
@@ -9,126 +24,85 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("combobox", () => {
-  test("all pickers — closed", async ({ page }) => {
+  test("all — closed", async ({ page }) => {
     await expect(page.locator("#combobox")).toHaveScreenshot("all-closed.png");
   });
 
-  test("date picker — open", async ({ page }) => {
-    const trigger = page.locator("#combobox-date").getByRole("combobox", { name: "Birthday" });
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#combobox-date")).toHaveScreenshot(
-      "date-picker-open.png",
-    );
+  test("date — open", async ({ page }) => {
+    const section = page.locator("#combobox-date");
+    await section.getByRole("combobox", { name: "Birthday" }).click();
+    await screenshotWithPanel(page, section, "date-open.png");
   });
 
-  test("time picker — open", async ({ page }) => {
-    const trigger = page.locator("#combobox-time").getByRole("combobox", { name: "Meeting Time" });
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#combobox-time")).toHaveScreenshot(
-      "time-picker-open.png",
-    );
+  test("time — open", async ({ page }) => {
+    const section = page.locator("#combobox-time");
+    await section.getByRole("combobox", { name: "Meeting Time" }).click();
+    await screenshotWithPanel(page, section, "time-open.png");
   });
 
   test("dropdown — open", async ({ page }) => {
-    const trigger = page.locator("#combobox-dropdown").getByRole("combobox", { name: "Country" });
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#combobox-dropdown")).toHaveScreenshot(
-      "dropdown-open.png",
-    );
+    const section = page.locator("#combobox-dropdown");
+    await section.getByRole("combobox", { name: "Country" }).click();
+    await screenshotWithPanel(page, section, "dropdown-open.png");
   });
 
   test("typeahead — open", async ({ page }) => {
-    const trigger = page.locator("#combobox-typeahead").getByRole("combobox", { name: "City" });
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#combobox-typeahead")).toHaveScreenshot(
-      "typeahead-open.png",
-    );
+    const section = page.locator("#combobox-typeahead");
+    await section.getByRole("combobox", { name: "City" }).click();
+    await screenshotWithPanel(page, section, "typeahead-open.png");
   });
 
   test("typeahead — loading", async ({ page }) => {
-    const trigger = page.locator("#combobox-typeahead").getByRole("combobox", { name: "City" });
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-
-    const loading = page.locator(
-      "#combobox-typeahead [data-combobox-dropdown-target='loading']",
-    );
-    await loading.evaluate((el) => el.removeAttribute("hidden"));
-
-    await expect(page.locator("#combobox-typeahead")).toHaveScreenshot(
-      "typeahead-loading.png",
-    );
+    const section = page.locator("#combobox-typeahead");
+    await section.getByRole("combobox", { name: "City" }).click();
+    await section.locator("[data-combobox-dropdown-target='loading']").evaluate((el) => el.removeAttribute("hidden"));
+    await screenshotWithPanel(page, section, "typeahead-loading.png");
   });
 
   test("typeahead — empty", async ({ page }) => {
-    const trigger = page.locator("#combobox-typeahead").getByRole("combobox", { name: "City" });
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-
-    const empty = page.locator(
-      "#combobox-typeahead [data-combobox-dropdown-target='empty']",
-    );
-    await empty.evaluate((el) => el.removeAttribute("hidden"));
-
-    await expect(page.locator("#combobox-typeahead")).toHaveScreenshot(
-      "typeahead-empty.png",
-    );
+    const section = page.locator("#combobox-typeahead");
+    await section.getByRole("combobox", { name: "City" }).click();
+    await section.locator("[data-combobox-dropdown-target='empty']").evaluate((el) => el.removeAttribute("hidden"));
+    await screenshotWithPanel(page, section, "typeahead-empty.png");
   });
 
-  test("date picker error — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-date-error")).toHaveScreenshot(
-      "date-picker-error-closed.png",
-    );
+  test("date error — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-date-error")).toHaveScreenshot("date-error-closed.png");
   });
 
-  test("date picker error — open", async ({ page }) => {
-    const trigger = page.locator("#combobox-date-error input[role='combobox']");
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#combobox-date-error")).toHaveScreenshot(
-      "date-picker-error-open.png",
-    );
+  test("date error — open", async ({ page }) => {
+    const section = page.locator("#combobox-date-error");
+    await section.locator("input[role='combobox']").click();
+    await screenshotWithPanel(page, section, "date-error-open.png");
   });
 
-  test("time picker error — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-time-error")).toHaveScreenshot(
-      "time-picker-error-closed.png",
-    );
+  test("time error — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-time-error")).toHaveScreenshot("time-error-closed.png");
   });
 
-  test("time picker error — open", async ({ page }) => {
-    const trigger = page.locator("#combobox-time-error input[role='combobox']");
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#combobox-time-error")).toHaveScreenshot(
-      "time-picker-error-open.png",
-    );
+  test("time error — open", async ({ page }) => {
+    const section = page.locator("#combobox-time-error");
+    await section.locator("input[role='combobox']").click();
+    await screenshotWithPanel(page, section, "time-error-open.png");
   });
 
   test("dropdown error — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-dropdown-error")).toHaveScreenshot(
-      "dropdown-error-closed.png",
-    );
+    await expect(page.locator("#combobox-dropdown-error")).toHaveScreenshot("dropdown-error-closed.png");
   });
 
   test("dropdown error — open", async ({ page }) => {
-    const trigger = page.locator(
-      "#combobox-dropdown-error input[role='combobox']",
-    );
-    await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#combobox-dropdown-error")).toHaveScreenshot(
-      "dropdown-error-open.png",
-    );
+    const section = page.locator("#combobox-dropdown-error");
+    await section.locator("input[role='combobox']").click();
+    await screenshotWithPanel(page, section, "dropdown-error-open.png");
   });
 
   test("typeahead error — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-typeahead-error")).toHaveScreenshot(
-      "typeahead-error-closed.png",
-    );
+    await expect(page.locator("#combobox-typeahead-error")).toHaveScreenshot("typeahead-error-closed.png");
+  });
+
+  test("typeahead error — open", async ({ page }) => {
+    const section = page.locator("#combobox-typeahead-error");
+    await section.locator("input[role='combobox']").click();
+    await screenshotWithPanel(page, section, "typeahead-error-open.png");
   });
 });

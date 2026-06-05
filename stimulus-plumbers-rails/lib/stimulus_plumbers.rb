@@ -39,10 +39,6 @@ require_relative "stimulus_plumbers/components/calendar/turbo/days_of_month"
 require_relative "stimulus_plumbers/components/calendar/turbo/months_of_year"
 require_relative "stimulus_plumbers/components/calendar/turbo/years_of_decade"
 
-# -- Date picker --
-require_relative "stimulus_plumbers/components/date_picker/navigator"
-require_relative "stimulus_plumbers/components/date_picker/navigation"
-
 # -- Combobox --
 require_relative "stimulus_plumbers/components/combobox"
 require_relative "stimulus_plumbers/components/combobox/variant"
@@ -51,6 +47,8 @@ require_relative "stimulus_plumbers/components/combobox/options"
 require_relative "stimulus_plumbers/components/combobox/options/option"
 require_relative "stimulus_plumbers/components/combobox/options/option_group"
 require_relative "stimulus_plumbers/components/combobox/date"
+require_relative "stimulus_plumbers/components/combobox/date/navigator"
+require_relative "stimulus_plumbers/components/combobox/date/navigation"
 require_relative "stimulus_plumbers/components/combobox/dropdown"
 require_relative "stimulus_plumbers/components/combobox/typeahead"
 require_relative "stimulus_plumbers/components/combobox/time"

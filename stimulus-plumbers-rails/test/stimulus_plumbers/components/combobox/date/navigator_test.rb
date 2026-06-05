@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class DatePickerNavigatorTest < ActionView::TestCase
+class ComboboxDateNavigatorTest < ActionView::TestCase
   def navigator(**kwargs)
-    StimulusPlumbers::Components::DatePicker::Navigator.new(self).render(**kwargs)
+    StimulusPlumbers::Components::Combobox::Date::Navigator.new(self).render(**kwargs)
   end
 
   def test_renders_button
@@ -12,9 +12,9 @@ class DatePickerNavigatorTest < ActionView::TestCase
   end
 
   def test_passes_data_attributes
-    html = navigator(data: { "datepicker-target" => "previous" })
+    html = navigator(data: { "combobox-date-target" => "previous" })
 
-    assert_includes html, 'data-datepicker-target="previous"'
+    assert_includes html, 'data-combobox-date-target="previous"'
   end
 
   def test_merges_custom_class

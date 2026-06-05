@@ -63,6 +63,17 @@ module StimulusPlumbers
 
         TIME = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
 
+        DATE_NAV = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
+
+        DATE_NAV_BTN = %w[
+          inline-flex items-center justify-center
+          size-(--sp-calendar-day-size) rounded-(--sp-radius-md)
+          text-(--sp-color-fg) hover:bg-(--sp-color-muted)
+          focus-visible:outline-none focus-visible:ring-2
+          focus-visible:ring-(--sp-focus-ring-color)
+          disabled:pointer-events-none disabled:opacity-50
+        ].freeze
+
         CONTAINER = %w[relative].freeze
         POPOVER   = %w[absolute top-full left-0 min-w-full].freeze
 
@@ -112,6 +123,14 @@ module StimulusPlumbers
 
         def combobox_time_classes
           { classes: klasses(*TIME) }
+        end
+
+        def combobox_date_navigation_classes
+          { classes: klasses(*DATE_NAV) }
+        end
+
+        def combobox_date_navigation_navigator_classes
+          { classes: klasses(*DATE_NAV_BTN) }
         end
       end
     end

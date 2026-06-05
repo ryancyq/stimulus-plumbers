@@ -74,75 +74,68 @@ class TailwindThemeCalendarTest < Minitest::Test
     assert_includes classes_for(:calendar_row), "contents"
   end
 
-  def test_calendar_navigation_includes_flex_classes
-    result = classes_for(:calendar_navigation)
-
-    assert_includes result, "flex"
-    assert_includes result, "justify-between"
+  def test_calendar_months_of_year_returns_contents_display
+    assert_includes classes_for(:calendar_months_of_year), "contents"
   end
 
-  def test_calendar_navigation_navigator_includes_button_classes
-    result = classes_for(:calendar_navigation_navigator)
-
-    assert_includes result, "inline-flex"
-    assert_includes result, "focus-visible:ring-2"
-    assert_includes result, "disabled:opacity-50"
+  def test_calendar_years_of_decade_returns_contents_display
+    assert_includes classes_for(:calendar_years_of_decade), "contents"
   end
 
-  def test_calendar_picker_grid_includes_grid_classes
-    result = classes_for(:calendar_picker_grid)
+  def test_calendar_quarter_grid_includes_grid_classes
+    result = classes_for(:calendar_quarter_grid)
 
     assert_includes result, "grid"
     assert_includes result, "grid-cols-4"
   end
 
-  def test_calendar_month_cell_returns_a_classes_string
-    result = classes_for(:calendar_month_cell)
+  def test_calendar_month_returns_a_classes_string
+    result = classes_for(:calendar_month)
 
     assert_instance_of String, result
     assert_predicate result, :present?
   end
 
-  def test_calendar_month_cell_includes_base_classes
-    result = classes_for(:calendar_month_cell)
+  def test_calendar_month_includes_base_classes
+    result = classes_for(:calendar_month)
 
     assert_includes result, "flex"
     assert_includes result, "cursor-pointer"
     assert_includes result, "h-10"
   end
 
-  def test_calendar_month_cell_includes_aria_current_variant
-    assert_includes classes_for(:calendar_month_cell), "aria-[current=month]:font-bold"
+  def test_calendar_month_includes_aria_current_variant
+    assert_includes classes_for(:calendar_month), "aria-[current=month]:font-bold"
   end
 
-  def test_calendar_month_cell_includes_selected_aria_variants
-    result = classes_for(:calendar_month_cell)
+  def test_calendar_month_includes_selected_aria_variants
+    result = classes_for(:calendar_month)
 
     assert_includes result, "aria-selected:bg-(--sp-color-primary)"
     assert_includes result, "aria-selected:text-(--sp-color-primary-fg)"
   end
 
-  def test_calendar_year_cell_returns_a_classes_string
-    result = classes_for(:calendar_year_cell)
+  def test_calendar_year_returns_a_classes_string
+    result = classes_for(:calendar_year)
 
     assert_instance_of String, result
     assert_predicate result, :present?
   end
 
-  def test_calendar_year_cell_includes_base_classes
-    result = classes_for(:calendar_year_cell)
+  def test_calendar_year_includes_base_classes
+    result = classes_for(:calendar_year)
 
     assert_includes result, "flex"
     assert_includes result, "cursor-pointer"
     assert_includes result, "h-10"
   end
 
-  def test_calendar_year_cell_includes_aria_current_variant
-    assert_includes classes_for(:calendar_year_cell), "aria-[current=year]:font-bold"
+  def test_calendar_year_includes_aria_current_variant
+    assert_includes classes_for(:calendar_year), "aria-[current=year]:font-bold"
   end
 
-  def test_calendar_year_cell_includes_selected_aria_variants
-    result = classes_for(:calendar_year_cell)
+  def test_calendar_year_includes_selected_aria_variants
+    result = classes_for(:calendar_year)
 
     assert_includes result, "aria-selected:bg-(--sp-color-primary)"
     assert_includes result, "aria-selected:text-(--sp-color-primary-fg)"

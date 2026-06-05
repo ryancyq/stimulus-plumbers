@@ -79,7 +79,7 @@ module StimulusPlumbers
           { hidden: true, data: { controller: YEAR_STIMULUS_CONTROLLER } },
           {
             data: {
-              "#{YEAR_STIMULUS_CONTROLLER}-month-class": theme.resolve(:calendar_month_cell).fetch(:classes, "")
+              "#{YEAR_STIMULUS_CONTROLLER}-month-class": theme.resolve(:calendar_month).fetch(:classes, "")
             }
           }
         )
@@ -90,7 +90,7 @@ module StimulusPlumbers
           { hidden: true, data: { controller: DECADE_STIMULUS_CONTROLLER } },
           {
             data: {
-              "#{DECADE_STIMULUS_CONTROLLER}-year-class": theme.resolve(:calendar_year_cell).fetch(:classes, "")
+              "#{DECADE_STIMULUS_CONTROLLER}-year-class": theme.resolve(:calendar_year).fetch(:classes, "")
             }
           }
         )

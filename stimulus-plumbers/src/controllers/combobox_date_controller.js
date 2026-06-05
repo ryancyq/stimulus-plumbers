@@ -1,14 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 import { tryParseDate } from '../plumbers/plumber/date';
 
-const VIEWS = ['day', 'month', 'year'];
+const VIEWS = ['month', 'year', 'decade'];
 
 export default class extends Controller {
-  static targets = ['previous', 'next', 'day', 'month', 'year', 'viewTitle', 'dayView', 'monthView', 'yearView'];
+  static targets = ['previous', 'next', 'day', 'month', 'year', 'viewTitle', 'monthView', 'yearView', 'decadeView'];
   static outlets = ['calendar-month'];
   static values = {
     date: String,
-    view: { type: String, default: 'day' },
+    view: { type: String, default: 'month' },
     locales: { type: Array, default: ['default'] },
     dayFormat: { type: String, default: 'numeric' },
     monthFormat: { type: String, default: 'long' },
@@ -36,7 +36,7 @@ export default class extends Controller {
     this.dispatch('selected', { detail: { value: event.detail.iso }, bubbles: true });
   }
 
-  drillUp() {
+  zoomOut() {
     const idx = VIEWS.indexOf(this.viewValue);
     if (idx < VIEWS.length - 1) {
       this.viewValue = VIEWS[idx + 1];
@@ -50,7 +50,7 @@ export default class extends Controller {
     const month = parseInt(btn.dataset.month, 10) - 1; // data-month is 1-indexed
     const { year } = this.calendarMonthOutlet.calendar;
     await this.calendarMonthOutlet.calendar.navigate(new Date(year, month, 1));
-    this.viewValue = 'day';
+    this.viewValue = 'month';
     this.draw();
   }
 
@@ -60,7 +60,7 @@ export default class extends Controller {
     const year = parseInt(btn.dataset.year, 10);
     const { month } = this.calendarMonthOutlet.calendar;
     await this.calendarMonthOutlet.calendar.navigate(new Date(year, month, 1));
-    this.viewValue = 'month';
+    this.viewValue = 'year';
     this.draw();
   }
 
@@ -90,19 +90,19 @@ export default class extends Controller {
     this.draw();
   }
 
-  monthViewTargetConnected(target) {
+  yearViewTargetConnected(target) {
     target.addEventListener('click', this.selectMonth);
   }
 
-  monthViewTargetDisconnected(target) {
+  yearViewTargetDisconnected(target) {
     target.removeEventListener('click', this.selectMonth);
   }
 
-  yearViewTargetConnected(target) {
+  decadeViewTargetConnected(target) {
     target.addEventListener('click', this.selectYear);
   }
 
-  yearViewTargetDisconnected(target) {
+  decadeViewTargetDisconnected(target) {
     target.removeEventListener('click', this.selectYear);
   }
 
@@ -111,9 +111,9 @@ export default class extends Controller {
     this.drawMonth();
     this.drawYear();
     this.drawViewTitle();
-    this.drawMonthView();
     this.drawYearView();
-    this.syncGridVisibility();
+    this.drawDecadeView();
+    this.drawView();
   }
 
   drawDay() {
@@ -146,8 +146,8 @@ export default class extends Controller {
     this.viewTitleTarget.textContent = this.viewTitleLabel(year, month);
   }
 
-  drawMonthView() {
-    if (!this.hasMonthViewTarget || !this.hasCalendarMonthOutlet) return;
+  drawYearView() {
+    if (!this.hasYearViewTarget || !this.hasCalendarMonthOutlet) return;
 
     const { year, month, monthsOfYear } = this.calendarMonthOutlet.calendar;
     const today = this.calendarMonthOutlet.calendar.today;
@@ -166,11 +166,11 @@ export default class extends Controller {
       cells.push(btn);
     }
 
-    this.monthViewTarget.replaceChildren(...cells);
+    this.yearViewTarget.replaceChildren(...cells);
   }
 
-  drawYearView() {
-    if (!this.hasYearViewTarget || !this.hasCalendarMonthOutlet) return;
+  drawDecadeView() {
+    if (!this.hasDecadeViewTarget || !this.hasCalendarMonthOutlet) return;
 
     const { year, yearsOfDecade } = this.calendarMonthOutlet.calendar;
     const todayYear = this.calendarMonthOutlet.calendar.today.getFullYear();
@@ -188,12 +188,12 @@ export default class extends Controller {
       cells.push(btn);
     }
 
-    this.yearViewTarget.replaceChildren(...cells);
+    this.decadeViewTarget.replaceChildren(...cells);
   }
 
   viewTitleLabel(year, month) {
-    if (this.viewValue === 'month') return String(year);
-    if (this.viewValue === 'year') {
+    if (this.viewValue === 'year') return String(year);
+    if (this.viewValue === 'decade') {
       const start = Math.floor(year / 10) * 10;
       return `${start}–${start + 9}`;
     }
@@ -201,21 +201,21 @@ export default class extends Controller {
   }
 
   stepArgs(direction) {
-    if (this.viewValue === 'month') return ['year', direction];
-    if (this.viewValue === 'year') return ['year', direction * 10];
+    if (this.viewValue === 'year') return ['year', direction];
+    if (this.viewValue === 'decade') return ['year', direction * 10];
     return ['month', direction];
   }
 
-  syncGridVisibility() {
-    if (this.hasDayViewTarget) this.dayViewTarget.hidden = this.viewValue !== 'day';
+  drawView() {
     if (this.hasMonthViewTarget) this.monthViewTarget.hidden = this.viewValue !== 'month';
     if (this.hasYearViewTarget) this.yearViewTarget.hidden = this.viewValue !== 'year';
+    if (this.hasDecadeViewTarget) this.decadeViewTarget.hidden = this.viewValue !== 'decade';
 
     if (this.hasCalendarMonthOutlet) {
       const outlet = this.calendarMonthOutlet;
-      const dayView = this.viewValue === 'day';
-      if (outlet.hasDaysOfWeekTarget) outlet.daysOfWeekTarget.hidden = !dayView;
-      if (outlet.hasDaysOfMonthTarget) outlet.daysOfMonthTarget.hidden = !dayView;
+      const monthView = this.viewValue === 'month';
+      if (outlet.hasDaysOfWeekTarget) outlet.daysOfWeekTarget.hidden = !monthView;
+      if (outlet.hasDaysOfMonthTarget) outlet.daysOfMonthTarget.hidden = !monthView;
     }
   }
 }

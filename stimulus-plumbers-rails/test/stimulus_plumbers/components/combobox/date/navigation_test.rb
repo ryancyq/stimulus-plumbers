@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class DatePickerNavigationTest < ActionView::TestCase
+class ComboboxDateNavigationTest < ActionView::TestCase
   def navigation(**kwargs)
-    StimulusPlumbers::Components::DatePicker::Navigation.new(self).render(
+    StimulusPlumbers::Components::Combobox::Date::Navigation.new(self).render(
       step:                "month",
       stimulus_controller: "combobox-date",
       date:                Date.new(2026, 6, 1),
@@ -17,7 +17,7 @@ class DatePickerNavigationTest < ActionView::TestCase
   end
 
   def test_nav_has_aria_label
-    assert_css parse_html(navigation), "nav[aria-label='DatePicker Navigation']"
+    assert_css parse_html(navigation), "nav[aria-label='Date picker navigation']"
   end
 
   def test_renders_three_buttons
@@ -45,25 +45,25 @@ class DatePickerNavigationTest < ActionView::TestCase
     btn = doc.at_css("button[data-combobox-date-target='viewTitle']")
 
     assert btn, "expected viewTitle button"
-    assert_equal "click->combobox-date#drillUp", btn["data-action"]
+    assert_equal "click->combobox-date#zoomOut", btn["data-action"]
   end
 
-  def test_view_title_shows_month_and_year_in_day_view
-    doc = parse_html(navigation(view: "day", date: Date.new(2026, 6, 1)))
+  def test_view_title_shows_month_and_year_in_month_view
+    doc = parse_html(navigation(view: "month", date: Date.new(2026, 6, 1)))
     btn = doc.at_css("button[data-combobox-date-target='viewTitle']")
 
     assert_match(%r{June 2026}, btn.text)
   end
 
-  def test_view_title_shows_year_in_month_view
-    doc = parse_html(navigation(view: "month", date: Date.new(2026, 6, 1), step: "year"))
+  def test_view_title_shows_year_in_year_view
+    doc = parse_html(navigation(view: "year", date: Date.new(2026, 6, 1), step: "year"))
     btn = doc.at_css("button[data-combobox-date-target='viewTitle']")
 
     assert_equal "2026", btn.text.strip
   end
 
-  def test_view_title_shows_decade_in_year_view
-    doc = parse_html(navigation(view: "year", date: Date.new(2026, 6, 1), step: "decade"))
+  def test_view_title_shows_decade_in_decade_view
+    doc = parse_html(navigation(view: "decade", date: Date.new(2026, 6, 1), step: "decade"))
     btn = doc.at_css("button[data-combobox-date-target='viewTitle']")
 
     assert_equal "2020–2029", btn.text.strip

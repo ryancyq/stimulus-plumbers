@@ -72,7 +72,7 @@ module StimulusPlumbers
             is_current_month = month_number == today.month && date.year == today.year
             is_focused = selected_date_in_month?(month_number) || (is_current_month && !selected_date_in_current_year?)
             merge_html_options(
-              theme.resolve(:calendar_month_cell),
+              theme.resolve(:calendar_month),
               {
                 role:     "gridcell",
                 tabindex: is_focused ? 0 : -1,

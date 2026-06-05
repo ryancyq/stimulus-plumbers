@@ -57,7 +57,7 @@ module StimulusPlumbers
         end
 
         def navigation
-          DatePicker::Navigation.new(template).render(
+          Navigation.new(template).render(
             step:                "month",
             stimulus_controller: STIMULUS_CONTROLLER
           )

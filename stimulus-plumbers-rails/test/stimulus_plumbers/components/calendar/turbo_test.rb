@@ -143,16 +143,16 @@ class CalendarTurboComponentTest < ActionView::TestCase
     assert_includes renderer.year(date: Date.new(2026, 4, 1)), 'role="grid"'
   end
 
-  def test_year_has_month_picker_aria_label
-    assert_includes renderer.year(date: Date.new(2026, 4, 1)), 'aria-label="Month picker"'
+  def test_year_has_year_view_aria_label
+    assert_includes renderer.year(date: Date.new(2026, 4, 1)), 'aria-label="Year view"'
   end
 
   def test_decade_has_grid_role
     assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'role="grid"'
   end
 
-  def test_decade_has_year_picker_aria_label
-    assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'aria-label="Year picker"'
+  def test_decade_has_decade_view_aria_label
+    assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'aria-label="Decade view"'
   end
 
   def test_non_selected_cells_have_aria_selected_false
