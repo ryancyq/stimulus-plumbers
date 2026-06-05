@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     get :action_list
     get :avatar
     get :button
+    get :button_group
     get :card
     get :link
     get :divider

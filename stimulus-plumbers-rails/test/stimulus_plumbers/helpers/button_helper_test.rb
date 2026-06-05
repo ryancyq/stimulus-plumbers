@@ -48,7 +48,7 @@ class ButtonHelperTest < ActionView::TestCase
   end
 
   def test_button_group_renders_div
-    doc = parse_html(sp_button_group { sp_button("One") })
+    doc = parse_html(sp_button_group { |group| group.button("One") })
 
     assert_css doc, "div[role='group']"
     assert_includes doc.text, "One"

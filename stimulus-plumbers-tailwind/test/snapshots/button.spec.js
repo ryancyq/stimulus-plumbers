@@ -22,14 +22,6 @@ test.describe("button", () => {
     await expect(page.locator("#button-sizes")).toHaveScreenshot("sizes.png");
   });
 
-  test("group-inline", async ({ page }) => {
-    await expect(page.locator("#button-group-inline")).toHaveScreenshot("group-inline.png");
-  });
-
-  test("group-stacked", async ({ page }) => {
-    await expect(page.locator("#button-group-stacked")).toHaveScreenshot("group-stacked.png");
-  });
-
   test("icons", async ({ page }) => {
     await expect(page.locator("#button-icons")).toHaveScreenshot("icons.png");
   });

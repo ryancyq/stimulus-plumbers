@@ -36,18 +36,21 @@ class ButtonGroupTest < ActionView::TestCase
 
   def test_button_renders_inside_group
     doc = parse_html(renderer.render { |group| group.button("Save") })
+
     assert_css doc, "div[role='group'] button"
     assert_includes doc.text, "Save"
   end
 
   def test_button_passes_options
     doc = parse_html(renderer.render { |group| group.button("Cancel", variant: :outline) })
+
     assert_css doc, "div[role='group'] button"
     assert_includes doc.text, "Cancel"
   end
 
   def test_button_renders_multiple
     doc = parse_html(renderer.render { |group| group.button("A") + group.button("B") })
+
     assert_equal 2, doc.css("button").length
   end
 end

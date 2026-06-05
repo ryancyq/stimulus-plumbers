@@ -10,12 +10,6 @@
   <%= sp_button("Go to home", url: "/") %>
   <%= sp_button("External", url: "https://example.com", target: "_blank") %>
 
-  <%# ── Group ──────────────────────────────────────────────────────────── %>
-  <%= sp_button_group do %>
-    <%= sp_button("Save") %>
-    <%= sp_button("Cancel", type: :secondary) %>
-  <% end %>
-
   <%# ── Disabled ────────────────────────────────────────────────────────── %>
   <%= sp_button("Disabled",           disabled: true) %>
   <%= sp_button("Disabled secondary", type: :secondary, disabled: true) %>

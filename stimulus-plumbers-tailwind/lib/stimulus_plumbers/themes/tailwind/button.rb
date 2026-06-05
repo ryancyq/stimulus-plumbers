@@ -122,8 +122,14 @@ module StimulusPlumbers
         ].freeze
 
         GROUP_LAYOUTS = {
-          inline:  %w[sp-button-group inline-flex rounded-(--sp-radius-md) shadow-(--sp-shadow-xs) [&>*:not(:first-child)]:-ml-px].freeze,
-          stacked: %w[sp-button-group-stacked flex flex-col rounded-(--sp-radius-md) shadow-(--sp-shadow-xs) [&>*:not(:first-child)]:-mt-px].freeze
+          inline:  %w[
+            sp-button-group inline-flex rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
+            [&>*:not(:first-child)]:-ml-px
+          ].freeze,
+          stacked: %w[
+            sp-button-group-stacked flex flex-col rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
+            [&>*:not(:first-child)]:-mt-px
+          ].freeze
         }.freeze
 
         private

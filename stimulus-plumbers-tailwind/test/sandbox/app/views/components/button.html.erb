@@ -42,24 +42,6 @@
   <%= sp_button("XLarge", size: :xl) %>
 </div>
 
-<div id="button-group-inline">
-  <%# ── Group inline (default) ─────────────────────────────────────────── %>
-  <%= sp_button_group do |group| %>
-    <%= group.button("Profile",  type: :outline) %>
-    <%= group.button("Settings", type: :outline) %>
-    <%= group.button("Messages", type: :outline) %>
-  <% end %>
-</div>
-
-<div id="button-group-stacked">
-  <%# ── Group stacked ───────────────────────────────────────────────────── %>
-  <%= sp_button_group(layout: :stacked) do |group| %>
-    <%= group.button("Profile",  type: :outline) %>
-    <%= group.button("Settings", type: :outline) %>
-    <%= group.button("Messages", type: :outline) %>
-  <% end %>
-</div>
-
 <div id="button-icons" style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-start">
   <%# ── Icon leading ───────────────────────────────────────────────────── %>
   <div style="display:flex;gap:0.5rem;align-items:center">

@@ -1,0 +1,19 @@
+<h1>Button Group components</h1>
+
+<div id="button-group-inline">
+  <%# ── Group inline (default) ─────────────────────────────────────────── %>
+  <%= sp_button_group do |group| %>
+    <%= group.button("Profile",  type: :outline) %>
+    <%= group.button("Settings", type: :outline) %>
+    <%= group.button("Messages", type: :outline) %>
+  <% end %>
+</div>
+
+<div id="button-group-stacked">
+  <%# ── Group stacked ───────────────────────────────────────────────────── %>
+  <%= sp_button_group(layout: :stacked) do |group| %>
+    <%= group.button("Profile",  type: :outline) %>
+    <%= group.button("Settings", type: :outline) %>
+    <%= group.button("Messages", type: :outline) %>
+  <% end %>
+</div>
