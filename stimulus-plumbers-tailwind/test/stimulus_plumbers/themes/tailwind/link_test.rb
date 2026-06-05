@@ -221,12 +221,14 @@ class TailwindThemeLinkTest < Minitest::Test
     refute_includes result, "h-9"
   end
 
-  def test_link_card_type_uses_justify_between_layout
+  def test_link_card_type_uses_justify_start_layout
     result = classes_for(:link, type: :card)
 
-    assert_includes result, "justify-between"
+    assert_includes result, "justify-start"
     assert_includes result, "flex-1"
     assert_includes result, "gap-(--sp-space-3)"
+    assert_includes result, "[&>:last-child:not(:first-child)]:ml-auto"
+    refute_includes result, "justify-between"
   end
 
   def test_link_card_type_includes_border_shadow_and_hover_upgrades

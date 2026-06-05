@@ -97,7 +97,8 @@ module StimulusPlumbers
         }.freeze
 
         CARD_SIZE = %w[
-          inline-flex justify-between items-center flex-1 gap-(--sp-space-3) p-(--sp-space-4)
+          inline-flex justify-start items-center flex-1 gap-(--sp-space-3) p-(--sp-space-4)
+          [&>:last-child:not(:first-child)]:ml-auto
         ].freeze
 
         CARD_VARIANTS = {

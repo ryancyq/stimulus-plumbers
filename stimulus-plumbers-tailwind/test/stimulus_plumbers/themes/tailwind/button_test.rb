@@ -285,12 +285,14 @@ class TailwindThemeButtonTest < Minitest::Test
     refute_includes result, "h-14"
   end
 
-  def test_button_card_type_uses_justify_between_layout
+  def test_button_card_type_uses_justify_start_layout
     result = classes_for(:button, type: :card)
 
-    assert_includes result, "justify-between"
+    assert_includes result, "justify-start"
     assert_includes result, "flex-1"
     assert_includes result, "gap-(--sp-space-3)"
+    assert_includes result, "[&>:last-child:not(:first-child)]:ml-auto"
+    refute_includes result, "justify-between"
   end
 
   def test_button_card_type_includes_border_and_shadow

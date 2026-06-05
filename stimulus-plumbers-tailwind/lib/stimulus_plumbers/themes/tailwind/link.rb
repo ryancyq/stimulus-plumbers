@@ -53,7 +53,8 @@ module StimulusPlumbers
         ].freeze
 
         CARD_TYPE_BASE = %w[
-          inline-flex justify-between items-center flex-1 gap-(--sp-space-3) p-(--sp-space-4)
+          inline-flex justify-start items-center flex-1 gap-(--sp-space-3) p-(--sp-space-4)
+          [&>:last-child:not(:first-child)]:ml-auto
           font-medium rounded-(--sp-radius-md) transition-colors
           bg-(--sp-color-bg) text-(--sp-color-muted-fg)
           border border-(--sp-color-border) shadow-(--sp-shadow-xs)
