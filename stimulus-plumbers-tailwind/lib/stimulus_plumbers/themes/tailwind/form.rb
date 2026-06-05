@@ -102,9 +102,7 @@ module StimulusPlumbers
         RADIO_TYPES = {
           default: %w[
             size-(--sp-control-size) rounded-full shrink-0
-            border border-(--sp-color-border) bg-(--sp-color-muted)
-            appearance-none cursor-pointer
-            checked:border-(--sp-color-primary)
+            [accent-color:var(--sp-color-primary)] cursor-pointer
             focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
             disabled:opacity-50 disabled:cursor-not-allowed
           ].freeze,
@@ -129,7 +127,7 @@ module StimulusPlumbers
             text-(length:--sp-text-sm) text-(--sp-color-fg)
           ].freeze,
           button:  %w[
-            flex items-start gap-(--sp-space-3) flex-1 p-(--sp-space-4) cursor-pointer select-none
+            flex items-center gap-(--sp-space-3) flex-1 p-(--sp-space-4) cursor-pointer select-none
             text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
             bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
             hover:bg-(--sp-color-muted)

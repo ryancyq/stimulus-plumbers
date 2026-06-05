@@ -97,14 +97,8 @@ class ChoiceTest < ActionView::TestCase
     assert_equal "sign_in_form_remember_me", label["for"]
   end
 
-  def test_single_check_box_label_does_not_wrap_input
-    assert_no_css build_single_check_box, "label input[type='checkbox']"
-  end
-
-  def test_single_check_box_renders_input_before_label
-    nodes = build_single_check_box.css("input[type='checkbox'], label")
-
-    assert_equal "input", nodes.first.name
+  def test_single_check_box_renders_label_wrapping_input
+    assert_css build_single_check_box, "label[for] input[type='checkbox']"
   end
 
   def test_single_check_box_has_aria_invalid_on_error

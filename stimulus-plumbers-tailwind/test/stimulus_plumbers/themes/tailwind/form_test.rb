@@ -206,12 +206,13 @@ class TailwindThemeFormTest < Minitest::Test
     result = classes_for(:form_checkbox_label, type: :button)
 
     assert_includes result, "flex"
-    assert_includes result, "items-start"
+    assert_includes result, "items-center"
     assert_includes result, "p-(--sp-space-4)"
     assert_includes result, "bg-(--sp-color-bg)"
     assert_includes result, "border-(--sp-color-border)"
     assert_includes result, "rounded-(--sp-radius-md)"
     assert_includes result, "hover:bg-(--sp-color-muted)"
+    refute_includes result, "items-start"
     refute_includes result, "justify-between"
   end
 
@@ -261,16 +262,14 @@ class TailwindThemeFormTest < Minitest::Test
 
     assert_includes result, "size-(--sp-control-size)"
     assert_includes result, "rounded-full"
-    assert_includes result, "border"
-    assert_includes result, "border-(--sp-color-border)"
-    assert_includes result, "bg-(--sp-color-muted)"
-    assert_includes result, "appearance-none"
-    assert_includes result, "checked:border-(--sp-color-primary)"
+    assert_includes result, "[accent-color:var(--sp-color-primary)]"
     assert_includes result, "focus:ring-2"
     assert_includes result, "focus:ring-(--sp-focus-ring-color)"
     assert_includes result, "focus:outline-none"
     assert_includes result, "cursor-pointer"
     assert_includes result, "disabled:opacity-50"
+    refute_includes result, "appearance-none"
+    refute_includes result, "checked:border-(--sp-color-primary)"
   end
 
   def test_form_radio_button_type

@@ -68,19 +68,17 @@ module StimulusPlumbers
           end
 
           def render_single_check_box(attribute, field_opts, checked_value: "1", unchecked_value: "0", **kwargs)
-            field     = Field.new(@template, **{ layout: :inline }.deep_merge(field_opts))
-            input_id  = field_id(attribute)
-            error     = field.error?(object, attribute)
+            field    = Field.new(@template, **field_opts)
+            input_id = field_id(attribute)
+            error    = field.error?(object, attribute)
 
-            Fields::Group.new(@template).render(layout: :inline, error: error) do
-              @template.safe_join(
-                [
-                  build_check_box_input(field, attribute, input_id, error, checked_value, unchecked_value, **kwargs),
-                  build_check_box_label(field, attribute, input_id),
-                  field.render_hint(input_id),
-                  field.render_errors(object, attribute, input_id)
-                ]
-              )
+            Fields::Group.new(@template).render(layout: :stacked, error: error) do
+              check_box_html = build_check_box_input(field, attribute, input_id, error, checked_value, unchecked_value, **kwargs)
+              @template.safe_join([
+                build_check_box_label(field, attribute, input_id, check_box_html),
+                field.render_hint(input_id),
+                field.render_errors(object, attribute, input_id)
+              ])
             end
           end
 
@@ -101,9 +99,12 @@ module StimulusPlumbers
             @template.check_box(@object_name, attribute, objectify_options(check_box_opts), checked_value, unchecked_value)
           end
 
-          def build_check_box_label(field, attribute, input_id)
+          def build_check_box_label(field, attribute, input_id, check_box_html)
+            label_opts = merge_html_options(theme.resolve(:form_checkbox_label))
             label_text = field.label || attribute.to_s.humanize
-            @template.label_tag(input_id, label_text, **theme.resolve(:form_checkbox_label))
+            @template.content_tag(:label, for: input_id, **label_opts) do
+              @template.safe_join([check_box_html, label_text])
+            end
           end
         end
       end
