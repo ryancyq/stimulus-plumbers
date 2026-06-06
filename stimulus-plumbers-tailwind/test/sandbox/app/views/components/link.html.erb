@@ -2,57 +2,79 @@
 
 <section id="link-default" class="sb-section">
   <h2>Default</h2>
-  <%# ── type: :default × all variants ──────────────────────────────────────── %>
-  <%= sp_link("Default",     url: "#") %>
-  <%= sp_link("Success",     url: "#", variant: :success) %>
-  <%= sp_link("Destructive", url: "#", variant: :destructive) %>
-  <%= sp_link("Warning",     url: "#", variant: :warning) %>
-  <%= sp_link("Info",        url: "#", variant: :info) %>
+  <div class="sb-row">
+    <%# ── type: :default × all variants ──────────────────────────────────────── %>
+    <%= sp_link("Default",     url: "#") %>
+    <%= sp_link("Success",     url: "#", variant: :success) %>
+    <%= sp_link("Destructive", url: "#", variant: :destructive) %>
+    <%= sp_link("Warning",     url: "#", variant: :warning) %>
+    <%= sp_link("Info",        url: "#", variant: :info) %>
+  </div>
 </section>
 
 <section id="link-inline" class="sb-section">
   <h2>Inline text</h2>
-  <%# ── Inline text usage ──────────────────────────────────────────────────── %>
-  <p>500,000 people & companies have made over a million apps.
-    <%= sp_link("Read their stories", url: "#") %>
-  </p>
+  <div class="sb-row">
+    <%# ── Inline text usage ──────────────────────────────────────────────────── %>
+    <p>500,000 people & companies have made over a million apps.
+      <%= sp_link("Read their stories", url: "#") %>
+    </p>
+  </div>
 </section>
 
-<section id="link-icons" class="sb-section sb-col">
+<section id="link-icons" class="sb-section">
   <h2>With icons</h2>
-  <%# ── Icon trailing ───────────────────────────────────────────────────────── %>
-  <%= sp_link("Read their stories", url: "#", icon_trailing: "arrow-right") %>
-  <%# ── Icon leading ────────────────────────────────────────────────────────── %>
-  <%= sp_link("Back", url: "#", icon_leading: "arrow-left") %>
-  <%# ── External (auto icon) ───────────────────────────────────────────────── %>
-  <%= sp_link("External", url: "https://example.com", target: "_blank") %>
+  <div class="sb-col">
+    <%# ── Icon trailing ───────────────────────────────────────────────────────── %>
+    <%= sp_link("Read their stories", url: "#", icon_trailing: "arrow-right") %>
+    <%# ── Icon leading ────────────────────────────────────────────────────────── %>
+    <%= sp_link("Back", url: "#", icon_leading: "arrow-left") %>
+    <%# ── External (auto icon) ───────────────────────────────────────────────── %>
+    <%= sp_link("External", url: "https://example.com", target: "_blank") %>
+  </div>
 </section>
 
 <section id="link-button" class="sb-section">
   <h2>Button</h2>
-  <%# ── type: :button × all variants ──────────────────────────────────────── %>
-  <%= sp_link("Default",     url: "#", type: :button) %>
-  <%= sp_link("Success",     url: "#", type: :button, variant: :success) %>
-  <%= sp_link("Destructive", url: "#", type: :button, variant: :destructive) %>
-  <%= sp_link("Warning",     url: "#", type: :button, variant: :warning) %>
-  <%= sp_link("Info",        url: "#", type: :button, variant: :info) %>
+  <div class="sb-row">
+    <%# ── type: :button × all variants ──────────────────────────────────────── %>
+    <%= sp_link("Default",     url: "#", type: :button) %>
+    <%= sp_link("Success",     url: "#", type: :button, variant: :success) %>
+    <%= sp_link("Destructive", url: "#", type: :button, variant: :destructive) %>
+    <%= sp_link("Warning",     url: "#", type: :button, variant: :warning) %>
+    <%= sp_link("Info",        url: "#", type: :button, variant: :info) %>
+  </div>
 </section>
 
-<section id="link-card" class="sb-section sb-cards">
+<section id="link-card" class="sb-section">
   <h2>Card</h2>
-  <%# ── Card type ──────────────────────────────────────────────────── %>
-  <%= sp_link("Get started",        url: "#", type: :card) %>
-  <%= sp_link("Read the docs",      url: "#", type: :card, icon_leading: "book-open", icon_trailing: "arrow-right") %>
-  <%= sp_link("External resource",  url: "https://example.com", target: "_blank", type: :card) %>
-  <%# ── Card type × variants ──────────────────────────────────────── %>
-  <%= sp_link("Success card",       url: "#", type: :card, variant: :success) %>
-  <%= sp_link("Destructive card",   url: "#", type: :card, variant: :destructive) %>
+  <div class="sb-col">
+    <%# ── Card type ──────────────────────────────────────────────────── %>
+    <%= sp_link("Get started",        url: "#", type: :card) %>
+    <%= sp_link("Read the docs",      url: "#", type: :card, icon_leading: "book-open", icon_trailing: "arrow-right") %>
+    <%= sp_link("External resource",  url: "https://example.com", target: "_blank", type: :card) %>
+    <%# ── Card type × variants ──────────────────────────────────────── %>
+    <%= sp_link("Success card",       url: "#", type: :card, variant: :success) %>
+    <%= sp_link("Destructive card",   url: "#", type: :card, variant: :destructive) %>
+    <%= sp_link("Warning card",       url: "#", type: :card, variant: :warning) %>
+    <%= sp_link("Info card",          url: "#", type: :card, variant: :info) %>
+  </div>
 </section>
 
-<section id="link-button-icons" class="sb-section sb-row">
+<section id="link-button-icons" class="sb-section">
   <h2>Button — With icons</h2>
-  <%# ── type: :button with icons ───────────────────────────────────────────── %>
-  <%= sp_link("With icon",   url: "#", icon_leading: "arrow-left",         type: :button) %>
-  <%= sp_link("Download",    url: "#", icon_trailing: "arrow-down-tray",   type: :button) %>
-  <%= sp_link("External",    url: "https://example.com", target: "_blank", type: :button) %>
+  <div class="sb-col">
+    <%# ── Icon leading / trailing ───────────────────────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_link("With icon",   url: "#", icon_leading: "arrow-left",         type: :button) %>
+      <%= sp_link("Download",    url: "#", icon_trailing: "arrow-down-tray",   type: :button) %>
+      <%= sp_link("External",    url: "https://example.com", target: "_blank", type: :button) %>
+    </div>
+    <%# ── Icon only ──────────────────────────────────────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_link(url: "#", icon_leading: "plus",   aria: { label: "Add" },    type: :button) %>
+      <%= sp_link(url: "#", icon_leading: "pencil", aria: { label: "Edit" },   type: :button, variant: :info) %>
+      <%= sp_link(url: "#", icon_leading: "trash",  aria: { label: "Delete" }, type: :button, variant: :destructive) %>
+    </div>
+  </div>
 </section>

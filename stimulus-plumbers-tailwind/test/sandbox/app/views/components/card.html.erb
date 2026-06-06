@@ -1,22 +1,24 @@
 <h1>Card components</h1>
 
-<section id="card" class="sb-section">
+<section id="card-default" class="sb-section">
   <h2>Default</h2>
-  <%# ── Simple card ────────────────────────────────────────────────────── %>
-  <%= sp_card(title: "Account") do %>
-    <%= sp_card_section do %>
-      <p>Your account is active.</p>
-    <% end %>
-  <% end %>
-
-  <%# ── Card with multiple sections ────────────────────────────────────── %>
-  <%= sp_card(title: "Settings") do %>
-    <%= sp_card_section(title: "General") do %>
-      <p>Language: English</p>
+  <div class="sb-col">
+    <%# ── Simple card ────────────────────────────────────────────────────── %>
+    <%= sp_card(title: "Account") do %>
+      <%= sp_card_section do %>
+        <p>Your account is active.</p>
+      <% end %>
     <% end %>
 
-    <%= sp_card_section(title: "Security") do %>
-      <p>Two-factor authentication is enabled.</p>
+    <%# ── Card with multiple sections ────────────────────────────────────── %>
+    <%= sp_card(title: "Settings") do %>
+      <%= sp_card_section(title: "General") do %>
+        <p>Language: English</p>
+      <% end %>
+
+      <%= sp_card_section(title: "Security") do %>
+        <p>Two-factor authentication is enabled.</p>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </section>

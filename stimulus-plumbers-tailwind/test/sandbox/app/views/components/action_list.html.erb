@@ -1,35 +1,41 @@
 <h1>Action list components</h1>
 
-<%# ── Plain list ─────────────────────────────────────────────────────── %>
 <section id="action-list-plain" class="sb-section">
   <h2>Plain list</h2>
-  <%= sp_action_list do |list| %>
-    <%= list.section do %>
-      <%= list.item("Profile") %>
-      <%= list.item("Settings") %>
-      <%= list.item("Help") %>
+  <div class="sb-col">
+    <%# ── Plain list ─────────────────────────────────────────────────────── %>
+    <%= sp_action_list do |list| %>
+      <%= list.section do %>
+        <%= list.item("Profile") %>
+        <%= list.item("Settings") %>
+        <%= list.item("Help") %>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
-<%# ── With links ─────────────────────────────────────────────────────── %>
 <section id="action-list-with-links" class="sb-section">
   <h2>With links</h2>
-  <%= sp_action_list do |list| %>
-    <%= list.section(title: "Navigation") do %>
-      <%= list.item("Dashboard", url: "/") %>
-      <%= list.item("Reports",   url: "/") %>
+  <div class="sb-col">
+    <%# ── With links ─────────────────────────────────────────────────────── %>
+    <%= sp_action_list do |list| %>
+      <%= list.section(title: "Navigation") do %>
+        <%= list.item("Dashboard", url: "/") %>
+        <%= list.item("Reports",   url: "/") %>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
-<%# ── Active item ─────────────────────────────────────────────────────── %>
 <section id="action-list-active" class="sb-section">
   <h2>Active item</h2>
-  <%= sp_action_list do |list| %>
-    <%= list.section do %>
-      <%= list.item("Active item",   active: true) %>
-      <%= list.item("Inactive item") %>
+  <div class="sb-col">
+    <%# ── Active item ─────────────────────────────────────────────────────── %>
+    <%= sp_action_list do |list| %>
+      <%= list.section do %>
+        <%= list.item("Active item",   active: true) %>
+        <%= list.item("Inactive item") %>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </section>

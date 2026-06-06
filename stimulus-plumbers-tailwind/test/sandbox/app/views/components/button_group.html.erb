@@ -2,20 +2,70 @@
 
 <section id="button-group-inline" class="sb-section">
   <h2>Inline (Default)</h2>
-  <%# ── Group inline (default) ─────────────────────────────────────────── %>
-  <%= sp_button_group do |group| %>
-    <%= group.button("Profile",  type: :outline) %>
-    <%= group.button("Settings", type: :outline) %>
-    <%= group.button("Messages", type: :outline) %>
-  <% end %>
+  <div class="sb-row">
+    <%# ── Group inline (default) ─────────────────────────────────────────── %>
+    <%= sp_button_group do |group| %>
+      <%= group.button("Profile",  type: :outline) %>
+      <%= group.button("Settings", type: :outline) %>
+      <%= group.button("Messages", type: :outline) %>
+    <% end %>
+  </div>
 </section>
 
 <section id="button-group-stacked" class="sb-section">
   <h2>Stacked</h2>
-  <%# ── Group stacked ───────────────────────────────────────────────────── %>
-  <%= sp_button_group(layout: :stacked) do |group| %>
-    <%= group.button("Profile",  type: :outline) %>
-    <%= group.button("Settings", type: :outline) %>
-    <%= group.button("Messages", type: :outline) %>
-  <% end %>
+  <div class="sb-col">
+    <%# ── Group stacked ───────────────────────────────────────────────────── %>
+    <%= sp_button_group(layout: :stacked) do |group| %>
+      <%= group.button("Profile",  type: :outline) %>
+      <%= group.button("Settings", type: :outline) %>
+      <%= group.button("Messages", type: :outline) %>
+    <% end %>
+  </div>
+</section>
+
+<section id="button-group-icons" class="sb-section">
+  <h2>With Icons</h2>
+  <div class="sb-col">
+    <%# ── Icon leading — default type ───────────────────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_button_group do |group| %>
+        <%= group.button("New item",      icon_leading: "plus") %>
+        <%= group.button("Notifications", icon_leading: "bell") %>
+        <%= group.button("Delete",        icon_leading: "trash", variant: :destructive) %>
+      <% end %>
+    </div>
+    <%# ── Icon leading — outline type ───────────────────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_button_group do |group| %>
+        <%= group.button("New item",      icon_leading: "plus",  type: :outline) %>
+        <%= group.button("Notifications", icon_leading: "bell",  type: :outline, variant: :secondary) %>
+        <%= group.button("Delete",        icon_leading: "trash", type: :outline, variant: :destructive) %>
+      <% end %>
+    </div>
+    <%# ── Icon leading — ghost type ─────────────────────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_button_group do |group| %>
+        <%= group.button("New item",      icon_leading: "plus",  type: :ghost) %>
+        <%= group.button("Notifications", icon_leading: "bell",  type: :ghost, variant: :secondary) %>
+        <%= group.button("Delete",        icon_leading: "trash", type: :ghost, variant: :destructive) %>
+      <% end %>
+    </div>
+    <%# ── Icon trailing ──────────────────────────────────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_button_group do |group| %>
+        <%= group.button("Download", icon_trailing: "arrow-down-tray") %>
+        <%= group.button("Next",     icon_trailing: "arrow-right") %>
+        <%= group.button("Send",     icon_leading: "envelope", icon_trailing: "arrow-right") %>
+      <% end %>
+    </div>
+    <%# ── Icon only ──────────────────────────────────────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_button_group do |group| %>
+        <%= group.button(icon_leading: "plus",   aria: { label: "Add" }) %>
+        <%= group.button(icon_leading: "pencil", aria: { label: "Edit" },   type: :outline, variant: :secondary) %>
+        <%= group.button(icon_leading: "trash",  aria: { label: "Delete" }, type: :fab,     variant: :destructive) %>
+      <% end %>
+    </div>
+  </div>
 </section>
