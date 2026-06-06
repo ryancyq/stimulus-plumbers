@@ -15,9 +15,7 @@ module StimulusPlumbers
     module Schema
       ACTION_LIST = {
         action_list:         {}.freeze,
-        action_list_item:    {
-          active: { default: false, validate: Ranges::BOOL }
-        }.freeze,
+        action_list_item:    {}.freeze,
         action_list_section: {}.freeze
       }.freeze
 

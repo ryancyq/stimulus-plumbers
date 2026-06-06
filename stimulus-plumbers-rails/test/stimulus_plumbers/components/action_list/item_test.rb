@@ -44,4 +44,20 @@ class ActionListItemTest < ActionView::TestCase
   def test_passes_html_options_to_inner_element
     assert_css parse_html(renderer.render("Action", id: "my-item")), "#my-item"
   end
+
+  def test_inactive_button_has_no_aria_current
+    assert_no_css parse_html(renderer.render("Item")), "button[aria-current]"
+  end
+
+  def test_active_button_has_aria_current_true
+    assert_css parse_html(renderer.render("Item", active: true)), "button[aria-current='true']"
+  end
+
+  def test_inactive_link_has_no_aria_current
+    assert_no_css parse_html(renderer.render("Home", url: "/")), "a[aria-current]"
+  end
+
+  def test_active_link_has_aria_current_page
+    assert_css parse_html(renderer.render("Home", url: "/", active: true)), "a[aria-current='page']"
+  end
 end

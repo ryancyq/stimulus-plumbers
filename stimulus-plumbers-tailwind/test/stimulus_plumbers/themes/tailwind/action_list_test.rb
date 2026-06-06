@@ -37,15 +37,11 @@ class TailwindThemeActionListTest < Minitest::Test
     assert_includes result, "rounded-(--sp-radius-sm)"
   end
 
-  def test_action_list_item_excludes_active_classes_when_inactive
-    refute_includes classes_for(:action_list_item, active: false), "bg-(--sp-color-primary)/10"
-  end
+  def test_action_list_item_includes_aria_current_active_classes
+    result = classes_for(:action_list_item)
 
-  def test_action_list_item_includes_active_classes_when_active
-    result = classes_for(:action_list_item, active: true)
-
-    assert_includes result, "bg-(--sp-color-primary)/10"
-    assert_includes result, "text-(--sp-color-primary)"
+    assert_includes result, "aria-[current]:bg-(--sp-color-primary)/10"
+    assert_includes result, "aria-[current]:text-(--sp-color-primary)"
   end
 
   def test_action_list_section_returns_a_classes_string
