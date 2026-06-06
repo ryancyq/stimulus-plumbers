@@ -6,8 +6,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("link", () => {
-  test("variants", async ({ page }) => {
-    await expect(page.locator("#link-variants")).toHaveScreenshot("variants.png");
+  test("default", async ({ page }) => {
+    await expect(page.locator("#link-default")).toHaveScreenshot("default.png");
   });
 
   test("inline", async ({ page }) => {
@@ -18,21 +18,15 @@ test.describe("link", () => {
     await expect(page.locator("#link-icons")).toHaveScreenshot("icons.png");
   });
 
-  test("navigation", async ({ page }) => {
-    await expect(page.locator("#link-navigation")).toHaveScreenshot(
-      "navigation.png",
-    );
-  });
-
-  test("button type", async ({ page }) => {
+  test("button", async ({ page }) => {
     await expect(page.locator("#link-button")).toHaveScreenshot("button.png");
   });
 
-  test("card type", async ({ page }) => {
+  test("card", async ({ page }) => {
     await expect(page.locator("#link-card")).toHaveScreenshot("card.png");
   });
 
-  test("button type icons", async ({ page }) => {
+  test("button-icons", async ({ page }) => {
     await expect(page.locator("#link-button-icons")).toHaveScreenshot(
       "button-icons.png",
     );

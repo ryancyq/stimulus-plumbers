@@ -24,6 +24,7 @@ class SubmitTest < ActionView::TestCase
     doc = build_form(&:submit)
 
     button = doc.at_css("button[type='submit']")
+
     assert_not_nil button
     refute_empty button.text.strip
   end
@@ -62,6 +63,7 @@ class SubmitTest < ActionView::TestCase
     doc = build_form { |f| f.submit class: "btn" }
 
     button = doc.at_css("button[type='submit']")
+
     assert_not_nil button
     assert_includes button["class"].to_s, "btn"
     refute_empty button.text.strip

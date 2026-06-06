@@ -48,6 +48,23 @@ module StimulusPlumbers
           INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
           INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
+          COMBOBOX_INPUT = %w[
+            [&>input:not([type=hidden])]:border-0
+            [&>input:not([type=hidden])]:rounded-none
+            [&>input:not([type=hidden])]:px-0
+            [&>input:not([type=hidden])]:py-0
+            [&>input:not([type=hidden])]:bg-transparent
+            [&>input:not([type=hidden])]:shadow-none
+            [&>input:not([type=hidden])]:focus:ring-0
+          ].freeze
+          COMBOBOX_TRIGGER_GROUP = %w[
+            [&>div:first-child]:border-0
+            [&>div:first-child]:rounded-none
+            [&>div:first-child]:px-0
+            [&>div:first-child]:py-0
+            [&>div:first-child]:focus-within:ring-0
+          ].freeze
+
           BUTTON_REVEAL = %w[
             self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg)
             hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
@@ -90,24 +107,13 @@ module StimulusPlumbers
           end
 
           def form_field_input_combobox_classes(error: false)
-            {
-              classes: klasses(
-                *INPUT_BASE,
-                *(error ? INPUT_ERROR : INPUT_DEFAULT),
-                "[&>input:not([type=hidden])]:border-0",
-                "[&>input:not([type=hidden])]:rounded-none",
-                "[&>input:not([type=hidden])]:px-0",
-                "[&>input:not([type=hidden])]:py-0",
-                "[&>input:not([type=hidden])]:bg-transparent",
-                "[&>input:not([type=hidden])]:shadow-none",
-                "[&>input:not([type=hidden])]:focus:ring-0",
-                "[&>div:first-child]:border-0",
-                "[&>div:first-child]:rounded-none",
-                "[&>div:first-child]:px-0",
-                "[&>div:first-child]:py-0",
-                "[&>div:first-child]:focus-within:ring-0"
-              )
-            }
+            { classes: klasses(
+              *INPUT_BASE,
+              *(error ? INPUT_ERROR : INPUT_DEFAULT),
+              *COMBOBOX_INPUT,
+              *COMBOBOX_TRIGGER_GROUP
+            )
+}
           end
 
           def form_field_input_reveal_classes(**)

@@ -10,7 +10,7 @@ module StimulusPlumbers
               options = value
               value = nil
             end
-            value   ||= submit_default_value
+            value ||= submit_default_value
             type     = options.delete(:type)    { :default }
             variant  = options.delete(:variant) { :primary }
 

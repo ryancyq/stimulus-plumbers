@@ -1,0 +1,19 @@
+<h1>Link components</h1>
+
+<div id="link">
+  <%# ── Default (text link) ─────────────────────────────────────────────────── %>
+  <%= sp_link("Go to home", url: "/") %>
+  <%= sp_link("External",   url: "https://example.com", target: "_blank") %>
+
+  <%# ── With icons ─────────────────────────────────────────────────────────── %>
+  <%= sp_link("Read more", url: "/", icon_trailing: :arrow) %>
+  <%= sp_link("Back",      url: "/", icon_leading: :arrow) %>
+
+  <%# ── type: :button ──────────────────────────────────────────────────────── %>
+  <%= sp_link("Sign up",    url: "/", type: :button) %>
+  <%= sp_link("Destructive", url: "/", type: :button, variant: :destructive) %>
+
+  <%# ── type: :card ────────────────────────────────────────────────────────── %>
+  <%= sp_link("Get started",        url: "/", type: :card) %>
+  <%= sp_link("View documentation", url: "/", type: :card, icon_leading: :book, icon_trailing: :arrow) %>
+</div>

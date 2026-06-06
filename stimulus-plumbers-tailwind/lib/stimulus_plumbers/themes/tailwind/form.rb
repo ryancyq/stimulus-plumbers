@@ -20,7 +20,8 @@ module StimulusPlumbers
             *Button::VARIANTS.fetch(variant, Button::VARIANTS[:primary]),
             *Button::TYPES.fetch(type, Button::TYPES[:default]),
             *(type == :card ? [] : Button::SIZES[:md])
-          ) }
+          )
+}
         end
       end
     end
