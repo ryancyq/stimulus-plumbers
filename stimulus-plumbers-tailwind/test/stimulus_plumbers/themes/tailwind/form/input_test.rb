@@ -196,6 +196,10 @@ class TailwindThemeFormInputTest < Minitest::Test
 
     assert_includes result, "[&>input:not([type=hidden])]:border-0"
     assert_includes result, "[&>input:not([type=hidden])]:rounded-none"
+    assert_includes result, "[&>input:not([type=hidden])]:px-0"
+    assert_includes result, "[&>input:not([type=hidden])]:py-0"
+    assert_includes result, "[&>input:not([type=hidden])]:bg-transparent"
+    assert_includes result, "[&>input:not([type=hidden])]:shadow-none"
     assert_includes result, "[&>input:not([type=hidden])]:focus:ring-0"
     refute_includes result, "sp-form-combobox"
   end
@@ -215,6 +219,8 @@ class TailwindThemeFormInputTest < Minitest::Test
 
     assert_includes result, "[&>input]:border-0"
     assert_includes result, "[&>input]:rounded-none"
+    assert_includes result, "[&>input]:bg-transparent"
+    assert_includes result, "[&>input]:shadow-none"
     assert_includes result, "[&>input]:focus:ring-0"
     refute_includes result, "sp-form-input-group"
   end
@@ -232,6 +238,8 @@ class TailwindThemeFormInputTest < Minitest::Test
 
     assert_includes result, "[&>input]:border-0"
     assert_includes result, "[&>input]:rounded-none"
+    assert_includes result, "[&>input]:bg-transparent"
+    assert_includes result, "[&>input]:shadow-none"
     assert_includes result, "[&>input]:focus:ring-0"
     refute_includes result, "sp-form-input-group"
   end

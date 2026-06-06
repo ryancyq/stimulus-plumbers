@@ -2,6 +2,7 @@
 
 <%# ── Plain list ─────────────────────────────────────────────────────── %>
 <section id="action-list-plain" class="sb-section">
+  <h2>Plain list</h2>
   <%= sp_action_list do |list| %>
     <%= list.section do %>
       <%= list.item("Profile") %>
@@ -13,6 +14,7 @@
 
 <%# ── With links ─────────────────────────────────────────────────────── %>
 <section id="action-list-with-links" class="sb-section">
+  <h2>With links</h2>
   <%= sp_action_list do |list| %>
     <%= list.section(title: "Navigation") do %>
       <%= list.item("Dashboard", url: "/") %>
@@ -23,6 +25,7 @@
 
 <%# ── Active item ─────────────────────────────────────────────────────── %>
 <section id="action-list-active" class="sb-section">
+  <h2>Active item</h2>
   <%= sp_action_list do |list| %>
     <%= list.section do %>
       <%= list.item("Active item",   active: true) %>

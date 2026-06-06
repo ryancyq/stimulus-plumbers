@@ -96,6 +96,8 @@ class TailwindThemeFormFieldTest < Minitest::Test
     assert_includes result, "hover:text-(--sp-color-fg)"
     assert_includes result, "has-[:checked]:border-(--card-ring)"
     assert_includes result, "has-[:checked]:bg-(--card-ring)/10"
+    assert_includes result, "has-[:checked]:text-(--sp-color-fg)"
+    assert_includes result, "has-[:checked]:hover:bg-(--card-ring)/15"
     assert_includes result, "[--card-ring:var(--sp-color-primary)]"
   end
 
@@ -136,6 +138,7 @@ class TailwindThemeFormFieldTest < Minitest::Test
     assert_includes result, "peer-checked:border-(--card-ring)"
     assert_includes result, "peer-checked:bg-(--card-ring)/10"
     assert_includes result, "peer-checked:text-(--sp-color-fg)"
+    assert_includes result, "peer-checked:hover:bg-(--card-ring)/15"
     assert_includes result, "hover:bg-(--sp-color-muted)"
     assert_includes result, "[--card-ring:var(--sp-color-primary)]"
   end
@@ -158,6 +161,8 @@ class TailwindThemeFormFieldTest < Minitest::Test
     assert_includes result, "hover:text-(--sp-color-fg)"
     assert_includes result, "peer-checked:border-(--card-ring)"
     assert_includes result, "peer-checked:bg-(--card-ring)/10"
+    assert_includes result, "peer-checked:text-(--sp-color-fg)"
+    assert_includes result, "peer-checked:hover:bg-(--card-ring)/15"
     assert_includes result, "[--card-ring:var(--sp-color-primary)]"
   end
 

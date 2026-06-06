@@ -60,4 +60,22 @@ class TailwindThemeFormTest < Minitest::Test
   def test_form_submit_outline_type_excludes_solid_text
     refute_includes classes_for(:form_submit, type: :outline), "text-(--btn-fg)"
   end
+
+  def test_form_submit_card_type_skips_size_classes
+    result = classes_for(:form_submit, type: :card)
+
+    refute_includes result, "h-9"
+    refute_includes result, "h-7"
+    refute_includes result, "h-14"
+  end
+
+  def test_form_group_error_does_not_change_layout_classes
+    stacked         = classes_for(:form_group, layout: :stacked)
+    stacked_error   = classes_for(:form_group, layout: :stacked, error: true)
+    inline          = classes_for(:form_group, layout: :inline)
+    inline_error    = classes_for(:form_group, layout: :inline, error: true)
+
+    assert_equal stacked, stacked_error
+    assert_equal inline, inline_error
+  end
 end

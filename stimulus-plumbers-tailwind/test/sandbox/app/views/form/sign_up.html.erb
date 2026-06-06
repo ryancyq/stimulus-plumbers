@@ -1,6 +1,7 @@
 <h1>Create account</h1>
 
 <section id="sign-up" class="sb-section">
+  <h2>Default</h2>
   <%= sp_card do %>
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name,       as: :text,     label: "Full name",     required: true %>
@@ -13,11 +14,12 @@
       <%= f.submit "Create account" %>
     <% end %>
 
-    <%= sp_button("Sign in", url: "#", variant: :secondary) %>
+    <%= sp_link("Sign in", url: "#", variant: :default) %>
   <% end %>
 </section>
 
 <section id="sign-up-floating" class="sb-section">
+  <h2>Floating labels</h2>
   <%= sp_card do %>
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name,     as: :text,     label: "Full name",     required: true, floating: :outlined %>

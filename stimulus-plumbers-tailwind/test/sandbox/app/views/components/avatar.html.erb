@@ -2,21 +2,25 @@
 
 <%# ── Initials with name ──────────────────────────────────────────────── %>
 <section id="avatar-initials" class="sb-section" aria-label="Initials avatar">
+  <h2>Initials</h2>
   <%= sp_avatar(initials: "SP", name: "Stimulus Plumbers") %>
 </section>
 
 <%# ── Image with name ─────────────────────────────────────────────────── %>
 <section id="avatar-image" class="sb-section" aria-label="Image avatar">
+  <h2>Image</h2>
   <%= sp_avatar(name: "Jane Doe", url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==") %>
 </section>
 
 <%# ── Fallback SVG with name ──────────────────────────────────────────── %>
 <section id="avatar-fallback" class="sb-section" aria-label="Fallback avatar">
+  <h2>Fallback</h2>
   <%= sp_avatar(name: "Anonymous User") %>
 </section>
 
 <%# ── Sizes ───────────────────────────────────────────────────────────── %>
 <section id="avatar-sizes" class="sb-section sb-row" aria-label="Avatar sizes">
+  <h2>Sizes</h2>
   <%= sp_avatar(initials: "SM", name: "Small",  size: :sm) %>
   <%= sp_avatar(initials: "MD", name: "Medium", size: :md) %>
   <%= sp_avatar(initials: "LG", name: "Large",  size: :lg) %>

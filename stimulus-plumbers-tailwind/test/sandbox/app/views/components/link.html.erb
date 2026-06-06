@@ -1,6 +1,7 @@
 <h1>Link components</h1>
 
 <section id="link-variants" class="sb-section">
+  <h2>Variants</h2>
   <%# ── type: :default × all variants ──────────────────────────────────── %>
   <%= sp_link("Default",     url: "#") %>
   <%= sp_link("Success",     url: "#", variant: :success) %>
@@ -10,6 +11,7 @@
 </section>
 
 <section id="link-inline" class="sb-section">
+  <h2>Inline text</h2>
   <%# ── Inline text usage ──────────────────────────────────────────────────── %>
   <p>500,000 people & companies have made over a million apps.
     <%= sp_link("Read their stories", url: "#") %>
@@ -17,6 +19,7 @@
 </section>
 
 <section id="link-icons" class="sb-section sb-col">
+  <h2>With icons</h2>
   <%# ── Icon trailing ───────────────────────────────────────────────────────── %>
   <%= sp_link("Read their stories", url: "#", icon_trailing: "arrow-right") %>
   <%# ── Icon leading ────────────────────────────────────────────────────────── %>
@@ -24,12 +27,14 @@
 </section>
 
 <section id="link-navigation" class="sb-section sb-row" style="gap:1rem">
+  <h2>Navigation</h2>
   <%# ── Navigation ─────────────────────────────────────────────────────────── %>
   <%= sp_link("Go to home", url: "/") %>
   <%= sp_link("External",   url: "https://example.com", target: "_blank") %>
 </section>
 
 <section id="link-button" class="sb-section">
+  <h2>Button type</h2>
   <%# ── type: :button × all variants ──────────────────────────────────────── %>
   <%= sp_link("Default",     url: "#", type: :button) %>
   <%= sp_link("Success",     url: "#", type: :button, variant: :success) %>
@@ -39,6 +44,7 @@
 </section>
 
 <section id="link-card" class="sb-section sb-cards">
+  <h2>Card type</h2>
   <%# ── Card type ──────────────────────────────────────────────────── %>
   <%= sp_link("Get started",        url: "#", type: :card) %>
   <%= sp_link("Read the docs",      url: "#", type: :card, icon_leading: "book-open", icon_trailing: "arrow-right") %>
@@ -49,6 +55,7 @@
 </section>
 
 <section id="link-button-icons" class="sb-section sb-row">
+  <h2>Button type — With icons</h2>
   <%# ── type: :button with icons ───────────────────────────────────────────── %>
   <%= sp_link("With icon",   url: "#", icon_leading: "arrow-left",         type: :button) %>
   <%= sp_link("Download",    url: "#", icon_trailing: "arrow-down-tray",   type: :button) %>

@@ -7,6 +7,7 @@
 
 <%# ── Collection radio buttons, no error ─────────────────────────────── %>
 <section id="fieldset-radio" class="sb-section">
+  <h2>Radio — Default</h2>
   <% fresh = SignUp.new %>
   <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :gender, as: :radio,
@@ -16,6 +17,7 @@
 
 <%# ── Collection radio buttons with error ─────────────────────────────── %>
 <section id="fieldset-radio-error" class="sb-section">
+  <h2>Radio — Error</h2>
   <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :gender, as: :radio,
           label: "Gender", collection: genders, value_method: :first, text_method: :last %>
@@ -24,6 +26,7 @@
 
 <%# ── Collection radio buttons required ──────────────────────────────── %>
 <section id="fieldset-radio-required" class="sb-section">
+  <h2>Radio — Required</h2>
   <% required_form = SignUp.new %>
   <%= form_with(model: required_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :gender, as: :radio,
@@ -33,6 +36,7 @@
 
 <%# ── Collection check boxes, no error ────────────────────────────────── %>
 <section id="fieldset-checkbox" class="sb-section">
+  <h2>Checkbox — Default</h2>
   <% fresh2 = SignUp.new %>
   <%= form_with(model: fresh2, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :interests, as: :check_box,
@@ -42,6 +46,7 @@
 
 <%# ── Collection check boxes with error ───────────────────────────────── %>
 <section id="fieldset-checkbox-error" class="sb-section">
+  <h2>Checkbox — Error</h2>
   <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :interests, as: :check_box,
           label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>

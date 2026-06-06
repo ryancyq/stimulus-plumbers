@@ -349,12 +349,29 @@ class TailwindThemeButtonTest < Minitest::Test
     refute_includes result, "h-14"
   end
 
-  StimulusPlumbers::Themes::Schema::Ranges::SIZE.each do |size|
+  StimulusPlumbers::Themes::Schema::Button::Ranges::SIZE.each do |size|
     define_method("test_button_resolves_#{size}_size") do
       height = { xs: "h-7", sm: "h-8", md: "h-9", lg: "h-11", xl: "h-14" }
 
       assert_includes classes_for(:button, size: size), height[size]
     end
+  end
+
+  # ── button_icon ──────────────────────────────────────────────────────────────
+
+  def test_button_icon_returns_a_classes_string
+    result = classes_for(:button_icon)
+
+    assert_instance_of String, result
+    assert_predicate result, :present?
+  end
+
+  def test_button_icon_includes_size_token
+    assert_includes classes_for(:button_icon), "size-(--sp-control-size)"
+  end
+
+  def test_button_icon_includes_stroke_current
+    assert_includes classes_for(:button_icon), "stroke-current"
   end
 
   # ── button_group ─────────────────────────────────────────────────────────────
