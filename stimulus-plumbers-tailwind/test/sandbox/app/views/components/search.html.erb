@@ -1,16 +1,14 @@
 <h1>Search field</h1>
 
-<div id="search">
-  <section id="search-default">
-    <%= form_with url: "#", scope: :search, builder: StimulusPlumbers::Form::Builder do |f| %>
-      <%= f.field :query, as: :search, label: "Search", clearable: true %>
-    <% end %>
-  </section>
+<section id="search-default" class="sb-section">
+  <%= form_with url: "#", scope: :search, builder: StimulusPlumbers::Form::Builder do |f| %>
+    <%= f.field :query, as: :search, label: "Search", clearable: true %>
+  <% end %>
+</section>
 
-  <section id="search-error">
-    <% search_error = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") } %>
-    <%= form_with(model: search_error, url: "#", builder: StimulusPlumbers::Form::Builder) do |f| %>
-      <%= f.field :name, as: :search, label: "Search" %>
-    <% end %>
-  </section>
-</div>
+<section id="search-error" class="sb-section">
+  <% search_error = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") } %>
+  <%= form_with(model: search_error, url: "#", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.field :name, as: :search, label: "Search" %>
+  <% end %>
+</section>

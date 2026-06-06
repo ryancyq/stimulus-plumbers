@@ -1,34 +1,32 @@
 <h1>Action list components</h1>
 
-<div id="action-list">
-  <%# ── Plain list ─────────────────────────────────────────────────────── %>
-  <section id="action-list-plain">
-    <%= sp_action_list do |list| %>
-      <%= list.section do %>
-        <%= list.item("Profile") %>
-        <%= list.item("Settings") %>
-        <%= list.item("Help") %>
-      <% end %>
+<%# ── Plain list ─────────────────────────────────────────────────────── %>
+<section id="action-list-plain" class="sb-section">
+  <%= sp_action_list do |list| %>
+    <%= list.section do %>
+      <%= list.item("Profile") %>
+      <%= list.item("Settings") %>
+      <%= list.item("Help") %>
     <% end %>
-  </section>
+  <% end %>
+</section>
 
-  <%# ── With links ─────────────────────────────────────────────────────── %>
-  <section id="action-list-with-links">
-    <%= sp_action_list do |list| %>
-      <%= list.section(title: "Navigation") do %>
-        <%= list.item("Dashboard", url: "/") %>
-        <%= list.item("Reports",   url: "/") %>
-      <% end %>
+<%# ── With links ─────────────────────────────────────────────────────── %>
+<section id="action-list-with-links" class="sb-section">
+  <%= sp_action_list do |list| %>
+    <%= list.section(title: "Navigation") do %>
+      <%= list.item("Dashboard", url: "/") %>
+      <%= list.item("Reports",   url: "/") %>
     <% end %>
-  </section>
+  <% end %>
+</section>
 
-  <%# ── Active item ─────────────────────────────────────────────────────── %>
-  <section id="action-list-active">
-    <%= sp_action_list do |list| %>
-      <%= list.section do %>
-        <%= list.item("Active item",   active: true) %>
-        <%= list.item("Inactive item") %>
-      <% end %>
+<%# ── Active item ─────────────────────────────────────────────────────── %>
+<section id="action-list-active" class="sb-section">
+  <%= sp_action_list do |list| %>
+    <%= list.section do %>
+      <%= list.item("Active item",   active: true) %>
+      <%= list.item("Inactive item") %>
     <% end %>
-  </section>
-</div>
+  <% end %>
+</section>

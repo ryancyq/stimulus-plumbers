@@ -4,11 +4,21 @@ module StimulusPlumbers
   module Components
     class Button < Plumber::Base
       def render(content = nil, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
-        render_button(**kwargs) do
-          build_layout(icon_leading: icon_leading, icon_trailing: icon_trailing) do
-            build_button(content, &block)
+        build(**kwargs) do |attrs|
+          template.content_tag(:button, type: "button", **attrs) do
+            build_layout(icon_leading: icon_leading, icon_trailing: icon_trailing) do
+              build_button(content, &block)
+            end
           end
         end
+      end
+
+      def build(type: :default, variant: :primary, size: :md, **kwargs, &block)
+        attrs = merge_html_options(
+          theme.resolve(:button, type: type, variant: variant, size: size),
+          kwargs
+        )
+        template.capture(attrs, &block)
       end
 
       private
@@ -29,17 +39,6 @@ module StimulusPlumbers
             icon_trailing.respond_to?(:call) ? template.capture(&icon_trailing) : render_icon(icon_trailing)
           ]
         )
-      end
-
-      def render_button(type: :primary, variant: :default, size: :md, **kwargs, &block)
-        html_options = merge_html_options(
-          theme.resolve(:button, type: type, variant: variant, size: size),
-          kwargs
-        )
-
-        template.content_tag(:button, type: "button", **html_options) do
-          template.capture(&block)
-        end
       end
 
       def render_icon(name)

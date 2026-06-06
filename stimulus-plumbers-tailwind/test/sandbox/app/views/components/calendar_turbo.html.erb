@@ -1,6 +1,7 @@
 <h1>Calendar (Turbo / SSR)</h1>
 
-<div id="calendar">
+<section id="calendar-turbo" class="sb-section">
+  <h2>Turbo (SSR)</h2>
   <% if @view == "month" %>
     <%= sp_calendar_turbo_month(date: @date, today: @today) %>
   <% elsif @view == "year" %>
@@ -10,4 +11,4 @@
   <% else %>
     <%= sp_calendar_turbo(date: @date, today: @today, selectable: @selectable, show_other_months: @show_other_months) %>
   <% end %>
-</div>
+</section>

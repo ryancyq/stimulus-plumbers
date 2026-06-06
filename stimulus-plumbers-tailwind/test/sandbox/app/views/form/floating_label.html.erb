@@ -2,7 +2,7 @@
 
 <%# ── Filled ──────────────────────────────────────────────────────────── %>
 
-<section id="floating-filled">
+<section id="floating-filled" class="sb-section">
   <h2>Filled</h2>
   <%= sp_card do %>
     <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
@@ -11,7 +11,7 @@
   <% end %>
 </section>
 
-<section id="floating-filled-error">
+<section id="floating-filled-error" class="sb-section">
   <h2>Filled — error</h2>
   <%= sp_card do %>
     <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
@@ -22,7 +22,7 @@
 
 <%# ── Outlined ─────────────────────────────────────────────────────────── %>
 
-<section id="floating-outlined">
+<section id="floating-outlined" class="sb-section">
   <h2>Outlined</h2>
   <%= sp_card do %>
     <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
@@ -31,7 +31,7 @@
   <% end %>
 </section>
 
-<section id="floating-outlined-error">
+<section id="floating-outlined-error" class="sb-section">
   <h2>Outlined — error</h2>
   <%= sp_card do %>
     <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
@@ -42,7 +42,7 @@
 
 <%# ── Standard ─────────────────────────────────────────────────────────── %>
 
-<section id="floating-standard">
+<section id="floating-standard" class="sb-section">
   <h2>Standard</h2>
   <%= sp_card do %>
     <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
@@ -51,7 +51,7 @@
   <% end %>
 </section>
 
-<section id="floating-standard-error">
+<section id="floating-standard-error" class="sb-section">
   <h2>Standard — error</h2>
   <%= sp_card do %>
     <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>

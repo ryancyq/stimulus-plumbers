@@ -7,7 +7,7 @@ class CustomThemeIntegrationTest < ActionView::TestCase
   CustomTheme = Class.new(StimulusPlumbers::Themes::Base) do
     private
 
-    def form_label_classes(hidden: false, **)
+    def form_field_label_classes(hidden: false, **)
       { classes: hidden ? "sr-only label" : "label" }
     end
 

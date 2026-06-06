@@ -45,6 +45,58 @@
   <% end %>
 </section>
 
+<%# ── Collection Checkbox (button type) ──────────────────────────── %>
+
+<section id="collection-checkbox-button">
+  <h2>Collection Checkbox — Button</h2>
+
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          type:       :button,
+          collection: interests, **coll %>
+  <% end %>
+</section>
+
+<%# ── Collection Checkbox (card type) ────────────────────────────── %>
+
+<section id="collection-checkbox-card">
+  <h2>Collection Checkbox — Card</h2>
+
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          type:       :card,
+          collection: interests, **coll %>
+  <% end %>
+</section>
+
+<%# ── Collection Radio (button type) ─────────────────────────────── %>
+
+<section id="collection-radio-button">
+  <h2>Collection Radio — Button</h2>
+
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label:      "Gender",
+          type:       :button,
+          collection: genders, **coll %>
+  <% end %>
+</section>
+
+<%# ── Collection Radio (card type) ───────────────────────────────── %>
+
+<section id="collection-radio-card">
+  <h2>Collection Radio — Card</h2>
+
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label:      "Gender",
+          type:       :card,
+          collection: genders, **coll %>
+  <% end %>
+</section>
+
 <%# ── Single Checkbox (with error) ────────────────────────────────── %>
 
 <section id="single-checkbox-error">

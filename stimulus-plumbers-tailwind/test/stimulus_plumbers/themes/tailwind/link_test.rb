@@ -143,7 +143,7 @@ class TailwindThemeLinkTest < Minitest::Test
   def test_link_button_type_includes_focus_ring
     result = classes_for(:link, type: :button)
 
-    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "focus-visible:ring-(--link-ring)"
   end
 

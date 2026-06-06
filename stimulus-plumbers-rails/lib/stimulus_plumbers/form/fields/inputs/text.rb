@@ -20,7 +20,7 @@ module StimulusPlumbers
 
           TEXT_FIELD_METHODS.each_value do |template_method|
             define_method(template_method) do |attribute, options = {}|
-              html_options = merge_html_options(theme.resolve(:form_input), options)
+              html_options = merge_html_options(theme.resolve(:form_field_input), options)
               super(attribute, html_options)
             end
           end
@@ -34,7 +34,7 @@ module StimulusPlumbers
           end
 
           def render_text(attribute, html_opts, opts, error, template_method, **kwargs)
-            html_options = merge_html_options(theme.resolve(:form_input, error: error), opts, html_opts, kwargs)
+            html_options = merge_html_options(theme.resolve(:form_field_input, error: error), opts, html_opts, kwargs)
             @template.public_send(template_method, @object_name, attribute, objectify_options(html_options))
           end
         end

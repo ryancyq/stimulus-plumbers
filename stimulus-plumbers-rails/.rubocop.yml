@@ -89,7 +89,6 @@ Metrics/ParameterLists:
   Max: 6
   Exclude:
     - lib/stimulus_plumbers/components/combobox/trigger.rb
-    - lib/stimulus_plumbers/components/combobox/popover.rb
     - lib/stimulus_plumbers/form/base.rb
     - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/field.rb

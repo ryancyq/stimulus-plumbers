@@ -6,7 +6,7 @@ module StimulusPlumbers
       module Inputs
         module Checkbox
           def check_box(attribute, options = {}, checked_value = "1", unchecked_value = "0")
-            html_options = merge_html_options(theme.resolve(:form_checkbox), options)
+            html_options = merge_html_options(theme.resolve(:form_field_input_checkbox), options)
             super(attribute, html_options, checked_value, unchecked_value)
           end
 
@@ -19,12 +19,12 @@ module StimulusPlumbers
             html_options = {},
             &block
           )
-            item_opts = merge_html_options(theme.resolve(:form_checkbox), html_options)
+            item_opts = merge_html_options(theme.resolve(:form_field_input_checkbox), html_options)
             if block_given?
               super(attribute, collection, value_method, text_method, options, item_opts, &block)
             else
               super(attribute, collection, value_method, text_method, options, item_opts) do |builder|
-                render_check_box_label(builder, theme.resolve(:form_checkbox_label))
+                render_check_box_label(builder, theme.resolve(:form_field_checkbox_label))
               end
             end
           end
@@ -45,14 +45,14 @@ module StimulusPlumbers
             field   = Field.new(@template, **{ layout: :inline }.deep_merge(field_opts))
             render_fieldset(attribute, field) do |error|
               item_opts = merge_html_options(
-                theme.resolve(:form_checkbox, error: error, type: type, variant: variant),
+                theme.resolve(:form_field_input_checkbox, error: error, type: type, variant: variant),
                 kwargs,
                 field.required ? { aria: { required: "true" } } : {}
               )
               @template.collection_check_boxes(
                 @object_name, attribute, collection, value_method, text_method, {}, item_opts
               ) do |builder|
-                render_check_box_label(builder, theme.resolve(:form_checkbox_label, type: type, variant: variant), type)
+                render_check_box_label(builder, theme.resolve(:form_field_checkbox_label, type: type, variant: variant), type)
               end
             end
           end
@@ -74,11 +74,13 @@ module StimulusPlumbers
 
             Fields::Group.new(@template).render(layout: :stacked, error: error) do
               check_box_html = build_check_box_input(field, attribute, input_id, error, checked_value, unchecked_value, **kwargs)
-              @template.safe_join([
-                build_check_box_label(field, attribute, input_id, check_box_html),
-                field.render_hint(input_id),
-                field.render_errors(object, attribute, input_id)
-              ])
+              @template.safe_join(
+                [
+                  build_check_box_label(field, attribute, input_id, check_box_html),
+                  field.render_hint(input_id),
+                  field.render_errors(object, attribute, input_id)
+                ]
+              )
             end
           end
 
@@ -100,7 +102,7 @@ module StimulusPlumbers
           end
 
           def build_check_box_label(field, attribute, input_id, check_box_html)
-            label_opts = merge_html_options(theme.resolve(:form_checkbox_label))
+            label_opts = merge_html_options(theme.resolve(:form_field_checkbox_label))
             label_text = field.label || attribute.to_s.humanize
             @template.content_tag(:label, for: input_id, **label_opts) do
               @template.safe_join([check_box_html, label_text])

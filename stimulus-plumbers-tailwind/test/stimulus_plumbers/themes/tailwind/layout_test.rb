@@ -96,7 +96,7 @@ class TailwindThemeLayoutTest < Minitest::Test
   def test_popover_trigger_includes_focus_ring
     result = classes_for(:popover_trigger)
 
-    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
   end
 

@@ -8,3 +8,15 @@
     --sp-avatar-size: 2.5rem;
   }
 }
+
+/* Sandbox-only snapshot layout helpers — prefix sb- to avoid clashing with library classes */
+@layer utilities {
+  /* Clips the screenshot to content width on both desktop (1280px) and mobile viewports */
+  .sb-section { width: fit-content; }
+  /* Horizontal flex row — wraps on narrow viewports for mobile snapshot stability */
+  .sb-row     { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  /* Vertical flex column */
+  .sb-col     { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+  /* Card column with max-width cap */
+  .sb-cards   { display: flex; flex-direction: column; gap: 0.5rem; max-width: 24rem; }
+}

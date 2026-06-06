@@ -1,18 +1,18 @@
 <h1>Combobox components</h1>
 
-<div id="combobox">
+<section id="combobox" class="sb-section">
   <%# ── Date ──────────────────────────────────────────────────────────── %>
-  <section id="combobox-date">
+  <section id="combobox-date" class="sb-section">
     <%= sp_combobox_date(label: "Birthday") %>
   </section>
 
   <%# ── Time ──────────────────────────────────────────────────────────── %>
-  <section id="combobox-time">
+  <section id="combobox-time" class="sb-section">
     <%= sp_combobox_time(label: "Meeting Time") %>
   </section>
 
   <%# ── Dropdown ───────────────────────────────────────────────────────── %>
-  <section id="combobox-dropdown">
+  <section id="combobox-dropdown" class="sb-section">
     <%= sp_combobox_dropdown(
           label:   "Country",
           options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
@@ -20,12 +20,12 @@
   </section>
 
   <%# ── Typeahead ──────────────────────────────────────────────────────── %>
-  <section id="combobox-typeahead">
+  <section id="combobox-typeahead" class="sb-section">
     <%= sp_combobox_typeahead(label: "City") %>
   </section>
 
   <%# ── Date (with error) ──────────────────────────────────────────────────── %>
-  <section id="combobox-date-error">
+  <section id="combobox-date-error" class="sb-section">
     <% date_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
     <%= form_with(model: date_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :birth_date, as: :date, label: "Birthday" %>
@@ -33,7 +33,7 @@
   </section>
 
   <%# ── Time (with error) ──────────────────────────────────────────────────── %>
-  <section id="combobox-time-error">
+  <section id="combobox-time-error" class="sb-section">
     <% time_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
     <%= form_with(model: time_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :birth_date, as: :time, label: "Meeting Time" %>
@@ -41,7 +41,7 @@
   </section>
 
   <%# ── Dropdown (with error) ──────────────────────────────────────────────── %>
-  <section id="combobox-dropdown-error">
+  <section id="combobox-dropdown-error" class="sb-section">
     <% dropdown_error = SignUp.new.tap { |f| f.errors.add(:country, "is invalid") } %>
     <%= form_with(model: dropdown_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :country, as: :select, label: "Country",
@@ -50,10 +50,10 @@
   </section>
 
   <%# ── Typeahead (with error) ─────────────────────────────────────────────── %>
-  <section id="combobox-typeahead-error">
+  <section id="combobox-typeahead-error" class="sb-section">
     <% typeahead_error = SignUp.new.tap { |f| f.errors.add(:name, "is invalid") } %>
     <%= form_with(model: typeahead_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :search, label: "City" %>
     <% end %>
   </section>
-</div>
+</section>

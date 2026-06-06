@@ -9,6 +9,14 @@ module StimulusPlumbers
           bg-(--sp-color-bg) shadow-(--sp-shadow-xs)
         ].freeze
 
+        VARIANTS = {
+          default:     %w[[--card-ring:var(--sp-color-primary)]].freeze,
+          success:     %w[[--card-ring:var(--sp-color-success)]].freeze,
+          destructive: %w[[--card-ring:var(--sp-color-destructive)]].freeze,
+          warning:     %w[[--card-ring:var(--sp-color-warning)]].freeze,
+          info:        %w[[--card-ring:var(--sp-color-info)]].freeze
+        }.freeze
+
         SECTION_BASE = %w[
           p-(--sp-space-6)
           [&:not(:first-child)]:border-t

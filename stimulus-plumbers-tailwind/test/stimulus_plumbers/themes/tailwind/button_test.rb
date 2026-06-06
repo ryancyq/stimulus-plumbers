@@ -11,16 +11,14 @@ class TailwindThemeButtonTest < Minitest::Test
     @theme.resolve(component, **args)[:classes]
   end
 
-  # :button base
+  # ── base ────────────────────────────────────────────────────────────────────
 
   def test_button_returns_a_classes_string
-    result = classes_for(:button)
-
-    assert_instance_of String, result
-    assert_predicate result, :present?
+    assert_instance_of String, classes_for(:button)
+    assert_predicate classes_for(:button), :present?
   end
 
-  def test_button_includes_base_layout_classes
+  def test_button_includes_base_structural_classes
     result = classes_for(:button)
 
     assert_includes result, "inline-flex"
@@ -28,100 +26,138 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_includes result, "font-medium"
   end
 
-  # :button default (type: primary, variant: default)
-
-  def test_button_default_sets_primary_css_variables
+  def test_button_includes_focus_ring_via_css_vars
     result = classes_for(:button)
 
-    assert_includes result, "[--btn-bg:var(--sp-color-primary)]"
-    assert_includes result, "[--btn-fg:var(--sp-color-primary-fg)]"
-    assert_includes result, "[--btn-ring:var(--sp-color-primary)]"
+    assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
+    assert_includes result, "focus-visible:ring-offset-(length:--sp-focus-ring-offset)"
+    refute_includes result, "ring-2"
+    refute_includes result, "ring-offset-2"
   end
 
-  def test_button_default_references_btn_variables_for_bg_and_text
-    result = classes_for(:button)
-
-    assert_includes result, "bg-(--btn-bg)"
-    assert_includes result, "text-(--btn-fg)"
-  end
-
-  def test_button_falls_back_to_default_variant_for_unknown_variant
-    result = classes_for(:button, variant: :unknown)
-
-    assert_includes result, "[--btn-bg:var(--sp-color-primary)]"
-  end
-
-  def test_button_falls_back_to_primary_type_for_unknown_type
+  def test_button_falls_back_to_default_type_for_unknown_type
     result = classes_for(:button, type: :unknown)
 
     assert_includes result, "bg-(--btn-bg)"
   end
 
-  # :button types
+  def test_button_falls_back_to_primary_variant_for_unknown_variant
+    result = classes_for(:button, variant: :unknown)
 
-  def test_button_secondary_type_uses_tinted_background
-    result = classes_for(:button, type: :secondary)
-
-    assert_includes result, "bg-(--btn-bg)/15"
-    assert_includes result, "text-(--btn-bg)"
-    refute_includes result, "bg-(--btn-bg) "
+    assert_includes result, "[--btn-bg:var(--sp-color-primary)]"
   end
 
-  def test_button_tertiary_type_uses_surface_bg_with_light_border
-    result = classes_for(:button, type: :tertiary)
+  # ── variants: CSS variables emitted ─────────────────────────────────────────
 
-    assert_includes result, "bg-(--sp-color-bg)"
-    assert_includes result, "border-(--btn-bg)/40"
-    assert_includes result, "text-(--btn-bg)"
+  def test_button_primary_variant_sets_five_css_variables
+    result = classes_for(:button, variant: :primary)
+
+    assert_includes result, "[--btn-bg:var(--sp-color-primary)]"
+    assert_includes result, "[--btn-fg:var(--sp-color-primary-fg)]"
+    assert_includes result, "[--btn-accent:var(--sp-color-primary)]"
+    assert_includes result, "[--btn-border:var(--sp-color-primary-border)]"
+    assert_includes result, "[--btn-ring:var(--sp-color-primary-ring)]"
   end
 
-  def test_button_outline_type_fills_on_hover
-    result = classes_for(:button, type: :outline)
+  def test_button_secondary_variant_sets_five_css_variables
+    result = classes_for(:button, variant: :secondary)
 
-    assert_includes result, "bg-(--sp-color-bg)"
-    assert_includes result, "border-(--btn-bg)"
-    assert_includes result, "hover:bg-(--btn-bg)"
-    assert_includes result, "hover:text-(--btn-fg)"
+    assert_includes result, "[--btn-bg:var(--sp-color-secondary)]"
+    assert_includes result, "[--btn-fg:var(--sp-color-secondary-fg)]"
+    assert_includes result, "[--btn-accent:var(--sp-color-secondary)]"
+    assert_includes result, "[--btn-border:var(--sp-color-secondary-border)]"
+    assert_includes result, "[--btn-ring:var(--sp-color-secondary-ring)]"
   end
 
-  def test_button_ghost_type_uses_transparent_bg_with_muted_hover
-    result = classes_for(:button, type: :ghost)
+  def test_button_tertiary_variant_uses_muted_bg_and_fg_text_for_accent
+    result = classes_for(:button, variant: :tertiary)
 
-    assert_includes result, "bg-transparent"
-    assert_includes result, "hover:bg-(--btn-bg)/10"
+    assert_includes result, "[--btn-bg:var(--sp-color-muted)]"
+    assert_includes result, "[--btn-fg:var(--sp-color-muted-fg)]"
+    assert_includes result, "[--btn-accent:var(--sp-color-fg)]"
+    assert_includes result, "[--btn-border:var(--sp-color-muted-border)]"
+    assert_includes result, "[--btn-ring:var(--sp-color-muted-ring)]"
+    refute_includes result, "[--btn-accent:var(--sp-color-muted)]"
   end
 
-  # :button variants
-
-  def test_button_destructive_variant_sets_destructive_css_variables
-    result = classes_for(:button, variant: :destructive)
-
-    assert_includes result, "[--btn-bg:var(--sp-color-destructive)]"
-    assert_includes result, "[--btn-fg:var(--sp-color-destructive-fg)]"
-  end
-
-  def test_button_success_variant_sets_success_css_variables
+  def test_button_success_variant_sets_five_css_variables
     result = classes_for(:button, variant: :success)
 
     assert_includes result, "[--btn-bg:var(--sp-color-success)]"
     assert_includes result, "[--btn-fg:var(--sp-color-success-fg)]"
+    assert_includes result, "[--btn-accent:var(--sp-color-success)]"
+    assert_includes result, "[--btn-border:var(--sp-color-success-border)]"
     assert_includes result, "[--btn-ring:var(--sp-color-success-ring)]"
   end
 
-  def test_button_warning_variant_sets_warning_css_variables
+  def test_button_destructive_variant_sets_five_css_variables
+    result = classes_for(:button, variant: :destructive)
+
+    assert_includes result, "[--btn-bg:var(--sp-color-destructive)]"
+    assert_includes result, "[--btn-fg:var(--sp-color-destructive-fg)]"
+    assert_includes result, "[--btn-accent:var(--sp-color-destructive)]"
+    assert_includes result, "[--btn-border:var(--sp-color-destructive-border)]"
+    assert_includes result, "[--btn-ring:var(--sp-color-destructive-ring)]"
+  end
+
+  def test_button_warning_variant_sets_five_css_variables
     result = classes_for(:button, variant: :warning)
 
     assert_includes result, "[--btn-bg:var(--sp-color-warning)]"
     assert_includes result, "[--btn-fg:var(--sp-color-warning-fg)]"
+    assert_includes result, "[--btn-accent:var(--sp-color-warning)]"
+    assert_includes result, "[--btn-border:var(--sp-color-warning-border)]"
     assert_includes result, "[--btn-ring:var(--sp-color-warning-ring)]"
   end
 
-  def test_button_info_variant_sets_info_css_variables
+  def test_button_info_variant_sets_five_css_variables
     result = classes_for(:button, variant: :info)
 
     assert_includes result, "[--btn-bg:var(--sp-color-info)]"
     assert_includes result, "[--btn-fg:var(--sp-color-info-fg)]"
+    assert_includes result, "[--btn-accent:var(--sp-color-info)]"
+    assert_includes result, "[--btn-border:var(--sp-color-info-border)]"
     assert_includes result, "[--btn-ring:var(--sp-color-info-ring)]"
+  end
+
+  # ── type: :default ───────────────────────────────────────────────────────────
+
+  def test_button_default_type_uses_filled_bg_and_fg
+    result = classes_for(:button, type: :default)
+
+    assert_includes result, "bg-(--btn-bg)"
+    assert_includes result, "text-(--btn-fg)"
+    refute_includes result, "text-(--btn-accent)"
+  end
+
+  def test_button_default_type_uses_btn_border
+    assert_includes classes_for(:button, type: :default), "border-(--btn-border)"
+  end
+
+  def test_button_default_type_hover_darkens_bg
+    assert_includes classes_for(:button, type: :default), "hover:bg-(--btn-bg)/90"
+  end
+
+  # ── type: :outline ───────────────────────────────────────────────────────────
+
+  def test_button_outline_type_uses_surface_bg_and_accent_text
+    result = classes_for(:button, type: :outline)
+
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "text-(--btn-accent)"
+    refute_includes result, "text-(--btn-fg)"
+  end
+
+  def test_button_outline_type_uses_btn_border
+    assert_includes classes_for(:button, type: :outline), "border-(--btn-border)"
+  end
+
+  def test_button_outline_type_hover_tints_bg
+    assert_includes classes_for(:button, type: :outline), "hover:bg-(--btn-bg)/10"
+  end
+
+  def test_button_outline_type_does_not_change_text_on_hover
+    refute_includes classes_for(:button, type: :outline), "hover:text-"
   end
 
   def test_button_type_and_variant_combine_independently
@@ -129,16 +165,181 @@ class TailwindThemeButtonTest < Minitest::Test
 
     assert_includes result, "[--btn-bg:var(--sp-color-destructive)]"
     assert_includes result, "bg-(--sp-color-bg)"
-    assert_includes result, "hover:bg-(--btn-bg)"
+    assert_includes result, "text-(--btn-accent)"
+    assert_includes result, "hover:bg-(--btn-bg)/10"
   end
 
-  # :button sizes
+  # ── type: :ghost ─────────────────────────────────────────────────────────────
 
-  def test_button_includes_medium_size_classes_by_default
+  def test_button_ghost_type_uses_transparent_bg_and_accent_text
+    result = classes_for(:button, type: :ghost)
+
+    assert_includes result, "bg-transparent"
+    assert_includes result, "text-(--btn-accent)"
+    refute_includes result, "text-(--btn-fg)"
+  end
+
+  def test_button_ghost_type_has_transparent_border
+    assert_includes classes_for(:button, type: :ghost), "border-transparent"
+  end
+
+  def test_button_ghost_type_hover_tints_bg
+    assert_includes classes_for(:button, type: :ghost), "hover:bg-(--btn-bg)/10"
+  end
+
+  # ── type: :fab ───────────────────────────────────────────────────────────────
+
+  def test_button_fab_type_uses_filled_bg_and_fg
+    result = classes_for(:button, type: :fab)
+
+    assert_includes result, "bg-(--btn-bg)"
+    assert_includes result, "text-(--btn-fg)"
+    refute_includes result, "text-(--btn-accent)"
+  end
+
+  def test_button_fab_type_uses_radius_full_token
+    result = classes_for(:button, type: :fab)
+
+    assert_includes result, "rounded-(--sp-radius-full)"
+    refute_includes result, "rounded-full"
+  end
+
+  def test_button_fab_type_uses_shadow_tokens
+    result = classes_for(:button, type: :fab)
+
+    assert_includes result, "shadow-(--sp-shadow-lg)"
+    assert_includes result, "hover:shadow-(--sp-shadow-xl)"
+    refute_includes result.split, "shadow-lg"
+    refute_includes result.split, "shadow-xl"
+  end
+
+  def test_button_fab_type_hover_darkens_bg
+    assert_includes classes_for(:button, type: :fab), "hover:bg-(--btn-bg)/90"
+  end
+
+  # ── type: :fab_outline ───────────────────────────────────────────────────────
+
+  def test_button_fab_outline_type_uses_transparent_bg_and_accent_text_at_rest
+    result = classes_for(:button, type: :fab_outline)
+
+    assert_includes result, "bg-transparent"
+    assert_includes result, "text-(--btn-accent)"
+    refute_includes result.split, "bg-(--btn-bg)"
+  end
+
+  def test_button_fab_outline_type_uses_radius_full_token
+    result = classes_for(:button, type: :fab_outline)
+
+    assert_includes result, "rounded-(--sp-radius-full)"
+    refute_includes result, "rounded-full"
+  end
+
+  def test_button_fab_outline_type_uses_shadow_tokens
+    result = classes_for(:button, type: :fab_outline)
+
+    assert_includes result, "shadow-(--sp-shadow-lg)"
+    assert_includes result, "hover:shadow-(--sp-shadow-xl)"
+    refute_includes result, "shadow-lg "
+  end
+
+  def test_button_fab_outline_type_fills_on_hover
+    result = classes_for(:button, type: :fab_outline)
+
+    assert_includes result, "hover:bg-(--btn-bg)"
+    assert_includes result, "hover:text-(--btn-fg)"
+  end
+
+  def test_button_fab_outline_type_uses_btn_border
+    assert_includes classes_for(:button, type: :fab_outline), "border-(--btn-border)"
+  end
+
+  # ── type: :dashed ────────────────────────────────────────────────────────────
+
+  def test_button_dashed_type_uses_surface_bg_and_accent_text
+    result = classes_for(:button, type: :dashed)
+
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "text-(--btn-accent)"
+    refute_includes result, "bg-transparent"
+    refute_includes result, "text-(--btn-fg)"
+  end
+
+  def test_button_dashed_type_includes_dashed_border_style
+    result = classes_for(:button, type: :dashed)
+
+    assert_includes result, "border-dashed"
+    assert_includes result, "border-(--btn-border)"
+  end
+
+  def test_button_dashed_type_hover_tints_bg
+    assert_includes classes_for(:button, type: :dashed), "hover:bg-(--btn-bg)/10"
+  end
+
+  # ── type: :card ──────────────────────────────────────────────────────────────
+
+  def test_button_card_type_uses_surface_bg_and_accent_text
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "text-(--btn-accent)"
+    refute_includes result, "text-(--btn-fg)"
+  end
+
+  def test_button_card_type_uses_btn_border_and_shadow
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "border-(--btn-border)"
+    assert_includes result, "shadow-(--sp-shadow-xs)"
+  end
+
+  def test_button_card_type_does_not_change_text_on_hover
+    refute_includes classes_for(:button, type: :card), "hover:text-"
+  end
+
+  def test_button_card_type_hover_tints_bg
+    assert_includes classes_for(:button, type: :card), "hover:bg-(--btn-bg)/10"
+  end
+
+  def test_button_card_type_uses_justify_start_layout
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "justify-start"
+    assert_includes result, "flex-1"
+    assert_includes result, "p-(--sp-space-4)"
+    assert_includes result, "[&>:last-child:not(:first-child)]:ml-auto"
+  end
+
+  def test_button_card_type_skips_size_classes
+    result_md = classes_for(:button, type: :card, size: :md)
+    result_xl = classes_for(:button, type: :card, size: :xl)
+
+    assert_equal result_md, result_xl
+    refute_includes result_md, "h-9"
+    refute_includes result_md, "h-14"
+  end
+
+  def test_button_card_type_uses_btn_variables_not_card_ring
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "focus-visible:ring-(--btn-ring)"
+    refute_includes result, "--card-ring"
+  end
+
+  def test_button_card_variant_changes_btn_variables
+    result = classes_for(:button, type: :card, variant: :success)
+
+    assert_includes result, "[--btn-bg:var(--sp-color-success)]"
+    assert_includes result, "[--btn-accent:var(--sp-color-success)]"
+    refute_includes result, "[--btn-bg:var(--sp-color-primary)]"
+  end
+
+  # ── sizes ────────────────────────────────────────────────────────────────────
+
+  def test_button_includes_medium_size_by_default
     assert_includes classes_for(:button), "h-9"
   end
 
-  def test_button_resolves_nil_size_applies_no_size_classes
+  def test_button_nil_size_applies_no_height
     result = classes_for(:button, size: nil)
 
     refute_includes result, "h-7"
@@ -156,7 +357,7 @@ class TailwindThemeButtonTest < Minitest::Test
     end
   end
 
-  # :button_group base
+  # ── button_group ─────────────────────────────────────────────────────────────
 
   def test_button_group_returns_a_classes_string
     result = classes_for(:button_group)
@@ -172,8 +373,6 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_includes result, "shadow-(--sp-shadow-xs)"
   end
 
-  # :button_group layout: :inline
-
   def test_button_group_inline_uses_horizontal_flex
     result = classes_for(:button_group, layout: :inline)
 
@@ -188,11 +387,13 @@ class TailwindThemeButtonTest < Minitest::Test
     refute_includes result, "-mt-px"
   end
 
-  def test_button_group_inline_uses_sp_button_group_class
-    assert_includes classes_for(:button_group, layout: :inline), "sp-button-group"
-  end
+  def test_button_group_inline_rounds_first_and_last_child
+    result = classes_for(:button_group, layout: :inline)
 
-  # :button_group layout: :stacked
+    assert_includes result, "[&>*]:rounded-none"
+    assert_includes result, "[&>*:first-child]:rounded-s-(--sp-radius-md)"
+    assert_includes result, "[&>*:last-child]:rounded-e-(--sp-radius-md)"
+  end
 
   def test_button_group_stacked_uses_vertical_flex
     result = classes_for(:button_group, layout: :stacked)
@@ -209,150 +410,18 @@ class TailwindThemeButtonTest < Minitest::Test
     refute_includes result, "-ml-px"
   end
 
-  def test_button_group_stacked_uses_sp_button_group_stacked_class
-    assert_includes classes_for(:button_group, layout: :stacked), "sp-button-group-stacked"
+  def test_button_group_stacked_rounds_first_and_last_child
+    result = classes_for(:button_group, layout: :stacked)
+
+    assert_includes result, "[&>*]:rounded-none"
+    assert_includes result, "[&>*:first-child]:rounded-t-(--sp-radius-md)"
+    assert_includes result, "[&>*:last-child]:rounded-b-(--sp-radius-md)"
   end
 
-  def test_button_group_stacked_does_not_include_inline_group_class
-    refute_includes classes_for(:button_group, layout: :stacked), "sp-button-group "
-  end
+  def test_button_group_stacked_does_not_include_inline_child_rounding
+    result = classes_for(:button_group, layout: :stacked)
 
-  # :button fab type
-
-  def test_button_fab_type_includes_rounded_full
-    assert_includes classes_for(:button, type: :fab), "rounded-full"
-  end
-
-  def test_button_fab_type_includes_shadow
-    assert_includes classes_for(:button, type: :fab), "shadow-lg"
-  end
-
-  def test_button_fab_type_references_btn_variables
-    result = classes_for(:button, type: :fab)
-
-    assert_includes result, "bg-(--btn-bg)"
-    assert_includes result, "text-(--btn-fg)"
-  end
-
-  def test_button_fab_type_includes_hover_shadow
-    assert_includes classes_for(:button, type: :fab), "hover:shadow-xl"
-  end
-
-  # :button fab_outline type
-
-  def test_button_fab_outline_type_includes_rounded_full
-    assert_includes classes_for(:button, type: :fab_outline), "rounded-full"
-  end
-
-  def test_button_fab_outline_type_includes_shadow
-    assert_includes classes_for(:button, type: :fab_outline), "shadow-lg"
-  end
-
-  def test_button_fab_outline_type_references_btn_border_and_text
-    result = classes_for(:button, type: :fab_outline)
-
-    assert_includes result, "border-(--btn-bg)"
-    assert_includes result, "text-(--btn-bg)"
-  end
-
-  def test_button_fab_outline_type_hover_fills
-    result = classes_for(:button, type: :fab_outline)
-
-    assert_includes result, "hover:bg-(--btn-bg)"
-    assert_includes result, "hover:text-(--btn-fg)"
-  end
-
-  def test_button_fab_outline_type_includes_hover_shadow
-    assert_includes classes_for(:button, type: :fab_outline), "hover:shadow-xl"
-  end
-
-  # :button card type
-
-  def test_button_card_type_uses_neutral_background
-    result = classes_for(:button, type: :card)
-
-    assert_includes result, "bg-(--sp-color-bg)"
-    assert_includes result, "text-(--sp-color-muted-fg)"
-  end
-
-  def test_button_card_type_uses_full_padding_not_height
-    result = classes_for(:button, type: :card)
-
-    assert_includes result, "p-(--sp-space-4)"
-    refute_includes result, "h-9"
-    refute_includes result, "h-7"
-    refute_includes result, "h-11"
-    refute_includes result, "h-14"
-  end
-
-  def test_button_card_type_uses_justify_start_layout
-    result = classes_for(:button, type: :card)
-
-    assert_includes result, "justify-start"
-    assert_includes result, "flex-1"
-    assert_includes result, "gap-(--sp-space-3)"
-    assert_includes result, "[&>:last-child:not(:first-child)]:ml-auto"
-    refute_includes result, "justify-between"
-  end
-
-  def test_button_card_type_includes_border_and_shadow
-    result = classes_for(:button, type: :card)
-
-    assert_includes result, "border-(--sp-color-border)"
-    assert_includes result, "shadow-(--sp-shadow-xs)"
-  end
-
-  def test_button_card_type_includes_hover_upgrades
-    result = classes_for(:button, type: :card)
-
-    assert_includes result, "hover:border-(--sp-color-border-strong)"
-    assert_includes result, "hover:text-(--sp-color-fg)"
-    assert_includes result, "hover:bg-(--sp-color-muted)"
-  end
-
-  def test_button_card_type_sets_default_card_ring
-    result = classes_for(:button, type: :card)
-
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
-    assert_includes result, "focus-visible:ring-(--card-ring)"
-  end
-
-  def test_button_card_type_does_not_set_btn_variables
-    result = classes_for(:button, type: :card)
-
-    refute_includes result, "--btn-bg"
-    refute_includes result, "--btn-fg"
-    refute_includes result, "--btn-ring"
-  end
-
-  def test_button_card_type_success_variant_sets_card_ring
-    result = classes_for(:button, type: :card, variant: :success)
-
-    assert_includes result, "[--card-ring:var(--sp-color-success)]"
-    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
-  end
-
-  def test_button_card_type_size_param_has_no_effect
-    result_md  = classes_for(:button, type: :card, size: :md)
-    result_xl  = classes_for(:button, type: :card, size: :xl)
-
-    assert_equal result_md, result_xl
-  end
-
-  # :button dashed type
-
-  def test_button_dashed_type_includes_dashed_border
-    result = classes_for(:button, type: :dashed)
-
-    assert_includes result, "border-dashed"
-    assert_includes result, "border-(--btn-bg)/60"
-  end
-
-  def test_button_dashed_type_includes_transparent_background
-    assert_includes classes_for(:button, type: :dashed), "bg-transparent"
-  end
-
-  def test_button_dashed_type_includes_tinted_hover
-    assert_includes classes_for(:button, type: :dashed), "hover:bg-(--btn-bg)/10"
+    refute_includes result, "[&>*:first-child]:rounded-s-(--sp-radius-md)"
+    refute_includes result, "[&>*:last-child]:rounded-e-(--sp-radius-md)"
   end
 end
