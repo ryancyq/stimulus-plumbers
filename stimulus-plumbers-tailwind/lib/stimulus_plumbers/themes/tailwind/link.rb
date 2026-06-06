@@ -45,6 +45,8 @@ module StimulusPlumbers
           "whitespace-nowrap",
           "inline-flex items-center justify-center gap-(--sp-space-2)",
           "h-9 px-(--sp-space-4) text-(length:--sp-text-base)",
+          "[&:not(:has(>span))]:aspect-square",
+          "[&:not(:has(>span))]:px-0",
           "rounded-(--sp-radius-md)",
           "bg-(--sp-color-bg) text-(--link-color)",
           "border border-(--link-color)",

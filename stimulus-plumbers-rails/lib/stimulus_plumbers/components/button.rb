@@ -25,9 +25,9 @@ module StimulusPlumbers
 
       def build_button(content, &block)
         if block_given?
-          template.capture(&block)
-        else
-          content
+          template.content_tag(:span, template.capture(&block))
+        elsif content
+          template.content_tag(:span, content)
         end
       end
 

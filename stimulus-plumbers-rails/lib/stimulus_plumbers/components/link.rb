@@ -35,7 +35,11 @@ module StimulusPlumbers
       end
 
       def build_content(content, &block)
-        block_given? ? template.capture(&block) : content
+        if block_given?
+          template.content_tag(:span, template.capture(&block))
+        elsif content
+          template.content_tag(:span, content)
+        end
       end
 
       def render_icon(name)

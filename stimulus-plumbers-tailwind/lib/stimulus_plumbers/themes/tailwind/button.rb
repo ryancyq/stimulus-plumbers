@@ -119,6 +119,8 @@ module StimulusPlumbers
 
         LAYOUT = %w[
           inline-flex items-center justify-center gap-(--sp-space-2)
+          [&:not(:has(>span))]:aspect-square
+          [&:not(:has(>span))]:px-0
         ].freeze
 
         CARD = %w[
