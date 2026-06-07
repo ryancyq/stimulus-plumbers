@@ -8,48 +8,43 @@ Rails helpers for rendering themed, accessible buttons and links.
 
 ```erb
 <%= sp_button "Save" %>
-<%= sp_button "Visit", url: root_path %>
-<%= sp_button "Docs",  url: "https://example.com", external: true %>
 <%= sp_button(icon_leading: "check") { "Confirm" } %>
-<%= sp_button "Delete", type: :primary, variant: :destructive, size: :sm %>
+<%= sp_button "Delete", type: :default, variant: :destructive, size: :sm %>
 ```
 
-| Option           | Default    | Description                                                                                               |
-| ---------------- | ---------- | --------------------------------------------------------------------------------------------------------- |
-| `content`        | `nil`      | Button label — positional arg or block                                                                    |
-| `url`            | `nil`      | Renders an `<a>` instead of `<button>`                                                                    |
-| `external`       | `false`    | Adds `target="_blank"` (only used when `url:` is set)                                                     |
-| `target`         | `nil`      | Explicit `target` attribute for the anchor (overridden by `external:`)                                    |
-| `type`           | `:primary` | Visual style — `:primary` \| `:secondary` \| `:tertiary` \| `:outline` \| `:ghost` \| `:fab` \| `:dashed` |
-| `variant`        | `:default` | Color semantic — `:default` \| `:success` \| `:destructive` \| `:warning` \| `:info`                      |
-| `size`           | `:md`      | Size — `:xs` \| `:sm` \| `:md` \| `:lg` \| `:xl`                                                          |
-| `icon_leading`   | `nil`      | Icon rendered **before** the button — icon name (string or symbol) or callable                            |
-| `icon_trailing`  | `nil`      | Icon rendered **after** the button — icon name (string or symbol) or callable                             |
-| `**html_options` | —          | Forwarded to the `<button>` or `<a>` element                                                              |
-
-> **Note:** `url:` renders an `<a>` which uses only `variant:` and `size:` (no `type:`).
+| Option           | Default    | Description                                                                                              |
+| ---------------- | ---------- | -------------------------------------------------------------------------------------------------------- |
+| `content`        | `nil`      | Button label — positional arg or block                                                                   |
+| `type`           | `:default` | Visual style — `:default` \| `:outline` \| `:ghost` \| `:fab` \| `:fab_outline` \| `:dashed` \| `:card` |
+| `variant`        | `:primary` | Color source — `:primary` \| `:secondary` \| `:tertiary` \| `:success` \| `:destructive` \| `:warning` \| `:info` |
+| `size`           | `:md`      | Size — `:xs` \| `:sm` \| `:md` \| `:lg` \| `:xl` (ignored when `type: :card`)                           |
+| `icon_leading`   | `nil`      | Icon rendered **before** the label — icon name (string or symbol) or callable                            |
+| `icon_trailing`  | `nil`      | Icon rendered **after** the label — icon name (string or symbol) or callable                             |
+| `**html_options` | —          | Forwarded to the `<button>` element                                                                      |
 
 **`type:` — visual style**
 
-| Value        | Appearance                                             |
-| ------------ | ------------------------------------------------------ |
-| `:primary`   | Filled — solid background from `variant` color         |
-| `:secondary` | Tinted — low-opacity background, colored text          |
-| `:tertiary`  | White background, colored border and text              |
-| `:outline`   | Transparent with full border; fills solid on hover     |
-| `:ghost`     | Transparent, no border; subtle fill on hover           |
-| `:fab`       | Floating action button — rounded full, elevated shadow |
-| `:dashed`    | Dashed border, transparent background                  |
+| Value          | Appearance                                                                    |
+| -------------- | ----------------------------------------------------------------------------- |
+| `:default`     | Filled — solid background from `variant` color                                |
+| `:outline`     | Surface background, colored border and text; subtle tint on hover             |
+| `:ghost`       | Transparent, no border; subtle tint on hover                                  |
+| `:fab`         | Floating action button — `rounded-full`, elevated shadow, filled              |
+| `:fab_outline` | Floating action button — `rounded-full`, elevated shadow, fills solid on hover |
+| `:dashed`      | Dashed border, surface background                                             |
+| `:card`        | Full-padding card — `flex-1`, `justify-start`; `size:` ignored                |
 
-**`variant:` — color semantic**
+**`variant:` — color source**
 
-| Value          | Color role           |
-| -------------- | -------------------- |
-| `:default`     | Primary brand color  |
-| `:success`     | Green / positive     |
-| `:destructive` | Red / danger         |
-| `:warning`     | Amber / caution      |
-| `:info`        | Blue / informational |
+| Value          | Color tokens used                    |
+| -------------- | ------------------------------------ |
+| `:primary`     | `--sp-color-primary-*`               |
+| `:secondary`   | `--sp-color-secondary-*`             |
+| `:tertiary`    | `--sp-color-muted-*` (neutral)       |
+| `:success`     | `--sp-color-success-*`               |
+| `:destructive` | `--sp-color-destructive-*`           |
+| `:warning`     | `--sp-color-warning-*`               |
+| `:info`        | `--sp-color-info-*`                  |
 
 **Icon values:**
 
@@ -62,20 +57,19 @@ Wraps buttons in a themed container `<div>`.
 
 ```erb
 <%= sp_button_group do %>
-  <%= sp_button "Cancel", type: :secondary %>
+  <%= sp_button "Cancel", type: :outline %>
   <%= sp_button "Save" %>
 <% end %>
 
-<%= sp_button_group(alignment: :right, direction: :row) do %>
+<%= sp_button_group(layout: :stacked) do %>
   ...
 <% end %>
 ```
 
-| Option           | Default | Description                                              |
-| ---------------- | ------- | -------------------------------------------------------- |
-| `alignment`      | `:left` | Alignment variant passed to the `button_group` theme key |
-| `direction`      | `:row`  | Direction variant passed to the `button_group` theme key |
-| `**html_options` | —       | Forwarded to the wrapper `<div>`                         |
+| Option           | Default   | Description                                          |
+| ---------------- | --------- | ---------------------------------------------------- |
+| `layout`         | `:inline` | Layout direction — `:inline` \| `:stacked`           |
+| `**html_options` | —         | Forwarded to the wrapper `<div>`                     |
 
 ---
 
@@ -83,46 +77,44 @@ Wraps buttons in a themed container `<div>`.
 
 ### Button (action)
 
-```html
-<button type="button" class="[theme classes]">Save</button>
-```
-
-### Link button
+Text content is always wrapped in a `<span>`:
 
 ```html
-<a href="/path" class="[theme classes]"> Visit </a>
-```
-
-### External link
-
-```html
-<a href="https://example.com" target="_blank" class="[theme classes]"> Docs </a>
+<button type="button" class="[theme classes]"><span>Save</span></button>
 ```
 
 ### With icons
 
-Icons are rendered as **siblings** outside the `<button>`/`<a>`, not inside it:
+Icons are rendered **inside** the `<button>`, before or after the label `<span>`:
 
 ```html
-<span aria-hidden="true" class="[button_icon theme classes]"
-  ><!-- icon svg --></span
->
-<button type="button" class="[theme classes]">Confirm</button>
+<button type="button" class="[theme classes]">
+  <svg aria-hidden="true" class="[button_icon theme classes]"><!-- icon svg --></svg>
+  <span>Confirm</span>
+</button>
 ```
 
 ```html
-<button type="button" class="[theme classes]">Next</button>
-<span aria-hidden="true" class="[button_icon theme classes]"
-  ><!-- icon svg --></span
->
+<button type="button" class="[theme classes]">
+  <span>Next</span>
+  <svg aria-hidden="true" class="[button_icon theme classes]"><!-- icon svg --></svg>
+</button>
 ```
 
-This means the containing element must establish layout context (e.g. `display: flex`) to align the icon and button visually.
+### Icon only
+
+When no text is provided, no `<span>` is rendered. The theme uses `:has(> span)` to detect this and applies `aspect-square` + `px-0`, making the button square (or a circle for `type: :fab` / `:fab_outline`):
+
+```html
+<button type="button" aria-label="Add" class="[theme classes]">
+  <svg aria-hidden="true" class="[button_icon theme classes]"><!-- icon svg --></svg>
+</button>
+```
 
 ### Button group
 
 ```html
-<div class="[button_group theme classes]">
+<div role="group" class="[button_group theme classes]">
   <button type="button">Cancel</button>
   <button type="button">Save</button>
 </div>
@@ -134,4 +126,4 @@ This means the containing element must establish layout context (e.g. `display: 
 
 - `<button>` always has `type="button"` to prevent accidental form submission.
 - Icon-only buttons must supply an accessible label via `aria: { label: "..." }` in `html_options`.
-- When rendered as `<a>`, the element has no explicit `role` — screen readers announce it as a link, not a button. Use `url:` only when navigation is the intent.
+- For navigation actions (links), use `sp_link` instead — it renders an `<a>` element.

@@ -18,56 +18,70 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Form fields
 
-| Key                    | Component                                                                                         | Variants                                   |
-| ---------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `form_group`           | `Fields::Group` (wrapper div)                                                                     | `layout: :stacked\|:inline`, `error: bool` |
-| `form_label`           | `Fields::Label`, `Fields::Fieldset` (`<legend>`)                                                  | `required: bool`, `hidden: bool`           |
-| `form_required_mark`   | `Fields::Label`, `Fields::Fieldset` (required `*` span)                                           | —                                          |
-| `form_details`         | `Fields::Hint`                                                                                    | —                                          |
-| `form_error`           | `Fields::Error`                                                                                   | —                                          |
-| `form_input`           | `Fields::Inputs::Text`, `Fields::Inputs::Datetime`                                                | `error: bool`                              |
-| `form_textarea`        | `Fields::Inputs::TextArea`                                                                        | `error: bool`                              |
-| `form_file`            | `Fields::Inputs::File`                                                                            | `error: bool`                              |
-| `form_select`          | `Fields::Inputs::Select`                                                                          | `error: bool`                              |
-| `form_checkbox`        | `Fields::Inputs::Choice` (single and collection checkbox)                                         | `error: bool`                              |
-| `form_radio`           | `Fields::Inputs::Choice` (single and collection radio)                                            | `error: bool`                              |
-| `form_input_group`     | `Fields::InputGroup` (wrapper for input + adornment)                                              | `error: bool`                              |
-| `form_combobox`        | `Fields::Inputs::Select`, `Fields::Inputs::Search`, `Fields::Inputs::Datetime` (combobox wrapper) | `error: bool`                              |
-| `form_input_clearable` | `Fields::Inputs::Search` (combobox trigger inside clearable wrapper)                              | —                                          |
-| `form_button_clear`    | `Fields::Inputs::Search` (clear button in clearable wrapper)                                      | —                                          |
-| `form_input_reveal`    | `Fields::Inputs::Password` (input inside reveal group)                                            | `error: bool`                              |
-| `form_button_reveal`   | `Fields::Inputs::Password` (show/hide toggle button)                                              | —                                          |
-| `form_submit`          | `Fields::Inputs::Submit` (`Builder#submit`)                                                       | `variant: :default\|:button`               |
+| Key                            | Component                                                               | Variants                                          |
+| ------------------------------ | ----------------------------------------------------------------------- | ------------------------------------------------- |
+| `form_group`                   | `Fields::Group` (wrapper div)                                           | `layout: :stacked\|:inline`, `error: bool`        |
+| `form_field_label`             | `Fields::Label`, `Fields::Fieldset` (`<legend>`)                        | `required: bool`, `hidden: bool`                  |
+| `form_field_required_mark`     | Required `*` span in label/legend                                       | —                                                 |
+| `form_field_hint`              | `Fields::Hint`                                                          | —                                                 |
+| `form_field_error`             | `Fields::Error`                                                         | —                                                 |
+| `form_field_choice_items`      | Collection wrapper (the items container inside a fieldset)              | `layout: :stacked\|:inline`                       |
+| `form_field_checkbox_label`    | `<label>` wrapping each checkbox in a collection                        | `type: :default\|:button\|:card`, `variant:`      |
+| `form_field_radio_label`       | `<label>` for each radio button in a collection                         | `type: :default\|:button\|:card`, `variant:`      |
+| `form_field_input`             | Text-like `<input>` (text, email, number, url, tel, …)                  | `error: bool`                                     |
+| `form_field_floating`          | `<input>` inside a floating-label field                                 | `type: :filled\|:outlined\|:standard`, `error: bool` |
+| `form_field_floating_group`    | Wrapper `<div>` that groups floating input + label                      | `type: :filled\|:outlined\|:standard`             |
+| `form_field_floating_label`    | Animated `<label>` that floats above the input                          | `type: :filled\|:outlined\|:standard`, `error: bool` |
+| `form_field_input_textarea`    | `<textarea>`                                                            | `error: bool`                                     |
+| `form_field_input_file`        | `<input type="file">`                                                   | `error: bool`                                     |
+| `form_field_input_select`      | Native `<select>`                                                       | `error: bool`                                     |
+| `form_field_input_checkbox`    | `<input type="checkbox">` element in a collection                       | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
+| `form_field_input_radio`       | `<input type="radio">` element in a collection                          | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
+| `form_field_input_combobox`    | Combobox wrapper input (resets child input/trigger styles)              | `error: bool`                                     |
+| `form_field_input_reveal`      | Password reveal wrapper (resets child input styles)                     | `error: bool`                                     |
+| `form_field_input_clearable`   | Clearable wrapper (resets child input styles)                           | —                                                 |
+| `form_field_input_button_reveal` | Show/hide toggle button inside a password field                       | —                                                 |
+| `form_field_input_button_clear`  | Clear button inside a search/clearable field                           | —                                                 |
+| `form_submit`                  | Submit button (`Builder#submit`)                                        | `type: :link\|:default\|…`, `variant:`            |
+| `input_group`                  | `Fields::InputGroup` (input + adornment wrapper)                        | `error: bool`                                     |
 
 ### Calendar
 
-| Key                             | Component                                         | Variants                                         |
-| ------------------------------- | ------------------------------------------------- | ------------------------------------------------ |
-| `calendar`                      | `Calendar`, `Calendar::Month::Turbo`              | —                                                |
-| `calendar_days_of_week`         | `Calendar::Month::Turbo::DaysOfWeek`              | —                                                |
-| `calendar_days_of_month`        | `Calendar::Month::Turbo::DaysOfMonth`             | —                                                |
-| `calendar_day`                  | `Calendar::Month::Turbo::DaysOfMonth` (each cell) | `today: bool`, `selected: bool`, `outside: bool` |
-| `calendar_navigation`           | `DatePicker::Navigation`                          | —                                                |
-| `calendar_navigation_navigator` | `DatePicker::Navigator` (each button)             | —                                                |
+| Key                       | Component                                              | Variants                        |
+| ------------------------- | ------------------------------------------------------ | ------------------------------- |
+| `calendar`                | `Calendar`, `Calendar::Turbo`                          | —                               |
+| `calendar_days_of_week`   | `Calendar::Turbo::DaysOfWeek`                          | —                               |
+| `calendar_days_of_month`  | `Calendar::Turbo::DaysOfMonth`                         | —                               |
+| `calendar_row`            | `Calendar::Turbo::DaysOfMonth` (each week row)         | —                               |
+| `calendar_day`            | `Calendar::Turbo::DaysOfMonth` (each day cell)         | `outside: bool`                 |
+| `calendar_months_of_year` | `Calendar::Turbo::MonthsOfYear` (rowgroup wrapper)     | —                               |
+| `calendar_month`          | `Calendar::Turbo::MonthsOfYear` (each month cell)      | —                               |
+| `calendar_years_of_decade`| `Calendar::Turbo::YearsOfDecade` (rowgroup wrapper)    | —                               |
+| `calendar_year`           | `Calendar::Turbo::YearsOfDecade` (each year cell)      | —                               |
+| `calendar_quarter_grid`   | `Calendar::Turbo` year/decade grid wrapper (4-col grid)| —                               |
 
 ### Combobox
 
-| Key                          | Component                                                                        | Variants                           |
-| ---------------------------- | -------------------------------------------------------------------------------- | ---------------------------------- |
-| `combobox_listbox`           | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time::Drum` (the `<ul>`) | —                                  |
-| `combobox_option`            | `Combobox::Options::Option`                                                      | `selected: bool`, `disabled: bool` |
-| `combobox_option_group`      | `Combobox::Options::OptionGroup`                                                 | —                                  |
-| `combobox_typeahead_loading` | `Combobox::Typeahead` (loading indicator)                                        | —                                  |
-| `combobox_typeahead_empty`   | `Combobox::Typeahead` (no-results message)                                       | —                                  |
-| `combobox_time`              | `Combobox::Time` (drum wrapper)                                                  | —                                  |
+| Key                                  | Component                                                                        | Variants                           |
+| ------------------------------------ | -------------------------------------------------------------------------------- | ---------------------------------- |
+| `combobox_listbox`                   | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time::Drum` (the `<ul>`) | —                                  |
+| `combobox_option`                    | `Combobox::Options::Option`                                                      | `selected: bool`, `disabled: bool` |
+| `combobox_option_group`              | `Combobox::Options::OptionGroup`                                                 | —                                  |
+| `combobox_typeahead_loading`         | `Combobox::Typeahead` (loading indicator)                                        | —                                  |
+| `combobox_typeahead_empty`           | `Combobox::Typeahead` (no-results message)                                       | —                                  |
+| `combobox_time`                      | `Combobox::Time` (drum wrapper)                                                  | —                                  |
+| `combobox_date_navigation`           | `Combobox::Date::Navigation` (nav bar)                                           | —                                  |
+| `combobox_date_navigation_navigator` | `Combobox::Date::Navigator` (each prev/next/title button)                        | —                                  |
 
 ### Other components
 
 | Key                | Component                                                       | Variants                                                                                                                                                                |
 | ------------------ | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `button`           | `Button`                                                        | `type: :primary\|:secondary\|:tertiary\|:outline\|:ghost\|:fab\|:dashed`, `variant: :default\|:success\|:destructive\|:warning\|:info`, `size: :xs\|:sm\|:md\|:lg\|:xl` |
-| `button_group`     | `Button::Group`                                                 | `alignment:`, `direction: :row\|:col`                                                                                                                                   |
+| `button`           | `Button`                                                        | `type: :default\|:outline\|:ghost\|:fab\|:fab_outline\|:dashed\|:card`, `variant: :primary\|:secondary\|:tertiary\|:success\|:destructive\|:warning\|:info`, `size: :xs\|:sm\|:md\|:lg\|:xl` |
+| `button_group`     | `Button::Group`                                                 | `layout: :inline\|:stacked`                                                                                                                                             |
 | `button_icon`      | `Button` (icon rendered via `icon_leading:` / `icon_trailing:`) | —                                                                                                                                                                       |
+| `link`             | `Link`                                                          | `type: :default\|:button\|:card`, `variant: :default\|:success\|:destructive\|:warning\|:info`                                                                         |
+| `link_icon`        | `Link` (icon rendered via `icon_leading:` / `icon_trailing:`)   | —                                                                                                                                                                       |
 | `action_list`      | `ActionList`                                                    | — _(accepts `role:` at render time, default `"list"`)_                                                                                                                  |
 | `action_list_item` | `ActionList::Item`                                              | `active: bool`                                                                                                                                                          |
 | `avatar`           | `Avatar`                                                        | `size:`                                                                                                                                                                 |
