@@ -37,9 +37,9 @@ stimulus-plumbers-rails/
 │       │   │   │   └── drum.rb           # Single drum column renderer
 │       │   │   ├── trigger.rb            # Combobox trigger input (<input role="combobox">)
 │       │   │   └── variant.rb            # Immutable popup metadata per variant (haspopup, panel_class, popup_id_suffix, default_opts)
-│       │   ├── date_picker/
-│       │   │   ├── navigation.rb         # Month navigation bar (prev/next buttons)
-│       │   │   └── navigator.rb          # Individual prev/next button
+│       │   │   ├── date/
+│       │   │   │   ├── navigation.rb     # Date picker navigation bar (prev/next + view-title buttons)
+│       │   │   │   └── navigator.rb      # Individual nav button (wraps Button with ghost variant)
 │       │   ├── divider.rb                # sp_divider renderer
 │       │   ├── icon.rb                   # sp_icon renderer (SVG or span fallback)
 │       │   ├── popover.rb                # sp_popover renderer; render (with wrapper) / build (without wrapper)
@@ -106,8 +106,18 @@ stimulus-plumbers-rails/
 │       │   ├── schema/
 │       │   │   ├── icon.rb
 │       │   │   ├── ranges.rb
+│       │   │   ├── avatar/
+│       │   │   │   └── ranges.rb
+│       │   │   ├── button/
+│       │   │   │   └── ranges.rb
+│       │   │   ├── link/
+│       │   │   │   └── ranges.rb
 │       │   │   └── form/
-│       │   │       └── ranges.rb
+│       │   │       ├── ranges.rb
+│       │   │       ├── checkbox/
+│       │   │       │   └── ranges.rb
+│       │   │       └── radio/
+│       │   │           └── ranges.rb
 │       │   └── icons/
 │       │       ├── external.rb           # SVG file parser (include into any icon source module)
 │       │       └── registry.rb           # Lazy-loading Registry < SimpleDelegator (source-injected)
@@ -204,11 +214,35 @@ Three builder methods provide the complete accessible field pattern:
 
 Field-chrome options (`label:`, `hint:`, `error:`, `required:`, `hide_label:`, `layout:`) are only meaningful on the full-field helpers — they are **not** processed by native overrides.
 
+## Schema Ranges Convention
+
+Validation ranges for theme schema params live under `lib/stimulus_plumbers/themes/schema/`.
+
+**Where ranges live — the branching rule:**
+- If a component branches on the values internally (e.g. `when *FLOATING_TYPES`), the component owns the constant (`Form::Field::FLOATING_TYPES`). The schema references it directly at the call site — no alias.
+- If the component only passes the value through to the theme, the schema owns the range (`Schema::Button::Ranges::TYPE`, `Schema::Link::Ranges::TYPE`/`VARIANT`).
+
+**Namespace rules:**
+- `Schema::Ranges` — cross-cutting ranges only (`BOOL`). `SIZE`, `LAYOUT`, and `VARIANT` are **not** global — each component owns its own copy.
+- `Schema::<Component>::Ranges` — component-owned ranges (e.g. `Schema::Avatar::Ranges::SIZE`, `Schema::Button::Ranges::TYPE/SIZE/LAYOUT/VARIANT`).
+- `Schema::Link::Ranges` — link-specific ranges (`TYPE`, `VARIANT` — uses `:default` base instead of `:primary`).
+- `Schema::Form::<Input>::Ranges` — ranges for a form input sub-component (e.g. `Schema::Form::Checkbox::Ranges::TYPE/VARIANT`, `Schema::Form::Radio::Ranges::TYPE/VARIANT`).
+- `Schema::Form::Ranges` — form-level ranges (`LAYOUT`, `VARIANT`).
+- **No local aliases** — never re-export another module's constant inside a `Ranges` module. Reference it directly at the call site.
+- **Remove unused constants** — don't keep range constants with no call sites in `schema.rb`.
+
+## WCAG / ARIA Reference
+See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns. Renderers in this package own the HTML structure and ARIA attributes for all components.
+
 ## Component Architecture
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
-> Key internal docs: `plumber.md` (Base / Renderer / HtmlOptions), `dispatcher.md` (Dispatcher strategies), `form_builder.md` (two-level field API).
+> Key internal docs: `plumber.md` (Base / Renderer / HtmlOptions), `dispatcher.md` (Dispatcher strategies), `form.md` (two-level field API).
 > Ensure examples provided are tested.
+
+### Icon-only detection (Button + Link)
+
+`Button#build_button` and `Link#build_content` always wrap non-nil text/block content in a `<span>`. When content is nil and no block is given (icon-only), nothing is rendered — no `<span>`. The active theme can use `:has(> span)` / `:not(:has(> span))` to distinguish icon-only from text buttons without any Ruby flag. Do not change this contract without updating the theme accordingly.
 
 ## Doc Update Rule
 - When changing component API (targets, values, options, HTML structure, form builder keywords), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.
