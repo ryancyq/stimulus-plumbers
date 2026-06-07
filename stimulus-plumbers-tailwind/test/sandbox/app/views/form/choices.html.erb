@@ -14,7 +14,7 @@
 
 <section id="choices-default" class="sb-section">
   <h2>Default</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :gender, as: :radio,
           label:        "Gender",
@@ -38,36 +38,36 @@
     <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
     <%= f.submit "Save preferences" %>
   <% end %>
-  <% end %>
+  </div>
 </section>
 
 <%# ── Single Checkbox ─────────────────────────────────────────────── %>
 
 <section id="single-checkbox-default" class="sb-section">
   <h2>Single Checkbox</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="single-checkbox-hint" class="sb-section">
   <h2>Single Checkbox — With hint</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :newsletter, as: :check_box,
             label: "Free shipping",
             hint:  "We only send weekly product updates" %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <%# ── Collection Checkbox ─────────────────────────────────────────── %>
 
 <section id="collection-checkbox-default-inline" class="sb-section">
   <h2>Collection Checkbox — Default Inline</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests,
         as: :check_box,
@@ -76,12 +76,12 @@
         **collection
       %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-checkbox-default-stacked" class="sb-section">
   <h2>Collection Checkbox — Default Stacked</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests,
         as: :check_box,
@@ -91,12 +91,12 @@
         **collection
       %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-checkbox-button-inline" class="sb-section">
   <h2>Collection Checkbox — Button Inline</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests,
         as: :check_box,
@@ -106,12 +106,12 @@
         **collection
       %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-checkbox-button-stacked" class="sb-section">
   <h2>Collection Checkbox — Button Stacked</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests,
         as: :check_box,
@@ -122,12 +122,12 @@
         **collection
       %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-checkbox-card-inline" class="sb-section">
   <h2>Collection Checkbox — Card Inline</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests,
         as: :check_box,
@@ -137,12 +137,12 @@
         **collection
       %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-checkbox-card-stacked" class="sb-section">
   <h2>Collection Checkbox — Card Stacked</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests,
         as: :check_box,
@@ -153,49 +153,49 @@
         **collection
       %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <%# ── Collection Radio ────────────────────────────────────────────── %>
 
 <section id="collection-radio-default-inline" class="sb-section">
   <h2>Collection Radio — Default Inline</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label:      "Gender",
             collection: genders, **collection %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-radio-default-stacked" class="sb-section">
   <h2>Collection Radio — Default Stacked</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label:      "Gender",
             layout:     :stacked,
             collection: genders, **collection %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-radio-button-inline" class="sb-section">
   <h2>Collection Radio — Button Inline</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label:      "Gender",
             type:       :button,
             collection: genders, **collection %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-radio-button-stacked" class="sb-section">
   <h2>Collection Radio — Button Stacked</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label:      "Gender",
@@ -203,24 +203,24 @@
             layout:     :stacked,
             collection: genders, **collection %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-radio-card-inline" class="sb-section">
   <h2>Collection Radio — Card Inline</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label:      "Gender",
             type:       :card,
             collection: genders, **collection %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="collection-radio-card-stacked" class="sb-section">
   <h2>Collection Radio — Card Stacked</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label:      "Gender",
@@ -228,7 +228,7 @@
             layout:     :stacked,
             collection: genders, **collection %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <%# ── Single Checkbox (with error) ────────────────────────────────── %>

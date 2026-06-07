@@ -4,58 +4,58 @@
 
 <section id="floating-filled" class="sb-section">
   <h2>Filled</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :filled %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="floating-filled-error" class="sb-section">
   <h2>Filled — error</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :filled %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <%# ── Outlined ─────────────────────────────────────────────────────────── %>
 
 <section id="floating-outlined" class="sb-section">
   <h2>Outlined</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :outlined %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="floating-outlined-error" class="sb-section">
   <h2>Outlined — error</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :outlined %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <%# ── Standard ─────────────────────────────────────────────────────────── %>
 
 <section id="floating-standard" class="sb-section">
   <h2>Standard</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :standard %>
     <% end %>
-  <% end %>
+  </div>
 </section>
 
 <section id="floating-standard-error" class="sb-section">
   <h2>Standard — error</h2>
-  <%= sp_card do %>
+  <div class="sb-col">
     <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :standard %>
     <% end %>
-  <% end %>
+  </div>
 </section>
