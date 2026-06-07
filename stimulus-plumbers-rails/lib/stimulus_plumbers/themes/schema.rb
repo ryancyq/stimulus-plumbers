@@ -14,9 +14,11 @@ module StimulusPlumbers
   module Themes
     module Schema
       ACTION_LIST = {
-        action_list:         {}.freeze,
-        action_list_item:    {}.freeze,
-        action_list_section: {}.freeze
+        action_list:                {}.freeze,
+        action_list_item:           {}.freeze,
+        action_list_item_icon:      {}.freeze,
+        action_list_section:        {}.freeze,
+        action_list_section_header: {}.freeze
       }.freeze
 
       AVATAR = {
@@ -69,6 +71,7 @@ module StimulusPlumbers
         combobox:                           {}.freeze,
         combobox_popover:                   {}.freeze,
         combobox_trigger:                   {}.freeze,
+        combobox_trigger_icon:              {}.freeze,
         combobox_trigger_group:             {}.freeze,
         combobox_option:                    {
           selected: { default: false, validate: Ranges::BOOL },
@@ -77,6 +80,7 @@ module StimulusPlumbers
         combobox_option_group:              {}.freeze,
         combobox_listbox:                   {}.freeze,
         combobox_typeahead_loading:         {}.freeze,
+        combobox_typeahead_loading_icon:    {}.freeze,
         combobox_typeahead_empty:           {}.freeze,
         combobox_time:                      {}.freeze,
         combobox_date_navigation:           {}.freeze,

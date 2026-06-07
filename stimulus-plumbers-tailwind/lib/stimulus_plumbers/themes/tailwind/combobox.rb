@@ -109,6 +109,10 @@ module StimulusPlumbers
           { classes: klasses(*TYPEAHEAD_LOADING) }
         end
 
+        def combobox_typeahead_loading_icon_classes
+          { classes: klasses("size-(--sp-icon-size)", "animate-spin") }
+        end
+
         def combobox_typeahead_empty_classes
           { classes: klasses(*TYPEAHEAD_EMPTY) }
         end
