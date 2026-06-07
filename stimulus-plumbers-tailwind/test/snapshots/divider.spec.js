@@ -6,8 +6,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("divider", () => {
-  test("plain", async ({ page }) => {
-    await expect(page.locator("#divider-plain")).toHaveScreenshot("plain.png");
+  test("default", async ({ page }) => {
+    await expect(page.locator("#divider-default")).toHaveScreenshot("default.png");
   });
 
   test("labeled", async ({ page }) => {
