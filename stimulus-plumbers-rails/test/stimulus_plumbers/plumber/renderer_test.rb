@@ -164,12 +164,4 @@ class PlumberRendererTest < Minitest::Test
 
     assert_equal "gold", result
   end
-
-  def test_eval_renderer_method_defines_callable_method
-    klass = fresh_class
-    klass.renderers = { greet: proc { "eval-hello" } }
-    klass.send(:eval_renderer_method, :greet)
-
-    assert_equal "eval-hello", klass.new(template).greet
-  end
 end

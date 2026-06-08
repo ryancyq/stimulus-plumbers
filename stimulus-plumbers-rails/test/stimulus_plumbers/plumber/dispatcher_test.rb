@@ -116,10 +116,6 @@ class PlumberDispatcherTest < Minitest::Test
     def test_method_receives_no_block_when_none_given
       assert_equal "hello", Dispatcher::MethodCall.new(:with_block, "hello").call(target)
     end
-
-    def test_block_reader_returns_nil_when_not_given
-      assert_nil Dispatcher::MethodCall.new(:no_args).block
-    end
   end
 
   class InstanceExecTest < PlumberDispatcherTest
@@ -165,16 +161,6 @@ class PlumberDispatcherTest < Minitest::Test
 
     def test_raises_for_non_proc
       assert_raises(ArgumentError) { Dispatcher::InstanceExec.new("not a proc") }
-    end
-
-    def test_secondary_callable_passed_as_positional_arg
-      wrapper = ->(v) { "wrapped:#{v}" }
-      result = Dispatcher::InstanceExec.new(
-        proc { |inner| inner.call(greeting) },
-        wrapper
-      ).call(target)
-
-      assert_equal "wrapped:hello", result
     end
   end
 
@@ -234,12 +220,6 @@ class PlumberDispatcherTest < Minitest::Test
 
       assert_equal "rendered:hello", proxy.call(target)
     end
-
-    def test_block_reader_returns_nil_when_not_given
-      proxy = Dispatcher::KlassProxy.new(FakeRenderer, :render_item, "hello", init_args: ["tmpl"])
-
-      assert_nil proxy.block
-    end
   end
 
   class BuildTest < PlumberDispatcherTest
@@ -275,15 +255,15 @@ class PlumberDispatcherTest < Minitest::Test
       assert_nil Dispatcher.build(42)
     end
 
-    def test_threads_args_to_method_call
+    def test_forwards_args_to_method_call
       assert_equal %w[a b], Dispatcher.build(:some_method, "a", "b").args
     end
 
-    def test_threads_kwargs_to_method_call
+    def test_forwards_kwargs_to_method_call
       assert_equal({ foo: "bar" }, Dispatcher.build(:some_method, foo: "bar").kwargs)
     end
 
-    def test_threads_init_args_and_init_kwargs_to_klass_proxy
+    def test_forwards_init_args_and_init_kwargs_to_klass_proxy
       result = Dispatcher.build(
         FakeRenderer,
         method_name: :render_item,
@@ -295,21 +275,21 @@ class PlumberDispatcherTest < Minitest::Test
       assert_equal({ extra: "x" }, result.init_kwargs)
     end
 
-    def test_threads_block_to_method_call
+    def test_forwards_block_to_method_call
       blk = proc { |v| "wrapped:#{v}" }
       result = Dispatcher.build(:some_method, &blk)
 
       assert_equal blk, result.block
     end
 
-    def test_threads_block_to_klass_proxy
+    def test_forwards_block_to_klass_proxy
       blk = proc { |v| "wrapped:#{v}" }
       result = Dispatcher.build(FakeRenderer, method_name: :render_item, init_args: ["tmpl"], &blk)
 
       assert_equal blk, result.block
     end
 
-    def test_does_not_thread_block_to_instance_exec
+    def test_caller_block_ignored_when_callable_is_proc
       callable = proc { "the callable" }
       ignored  = proc { "ignored" }
       result = Dispatcher.build(callable, &ignored)

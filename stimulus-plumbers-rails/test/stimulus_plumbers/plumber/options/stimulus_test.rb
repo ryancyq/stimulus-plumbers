@@ -2,12 +2,9 @@
 
 require "test_helper"
 
-class PlumberStimulusOptionsTest < Minitest::Test
+class PlumberOptionsStimulusTest < Minitest::Test
   def instance
-    obj = Object.new
-    obj.extend(StimulusPlumbers::Plumber::StimulusOptions)
-    obj.extend(StimulusPlumbers::Plumber::ThemeOptions)
-    obj
+    Class.new { include StimulusPlumbers::Plumber::Options::Stimulus }.new
   end
 
   def test_space_joins_controller_and_action
@@ -35,5 +32,16 @@ class PlumberStimulusOptionsTest < Minitest::Test
     result = instance.merge_stimulus_data({ target: "old" }, { target: "new" })
 
     assert_equal "new", result[:target]
+  end
+
+  def test_custom_spacejoin_overrides_default_keys
+    result = instance.merge_stimulus_data(
+      { controller: "base", custom: "a" },
+      { controller: "extra", custom: "b" },
+      spacejoin: %i[custom]
+    )
+
+    assert_equal "extra", result[:controller]
+    assert_equal "a b",   result[:custom]
   end
 end
