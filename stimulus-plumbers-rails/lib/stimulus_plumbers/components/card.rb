@@ -3,29 +3,55 @@
 module StimulusPlumbers
   module Components
     class Card < Plumber::Base
-      def render(...)
-        render_card(...)
-      end
+      def render(variant: :tertiary, title_tag: :h2, **kwargs, &block)
+        slots = Card::Slots.new
+        yield slots if block_given?
 
-      def section(...)
-        Card::Section.new(template).render(...)
+        html_options = merge_html_options(theme.resolve(:card, variant: variant), kwargs)
+        template.content_tag(:div, **html_options) do
+          template.safe_join(
+            [
+              render_header(slots, title_tag),
+              render_body(slots),
+              render_action(slots)
+            ].compact
+          )
+        end
       end
 
       private
 
-      def render_card(title: nil, title_tag: :h2, **kwargs, &block)
-        html_options = merge_html_options(
-          theme.resolve(:card),
-          kwargs
-        )
+      def render_header(slots, title_tag)
+        icon  = slots.resolve(:icon) { |v| render_icon(v, theme: :card_icon) }
+        title = slots.resolve(:title)
+        return unless icon || title
 
-        template.content_tag(:div, **html_options) do
+        template.content_tag(:div, **merge_html_options(theme.resolve(:card_header))) do
           template.safe_join(
             [
-              (template.content_tag(title_tag, title) if title.present?),
-              template.capture(&block)
-            ]
+              icon,
+              (template.content_tag(title_tag, title, **merge_html_options(theme.resolve(:card_title))) if title)
+            ].compact
           )
+        end
+      end
+
+      def render_body(slots)
+        content = slots.resolve(:body)
+        return unless content
+
+        template.content_tag(:div, **merge_html_options(theme.resolve(:card_body))) do
+          content
+        end
+      end
+
+      def render_action(slots)
+        content = slots.resolve(:action)
+        return unless content
+
+        url = slots.options_for(:action)[:url]
+        template.content_tag(:div, **merge_html_options(theme.resolve(:card_action))) do
+          build_link_or_button(url: url) { content }
         end
       end
     end

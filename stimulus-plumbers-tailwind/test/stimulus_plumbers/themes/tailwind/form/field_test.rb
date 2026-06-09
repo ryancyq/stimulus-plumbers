@@ -98,14 +98,14 @@ class TailwindThemeFormFieldTest < Minitest::Test
     assert_includes result, "has-[:checked]:bg-(--card-ring)/10"
     assert_includes result, "has-[:checked]:text-(--sp-color-fg)"
     assert_includes result, "has-[:checked]:hover:bg-(--card-ring)/15"
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
   def test_form_field_checkbox_label_card_type_with_variant
     result = classes_for(:form_field_checkbox_label, type: :card, variant: :success)
 
     assert_includes result, "[--card-ring:var(--sp-color-success)]"
-    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+    refute_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
   def test_form_field_checkbox_label_non_card_type_ignores_variant
@@ -140,14 +140,14 @@ class TailwindThemeFormFieldTest < Minitest::Test
     assert_includes result, "peer-checked:text-(--sp-color-fg)"
     assert_includes result, "peer-checked:hover:bg-(--card-ring)/15"
     assert_includes result, "hover:bg-(--sp-color-muted)"
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
   def test_form_field_radio_label_button_type_with_variant
     result = classes_for(:form_field_radio_label, type: :button, variant: :destructive)
 
     assert_includes result, "[--card-ring:var(--sp-color-destructive)]"
-    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+    refute_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
   def test_form_field_radio_label_card_type
@@ -163,14 +163,14 @@ class TailwindThemeFormFieldTest < Minitest::Test
     assert_includes result, "peer-checked:bg-(--card-ring)/10"
     assert_includes result, "peer-checked:text-(--sp-color-fg)"
     assert_includes result, "peer-checked:hover:bg-(--card-ring)/15"
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
   def test_form_field_radio_label_card_type_with_variant
     result = classes_for(:form_field_radio_label, type: :card, variant: :destructive)
 
     assert_includes result, "[--card-ring:var(--sp-color-destructive)]"
-    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+    refute_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
   def test_form_field_radio_label_non_card_type_ignores_variant

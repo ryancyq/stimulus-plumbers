@@ -4,6 +4,7 @@ require_relative "../form/field"
 require_relative "schema/ranges"
 require_relative "schema/avatar/ranges"
 require_relative "schema/button/ranges"
+require_relative "schema/card/ranges"
 require_relative "schema/link/ranges"
 require_relative "schema/form/ranges"
 require_relative "schema/form/checkbox/ranges"
@@ -13,12 +14,16 @@ require_relative "schema/icon"
 module StimulusPlumbers
   module Themes
     module Schema
-      ACTION_LIST = {
-        action_list:                {}.freeze,
-        action_list_item:           {}.freeze,
-        action_list_item_icon:      {}.freeze,
-        action_list_section:        {}.freeze,
-        action_list_section_header: {}.freeze
+      LIST = {
+        list:                     {}.freeze,
+        list_section:             {}.freeze,
+        list_section_title:       {}.freeze,
+        list_section_description: {}.freeze,
+        list_item:                {}.freeze,
+        list_item_icon:           {}.freeze,
+        list_item_content:        {}.freeze,
+        list_item_title:          {}.freeze,
+        list_item_description:    {}.freeze
       }.freeze
 
       AVATAR = {
@@ -63,8 +68,12 @@ module StimulusPlumbers
       }.freeze
 
       CARD = {
-        card:         {}.freeze,
-        card_section: {}.freeze
+        card:        { variant: { default: :tertiary, validate: Card::Ranges::VARIANT } }.freeze,
+        card_header: {}.freeze,
+        card_icon:   {}.freeze,
+        card_title:  {}.freeze,
+        card_body:   {}.freeze,
+        card_action: {}.freeze
       }.freeze
 
       COMBOBOX = {
@@ -103,12 +112,12 @@ module StimulusPlumbers
           layout: { default: :stacked, validate: Form::Ranges::LAYOUT }
         }.freeze,
         form_field_checkbox_label:      {
-          type:    { default: :default, validate: Form::Checkbox::Ranges::TYPE },
-          variant: { default: :primary, validate: Form::Checkbox::Ranges::VARIANT }
+          type:    { default: :default,  validate: Form::Checkbox::Ranges::TYPE },
+          variant: { default: :tertiary, validate: Form::Checkbox::Ranges::VARIANT }
         }.freeze,
         form_field_radio_label:         {
-          type:    { default: :default, validate: Form::Radio::Ranges::TYPE },
-          variant: { default: :primary, validate: Form::Radio::Ranges::VARIANT }
+          type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
+          variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
         form_field_input:               { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_field_floating:            {
@@ -126,14 +135,14 @@ module StimulusPlumbers
         form_field_input_file:          { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_field_input_select:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_field_input_checkbox:      {
-          error:   { default: false,    validate: Ranges::BOOL },
-          type:    { default: :default, validate: Form::Checkbox::Ranges::TYPE },
-          variant: { default: :primary, validate: Form::Checkbox::Ranges::VARIANT }
+          error:   { default: false,     validate: Ranges::BOOL },
+          type:    { default: :default,  validate: Form::Checkbox::Ranges::TYPE },
+          variant: { default: :tertiary, validate: Form::Checkbox::Ranges::VARIANT }
         }.freeze,
         form_field_input_radio:         {
-          error:   { default: false,    validate: Ranges::BOOL },
-          type:    { default: :default, validate: Form::Radio::Ranges::TYPE },
-          variant: { default: :primary, validate: Form::Radio::Ranges::VARIANT }
+          error:   { default: false,     validate: Ranges::BOOL },
+          type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
+          variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
         form_field_input_combobox:      { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_field_input_reveal:        { error: { default: false, validate: Ranges::BOOL } }.freeze,

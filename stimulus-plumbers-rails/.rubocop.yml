@@ -65,6 +65,7 @@ Metrics/ClassLength:
 
 Metrics/ModuleLength:
   Exclude:
+    - lib/stimulus_plumbers/plumber/renderer.rb
     - lib/stimulus_plumbers/themes/schema.rb
 
 Metrics/MethodLength:

@@ -12,6 +12,7 @@ require_relative "stimulus_plumbers/logger"
 
 # -- Plumber base --
 require_relative "stimulus_plumbers/plumber/dispatcher"
+require_relative "stimulus_plumbers/plumber/slots"
 require_relative "stimulus_plumbers/plumber/base"
 
 # -- UI components --
@@ -21,10 +22,11 @@ require_relative "stimulus_plumbers/components/button"
 require_relative "stimulus_plumbers/components/button/group"
 require_relative "stimulus_plumbers/components/link"
 require_relative "stimulus_plumbers/components/card"
-require_relative "stimulus_plumbers/components/card/section"
-require_relative "stimulus_plumbers/components/action_list"
-require_relative "stimulus_plumbers/components/action_list/section"
-require_relative "stimulus_plumbers/components/action_list/item"
+require_relative "stimulus_plumbers/components/card/slots"
+require_relative "stimulus_plumbers/components/list"
+require_relative "stimulus_plumbers/components/list/section"
+require_relative "stimulus_plumbers/components/list/item"
+require_relative "stimulus_plumbers/components/list/item/slots"
 require_relative "stimulus_plumbers/components/divider"
 require_relative "stimulus_plumbers/components/input_group"
 require_relative "stimulus_plumbers/components/popover"

@@ -2,9 +2,9 @@
 
 module StimulusPlumbers
   module Helpers
-    module CardHelper
-      def sp_card(...)
-        Components::Card.new(self).render(...)
+    module ListHelper
+      def sp_list(...)
+        Components::List.new(self).render(...)
       end
     end
   end

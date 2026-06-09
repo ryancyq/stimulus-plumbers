@@ -157,12 +157,12 @@ module StimulusPlumbers
           end
 
           def form_field_checkbox_label_classes(type: :default, variant: :default)
-            card_color = type == :card ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:default]) : []
+            card_color = type == :card ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:tertiary]) : []
             { classes: klasses(*CHECKBOX_LABEL_TYPES.fetch(type), *card_color) }
           end
 
           def form_field_radio_label_classes(type: :default, variant: :default)
-            card_color = %i[button card].include?(type) ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:default]) : []
+            card_color = %i[button card].include?(type) ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:tertiary]) : []
             { classes: klasses(*RADIO_LABEL_TYPES.fetch(type), *card_color) }
           end
         end

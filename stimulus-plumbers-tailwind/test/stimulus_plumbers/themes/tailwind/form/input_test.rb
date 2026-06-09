@@ -118,7 +118,7 @@ class TailwindThemeFormInputTest < Minitest::Test
 
     assert_includes result, "checked:border-(--card-ring)"
     assert_includes result, "focus:ring-(--card-ring)"
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
     refute_includes result, "focus:ring-(--sp-focus-ring-color)"
   end
 
@@ -156,7 +156,7 @@ class TailwindThemeFormInputTest < Minitest::Test
   def test_form_field_input_radio_card_type_uses_card_ring
     result = classes_for(:form_field_input_radio, type: :card)
 
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
     refute_includes result, "focus:ring-(--sp-focus-ring-color)"
   end
 
@@ -164,17 +164,17 @@ class TailwindThemeFormInputTest < Minitest::Test
     result = classes_for(:form_field_input_radio, type: :card, variant: :success)
 
     assert_includes result, "[--card-ring:var(--sp-color-success)]"
-    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+    refute_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
   def test_form_field_input_radio_button_type_uses_card_ring
     result = classes_for(:form_field_input_radio, type: :button)
 
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
   def test_form_field_input_radio_default_type_excludes_card_ring
-    refute_includes classes_for(:form_field_input_radio), "[--card-ring:var(--sp-color-primary)]"
+    refute_includes classes_for(:form_field_input_radio), "--card-ring"
   end
 
   # :form_field_input_combobox

@@ -62,7 +62,7 @@ module StimulusPlumbers
           "bg-(--sp-color-bg) text-(--link-color)",
           "border border-(--link-color) shadow-(--sp-shadow-xs)",
           "hover:bg-(--link-bg)/10",
-          "focus-visible:ring-(--card-ring)"
+          "focus-visible:ring-(--link-ring)"
         ].freeze
 
         private
@@ -71,7 +71,7 @@ module StimulusPlumbers
           variant_classes = VARIANTS.fetch(variant, VARIANTS[:default])
           case type
           when :button then { classes: klasses(*BUTTON, *variant_classes) }
-          when :card   then { classes: klasses(*CARD, *variant_classes, *Card::VARIANTS.fetch(variant, Card::VARIANTS[:default])) }
+          when :card   then { classes: klasses(*CARD, *variant_classes) }
           else              { classes: klasses(*BASE, *variant_classes) }
           end
         end

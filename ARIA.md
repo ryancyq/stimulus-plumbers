@@ -46,6 +46,9 @@
 - Static list: `role="list"` + `role="listitem"`
 - Interactive menu: `role="menu"` + `role="menuitem"`; Arrow keys navigate; Enter activates
 - Selected item: `aria-selected` (listbox) or `aria-checked` (menuitemcheckbox)
+- Grouped/nested sections: section body `<ul aria-label="…">` inside a `<li>` wrapper; `aria-label` provides group labeling for screen readers; no `role="group"` needed for plain grouped lists
+- Section headers: `<hN>` when `heading_level:` is set on the list; `<span aria-hidden="true">` otherwise — inner `<ul>` carries the accessible label via `aria-label`
+- Nested section builder: `list.section { |s| s.section(title: "Sub") { |sub| sub.item("…") } }` — heading level increments automatically per nesting depth
 
 #### Form Fields (`form/`, `form-field_controller`)
 - Every input must have a visible `<label>` via `for`/`id` or `aria-labelledby`
