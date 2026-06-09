@@ -62,7 +62,7 @@ module StimulusPlumbers
             is_current_year = year == today.year
             is_focused      = selected_date_in_year?(year) || (is_current_year && !selected_date)
             merge_html_options(
-              theme.resolve(:calendar_year_cell, outside: outside),
+              theme.resolve(:calendar_year, outside: outside),
               {
                 role:     "gridcell",
                 tabindex: is_focused ? 0 : -1,

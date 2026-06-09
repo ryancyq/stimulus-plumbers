@@ -47,15 +47,13 @@ module StimulusPlumbers
           selected: { default: false, validate: Ranges::BOOL },
           outside:  { default: false, validate: Ranges::BOOL }
         }.freeze,
-        calendar_month_cell:           {
+        calendar_month:                {
           outside: { default: false, validate: Ranges::BOOL }
         }.freeze,
-        calendar_year_cell:            {
+        calendar_year:                 {
           outside: { default: false, validate: Ranges::BOOL }
         }.freeze,
-        calendar_navigation:           {}.freeze,
-        calendar_navigation_navigator: {}.freeze,
-        calendar_picker_grid:          {}.freeze
+        calendar_quarter_grid:         {}.freeze
       }.freeze
 
       CARD = {
@@ -76,7 +74,9 @@ module StimulusPlumbers
         combobox_listbox:           {}.freeze,
         combobox_typeahead_loading: {}.freeze,
         combobox_typeahead_empty:   {}.freeze,
-        combobox_time:              {}.freeze
+        combobox_time:                      {}.freeze,
+        combobox_date_navigation:           {}.freeze,
+        combobox_date_navigation_navigator: {}.freeze
       }.freeze
 
       FORM = {

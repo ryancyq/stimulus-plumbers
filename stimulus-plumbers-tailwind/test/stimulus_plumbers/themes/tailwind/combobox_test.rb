@@ -147,4 +147,21 @@ class TailwindThemeComboboxTest < Minitest::Test
   def test_combobox_time_includes_flex_class
     assert_includes classes_for(:combobox_time), "flex"
   end
+
+  # ── date navigation ───────────────────────────────────────────────────────
+
+  def test_combobox_date_navigation_includes_flex_classes
+    result = classes_for(:combobox_date_navigation)
+
+    assert_includes result, "flex"
+    assert_includes result, "justify-between"
+  end
+
+  def test_combobox_date_navigation_navigator_includes_button_classes
+    result = classes_for(:combobox_date_navigation_navigator)
+
+    assert_includes result, "inline-flex"
+    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "disabled:opacity-50"
+  end
 end

@@ -40,9 +40,9 @@ module StimulusPlumbers
 
         def year(date: Date.today, today: Date.today, selected_date: nil, month_format: :short, **kwargs)
           html_options = merge_html_options(
-            theme.resolve(:calendar_picker_grid),
+            theme.resolve(:calendar_quarter_grid),
             kwargs,
-            { role: "grid", aria: { label: "Month picker" } }
+            { role: "grid", aria: { label: "Year view" } }
           )
           template.content_tag(:div, **html_options) do
             Turbo::MonthsOfYear.new(template, date: date, today: today, selected_date: selected_date, format: month_format).render
@@ -51,9 +51,9 @@ module StimulusPlumbers
 
         def decade(date: Date.today, today: Date.today, selected_date: nil, **kwargs)
           html_options = merge_html_options(
-            theme.resolve(:calendar_picker_grid),
+            theme.resolve(:calendar_quarter_grid),
             kwargs,
-            { role: "grid", aria: { label: "Year picker" } }
+            { role: "grid", aria: { label: "Decade view" } }
           )
           template.content_tag(:div, **html_options) do
             Turbo::YearsOfDecade.new(template, date: date, today: today, selected_date: selected_date).render

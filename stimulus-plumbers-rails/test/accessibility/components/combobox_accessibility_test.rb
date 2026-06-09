@@ -9,7 +9,7 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#combobox"
   end
 
-  def test_passes_wcag_with_date_picker_open
+  def test_passes_wcag_with_combobox_date_open
     visit "/components/combobox"
     find("input[aria-label='Birthday']").click
 
@@ -37,13 +37,13 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#combobox-typeahead"
   end
 
-  def test_passes_wcag_with_date_picker_error
+  def test_passes_wcag_with_combobox_date_error
     visit "/components/combobox"
 
     assert_accessible context: "#combobox-date-error"
   end
 
-  def test_passes_wcag_with_date_picker_error_open
+  def test_passes_wcag_with_combobox_date_error_open
     visit "/components/combobox"
     find("#combobox-date-error input[role='combobox']").click
 

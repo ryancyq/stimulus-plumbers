@@ -25,18 +25,11 @@ module StimulusPlumbers
           aria-[hidden=true]:hover:bg-transparent
         ].freeze
 
-        NAV = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
+        QUARTER_GRID = %w[grid grid-cols-4].freeze
 
-        NAV_BTN = %w[
-          inline-flex items-center justify-center
-          size-(--sp-calendar-day-size) rounded-(--sp-radius-md)
-          text-(--sp-color-fg) hover:bg-(--sp-color-muted)
-          focus-visible:outline-none focus-visible:ring-2
-          focus-visible:ring-(--sp-focus-ring-color)
-          disabled:pointer-events-none disabled:opacity-50
-        ].freeze
+        MONTHS_OF_YEAR = "contents"
 
-        PICKER_CELL = %w[
+        MONTH = %w[
           rounded-(--sp-radius-md) flex items-center justify-center
           text-(length:--sp-text-sm) h-10 flex-1
           hover:bg-(--sp-color-muted) cursor-pointer
@@ -44,13 +37,21 @@ module StimulusPlumbers
           aria-selected:text-(--sp-color-primary-fg)
           aria-selected:hover:bg-(--sp-color-primary)/90
           aria-disabled:pointer-events-none aria-disabled:text-(--sp-color-disabled-fg)
+          aria-[current=month]:font-bold
         ].freeze
 
-        PICKER_GRID = %w[grid grid-cols-4].freeze
+        YEARS_OF_DECADE = "contents"
 
-        MONTH_CELL = [*PICKER_CELL, "aria-[current=month]:font-bold"].freeze
-
-        YEAR_CELL = [*PICKER_CELL, "aria-[current=year]:font-bold"].freeze
+        YEAR = %w[
+          rounded-(--sp-radius-md) flex items-center justify-center
+          text-(length:--sp-text-sm) h-10 flex-1
+          hover:bg-(--sp-color-muted) cursor-pointer
+          aria-selected:bg-(--sp-color-primary)
+          aria-selected:text-(--sp-color-primary-fg)
+          aria-selected:hover:bg-(--sp-color-primary)/90
+          aria-disabled:pointer-events-none aria-disabled:text-(--sp-color-disabled-fg)
+          aria-[current=year]:font-bold
+        ].freeze
 
         private
 
@@ -67,11 +68,11 @@ module StimulusPlumbers
         end
 
         def calendar_months_of_year_classes
-          {}
+          { classes: MONTHS_OF_YEAR }
         end
 
         def calendar_years_of_decade_classes
-          {}
+          { classes: YEARS_OF_DECADE }
         end
 
         def calendar_row_classes
@@ -87,24 +88,16 @@ module StimulusPlumbers
           }
         end
 
-        def calendar_month_cell_classes(**)
-          { classes: klasses(*MONTH_CELL) }
+        def calendar_month_classes(**)
+          { classes: klasses(*MONTH) }
         end
 
-        def calendar_year_cell_classes(**)
-          { classes: klasses(*YEAR_CELL) }
+        def calendar_year_classes(**)
+          { classes: klasses(*YEAR) }
         end
 
-        def calendar_navigation_classes
-          { classes: klasses(*NAV) }
-        end
-
-        def calendar_navigation_navigator_classes
-          { classes: klasses(*NAV_BTN) }
-        end
-
-        def calendar_picker_grid_classes
-          { classes: klasses(*PICKER_GRID) }
+        def calendar_quarter_grid_classes
+          { classes: klasses(*QUARTER_GRID) }
         end
       end
     end
