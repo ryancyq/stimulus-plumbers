@@ -3,22 +3,22 @@
 <div id="floating-label">
   <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <h2>Filled variant</h2>
-    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  type: :floating_filled %>
+    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  floating: :filled %>
 
     <h2>Filled variant – optional</h2>
-    <%= f.field :email, as: :email, label: "Email address", required: false, type: :floating_filled %>
+    <%= f.field :email, as: :email, label: "Email address", required: false, floating: :filled %>
 
     <h2>Filled variant – with hint</h2>
-    <%= f.field :bio,   as: :text_area, label: "Bio",       required: false, type: :floating_filled,
+    <%= f.field :bio,   as: :text_area, label: "Bio",       required: false, floating: :filled,
                 hint: "Tell us a little about yourself." %>
 
     <h2>Outlined variant</h2>
-    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  type: :floating_outlined %>
+    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  floating: :outlined %>
 
     <h2>Standard variant</h2>
-    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  type: :floating_standard %>
+    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  floating: :standard %>
 
     <h2>Filled variant – with error</h2>
-    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  type: :floating_filled %>
+    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  floating: :filled %>
   <% end %>
 </div>

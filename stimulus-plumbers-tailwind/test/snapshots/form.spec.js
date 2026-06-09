@@ -15,9 +15,15 @@ test.describe("sign up form", () => {
   });
 
   test("password revealed", async ({ page }) => {
-    await page.getByLabel("Show password").click();
+    await page.locator("#sign-up").getByLabel("Show password").click();
     await expect(page.locator("#sign-up")).toHaveScreenshot(
       "sign-up-password-revealed.png",
+    );
+  });
+
+  test("floating labels", async ({ page }) => {
+    await expect(page.locator("#sign-up-floating")).toHaveScreenshot(
+      "sign-up-floating.png",
     );
   });
 });
@@ -53,7 +59,7 @@ test.describe("floating label form", () => {
     });
 
     test("focused", async ({ page }) => {
-      await page.locator("#floating-filled input").focus();
+      await page.locator("#floating-filled input:not([type='hidden'])").focus();
       await expect(page.locator("#floating-filled")).toHaveScreenshot(
         "floating-filled-focused.png",
       );
@@ -74,7 +80,7 @@ test.describe("floating label form", () => {
     });
 
     test("focused", async ({ page }) => {
-      await page.locator("#floating-outlined input").focus();
+      await page.locator("#floating-outlined input:not([type='hidden'])").focus();
       await expect(page.locator("#floating-outlined")).toHaveScreenshot(
         "floating-outlined-focused.png",
       );
@@ -95,7 +101,7 @@ test.describe("floating label form", () => {
     });
 
     test("focused", async ({ page }) => {
-      await page.locator("#floating-standard input").focus();
+      await page.locator("#floating-standard input:not([type='hidden'])").focus();
       await expect(page.locator("#floating-standard")).toHaveScreenshot(
         "floating-standard-focused.png",
       );

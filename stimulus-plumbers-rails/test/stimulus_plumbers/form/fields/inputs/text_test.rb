@@ -196,20 +196,20 @@ class FormFieldsTextTest < ActionView::TestCase
     assert_css build_native(:datetime_local_field), "input[type='datetime-local']"
   end
 
-  def test_floating_filled_type_renders_input_before_label
-    doc = build_field(as: :text, type: :floating_filled)
+  def test_floating_filled_renders_input_before_label
+    doc = build_field(as: :text, floating: :filled)
 
     assert_operator doc.to_html.index("<input"), :<, doc.to_html.index("<label")
   end
 
-  def test_floating_outlined_type_renders_input_before_label
-    doc = build_field(as: :text, type: :floating_outlined)
+  def test_floating_outlined_renders_input_before_label
+    doc = build_field(as: :text, floating: :outlined)
 
     assert_operator doc.to_html.index("<input"), :<, doc.to_html.index("<label")
   end
 
-  def test_floating_standard_type_renders_input_before_label
-    doc = build_field(as: :text, type: :floating_standard)
+  def test_floating_standard_renders_input_before_label
+    doc = build_field(as: :text, floating: :standard)
 
     assert_operator doc.to_html.index("<input"), :<, doc.to_html.index("<label")
   end

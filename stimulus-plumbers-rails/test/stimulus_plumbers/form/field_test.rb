@@ -129,11 +129,11 @@ class FormFieldTest < Minitest::Test
     assert_equal "Something went wrong", component(error: "Something went wrong").error
   end
 
-  def test_default_type_is_default
-    assert_equal :default, component.type
+  def test_default_floating_is_nil
+    assert_nil component.floating
   end
 
-  def test_type_when_set
-    assert_equal :floating_filled, component(type: :floating_filled).type
+  def test_floating_when_set
+    assert_equal :filled, component(floating: :filled).floating
   end
 end
