@@ -32,7 +32,7 @@ module StimulusPlumbers
         end
 
         def fields_wrapper(layout, &block)
-          html_options = merge_html_options(theme.resolve(:form_choice_items, layout: layout))
+          html_options = merge_html_options(theme.resolve(:form_field_choice_items, layout: layout))
           template.content_tag(:div, **html_options, &block)
         end
 

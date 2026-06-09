@@ -6,9 +6,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("action list", () => {
-  test("plain", async ({ page }) => {
-    await expect(page.locator("#action-list-plain")).toHaveScreenshot(
-      "plain.png",
+  test("default", async ({ page }) => {
+    await expect(page.locator("#action-list-default")).toHaveScreenshot(
+      "default.png",
     );
   });
 

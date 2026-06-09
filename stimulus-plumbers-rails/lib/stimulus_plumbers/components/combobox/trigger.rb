@@ -83,7 +83,7 @@ module StimulusPlumbers
         end
 
         def render_trigger_icon(name)
-          Icon.new(template).render(name: name, aria: { hidden: "true" })
+          render_icon(name, theme: :combobox_trigger_icon)
         end
       end
     end

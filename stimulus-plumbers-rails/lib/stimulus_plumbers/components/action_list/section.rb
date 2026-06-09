@@ -28,7 +28,8 @@ module StimulusPlumbers
         def render_section_header(title)
           return unless title.present?
 
-          template.content_tag(:span, title, aria: { hidden: "true" })
+          html_options = merge_html_options(theme.resolve(:action_list_section_header), { aria: { hidden: "true" } })
+          template.content_tag(:span, title, **html_options)
         end
 
         def render_section_body(title, &block)

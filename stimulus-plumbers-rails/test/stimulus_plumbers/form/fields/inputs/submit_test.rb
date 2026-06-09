@@ -13,35 +13,38 @@ class SubmitTest < ActionView::TestCase
     parse_html(html)
   end
 
-  def test_submit_renders_submit_input_with_given_value
+  def test_submit_renders_button_element_with_given_value
     doc = build_form { |f| f.submit "Save" }
 
-    assert_css doc, "input[type='submit'][value='Save']"
+    assert_css doc, "button[type='submit']"
+    assert_includes doc.at_css("button[type='submit']").text, "Save"
   end
 
   def test_submit_uses_default_value_when_omitted
     doc = build_form(&:submit)
 
-    assert_css doc, "input[type='submit']"
-    refute_empty doc.at_css("input[type='submit']")["value"].to_s
+    button = doc.at_css("button[type='submit']")
+
+    assert_not_nil button
+    refute_empty button.text.strip
   end
 
   def test_submit_with_default_type_does_not_raise
     doc = build_form { |f| f.submit "Save", type: :default }
 
-    assert_css doc, "input[type='submit']"
+    assert_css doc, "button[type='submit']"
   end
 
-  def test_submit_type_does_not_override_input_type_attribute
-    doc = build_form { |f| f.submit "Save", type: :button }
+  def test_submit_style_type_does_not_override_html_type_attribute
+    doc = build_form { |f| f.submit "Save", type: :outline }
 
-    assert_equal "submit", doc.at_css("input[type='submit']")["type"]
+    assert_equal "submit", doc.at_css("button[type='submit']")["type"]
   end
 
   def test_submit_forwards_extra_html_options
     doc = build_form { |f| f.submit "Save", class: "btn" }
 
-    assert_includes doc.at_css("input[type='submit']")["class"].to_s, "btn"
+    assert_includes doc.at_css("button[type='submit']")["class"].to_s, "btn"
   end
 
   def test_submit_renders_no_label
@@ -59,10 +62,10 @@ class SubmitTest < ActionView::TestCase
   def test_submit_accepts_hash_as_first_arg
     doc = build_form { |f| f.submit class: "btn" }
 
-    input = doc.at_css("input[type='submit']")
+    button = doc.at_css("button[type='submit']")
 
-    assert_not_nil input
-    assert_includes input["class"].to_s, "btn"
-    refute_empty input["value"].to_s
+    assert_not_nil button
+    assert_includes button["class"].to_s, "btn"
+    refute_empty button.text.strip
   end
 end

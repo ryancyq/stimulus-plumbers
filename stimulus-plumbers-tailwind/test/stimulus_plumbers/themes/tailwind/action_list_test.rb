@@ -37,15 +37,11 @@ class TailwindThemeActionListTest < Minitest::Test
     assert_includes result, "rounded-(--sp-radius-sm)"
   end
 
-  def test_action_list_item_excludes_active_classes_when_inactive
-    refute_includes classes_for(:action_list_item, active: false), "bg-(--sp-color-primary)/10"
-  end
+  def test_action_list_item_includes_aria_current_active_classes
+    result = classes_for(:action_list_item)
 
-  def test_action_list_item_includes_active_classes_when_active
-    result = classes_for(:action_list_item, active: true)
-
-    assert_includes result, "bg-(--sp-color-primary)/10"
-    assert_includes result, "text-(--sp-color-primary)"
+    assert_includes result, "aria-[current]:bg-(--sp-color-primary)/10"
+    assert_includes result, "aria-[current]:text-(--sp-color-primary)"
   end
 
   def test_action_list_section_returns_a_classes_string
@@ -57,5 +53,33 @@ class TailwindThemeActionListTest < Minitest::Test
 
   def test_action_list_section_includes_padding
     assert_includes classes_for(:action_list_section), "py-(--sp-space-2)"
+  end
+
+  def test_action_list_section_header_returns_a_classes_string
+    result = classes_for(:action_list_section_header)
+
+    assert_instance_of String, result
+    assert_predicate result, :present?
+  end
+
+  def test_action_list_section_header_includes_muted_small_label_classes
+    result = classes_for(:action_list_section_header)
+
+    assert_includes result, "text-(--sp-color-muted-fg)"
+    assert_includes result, "font-semibold"
+    assert_includes result, "uppercase"
+    assert_includes result, "text-(length:--sp-text-xs)"
+  end
+
+  def test_action_list_item_uses_neutral_default_text
+    assert_includes classes_for(:action_list_item), "text-(--sp-color-fg)"
+  end
+
+  def test_action_list_item_includes_control_base_classes
+    result = classes_for(:action_list_item)
+
+    assert_includes result, "font-medium"
+    assert_includes result, "transition-colors"
+    assert_includes result, "disabled:opacity-50"
   end
 end

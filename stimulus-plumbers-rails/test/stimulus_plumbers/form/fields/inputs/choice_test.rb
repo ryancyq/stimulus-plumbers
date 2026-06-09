@@ -248,6 +248,22 @@ class ChoiceTest < ActionView::TestCase
     assert_css doc, "legend span[aria-hidden='true']"
   end
 
+  def test_choice_radio_card_type_renders_inputs_inside_fieldset
+    assert_css build_choice(as: :radio, type: :card), "fieldset input[type='radio']"
+  end
+
+  def test_choice_radio_card_type_renders_one_input_per_item
+    assert_equal ROLES.size, build_choice(as: :radio, type: :card).css("input[type='radio']").size
+  end
+
+  def test_choice_radio_card_type_renders_labels_inside_fieldset
+    assert_css build_choice(as: :radio, type: :card), "fieldset label[for]"
+  end
+
+  def test_choice_radio_button_type_renders_inputs_inside_fieldset
+    assert_css build_choice(as: :radio, type: :button), "fieldset input[type='radio']"
+  end
+
   def test_choice_check_box_renders_fieldset
     assert_css build_choice(as: :check_box), "fieldset"
   end
@@ -336,5 +352,29 @@ class ChoiceTest < ActionView::TestCase
     doc = build_choice(as: :check_box, required: true)
 
     assert_css doc, "legend span[aria-hidden='true']"
+  end
+
+  def test_choice_check_box_default_type_renders_input_before_text
+    doc   = build_choice(as: :check_box)
+    label = doc.at_css("label[for]")
+    nodes = label.children.reject { |n| n.text? && n.text.strip.empty? }
+
+    assert_equal "input", nodes[0].name
+  end
+
+  def test_choice_check_box_card_type_renders_text_before_input
+    doc   = build_choice(as: :check_box, type: :card)
+    label = doc.at_css("label[for]")
+    nodes = label.children.reject { |n| n.text? && n.text.strip.empty? }
+
+    assert_equal "input", nodes[-1].name
+  end
+
+  def test_choice_check_box_card_type_renders_inputs_inside_fieldset
+    assert_css build_choice(as: :check_box, type: :card), "fieldset input[type='checkbox']"
+  end
+
+  def test_choice_check_box_button_type_renders_inputs_inside_fieldset
+    assert_css build_choice(as: :check_box, type: :button), "fieldset input[type='checkbox']"
   end
 end

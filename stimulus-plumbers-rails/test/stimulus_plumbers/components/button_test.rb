@@ -87,4 +87,18 @@ class ButtonTest < ActionView::TestCase
   def test_button_renders_with_size_option
     assert_css parse_html(renderer.render("Click", size: :sm)), "button"
   end
+
+  def test_build_yields_attrs_to_block
+    html = renderer.build { |attrs| "<button type='submit' class='#{attrs[:class]}'>Go</button>".html_safe }
+
+    assert_includes parse_html(html).to_html, "Go"
+  end
+
+  def test_build_passes_merged_class_attrs
+    html = renderer.build(class: "extra") do |attrs|
+      "<span class='#{attrs[:class]}'></span>".html_safe
+    end
+
+    assert_includes parse_html(html).at_css("span")["class"].to_s, "extra"
+  end
 end

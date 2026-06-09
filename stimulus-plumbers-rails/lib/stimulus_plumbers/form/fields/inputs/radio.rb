@@ -6,7 +6,7 @@ module StimulusPlumbers
       module Inputs
         module Radio
           def radio_button(attribute, tag_value, options = {})
-            html_options = merge_html_options(theme.resolve(:form_radio), options)
+            html_options = merge_html_options(theme.resolve(:form_field_input_radio), options)
             super(attribute, tag_value, html_options)
           end
 
@@ -19,12 +19,12 @@ module StimulusPlumbers
             html_options = {},
             &block
           )
-            item_opts = merge_html_options(theme.resolve(:form_radio), html_options)
+            item_opts = merge_html_options(theme.resolve(:form_field_input_radio), html_options)
             if block_given?
               super(attribute, collection, value_method, text_method, options, item_opts, &block)
             else
               super(attribute, collection, value_method, text_method, options, item_opts) do |builder|
-                render_radio_button_label(builder, theme.resolve(:form_radio_label))
+                render_radio_button_label(builder, theme.resolve(:form_field_radio_label))
               end
             end
           end
@@ -37,14 +37,14 @@ module StimulusPlumbers
             field = Field.new(@template, **{ layout: :inline }.deep_merge(field_opts))
             render_fieldset(attribute, field) do |error|
               item_opts = merge_html_options(
-                theme.resolve(:form_radio, error: error, type: type, variant: variant),
+                theme.resolve(:form_field_input_radio, error: error, type: type, variant: variant),
                 kwargs,
                 field.required ? { aria: { required: "true" } } : {}
               )
               @template.collection_radio_buttons(
                 @object_name, attribute, collection, value_method, text_method, {}, item_opts
               ) do |builder|
-                render_radio_button_label(builder, theme.resolve(:form_radio_label, type: type, variant: variant))
+                render_radio_button_label(builder, theme.resolve(:form_field_radio_label, type: type, variant: variant))
               end
             end
           end

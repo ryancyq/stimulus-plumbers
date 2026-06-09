@@ -44,6 +44,9 @@ stimulus-plumbers/
 - **Unit tests** using Vitest
 - **Lint tests** (eslint)
 
+## WCAG / ARIA Reference
+See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns. Controllers in this package are responsible for keyboard navigation, focus management, and dynamic ARIA state.
+
 ## Controller / Plumber Design Principles
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.

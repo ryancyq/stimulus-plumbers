@@ -70,7 +70,7 @@ module StimulusPlumbers
       def render_floating_field(object, attribute, input_id, &block)
         error_override = error?(object, attribute)
         aria           = build_aria(object, attribute, input_id)
-        input_classes  = theme.resolve(:form_floating_input, type: @floating, error: error_override)[:classes]
+        input_classes  = theme.resolve(:form_field_floating, type: @floating, error: error_override)[:classes]
         field_opts     = build_html_options(input_id, aria).merge(class: input_classes, placeholder: " ")
         Fields::Group.new(@template).render(layout: @layout, error: error_override) do
           @template.safe_join(

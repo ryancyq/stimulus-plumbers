@@ -49,8 +49,13 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "gap-(--sp-space-2)"
   end
 
-  def test_combobox_trigger_group_includes_marker_class
-    assert_includes classes_for(:combobox_trigger_group), "sp-combobox-group"
+  def test_combobox_trigger_group_resets_child_input_styles
+    result = classes_for(:combobox_trigger_group)
+
+    assert_includes result, "[&>input]:border-0"
+    assert_includes result, "[&>input]:rounded-none"
+    assert_includes result, "[&>input]:focus:ring-0"
+    refute_includes result, "sp-combobox-group"
   end
 
   def test_combobox_trigger_group_includes_focus_ring_classes
@@ -161,7 +166,7 @@ class TailwindThemeComboboxTest < Minitest::Test
     result = classes_for(:combobox_date_navigation_navigator)
 
     assert_includes result, "inline-flex"
-    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "disabled:opacity-50"
   end
 end

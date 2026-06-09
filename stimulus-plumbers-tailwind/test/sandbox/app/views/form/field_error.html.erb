@@ -1,6 +1,6 @@
 <h1>Field error</h1>
 
-<div id="field-error">
+<section id="field-error" class="sb-section">
   <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <h2>Required</h2>
     <%= f.field :name, as: :text, label: "Full name", required: true %>
@@ -18,4 +18,4 @@
     <h2>Visually hidden label</h2>
     <%= f.field :name, as: :text, label: "Search query", hide_label: true %>
   <% end %>
-</div>
+</section>

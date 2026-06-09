@@ -25,7 +25,11 @@ module StimulusPlumbers
           lg: "size-(--sp-avatar-size-lg)"
         }.freeze
 
-        BASE = %w[rounded-(--sp-radius-full) overflow-hidden inline-flex items-center justify-center].freeze
+        BASE = %w[
+          rounded-(--sp-radius-full)
+          overflow-hidden
+          inline-flex items-center justify-center
+        ].freeze
 
         def avatar_variants
           VARIANTS

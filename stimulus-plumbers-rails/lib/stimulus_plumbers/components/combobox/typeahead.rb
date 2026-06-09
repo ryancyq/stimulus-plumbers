@@ -70,7 +70,7 @@ module StimulusPlumbers
               { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
             )
           ) do
-            Icon.new(template).render(name: "spinner", classes: "size-(--sp-icon-size) animate-spin")
+            render_icon("spinner", theme: :combobox_typeahead_loading_icon)
           end
         end
 

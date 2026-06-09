@@ -5,6 +5,7 @@
     "build:css": "./node_modules/.bin/tailwindcss -i test/sandbox/tailwind.css -o test/sandbox/public/tailwind.css",
     "clean:snapshots": "rm -rf test/snapshots/__screenshots__",
     "test:snapshots": "npm run build:css && playwright test",
+    "test:snapshots:ui": "npm run build:css && playwright test --ui",
     "test:snapshots:update": "npm run build:css && playwright test --update-snapshots"
   },
   "devDependencies": {

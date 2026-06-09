@@ -1,59 +1,81 @@
 <h1>Combobox components</h1>
 
-<div id="combobox">
-  <%# ── Date ──────────────────────────────────────────────────────────── %>
-  <section id="combobox-date">
+<%# ── Date ──────────────────────────────────────────────────────────── %>
+<section id="combobox-date" class="sb-section">
+  <h2>Date picker</h2>
+  <div class="sb-col">
     <%= sp_combobox_date(label: "Birthday") %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Time ──────────────────────────────────────────────────────────── %>
-  <section id="combobox-time">
+<%# ── Time ──────────────────────────────────────────────────────────── %>
+<section id="combobox-time" class="sb-section">
+  <h2>Time picker</h2>
+  <div class="sb-col">
     <%= sp_combobox_time(label: "Meeting Time") %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Dropdown ───────────────────────────────────────────────────────── %>
-  <section id="combobox-dropdown">
+<%# ── Dropdown ───────────────────────────────────────────────────────── %>
+<section id="combobox-dropdown" class="sb-section">
+  <h2>Dropdown</h2>
+  <div class="sb-col">
     <%= sp_combobox_dropdown(
           label:   "Country",
           options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
         ) %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Typeahead ──────────────────────────────────────────────────────── %>
-  <section id="combobox-typeahead">
+<%# ── Typeahead ──────────────────────────────────────────────────────── %>
+<section id="combobox-typeahead" class="sb-section">
+  <h2>Typeahead</h2>
+  <div class="sb-col">
     <%= sp_combobox_typeahead(label: "City") %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Date (with error) ──────────────────────────────────────────────────── %>
-  <section id="combobox-date-error">
+<%# ── Date (with error) ──────────────────────────────────────────────────── %>
+<section id="combobox-date-error" class="sb-section">
+  <h2>Date picker — Error</h2>
+  <div class="sb-col">
     <% date_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
     <%= form_with(model: date_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :birth_date, as: :date, label: "Birthday" %>
     <% end %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Time (with error) ──────────────────────────────────────────────────── %>
-  <section id="combobox-time-error">
+<%# ── Time (with error) ──────────────────────────────────────────────────── %>
+<section id="combobox-time-error" class="sb-section">
+  <h2>Time picker — Error</h2>
+  <div class="sb-col">
     <% time_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
     <%= form_with(model: time_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :birth_date, as: :time, label: "Meeting Time" %>
     <% end %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Dropdown (with error) ──────────────────────────────────────────────── %>
-  <section id="combobox-dropdown-error">
+<%# ── Dropdown (with error) ──────────────────────────────────────────────── %>
+<section id="combobox-dropdown-error" class="sb-section">
+  <h2>Dropdown — Error</h2>
+  <div class="sb-col">
     <% dropdown_error = SignUp.new.tap { |f| f.errors.add(:country, "is invalid") } %>
     <%= form_with(model: dropdown_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :country, as: :select, label: "Country",
             choices: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]] %>
     <% end %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Typeahead (with error) ─────────────────────────────────────────────── %>
-  <section id="combobox-typeahead-error">
+<%# ── Typeahead (with error) ─────────────────────────────────────────────── %>
+<section id="combobox-typeahead-error" class="sb-section">
+  <h2>Typeahead — Error</h2>
+  <div class="sb-col">
     <% typeahead_error = SignUp.new.tap { |f| f.errors.add(:name, "is invalid") } %>
     <%= form_with(model: typeahead_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :search, label: "City" %>
     <% end %>
-  </section>
-</div>
+  </div>
+</section>

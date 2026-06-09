@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     get :search
     get :button
     get :button_group
+    get :link
     get :action_list
     get :card
     get :popover

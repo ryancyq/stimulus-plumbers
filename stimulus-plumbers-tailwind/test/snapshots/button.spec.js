@@ -6,16 +6,38 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("button", () => {
-  test("variants", async ({ page }) => {
-    await expect(page.locator("#button-variants")).toHaveScreenshot(
-      "variants.png",
+  test("default", async ({ page }) => {
+    await expect(page.locator("#button-default")).toHaveScreenshot(
+      "default.png",
     );
   });
 
-  test("semantic", async ({ page }) => {
-    await expect(page.locator("#button-semantic")).toHaveScreenshot(
-      "semantic.png",
+  test("outline", async ({ page }) => {
+    await expect(page.locator("#button-outline")).toHaveScreenshot(
+      "outline.png",
     );
+  });
+
+  test("ghost", async ({ page }) => {
+    await expect(page.locator("#button-ghost")).toHaveScreenshot("ghost.png");
+  });
+
+  test("fab", async ({ page }) => {
+    await expect(page.locator("#button-fab")).toHaveScreenshot("fab.png");
+  });
+
+  test("fab-outline", async ({ page }) => {
+    await expect(page.locator("#button-fab-outline")).toHaveScreenshot(
+      "fab-outline.png",
+    );
+  });
+
+  test("dashed", async ({ page }) => {
+    await expect(page.locator("#button-dashed")).toHaveScreenshot("dashed.png");
+  });
+
+  test("card", async ({ page }) => {
+    await expect(page.locator("#button-card")).toHaveScreenshot("card.png");
   });
 
   test("sizes", async ({ page }) => {
@@ -26,12 +48,10 @@ test.describe("button", () => {
     await expect(page.locator("#button-icons")).toHaveScreenshot("icons.png");
   });
 
-  test("link", async ({ page }) => {
-    await expect(page.locator("#button-link")).toHaveScreenshot("link.png");
-  });
-
-  test("card", async ({ page }) => {
-    await expect(page.locator("#button-card")).toHaveScreenshot("card.png");
+  test("card-icons", async ({ page }) => {
+    await expect(page.locator("#button-card-icons")).toHaveScreenshot(
+      "card-icons.png",
+    );
   });
 
   test("disabled", async ({ page }) => {

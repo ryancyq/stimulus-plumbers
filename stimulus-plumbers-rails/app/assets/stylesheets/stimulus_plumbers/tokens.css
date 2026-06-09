@@ -10,32 +10,43 @@
   /* ── Semantic colors ─────────────────────────────────────────────────── */
   --sp-color-primary:        oklch(55% 0.2 250);
   --sp-color-primary-fg:     oklch(98% 0.01 250);
+  --sp-color-primary-border: oklch(65% 0.2 250);
+  --sp-color-primary-ring:   oklch(75% 0.15 250);
 
-  --sp-color-secondary:      oklch(55% 0.05 250);
-  --sp-color-secondary-fg:   oklch(98% 0.01 250);
+  --sp-color-secondary:        oklch(55% 0.05 250);
+  --sp-color-secondary-fg:     oklch(98% 0.01 250);
+  --sp-color-secondary-border: oklch(65% 0.05 250);
+  --sp-color-secondary-ring:   oklch(75% 0.05 250);
 
-  --sp-color-destructive:    oklch(55% 0.22 25);
-  --sp-color-destructive-fg: oklch(98% 0.01 25);
+  --sp-color-destructive:        oklch(55% 0.22 25);
+  --sp-color-destructive-fg:     oklch(98% 0.01 25);
+  --sp-color-destructive-border: oklch(65% 0.22 25);
+  --sp-color-destructive-ring:   oklch(75% 0.18 25);
 
   --sp-color-success:        oklch(52% 0.18 145);
   --sp-color-success-fg:     oklch(98% 0.01 145);
+  --sp-color-success-border: oklch(62% 0.18 145);
   --sp-color-success-ring:   oklch(82% 0.12 145);
 
   --sp-color-warning:        oklch(68% 0.17 65);
   --sp-color-warning-fg:     oklch(98% 0.01 65);
+  --sp-color-warning-border: oklch(78% 0.17 65);
   --sp-color-warning-ring:   oklch(88% 0.10 65);
 
   --sp-color-dark:           oklch(18% 0.02 250);
   --sp-color-dark-fg:        oklch(98% 0.01 250);
 
-  --sp-color-info:           oklch(55% 0.18 220);
-  --sp-color-info-fg:        oklch(98% 0.01 220);
-  --sp-color-info-ring:      oklch(82% 0.12 220);
+  --sp-color-info:        oklch(55% 0.18 220);
+  --sp-color-info-fg:     oklch(98% 0.01 220);
+  --sp-color-info-border: oklch(65% 0.18 220);
+  --sp-color-info-ring:   oklch(82% 0.12 220);
 
   --sp-color-error:          oklch(40% 0.20 25);
 
-  --sp-color-muted:          oklch(96% 0.02 250);
-  --sp-color-muted-fg:       oklch(45% 0.05 250);
+  --sp-color-muted:        oklch(96% 0.02 250);
+  --sp-color-muted-fg:     oklch(45% 0.05 250);
+  --sp-color-muted-border: oklch(88% 0.02 250);
+  --sp-color-muted-ring:   oklch(82% 0.02 250);
 
   --sp-color-border:         oklch(90% 0.02 250);
   --sp-color-border-strong:  oklch(75% 0.03 250);
@@ -88,6 +99,10 @@
                   0 1px 2px -1px rgb(0 0 0 / 0.1);
   --sp-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
                   0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --sp-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+                  0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --sp-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+                  0 8px 10px -6px rgb(0 0 0 / 0.1);
 
 
   /* ── Typography ──────────────────────────────────────────────────────── */

@@ -33,7 +33,8 @@ test.describe("single checkbox", () => {
   test("checked", async ({ page }) => {
     await page
       .locator('#single-checkbox-default input[type="checkbox"]')
-      .check();
+      .locator("xpath=ancestor::label")
+      .click();
     await expect(page.locator("#single-checkbox-default")).toHaveScreenshot(
       "single-checkbox-checked.png",
     );
@@ -55,7 +56,8 @@ test.describe("collection checkbox", () => {
         await page
           .locator('#collection-checkbox-default-inline input[type="checkbox"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-checkbox-default-inline"),
         ).toHaveScreenshot("collection-checkbox-default-inline-checked.png");
@@ -75,7 +77,8 @@ test.describe("collection checkbox", () => {
             '#collection-checkbox-default-stacked input[type="checkbox"]',
           )
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-checkbox-default-stacked"),
         ).toHaveScreenshot("collection-checkbox-default-stacked-checked.png");
@@ -95,7 +98,8 @@ test.describe("collection checkbox", () => {
         await page
           .locator('#collection-checkbox-button-inline input[type="checkbox"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-checkbox-button-inline"),
         ).toHaveScreenshot("collection-checkbox-button-inline-checked.png");
@@ -113,7 +117,8 @@ test.describe("collection checkbox", () => {
         await page
           .locator('#collection-checkbox-button-stacked input[type="checkbox"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-checkbox-button-stacked"),
         ).toHaveScreenshot("collection-checkbox-button-stacked-checked.png");
@@ -133,7 +138,8 @@ test.describe("collection checkbox", () => {
         await page
           .locator('#collection-checkbox-card-inline input[type="checkbox"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-checkbox-card-inline"),
         ).toHaveScreenshot("collection-checkbox-card-inline-checked.png");
@@ -151,7 +157,8 @@ test.describe("collection checkbox", () => {
         await page
           .locator('#collection-checkbox-card-stacked input[type="checkbox"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-checkbox-card-stacked"),
         ).toHaveScreenshot("collection-checkbox-card-stacked-checked.png");
@@ -203,7 +210,8 @@ test.describe("collection radio", () => {
         await page
           .locator('#collection-radio-default-inline input[type="radio"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-radio-default-inline"),
         ).toHaveScreenshot("collection-radio-default-inline-selected.png");
@@ -221,7 +229,8 @@ test.describe("collection radio", () => {
         await page
           .locator('#collection-radio-default-stacked input[type="radio"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-radio-default-stacked"),
         ).toHaveScreenshot("collection-radio-default-stacked-selected.png");
@@ -241,7 +250,8 @@ test.describe("collection radio", () => {
         await page
           .locator('#collection-radio-button-inline input[type="radio"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-radio-button-inline"),
         ).toHaveScreenshot("collection-radio-button-inline-selected.png");
@@ -259,7 +269,8 @@ test.describe("collection radio", () => {
         await page
           .locator('#collection-radio-button-stacked input[type="radio"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-radio-button-stacked"),
         ).toHaveScreenshot("collection-radio-button-stacked-selected.png");
@@ -279,7 +290,8 @@ test.describe("collection radio", () => {
         await page
           .locator('#collection-radio-card-inline input[type="radio"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-radio-card-inline"),
         ).toHaveScreenshot("collection-radio-card-inline-selected.png");
@@ -297,7 +309,8 @@ test.describe("collection radio", () => {
         await page
           .locator('#collection-radio-card-stacked input[type="radio"]')
           .first()
-          .check();
+          .locator("xpath=ancestor::label")
+          .click();
         await expect(
           page.locator("#collection-radio-card-stacked"),
         ).toHaveScreenshot("collection-radio-card-stacked-selected.png");

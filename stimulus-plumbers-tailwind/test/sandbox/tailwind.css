@@ -8,3 +8,13 @@
     --sp-avatar-size: 2.5rem;
   }
 }
+
+/* Sandbox-only snapshot layout helpers — prefix sb- to avoid clashing with library classes */
+@layer utilities {
+  /* Section - Vertical Arrangement */
+  .sb-section { display: flex; flex-direction: column; row-gap: 0.3rem; padding: 1rem; }
+  /* Horizontal flex row - both desktop (1280px) and mobile viewports */
+  .sb-row     { display: flex; flex-wrap: wrap; column-gap: 0.3rem; row-gap: 0.3rem; align-items: center; }
+  /* Vertical flex col - both desktop (1280px) and mobile viewports */
+  .sb-col     { display: flex; flex-direction: column; column-gap: 0.3rem; row-gap: 0.3rem; align-items: flex-start; }
+}

@@ -25,7 +25,7 @@ class BaseThemeFormTest < StubThemeTestCase
     mock_logger = Minitest::Mock.new
     mock_logger.expect(:warn, nil, [%r{unknown value "yes"}])
     Rails.stub(:logger, mock_logger) do
-      @theme.resolve(:form_input, error: "yes")
+      @theme.resolve(:form_field_input, error: "yes")
     end
     mock_logger.verify
   end
@@ -43,7 +43,7 @@ class BaseThemeFormTest < StubThemeTestCase
     mock_logger = Minitest::Mock.new
     mock_logger.expect(:warn, nil, [%r{unknown value "yes"}])
     Rails.stub(:logger, mock_logger) do
-      @theme.resolve(:form_label, hidden: "yes")
+      @theme.resolve(:form_field_label, hidden: "yes")
     end
     mock_logger.verify
   end
@@ -52,7 +52,7 @@ class BaseThemeFormTest < StubThemeTestCase
     mock_logger = Minitest::Mock.new
     mock_logger.expect(:warn, nil, [%r{unknown value "yes"}])
     Rails.stub(:logger, mock_logger) do
-      @theme.resolve(:form_label, required: "yes")
+      @theme.resolve(:form_field_label, required: "yes")
     end
     mock_logger.verify
   end
@@ -69,7 +69,7 @@ class BaseThemeFormTest < StubThemeTestCase
   def test_resolves_valid_form_input_reveal_error_without_warning
     mock_logger = Minitest::Mock.new
     Rails.stub(:logger, mock_logger) do
-      @theme.resolve(:form_input_reveal, error: true)
+      @theme.resolve(:form_field_input_reveal, error: true)
     end
     mock_logger.verify
   end
@@ -78,7 +78,7 @@ class BaseThemeFormTest < StubThemeTestCase
     mock_logger = Minitest::Mock.new
     mock_logger.expect(:warn, nil, [%r{unknown value "yes"}])
     Rails.stub(:logger, mock_logger) do
-      @theme.resolve(:form_input_reveal, error: "yes")
+      @theme.resolve(:form_field_input_reveal, error: "yes")
     end
     mock_logger.verify
   end

@@ -35,4 +35,20 @@ class ChoicesAccessibilityTest < ApplicationAccessibilityTestCase
   def test_collection_radio_with_error_passes_wcag
     assert_accessible context: "#collection-radio-error"
   end
+
+  def test_collection_checkbox_button_type_passes_wcag
+    assert_accessible context: "#collection-checkbox-button"
+  end
+
+  def test_collection_checkbox_card_type_passes_wcag
+    assert_accessible context: "#collection-checkbox-card"
+  end
+
+  def test_collection_radio_button_type_passes_wcag
+    assert_accessible context: "#collection-radio-button"
+  end
+
+  def test_collection_radio_card_type_passes_wcag
+    assert_accessible context: "#collection-radio-card"
+  end
 end

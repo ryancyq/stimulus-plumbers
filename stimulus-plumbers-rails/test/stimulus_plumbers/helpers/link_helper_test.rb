@@ -40,12 +40,12 @@ class LinkHelperTest < ActionView::TestCase
   def test_icon_trailing_renders_after_content
     doc = parse_html(sp_link("Read their stories", url: "/", icon_trailing: :arrow))
 
-    assert_operator doc.to_html.index("Read their stories"), :<, doc.to_html.index("<span")
+    assert_operator doc.to_html.index("Read their stories"), :<, doc.to_html.index("aria-hidden")
   end
 
   def test_icon_leading_renders_before_content
     doc = parse_html(sp_link("Read more", url: "/", icon_leading: :arrow))
 
-    assert_operator doc.to_html.index("<span"), :<, doc.to_html.index("Read more")
+    assert_operator doc.to_html.index("aria-hidden"), :<, doc.to_html.index("Read more")
   end
 end

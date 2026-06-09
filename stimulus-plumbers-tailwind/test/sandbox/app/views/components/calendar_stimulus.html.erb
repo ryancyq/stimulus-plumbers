@@ -6,7 +6,10 @@
           data-action="click->combobox-date#zoomOut"
           type="button"></button>
 
-  <div id="calendar">
-    <%= sp_calendar_month(date: @date) %>
-  </div>
+  <section id="calendar-stimulus" class="sb-section">
+    <h2>Stimulus (CSR)</h2>
+    <div class="sb-col">
+      <%= sp_calendar_month(date: @date) %>
+    </div>
+  </section>
 </div>

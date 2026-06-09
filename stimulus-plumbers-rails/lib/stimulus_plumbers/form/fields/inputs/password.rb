@@ -7,7 +7,7 @@ module StimulusPlumbers
         module Password
           def password_field(attribute, options = {})
             revealable = options.delete(:revealable) { false }
-            html_options = merge_html_options(theme.resolve(:form_input), options)
+            html_options = merge_html_options(theme.resolve(:form_field_input), options)
             if revealable
               render_revealable_password(false) do
                 super(attribute, merge_html_options(html_options, { data: { input_formatter_target: "input" } }))
@@ -22,7 +22,7 @@ module StimulusPlumbers
           def render_password_input(attribute, html_opts, opts, error, revealable: false, **kwargs)
             if revealable
               html_options = merge_html_options(
-                theme.resolve(:form_input, error: error),
+                theme.resolve(:form_field_input, error: error),
                 opts,
                 html_opts,
                 kwargs,
@@ -32,7 +32,7 @@ module StimulusPlumbers
                 @template.password_field(@object_name, attribute, objectify_options(html_options))
               end
             else
-              html_options = merge_html_options(theme.resolve(:form_input, error: error), opts, html_opts, kwargs)
+              html_options = merge_html_options(theme.resolve(:form_field_input, error: error), opts, html_opts, kwargs)
               @template.password_field(@object_name, attribute, objectify_options(html_options))
             end
           end
@@ -42,7 +42,7 @@ module StimulusPlumbers
               error:    error,
               trailing: method(:reveal_button),
               **merge_html_options(
-                theme.resolve(:form_input_reveal, error: error),
+                theme.resolve(:form_field_input_reveal, error: error),
                 { data: { controller: "input-formatter", input_formatter_format_value: "password" } }
               )
             ) { @template.capture(&block) }
@@ -50,7 +50,7 @@ module StimulusPlumbers
 
           def reveal_button
             html_options = merge_html_options(
-              theme.resolve(:form_button_reveal),
+              theme.resolve(:form_field_input_button_reveal),
               {
                 type: "button",
                 aria: { label: I18n.t("stimulus_plumbers.form.password.show", default: "Show password"), pressed: "false" },

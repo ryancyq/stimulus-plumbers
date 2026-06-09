@@ -10,13 +10,16 @@ module StimulusPlumbers
               options = value
               value = nil
             end
-            value   ||= submit_default_value
-            type      = options.delete(:type) { :default }
-            @template.tag.input(
-              type:  "submit",
-              value: value,
-              **merge_html_options(theme.resolve(:form_submit, type: type), options)
-            )
+            value ||= submit_default_value
+            type     = options.delete(:type)    { :default }
+            variant  = options.delete(:variant) { :primary }
+
+            Components::Button.new(@template).build(type: type, variant: variant) do |attrs|
+              @template.tag.button(
+                type: "submit",
+                **merge_html_options(attrs, options)
+              ) { value }
+            end
           end
         end
       end

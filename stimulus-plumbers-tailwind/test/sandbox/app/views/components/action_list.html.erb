@@ -1,8 +1,9 @@
 <h1>Action list components</h1>
 
-<div id="action-list">
-  <%# ── Plain list ─────────────────────────────────────────────────────── %>
-  <section id="action-list-plain">
+<section id="action-list-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col">
+    <%# ── Default ────────────────────────────────────────────────────────── %>
     <%= sp_action_list do |list| %>
       <%= list.section do %>
         <%= list.item("Profile") %>
@@ -10,25 +11,31 @@
         <%= list.item("Help") %>
       <% end %>
     <% end %>
-  </section>
+  </div>
+</section>
 
-  <%# ── With links ─────────────────────────────────────────────────────── %>
-  <section id="action-list-with-links">
+<section id="action-list-with-links" class="sb-section">
+  <h2>With links</h2>
+  <div class="sb-col">
+    <%# ── With links ─────────────────────────────────────────────────────── %>
     <%= sp_action_list do |list| %>
       <%= list.section(title: "Navigation") do %>
         <%= list.item("Dashboard", url: "/") %>
         <%= list.item("Reports",   url: "/") %>
       <% end %>
     <% end %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Active item ─────────────────────────────────────────────────────── %>
-  <section id="action-list-active">
+<section id="action-list-active" class="sb-section">
+  <h2>Active item</h2>
+  <div class="sb-col">
+    <%# ── Active item ─────────────────────────────────────────────────────── %>
     <%= sp_action_list do |list| %>
       <%= list.section do %>
         <%= list.item("Active item",   active: true) %>
         <%= list.item("Inactive item") %>
       <% end %>
     <% end %>
-  </section>
-</div>
+  </div>
+</section>

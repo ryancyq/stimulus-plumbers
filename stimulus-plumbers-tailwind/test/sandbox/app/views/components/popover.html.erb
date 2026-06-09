@@ -1,16 +1,19 @@
 <h1>Popover components</h1>
 
-<div id="popover">
-  <%# ── Interactive popover ─────────────────────────────────────────────── %>
-  <%= sp_popover do |p| %>
-    <% p.trigger { "Open menu" } %>
-    <% p.panel(role: "dialog", aria: { label: "Menu options" }) do %>
-      <%= sp_action_list do |list| %>
-        <%= list.section do %>
-          <%= list.item("Edit",   url: "#") %>
-          <%= list.item("Delete") %>
+<section id="popover-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-row">
+    <%# ── Interactive popover ─────────────────────────────────────────────── %>
+    <%= sp_popover do |p| %>
+      <% p.trigger { "Open menu" } %>
+      <% p.panel(role: "dialog", aria: { label: "Menu options" }) do %>
+        <%= sp_action_list do |list| %>
+          <%= list.section do %>
+            <%= list.item("Edit",   url: "#") %>
+            <%= list.item("Delete") %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>
-  <% end %>
-</div>
+  </div>
+</section>

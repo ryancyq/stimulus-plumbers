@@ -9,12 +9,13 @@ module StimulusPlumbers
 
       private
 
-      def render_icon(name, theme_key:)
-        return unless name
+      def render_icon(icon_name, theme:)
+        return unless icon_name
+        return template.capture(&icon_name) if icon_name.respond_to?(:call)
 
         Components::Icon.new(template).render(
-          name:    name,
-          classes: theme.resolve(theme_key).fetch(:classes, ""),
+          name:    icon_name,
+          classes: self.theme.resolve(theme).fetch(:classes, ""),
           aria:    { hidden: "true" }
         )
       end

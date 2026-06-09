@@ -4,109 +4,103 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Button
-        # Variant sets --btn-bg/fg/ring CSS variables; type references them.
         VARIANTS = {
-          default:     %w[
+          primary:     %w[
             [--btn-bg:var(--sp-color-primary)]
             [--btn-fg:var(--sp-color-primary-fg)]
-            [--btn-ring:var(--sp-color-primary)]
+            [--btn-accent:var(--sp-color-primary)]
+            [--btn-border:var(--sp-color-primary-border)]
+            [--btn-ring:var(--sp-color-primary-ring)]
+          ].freeze,
+          secondary:   %w[
+            [--btn-bg:var(--sp-color-secondary)]
+            [--btn-fg:var(--sp-color-secondary-fg)]
+            [--btn-accent:var(--sp-color-secondary)]
+            [--btn-border:var(--sp-color-secondary-border)]
+            [--btn-ring:var(--sp-color-secondary-ring)]
+          ].freeze,
+          tertiary:    %w[
+            [--btn-bg:var(--sp-color-muted)]
+            [--btn-fg:var(--sp-color-muted-fg)]
+            [--btn-accent:var(--sp-color-fg)]
+            [--btn-border:var(--sp-color-muted-border)]
+            [--btn-ring:var(--sp-color-muted-ring)]
           ].freeze,
           success:     %w[
             [--btn-bg:var(--sp-color-success)]
             [--btn-fg:var(--sp-color-success-fg)]
+            [--btn-accent:var(--sp-color-success)]
+            [--btn-border:var(--sp-color-success-border)]
             [--btn-ring:var(--sp-color-success-ring)]
           ].freeze,
           destructive: %w[
             [--btn-bg:var(--sp-color-destructive)]
             [--btn-fg:var(--sp-color-destructive-fg)]
-            [--btn-ring:var(--sp-color-destructive)]
+            [--btn-accent:var(--sp-color-destructive)]
+            [--btn-border:var(--sp-color-destructive-border)]
+            [--btn-ring:var(--sp-color-destructive-ring)]
           ].freeze,
           warning:     %w[
             [--btn-bg:var(--sp-color-warning)]
             [--btn-fg:var(--sp-color-warning-fg)]
+            [--btn-accent:var(--sp-color-warning)]
+            [--btn-border:var(--sp-color-warning-border)]
             [--btn-ring:var(--sp-color-warning-ring)]
           ].freeze,
           info:        %w[
             [--btn-bg:var(--sp-color-info)]
             [--btn-fg:var(--sp-color-info-fg)]
+            [--btn-accent:var(--sp-color-info)]
+            [--btn-border:var(--sp-color-info-border)]
             [--btn-ring:var(--sp-color-info-ring)]
           ].freeze
         }.freeze
 
         TYPES = {
-          # ── Filled ────────────────────────────────────────────────────────
-          primary:     %w[
+          default:     %w[
+            rounded-(--sp-radius-md)
             bg-(--btn-bg) text-(--btn-fg)
-            border border-transparent
+            border border-(--btn-border)
             hover:bg-(--btn-bg)/90
-            focus-visible:ring-(--btn-ring)
           ].freeze,
-          secondary:   %w[
-            bg-(--btn-bg)/15 text-(--btn-bg)
-            border border-(--btn-bg)/25
-            hover:bg-(--btn-bg)/25
-            focus-visible:ring-(--btn-ring)
-          ].freeze,
-          tertiary:    %w[
-            bg-(--sp-color-bg) text-(--btn-bg)
-            border border-(--btn-bg)/40
-            hover:bg-(--btn-bg)/10
-            focus-visible:ring-(--btn-ring)
-          ].freeze,
-          # ── Outline ───────────────────────────────────────────────────────
           outline:     %w[
-            bg-(--sp-color-bg) text-(--btn-bg)
-            border border-(--btn-bg)
-            hover:bg-(--btn-bg) hover:text-(--btn-fg)
-            focus-visible:ring-(--btn-ring)
+            rounded-(--sp-radius-md)
+            bg-(--sp-color-bg) text-(--btn-accent)
+            border border-(--btn-border)
+            hover:bg-(--btn-bg)/10
           ].freeze,
-          # ── Special ───────────────────────────────────────────────────────
           ghost:       %w[
-            bg-transparent text-(--btn-bg)
+            rounded-(--sp-radius-md)
+            bg-transparent text-(--btn-accent)
             border border-transparent
             hover:bg-(--btn-bg)/10
-            focus-visible:ring-(--btn-ring)
           ].freeze,
           fab:         %w[
-            rounded-full shadow-lg
+            rounded-(--sp-radius-full)
             bg-(--btn-bg) text-(--btn-fg)
-            border border-transparent
-            hover:bg-(--btn-bg)/90 hover:shadow-xl
-            focus-visible:ring-(--btn-ring)
+            border border-(--btn-border)
+            shadow-(--sp-shadow-lg)
+            hover:bg-(--btn-bg)/90 hover:shadow-(--sp-shadow-xl)
           ].freeze,
           fab_outline: %w[
-            rounded-full shadow-lg
-            bg-(--sp-color-bg) text-(--btn-bg)
-            border border-(--btn-bg)
-            hover:bg-(--btn-bg) hover:text-(--btn-fg) hover:shadow-xl
-            focus-visible:ring-(--btn-ring)
+            rounded-(--sp-radius-full)
+            bg-transparent text-(--btn-accent)
+            border border-(--btn-border)
+            shadow-(--sp-shadow-lg)
+            hover:bg-(--btn-bg) hover:text-(--btn-fg) hover:shadow-(--sp-shadow-xl)
           ].freeze,
           dashed:      %w[
-            bg-transparent text-(--btn-bg)
-            border border-dashed border-(--btn-bg)/60
+            rounded-(--sp-radius-md)
+            bg-(--sp-color-bg) text-(--btn-accent)
+            border border-dashed border-(--btn-border)
             hover:bg-(--btn-bg)/10
-            focus-visible:ring-(--btn-ring)
           ].freeze,
-          # ── Card ──────────────────────────────────────────────────────────
           card:        %w[
-            bg-(--sp-color-bg) text-(--sp-color-muted-fg)
-            border border-(--sp-color-border) shadow-(--sp-shadow-xs)
-            hover:bg-(--sp-color-muted) hover:border-(--sp-color-border-strong) hover:text-(--sp-color-fg)
-            focus-visible:ring-(--card-ring)
+            rounded-(--sp-radius-md)
+            bg-(--sp-color-bg) text-(--btn-accent)
+            border border-(--btn-border) shadow-(--sp-shadow-xs)
+            hover:bg-(--btn-bg)/10
           ].freeze
-        }.freeze
-
-        CARD_SIZE = %w[
-          inline-flex justify-start items-center flex-1 gap-(--sp-space-3) p-(--sp-space-4)
-          [&>:last-child:not(:first-child)]:ml-auto
-        ].freeze
-
-        CARD_VARIANTS = {
-          default:     %w[[--card-ring:var(--sp-color-primary)]].freeze,
-          success:     %w[[--card-ring:var(--sp-color-success)]].freeze,
-          destructive: %w[[--card-ring:var(--sp-color-destructive)]].freeze,
-          warning:     %w[[--card-ring:var(--sp-color-warning)]].freeze,
-          info:        %w[[--card-ring:var(--sp-color-info)]].freeze
         }.freeze
 
         SIZES = {
@@ -117,58 +111,34 @@ module StimulusPlumbers
           xl: %w[h-14 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze
         }.freeze
 
-        BASE_SHARED = %w[
-          font-medium whitespace-nowrap rounded-(--sp-radius-md) transition-colors
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
-          disabled:pointer-events-none disabled:opacity-50
-          [.sp-button-group_&]:rounded-none
-          [.sp-button-group_&:first-child]:rounded-s-(--sp-radius-md)
-          [.sp-button-group_&:last-child]:rounded-e-(--sp-radius-md)
-          [.sp-button-group-stacked_&]:rounded-none
-          [.sp-button-group-stacked_&:first-child]:rounded-t-(--sp-radius-md)
-          [.sp-button-group-stacked_&:last-child]:rounded-b-(--sp-radius-md)
+        BASE = [
+          *Control::BASE,
+          "whitespace-nowrap",
+          "focus-visible:ring-(--btn-ring)"
         ].freeze
 
-        BASE = [*BASE_SHARED, "inline-flex", "items-center", "justify-center", "gap-(--sp-space-2)"].freeze
+        LAYOUT = %w[
+          inline-flex items-center justify-center gap-(--sp-space-2)
+          [&:not(:has(>span))]:aspect-square
+          [&:not(:has(>span))]:px-0
+        ].freeze
 
-        GROUP_LAYOUTS = {
-          inline:  %w[
-            sp-button-group inline-flex rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
-            [&>*:not(:first-child)]:-ml-px
-          ].freeze,
-          stacked: %w[
-            sp-button-group-stacked flex flex-col rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
-            [&>*:not(:first-child)]:-mt-px
-          ].freeze
-        }.freeze
+        CARD = %w[
+          inline-flex justify-start items-center flex-1 gap-(--sp-space-3) p-(--sp-space-4)
+          [&>:last-child:not(:first-child)]:ml-auto
+        ].freeze
 
         private
 
-        def button_classes(type: :primary, variant: :default, size: :md)
-          if type == :card
-            {
-              classes: klasses(
-                *BASE_SHARED,
-                *CARD_SIZE,
-                *TYPES[:card],
-                *CARD_VARIANTS.fetch(variant, CARD_VARIANTS[:default])
-              )
-            }
-          else
-            {
-              classes: klasses(
-                *BASE,
-                *VARIANTS.fetch(variant, VARIANTS[:default]),
-                *TYPES.fetch(type, TYPES[:primary]),
-                *SIZES.fetch(size, [])
-              )
-            }
-          end
-        end
-
-        def button_group_classes(layout: :inline)
+        def button_classes(type: :default, variant: :primary, size: :md)
           {
-            classes: klasses(*GROUP_LAYOUTS.fetch(layout, GROUP_LAYOUTS[:inline]))
+            classes: klasses(
+              *BASE,
+              *(type == :card ? CARD : LAYOUT),
+              *VARIANTS.fetch(variant, VARIANTS[:primary]),
+              *TYPES.fetch(type, TYPES[:default]),
+              *(type == :card ? [] : SIZES.fetch(size, []))
+            )
           }
         end
 

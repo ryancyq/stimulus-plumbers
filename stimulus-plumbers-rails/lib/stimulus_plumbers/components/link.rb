@@ -27,19 +27,19 @@ module StimulusPlumbers
       def build_layout(icon_leading: nil, icon_trailing: nil, &block)
         template.safe_join(
           [
-            icon_leading.respond_to?(:call) ? template.capture(&icon_leading) : render_icon(icon_leading),
+            render_icon(icon_leading, theme: :link_icon),
             template.capture(&block),
-            icon_trailing.respond_to?(:call) ? template.capture(&icon_trailing) : render_icon(icon_trailing)
+            render_icon(icon_trailing, theme: :link_icon)
           ]
         )
       end
 
       def build_content(content, &block)
-        block_given? ? template.capture(&block) : content
-      end
-
-      def render_icon(name)
-        super(name, theme_key: :link_icon)
+        if block_given?
+          template.content_tag(:span, template.capture(&block))
+        elsif content
+          template.content_tag(:span, content)
+        end
       end
     end
   end

@@ -24,6 +24,5 @@ export default defineConfig({
   webServer: {
     command: `RAILS_ENV=test bundle exec puma test/sandbox/config.ru --bind tcp://127.0.0.1:${PORT}`,
     url: `http://127.0.0.1:${PORT}/up`,
-    reuseExistingServer: !process.env.CI,
   },
 });

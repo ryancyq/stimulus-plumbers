@@ -11,7 +11,7 @@ class TailwindThemeLinkTest < Minitest::Test
     @theme.resolve(component, **args)[:classes]
   end
 
-  # :link type: :default base
+  # ── default (BASE) ──────────────────────────────────────────────────────────
 
   def test_link_returns_a_classes_string
     result = classes_for(:link)
@@ -38,7 +38,7 @@ class TailwindThemeLinkTest < Minitest::Test
   def test_link_includes_focus_ring
     result = classes_for(:link)
 
-    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "focus-visible:ring-(--link-ring)"
   end
 
@@ -51,7 +51,7 @@ class TailwindThemeLinkTest < Minitest::Test
     refute_includes result, "px-"
   end
 
-  # :link type: :default variants
+  # ── default variants ────────────────────────────────────────────────────────
 
   def test_link_default_sets_primary_css_variables
     result = classes_for(:link)
@@ -104,7 +104,7 @@ class TailwindThemeLinkTest < Minitest::Test
     refute_includes result, "--btn-ring"
   end
 
-  # :link type: :button base
+  # ── type: :button ───────────────────────────────────────────────────────────
 
   def test_link_button_type_returns_a_classes_string
     result = classes_for(:link, type: :button)
@@ -122,15 +122,23 @@ class TailwindThemeLinkTest < Minitest::Test
     assert_includes result, "font-medium"
   end
 
-  def test_link_button_type_uses_muted_background
-    assert_includes classes_for(:link, type: :button), "bg-(--sp-color-bg-muted)"
+  def test_link_button_type_uses_surface_background
+    assert_includes classes_for(:link, type: :button), "bg-(--sp-color-bg)"
   end
 
-  def test_link_button_type_uses_link_bg_for_text_and_border
+  def test_link_button_type_uses_link_color_for_text_and_border
     result = classes_for(:link, type: :button)
 
-    assert_includes result, "text-(--link-bg)"
-    assert_includes result, "border-(--link-bg)/40"
+    assert_includes result, "text-(--link-color)"
+    assert_includes result, "border-(--link-color)"
+  end
+
+  def test_link_button_type_hover_tints_bg
+    assert_includes classes_for(:link, type: :button), "hover:bg-(--link-bg)/10"
+  end
+
+  def test_link_button_type_does_not_change_text_on_hover
+    refute_includes classes_for(:link, type: :button), "hover:text-"
   end
 
   def test_link_button_type_includes_fixed_medium_size
@@ -143,7 +151,7 @@ class TailwindThemeLinkTest < Minitest::Test
   def test_link_button_type_includes_focus_ring
     result = classes_for(:link, type: :button)
 
-    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "focus-visible:ring-(--link-ring)"
   end
 
@@ -151,11 +159,7 @@ class TailwindThemeLinkTest < Minitest::Test
     refute_includes classes_for(:link, type: :button), "hover:underline"
   end
 
-  def test_link_button_type_does_not_use_link_color_for_text
-    refute_includes classes_for(:link, type: :button), "text-(--link-color)"
-  end
-
-  # :link type: :button variants
+  # ── type: :button variants ──────────────────────────────────────────────────
 
   def test_link_button_type_default_variant_sets_primary_variables
     result = classes_for(:link, type: :button)
@@ -198,7 +202,7 @@ class TailwindThemeLinkTest < Minitest::Test
     assert_includes result, "[--link-bg:var(--sp-color-primary)]"
   end
 
-  # :link type: :card base
+  # ── type: :card ─────────────────────────────────────────────────────────────
 
   def test_link_card_type_returns_a_classes_string
     result = classes_for(:link, type: :card)
@@ -207,11 +211,11 @@ class TailwindThemeLinkTest < Minitest::Test
     assert_predicate result, :present?
   end
 
-  def test_link_card_type_uses_neutral_background_and_text
+  def test_link_card_type_uses_surface_background_and_link_color_text
     result = classes_for(:link, type: :card)
 
     assert_includes result, "bg-(--sp-color-bg)"
-    assert_includes result, "text-(--sp-color-muted-fg)"
+    assert_includes result, "text-(--link-color)"
   end
 
   def test_link_card_type_uses_full_padding_not_height
@@ -231,13 +235,26 @@ class TailwindThemeLinkTest < Minitest::Test
     refute_includes result, "justify-between"
   end
 
-  def test_link_card_type_includes_border_shadow_and_hover_upgrades
+  def test_link_card_type_uses_link_color_for_border_and_has_shadow
     result = classes_for(:link, type: :card)
 
-    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "border-(--link-color)"
     assert_includes result, "shadow-(--sp-shadow-xs)"
-    assert_includes result, "hover:border-(--sp-color-border-strong)"
-    assert_includes result, "hover:text-(--sp-color-fg)"
+  end
+
+  def test_link_card_type_hover_tints_bg
+    assert_includes classes_for(:link, type: :card), "hover:bg-(--link-bg)/10"
+  end
+
+  def test_link_card_type_does_not_change_text_on_hover
+    refute_includes classes_for(:link, type: :card), "hover:text-"
+  end
+
+  def test_link_card_type_sets_link_css_variables
+    result = classes_for(:link, type: :card)
+
+    assert_includes result, "[--link-color:var(--sp-color-primary)]"
+    assert_includes result, "[--link-bg:var(--sp-color-primary)]"
   end
 
   def test_link_card_type_sets_default_card_ring
@@ -251,22 +268,17 @@ class TailwindThemeLinkTest < Minitest::Test
     refute_includes classes_for(:link, type: :card), "hover:underline"
   end
 
-  def test_link_card_type_does_not_use_link_color_or_bg
-    result = classes_for(:link, type: :card)
-
-    refute_includes result, "--link-color"
-    refute_includes result, "--link-bg"
-  end
-
   def test_link_card_type_does_not_include_fixed_height
     refute_includes classes_for(:link, type: :card), "h-9"
   end
 
-  # :link type: :card variants
+  # ── type: :card variants ────────────────────────────────────────────────────
 
-  def test_link_card_type_success_variant_sets_card_ring
+  def test_link_card_type_success_variant_sets_link_and_card_variables
     result = classes_for(:link, type: :card, variant: :success)
 
+    assert_includes result, "[--link-color:var(--sp-color-success)]"
+    assert_includes result, "[--link-bg:var(--sp-color-success)]"
     assert_includes result, "[--card-ring:var(--sp-color-success)]"
     refute_includes result, "[--card-ring:var(--sp-color-primary)]"
   end
@@ -283,7 +295,7 @@ class TailwindThemeLinkTest < Minitest::Test
     assert_includes result, "[--card-ring:var(--sp-color-primary)]"
   end
 
-  # :link_icon
+  # ── link_icon ────────────────────────────────────────────────────────────────
 
   def test_link_icon_returns_a_classes_string
     result = classes_for(:link_icon)
