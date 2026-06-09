@@ -10,19 +10,19 @@ module StimulusPlumbers
 
         private
 
-        def render_item(content, active: false, **kwargs, &block)
+        def render_item(content, active: false, url: nil, **kwargs, &block)
           html_options = merge_html_options(
             theme.resolve(:action_list_item, active: active),
             kwargs
           )
 
           template.content_tag(:li) do
-            render_button(content, variant: :ghost, **html_options, &block)
+            if url.present?
+              Components::Link.new(template).render(content, url: url, **html_options, &block)
+            else
+              Components::Button.new(template).render(content, variant: :ghost, **html_options, &block)
+            end
           end
-        end
-
-        def render_button(content, ...)
-          Components::Button.new(template).render(content, ...)
         end
       end
     end

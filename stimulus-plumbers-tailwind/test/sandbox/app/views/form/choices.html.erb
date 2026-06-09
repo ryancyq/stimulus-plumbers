@@ -102,7 +102,7 @@
         <%= f.choice :interests, 
           as: :check_box,
           label:      "Interests",
-          variant:    :button,
+          type:       :button,
           collection: interests, 
           **collection 
         %>
@@ -116,7 +116,7 @@
         <%= f.choice :interests, 
           as: :check_box,
           label:      "Interests",
-          variant:    :button,
+          type:       :button,
           layout:     :stacked,
           collection: interests, 
           **collection 
@@ -131,7 +131,7 @@
         <%= f.choice :interests, 
           as: :check_box,
           label:      "Interests",
-          variant:    :card,
+          type:       :card,
           collection: interests, 
           **collection 
         %>
@@ -145,7 +145,7 @@
         <%= f.choice :interests, 
           as: :check_box,
           label:      "Interests",
-          variant:    :card,
+          type:       :card,
           layout:     :stacked,
           collection: interests, 
           **collection 
@@ -186,7 +186,7 @@
       <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
         <%= f.choice :gender, as: :radio,
               label:      "Gender",
-              variant:    :button,
+              type:       :button,
               collection: genders, **collection %>
       <% end %>
     <% end %>
@@ -197,7 +197,7 @@
       <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
         <%= f.choice :gender, as: :radio,
               label:      "Gender",
-              variant:    :button,
+              type:       :button,
               layout:     :stacked,
               collection: genders, **collection %>
       <% end %>
@@ -209,7 +209,7 @@
       <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
         <%= f.choice :gender, as: :radio,
               label:      "Gender",
-              variant:    :card,
+              type:       :card,
               collection: genders, **collection %>
       <% end %>
     <% end %>
@@ -220,7 +220,7 @@
       <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
         <%= f.choice :gender, as: :radio,
               label:      "Gender",
-              variant:    :card,
+              type:       :card,
               layout:     :stacked,
               collection: genders, **collection %>
       <% end %>

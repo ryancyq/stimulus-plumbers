@@ -24,11 +24,11 @@ module StimulusPlumbers
         @name ||= self.class.name.demodulize.delete_suffix("Theme")
       end
 
-      def avatar_colors
+      def avatar_variants
         {}
       end
 
-      def avatar_color_range
+      def avatar_variant_range
         []
       end
 

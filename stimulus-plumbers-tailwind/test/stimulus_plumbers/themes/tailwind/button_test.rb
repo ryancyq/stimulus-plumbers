@@ -266,6 +266,79 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_includes classes_for(:button, type: :fab_outline), "hover:shadow-xl"
   end
 
+  # :button card type
+
+  def test_button_card_type_uses_neutral_background
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "text-(--sp-color-muted-fg)"
+  end
+
+  def test_button_card_type_uses_full_padding_not_height
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "p-(--sp-space-4)"
+    refute_includes result, "h-9"
+    refute_includes result, "h-7"
+    refute_includes result, "h-11"
+    refute_includes result, "h-14"
+  end
+
+  def test_button_card_type_uses_justify_start_layout
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "justify-start"
+    assert_includes result, "flex-1"
+    assert_includes result, "gap-(--sp-space-3)"
+    assert_includes result, "[&>:last-child:not(:first-child)]:ml-auto"
+    refute_includes result, "justify-between"
+  end
+
+  def test_button_card_type_includes_border_and_shadow
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "shadow-(--sp-shadow-xs)"
+  end
+
+  def test_button_card_type_includes_hover_upgrades
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "hover:border-(--sp-color-border-strong)"
+    assert_includes result, "hover:text-(--sp-color-fg)"
+    assert_includes result, "hover:bg-(--sp-color-muted)"
+  end
+
+  def test_button_card_type_sets_default_card_ring
+    result = classes_for(:button, type: :card)
+
+    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "focus-visible:ring-(--card-ring)"
+  end
+
+  def test_button_card_type_does_not_set_btn_variables
+    result = classes_for(:button, type: :card)
+
+    refute_includes result, "--btn-bg"
+    refute_includes result, "--btn-fg"
+    refute_includes result, "--btn-ring"
+  end
+
+  def test_button_card_type_success_variant_sets_card_ring
+    result = classes_for(:button, type: :card, variant: :success)
+
+    assert_includes result, "[--card-ring:var(--sp-color-success)]"
+    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+  end
+
+  def test_button_card_type_size_param_has_no_effect
+    result_md  = classes_for(:button, type: :card, size: :md)
+    result_xl  = classes_for(:button, type: :card, size: :xl)
+
+    assert_equal result_md, result_xl
+  end
+
   # :button dashed type
 
   def test_button_dashed_type_includes_dashed_border

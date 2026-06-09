@@ -28,6 +28,10 @@ test.describe("link", () => {
     await expect(page.locator("#link-button")).toHaveScreenshot("button.png");
   });
 
+  test("card type", async ({ page }) => {
+    await expect(page.locator("#link-card")).toHaveScreenshot("card.png");
+  });
+
   test("button type icons", async ({ page }) => {
     await expect(page.locator("#link-button-icons")).toHaveScreenshot(
       "button-icons.png",

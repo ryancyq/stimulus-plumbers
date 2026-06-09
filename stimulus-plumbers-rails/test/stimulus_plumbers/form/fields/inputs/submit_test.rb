@@ -26,16 +26,16 @@ class SubmitTest < ActionView::TestCase
     refute_empty doc.at_css("input[type='submit']")["value"].to_s
   end
 
-  def test_submit_with_default_variant_does_not_raise
-    doc = build_form { |f| f.submit "Save", variant: :default }
+  def test_submit_with_default_type_does_not_raise
+    doc = build_form { |f| f.submit "Save", type: :default }
 
     assert_css doc, "input[type='submit']"
   end
 
-  def test_submit_variant_is_not_rendered_as_html_attribute
-    doc = build_form { |f| f.submit "Save", variant: :default }
+  def test_submit_type_does_not_override_input_type_attribute
+    doc = build_form { |f| f.submit "Save", type: :button }
 
-    assert_nil doc.at_css("input[type='submit']")["variant"]
+    assert_equal "submit", doc.at_css("input[type='submit']")["type"]
   end
 
   def test_submit_forwards_extra_html_options

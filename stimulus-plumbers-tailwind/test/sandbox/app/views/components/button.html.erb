@@ -69,7 +69,17 @@
   <%= sp_link("External",   url: "https://example.com", target: "_blank",  type: :button) %>
 </div>
 
-<div id="button-disabled">
+<div id="button-card" style="display:flex;flex-direction:column;gap:0.5rem;max-width:24rem">
+  <%# ── Card type ──────────────────────────────────────────────────── %>
+  <%= sp_button("Get started",         type: :card) %>
+  <%= sp_button("View documentation",  type: :card, icon_leading: "book-open") %>
+  <%= sp_button("Download",            type: :card, icon_leading: "arrow-down-tray", icon_trailing: "arrow-right") %>
+  <%# ── Card type × variants ──────────────────────────────────────── %>
+  <%= sp_button("Success card",        type: :card, variant: :success) %>
+  <%= sp_button("Destructive card",    type: :card, variant: :destructive) %>
+</div>
+
+<div id="button-disabled" style="display:flex;gap:0.5rem;align-items:center">
   <%# ── Disabled ─────────────────────────────────────────────────────────── %>
   <%= sp_button("Primary",     disabled: true) %>
   <%= sp_button("Secondary",   type: :secondary,                    disabled: true) %>

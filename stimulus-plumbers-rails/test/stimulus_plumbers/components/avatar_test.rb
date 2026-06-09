@@ -64,10 +64,10 @@ class AvatarComponentTest < ActionView::TestCase
     assert_css parse_html(renderer.render(id: "my-avatar")), "#my-avatar"
   end
 
-  def stub_theme_with_colors(colors)
+  def stub_theme_with_variants(variants)
     Class.new(StimulusPlumbers::Themes::Base) do
-      define_method(:avatar_color_range) { colors.values }
-      define_method(:avatar_colors) { colors }
+      define_method(:avatar_variant_range) { variants.values }
+      define_method(:avatar_variants) { variants }
     end.new
   end
 
@@ -79,35 +79,35 @@ class AvatarComponentTest < ActionView::TestCase
     StimulusPlumbers.config.theme.use(original)
   end
 
-  def test_derives_color_from_name
-    stub = stub_theme_with_colors(red: "text-red", blue: "text-blue")
+  def test_derives_variant_from_name
+    stub = stub_theme_with_variants(red: "text-red", blue: "text-blue")
     with_stub_theme(stub) do
       html = renderer.render(name: "Test User")
 
-      assert(stub.avatar_color_range.any? { |c| html.include?(c) })
+      assert(stub.avatar_variant_range.any? { |c| html.include?(c) })
     end
   end
 
-  def test_applies_explicit_color
-    stub = stub_theme_with_colors(red: "text-red", blue: "text-blue")
+  def test_applies_explicit_variant
+    stub = stub_theme_with_variants(red: "text-red", blue: "text-blue")
     with_stub_theme(stub) do
-      doc = parse_html(renderer.render(color: :red))
+      doc = parse_html(renderer.render(variant: :red))
 
       assert_css doc, ".text-red"
     end
   end
 
-  def test_does_not_apply_color_when_url_given
+  def test_does_not_apply_variant_when_url_given
     theme  = StimulusPlumbers.config.theme.current
     html   = renderer.render(name: "John", url: "/avatar.jpg")
 
-    assert(theme.avatar_color_range.none? { |c| html.include?(c) })
+    assert(theme.avatar_variant_range.none? { |c| html.include?(c) })
   end
 
-  def test_does_not_apply_color_when_block_given
+  def test_does_not_apply_variant_when_block_given
     theme  = StimulusPlumbers.config.theme.current
     html   = renderer.render(name: "John") { "custom" }
 
-    assert(theme.avatar_color_range.none? { |c| html.include?(c) })
+    assert(theme.avatar_variant_range.none? { |c| html.include?(c) })
   end
 end

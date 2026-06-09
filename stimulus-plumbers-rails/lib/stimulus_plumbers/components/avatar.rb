@@ -9,13 +9,13 @@ module StimulusPlumbers
 
       private
 
-      def render_avatar(name: nil, initials: nil, url: nil, color: nil, size: :md, **kwargs, &block)
-        color_css = resolve_color(color, name, initials) unless url || block_given?
+      def render_avatar(name: nil, initials: nil, url: nil, variant: nil, size: :md, **kwargs, &block)
+        variant_css = resolve_variant(variant, name, initials) unless url || block_given?
 
         html_options = merge_html_options(
           theme.resolve(:avatar, size: size),
           kwargs,
-          { class: color_css, aria: { label: name }, role: "img" }
+          { class: variant_css, aria: { label: name }, role: "img" }
         )
 
         template.content_tag(:span, **html_options) do
@@ -39,10 +39,10 @@ module StimulusPlumbers
         end
       end
 
-      def resolve_color(color, name, initials)
-        range = theme.avatar_color_range
-        if color
-          theme.avatar_colors.fetch(color, nil)
+      def resolve_variant(variant, name, initials)
+        range = theme.avatar_variant_range
+        if variant
+          theme.avatar_variants.fetch(variant, nil)
         elsif (seed = name || initials) && range.any?
           range[seed.bytes.reduce(:^) % range.length]
         else

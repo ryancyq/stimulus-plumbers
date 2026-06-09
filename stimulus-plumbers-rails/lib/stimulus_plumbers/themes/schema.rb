@@ -17,8 +17,8 @@ module StimulusPlumbers
 
       AVATAR = {
         avatar:       {
-          size:  { default: :md, validate: Ranges::SIZE },
-          color: { default: nil, validate: :avatar_color_range }
+          size:    { default: :md, validate: Ranges::SIZE },
+          variant: { default: nil, validate: :avatar_variant_range }
         }.freeze,
         avatar_image: {}.freeze
       }.freeze
@@ -93,26 +93,28 @@ module StimulusPlumbers
         form_error:            {}.freeze,
         form_input:            { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_floating_input:   {
-          error:   { default: false, validate: Ranges::BOOL },
-          variant: { default: nil,   validate: Form::Ranges::FLOATING_VARIANT }
+          error: { default: false, validate: Ranges::BOOL },
+          type:  { default: nil,   validate: Form::Ranges::FLOATING_TYPE }
         }.freeze,
         form_floating_group:   {
-          variant: { default: nil, validate: Form::Ranges::FLOATING_VARIANT }
+          type: { default: nil, validate: Form::Ranges::FLOATING_TYPE }
         }.freeze,
         form_floating_label:   {
-          variant: { default: nil,   validate: Form::Ranges::FLOATING_VARIANT },
-          error:   { default: false, validate: Ranges::BOOL }
+          type:  { default: nil,   validate: Form::Ranges::FLOATING_TYPE },
+          error: { default: false, validate: Ranges::BOOL }
         }.freeze,
         form_textarea:         { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_file:             { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_select:           { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_checkbox:         {
-          error:   { default: false, validate: Ranges::BOOL },
-          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
+          error:   { default: false,    validate: Ranges::BOOL },
+          type:    { default: :default, validate: Form::Ranges::CHOICE_TYPE },
+          variant: { default: :default, validate: Ranges::BUTTON_VARIANT }
         }.freeze,
         form_radio:            {
-          error:   { default: false, validate: Ranges::BOOL },
-          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
+          error:   { default: false,    validate: Ranges::BOOL },
+          type:    { default: :default, validate: Form::Ranges::CHOICE_TYPE },
+          variant: { default: :default, validate: Ranges::BUTTON_VARIANT }
         }.freeze,
         form_combobox:         { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_input_reveal:     { error: { default: false, validate: Ranges::BOOL } }.freeze,
@@ -120,10 +122,12 @@ module StimulusPlumbers
         form_button_reveal:    {}.freeze,
         form_button_clear:     {}.freeze,
         form_checkbox_label:   {
-          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
+          type:    { default: :default, validate: Form::Ranges::CHOICE_TYPE },
+          variant: { default: :default, validate: Ranges::BUTTON_VARIANT }
         }.freeze,
         form_radio_label:      {
-          variant: { default: :default, validate: Form::Ranges::CHOICE_VARIANT }
+          type:    { default: :default, validate: Form::Ranges::CHOICE_TYPE },
+          variant: { default: :default, validate: Ranges::BUTTON_VARIANT }
         }.freeze,
         form_choice_items:     {
           layout: { default: :stacked, validate: Ranges::LAYOUT }
@@ -135,7 +139,7 @@ module StimulusPlumbers
           as: { validate: Form::Ranges::COLLECTION_FIELD_TYPE }
         }.freeze,
         form_submit:           {
-          variant: { default: :default, validate: Form::Ranges::SUBMIT_VARIANT }
+          type: { default: :default, validate: Form::Ranges::SUBMIT_TYPE }
         }.freeze
       }.freeze
 

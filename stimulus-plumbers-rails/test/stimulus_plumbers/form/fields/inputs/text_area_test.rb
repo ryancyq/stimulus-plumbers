@@ -132,8 +132,8 @@ class FormFieldsTextAreaTest < ActionView::TestCase
     assert_equal "true", build_field(error: "bad").at_css("textarea")["aria-invalid"]
   end
 
-  def test_floating_variant_renders_input_before_label
-    doc = build_field(variant: :floating_filled)
+  def test_floating_type_renders_input_before_label
+    doc = build_field(type: :floating_filled)
 
     assert_operator doc.to_html.index("<textarea"), :<, doc.to_html.index("<label")
   end

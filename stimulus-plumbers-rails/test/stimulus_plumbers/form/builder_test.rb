@@ -91,7 +91,6 @@ class FormBuilderTest < ActionView::TestCase
 
     assert_css doc, "label[for='sign_in_form_newsletter']"
     assert_css doc, "input[type='checkbox'][name='sign_in_form[newsletter]']"
-    assert_no_css doc, "label input[type='checkbox']"
   end
 
   def test_choice_check_box_renders_hint

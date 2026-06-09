@@ -30,6 +30,10 @@ test.describe("button", () => {
     await expect(page.locator("#button-link")).toHaveScreenshot("link.png");
   });
 
+  test("card", async ({ page }) => {
+    await expect(page.locator("#button-card")).toHaveScreenshot("card.png");
+  });
+
   test("disabled", async ({ page }) => {
     await expect(page.locator("#button-disabled")).toHaveScreenshot(
       "disabled.png",
