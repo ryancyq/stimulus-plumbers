@@ -4,6 +4,7 @@ module StimulusPlumbers
   module Components
     class Link < Plumber::Base
       def render(content = nil, url:, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
+        icon_trailing ||= "external-link" if kwargs[:target] == "_blank"
         render_link(url: url, **kwargs) do
           build_layout(icon_leading: icon_leading, icon_trailing: icon_trailing) do
             build_content(content, &block)
@@ -13,9 +14,9 @@ module StimulusPlumbers
 
       private
 
-      def render_link(url:, target: nil, variant: :default, **kwargs, &block)
+      def render_link(url:, target: nil, type: :default, variant: :default, **kwargs, &block)
         html_options = merge_html_options(
-          theme.resolve(:link, variant: variant),
+          theme.resolve(:link, type: type, variant: variant),
           kwargs
         )
         template.content_tag(:a, href: url, target: target, **html_options) do
@@ -38,12 +39,7 @@ module StimulusPlumbers
       end
 
       def render_icon(name)
-        return unless name
-
-        Icon.new(template).render(
-          name:    name,
-          classes: theme.resolve(:link_icon).fetch(:classes, "")
-        )
+        super(name, theme_key: :link_icon)
       end
     end
   end

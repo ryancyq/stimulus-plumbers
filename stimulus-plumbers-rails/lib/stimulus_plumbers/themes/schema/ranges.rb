@@ -6,10 +6,12 @@ module StimulusPlumbers
       module Ranges
         BOOL           = [true, false].freeze
         SIZE           = %i[xs sm md lg xl].freeze
+        LAYOUT         = %i[stacked inline].freeze
         FLEX_ALIGN     = %i[left center right top bottom].freeze
         FLEX_DIRECTION = %i[row col].freeze
         BUTTON_TYPE    = %i[primary secondary tertiary outline ghost fab fab_outline dashed].freeze
         BUTTON_VARIANT = %i[default success destructive warning info].freeze
+        LINK_TYPE      = %i[default button].freeze
         LINK_VARIANT   = %i[default success destructive warning info].freeze
       end
     end

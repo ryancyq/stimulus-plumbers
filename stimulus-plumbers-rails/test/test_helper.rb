@@ -9,5 +9,6 @@ require "nokogiri"
 
 Dir[File.join(__dir__, "support/**/*.rb")].each { |f| require f }
 
-ActiveSupport::TestCase.include HtmlAssertions
+ActionView::TestCase.include HtmlAssertions
+ActionView::TestCase.include IconThemeHelper
 ActionView::TestCase.include StimulusPlumbers::Helpers::PlumberHelper

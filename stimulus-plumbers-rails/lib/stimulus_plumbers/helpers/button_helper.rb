@@ -8,7 +8,7 @@ module StimulusPlumbers
       end
 
       def sp_button_group(...)
-        button_renderer.group(...)
+        Components::Button::Group.new(self).render(...)
       end
 
       private

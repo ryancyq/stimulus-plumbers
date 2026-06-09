@@ -26,11 +26,31 @@ class ButtonGroupTest < ActionView::TestCase
     assert_css parse_html(renderer.render(id: "btn-group") { "" }), "#btn-group"
   end
 
-  def test_renders_with_alignment_option
-    assert_css parse_html(renderer.render(alignment: :right) { "" }), "div[role='group']"
+  def test_renders_with_inline_layout
+    assert_css parse_html(renderer.render(layout: :inline) { "" }), "div[role='group']"
   end
 
-  def test_renders_with_direction_option
-    assert_css parse_html(renderer.render(direction: :column) { "" }), "div[role='group']"
+  def test_renders_with_stacked_layout
+    assert_css parse_html(renderer.render(layout: :stacked) { "" }), "div[role='group']"
+  end
+
+  def test_button_renders_inside_group
+    doc = parse_html(renderer.render { |group| group.button("Save") })
+
+    assert_css doc, "div[role='group'] button"
+    assert_includes doc.text, "Save"
+  end
+
+  def test_button_passes_options
+    doc = parse_html(renderer.render { |group| group.button("Cancel", variant: :outline) })
+
+    assert_css doc, "div[role='group'] button"
+    assert_includes doc.text, "Cancel"
+  end
+
+  def test_button_renders_multiple
+    doc = parse_html(renderer.render { |group| group.button("A") + group.button("B") })
+
+    assert_equal 2, doc.css("button").length
   end
 end

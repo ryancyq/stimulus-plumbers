@@ -16,22 +16,6 @@ class ButtonHelperTest < ActionView::TestCase
     assert_css parse_html(sp_button("Click me")), "button[type='button']"
   end
 
-  def test_renders_as_link_when_url_given
-    doc = parse_html(sp_button("Go", url: "/dashboard"))
-
-    assert_css doc, "a[href='/dashboard']"
-    assert_includes doc.text, "Go"
-  end
-
-  def test_renders_link_with_target_blank
-    assert_css parse_html(sp_button("External", url: "https://example.com", target: "_blank")),
-               "a[target='_blank']"
-  end
-
-  def test_omits_target_when_not_given
-    assert_no_css parse_html(sp_button("Internal", url: "/path")), "a[target]"
-  end
-
   def test_accepts_block_content
     assert_includes parse_html(sp_button { "Block content" }).text, "Block content"
   end
@@ -48,7 +32,7 @@ class ButtonHelperTest < ActionView::TestCase
   end
 
   def test_button_group_renders_div
-    doc = parse_html(sp_button_group { sp_button("One") })
+    doc = parse_html(sp_button_group { |group| group.button("One") })
 
     assert_css doc, "div[role='group']"
     assert_includes doc.text, "One"

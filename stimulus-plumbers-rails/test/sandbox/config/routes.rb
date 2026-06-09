@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     get :combobox
     get :search
     get :button
+    get :button_group
     get :action_list
     get :card
     get :popover
