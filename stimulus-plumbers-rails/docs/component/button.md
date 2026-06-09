@@ -12,39 +12,39 @@ Rails helpers for rendering themed, accessible buttons and links.
 <%= sp_button "Delete", type: :default, variant: :destructive, size: :sm %>
 ```
 
-| Option           | Default    | Description                                                                                              |
-| ---------------- | ---------- | -------------------------------------------------------------------------------------------------------- |
-| `content`        | `nil`      | Button label — positional arg or block                                                                   |
-| `type`           | `:default` | Visual style — `:default` \| `:outline` \| `:ghost` \| `:fab` \| `:fab_outline` \| `:dashed` \| `:card` |
+| Option           | Default    | Description                                                                                                       |
+| ---------------- | ---------- | ----------------------------------------------------------------------------------------------------------------- |
+| `content`        | `nil`      | Button label — positional arg or block                                                                            |
+| `type`           | `:default` | Visual style — `:default` \| `:outline` \| `:ghost` \| `:fab` \| `:fab_outline` \| `:dashed` \| `:card`           |
 | `variant`        | `:primary` | Color source — `:primary` \| `:secondary` \| `:tertiary` \| `:success` \| `:destructive` \| `:warning` \| `:info` |
-| `size`           | `:md`      | Size — `:xs` \| `:sm` \| `:md` \| `:lg` \| `:xl` (ignored when `type: :card`)                           |
-| `icon_leading`   | `nil`      | Icon rendered **before** the label — icon name (string or symbol) or callable                            |
-| `icon_trailing`  | `nil`      | Icon rendered **after** the label — icon name (string or symbol) or callable                             |
-| `**html_options` | —          | Forwarded to the `<button>` element                                                                      |
+| `size`           | `:md`      | Size — `:xs` \| `:sm` \| `:md` \| `:lg` \| `:xl` (ignored when `type: :card`)                                     |
+| `icon_leading`   | `nil`      | Icon rendered **before** the label — icon name (string or symbol) or callable                                     |
+| `icon_trailing`  | `nil`      | Icon rendered **after** the label — icon name (string or symbol) or callable                                      |
+| `**html_options` | —          | Forwarded to the `<button>` element                                                                               |
 
 **`type:` — visual style**
 
-| Value          | Appearance                                                                    |
-| -------------- | ----------------------------------------------------------------------------- |
-| `:default`     | Filled — solid background from `variant` color                                |
-| `:outline`     | Surface background, colored border and text; subtle tint on hover             |
-| `:ghost`       | Transparent, no border; subtle tint on hover                                  |
-| `:fab`         | Floating action button — `rounded-full`, elevated shadow, filled              |
+| Value          | Appearance                                                                     |
+| -------------- | ------------------------------------------------------------------------------ |
+| `:default`     | Filled — solid background from `variant` color                                 |
+| `:outline`     | Surface background, colored border and text; subtle tint on hover              |
+| `:ghost`       | Transparent, no border; subtle tint on hover                                   |
+| `:fab`         | Floating action button — `rounded-full`, elevated shadow, filled               |
 | `:fab_outline` | Floating action button — `rounded-full`, elevated shadow, fills solid on hover |
-| `:dashed`      | Dashed border, surface background                                             |
-| `:card`        | Full-padding card — `flex-1`, `justify-start`; `size:` ignored                |
+| `:dashed`      | Dashed border, surface background                                              |
+| `:card`        | Full-padding card — `flex-1`, `justify-start`; `size:` ignored                 |
 
 **`variant:` — color source**
 
-| Value          | Color tokens used                    |
-| -------------- | ------------------------------------ |
-| `:primary`     | `--sp-color-primary-*`               |
-| `:secondary`   | `--sp-color-secondary-*`             |
-| `:tertiary`    | `--sp-color-muted-*` (neutral)       |
-| `:success`     | `--sp-color-success-*`               |
-| `:destructive` | `--sp-color-destructive-*`           |
-| `:warning`     | `--sp-color-warning-*`               |
-| `:info`        | `--sp-color-info-*`                  |
+| Value          | Color tokens used              |
+| -------------- | ------------------------------ |
+| `:primary`     | `--sp-color-primary-*`         |
+| `:secondary`   | `--sp-color-secondary-*`       |
+| `:tertiary`    | `--sp-color-muted-*` (neutral) |
+| `:success`     | `--sp-color-success-*`         |
+| `:destructive` | `--sp-color-destructive-*`     |
+| `:warning`     | `--sp-color-warning-*`         |
+| `:info`        | `--sp-color-info-*`            |
 
 **Icon values:**
 
@@ -66,10 +66,10 @@ Wraps buttons in a themed container `<div>`.
 <% end %>
 ```
 
-| Option           | Default   | Description                                          |
-| ---------------- | --------- | ---------------------------------------------------- |
-| `layout`         | `:inline` | Layout direction — `:inline` \| `:stacked`           |
-| `**html_options` | —         | Forwarded to the wrapper `<div>`                     |
+| Option           | Default   | Description                                |
+| ---------------- | --------- | ------------------------------------------ |
+| `layout`         | `:inline` | Layout direction — `:inline` \| `:stacked` |
+| `**html_options` | —         | Forwarded to the wrapper `<div>`           |
 
 ---
 
@@ -89,7 +89,9 @@ Icons are rendered **inside** the `<button>`, before or after the label `<span>`
 
 ```html
 <button type="button" class="[theme classes]">
-  <svg aria-hidden="true" class="[button_icon theme classes]"><!-- icon svg --></svg>
+  <svg aria-hidden="true" class="[button_icon theme classes]">
+    <!-- icon svg -->
+  </svg>
   <span>Confirm</span>
 </button>
 ```
@@ -97,7 +99,9 @@ Icons are rendered **inside** the `<button>`, before or after the label `<span>`
 ```html
 <button type="button" class="[theme classes]">
   <span>Next</span>
-  <svg aria-hidden="true" class="[button_icon theme classes]"><!-- icon svg --></svg>
+  <svg aria-hidden="true" class="[button_icon theme classes]">
+    <!-- icon svg -->
+  </svg>
 </button>
 ```
 
@@ -107,7 +111,9 @@ When no text is provided, no `<span>` is rendered. The theme uses `:has(> span)`
 
 ```html
 <button type="button" aria-label="Add" class="[theme classes]">
-  <svg aria-hidden="true" class="[button_icon theme classes]"><!-- icon svg --></svg>
+  <svg aria-hidden="true" class="[button_icon theme classes]">
+    <!-- icon svg -->
+  </svg>
 </button>
 ```
 

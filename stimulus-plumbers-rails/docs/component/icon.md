@@ -12,10 +12,10 @@ Rails helper for rendering a named icon from the active theme's icon registry.
 <%= sp_icon name: "unknown-icon" %>
 ```
 
-| Option           | Default    | Description                               |
-| ---------------- | ---------- | ----------------------------------------- |
+| Option           | Default    | Description                                 |
+| ---------------- | ---------- | ------------------------------------------- |
 | `name`           | (required) | Icon name — looked up in the theme registry |
-| `**html_options` | —          | Forwarded to the root element             |
+| `**html_options` | —          | Forwarded to the root element               |
 
 ---
 

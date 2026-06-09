@@ -18,47 +18,47 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Form fields
 
-| Key                            | Component                                                               | Variants                                          |
-| ------------------------------ | ----------------------------------------------------------------------- | ------------------------------------------------- |
-| `form_group`                   | `Fields::Group` (wrapper div)                                           | `layout: :stacked\|:inline`, `error: bool`        |
-| `form_field_label`             | `Fields::Label`, `Fields::Fieldset` (`<legend>`)                        | `required: bool`, `hidden: bool`                  |
-| `form_field_required_mark`     | Required `*` span in label/legend                                       | —                                                 |
-| `form_field_hint`              | `Fields::Hint`                                                          | —                                                 |
-| `form_field_error`             | `Fields::Error`                                                         | —                                                 |
-| `form_field_choice_items`      | Collection wrapper (the items container inside a fieldset)              | `layout: :stacked\|:inline`                       |
-| `form_field_checkbox_label`    | `<label>` wrapping each checkbox in a collection                        | `type: :default\|:button\|:card`, `variant:`      |
-| `form_field_radio_label`       | `<label>` for each radio button in a collection                         | `type: :default\|:button\|:card`, `variant:`      |
-| `form_field_input`             | Text-like `<input>` (text, email, number, url, tel, …)                  | `error: bool`                                     |
-| `form_field_floating`          | `<input>` inside a floating-label field                                 | `type: :filled\|:outlined\|:standard`, `error: bool` |
-| `form_field_floating_group`    | Wrapper `<div>` that groups floating input + label                      | `type: :filled\|:outlined\|:standard`             |
-| `form_field_floating_label`    | Animated `<label>` that floats above the input                          | `type: :filled\|:outlined\|:standard`, `error: bool` |
-| `form_field_input_textarea`    | `<textarea>`                                                            | `error: bool`                                     |
-| `form_field_input_file`        | `<input type="file">`                                                   | `error: bool`                                     |
-| `form_field_input_select`      | Native `<select>`                                                       | `error: bool`                                     |
-| `form_field_input_checkbox`    | `<input type="checkbox">` element in a collection                       | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
-| `form_field_input_radio`       | `<input type="radio">` element in a collection                          | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
-| `form_field_input_combobox`    | Combobox wrapper input (resets child input/trigger styles)              | `error: bool`                                     |
-| `form_field_input_reveal`      | Password reveal wrapper (resets child input styles)                     | `error: bool`                                     |
-| `form_field_input_clearable`   | Clearable wrapper (resets child input styles)                           | —                                                 |
-| `form_field_input_button_reveal` | Show/hide toggle button inside a password field                       | —                                                 |
-| `form_field_input_button_clear`  | Clear button inside a search/clearable field                           | —                                                 |
-| `form_submit`                  | Submit button (`Builder#submit`)                                        | `type: :link\|:default\|…`, `variant:`            |
-| `input_group`                  | `Fields::InputGroup` (input + adornment wrapper)                        | `error: bool`                                     |
+| Key                              | Component                                                  | Variants                                                    |
+| -------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------- |
+| `form_group`                     | `Fields::Group` (wrapper div)                              | `layout: :stacked\|:inline`, `error: bool`                  |
+| `form_field_label`               | `Fields::Label`, `Fields::Fieldset` (`<legend>`)           | `required: bool`, `hidden: bool`                            |
+| `form_field_required_mark`       | Required `*` span in label/legend                          | —                                                           |
+| `form_field_hint`                | `Fields::Hint`                                             | —                                                           |
+| `form_field_error`               | `Fields::Error`                                            | —                                                           |
+| `form_field_choice_items`        | Collection wrapper (the items container inside a fieldset) | `layout: :stacked\|:inline`                                 |
+| `form_field_checkbox_label`      | `<label>` wrapping each checkbox in a collection           | `type: :default\|:button\|:card`, `variant:`                |
+| `form_field_radio_label`         | `<label>` for each radio button in a collection            | `type: :default\|:button\|:card`, `variant:`                |
+| `form_field_input`               | Text-like `<input>` (text, email, number, url, tel, …)     | `error: bool`                                               |
+| `form_field_floating`            | `<input>` inside a floating-label field                    | `type: :filled\|:outlined\|:standard`, `error: bool`        |
+| `form_field_floating_group`      | Wrapper `<div>` that groups floating input + label         | `type: :filled\|:outlined\|:standard`                       |
+| `form_field_floating_label`      | Animated `<label>` that floats above the input             | `type: :filled\|:outlined\|:standard`, `error: bool`        |
+| `form_field_input_textarea`      | `<textarea>`                                               | `error: bool`                                               |
+| `form_field_input_file`          | `<input type="file">`                                      | `error: bool`                                               |
+| `form_field_input_select`        | Native `<select>`                                          | `error: bool`                                               |
+| `form_field_input_checkbox`      | `<input type="checkbox">` element in a collection          | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
+| `form_field_input_radio`         | `<input type="radio">` element in a collection             | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
+| `form_field_input_combobox`      | Combobox wrapper input (resets child input/trigger styles) | `error: bool`                                               |
+| `form_field_input_reveal`        | Password reveal wrapper (resets child input styles)        | `error: bool`                                               |
+| `form_field_input_clearable`     | Clearable wrapper (resets child input styles)              | —                                                           |
+| `form_field_input_button_reveal` | Show/hide toggle button inside a password field            | —                                                           |
+| `form_field_input_button_clear`  | Clear button inside a search/clearable field               | —                                                           |
+| `form_submit`                    | Submit button (`Builder#submit`)                           | `type: :link\|:default\|…`, `variant:`                      |
+| `input_group`                    | `Fields::InputGroup` (input + adornment wrapper)           | `error: bool`                                               |
 
 ### Calendar
 
-| Key                       | Component                                              | Variants                        |
-| ------------------------- | ------------------------------------------------------ | ------------------------------- |
-| `calendar`                | `Calendar`, `Calendar::Turbo`                          | —                               |
-| `calendar_days_of_week`   | `Calendar::Turbo::DaysOfWeek`                          | —                               |
-| `calendar_days_of_month`  | `Calendar::Turbo::DaysOfMonth`                         | —                               |
-| `calendar_row`            | `Calendar::Turbo::DaysOfMonth` (each week row)         | —                               |
-| `calendar_day`            | `Calendar::Turbo::DaysOfMonth` (each day cell)         | `outside: bool`                 |
-| `calendar_months_of_year` | `Calendar::Turbo::MonthsOfYear` (rowgroup wrapper)     | —                               |
-| `calendar_month`          | `Calendar::Turbo::MonthsOfYear` (each month cell)      | —                               |
-| `calendar_years_of_decade`| `Calendar::Turbo::YearsOfDecade` (rowgroup wrapper)    | —                               |
-| `calendar_year`           | `Calendar::Turbo::YearsOfDecade` (each year cell)      | —                               |
-| `calendar_quarter_grid`   | `Calendar::Turbo` year/decade grid wrapper (4-col grid)| —                               |
+| Key                        | Component                                               | Variants        |
+| -------------------------- | ------------------------------------------------------- | --------------- |
+| `calendar`                 | `Calendar`, `Calendar::Turbo`                           | —               |
+| `calendar_days_of_week`    | `Calendar::Turbo::DaysOfWeek`                           | —               |
+| `calendar_days_of_month`   | `Calendar::Turbo::DaysOfMonth`                          | —               |
+| `calendar_row`             | `Calendar::Turbo::DaysOfMonth` (each week row)          | —               |
+| `calendar_day`             | `Calendar::Turbo::DaysOfMonth` (each day cell)          | `outside: bool` |
+| `calendar_months_of_year`  | `Calendar::Turbo::MonthsOfYear` (rowgroup wrapper)      | —               |
+| `calendar_month`           | `Calendar::Turbo::MonthsOfYear` (each month cell)       | —               |
+| `calendar_years_of_decade` | `Calendar::Turbo::YearsOfDecade` (rowgroup wrapper)     | —               |
+| `calendar_year`            | `Calendar::Turbo::YearsOfDecade` (each year cell)       | —               |
+| `calendar_quarter_grid`    | `Calendar::Turbo` year/decade grid wrapper (4-col grid) | —               |
 
 ### Combobox
 
@@ -75,20 +75,20 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Other components
 
-| Key                | Component                                                       | Variants                                                                                                                                                                |
-| ------------------ | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Key                | Component                                                       | Variants                                                                                                                                                                                     |
+| ------------------ | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `button`           | `Button`                                                        | `type: :default\|:outline\|:ghost\|:fab\|:fab_outline\|:dashed\|:card`, `variant: :primary\|:secondary\|:tertiary\|:success\|:destructive\|:warning\|:info`, `size: :xs\|:sm\|:md\|:lg\|:xl` |
-| `button_group`     | `Button::Group`                                                 | `layout: :inline\|:stacked`                                                                                                                                             |
-| `button_icon`      | `Button` (icon rendered via `icon_leading:` / `icon_trailing:`) | —                                                                                                                                                                       |
-| `link`             | `Link`                                                          | `type: :default\|:button\|:card`, `variant: :default\|:success\|:destructive\|:warning\|:info`                                                                         |
-| `link_icon`        | `Link` (icon rendered via `icon_leading:` / `icon_trailing:`)   | —                                                                                                                                                                       |
-| `action_list`      | `ActionList`                                                    | — _(accepts `role:` at render time, default `"list"`)_                                                                                                                  |
-| `action_list_item` | `ActionList::Item`                                              | `active: bool`                                                                                                                                                          |
-| `avatar`           | `Avatar`                                                        | `size:`                                                                                                                                                                 |
-| `card`             | `Card`                                                          | —                                                                                                                                                                       |
-| `card_section`     | `Card::Section`                                                 | —                                                                                                                                                                       |
-| `icon`             | `Icon`                                                          | —                                                                                                                                                                       |
-| `popover`          | `Popover`                                                       | —                                                                                                                                                                       |
+| `button_group`     | `Button::Group`                                                 | `layout: :inline\|:stacked`                                                                                                                                                                  |
+| `button_icon`      | `Button` (icon rendered via `icon_leading:` / `icon_trailing:`) | —                                                                                                                                                                                            |
+| `link`             | `Link`                                                          | `type: :default\|:button\|:card`, `variant: :default\|:success\|:destructive\|:warning\|:info`                                                                                               |
+| `link_icon`        | `Link` (icon rendered via `icon_leading:` / `icon_trailing:`)   | —                                                                                                                                                                                            |
+| `action_list`      | `ActionList`                                                    | — _(accepts `role:` at render time, default `"list"`)_                                                                                                                                       |
+| `action_list_item` | `ActionList::Item`                                              | `active: bool`                                                                                                                                                                               |
+| `avatar`           | `Avatar`                                                        | `size:`                                                                                                                                                                                      |
+| `card`             | `Card`                                                          | —                                                                                                                                                                                            |
+| `card_section`     | `Card::Section`                                                 | —                                                                                                                                                                                            |
+| `icon`             | `Icon`                                                          | —                                                                                                                                                                                            |
+| `popover`          | `Popover`                                                       | —                                                                                                                                                                                            |
 
 ## Custom theme
 

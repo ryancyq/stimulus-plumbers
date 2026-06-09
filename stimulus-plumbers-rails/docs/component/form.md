@@ -20,10 +20,10 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 
 ## Two-level API
 
-| Level | What it renders | When to use |
-| ----- | --------------- | ----------- |
+| Level                                 | What it renders                                                 | When to use                                  |
+| ------------------------------------- | --------------------------------------------------------------- | -------------------------------------------- |
 | **Level 1** — native helper overrides | Input element only (theme classes, no label/hint/error wrapper) | When you control surrounding markup manually |
-| **Level 2** — full-field helpers | Label + input + hint + error, fully wired for accessibility | Default choice |
+| **Level 2** — full-field helpers      | Label + input + hint + error, fully wired for accessibility     | Default choice                               |
 
 ---
 
@@ -50,10 +50,10 @@ Standard Rails helpers are overridden to apply theme CSS classes. All native HTM
 
 Special options on native helpers:
 
-| Helper | Option | Effect |
-| ------ | ------ | ------ |
-| `password_field` | `revealable: true` | Wraps input in an `input-formatter` reveal controller |
-| `search_field` | `clearable: true` | Wraps input in an `input-clearable` controller with a clear button |
+| Helper           | Option             | Effect                                                             |
+| ---------------- | ------------------ | ------------------------------------------------------------------ |
+| `password_field` | `revealable: true` | Wraps input in an `input-formatter` reveal controller              |
+| `search_field`   | `clearable: true`  | Wraps input in an `input-clearable` controller with a clear button |
 
 ---
 
@@ -61,23 +61,23 @@ Special options on native helpers:
 
 Three methods render a complete, accessible field:
 
-| Method | `as:` values |
-| ------ | ------------ |
-| `f.field(attr, as:, **opts)` | `:text` `:email` `:number` `:url` `:tel` `:color` `:month` `:week` `:range` `:datetime_local` `:text_area` `:file` `:password` `:date` `:time` `:select` `:search` |
-| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | `:collection_select` `:grouped_collection_select` |
-| `f.choice(attr, as:, **opts)` | `:radio` `:check_box` |
+| Method                                                                            | `as:` values                                                                                                                                                       |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `f.field(attr, as:, **opts)`                                                      | `:text` `:email` `:number` `:url` `:tel` `:color` `:month` `:week` `:range` `:datetime_local` `:text_area` `:file` `:password` `:date` `:time` `:select` `:search` |
+| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | `:collection_select` `:grouped_collection_select`                                                                                                                  |
+| `f.choice(attr, as:, **opts)`                                                     | `:radio` `:check_box`                                                                                                                                              |
 
 ### Shared field options
 
-| Option       | Type                                                                          | Default    | Description |
-| ------------ | ----------------------------------------------------------------------------- | ---------- | ----------- |
-| `label`      | String                                                                        | humanised attribute name | Override label / legend text |
-| `hint`       | String                                                                        | `nil`      | Hint text rendered below the field |
-| `error`      | String / Array                                                                | `nil`      | Override error message(s); suppresses `model.errors[attribute]` |
-| `required`   | Boolean                                                                       | `false`    | Adds `required` + `aria-required="true"` |
-| `hide_label` | Boolean                                                                       | `false`    | Renders label visually hidden (screen-reader accessible) |
-| `layout`     | `:stacked` / `:inline`                        | `:stacked` | Label above input vs beside it |
-| `floating`   | `:filled` / `:outlined` / `:standard`         | `nil`      | Floating-label style (text-like inputs only; `nil` = standard label above) |
+| Option       | Type                                  | Default                  | Description                                                                |
+| ------------ | ------------------------------------- | ------------------------ | -------------------------------------------------------------------------- |
+| `label`      | String                                | humanised attribute name | Override label / legend text                                               |
+| `hint`       | String                                | `nil`                    | Hint text rendered below the field                                         |
+| `error`      | String / Array                        | `nil`                    | Override error message(s); suppresses `model.errors[attribute]`            |
+| `required`   | Boolean                               | `false`                  | Adds `required` + `aria-required="true"`                                   |
+| `hide_label` | Boolean                               | `false`                  | Renders label visually hidden (screen-reader accessible)                   |
+| `layout`     | `:stacked` / `:inline`                | `:stacked`               | Label above input vs beside it                                             |
+| `floating`   | `:filled` / `:outlined` / `:standard` | `nil`                    | Floating-label style (text-like inputs only; `nil` = standard label above) |
 
 ---
 
@@ -94,20 +94,20 @@ Three methods render a complete, accessible field:
 
 **Floating label variants** — label starts inside the input, animates above on focus/fill. Compatible with text-like inputs only.
 
-| `floating:` value | Style |
-| ----------------- | ----- |
-| `:filled`   | Filled background, bottom border only |
-| `:outlined` | Full border, label clips through on float |
-| `:standard` | Bottom border only, no background |
+| `floating:` value | Style                                     |
+| ----------------- | ----------------------------------------- |
+| `:filled`         | Filled background, bottom border only     |
+| `:outlined`       | Full border, label clips through on float |
+| `:standard`       | Bottom border only, no background         |
 
 **Date** (`as: :date`) — calendar-grid picker backed by `combobox-date`. Use `f.date_field` for a plain `<input type="date">`.
 
 **Time** (`as: :time`) — drum/scroll-wheel picker backed by `combobox-time`.
 
-| Option | Values | Default | Description |
-| ------ | ------ | ------- | ----------- |
-| `format` | `:h12` / `:h24` | `:h12` | Clock format |
-| `step` | Integer | `1` | Minute interval |
+| Option   | Values          | Default | Description     |
+| -------- | --------------- | ------- | --------------- |
+| `format` | `:h12` / `:h24` | `:h12`  | Clock format    |
+| `step`   | Integer         | `1`     | Minute interval |
 
 Use `f.time_field` for a plain `<input type="time">`.
 
@@ -154,13 +154,14 @@ Renders a `<fieldset>` / `<legend>` for accessible grouping, or a single checkbo
 
 **Collection-only options:**
 
-| Option | Values | Default | Description |
-| ------ | ------ | ------- | ----------- |
-| `type` | `:default` \| `:button` \| `:card` | `:default` | Input/label presentation style |
-| `variant` | `:default` \| `:success` \| `:destructive` \| `:warning` \| `:info` | `:default` | Accent color for selected state |
-| `layout` | `:stacked` \| `:inline` | `:inline` | Stack cards vertically or wrap inline |
+| Option    | Values                                                              | Default    | Description                           |
+| --------- | ------------------------------------------------------------------- | ---------- | ------------------------------------- |
+| `type`    | `:default` \| `:button` \| `:card`                                  | `:default` | Input/label presentation style        |
+| `variant` | `:default` \| `:success` \| `:destructive` \| `:warning` \| `:info` | `:default` | Accent color for selected state       |
+| `layout`  | `:stacked` \| `:inline`                                             | `:inline`  | Stack cards vertically or wrap inline |
 
 **Card / button behaviour:**
+
 - **Checkbox card** — input visible on right; card border changes on check via `has-[:checked]:`
 - **Radio card** — input hidden (`hidden peer`); entire card is the clickable area via `peer-checked:`
 - **Radio button** — input hidden (`hidden peer`); inline pill style via `peer-checked:`
@@ -174,7 +175,13 @@ Renders a `<fieldset>` / `<legend>` for accessible grouping, or a single checkbo
 ```html
 <div>
   <label for="user_email" id="user_email_label">E-mail</label>
-  <input id="user_email" type="email" aria-describedby="user_email_hint" required aria-required="true" />
+  <input
+    id="user_email"
+    type="email"
+    aria-describedby="user_email_hint"
+    required
+    aria-required="true"
+  />
   <p id="user_email_hint">We'll never share your email.</p>
   <p id="user_email_error" role="alert">can't be blank</p>
 </div>
@@ -198,8 +205,14 @@ Renders a `<fieldset>` / `<legend>` for accessible grouping, or a single checkbo
   <legend>Plan <span aria-hidden="true">*</span></legend>
   <div>
     <p id="user_plan_hint">Choose the plan that fits your needs.</p>
-    <label><input type="radio" name="user[plan]" value="1" aria-required="true" /> Basic</label>
-    <label><input type="radio" name="user[plan]" value="2" aria-required="true" /> Pro</label>
+    <label
+      ><input type="radio" name="user[plan]" value="1" aria-required="true" />
+      Basic</label
+    >
+    <label
+      ><input type="radio" name="user[plan]" value="2" aria-required="true" />
+      Pro</label
+    >
   </div>
 </fieldset>
 ```
