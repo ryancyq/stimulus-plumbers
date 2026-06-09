@@ -22,7 +22,7 @@ module StimulusPlumbers
       private
 
       def render_header(slots, title_tag)
-        icon  = slots.resolve(:icon) { |v| render_icon(v, theme: :card_icon) }
+        icon  = slots.resolve(:icon) { |value| render_icon_slot(value) }
         title = slots.resolve(:title)
         return unless icon || title
 
@@ -45,13 +45,27 @@ module StimulusPlumbers
         end
       end
 
+      def render_icon_slot(value)
+        return value unless value.is_a?(Symbol) || (value.is_a?(String) && !value.html_safe?)
+
+        Components::Icon.new(template).render(
+          name:    value,
+          classes: theme.resolve(:card_icon).fetch(:classes, ""),
+          aria:    { hidden: "true" }
+        )
+      end
+
       def render_action(slots)
         content = slots.resolve(:action)
         return unless content
 
         url = slots.options_for(:action)[:url]
         template.content_tag(:div, **merge_html_options(theme.resolve(:card_action))) do
-          build_link_or_button(url: url) { content }
+          if url.present?
+            template.content_tag(:a, href: url) { content }
+          else
+            template.content_tag(:button, type: "button") { content }
+          end
         end
       end
     end

@@ -3,8 +3,6 @@
 require_relative "options/html"
 require_relative "options/aria"
 require_relative "renderer"
-require_relative "icon_renderer"
-require_relative "link_renderer"
 
 module StimulusPlumbers
   module Plumber
@@ -12,8 +10,6 @@ module StimulusPlumbers
       include Options::Html
       include Options::Aria
       include Renderer
-      include IconRenderer
-      include LinkRenderer
 
       attr_reader :template
 

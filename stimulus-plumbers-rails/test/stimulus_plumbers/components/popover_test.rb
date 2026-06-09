@@ -16,19 +16,19 @@ class PopoverComponentTest < ActionView::TestCase
   end
 
   def test_renders_outer_div
-    assert_css parse_html(renderer.render { |_p| nil }), "div"
+    assert_css parse_html(renderer.render { |p| p }), "div"
   end
 
   def test_wrapper_has_stimulus_controller
-    assert_css parse_html(renderer.render { |_p| nil }), "[data-controller~='popover']"
+    assert_css parse_html(renderer.render { |p| p }), "[data-controller~='popover']"
   end
 
   def test_merges_custom_class
-    assert_css parse_html(renderer.render(class: "dropdown") { |_p| nil }), ".dropdown"
+    assert_css parse_html(renderer.render(class: "dropdown") { |p| p }), ".dropdown"
   end
 
   def test_passes_html_options
-    doc = parse_html(renderer.render(id: "my-popover") { |_p| nil })
+    doc = parse_html(renderer.render(id: "my-popover") { |p| p })
 
     assert_css doc, "#my-popover"
     assert_css doc, "[data-controller~='popover']"

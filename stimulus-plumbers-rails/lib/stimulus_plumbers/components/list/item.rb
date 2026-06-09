@@ -12,7 +12,7 @@ module StimulusPlumbers
 
           template.content_tag(:li) do
             build(**kwargs) do |attrs|
-              build_link_or_button(**attrs) { render_item_slots(slots) }
+              render_link_or_button(**attrs) { render_item_slots(slots) }
             end
           end
         end
@@ -24,8 +24,30 @@ module StimulusPlumbers
 
         private
 
+        def render_link_or_button(url: nil, target: nil, active: false, **html_options, &block)
+          if url.present?
+            aria = active ? { aria: { current: "page" } } : {}
+            template.content_tag(:a, href: url, target: target, **merge_html_options(html_options, aria)) do
+              template.capture(&block)
+            end
+          else
+            aria = active ? { aria: { current: true } } : {}
+            template.content_tag(:button, type: "button", **merge_html_options(html_options, aria)) do
+              template.capture(&block)
+            end
+          end
+        end
+
         def render_icon_slot(slots, name)
-          slots.resolve(name) { |v| render_icon(v, theme: :list_item_icon) }
+          slots.resolve(name) do |value|
+            next value unless Components::Icon.icon_name?(value)
+
+            Components::Icon.new(template).render(
+              name:    value,
+              classes: theme.resolve(:list_item_icon).fetch(:classes, ""),
+              aria:    { hidden: "true" }
+            )
+          end
         end
 
         def render_title_slot(slots)
