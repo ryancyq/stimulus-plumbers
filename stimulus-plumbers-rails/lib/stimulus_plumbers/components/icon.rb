@@ -3,6 +3,10 @@
 module StimulusPlumbers
   module Components
     class Icon < Plumber::Base
+      def self.icon_name?(value)
+        value.is_a?(Symbol) || (value.is_a?(String) && !value.html_safe?)
+      end
+
       def render(name:, **kwargs)
         html_options = merge_html_options(
           theme.resolve(:icon),

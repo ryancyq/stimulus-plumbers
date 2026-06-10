@@ -12,10 +12,10 @@ Rails helper for rendering a horizontal rule, optionally labelled.
 <%= sp_divider "Section title", class: "my-4" %>
 ```
 
-| Option           | Default | Description                                               |
-| ---------------- | ------- | --------------------------------------------------------- |
+| Option           | Default | Description                                                                 |
+| ---------------- | ------- | --------------------------------------------------------------------------- |
 | `label`          | `nil`   | Positional arg. When present, the label is centred between two `<hr>` lines |
-| `**html_options` | —       | Forwarded to the outer `<div role="separator">`           |
+| `**html_options` | —       | Forwarded to the outer `<div role="separator">`                             |
 
 ---
 

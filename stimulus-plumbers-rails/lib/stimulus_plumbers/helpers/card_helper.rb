@@ -4,17 +4,7 @@ module StimulusPlumbers
   module Helpers
     module CardHelper
       def sp_card(...)
-        card_renderer.render(...)
-      end
-
-      def sp_card_section(...)
-        card_renderer.section(...)
-      end
-
-      private
-
-      def card_renderer
-        Components::Card.new(self)
+        Components::Card.new(self).render(...)
       end
     end
   end

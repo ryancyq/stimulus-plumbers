@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     get :calendar_turbo
     get :combobox
     get :search
-    get :action_list
+    get :list
     get :avatar
     get :button
     get :button_group

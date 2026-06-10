@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "helpers/plumber_helper"
-require_relative "helpers/action_list_helper"
+require_relative "helpers/list_helper"
 require_relative "helpers/avatar_helper"
 require_relative "helpers/button_helper"
 require_relative "helpers/calendar_helper"
@@ -15,7 +15,7 @@ require_relative "helpers/popover_helper"
 module StimulusPlumbers
   module Helpers
     include PlumberHelper
-    include ActionListHelper
+    include ListHelper
     include AvatarHelper
     include ButtonHelper
     include CalendarHelper

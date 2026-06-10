@@ -4,9 +4,13 @@ module StimulusPlumbers
   module Components
     class Button < Plumber::Base
       def render(content = nil, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
+        slots = Button::Slots.new
+        slots.with_icon_leading(icon_leading) if icon_leading
+        slots.with_icon_trailing(icon_trailing) if icon_trailing
+
         build(**kwargs) do |html_options|
           template.content_tag(:button, type: "button", **html_options) do
-            build_layout(icon_leading: icon_leading, icon_trailing: icon_trailing) do
+            build_layout(slots) do
               build_button(content, &block)
             end
           end
@@ -31,14 +35,26 @@ module StimulusPlumbers
         end
       end
 
-      def build_layout(icon_leading: nil, icon_trailing: nil, &block)
+      def build_layout(slots, &block)
         template.safe_join(
           [
-            render_icon(icon_leading, theme: :button_icon),
+            render_icon_slot(slots, :icon_leading),
             template.capture(&block),
-            render_icon(icon_trailing, theme: :button_icon)
+            render_icon_slot(slots, :icon_trailing)
           ]
         )
+      end
+
+      def render_icon_slot(slots, name)
+        slots.resolve(name) do |value|
+          next value unless Components::Icon.icon_name?(value)
+
+          Components::Icon.new(template).render(
+            name:    value,
+            classes: theme.resolve(:button_icon).fetch(:classes, ""),
+            aria:    { hidden: "true" }
+          )
+        end
       end
     end
   end

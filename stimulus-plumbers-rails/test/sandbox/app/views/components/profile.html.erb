@@ -2,18 +2,13 @@
 
 <div id="profile">
   <%# ── Profile card ─────────────────────────────────────────────────── %>
-  <%= sp_card(title: "Profile") do %>
-    <%= sp_card_section do %>
+  <%= sp_card do |card| %>
+    <% card.with_title("Profile") %>
+    <% card.with_body do %>
       <%= sp_avatar(initials: "JD", name: "Jane Doe") %>
       <p>Jane Doe</p>
       <p>jane@example.com</p>
-    <% end %>
-
-    <%= sp_card_section(title: "About") do %>
       <p>Software engineer passionate about accessible UI components.</p>
-    <% end %>
-
-    <%= sp_card_section do %>
       <%= sp_button_group do %>
         <%= sp_button("Edit profile") %>
         <%= sp_button("Change password", variant: :secondary) %>
@@ -22,18 +17,19 @@
   <% end %>
 
   <%# ── Preferences card ─────────────────────────────────────────────── %>
-  <%= sp_card(title: "Preferences") do %>
-    <%= sp_card_section(title: "Preferences") do %>
-      <%= sp_action_list do |list| %>
-        <%= list.section(title: "Notifications") do %>
-          <%= list.item("Email notifications") %>
-          <%= list.item("Push notifications") %>
-          <%= list.item("SMS alerts") %>
+  <%= sp_card do |card| %>
+    <% card.with_title("Preferences") %>
+    <% card.with_body do %>
+      <%= sp_list(heading_level: 2) do |list| %>
+        <%= list.section(title: "Notifications") do |s| %>
+          <%= s.item("Email notifications") %>
+          <%= s.item("Push notifications") %>
+          <%= s.item("SMS alerts") %>
         <% end %>
 
-        <%= list.section(title: "Account") do %>
-          <%= list.item("Privacy settings", url: "#") %>
-          <%= list.item("Connected accounts", url: "#") %>
+        <%= list.section(title: "Account") do |s| %>
+          <%= s.item("Privacy settings", url: "#") %>
+          <%= s.item("Connected accounts", url: "#") %>
         <% end %>
       <% end %>
     <% end %>
@@ -43,11 +39,11 @@
   <%= sp_popover do |p| %>
     <% p.trigger { "More options" } %>
     <% p.panel(role: "dialog", aria: { label: "More options" }) do %>
-      <%= sp_action_list do |list| %>
-        <%= list.section do %>
-          <%= list.item("Export data",       url: "#") %>
-          <%= list.item("Download archive",  url: "#") %>
-          <%= list.item("Delete account") %>
+      <%= sp_list do |list| %>
+        <%= list.section do |s| %>
+          <%= s.item("Export data",       url: "#") %>
+          <%= s.item("Download archive",  url: "#") %>
+          <%= s.item("Delete account") %>
         <% end %>
       <% end %>
     <% end %>

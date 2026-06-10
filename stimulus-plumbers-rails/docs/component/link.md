@@ -14,23 +14,23 @@ Rails helper for rendering themed, accessible links and link-styled buttons.
 <%= sp_link "GitHub", url: "https://github.com", target: "_blank" %>
 ```
 
-| Option           | Default    | Description                                                                              |
-| ---------------- | ---------- | ---------------------------------------------------------------------------------------- |
-| `content`        | `nil`      | Link text — positional arg or block                                                      |
-| `url`            | (required) | `href` value                                                                             |
-| `type`           | `:default` | Visual style — `:default` \| `:button` \| `:card`                                       |
-| `variant`        | `:default` | Color source — `:default` \| `:success` \| `:destructive` \| `:warning` \| `:info`      |
-| `icon_leading`   | `nil`      | Icon rendered **before** the label — icon name (string or symbol) or callable            |
-| `icon_trailing`  | `nil`      | Icon rendered **after** the label — icon name (string or symbol) or callable             |
-| `target`         | `nil`      | Forwarded to `<a target>`. `"_blank"` auto-sets `icon_trailing: "external-link"`        |
-| `**html_options` | —          | Forwarded to the `<a>` element                                                           |
+| Option           | Default    | Description                                                                        |
+| ---------------- | ---------- | ---------------------------------------------------------------------------------- |
+| `content`        | `nil`      | Link text — positional arg or block                                                |
+| `url`            | (required) | `href` value                                                                       |
+| `type`           | `:default` | Visual style — `:default` \| `:button` \| `:card`                                  |
+| `variant`        | `:default` | Color source — `:default` \| `:success` \| `:destructive` \| `:warning` \| `:info` |
+| `icon_leading`   | `nil`      | Icon rendered **before** the label — icon name (string or symbol) or callable      |
+| `icon_trailing`  | `nil`      | Icon rendered **after** the label — icon name (string or symbol) or callable       |
+| `target`         | `nil`      | Forwarded to `<a target>`. `"_blank"` auto-sets `icon_trailing: "external-link"`   |
+| `**html_options` | —          | Forwarded to the `<a>` element                                                     |
 
 **`type:` — visual style**
 
-| Value      | Appearance                                                                |
-| ---------- | ------------------------------------------------------------------------- |
-| `:default` | Inline text link — colored, underlines on hover                           |
-| `:button`  | Outlined button shape — border + surface background, no fill              |
+| Value      | Appearance                                                                 |
+| ---------- | -------------------------------------------------------------------------- |
+| `:default` | Inline text link — colored, underlines on hover                            |
+| `:button`  | Outlined button shape — border + surface background, no fill               |
 | `:card`    | Full-padding card — `flex-1`, `justify-start`; border + surface background |
 
 **`variant:` — color source**
@@ -51,7 +51,9 @@ Text content is always wrapped in a `<span>`:
 
 ```html
 <a href="/path" class="[theme classes]">
-  <svg aria-hidden="true" class="[link_icon theme classes]"><!-- icon svg --></svg>
+  <svg aria-hidden="true" class="[link_icon theme classes]">
+    <!-- icon svg -->
+  </svg>
   <span>Back</span>
 </a>
 ```
@@ -61,7 +63,9 @@ Text content is always wrapped in a `<span>`:
 ```html
 <a href="https://github.com" target="_blank" class="[theme classes]">
   <span>GitHub</span>
-  <svg aria-hidden="true" class="[link_icon theme classes]"><!-- external-link icon --></svg>
+  <svg aria-hidden="true" class="[link_icon theme classes]">
+    <!-- external-link icon -->
+  </svg>
 </a>
 ```
 
@@ -71,7 +75,9 @@ When no text is provided, `type: :button` links become square (same mechanism as
 
 ```html
 <a href="/path" aria-label="Add" class="[theme classes]">
-  <svg aria-hidden="true" class="[link_icon theme classes]"><!-- icon svg --></svg>
+  <svg aria-hidden="true" class="[link_icon theme classes]">
+    <!-- icon svg -->
+  </svg>
 </a>
 ```
 

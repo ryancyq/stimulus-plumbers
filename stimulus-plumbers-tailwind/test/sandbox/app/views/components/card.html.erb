@@ -3,22 +3,38 @@
 <section id="card-default" class="sb-section">
   <h2>Default</h2>
   <div class="sb-col">
-    <%# ── Simple card ────────────────────────────────────────────────────── %>
-    <%= sp_card(title: "Account") do %>
-      <%= sp_card_section do %>
-        <p>Your account is active.</p>
-      <% end %>
-    <% end %>
+    <%= sp_card { |card| card.icon("user"); card.title("Profile"); card.body("Manage your account settings") } %>
+    <%= sp_card { |card| card.icon("cog"); card.title("Settings") } %>
+    <%= sp_card { |card| card.title("Help"); card.body("Get support and documentation") } %>
+  </div>
+</section>
 
-    <%# ── Card with multiple sections ────────────────────────────────────── %>
-    <%= sp_card(title: "Settings") do %>
-      <%= sp_card_section(title: "General") do %>
-        <p>Language: English</p>
-      <% end %>
-
-      <%= sp_card_section(title: "Security") do %>
-        <p>Two-factor authentication is enabled.</p>
-      <% end %>
+<section id="card-cta" class="sb-section">
+  <h2>With action</h2>
+  <div class="sb-col">
+    <%= sp_card do |card| %>
+      <% card.icon("user") %>
+      <% card.title("View Profile") %>
+      <% card.body("See your public profile") %>
+      <% card.action("View", url: "/") %>
     <% end %>
+    <%= sp_card do |card| %>
+      <% card.icon("folder") %>
+      <% card.title("Archive") %>
+      <% card.body("Move items to archive") %>
+      <% card.action("Archive") %>
+    <% end %>
+  </div>
+</section>
+
+<section id="card-variants" class="sb-section">
+  <h2>Variants</h2>
+  <div class="sb-col">
+    <%= sp_card(variant: :primary)     { |card| card.title("Primary");     card.body("Primary variant") } %>
+    <%= sp_card(variant: :secondary)   { |card| card.title("Secondary");   card.body("Secondary variant") } %>
+    <%= sp_card(variant: :success)     { |card| card.title("Success");     card.body("Action completed") } %>
+    <%= sp_card(variant: :destructive) { |card| card.title("Destructive"); card.body("Destructive action") } %>
+    <%= sp_card(variant: :warning)     { |card| card.title("Warning");     card.body("Proceed with caution") } %>
+    <%= sp_card(variant: :info)        { |card| card.title("Info");        card.body("Informational") } %>
   </div>
 </section>

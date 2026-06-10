@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "tailwind/control"
-require_relative "tailwind/action_list"
+require_relative "tailwind/list"
 require_relative "tailwind/avatar"
 require_relative "tailwind/button"
 require_relative "tailwind/button/group"
@@ -18,7 +18,7 @@ require_relative "tailwind/link"
 module StimulusPlumbers
   module Themes
     class TailwindTheme < Base
-      include Tailwind::ActionList
+      include Tailwind::List
       include Tailwind::Combobox
       include Tailwind::Avatar
       include Tailwind::Button

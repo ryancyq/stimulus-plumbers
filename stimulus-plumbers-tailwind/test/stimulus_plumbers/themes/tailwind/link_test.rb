@@ -257,11 +257,12 @@ class TailwindThemeLinkTest < Minitest::Test
     assert_includes result, "[--link-bg:var(--sp-color-primary)]"
   end
 
-  def test_link_card_type_sets_default_card_ring
+  def test_link_card_type_uses_link_ring_for_focus
     result = classes_for(:link, type: :card)
 
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
-    assert_includes result, "focus-visible:ring-(--card-ring)"
+    assert_includes result, "focus-visible:ring-(--link-ring)"
+    refute_includes result, "focus-visible:ring-(--card-ring)"
+    refute_includes result, "--card-ring"
   end
 
   def test_link_card_type_does_not_include_hover_underline
@@ -274,25 +275,27 @@ class TailwindThemeLinkTest < Minitest::Test
 
   # ── type: :card variants ────────────────────────────────────────────────────
 
-  def test_link_card_type_success_variant_sets_link_and_card_variables
+  def test_link_card_type_success_variant_sets_link_variables
     result = classes_for(:link, type: :card, variant: :success)
 
     assert_includes result, "[--link-color:var(--sp-color-success)]"
     assert_includes result, "[--link-bg:var(--sp-color-success)]"
-    assert_includes result, "[--card-ring:var(--sp-color-success)]"
-    refute_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "[--link-ring:var(--sp-color-success-ring)]"
+    refute_includes result, "--card-ring"
   end
 
-  def test_link_card_type_destructive_variant_sets_card_ring
+  def test_link_card_type_destructive_variant_sets_link_ring
     result = classes_for(:link, type: :card, variant: :destructive)
 
-    assert_includes result, "[--card-ring:var(--sp-color-destructive)]"
+    assert_includes result, "[--link-ring:var(--sp-color-destructive)]"
+    refute_includes result, "--card-ring"
   end
 
-  def test_link_card_type_falls_back_to_default_card_ring_for_unknown_variant
+  def test_link_card_type_falls_back_to_default_link_ring_for_unknown_variant
     result = classes_for(:link, type: :card, variant: :unknown)
 
-    assert_includes result, "[--card-ring:var(--sp-color-primary)]"
+    assert_includes result, "[--link-ring:var(--sp-color-primary)]"
+    refute_includes result, "--card-ring"
   end
 
   # ── link_icon ────────────────────────────────────────────────────────────────

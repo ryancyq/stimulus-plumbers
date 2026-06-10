@@ -7,7 +7,7 @@ module StimulusPlumbers
   module Themes
     class Base
       SCHEMA = {
-        **Schema::ACTION_LIST,
+        **Schema::LIST,
         **Schema::AVATAR,
         **Schema::BUTTON,
         **Schema::CALENDAR,

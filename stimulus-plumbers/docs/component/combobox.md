@@ -93,39 +93,39 @@ Navigates a calendar grid with month, year, and decade views. Requires a `calend
 
 **Targets**
 
-| Target       | Description                                                              |
-| ------------ | ------------------------------------------------------------------------ |
-| `previous`   | Button that steps backward (one month / one year / one decade by view)   |
-| `next`       | Button that steps forward (one month / one year / one decade by view)    |
-| `viewTitle`  | Button showing the current view label (e.g. "June 2025" / "2025")        |
-| `day`        | Rendered day label element (display only)                                |
-| `month`      | Rendered month label element (display only)                              |
-| `year`       | Rendered year label element (display only)                               |
-| `monthView`  | Container for the month view (days grid); hidden in year/decade views    |
+| Target       | Description                                                                |
+| ------------ | -------------------------------------------------------------------------- |
+| `previous`   | Button that steps backward (one month / one year / one decade by view)     |
+| `next`       | Button that steps forward (one month / one year / one decade by view)      |
+| `viewTitle`  | Button showing the current view label (e.g. "June 2025" / "2025")          |
+| `day`        | Rendered day label element (display only)                                  |
+| `month`      | Rendered month label element (display only)                                |
+| `year`       | Rendered year label element (display only)                                 |
+| `monthView`  | Container for the month view (days grid); hidden in year/decade views      |
 | `yearView`   | Container for the year view (months grid); each cell calls `selectMonth()` |
 | `decadeView` | Container for the decade view (years grid); each cell calls `selectYear()` |
 
 **Values**
 
-| Value         | Type   | Default       | Description                                                    |
-| ------------- | ------ | ------------- | -------------------------------------------------------------- |
-| `date`        | String | `""`          | ISO 8601 initial date; navigates calendar on outlet connect    |
-| `view`        | String | `"month"`     | Current view — `"month"` \| `"year"` \| `"decade"`             |
-| `locales`     | Array  | `["default"]` | `Intl.DateTimeFormat` locales                                  |
-| `dayFormat`   | String | `"numeric"`   | Day label format                                               |
-| `monthFormat` | String | `"long"`      | Month label format                                             |
-| `yearFormat`  | String | `"numeric"`   | Year label format                                              |
+| Value         | Type   | Default       | Description                                                 |
+| ------------- | ------ | ------------- | ----------------------------------------------------------- |
+| `date`        | String | `""`          | ISO 8601 initial date; navigates calendar on outlet connect |
+| `view`        | String | `"month"`     | Current view — `"month"` \| `"year"` \| `"decade"`          |
+| `locales`     | Array  | `["default"]` | `Intl.DateTimeFormat` locales                               |
+| `dayFormat`   | String | `"numeric"`   | Day label format                                            |
+| `monthFormat` | String | `"long"`      | Month label format                                          |
+| `yearFormat`  | String | `"numeric"`   | Year label format                                           |
 
 **Methods**
 
-| Method            | Wired via                          | Description                                                                          |
-| ----------------- | ---------------------------------- | ------------------------------------------------------------------------------------ |
-| `previous()`      | click on `previous` target         | Steps back: one month (month view), one year (year view), one decade (decade view)   |
-| `next()`          | click on `next` target             | Steps forward: one month (month view), one year (year view), one decade (decade view)|
-| `zoomOut()`       | click on `viewTitle` target        | Zooms out: month → year → decade view                                                |
-| `selectMonth()`   | click on `yearView` cell           | Selects a month and switches to month view                                           |
-| `selectYear()`    | click on `decadeView` cell         | Selects a year and switches to year view                                             |
-| `onSelect(event)` | `calendar-observer:selected`       | Event adapter — updates `dateValue`, redraws labels, dispatches `selected`           |
+| Method            | Wired via                    | Description                                                                           |
+| ----------------- | ---------------------------- | ------------------------------------------------------------------------------------- |
+| `previous()`      | click on `previous` target   | Steps back: one month (month view), one year (year view), one decade (decade view)    |
+| `next()`          | click on `next` target       | Steps forward: one month (month view), one year (year view), one decade (decade view) |
+| `zoomOut()`       | click on `viewTitle` target  | Zooms out: month → year → decade view                                                 |
+| `selectMonth()`   | click on `yearView` cell     | Selects a month and switches to month view                                            |
+| `selectYear()`    | click on `decadeView` cell   | Selects a year and switches to year view                                              |
+| `onSelect(event)` | `calendar-observer:selected` | Event adapter — updates `dateValue`, redraws labels, dispatches `selected`            |
 
 **Dispatches**
 

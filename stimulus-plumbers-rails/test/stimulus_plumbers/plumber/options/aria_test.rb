@@ -2,10 +2,10 @@
 
 require "test_helper"
 
-class PlumberAriaOptionsTest < Minitest::Test
+class PlumberOptionsAriaTest < Minitest::Test
   def instance
     obj = Object.new
-    obj.extend(StimulusPlumbers::Plumber::AriaOptions)
+    obj.extend(StimulusPlumbers::Plumber::Options::Aria)
     obj
   end
 
@@ -13,7 +13,7 @@ class PlumberAriaOptionsTest < Minitest::Test
     result = instance.labelled_aria("My label", labelledby: "field_label")
 
     assert_equal "field_label", result[:labelledby]
-    assert_nil result[:label]
+    refute result.key?(:label)
   end
 
   def test_returns_label_when_no_labelledby
@@ -23,16 +23,9 @@ class PlumberAriaOptionsTest < Minitest::Test
     assert_nil result[:labelledby]
   end
 
-  def test_returns_empty_when_both_absent
+  def test_returns_empty_hash_when_label_is_nil
     result = instance.labelled_aria(nil)
 
     assert_empty result
-  end
-
-  def test_label_ignored_when_labelledby_present
-    result = instance.labelled_aria("ignored", labelledby: "ref_id")
-
-    assert_equal "ref_id", result[:labelledby]
-    refute result.key?(:label)
   end
 end

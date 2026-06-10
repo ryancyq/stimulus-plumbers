@@ -2,11 +2,9 @@
 
 require "test_helper"
 
-class PlumberThemeOptionsTest < Minitest::Test
+class PlumberOptionsThemeTest < Minitest::Test
   def instance
-    obj = Object.new
-    obj.extend(StimulusPlumbers::Plumber::ThemeOptions)
-    obj
+    Class.new { include StimulusPlumbers::Plumber::Options::Theme }.new
   end
 
   def test_converts_classes_to_class
@@ -32,10 +30,10 @@ class PlumberThemeOptionsTest < Minitest::Test
     assert_includes result, "user-class"
   end
 
-  def test_class_hash_includes_only_truthy_keys
-    result = instance.merge_theme_options({ class: { "active" => true, "disabled" => false } })
+  def test_deduplicates_same_class_across_hashes
+    result = instance.merge_theme_options({ class: "btn" }, { class: "btn active" })
 
-    assert_equal "active", result
+    assert_equal "btn active", result
   end
 
   def test_returns_nil_when_no_classes

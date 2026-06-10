@@ -83,7 +83,11 @@ module StimulusPlumbers
         end
 
         def render_trigger_icon(name)
-          render_icon(name, theme: :combobox_trigger_icon)
+          Components::Icon.new(template).render(
+            name:    name,
+            classes: theme.resolve(:combobox_trigger_icon).fetch(:classes, ""),
+            aria:    { hidden: "true" }
+          )
         end
       end
     end

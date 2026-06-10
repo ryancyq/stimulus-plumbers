@@ -2,24 +2,25 @@
 
 module StimulusPlumbers
   module Components
-    class ActionList < Plumber::Base
+    class List < Plumber::Base
       def render(...)
         render_list(...)
       end
 
       def section(...)
-        ActionList::Section.new(template).render(...)
+        List::Section.new(template, heading_level: @heading_level).render(...)
       end
 
       def item(content = nil, **kwargs, &block)
-        ActionList::Item.new(template).render(content, **kwargs, &block)
+        List::Item.new(template).render(content, **kwargs, &block)
       end
 
       private
 
-      def render_list(role: "list", **kwargs, &block)
+      def render_list(role: "list", heading_level: nil, **kwargs, &block)
+        @heading_level = heading_level
         html_options = merge_html_options(
-          theme.resolve(:action_list),
+          theme.resolve(:list),
           kwargs,
           { role: role }
         )

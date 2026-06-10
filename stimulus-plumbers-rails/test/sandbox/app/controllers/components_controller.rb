@@ -22,7 +22,7 @@ class ComponentsController < ApplicationController
 
   def button; end
 
-  def action_list; end
+  def list; end
 
   def card; end
 

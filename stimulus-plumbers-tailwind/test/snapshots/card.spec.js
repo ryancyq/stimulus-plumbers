@@ -7,6 +7,6 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("card", () => {
   test("default", async ({ page }) => {
-    await expect(page.locator("#card")).toHaveScreenshot("default.png");
+    await expect(page.locator("#card-default")).toHaveScreenshot("default.png");
   });
 });

@@ -2,8 +2,8 @@
 
 require "action_view/version"
 
-require_relative "../plumber/aria_options"
-require_relative "../plumber/html_options"
+require_relative "../plumber/options/aria"
+require_relative "../plumber/options/html"
 
 require_relative "base"
 require_relative "field"
@@ -27,8 +27,8 @@ require_relative "fields/inputs/text_area"
 module StimulusPlumbers
   module Form
     class Builder < ActionView::Helpers::FormBuilder
-      include Plumber::HtmlOptions
-      include Plumber::AriaOptions
+      include Plumber::Options::Html
+      include Plumber::Options::Aria
       include Fields::Inputs::Checkbox
       include Fields::Inputs::Datetime
       include Fields::Inputs::Radio
