@@ -7,14 +7,11 @@ stimulus-plumbers-rails/
 ├── lib/
 │   └── stimulus_plumbers/
 │       ├── components/
-│       │   ├── action_list.rb            # sp_action_list list/section/item renderer
-│       │   ├── action_list/
-│       │   │   ├── item.rb
-│       │   │   └── section.rb
 │       │   ├── avatar.rb                 # sp_avatar renderer
 │       │   ├── button.rb                 # sp_button renderer
 │       │   ├── button/
-│       │   │   └── group.rb
+│       │   │   ├── group.rb
+│       │   │   └── slots.rb
 │       │   ├── calendar.rb               # sp_calendar_month renderer
 │       │   ├── calendar/month/turbo.rb   # Turbo-compatible calendar grid
 │       │   ├── calendar/month/turbo/
@@ -22,8 +19,8 @@ stimulus-plumbers-rails/
 │       │   │   └── days_of_week.rb
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
-│       │   │   └── section.rb
-│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-format; drives p.build_panel, threads haspopup/popup_id
+│       │   │   └── slots.rb
+│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-formatter; drives p.build_panel, threads haspopup/popup_id
 │       │   ├── combobox/
 │       │   │   ├── typeahead.rb          # combobox-dropdown body — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
 │       │   │   ├── date.rb               # combobox-date picker body — panel IS the role=dialog (hosts the controller)
@@ -41,22 +38,33 @@ stimulus-plumbers-rails/
 │       │   │   │   ├── navigation.rb     # Date picker navigation bar (prev/next + view-title buttons)
 │       │   │   │   └── navigator.rb      # Individual nav button (wraps Button with ghost variant)
 │       │   ├── divider.rb                # sp_divider renderer
-│       │   ├── icon.rb                   # sp_icon renderer (SVG or span fallback)
+│       │   ├── icon.rb                   # Icon component (SVG or span fallback)
+│       │   ├── input_group.rb            # InputGroup wrapper (input + adornment)
+│       │   ├── link.rb                   # sp_link renderer
+│       │   ├── link/
+│       │   │   └── slots.rb
+│       │   ├── list.rb                   # sp_list renderer
+│       │   ├── list/
+│       │   │   ├── item.rb
+│       │   │   ├── item/
+│       │   │   │   └── slots.rb
+│       │   │   └── section.rb
 │       │   ├── popover.rb                # sp_popover renderer; render (with wrapper) / build (without wrapper)
 │       │   └── popover/
 │       │       ├── builder.rb            # Builder DSL: p.trigger / p.panel (auto-wired) / p.build_panel (caller-wired) — yielded by render/build
 │       │       ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
 │       │       └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_attrs for caller to wire)
 │       ├── helpers/
-│       │   ├── action_list_helper.rb     # sp_action_list, sp_action_list_section, sp_action_list_item
 │       │   ├── avatar_helper.rb          # sp_avatar
 │       │   ├── button_helper.rb          # sp_button, sp_button_group
 │       │   ├── calendar_helper.rb        # sp_calendar_month
 │       │   ├── calendar_turbo_helper.rb  # sp_calendar_turbo, sp_calendar_turbo_month/year/decade
-│       │   ├── card_helper.rb            # sp_card, sp_card_section
+│       │   ├── card_helper.rb            # sp_card
 │       │   ├── combobox_helper.rb        # sp_combobox_date/time/dropdown/typeahead
 │       │   ├── divider_helper.rb         # sp_divider
+│       │   ├── icon_helper.rb            # sp_icon
 │       │   ├── link_helper.rb            # sp_link
+│       │   ├── list_helper.rb            # sp_list
 │       │   ├── plumber_helper.rb         # sp_dom_id
 │       │   └── popover_helper.rb         # sp_popover
 │       ├── form/
@@ -88,17 +96,21 @@ stimulus-plumbers-rails/
 │       │           ├── text.rb           # text/email/url/tel/number/range/color/month/week/datetime_local_field (native + render_*_input per type)
 │       │           └── text_area.rb      # text_area (native); render_text_area_input
 │       ├── plumber/
-│       │   ├── base.rb                   # Plumber::Base (template accessor; includes ThemeOptions, StimulusOptions, AriaOptions)
+│       │   ├── base.rb                   # Plumber::Base (template accessor; includes Options::Html and Options::Aria)
 │       │   ├── dispatcher.rb             # Dispatcher for block-based component DSL
 │       │   ├── dispatcher/
 │       │   │   ├── callable_inspector.rb
 │       │   │   ├── instance_exec.rb
 │       │   │   ├── klass_proxy.rb
 │       │   │   └── method_call.rb
-│       │   ├── aria_options.rb           # labelled_aria helper (label vs labelledby)
-│       │   ├── stimulus_options.rb       # merge_stimulus_data (space-joins controller/action)
-│       │   ├── theme_options.rb          # merge_html_options, extract_classes, merge_string_option
-│       │   └── renderer.rb              # Plumber::Renderer base
+│       │   ├── options/
+│       │   │   ├── aria.rb               # Options::Aria — labelled_aria helper (label vs labelledby)
+│       │   │   ├── html.rb               # Options::Html — merge_html_options (composes Theme + Stimulus)
+│       │   │   ├── stimulus.rb           # Options::Stimulus — merge_stimulus_data (space-joins controller/action)
+│       │   │   ├── theme.rb              # Options::Theme — extract_classes, theme key resolution
+│       │   │   └── token_list.rb         # Options::TokenList — merge_token_list
+│       │   ├── renderer.rb               # Plumber::Renderer — renders macro + renderers class attribute
+│       │   └── slots.rb                  # Plumber::Slots — slot DSL (with_*, resolve, options_for)
 │       ├── themes/
 │       │   ├── base.rb                   # Base theme (no-op default)
 │       │   ├── configuration.rb          # Theme registry
@@ -109,6 +121,8 @@ stimulus-plumbers-rails/
 │       │   │   ├── avatar/
 │       │   │   │   └── ranges.rb
 │       │   │   ├── button/
+│       │   │   │   └── ranges.rb
+│       │   │   ├── card/
 │       │   │   │   └── ranges.rb
 │       │   │   ├── link/
 │       │   │   │   └── ranges.rb
@@ -237,7 +251,7 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 ## Component Architecture
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
-> Key internal docs: `plumber.md` (Base / Renderer / HtmlOptions), `dispatcher.md` (Dispatcher strategies), `form.md` (two-level field API).
+> Key internal docs: `plumber.md` (Base / Renderer / Options::Html), `dispatcher.md` (Dispatcher strategies), `form.md` (two-level field API).
 > Ensure examples provided are tested.
 
 ### Icon-only detection (Button + Link)
