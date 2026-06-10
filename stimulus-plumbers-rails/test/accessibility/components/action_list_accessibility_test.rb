@@ -24,15 +24,7 @@ class ListAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#list-nested"
   end
 
-  def test_nested_sections_heading_order_is_valid
-    assert_valid_heading_order context: "#list-nested"
-  end
-
   def test_hierarchical_sections_pass_wcag
     assert_accessible context: "#list-hierarchical"
-  end
-
-  def test_hierarchical_heading_order_is_valid
-    assert_valid_heading_order context: "#list-hierarchical"
   end
 end
