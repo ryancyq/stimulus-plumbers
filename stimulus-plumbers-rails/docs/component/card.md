@@ -1,51 +1,52 @@
 # Card
 
-Rails helpers for rendering a themed card container with optional sections.
+Rails helper for rendering a themed card with optional icon, title, body, and action slots.
 
-## Helpers
+## Helper
 
 ### `sp_card`
 
 ```erb
-<%= sp_card do %>
-  <p>Simple card</p>
+<%# Minimal %>
+<%= sp_card do |card| %>
+  <% card.with_body { "Simple content." } %>
 <% end %>
 
-<%= sp_card title: "Profile" do %>
-  <p>Card with a title heading.</p>
+<%# With title and icon %>
+<%= sp_card(title_tag: :h3) do |card| %>
+  <% card.with_icon("user") %>
+  <% card.with_title("Account") %>
+  <% card.with_body { "Your account is active." } %>
 <% end %>
 
-<%= sp_card title: "Settings", title_tag: :h3 do %>
-  ...
+<%# With action link %>
+<%= sp_card do |card| %>
+  <% card.with_title("Settings") %>
+  <% card.with_action("Manage", url: settings_path) %>
 <% end %>
-```
 
-| Option           | Default | Description                                          |
-| ---------------- | ------- | ---------------------------------------------------- |
-| `title`          | `nil`   | Rendered as a heading inside the card before content |
-| `title_tag`      | `:h2`   | HTML tag for the title element                       |
-| `**html_options` | —       | Forwarded to the `<div>` wrapper                     |
-
-### `sp_card_section`
-
-Renders a subsection inside a card with its own optional title.
-
-```erb
-<%= sp_card do %>
-  <%= sp_card_section title: "Details" do %>
-    <p>Section content</p>
-  <% end %>
-  <%= sp_card_section title: "Actions" do %>
-    ...
-  <% end %>
+<%# With action button (no url) %>
+<%= sp_card do |card| %>
+  <% card.with_action("Open") %>
 <% end %>
 ```
 
-| Option           | Default | Description                                             |
-| ---------------- | ------- | ------------------------------------------------------- |
-| `title`          | `nil`   | Rendered as a heading inside the section before content |
-| `title_tag`      | `:h3`   | HTML tag for the title element                          |
-| `**html_options` | —       | Forwarded to the `<div>` wrapper                        |
+| Option           | Default     | Description                        |
+| ---------------- | ----------- | ---------------------------------- |
+| `variant:`       | `:tertiary` | Theme variant for the card wrapper |
+| `title_tag:`     | `:h2`       | HTML tag used by `with_title`      |
+| `**html_options` | —           | Forwarded to the outer `<div>`     |
+
+### Slot methods (yielded as `card`)
+
+| Slot method                        | Description                                                                  |
+| ---------------------------------- | ---------------------------------------------------------------------------- |
+| `card.with_icon(name_or_html)`     | Icon before the title — string/symbol resolves via `Icon`; HTML passed as-is |
+| `card.with_title(text)`            | Title text rendered as `title_tag`                                           |
+| `card.with_body { content }`       | Body content — block required                                                |
+| `card.with_action(text, url: nil)` | Action link (`<a>`) when `url:` present; `<button>` otherwise                |
+
+`with_action` raises `ArgumentError` when `url:` is given but no content (text or block).
 
 ---
 
@@ -53,20 +54,39 @@ Renders a subsection inside a card with its own optional title.
 
 ```html
 <div class="[card theme classes]">
-  <h2>Profile</h2>
-  <!-- block content -->
+  <!-- header: rendered when icon or title is present -->
+  <div class="[card_header theme classes]">
+    <svg aria-hidden="true" class="[card_icon theme classes]">...</svg>
+    <h2 class="[card_title theme classes]">Account</h2>
+  </div>
 
-  <div class="[card_section theme classes]">
-    <h3>Details</h3>
-    <!-- section content -->
+  <!-- body -->
+  <div class="[card_body theme classes]">Your account is active.</div>
+
+  <!-- action -->
+  <div class="[card_action theme classes]">
+    <a href="/settings">Manage</a>
   </div>
 </div>
 ```
 
 ---
 
+## Theme keys
+
+| Key           | Element                             | Variants                                      |
+| ------------- | ----------------------------------- | --------------------------------------------- |
+| `card`        | Outer `<div>`                       | `variant: :primary\|:secondary\|:tertiary\|…` |
+| `card_header` | Header wrapper `<div>` (icon+title) | —                                             |
+| `card_icon`   | Icon inside the header              | —                                             |
+| `card_title`  | Title element (`h2` etc.)           | —                                             |
+| `card_body`   | Body `<div>`                        | —                                             |
+| `card_action` | Action `<div>`                      | —                                             |
+
+---
+
 ## ARIA
 
-- `sp_card` and `sp_card_section` are pure layout containers — no ARIA roles are added automatically.
-- Supply `role:` or `aria:` options via `html_options` when the card plays a semantic role (e.g. `role: "region"`, `aria: { label: "..." }`).
+- `sp_card` is a layout container — no ARIA roles are added automatically.
+- Supply `role:` or `aria:` via `html_options` when the card plays a semantic role (e.g. `role: "region"`, `aria: { label: "..." }`).
 - For interactive card-style inputs (radio/checkbox), see `f.choice` with `type: :card` in the [form doc](form.md).

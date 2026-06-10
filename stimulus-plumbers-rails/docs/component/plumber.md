@@ -22,10 +22,10 @@ end
 
 ### Included modules
 
-| Module                 | What it adds                                                      |
-| ---------------------- | ----------------------------------------------------------------- |
-| `Plumber::HtmlOptions` | `merge_html_options`, `merge_data_options`, `merge_string_option` |
-| `Plumber::Renderer`    | `renders` class macro; `renderers` class attribute                |
+| Module                   | What it adds                                                    |
+| ------------------------ | --------------------------------------------------------------- |
+| `Plumber::Options::Html` | `merge_html_options`, `merge_stimulus_data`, `merge_token_list` |
+| `Plumber::Renderer`      | `renders` class macro; `renderers` class attribute              |
 
 ### Instance interface
 
@@ -76,7 +76,7 @@ The `method_name:` and `init_args: [template]` are injected automatically — yo
 ```ruby
 class ComboboxHelper
   include StimulusPlumbers::Plumber::Renderer
-  include StimulusPlumbers::Plumber::HtmlOptions
+  include StimulusPlumbers::Plumber::Options::Html
 
   attr_reader :template
 
@@ -103,7 +103,7 @@ end
 
 ---
 
-## Plumber::HtmlOptions
+## Plumber::Options::Html
 
 Mixin for safely deep-merging HTML attribute hashes. Handles three concerns that a plain `Hash#merge` gets wrong:
 
@@ -138,7 +138,7 @@ html_options = merge_html_options(caller_opts, field_theme(:form_input, error: e
 
 `field_theme` returns `{ class: theme_classes }` (via `{ classes: ... }` internally); `merge_html_options` folds both into a single `class:` value.
 
-### `merge_string_option(*parts, delimiter: " ")`
+### `merge_token_list(*parts, delimiter: " ")`
 
 Joins string-like values into a single space-separated string, deduplicating tokens. Accepts heterogeneous inputs:
 
@@ -150,17 +150,17 @@ Joins string-like values into a single space-separated string, deduplicating tok
 | anything else | Ignored                                                              |
 
 ```ruby
-merge_string_option("btn",  "btn-sm", "btn")         # => "btn btn-sm"
-merge_string_option({ "hidden" => false, "active" => true })  # => "active"
-merge_string_option(["flex", "items-center"], "gap-2")        # => "flex items-center gap-2"
+merge_token_list("btn",  "btn-sm", "btn")         # => "btn btn-sm"
+merge_token_list({ "hidden" => false, "active" => true })  # => "active"
+merge_token_list(["flex", "items-center"], "gap-2")        # => "flex items-center gap-2"
 ```
 
-### `merge_data_options(*hashes, spacejoin:)`
+### `merge_stimulus_data(*hashes, spacejoin:)`
 
 Deep-merges `data:` sub-hashes. Keys listed in `spacejoin:` (default: `[:controller, :action]`) are space-joined when they conflict; all other keys use last-wins semantics.
 
 ```ruby
-merge_data_options(
+merge_stimulus_data(
   { controller: "toggle", value: "1" },
   { controller: "flip",   value: "2" }
 )
@@ -171,13 +171,13 @@ Pass `spacejoin: []` to disable space-joining entirely (plain deep merge).
 
 ### Extending the space-join set
 
-If a Stimulus controller uses a custom multi-valued data key (e.g. `data-targets`), override `merge_data_options` with an extended `spacejoin:` list:
+If a Stimulus controller uses a custom multi-valued data key (e.g. `data-targets`), override `merge_stimulus_data` with an extended `spacejoin:` list:
 
 ```ruby
 def merge_html_options(*hashes)
   super.tap do |result|
-    result[:data] = merge_data_options(*hashes.map { |h| h[:data] || {} },
-                                       spacejoin: STIMULUS_SPACEJOIN_KEYS + %i[targets])
+    result[:data] = merge_stimulus_data(*hashes.map { |h| h[:data] || {} },
+                                        spacejoin: STIMULUS_SPACEJOIN_KEYS + %i[targets])
   end
 end
 ```
