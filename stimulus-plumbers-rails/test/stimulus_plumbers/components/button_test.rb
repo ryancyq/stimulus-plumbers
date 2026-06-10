@@ -77,7 +77,7 @@ class ButtonTest < ActionView::TestCase
   end
 
   def test_button_renders_with_type_option
-    assert_css parse_html(renderer.render("Click", type: :secondary)), "button"
+    assert_css parse_html(renderer.render("Click", type: :outline)), "button"
   end
 
   def test_button_renders_with_variant_option

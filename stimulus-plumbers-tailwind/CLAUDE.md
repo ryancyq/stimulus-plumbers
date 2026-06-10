@@ -14,7 +14,7 @@ stimulus-plumbers-tailwind/
 │           ├── tailwind_theme.rb            # TailwindTheme < Base (includes component modules)
 │           └── tailwind/
 │               ├── control.rb              # Control::BASE — shared interactive foundation (required first)
-│               ├── action_list.rb           # ActionList CSS classes
+│               ├── list.rb                  # List CSS classes
 │               ├── avatar.rb               # Avatar CSS classes
 │               ├── button.rb               # Button CSS classes
 │               ├── calendar.rb             # Calendar CSS classes
