@@ -34,11 +34,12 @@ class ComboboxDropdownTest < ActionView::TestCase
     assert_css doc, "ul#p1[role='listbox'][data-combobox-dropdown-target='listbox']"
   end
 
-  def test_haspopup_is_listbox
-    assert_equal "listbox", StimulusPlumbers::Components::Combobox.variant(:dropdown).haspopup
-  end
+  def test_variant_metadata
+    meta = StimulusPlumbers::Components::Combobox::Dropdown::Metadata
 
-  def test_popup_id_is_the_panel
-    assert_equal "p1", StimulusPlumbers::Components::Combobox.variant(:dropdown).popup_id_for("p1")
+    assert_equal "listbox", meta.haspopup
+    assert_equal "chevron-down", meta.trigger_icon
+    assert_equal "p1", meta.popup_id_for("p1")
+    assert_empty meta.dataset("p1", {})
   end
 end

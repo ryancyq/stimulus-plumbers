@@ -12,16 +12,17 @@ module StimulusPlumbers
           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
         ].join(" ").freeze
 
-        def self.variant
-          Combobox.variant(:dropdown)
-        end
+        module Metadata
+          module_function
 
-        def self.options(**overrides)
-          variant.opts(**overrides)
+          def haspopup = "listbox"
+          def popup_id_for(panel_id) = panel_id
+          def trigger_icon = "chevron-down"
+          def trigger_options = {}
+          def dataset(_panel_id, _options) = {}
         end
 
         def render(...) = render_dropdown(...)
-        def build(...) = build_dropdown(...)
 
         private
 
@@ -31,10 +32,6 @@ module StimulusPlumbers
             Options.new(template).render(options, value: value),
             **listbox_attrs(panel_attrs: panel_attrs, label: label, labelledby: labelledby)
           )
-        end
-
-        def build_dropdown(panel_attrs: {}, label: nil, labelledby: nil, **_kwargs, &block)
-          template.capture(listbox_attrs(panel_attrs: panel_attrs, label: label, labelledby: labelledby), &block)
         end
 
         def listbox_attrs(panel_attrs: {}, label: nil, labelledby: nil)

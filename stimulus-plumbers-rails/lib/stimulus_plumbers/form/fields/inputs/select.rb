@@ -43,11 +43,10 @@ module StimulusPlumbers
             render_combobox(
               attribute,
               input_id: html_opts[:id],
-              variant:  Components::Combobox::Dropdown.variant,
               opts:     combobox_opts,
               error:    error
-            ) do |panel_attrs|
-              render_dropdown_component(all_choices, current_value, panel_attrs: panel_attrs, labelledby: labelledby, **kwargs)
+            ) do |c|
+              c.dropdown(options: all_choices, value: current_value, labelledby: labelledby, **kwargs)
             end
           end
 
@@ -75,14 +74,6 @@ module StimulusPlumbers
           )
             choices = build_grouped_choices(collection, group_label_method, group_method, value_method, text_method)
             render_field(:select, attribute, field_opts, { choices: choices, **kwargs })
-          end
-
-          def render_dropdown_component(choices, value, **kwargs)
-            Components::Combobox::Dropdown.new(@template).render(
-              options: choices,
-              value:   value,
-              **kwargs
-            )
           end
 
           def build_select_dropdown_opts(html_opts, current_value, opts:, icon_leading:, icon_trailing:)

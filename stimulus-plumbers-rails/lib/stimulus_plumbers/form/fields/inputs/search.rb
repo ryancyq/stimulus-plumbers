@@ -43,26 +43,19 @@ module StimulusPlumbers
           def render_typeahead_combobox(attribute, html_opts, opts, error, current_value, clearable:, choices:, url:, **kwargs)
             input_id      = html_opts[:id]
             labelledby    = Field.label_id(input_id)
-            combobox_opts = Components::Combobox::Typeahead.options(
+            combobox_opts = {
               input:   { value: current_value },
               trigger: { data: clearable ? { input_clearable_target: "input" } : {}, aria: html_opts[:aria] },
               **opts
-            )
+            }
             render_combobox(
               attribute,
               input_id: input_id,
-              variant:  Components::Combobox::Typeahead.variant,
               opts:     combobox_opts,
               error:    error,
-              data:     {
-                input_combobox_combobox_dropdown_outlet: "##{Components::Combobox.panel_id_for(input_id)}",
-                action:                                  "input->input-combobox#onInput"
-              },
               **kwargs
-            ) do |panel_attrs|
-              Components::Combobox::Typeahead.new(@template).render(
-                panel_attrs: panel_attrs, options: choices, value: current_value, labelledby: labelledby, url: url
-              )
+            ) do |c|
+              c.typeahead(options: choices, value: current_value, labelledby: labelledby, url: url)
             end
           end
 

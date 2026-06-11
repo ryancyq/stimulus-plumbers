@@ -16,16 +16,17 @@ module StimulusPlumbers
           [panel_id, "calendar"].compact.join("_")
         end
 
-        def self.variant
-          Combobox.variant(:date)
-        end
+        module Metadata
+          module_function
 
-        def self.options(**overrides)
-          variant.opts(**overrides)
+          def haspopup = "dialog"
+          def popup_id_for(panel_id) = panel_id
+          def trigger_icon = "calendar"
+          def trigger_options = {}
+          def dataset(_panel_id, _options) = { input_formatter_format_value: "date" }
         end
 
         def render(...) = render_date(...)
-        def build(...) = build_date(...)
 
         private
 
@@ -38,11 +39,6 @@ module StimulusPlumbers
           ) do
             template.safe_join([navigation, calendar(id: calendar_id)])
           end
-        end
-
-        def build_date(panel_attrs: {}, value: nil, label: "Picker", labelledby: nil, &block)
-          calendar_id = self.class.calendar_id_for(panel_attrs[:id])
-          template.capture(merge_html_options(panel_attrs, dialog_attrs(value, calendar_id, label, labelledby)), &block)
         end
 
         def dialog_attrs(value, calendar_id, label, labelledby)

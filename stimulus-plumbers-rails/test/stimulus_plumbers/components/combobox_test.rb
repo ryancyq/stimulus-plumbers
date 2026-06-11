@@ -8,8 +8,8 @@ class ComboboxTest < ActionView::TestCase
       input:   input,
       trigger: trigger,
       **kwargs
-    ) do |panel_attrs|
-      content_tag(:ul, "popover-content".html_safe, **panel_attrs)
+    ) do |c|
+      c.dropdown(options: [])
     end
   end
 
