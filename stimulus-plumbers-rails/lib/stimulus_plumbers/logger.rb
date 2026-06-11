@@ -4,8 +4,6 @@ module StimulusPlumbers
   module Logger
     LEVELS = %i[debug info warn error].freeze
 
-    module_function
-
     LEVELS.each do |level|
       define_method(level) do |message|
         tagged = StimulusPlumbers.config.log_formatter.call(message)
@@ -16,5 +14,7 @@ module StimulusPlumbers
         end
       end
     end
+
+    module_function(*LEVELS)
   end
 end
