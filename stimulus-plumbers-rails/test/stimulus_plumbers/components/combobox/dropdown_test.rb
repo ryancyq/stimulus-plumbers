@@ -40,6 +40,6 @@ class ComboboxDropdownTest < ActionView::TestCase
     assert_equal "listbox", meta.haspopup
     assert_equal "chevron-down", meta.trigger_icon
     assert_equal "p1", meta.popup_id_for("p1")
-    assert_empty meta.dataset("p1", {})
+    assert_empty meta.stimulus_data("p1", {})
   end
 end

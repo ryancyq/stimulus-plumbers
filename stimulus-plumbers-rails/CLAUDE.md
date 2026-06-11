@@ -20,10 +20,10 @@ stimulus-plumbers-rails/
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
 │       │   │   └── slots.rb
-│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-formatter; reads builder.metadata (haspopup/popup_id/trigger_options/dataset) + builder.render_panel into the popover
+│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-formatter; reads builder.metadata (haspopup/popup_id/trigger_options/stimulus_data) + builder.render_panel into the popover
 │       │   ├── combobox/
 │       │   │   ├── builder.rb            # DSL yielded by Combobox#render — c.dropdown/typeahead/date/time select a variant renderer (:variant slot, < Plumber::Slots); exposes #metadata (renderer::Metadata, or DefaultMetadata) + #render_panel
-│       │   │   ├── typeahead.rb          # combobox-dropdown body + nested Metadata (haspopup/popup_id_for/trigger_icon/trigger_options/dataset) — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
+│       │   │   ├── typeahead.rb          # combobox-dropdown body + nested Metadata (haspopup/popup_id_for/trigger_icon/trigger_options/stimulus_data) — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
 │       │   │   ├── date.rb               # combobox-date picker body + nested Metadata — panel IS the role=dialog (hosts the controller)
 │       │   │   ├── dropdown.rb           # combobox-dropdown body + nested Metadata — panel IS the <ul role=listbox>; options only
 │       │   │   ├── options.rb            # Option list renderer

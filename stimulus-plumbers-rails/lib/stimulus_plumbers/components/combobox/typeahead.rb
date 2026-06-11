@@ -16,7 +16,7 @@ module StimulusPlumbers
           def trigger_icon = nil
           def trigger_options = { readonly: false, aria: { autocomplete: "list" } }
 
-          def dataset(panel_id, _options)
+          def stimulus_data(panel_id, _options)
             {
               input_combobox_combobox_dropdown_outlet: "##{panel_id}",
               action:                                  "input->#{Combobox::STIMULUS_CONTROLLER}#onInput"

@@ -23,7 +23,7 @@ module StimulusPlumbers
           def popup_id_for(panel_id) = panel_id
           def trigger_icon = "calendar"
           def trigger_options = {}
-          def dataset(_panel_id, _options) = { input_formatter_format_value: "date" }
+          def stimulus_data(_panel_id, _options) = { input_formatter_format_value: "date" }
         end
 
         def render(...) = render_date(...)

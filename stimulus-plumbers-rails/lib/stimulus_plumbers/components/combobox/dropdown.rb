@@ -19,7 +19,7 @@ module StimulusPlumbers
           def popup_id_for(panel_id) = panel_id
           def trigger_icon = "chevron-down"
           def trigger_options = {}
-          def dataset(_panel_id, _options) = {}
+          def stimulus_data(_panel_id, _options) = {}
         end
 
         def render(...) = render_dropdown(...)

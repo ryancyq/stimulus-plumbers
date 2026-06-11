@@ -101,7 +101,7 @@ class ComboboxTimeTest < ActionView::TestCase
     assert_equal "dialog", meta.haspopup
     assert_equal "clock", meta.trigger_icon
 
-    data = meta.dataset("p1", { format: :h24 })
+    data = meta.stimulus_data("p1", { format: :h24 })
 
     assert_equal "time", data[:input_formatter_format_value]
     assert_equal({ format: :h24 }.to_json, data[:input_formatter_options_value])

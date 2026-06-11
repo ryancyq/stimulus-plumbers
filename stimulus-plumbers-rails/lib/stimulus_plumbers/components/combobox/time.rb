@@ -18,7 +18,7 @@ module StimulusPlumbers
           def trigger_icon = "clock"
           def trigger_options = {}
 
-          def dataset(_panel_id, options)
+          def stimulus_data(_panel_id, options)
             {
               input_formatter_format_value:  "time",
               input_formatter_options_value: { format: options.fetch(:format, :h12) }.to_json

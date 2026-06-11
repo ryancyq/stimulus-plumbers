@@ -56,6 +56,6 @@ class ComboboxDateTest < ActionView::TestCase
 
     assert_equal "dialog", meta.haspopup
     assert_equal "calendar", meta.trigger_icon
-    assert_equal "date", meta.dataset("p1", {})[:input_formatter_format_value]
+    assert_equal "date", meta.stimulus_data("p1", {})[:input_formatter_format_value]
   end
 end

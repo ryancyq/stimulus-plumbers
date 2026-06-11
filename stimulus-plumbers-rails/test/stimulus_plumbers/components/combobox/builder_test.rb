@@ -20,7 +20,7 @@ class ComboboxBuilderTest < ActiveSupport::TestCase
     assert_equal "p1", metadata.popup_id_for("p1")
     assert_nil metadata.trigger_icon
     assert_empty metadata.trigger_options
-    assert_empty metadata.dataset("p1", {})
+    assert_empty metadata.stimulus_data("p1", {})
   end
 
   def test_variant_methods_return_nil
@@ -58,12 +58,12 @@ class ComboboxBuilderTest < ActiveSupport::TestCase
     end
   end
 
-  def test_metadata_dataset_uses_selected_options
+  def test_metadata_stimulus_data_uses_selected_options
     builder = Builder.new
     builder.time(format: :h24)
 
-    dataset = builder.metadata.dataset("p1", builder.options)
+    stimulus_data = builder.metadata.stimulus_data("p1", builder.options)
 
-    assert_equal({ format: :h24 }.to_json, dataset[:input_formatter_options_value])
+    assert_equal({ format: :h24 }.to_json, stimulus_data[:input_formatter_options_value])
   end
 end

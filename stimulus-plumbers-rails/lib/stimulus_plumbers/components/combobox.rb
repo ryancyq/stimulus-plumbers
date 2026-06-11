@@ -46,7 +46,7 @@ module StimulusPlumbers
           theme.resolve(:combobox),
           kwargs,
           { data: stimulus_data(input[:value], close_on_select) },
-          { data: builder.metadata.dataset(panel_id, builder.options) }
+          { data: builder.metadata.stimulus_data(panel_id, builder.options) }
         )
       end
 

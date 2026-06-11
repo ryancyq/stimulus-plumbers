@@ -69,8 +69,8 @@ class ComboboxTypeaheadTest < ActionView::TestCase
     assert_equal "list", meta.trigger_options.dig(:aria, :autocomplete)
   end
 
-  def test_variant_dataset_wires_outlet
-    data = StimulusPlumbers::Components::Combobox::Typeahead::Metadata.dataset("p1_popover", {})
+  def test_variant_stimulus_data_wires_outlet
+    data = StimulusPlumbers::Components::Combobox::Typeahead::Metadata.stimulus_data("p1_popover", {})
 
     assert_equal "#p1_popover", data[:input_combobox_combobox_dropdown_outlet]
     assert_equal "input->input-combobox#onInput", data[:action]
