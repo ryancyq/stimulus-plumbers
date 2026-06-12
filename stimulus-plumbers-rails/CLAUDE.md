@@ -20,20 +20,20 @@ stimulus-plumbers-rails/
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
 │       │   │   └── slots.rb
-│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-formatter; drives p.build_panel, threads haspopup/popup_id
+│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-formatter; reads builder.metadata (haspopup/popup_id/trigger_options/stimulus_data) + builder.render_panel into the popover
 │       │   ├── combobox/
-│       │   │   ├── typeahead.rb          # combobox-dropdown body — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
-│       │   │   ├── date.rb               # combobox-date picker body — panel IS the role=dialog (hosts the controller)
-│       │   │   ├── dropdown.rb           # combobox-dropdown body — panel IS the <ul role=listbox>; options only
+│       │   │   ├── builder.rb            # DSL yielded by Combobox#render — c.dropdown/typeahead/date/time select a variant renderer (:variant slot, < Plumber::Slots); exposes #metadata (renderer::Metadata, or DefaultMetadata) + #render_panel
+│       │   │   ├── typeahead.rb          # combobox-dropdown body + nested Metadata (haspopup/popup_id_for/trigger_icon/trigger_options/stimulus_data) — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
+│       │   │   ├── date.rb               # combobox-date picker body + nested Metadata — panel IS the role=dialog (hosts the controller)
+│       │   │   ├── dropdown.rb           # combobox-dropdown body + nested Metadata — panel IS the <ul role=listbox>; options only
 │       │   │   ├── options.rb            # Option list renderer
 │       │   │   ├── options/
 │       │   │   │   ├── option.rb
 │       │   │   │   └── option_group.rb
-│       │   │   ├── time.rb               # combobox-time drum picker body — panel IS the role=dialog (hosts the controller)
+│       │   │   ├── time.rb               # combobox-time drum picker body + nested Metadata — panel IS the role=dialog (hosts the controller)
 │       │   │   ├── time/
 │       │   │   │   └── drum.rb           # Single drum column renderer
 │       │   │   ├── trigger.rb            # Combobox trigger input (<input role="combobox">)
-│       │   │   └── variant.rb            # Immutable popup metadata per variant (haspopup, panel_class, popup_id_suffix, default_opts)
 │       │   │   ├── date/
 │       │   │   │   ├── navigation.rb     # Date picker navigation bar (prev/next + view-title buttons)
 │       │   │   │   └── navigator.rb      # Individual nav button (wraps Button with ghost variant)
@@ -60,7 +60,7 @@ stimulus-plumbers-rails/
 │       │   ├── calendar_helper.rb        # sp_calendar_month
 │       │   ├── calendar_turbo_helper.rb  # sp_calendar_turbo, sp_calendar_turbo_month/year/decade
 │       │   ├── card_helper.rb            # sp_card
-│       │   ├── combobox_helper.rb        # sp_combobox_date/time/dropdown/typeahead
+│       │   ├── combobox_helper.rb        # sp_combobox (single entry, builder block) + sp_combobox_date/time/dropdown/typeahead thin wrappers
 │       │   ├── divider_helper.rb         # sp_divider
 │       │   ├── icon_helper.rb            # sp_icon
 │       │   ├── link_helper.rb            # sp_link
@@ -81,7 +81,7 @@ stimulus-plumbers-rails/
 │       │       │   └── floating.rb       # Fields::Label::Floating — wrapper div + block-captured input before label; used by render_floating_field
 │       │       └── inputs/
 │       │           ├── checkbox.rb       # check_box, collection_check_boxes (native); render_check_box, render_collection_check_box
-│       │           ├── combobox.rb       # Shared render_combobox — wires variant, panel_id, aria into Components::Combobox
+│       │           ├── combobox.rb       # Shared render_combobox — composes input/trigger opts + theme, yields the Builder block to Components::Combobox
 │       │           ├── radio.rb          # radio_button, collection_radio_buttons (native); render_collection_radio_button
 │       │           ├── datetime.rb       # date_field, time_field (native); render_combobox_date, render_combobox_time
 │       │           ├── file.rb           # file_field (native); render_file_input

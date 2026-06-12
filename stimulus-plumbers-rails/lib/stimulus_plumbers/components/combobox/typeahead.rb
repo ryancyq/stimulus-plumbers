@@ -8,16 +8,23 @@ module StimulusPlumbers
           [panel_id, "listbox"].compact.join("_")
         end
 
-        def self.variant
-          Combobox.variant(:typeahead)
-        end
+        module Metadata
+          module_function
 
-        def self.options(**overrides)
-          variant.opts(**overrides)
+          def haspopup = "listbox"
+          def popup_id_for(panel_id) = Typeahead.listbox_id_for(panel_id)
+          def trigger_icon = nil
+          def trigger_options = { readonly: false, aria: { autocomplete: "list" } }
+
+          def stimulus_data(panel_id, _options)
+            {
+              input_combobox_combobox_dropdown_outlet: "##{panel_id}",
+              action:                                  "input->#{Combobox::STIMULUS_CONTROLLER}#onInput"
+            }
+          end
         end
 
         def render(...) = render_typeahead(...)
-        def build(...) = build_typeahead(...)
 
         private
 
@@ -27,10 +34,6 @@ module StimulusPlumbers
             template.safe_join([render_listbox(panel_attrs[:id], options, value, labelledby, label), loading, empty]),
             **wrapper_attrs(panel_attrs: panel_attrs, url: url)
           )
-        end
-
-        def build_typeahead(panel_attrs: {}, url: nil, **_kwargs, &block)
-          template.capture(wrapper_attrs(panel_attrs: panel_attrs, url: url), &block)
         end
 
         def wrapper_attrs(panel_attrs: {}, url: nil)

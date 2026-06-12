@@ -6,6 +6,36 @@ See [docs/component/combobox-controllers.md](../../stimulus-plumbers/docs/compon
 
 ## Helpers
 
+### `sp_combobox`
+
+Single entry point. The panel type is chosen by a method call on the yielded builder
+(`c.dropdown`, `c.typeahead`, `c.date`, `c.time`) — the panel owns its `aria-haspopup`,
+popup id, trigger icon, and wrapper data. The `sp_combobox_*` helpers below are thin
+wrappers over this.
+
+```erb
+<%= sp_combobox(value: "us", label: "Country") do |c|
+  c.dropdown(options: [["United States", "us"], ["Canada", "ca"]], value: "us")
+end %>
+
+<%= sp_combobox(label: "Meeting time") do |c|
+  c.time(format: :h24, step: 15)
+end %>
+```
+
+| Option            | Description                                      |
+| ----------------- | ------------------------------------------------ |
+| `value`           | Initial value (hidden input + trigger)           |
+| `label`           | `aria-label` on the trigger input                |
+| `id`              | Trigger id (defaults to a generated `sp_dom_id`) |
+| `close_on_select` | `false` keeps the panel open after a selection   |
+| `**html_options`  | Forwarded to the wrapper `div`                   |
+
+Builder methods: `c.dropdown(options:, value:, label:)`, `c.typeahead(options:, value:, label:, url:)`,
+`c.date(value:)`, `c.time(format:, step:, value:)`.
+
+---
+
 ### `sp_combobox_date`
 
 Date picker backed by a calendar grid.

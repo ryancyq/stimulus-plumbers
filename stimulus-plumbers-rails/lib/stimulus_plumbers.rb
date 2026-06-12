@@ -45,7 +45,6 @@ require_relative "stimulus_plumbers/components/calendar/turbo/years_of_decade"
 
 # -- Combobox --
 require_relative "stimulus_plumbers/components/combobox"
-require_relative "stimulus_plumbers/components/combobox/variant"
 require_relative "stimulus_plumbers/components/combobox/trigger"
 require_relative "stimulus_plumbers/components/combobox/options"
 require_relative "stimulus_plumbers/components/combobox/options/option"
@@ -57,6 +56,7 @@ require_relative "stimulus_plumbers/components/combobox/dropdown"
 require_relative "stimulus_plumbers/components/combobox/typeahead"
 require_relative "stimulus_plumbers/components/combobox/time"
 require_relative "stimulus_plumbers/components/combobox/time/drum"
+require_relative "stimulus_plumbers/components/combobox/builder"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field"

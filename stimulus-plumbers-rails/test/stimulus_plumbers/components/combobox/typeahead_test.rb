@@ -59,11 +59,20 @@ class ComboboxTypeaheadTest < ActionView::TestCase
     assert_css doc, "div[data-controller~='combobox-dropdown'][data-combobox-dropdown-url-value='/search']"
   end
 
-  def test_haspopup_is_listbox
-    assert_equal "listbox", StimulusPlumbers::Components::Combobox.variant(:typeahead).haspopup
+  def test_variant_metadata
+    meta = StimulusPlumbers::Components::Combobox::Typeahead::Metadata
+
+    assert_equal "listbox", meta.haspopup
+    assert_nil meta.trigger_icon
+    assert_equal "p1_listbox", meta.popup_id_for("p1")
+    refute meta.trigger_options[:readonly]
+    assert_equal "list", meta.trigger_options.dig(:aria, :autocomplete)
   end
 
-  def test_popup_id_points_at_the_listbox
-    assert_equal "p1_listbox", StimulusPlumbers::Components::Combobox.variant(:typeahead).popup_id_for("p1")
+  def test_variant_stimulus_data_wires_outlet
+    data = StimulusPlumbers::Components::Combobox::Typeahead::Metadata.stimulus_data("p1_popover", {})
+
+    assert_equal "#p1_popover", data[:input_combobox_combobox_dropdown_outlet]
+    assert_equal "input->input-combobox#onInput", data[:action]
   end
 end

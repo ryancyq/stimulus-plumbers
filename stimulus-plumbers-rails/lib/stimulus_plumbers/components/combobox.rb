@@ -11,69 +11,62 @@ module StimulusPlumbers
         [trigger_id, "popover"].compact.join("_")
       end
 
-      def self.variants
-        @variants ||= {
-          dropdown:  Variant.new(haspopup: "listbox", panel_class: Dropdown),
-          typeahead: Variant.new(
-            haspopup:        "listbox",
-            panel_class:     Typeahead,
-            popup_id_suffix: "listbox",
-            default_opts:    { trigger: { aria: { autocomplete: "list" }, readonly: false } }
-          ),
-          date:      Variant.new(
-            haspopup:     "dialog",
-            panel_class:  Date,
-            default_opts: { input: { data: { combobox_date_date_value: nil } } }
-          ),
-          time:      Variant.new(haspopup: "dialog", panel_class: Time)
-        }.freeze
-      end
+      def render(trigger: {}, input: {}, close_on_select: nil, **kwargs, &block)
+        builder  = resolve_builder(&block)
+        panel_id = self.class.panel_id_for(trigger[:id])
 
-      def self.variant(name)
-        variants.fetch(name)
+        template.content_tag(:div, **combobox_attrs(input, close_on_select, builder, panel_id, kwargs)) do
+          build_popover(trigger, input, builder, panel_id)
+        end
       end
-
-      def render(...) = render_combobox(...)
-      def build(...) = build_combobox(...)
 
       private
 
-      def render_combobox(trigger: {}, input: {}, haspopup: "dialog", popup_id: nil, close_on_select: nil, **kwargs, &block)
-        template.content_tag(:div, **combobox_attrs(input, close_on_select, kwargs)) do
-          build_combobox(trigger: trigger, input: input, haspopup: haspopup, popup_id: popup_id, &block)
-        end
+      def resolve_builder
+        builder = Combobox::Builder.new
+        yield builder if block_given?
+        builder
       end
 
-      def build_combobox(trigger: {}, input: {}, haspopup: "dialog", popup_id: nil, **_kwargs, &block)
-        panel_id = self.class.panel_id_for(trigger[:id])
+      def build_popover(trigger, input, builder, panel_id)
+        metadata = builder.metadata
 
         Components::Popover.new(template).build(panel_id: panel_id) do |p|
-          p.trigger(haspopup: haspopup, controls: popup_id || panel_id) do |attrs|
-            build_combobox_trigger(attrs, trigger, input)
+          p.trigger(haspopup: metadata.haspopup, controls: metadata.popup_id_for(panel_id)) do |attrs|
+            build_combobox_trigger(attrs, trigger, input, metadata)
           end
-          p.build_panel(classes: theme.resolve(:combobox_popover).fetch(:classes, ""), &block)
+          p.build_panel(classes: theme.resolve(:combobox_popover).fetch(:classes, "")) do |panel_attrs|
+            builder.render_panel(template, panel_attrs: panel_attrs)
+          end
         end
       end
 
-      def combobox_attrs(input, close_on_select, kwargs)
+      def combobox_attrs(input, close_on_select, builder, panel_id, kwargs)
         merge_html_options(
           theme.resolve(:combobox),
           kwargs,
-          { data: stimulus_data(input[:value], close_on_select) }
+          { data: stimulus_data(input[:value], close_on_select) },
+          { data: builder.metadata.stimulus_data(panel_id, builder.options) }
         )
       end
 
-      def build_combobox_trigger(attrs, trigger, input)
+      def build_combobox_trigger(attrs, trigger, input, metadata)
         template.safe_join(
           [
             Combobox::Trigger.new(template).render(
               stimulus_controller: STIMULUS_CONTROLLER,
               popover:             attrs,
-              **trigger
+              **trigger_options(metadata, trigger)
             ),
             hidden_input(input)
           ]
         )
+      end
+
+      def trigger_options(metadata, trigger)
+        defaults = metadata.trigger_options.dup
+        defaults[:icon_trailing] = metadata.trigger_icon if metadata.trigger_icon
+        defaults.deep_merge(trigger)
       end
 
       def stimulus_data(initial_value, close_on_select)

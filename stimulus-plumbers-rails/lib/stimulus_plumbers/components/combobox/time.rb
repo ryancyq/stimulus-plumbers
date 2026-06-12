@@ -10,16 +10,23 @@ module StimulusPlumbers
           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
         ].join(" ").freeze
 
-        def self.variant
-          Combobox.variant(:time)
-        end
+        module Metadata
+          module_function
 
-        def self.options(**overrides)
-          variant.opts(**overrides)
+          def haspopup = "dialog"
+          def popup_id_for(panel_id) = panel_id
+          def trigger_icon = "clock"
+          def trigger_options = {}
+
+          def stimulus_data(_panel_id, options)
+            {
+              input_formatter_format_value:  "time",
+              input_formatter_options_value: { format: options.fetch(:format, :h12) }.to_json
+            }
+          end
         end
 
         def render(...) = render_time(...)
-        def build(...) = build_time(...)
 
         private
 
@@ -34,15 +41,6 @@ module StimulusPlumbers
             dialog_attrs(label, labelledby)
           )
           template.content_tag(:div, **attrs) { template.safe_join(drums) }
-        end
-
-        def build_time(panel_attrs: {}, label: "Picker", labelledby: nil, **_kwargs, &block)
-          attrs = merge_html_options(
-            panel_attrs,
-            theme.resolve(:combobox_time),
-            dialog_attrs(label, labelledby)
-          )
-          template.capture(attrs, &block)
         end
 
         def dialog_attrs(label, labelledby)

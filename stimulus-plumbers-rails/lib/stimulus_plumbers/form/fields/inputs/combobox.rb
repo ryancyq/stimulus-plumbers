@@ -7,8 +7,7 @@ module StimulusPlumbers
         module Combobox
           private
 
-          def render_combobox(attribute, input_id:, variant:, opts:, error:, **kwargs, &block)
-            panel_id      = Components::Combobox.panel_id_for(input_id)
+          def render_combobox(attribute, input_id:, opts:, error:, **kwargs, &block)
             combobox_opts = opts.deep_merge(
               input:   { name: field_name(attribute) },
               trigger: { id: input_id }
@@ -16,8 +15,6 @@ module StimulusPlumbers
 
             Components::Combobox.new(@template).render(
               **combobox_opts,
-              haspopup: variant.haspopup,
-              popup_id: variant.popup_id_for(panel_id),
               **merge_html_options(theme.resolve(:form_field_input_combobox, error: error), kwargs),
               &block
             )
