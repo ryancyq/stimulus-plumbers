@@ -27,7 +27,7 @@ module StimulusPlumbers
             opts,
             error,
             icon_leading: nil,
-            icon_trailing: "chevron-down",
+            icon_trailing: nil,
             choices: [],
             include_blank: nil,
             prompt: nil,
@@ -79,7 +79,7 @@ module StimulusPlumbers
           def build_select_dropdown_opts(html_opts, current_value, opts:, icon_leading:, icon_trailing:)
             {
               input:   { value: current_value },
-              trigger: html_opts.merge({ icon_leading: icon_leading, icon_trailing: icon_trailing }.compact),
+              trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
               **opts
             }
           end

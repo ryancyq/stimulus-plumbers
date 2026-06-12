@@ -21,11 +21,11 @@ module StimulusPlumbers
 
           private
 
-          def render_combobox_date(attribute, html_opts, opts, error, icon_leading: nil, icon_trailing: "calendar", **kwargs)
+          def render_combobox_date(attribute, html_opts, opts, error, icon_leading: nil, icon_trailing: nil, **kwargs)
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             labelledby    = Field.label_id(html_opts[:id])
             combobox_opts = {
-              input:   { value: current_value, data: { combobox_date_date_value: current_value } },
+              input:   { value: current_value },
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
               **opts
             }
@@ -48,7 +48,7 @@ module StimulusPlumbers
             format: :h12,
             step: 1,
             icon_leading: nil,
-            icon_trailing: "clock",
+            icon_trailing: nil,
             **kwargs
           )
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
