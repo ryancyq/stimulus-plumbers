@@ -5,9 +5,9 @@ module StimulusPlumbers
     module ComboboxHelper
       # Single entry point; panel type chosen by a block method (c.dropdown/date/...).
       def sp_combobox(value: nil, label: nil, id: nil, close_on_select: nil, **kwargs, &block)
-        id ||= sp_dom_id
         Components::Combobox.new(self).render(
-          trigger:         { id: id, aria: ({ label: label } if label) }.compact,
+          id:              id || sp_dom_id,
+          label:           label,
           input:           { value: value },
           close_on_select: close_on_select,
           **kwargs,
@@ -17,7 +17,9 @@ module StimulusPlumbers
 
       def sp_combobox_date(value: nil, label: nil, **kwargs)
         sp_combobox(value: value, label: label, **kwargs) do |c|
-          c.date(value: value)
+          panel_opts = { value: value }
+          panel_opts[:label] = label if label
+          c.date(**panel_opts)
         end
       end
 
@@ -35,7 +37,9 @@ module StimulusPlumbers
 
       def sp_combobox_time(format: :h12, step: 1, value: nil, label: nil, **kwargs)
         sp_combobox(value: value, label: label, **kwargs) do |c|
-          c.time(format: format, step: step, value: value)
+          panel_opts = { format: format, step: step, value: value }
+          panel_opts[:label] = label if label
+          c.time(**panel_opts)
         end
       end
     end
