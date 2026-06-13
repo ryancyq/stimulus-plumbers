@@ -1,0 +1,81 @@
+plugins:
+  - rubocop-rake
+  - rubocop-minitest
+
+AllCops:
+  TargetRubyVersion: 3.0
+  NewCops: enable
+  SuggestExtensions: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/RegexpLiteral:
+  EnforcedStyle: percent_r
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: consistent
+
+Style/Documentation:
+  Enabled: false
+
+# Not published to RubyGems (run-from-clone dev tool), so MFA metadata is N/A.
+Gemspec/RequireMFA:
+  Enabled: false
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/BlockDelimiters:
+  EnforcedStyle: line_count_based
+
+Layout/FirstMethodParameterLineBreak:
+  Enabled: true
+
+Layout/MultilineMethodParameterLineBreaks:
+  Enabled: true
+
+Layout/FirstMethodArgumentLineBreak:
+  Enabled: true
+
+Layout/MultilineMethodArgumentLineBreaks:
+  Enabled: true
+  AllowMultilineFinalElement: false
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/MultilineHashBraceLayout:
+  EnforcedStyle: new_line
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Metrics/MethodLength:
+  Max: 15
+  # Plugin #register_tools methods are declarative: each registers several tools
+  # in sequence, so length tracks the tool count, not complexity.
+  Exclude:
+    - lib/stimulus_plumbers/mcp/plugins/*.rb
+
+Metrics/AbcSize:
+  # Loaders shape source data (icon dirs, Tailwind variant matrices) and the
+  # schema plugin builds its tool set inline — high A/B/C counts are inherent.
+  Exclude:
+    - lib/stimulus_plumbers/mcp/loaders/schema_loader.rb
+    - lib/stimulus_plumbers/mcp/loaders/tailwind_theme_loader.rb
+    - lib/stimulus_plumbers/mcp/plugins/schema.rb
+    - lib/stimulus_plumbers/mcp/plugins/docs.rb
+
+Layout/LineLength:
+  Max: 130
+
+Metrics/ParameterLists:
+  Max: 6
+
+Minitest/MultipleAssertions:
+  Max: 8

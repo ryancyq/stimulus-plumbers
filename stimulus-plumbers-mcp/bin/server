@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require_relative "../lib/stimulus_plumbers_mcp"
+
+server = StimulusPlumbers::MCP::Server.build
+warn "[stimulus-plumbers-mcp] server started (version #{StimulusPlumbersMcp::VERSION})"
+transport = MCP::Server::Transports::StdioTransport.new(server)
+transport.open

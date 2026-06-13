@@ -19,6 +19,17 @@ class LoggerTest < Minitest::Test
     end
   end
 
+  # fallback — without Rails.logger, delegates to Kernel#warn once (no infinite recursion)
+  StimulusPlumbers::Logger::LEVELS.each do |level|
+    define_method("test_#{level}_falls_back_to_kernel_warn_without_rails_logger") do
+      Rails.stub(:logger, nil) do
+        assert_output(nil, "[StimulusPlumbers] fallback\n") do
+          StimulusPlumbers::Logger.public_send(level, "fallback")
+        end
+      end
+    end
+  end
+
   def test_applies_the_configured_formatter_before_delegating
     StimulusPlumbers.config.log_formatter = ->(msg) { "CUSTOM: #{msg}" }
     mock_logger = Minitest::Mock.new
