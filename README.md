@@ -13,8 +13,23 @@ Accessible, WCAG 2.1 AA compliant UI components for Rails + Hotwire applications
 | [`@stimulus-plumbers/controllers`](stimulus-plumbers/) | Stimulus JS controllers |
 | [`stimulus_plumbers`](stimulus-plumbers-rails/) | Rails view helpers and form builder |
 | [`stimulus_plumbers_tailwind`](stimulus-plumbers-tailwind/) | Tailwind CSS v4 theme |
+| [`stimulus_plumbers_mcp`](stimulus-plumbers-mcp/) | MCP server exposing API schema + docs to LLM IDEs |
 
 The Rails gem renders semantic, ARIA-wired HTML; the npm package provides the Stimulus controllers that drive behavior; the Tailwind gem layers utility-class styling on top.
+
+## MCP Server
+
+Connect your LLM IDE to the local MCP server via `bin/mcp` at the repo root:
+
+```json
+{
+  "mcpServers": {
+    "stimulus-plumbers": {
+      "command": "/path/to/stimulus-plumbers/bin/mcp"
+    }
+  }
+}
+```
 
 ## License
 

@@ -1,0 +1,102 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Query the stimulus-plumbers MCP server over stdio.
+#
+# Usage:
+#   bin/mcp-query tools                         # list available tools
+#   bin/mcp-query resources                     # list available resources
+#   bin/mcp-query tool <name> [args_json]       # call a tool (args_json defaults to {})
+#   bin/mcp-query read <uri>                    # read a resource
+
+require "bundler/setup"
+require "json"
+require "open3"
+
+SCRIPT_DIR = File.dirname(__FILE__)
+SERVER     = File.join(SCRIPT_DIR, "server")
+
+def usage
+  warn <<~USAGE
+    Usage:
+      bin/mcp-query tools
+      bin/mcp-query resources
+      bin/mcp-query tool <name> [args_json]
+      bin/mcp-query read <uri>
+  USAGE
+  exit 1
+end
+
+def die(message)
+  warn "error: #{message}"
+  usage
+end
+
+def build_requests(*requests)
+  client_info = { name: "mcp-query", version: "1.0" }
+  init_params = { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: client_info }
+  handshake = [
+    { jsonrpc: "2.0", id: 1, method: "initialize", params: init_params },
+    { jsonrpc: "2.0", method: "notifications/initialized" }
+  ]
+  "#{(handshake + requests).map { JSON.generate(_1) }.join("\n")}\n"
+end
+
+def query_server(requests)
+  stdout, _stderr, = Open3.capture3("ruby #{SERVER}", stdin_data: requests)
+  lines = stdout.lines.map(&:strip).reject(&:empty?)
+  raise "No response from server" if lines.empty?
+
+  JSON.parse(lines.last)
+end
+
+def print_error_and_exit(response)
+  warn "error: #{JSON.pretty_generate(response["error"])}"
+  exit 1
+end
+
+subcommand = ARGV.shift || usage
+
+case subcommand
+when "tools"
+  response = query_server(build_requests({ jsonrpc: "2.0", id: 2, method: "tools/list" }))
+  print_error_and_exit(response) if response["error"]
+
+  response.dig("result", "tools").each do |tool|
+    puts "  #{tool["name"]}"
+    puts "    #{tool["description"]}"
+    puts
+  end
+
+when "resources"
+  response = query_server(build_requests({ jsonrpc: "2.0", id: 2, method: "resources/list" }))
+  print_error_and_exit(response) if response["error"]
+
+  response.dig("result", "resources").each do |res|
+    puts "  #{res["uri"]}"
+    puts "    #{res["description"] || res["name"]}"
+    puts
+  end
+
+when "tool"
+  name = ARGV.shift || die("tool requires a name")
+  args = JSON.parse(ARGV.shift || "{}")
+
+  request = { jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: name, arguments: args } }
+  response = query_server(build_requests(request))
+  print_error_and_exit(response) if response["error"]
+
+  response.dig("result", "content").each { puts _1["text"] }
+
+when "read"
+  uri = ARGV.shift || die("read requires a URI")
+
+  request = { jsonrpc: "2.0", id: 2, method: "resources/read", params: { uri: uri } }
+  response = query_server(build_requests(request))
+  print_error_and_exit(response) if response["error"]
+
+  response.dig("result", "contents").each { puts _1["text"] }
+
+else
+  usage
+end

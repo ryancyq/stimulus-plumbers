@@ -10,7 +10,8 @@ module StimulusPlumbers
         if defined?(Rails) && Rails.respond_to?(:logger) && Rails.logger
           Rails.logger.public_send(level, tagged)
         else
-          warn(tagged)
+          # Kernel.warn, not bare `warn` which would recurse into this module's own warn.
+          Kernel.warn(tagged)
         end
       end
     end

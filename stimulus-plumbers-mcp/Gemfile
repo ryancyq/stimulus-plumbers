@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+gem "stimulus_plumbers",          path: "../stimulus-plumbers-rails"
+gem "stimulus_plumbers_tailwind", path: "../stimulus-plumbers-tailwind"
+
+group :development, :test do
+  gem "rake", "~> 13.3"
+
+  gem "simplecov", "~> 0.22.0", require: false
+  gem "simplecov-cobertura", require: false
+end
+
+group :development do
+  gem "rubocop", "~> 1.85", require: false
+  gem "rubocop-minitest", require: false
+  gem "rubocop-rake", require: false
+end
+
+group :test do
+  gem "minitest", "~> 5.25"
+end

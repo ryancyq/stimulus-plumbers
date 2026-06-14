@@ -90,7 +90,14 @@ Three methods render a complete, accessible field:
 <%= f.field :avatar,   as: :file %>
 <%= f.field :password, as: :password, revealable: true %>
 <%= f.field :email,    as: :email,    floating: :filled %>
+<%= f.field :country,  as: :select,
+      choices: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]],
+      include_blank: "Select a country" %>
+<%= f.field :tags,     as: :search,
+      choices: ["ruby", "rails", "hotwire"], clearable: true %>
 ```
+
+`choices:` takes the standard Rails shape — an array of `[label, value]` pairs (or a flat array of strings).
 
 **Floating label variants** — label starts inside the input, animates above on focus/fill. Compatible with text-like inputs only.
 
