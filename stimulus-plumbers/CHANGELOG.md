@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.0](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.3.3..stimulus-plumbers/v0.4.0) - 2026-06-14
+
+### Bug Fixes
+
+- redesign combobox + popover integration ([#93](https://github.com/ryancyq/stimulus-plumbers/issues/93)) - ([acffee6](https://github.com/ryancyq/stimulus-plumbers/commit/acffee6e8661daa9245223eb4c95df9d066ff452)) - Ryan Chang
+- calendar + combobox date ([#110](https://github.com/ryancyq/stimulus-plumbers/issues/110)) - ([d47065f](https://github.com/ryancyq/stimulus-plumbers/commit/d47065fc888bd81c2e72066dc98d061ff8a6e5a7)) - Ryan Chang
+- action list with builder ([#111](https://github.com/ryancyq/stimulus-plumbers/issues/111)) - ([8ba6c3f](https://github.com/ryancyq/stimulus-plumbers/commit/8ba6c3f4a4c51d8e95c57fdde5e7ba499cc17e86)) - Ryan Chang
+- more axe deps since we are testing in rails instead ([#118](https://github.com/ryancyq/stimulus-plumbers/issues/118)) - ([193075b](https://github.com/ryancyq/stimulus-plumbers/commit/193075b526749ae771cbc032506e5ac76955f54a)) - Ryan Chang
+
+### Documentation
+
+- update feature examples, usage - ([fc5f1be](https://github.com/ryancyq/stimulus-plumbers/commit/fc5f1be79788e21dd646afc169176a649b192da7)) - Ryan Chang
+
+### Features
+
+- calendar with days/months/years views ([#99](https://github.com/ryancyq/stimulus-plumbers/issues/99)) - ([fa530c8](https://github.com/ryancyq/stimulus-plumbers/commit/fa530c8eea38351e08cc27ad66aa6733fdb44f46)) - Ryan Chang
+- mcp server ([#117](https://github.com/ryancyq/stimulus-plumbers/issues/117)) - ([7f3e67b](https://github.com/ryancyq/stimulus-plumbers/commit/7f3e67b7a9f22adbd3373e1a5fea95a91c9a676c)) - Ryan Chang
+
+---
 ## [0.3.3](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.3.2..stimulus-plumbers/v0.3.3) - 2026-05-26
 
 ### Bug Fixes
