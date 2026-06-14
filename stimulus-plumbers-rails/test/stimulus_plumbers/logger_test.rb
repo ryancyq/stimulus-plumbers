@@ -17,10 +17,8 @@ class LoggerTest < Minitest::Test
       end
       mock_logger.verify
     end
-  end
 
-  # fallback — without Rails.logger, delegates to Kernel#warn once (no infinite recursion)
-  StimulusPlumbers::Logger::LEVELS.each do |level|
+    # fallback — without Rails.logger, delegates to Kernel#warn once (no infinite recursion)
     define_method("test_#{level}_falls_back_to_kernel_warn_without_rails_logger") do
       Rails.stub(:logger, nil) do
         assert_output(nil, "[StimulusPlumbers] fallback\n") do
