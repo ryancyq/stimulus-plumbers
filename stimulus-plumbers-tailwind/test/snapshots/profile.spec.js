@@ -10,14 +10,18 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("profile", () => {
   test("default", async ({ page }) => {
-    await expect(page.locator("#profile-default")).toHaveScreenshot("default.png");
+    await expect(page.locator("#profile-default")).toHaveScreenshot(
+      "default.png",
+    );
   });
 
   test("popover — open", async ({ page }) => {
     const btn = page.getByRole("button", { name: "More options" });
     await btn.click();
     await expect(btn).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#profile-default")).toHaveScreenshot("popover-open.png");
+    await expect(page.locator("#profile-default")).toHaveScreenshot(
+      "popover-open.png",
+    );
   });
 
   test.describe("date picker", () => {

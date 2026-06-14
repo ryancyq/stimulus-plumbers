@@ -7,7 +7,9 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("popover", () => {
   test("closed", async ({ page }) => {
-    await expect(page.locator("#popover-default")).toHaveScreenshot("closed.png");
+    await expect(page.locator("#popover-default")).toHaveScreenshot(
+      "closed.png",
+    );
   });
 
   test("open", async ({ page }) => {

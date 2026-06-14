@@ -58,10 +58,12 @@ test.describe("floating label form", () => {
       );
     });
 
-    test("focused", async ({ page }) => {
-      await page.locator("#floating-filled input:not([type='hidden'])").focus();
+    test("typed", async ({ page }) => {
+      await page
+        .locator("#floating-filled input:not([type='hidden'])")
+        .fill("Jane Doe");
       await expect(page.locator("#floating-filled")).toHaveScreenshot(
-        "floating-filled-focused.png",
+        "floating-filled-typed.png",
       );
     });
 
@@ -79,10 +81,12 @@ test.describe("floating label form", () => {
       );
     });
 
-    test("focused", async ({ page }) => {
-      await page.locator("#floating-outlined input:not([type='hidden'])").focus();
+    test("typed", async ({ page }) => {
+      await page
+        .locator("#floating-outlined input:not([type='hidden'])")
+        .fill("Jane Doe");
       await expect(page.locator("#floating-outlined")).toHaveScreenshot(
-        "floating-outlined-focused.png",
+        "floating-outlined-typed.png",
       );
     });
 
@@ -100,10 +104,12 @@ test.describe("floating label form", () => {
       );
     });
 
-    test("focused", async ({ page }) => {
-      await page.locator("#floating-standard input:not([type='hidden'])").focus();
+    test("typed", async ({ page }) => {
+      await page
+        .locator("#floating-standard input:not([type='hidden'])")
+        .fill("Jane Doe");
       await expect(page.locator("#floating-standard")).toHaveScreenshot(
-        "floating-standard-focused.png",
+        "floating-standard-typed.png",
       );
     });
 
