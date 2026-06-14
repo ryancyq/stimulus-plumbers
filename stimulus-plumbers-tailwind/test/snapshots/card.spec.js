@@ -9,4 +9,12 @@ test.describe("card", () => {
   test("default", async ({ page }) => {
     await expect(page.locator("#card-default")).toHaveScreenshot("default.png");
   });
+
+  test("cta", async ({ page }) => {
+    await expect(page.locator("#card-cta")).toHaveScreenshot("cta.png");
+  });
+
+  test("variants", async ({ page }) => {
+    await expect(page.locator("#card-variants")).toHaveScreenshot("variants.png");
+  });
 });

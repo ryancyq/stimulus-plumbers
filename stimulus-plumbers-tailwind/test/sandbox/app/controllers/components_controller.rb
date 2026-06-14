@@ -22,8 +22,6 @@ class ComponentsController < ApplicationController
 
   def search; end
 
-  def action_list; end
-
   def avatar; end
 
   def button; end

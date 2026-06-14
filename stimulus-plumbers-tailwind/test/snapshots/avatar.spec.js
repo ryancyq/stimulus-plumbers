@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/components/avatar");
-  await page.waitForSelector("[aria-label='Initials avatar']");
+  await page.waitForSelector("[role='img']");
 });
 
 test.describe("avatar", () => {

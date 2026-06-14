@@ -24,8 +24,20 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("combobox", () => {
-  test("all — closed", async ({ page }) => {
-    await expect(page.locator("#combobox")).toHaveScreenshot("all-closed.png");
+  test("date — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-date")).toHaveScreenshot("date-closed.png");
+  });
+
+  test("time — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-time")).toHaveScreenshot("time-closed.png");
+  });
+
+  test("dropdown — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-dropdown")).toHaveScreenshot("dropdown-closed.png");
+  });
+
+  test("typeahead — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-typeahead")).toHaveScreenshot("typeahead-closed.png");
   });
 
   test("date — open", async ({ page }) => {

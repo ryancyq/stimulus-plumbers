@@ -17,4 +17,10 @@ test.describe("button_group", () => {
       "group-stacked.png",
     );
   });
+
+  test("icons", async ({ page }) => {
+    await expect(page.locator("#button-group-icons")).toHaveScreenshot(
+      "group-icons.png",
+    );
+  });
 });
