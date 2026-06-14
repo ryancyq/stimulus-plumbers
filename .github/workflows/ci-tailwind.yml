@@ -81,7 +81,7 @@ jobs:
           path: stimulus-plumbers-tailwind/coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           directory: stimulus-plumbers-tailwind/coverage
           token: ${{ secrets.CODECOV_TOKEN }}

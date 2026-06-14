@@ -91,7 +91,7 @@ jobs:
           path: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           directory: stimulus-plumbers-rails/coverage-rails-${{ matrix.rails-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
