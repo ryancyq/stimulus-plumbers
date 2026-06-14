@@ -31,11 +31,11 @@ Rails helper for rendering a themed card with optional icon, title, body, and ac
 <% end %>
 ```
 
-| Option           | Default     | Description                        |
-| ---------------- | ----------- | ---------------------------------- |
-| `variant:`       | `:tertiary` | Theme variant for the card wrapper |
-| `title_tag:`     | `:h2`       | HTML tag used by `with_title`      |
-| `**html_options` | —           | Forwarded to the outer `<div>`     |
+| Option           | Default     | Description                                                                                                        |
+| ---------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| `variant:`       | `:tertiary` | Theme variant — `:primary` \| `:secondary` \| `:tertiary` \| `:success` \| `:destructive` \| `:warning` \| `:info` |
+| `title_tag:`     | `:h2`       | HTML tag used by `with_title`                                                                                      |
+| `**html_options` | —           | Forwarded to the outer `<div>`                                                                                     |
 
 ### Slot methods (yielded as `card`)
 
