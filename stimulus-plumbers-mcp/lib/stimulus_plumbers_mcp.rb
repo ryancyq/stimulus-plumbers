@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "json"
+require "action_view/version"
+require "uri" if ActionView.version < Gem::Version.new("7.3")
 require "mcp"
 require "action_view"
 require "stimulus_plumbers"
