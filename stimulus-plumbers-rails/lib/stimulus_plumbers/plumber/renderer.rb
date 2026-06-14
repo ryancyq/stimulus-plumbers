@@ -77,7 +77,7 @@ module StimulusPlumbers
         end
 
         def generate_renderer_method(method_name)
-          return eval_renderer_method(method_name) if ActiveSupport.version < "7.2"
+          return eval_renderer_method(method_name) if ActiveSupport.version < Gem::Version.new("7.2")
 
           require "active_support/code_generator"
           ActiveSupport::CodeGenerator.batch(generated_renderer_methods, __FILE__, __LINE__) do |owner|
@@ -123,7 +123,7 @@ module StimulusPlumbers
         end
 
         def generate_slot_method(method_name)
-          return eval_slot_method(method_name) if ActiveSupport.version < "7.2"
+          return eval_slot_method(method_name) if ActiveSupport.version < Gem::Version.new("7.2")
 
           require "active_support/code_generator"
           ActiveSupport::CodeGenerator.batch(generated_slot_methods, __FILE__, __LINE__) do |owner|
