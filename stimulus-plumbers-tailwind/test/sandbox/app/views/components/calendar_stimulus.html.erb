@@ -9,7 +9,10 @@
   <section id="calendar-stimulus" class="sb-section">
     <h2>Stimulus (CSR)</h2>
     <div class="sb-col">
-      <%= sp_calendar_month(date: @date) %>
+      <%= sp_calendar_month(
+            date: @date,
+            data: @show_other_months ? { "calendar-month-days-of-other-month-value": true } : {}
+          ) %>
     </div>
   </section>
 </div>

@@ -10,7 +10,7 @@ async function screenshotWithPanel(page, sectionLocator, filename) {
   const pBox = await panel.boundingBox();
   const x = Math.min(sBox.x, pBox.x);
   const y = Math.min(sBox.y, pBox.y);
-  const right  = Math.max(sBox.x + sBox.width,  pBox.x + pBox.width);
+  const right = Math.max(sBox.x + sBox.width, pBox.x + pBox.width);
   const bottom = Math.max(sBox.y + sBox.height, pBox.y + pBox.height);
   await expect(page).toHaveScreenshot(filename, {
     clip: { x, y, width: right - x, height: bottom - y },
@@ -25,19 +25,27 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("combobox", () => {
   test("date — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-date")).toHaveScreenshot("date-closed.png");
+    await expect(page.locator("#combobox-date")).toHaveScreenshot(
+      "date-closed.png",
+    );
   });
 
   test("time — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-time")).toHaveScreenshot("time-closed.png");
+    await expect(page.locator("#combobox-time")).toHaveScreenshot(
+      "time-closed.png",
+    );
   });
 
   test("dropdown — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-dropdown")).toHaveScreenshot("dropdown-closed.png");
+    await expect(page.locator("#combobox-dropdown")).toHaveScreenshot(
+      "dropdown-closed.png",
+    );
   });
 
   test("typeahead — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-typeahead")).toHaveScreenshot("typeahead-closed.png");
+    await expect(page.locator("#combobox-typeahead")).toHaveScreenshot(
+      "typeahead-closed.png",
+    );
   });
 
   test("date — open", async ({ page }) => {
@@ -67,19 +75,25 @@ test.describe("combobox", () => {
   test("typeahead — loading", async ({ page }) => {
     const section = page.locator("#combobox-typeahead");
     await section.getByRole("combobox", { name: "City" }).click();
-    await section.locator("[data-combobox-dropdown-target='loading']").evaluate((el) => el.removeAttribute("hidden"));
+    await section
+      .locator("[data-combobox-dropdown-target='loading']")
+      .evaluate((el) => el.removeAttribute("hidden"));
     await screenshotWithPanel(page, section, "typeahead-loading.png");
   });
 
   test("typeahead — empty", async ({ page }) => {
     const section = page.locator("#combobox-typeahead");
     await section.getByRole("combobox", { name: "City" }).click();
-    await section.locator("[data-combobox-dropdown-target='empty']").evaluate((el) => el.removeAttribute("hidden"));
+    await section
+      .locator("[data-combobox-dropdown-target='empty']")
+      .evaluate((el) => el.removeAttribute("hidden"));
     await screenshotWithPanel(page, section, "typeahead-empty.png");
   });
 
   test("date error — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-date-error")).toHaveScreenshot("date-error-closed.png");
+    await expect(page.locator("#combobox-date-error")).toHaveScreenshot(
+      "date-error-closed.png",
+    );
   });
 
   test("date error — open", async ({ page }) => {
@@ -89,7 +103,9 @@ test.describe("combobox", () => {
   });
 
   test("time error — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-time-error")).toHaveScreenshot("time-error-closed.png");
+    await expect(page.locator("#combobox-time-error")).toHaveScreenshot(
+      "time-error-closed.png",
+    );
   });
 
   test("time error — open", async ({ page }) => {
@@ -99,7 +115,9 @@ test.describe("combobox", () => {
   });
 
   test("dropdown error — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-dropdown-error")).toHaveScreenshot("dropdown-error-closed.png");
+    await expect(page.locator("#combobox-dropdown-error")).toHaveScreenshot(
+      "dropdown-error-closed.png",
+    );
   });
 
   test("dropdown error — open", async ({ page }) => {
@@ -109,7 +127,9 @@ test.describe("combobox", () => {
   });
 
   test("typeahead error — closed", async ({ page }) => {
-    await expect(page.locator("#combobox-typeahead-error")).toHaveScreenshot("typeahead-error-closed.png");
+    await expect(page.locator("#combobox-typeahead-error")).toHaveScreenshot(
+      "typeahead-error-closed.png",
+    );
   });
 
   test("typeahead error — open", async ({ page }) => {

@@ -15,6 +15,8 @@ test.describe("card", () => {
   });
 
   test("variants", async ({ page }) => {
-    await expect(page.locator("#card-variants")).toHaveScreenshot("variants.png");
+    await expect(page.locator("#card-variants")).toHaveScreenshot(
+      "variants.png",
+    );
   });
 });
