@@ -4,29 +4,28 @@
   <h2>User profile</h2>
   <div class="sb-col">
     <%# ── Profile card ─────────────────────────────────────────────────── %>
-    <%= sp_card(title: "Profile") do %>
-      <%= sp_card_section do %>
-        <%= sp_avatar(initials: "JD", name: "Jane Doe") %>
-        <p>Jane Doe</p>
-        <p>jane@example.com</p>
-      <% end %>
-
-      <%= sp_card_section(title: "About") do %>
-        <p>Software engineer passionate about accessible UI components.</p>
-      <% end %>
-
-      <%= sp_card_section do %>
-        <%= sp_button_group do %>
-          <%= sp_button("Edit profile") %>
-          <%= sp_button("Change password", variant: :secondary) %>
-        <% end %>
+    <%= sp_card do |card| %>
+      <% card.with_icon("user") %>
+      <% card.with_title("Profile") %>
+      <% card.with_body do %>
+        <div class="sb-col">
+          <%= sp_avatar(initials: "JD", name: "Jane Doe") %>
+          <p>Jane Doe</p>
+          <p>jane@example.com</p>
+          <p>Software engineer passionate about accessible UI components.</p>
+          <%= sp_button_group do %>
+            <%= sp_button("Edit profile") %>
+            <%= sp_button("Change password", variant: :secondary) %>
+          <% end %>
+        </div>
       <% end %>
     <% end %>
 
     <%# ── Preferences card ─────────────────────────────────────────────── %>
-    <%= sp_card(title: "Preferences") do %>
-      <%= sp_card_section(title: "Preferences") do %>
-        <%= sp_action_list do |list| %>
+    <%= sp_card do |card| %>
+      <% card.with_title("Preferences") %>
+      <% card.with_body do %>
+        <%= sp_list do |list| %>
           <%= list.section(title: "Notifications") do %>
             <%= list.item("Email notifications") %>
             <%= list.item("Push notifications") %>
@@ -45,7 +44,7 @@
     <%= sp_popover do |p| %>
       <% p.trigger { "More options" } %>
       <% p.panel(role: "dialog", aria: { label: "More options" }) do %>
-        <%= sp_action_list do |list| %>
+        <%= sp_list do |list| %>
           <%= list.section do %>
             <%= list.item("Export data",      url: "#") %>
             <%= list.item("Download archive", url: "#") %>

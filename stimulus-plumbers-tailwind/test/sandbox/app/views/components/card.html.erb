@@ -3,9 +3,9 @@
 <section id="card-default" class="sb-section">
   <h2>Default</h2>
   <div class="sb-col">
-    <%= sp_card { |card| card.icon("user"); card.title("Profile"); card.body("Manage your account settings") } %>
-    <%= sp_card { |card| card.icon("cog"); card.title("Settings") } %>
-    <%= sp_card { |card| card.title("Help"); card.body("Get support and documentation") } %>
+    <%= sp_card do |card| card.with_icon("user"); card.with_title("Profile"); card.with_body { "Manage your account settings" }; end %>
+    <%= sp_card do |card| card.with_icon("cog"); card.with_title("Settings"); end %>
+    <%= sp_card do |card| card.with_title("Help"); card.with_body { "Get support and documentation" }; end %>
   </div>
 </section>
 
@@ -13,16 +13,16 @@
   <h2>With action</h2>
   <div class="sb-col">
     <%= sp_card do |card| %>
-      <% card.icon("user") %>
-      <% card.title("View Profile") %>
-      <% card.body("See your public profile") %>
-      <% card.action("View", url: "/") %>
+      <% card.with_icon("user") %>
+      <% card.with_title("View Profile") %>
+      <% card.with_body { "See your public profile" } %>
+      <% card.with_action("View", url: "/") %>
     <% end %>
     <%= sp_card do |card| %>
-      <% card.icon("folder") %>
-      <% card.title("Archive") %>
-      <% card.body("Move items to archive") %>
-      <% card.action("Archive") %>
+      <% card.with_icon("folder") %>
+      <% card.with_title("Archive") %>
+      <% card.with_body { "Move items to archive" } %>
+      <% card.with_action("Archive") %>
     <% end %>
   </div>
 </section>
@@ -30,11 +30,11 @@
 <section id="card-variants" class="sb-section">
   <h2>Variants</h2>
   <div class="sb-col">
-    <%= sp_card(variant: :primary)     { |card| card.title("Primary");     card.body("Primary variant") } %>
-    <%= sp_card(variant: :secondary)   { |card| card.title("Secondary");   card.body("Secondary variant") } %>
-    <%= sp_card(variant: :success)     { |card| card.title("Success");     card.body("Action completed") } %>
-    <%= sp_card(variant: :destructive) { |card| card.title("Destructive"); card.body("Destructive action") } %>
-    <%= sp_card(variant: :warning)     { |card| card.title("Warning");     card.body("Proceed with caution") } %>
-    <%= sp_card(variant: :info)        { |card| card.title("Info");        card.body("Informational") } %>
+    <%= sp_card(variant: :primary)     do |card| card.with_title("Primary");     card.with_body { "Primary variant" };     end %>
+    <%= sp_card(variant: :secondary)   do |card| card.with_title("Secondary");   card.with_body { "Secondary variant" };   end %>
+    <%= sp_card(variant: :success)     do |card| card.with_title("Success");     card.with_body { "Action completed" };    end %>
+    <%= sp_card(variant: :destructive) do |card| card.with_title("Destructive"); card.with_body { "Destructive action" }; end %>
+    <%= sp_card(variant: :warning)     do |card| card.with_title("Warning");     card.with_body { "Proceed with caution" }; end %>
+    <%= sp_card(variant: :info)        do |card| card.with_title("Info");        card.with_body { "Informational" };       end %>
   </div>
 </section>

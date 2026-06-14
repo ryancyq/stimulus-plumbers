@@ -38,13 +38,13 @@
   <div class="sb-col">
     <%= sp_list do |list| %>
       <%= list.item("Dashboard", url: "/") do |item| %>
-        <% item.icon_leading("home") %>
-        <% item.icon_trailing("chevron-right") %>
+        <% item.with_icon_leading("home") %>
+        <% item.with_icon_trailing("chevron-right") %>
       <% end %>
       <%= list.item(url: "/") do |item| %>
-        <% item.icon_leading("chart-bar") %>
-        <% item.title("Reports") %>
-        <% item.description("Monthly summaries") %>
+        <% item.with_icon_leading("chart-bar") %>
+        <% item.with_title("Reports") %>
+        <% item.with_description("Monthly summaries") %>
       <% end %>
     <% end %>
   </div>

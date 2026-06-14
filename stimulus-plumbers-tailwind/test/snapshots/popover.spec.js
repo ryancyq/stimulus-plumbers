@@ -7,13 +7,13 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("popover", () => {
   test("closed", async ({ page }) => {
-    await expect(page.locator("#popover")).toHaveScreenshot("closed.png");
+    await expect(page.locator("#popover-default")).toHaveScreenshot("closed.png");
   });
 
   test("open", async ({ page }) => {
     const btn = page.getByRole("button", { name: "Open menu" });
     await btn.click();
     await expect(btn).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("#popover")).toHaveScreenshot("open.png");
+    await expect(page.locator("#popover-default")).toHaveScreenshot("open.png");
   });
 });
