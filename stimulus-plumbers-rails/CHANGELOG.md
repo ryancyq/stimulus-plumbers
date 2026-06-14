@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.0](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.3.3..stimulus-plumbers-rails/v0.4.0) - 2026-06-14
+
+### Bug Fixes
+
+- separate form field/choice rendering ([#92](https://github.com/ryancyq/stimulus-plumbers/issues/92)) - ([beedf5f](https://github.com/ryancyq/stimulus-plumbers/commit/beedf5f25849fd8e0411db69733bdb7afda99d9c)) - Ryan Chang
+- redesign combobox + popover integration ([#93](https://github.com/ryancyq/stimulus-plumbers/issues/93)) - ([acffee6](https://github.com/ryancyq/stimulus-plumbers/commit/acffee6e8661daa9245223eb4c95df9d066ff452)) - Ryan Chang
+- align form inputs logic ([#100](https://github.com/ryancyq/stimulus-plumbers/issues/100)) - ([db87ad1](https://github.com/ryancyq/stimulus-plumbers/commit/db87ad14d79fda8da6caa6e8ac05f8ab6712b0ce)) - Ryan Chang
+- avatar image theme ([#102](https://github.com/ryancyq/stimulus-plumbers/issues/102)) - ([8135d9b](https://github.com/ryancyq/stimulus-plumbers/commit/8135d9bf03df72365b66a22d4c4bfad356c3007f)) - Ryan Chang
+- button link with external url will have icon render by default ([#103](https://github.com/ryancyq/stimulus-plumbers/issues/103)) - ([0429cba](https://github.com/ryancyq/stimulus-plumbers/commit/0429cbab170d5a4a7a5009fe0f70023917521725)) - Ryan Chang
+- action list / popover builder ([#105](https://github.com/ryancyq/stimulus-plumbers/issues/105)) - ([fc27045](https://github.com/ryancyq/stimulus-plumbers/commit/fc2704527cec4a8e3f5ea5119de33026c936defb)) - Ryan Chang
+- button group builder ([#107](https://github.com/ryancyq/stimulus-plumbers/issues/107)) - ([c649df2](https://github.com/ryancyq/stimulus-plumbers/commit/c649df22162758958d4bfcd5a13f56c9bbb61eb6)) - Ryan Chang
+- floating label for form inputs ([#109](https://github.com/ryancyq/stimulus-plumbers/issues/109)) - ([16c1c9b](https://github.com/ryancyq/stimulus-plumbers/commit/16c1c9ba2601dbbd9819be2272836a0f56b0b404)) - Ryan Chang
+- calendar + combobox date ([#110](https://github.com/ryancyq/stimulus-plumbers/issues/110)) - ([d47065f](https://github.com/ryancyq/stimulus-plumbers/commit/d47065fc888bd81c2e72066dc98d061ff8a6e5a7)) - Ryan Chang
+- action list with builder ([#111](https://github.com/ryancyq/stimulus-plumbers/issues/111)) - ([8ba6c3f](https://github.com/ryancyq/stimulus-plumbers/commit/8ba6c3f4a4c51d8e95c57fdde5e7ba499cc17e86)) - Ryan Chang
+- icon helper + update doc ([#113](https://github.com/ryancyq/stimulus-plumbers/issues/113)) - ([301adf4](https://github.com/ryancyq/stimulus-plumbers/commit/301adf406102d2d98b8cbd65cb2e3f4f921b5a2e)) - Ryan Chang
+- combobox variant ([#114](https://github.com/ryancyq/stimulus-plumbers/issues/114)) - ([de7984c](https://github.com/ryancyq/stimulus-plumbers/commit/de7984c13dcd43f51c239c0c70901b4df0f02e64)) - Ryan Chang
+- update element id generation for aria across component consistently ([#116](https://github.com/ryancyq/stimulus-plumbers/issues/116)) - ([169b763](https://github.com/ryancyq/stimulus-plumbers/commit/169b7639f8b8fe17b0ee0459fbec594066517d97)) - Ryan Chang
+- remove duplicate defaults that already moved to metadata ([#115](https://github.com/ryancyq/stimulus-plumbers/issues/115)) - ([7d94536](https://github.com/ryancyq/stimulus-plumbers/commit/7d94536db8c1559001f935365656a193ee963cc2)) - Ryan Chang
+
+### Documentation
+
+- update feature examples, usage - ([fc5f1be](https://github.com/ryancyq/stimulus-plumbers/commit/fc5f1be79788e21dd646afc169176a649b192da7)) - Ryan Chang
+- update card documentation ([#119](https://github.com/ryancyq/stimulus-plumbers/issues/119)) - ([19e66e5](https://github.com/ryancyq/stimulus-plumbers/commit/19e66e52932c73e5d9330e35f3e1b41971c9e95b)) - Ryan Chang
+
+### Features
+
+- add block support to dispatcher ([#90](https://github.com/ryancyq/stimulus-plumbers/issues/90)) - ([9a6a2f5](https://github.com/ryancyq/stimulus-plumbers/commit/9a6a2f52ab16f8ae9488bc72506e575b28ed7aac)) - Ryan Chang
+- form floating label ([#96](https://github.com/ryancyq/stimulus-plumbers/issues/96)) - ([13e9854](https://github.com/ryancyq/stimulus-plumbers/commit/13e985424cd2460820f5ae0e7d5c6debad6392e4)) - Ryan Chang
+- button variant type ([#97](https://github.com/ryancyq/stimulus-plumbers/issues/97)) - ([c680077](https://github.com/ryancyq/stimulus-plumbers/commit/c680077f14df2aad943c84ed2559d87bcf41e12b)) - Ryan Chang
+- calendar with days/months/years views ([#99](https://github.com/ryancyq/stimulus-plumbers/issues/99)) - ([fa530c8](https://github.com/ryancyq/stimulus-plumbers/commit/fa530c8eea38351e08cc27ad66aa6733fdb44f46)) - Ryan Chang
+- button fab outline ([#104](https://github.com/ryancyq/stimulus-plumbers/issues/104)) - ([ba877d8](https://github.com/ryancyq/stimulus-plumbers/commit/ba877d8312fcb8362ccd287173af12651e6b7627)) - Ryan Chang
+- mcp server ([#117](https://github.com/ryancyq/stimulus-plumbers/issues/117)) - ([7f3e67b](https://github.com/ryancyq/stimulus-plumbers/commit/7f3e67b7a9f22adbd3373e1a5fea95a91c9a676c)) - Ryan Chang
+
+### Style
+
+- update component styling ([#89](https://github.com/ryancyq/stimulus-plumbers/issues/89)) - ([be240aa](https://github.com/ryancyq/stimulus-plumbers/commit/be240aa2a8e9a92b66c95086a8c5d0cfff067da4)) - Ryan Chang
+- tailwind choice checkbox/radio ([#95](https://github.com/ryancyq/stimulus-plumbers/issues/95)) - ([1c56b75](https://github.com/ryancyq/stimulus-plumbers/commit/1c56b753596f2d28b4d2320004ae32046e474f8a)) - Ryan Chang
+- fix card style across button/link/checkbox/radio ([#108](https://github.com/ryancyq/stimulus-plumbers/issues/108)) - ([6c6f2cc](https://github.com/ryancyq/stimulus-plumbers/commit/6c6f2ccfaca8bffdf186062ad73c38ebee5bdd21)) - Ryan Chang
+
+### Tests
+
+- a11y coverage update ([#88](https://github.com/ryancyq/stimulus-plumbers/issues/88)) - ([810bafe](https://github.com/ryancyq/stimulus-plumbers/commit/810bafe0531ea240acb89f0a7d6b1a450b5b96a2)) - Ryan Chang
+- address unit/a11y test gaps ([#101](https://github.com/ryancyq/stimulus-plumbers/issues/101)) - ([68f30e1](https://github.com/ryancyq/stimulus-plumbers/commit/68f30e1ddd1b11a6ab315beb40eb55a4a2946001)) - Ryan Chang
+
+---
 ## [0.3.3](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.3.2..stimulus-plumbers-rails/v0.3.3) - 2026-05-26
 
 ### Bug Fixes
