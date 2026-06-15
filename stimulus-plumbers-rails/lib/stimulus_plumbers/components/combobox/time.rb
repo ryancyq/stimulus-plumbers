@@ -30,7 +30,7 @@ module StimulusPlumbers
 
         private
 
-        def render_time(panel_attrs: {}, format: :h12, step: 1, value: nil, label: "Picker", labelledby: nil)
+        def render_time(panel_attrs: {}, format: :h12, step: 1, value: nil, label: nil, labelledby: nil)
           step = [1, step.to_i].max
           time = parse_time(value)
 
@@ -39,9 +39,10 @@ module StimulusPlumbers
         end
 
         def dialog_attrs(label, labelledby)
+          resolved_label = label || I18n.t("stimulus_plumbers.combobox.time.dialog_label")
           {
             role: "dialog",
-            aria: labelled_aria(label, labelledby: labelledby),
+            aria: labelled_aria(resolved_label, labelledby: labelledby),
             data: { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION }
           }
         end

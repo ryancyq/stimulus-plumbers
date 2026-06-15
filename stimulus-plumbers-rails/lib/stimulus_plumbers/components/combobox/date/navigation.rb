@@ -9,7 +9,7 @@ module StimulusPlumbers
             html_options = merge_html_options(
               theme.resolve(:combobox_date_navigation),
               kwargs,
-              { aria: { label: "Date picker navigation" } }
+              { aria: { label: t("navigation_label") } }
             )
 
             template.content_tag(:nav, **html_options) do
@@ -59,11 +59,15 @@ module StimulusPlumbers
           end
 
           def prev_label(step)
-            "Previous #{step.to_s.titleize}"
+            t("previous_#{step}")
           end
 
           def next_label(step)
-            "Next #{step.to_s.titleize}"
+            t("next_#{step}")
+          end
+
+          def t(key)
+            I18n.t("stimulus_plumbers.combobox.date.#{key}")
           end
         end
       end

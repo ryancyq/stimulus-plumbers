@@ -183,6 +183,21 @@ stimulus-plumbers-rails/
 - Full-field wrapper (`f.field(as:)`) — label, hint, error message, `aria-invalid`, `aria-describedby`, `required`, `hide_label`, all floating variants (`:floating_filled`, `:floating_outlined`, `:floating_standard`), and combined hint+error `aria-describedby`
 - When `error:` override is set, assert the override message appears **and** model errors are suppressed
 
+## I18n / Locale Convention
+
+**Never use `I18n.t(...)` in tests.** Assert the actual English string literal. Tests pin the rendered output — they must fail when a string changes, which `I18n.t(...)` would hide. If you need to reference a locale string in a test, copy the value from `config/locales/en.yml` as a plain string.
+
+```ruby
+# good
+assert_css doc, "button[aria-label='Previous month']"
+find("button[aria-label='Next month']").click
+
+# bad — hides regressions if the locale key or value changes
+assert_css doc, "button[aria-label='#{I18n.t("stimulus_plumbers.combobox.date.previous_month")}']"
+```
+
+This applies to all test types: unit tests, helper tests, and accessibility tests.
+
 ## Accessibility Test Convention
 
 **Icon naming in sandbox views:** Always use generic icon names (e.g., `close`, `download`, `book`), never heroicon/tailwind-specific compound names (e.g., `x-mark`, `arrow-down-tray`, `book-open`). The core sandbox runs without any theme, so heroicon names will not resolve. Aliases are defined in `stimulus-plumbers-tailwind/lib/stimulus_plumbers/themes/tailwind/icon.rb` (`Icon::ALIASES`).

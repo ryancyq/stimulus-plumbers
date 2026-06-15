@@ -25,19 +25,19 @@ class ComboboxDateNavigationTest < ActionView::TestCase
   end
 
   def test_previous_button_has_aria_label
-    assert_css parse_html(navigation), "button[aria-label='Previous Month']"
+    assert_css parse_html(navigation), "button[aria-label='Previous month']"
   end
 
   def test_next_button_has_aria_label
-    assert_css parse_html(navigation), "button[aria-label='Next Month']"
+    assert_css parse_html(navigation), "button[aria-label='Next month']"
   end
 
   def test_previous_button_contains_icon
-    assert_css parse_html(navigation), "button[aria-label='Previous Month'] span"
+    assert_css parse_html(navigation), "button[aria-label='Previous month'] span"
   end
 
   def test_next_button_contains_icon
-    assert_css parse_html(navigation), "button[aria-label='Next Month'] span"
+    assert_css parse_html(navigation), "button[aria-label='Next month'] span"
   end
 
   def test_view_title_button_has_drillup_action
@@ -72,12 +72,12 @@ class ComboboxDateNavigationTest < ActionView::TestCase
   def test_prev_label_changes_with_step
     doc = parse_html(navigation(step: "year"))
 
-    assert_css doc, "button[aria-label='Previous Year']"
+    assert_css doc, "button[aria-label='Previous year']"
   end
 
   def test_next_label_changes_with_step
     doc = parse_html(navigation(step: "year"))
 
-    assert_css doc, "button[aria-label='Next Year']"
+    assert_css doc, "button[aria-label='Next year']"
   end
 end
