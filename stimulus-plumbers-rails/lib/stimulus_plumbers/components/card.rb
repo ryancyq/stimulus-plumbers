@@ -14,7 +14,7 @@ module StimulusPlumbers
               render_header(slots, title_tag),
               render_body(slots),
               render_action(slots)
-            ].compact
+            ]
           )
         end
       end
@@ -31,7 +31,7 @@ module StimulusPlumbers
             [
               icon,
               (template.content_tag(title_tag, title, **merge_html_options(theme.resolve(:card_title))) if title)
-            ].compact
+            ]
           )
         end
       end
@@ -60,11 +60,11 @@ module StimulusPlumbers
         return unless content
 
         url = slots.options_for(:action)[:url]
-        template.content_tag(:div, **merge_html_options(theme.resolve(:card_action))) do
-          if url.present?
-            template.content_tag(:a, href: url) { content }
-          else
-            template.content_tag(:button, type: "button") { content }
+        Components::Button.new(template).build(type: :ghost, variant: :tertiary) do |attrs|
+          element = url.present? ? :a : :button
+          extra   = url.present? ? { href: url } : { type: "button" }
+          template.content_tag(element, **merge_html_options(attrs, extra, theme.resolve(:card_action))) do
+            template.content_tag(:span, content)
           end
         end
       end

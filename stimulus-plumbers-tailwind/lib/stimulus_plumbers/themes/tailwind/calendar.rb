@@ -25,7 +25,7 @@ module StimulusPlumbers
           aria-[hidden=true]:hover:bg-transparent
         ].freeze
 
-        QUARTER_GRID = %w[grid grid-cols-4].freeze
+        QUARTER_GRID = %w[grid grid-cols-4 gap-(--sp-space-1)].freeze
 
         MONTHS_OF_YEAR = "contents"
 

@@ -15,11 +15,11 @@ class TailwindThemeListTest < Minitest::Test
     assert_includes classes_for(:list), "py-(--sp-space-1)"
   end
 
-  def test_list_includes_section_divider
+  def test_list_does_not_divide_items
     result = classes_for(:list)
 
-    assert_includes result, "divide-y"
-    assert_includes result, "divide-(--sp-color-border)"
+    refute_includes result, "divide-y"
+    refute_includes result, "divide-(--sp-color-border)"
   end
 
   def test_list_item_returns_a_classes_string

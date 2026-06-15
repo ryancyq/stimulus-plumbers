@@ -57,13 +57,14 @@ module StimulusPlumbers
           cols
         end
 
-        def render_drum(target, label, items, selected)
+        def render_drum(target, label, items, selected, classes: nil)
           drum.render(
             stimulus_controller: STIMULUS_CONTROLLER,
             target:              target,
             label:               label,
             items:               items,
-            selected:            selected
+            selected:            selected,
+            classes:             classes
           )
         end
 

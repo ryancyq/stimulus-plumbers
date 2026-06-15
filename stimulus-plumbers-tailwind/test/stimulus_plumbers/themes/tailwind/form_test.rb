@@ -43,6 +43,18 @@ class TailwindThemeFormTest < Minitest::Test
     refute_includes classes_for(:form_group, layout: :inline), "flex-col"
   end
 
+  # :form_submit
+
+  def test_form_submit_returns_empty_hash
+    result = @theme.resolve(:form_submit)
+    assert_equal({}, result)
+  end
+
+  def test_form_submit_returns_empty_hash_with_type_and_variant
+    result = @theme.resolve(:form_submit, type: :default, variant: :primary)
+    assert_equal({}, result)
+  end
+
   def test_form_group_error_does_not_change_layout_classes
     stacked         = classes_for(:form_group, layout: :stacked)
     stacked_error   = classes_for(:form_group, layout: :stacked, error: true)

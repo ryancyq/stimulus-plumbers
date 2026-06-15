@@ -21,6 +21,8 @@ class TailwindThemeCardTest < Minitest::Test
   def test_card_includes_border_background_and_radius
     result = classes_for(:card)
 
+    assert_includes result, "flex"
+    assert_includes result, "flex-col"
     assert_includes result, "border"
     assert_includes result, "bg-(--sp-color-bg)"
     assert_includes result, "rounded-(--sp-radius-md)"
@@ -75,7 +77,7 @@ class TailwindThemeCardTest < Minitest::Test
     assert_includes result, "flex"
     assert_includes result, "items-center"
     assert_includes result, "px-(--sp-space-6)"
-    assert_includes result, "pt-(--sp-space-6)"
+    assert_includes result, "py-(--sp-space-6)"
   end
 
   # ── card_title ──────────────────────────────────────────────────────────────
@@ -103,16 +105,15 @@ class TailwindThemeCardTest < Minitest::Test
     result = classes_for(:card_body)
 
     assert_includes result, "px-(--sp-space-6)"
-    assert_includes result, "pt-(--sp-space-3)"
+    assert_includes result, "py-(--sp-space-3)"
   end
 
   # ── card_action ─────────────────────────────────────────────────────────────
 
-  def test_card_action_includes_padding
+  def test_card_action_includes_full_width_and_alignment
     result = classes_for(:card_action)
 
-    assert_includes result, "px-(--sp-space-6)"
-    assert_includes result, "pb-(--sp-space-6)"
-    assert_includes result, "pt-(--sp-space-4)"
+    assert_includes result, "w-full"
+    assert_includes result, "justify-start"
   end
 end

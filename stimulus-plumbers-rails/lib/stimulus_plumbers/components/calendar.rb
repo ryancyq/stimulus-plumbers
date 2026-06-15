@@ -15,8 +15,10 @@ module StimulusPlumbers
           kwargs,
           {
             data: {
-              controller: "#{MONTH_STIMULUS_CONTROLLER} #{OBSERVER_STIMULUS_CONTROLLER}",
-              action:     STIMULUS_ACTION
+              controller:                                         "#{MONTH_STIMULUS_CONTROLLER} #{OBSERVER_STIMULUS_CONTROLLER}",
+              action:                                             STIMULUS_ACTION,
+              "#{MONTH_STIMULUS_CONTROLLER}-row-class":          theme.resolve(:calendar_row).fetch(:classes, ""),
+              "#{MONTH_STIMULUS_CONTROLLER}-day-of-month-class": theme.resolve(:calendar_day).fetch(:classes, "")
             }
           }
         )
@@ -26,7 +28,7 @@ module StimulusPlumbers
       end
 
       def month
-        template.content_tag(:div, **month_options) do
+        template.content_tag(:div) do
           template.safe_join(
             [
               template.tag.div(**dow_options),
@@ -45,17 +47,6 @@ module StimulusPlumbers
       end
 
       private
-
-      def month_options
-        merge_html_options(
-          {
-            data: {
-              "#{MONTH_STIMULUS_CONTROLLER}-row-class":          theme.resolve(:calendar_row).fetch(:classes, ""),
-              "#{MONTH_STIMULUS_CONTROLLER}-day-of-month-class": theme.resolve(:calendar_day).fetch(:classes, "")
-            }
-          }
-        )
-      end
 
       def dow_options
         merge_html_options(

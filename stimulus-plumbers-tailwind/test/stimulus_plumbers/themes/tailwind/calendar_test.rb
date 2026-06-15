@@ -87,6 +87,7 @@ class TailwindThemeCalendarTest < Minitest::Test
 
     assert_includes result, "grid"
     assert_includes result, "grid-cols-4"
+    assert_includes result, "gap-(--sp-space-1)"
   end
 
   def test_calendar_month_returns_a_classes_string

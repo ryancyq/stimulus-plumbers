@@ -66,7 +66,7 @@ module StimulusPlumbers
           return unless title || description
 
           template.content_tag(:span, **merge_html_options(theme.resolve(:list_item_content))) do
-            template.safe_join([title, description].compact)
+            template.safe_join([title, description])
           end
         end
 
@@ -75,7 +75,7 @@ module StimulusPlumbers
           icon_trailing = render_icon_slot(slots, :icon_trailing)
           content       = render_content_slot(slots)
 
-          template.safe_join([icon_leading, content, icon_trailing].compact)
+          template.safe_join([icon_leading, content, icon_trailing])
         end
       end
     end

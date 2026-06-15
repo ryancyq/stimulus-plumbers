@@ -92,6 +92,7 @@ module StimulusPlumbers
         combobox_typeahead_loading_icon:    {}.freeze,
         combobox_typeahead_empty:           {}.freeze,
         combobox_time:                      {}.freeze,
+        combobox_time_drum:                 { target: { default: "hour" } }.freeze,
         combobox_date_navigation:           {}.freeze,
         combobox_date_navigation_navigator: {}.freeze
       }.freeze
@@ -148,7 +149,11 @@ module StimulusPlumbers
         form_field_input_reveal:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_field_input_clearable:     {}.freeze,
         form_field_input_button_reveal: {}.freeze,
-        form_field_input_button_clear:  {}.freeze
+        form_field_input_button_clear:  {}.freeze,
+        form_submit:                    {
+          type:    { default: :default, validate: Button::Ranges::TYPE },
+          variant: { default: :primary, validate: Button::Ranges::VARIANT }
+        }.freeze
       }.freeze
 
       ICON = {

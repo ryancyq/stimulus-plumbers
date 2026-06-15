@@ -16,6 +16,7 @@ module StimulusPlumbers
               :ul,
               **merge_html_options(
                 theme.resolve(:combobox_listbox),
+                theme.resolve(:combobox_time_drum, target: target),
                 {
                   role:     "listbox",
                   tabindex: "0",

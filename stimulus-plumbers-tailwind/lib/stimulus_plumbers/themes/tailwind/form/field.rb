@@ -78,7 +78,7 @@ module StimulusPlumbers
               hover:bg-(--sp-color-muted)
             ].freeze,
             card:    %w[
-              flex justify-between items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
+              flex justify-between items-center gap-(--sp-space-3) flex-1 p-(--sp-space-4) cursor-pointer select-none
               text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
               bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
               hover:bg-(--sp-color-muted) hover:border-(--sp-color-border-strong) hover:text-(--sp-color-fg)

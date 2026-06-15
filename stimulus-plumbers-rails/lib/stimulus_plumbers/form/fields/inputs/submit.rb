@@ -17,7 +17,7 @@ module StimulusPlumbers
             Components::Button.new(@template).build(type: type, variant: variant) do |attrs|
               @template.tag.button(
                 type: "submit",
-                **merge_html_options(attrs, options)
+                **merge_html_options(attrs, theme.resolve(:form_submit, type: type, variant: variant), options)
               ) { @template.content_tag(:span, value) }
             end
           end
