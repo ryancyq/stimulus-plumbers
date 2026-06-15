@@ -155,16 +155,8 @@ class TailwindThemeComboboxTest < Minitest::Test
 
   # ── time drum ─────────────────────────────────────────────────────────────
 
-  def test_combobox_time_drum_hour_includes_flex_expand_classes
-    result = classes_for(:combobox_time_drum, target: "hour")
-
-    assert_includes result, "flex-1"
-    assert_includes result, "min-w-0"
-    refute_includes result, "shrink-0"
-  end
-
-  def test_combobox_time_drum_minute_includes_flex_expand_classes
-    result = classes_for(:combobox_time_drum, target: "minute")
+  def test_combobox_time_drum_unit_includes_flex_expand_classes
+    result = classes_for(:combobox_time_drum, type: :unit)
 
     assert_includes result, "flex-1"
     assert_includes result, "min-w-0"
@@ -172,14 +164,14 @@ class TailwindThemeComboboxTest < Minitest::Test
   end
 
   def test_combobox_time_drum_period_includes_shrink_class
-    result = classes_for(:combobox_time_drum, target: "period")
+    result = classes_for(:combobox_time_drum, type: :period)
 
     assert_includes result, "shrink-0"
     refute_includes result, "flex-1"
     refute_includes result, "min-w-0"
   end
 
-  def test_combobox_time_drum_defaults_to_hhmm_classes
+  def test_combobox_time_drum_defaults_to_unit_classes
     result = classes_for(:combobox_time_drum)
 
     assert_includes result, "flex-1"

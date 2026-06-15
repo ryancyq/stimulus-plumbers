@@ -54,9 +54,9 @@ module StimulusPlumbers
           py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
-        TIME           = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
-        TIME_DRUM_HHMM = %w[flex-1 min-w-0].freeze
-        TIME_DRUM_AMPM = %w[shrink-0].freeze
+        TIME             = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
+        TIME_DRUM_UNIT   = %w[flex-1 min-w-0].freeze
+        TIME_DRUM_PERIOD = %w[shrink-0].freeze
 
         DATE_NAV = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
 
@@ -117,8 +117,8 @@ module StimulusPlumbers
           { classes: klasses(*TIME) }
         end
 
-        def combobox_time_drum_classes(target: "hour")
-          { classes: klasses(*(target == "period" ? TIME_DRUM_AMPM : TIME_DRUM_HHMM)) }
+        def combobox_time_drum_classes(type: :unit)
+          { classes: klasses(*(type == :period ? TIME_DRUM_PERIOD : TIME_DRUM_UNIT)) }
         end
 
         def combobox_date_navigation_classes

@@ -57,6 +57,7 @@ Metrics/ClassLength:
     - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/field.rb
     - test/stimulus_plumbers/components/calendar/turbo_test.rb
+    - test/stimulus_plumbers/components/combobox/time_test.rb
     - test/stimulus_plumbers/components/link_test.rb
     - test/stimulus_plumbers/form/**/*_test.rb
     - test/stimulus_plumbers/helpers/*_test.rb
