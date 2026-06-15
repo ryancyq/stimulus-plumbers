@@ -185,6 +185,8 @@ stimulus-plumbers-rails/
 
 ## Accessibility Test Convention
 
+**Icon naming in sandbox views:** Always use generic icon names (e.g., `close`, `download`, `book`), never heroicon/tailwind-specific compound names (e.g., `x-mark`, `arrow-down-tray`, `book-open`). The core sandbox runs without any theme, so heroicon names will not resolve. Aliases are defined in `stimulus-plumbers-tailwind/lib/stimulus_plumbers/themes/tailwind/icon.rb` (`Icon::ALIASES`).
+
 Always pass `context:` to `assert_accessible` to scope axe to the component, not the full page:
 
 ```ruby

@@ -1,25 +1,31 @@
 <h1>Avatar components</h1>
 
-<div id="avatar">
-  <%# ── Initials with name ──────────────────────────────────────────────── %>
-  <section aria-label="Initials avatar">
+<section id="avatar-initials">
+  <h2>Initials</h2>
+  <div class="sb-row">
     <%= sp_avatar(initials: "SP", name: "Stimulus Plumbers") %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Image with name ─────────────────────────────────────────────────── %>
-  <section aria-label="Image avatar">
+<section id="avatar-image">
+  <h2>Image</h2>
+  <div class="sb-row">
     <%= sp_avatar(name: "Jane Doe", url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==") %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Fallback SVG with name ──────────────────────────────────────────── %>
-  <section aria-label="Fallback avatar">
+<section id="avatar-fallback">
+  <h2>Fallback</h2>
+  <div class="sb-row">
     <%= sp_avatar(name: "Anonymous User") %>
-  </section>
+  </div>
+</section>
 
-  <%# ── Sizes ───────────────────────────────────────────────────────────── %>
-  <section aria-label="Avatar sizes">
-    <%= sp_avatar(initials: "SM", name: "Small", size: :sm) %>
+<section id="avatar-sizes">
+  <h2>Sizes</h2>
+  <div class="sb-row">
+    <%= sp_avatar(initials: "SM", name: "Small",  size: :sm) %>
     <%= sp_avatar(initials: "MD", name: "Medium", size: :md) %>
-    <%= sp_avatar(initials: "LG", name: "Large", size: :lg) %>
-  </section>
-</div>
+    <%= sp_avatar(initials: "LG", name: "Large",  size: :lg) %>
+  </div>
+</section>

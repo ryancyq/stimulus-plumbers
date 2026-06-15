@@ -3,9 +3,28 @@
 require_relative "../application_accessibility_test_case"
 
 class LinkAccessibilityTest < ApplicationAccessibilityTestCase
-  def test_passes_wcag
+  def setup
+    super
     visit "/components/link"
+  end
 
-    assert_accessible context: "#link"
+  def test_default_passes_wcag
+    assert_accessible context: "#link-default"
+  end
+
+  def test_icons_passes_wcag
+    assert_accessible context: "#link-icons"
+  end
+
+  def test_button_type_passes_wcag
+    assert_accessible context: "#link-button"
+  end
+
+  def test_button_type_with_icons_passes_wcag
+    assert_accessible context: "#link-button-icons"
+  end
+
+  def test_card_type_passes_wcag
+    assert_accessible context: "#link-card"
   end
 end

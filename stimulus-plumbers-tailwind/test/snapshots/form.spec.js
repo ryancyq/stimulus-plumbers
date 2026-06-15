@@ -41,6 +41,30 @@ test.describe("field error form", () => {
       "field-error.png",
     );
   });
+
+  test("textarea error", async ({ page }) => {
+    await expect(page.locator("#field-error-textarea")).toHaveScreenshot(
+      "field-error-textarea.png",
+    );
+  });
+
+  test("select error", async ({ page }) => {
+    await expect(page.locator("#field-error-select")).toHaveScreenshot(
+      "field-error-select.png",
+    );
+  });
+
+  test("checkbox error", async ({ page }) => {
+    await expect(page.locator("#field-error-checkbox")).toHaveScreenshot(
+      "field-error-checkbox.png",
+    );
+  });
+
+  test("file error", async ({ page }) => {
+    await expect(page.locator("#field-error-file")).toHaveScreenshot(
+      "field-error-file.png",
+    );
+  });
 });
 
 // ── Floating label form ───────────────────────────────────────────────────────
@@ -52,6 +76,18 @@ test.describe("floating label form", () => {
   });
 
   test.describe("filled", () => {
+    test("optional", async ({ page }) => {
+      await expect(page.locator("#floating-filled-optional")).toHaveScreenshot(
+        "floating-filled-optional.png",
+      );
+    });
+
+    test("hint", async ({ page }) => {
+      await expect(page.locator("#floating-filled-hint")).toHaveScreenshot(
+        "floating-filled-hint.png",
+      );
+    });
+
     test("empty", async ({ page }) => {
       await expect(page.locator("#floating-filled")).toHaveScreenshot(
         "floating-filled-empty.png",

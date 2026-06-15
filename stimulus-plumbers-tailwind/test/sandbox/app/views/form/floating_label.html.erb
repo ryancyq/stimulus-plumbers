@@ -2,6 +2,25 @@
 
 <%# ── Filled ──────────────────────────────────────────────────────────── %>
 
+<section id="floating-filled-optional" class="sb-section">
+  <h2>Filled — optional</h2>
+  <div class="sb-col">
+    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :email, as: :email, label: "Email address", required: false, floating: :filled %>
+    <% end %>
+  </div>
+</section>
+
+<section id="floating-filled-hint" class="sb-section">
+  <h2>Filled — with hint</h2>
+  <div class="sb-col">
+    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :bio, as: :text_area, label: "Bio", required: false, floating: :filled,
+                  hint: "Tell us a little about yourself." %>
+    <% end %>
+  </div>
+</section>
+
 <section id="floating-filled" class="sb-section">
   <h2>Filled</h2>
   <div class="sb-col">

@@ -1,23 +1,90 @@
 <h1>Button components</h1>
 
-<div id="button">
-  <%# ── Types ──────────────────────────────────────────────────────────── %>
-  <%= sp_button("Primary") %>
-  <%= sp_button("Secondary",   type: :secondary) %>
-  <%= sp_button("Destructive", type: :primary, variant: :destructive) %>
+<section id="button-default">
+  <h2>Default</h2>
+  <div class="sb-row">
+    <%= sp_button("Primary") %>
+    <%= sp_button("Secondary",   type: :secondary) %>
+    <%= sp_button("Destructive", type: :primary, variant: :destructive) %>
+  </div>
+</section>
 
-  <%# ── Link ───────────────────────────────────────────────────────────── %>
-  <%= sp_button("Go to home", url: "/") %>
-  <%= sp_button("External", url: "https://example.com", target: "_blank") %>
+<section id="button-outline">
+  <h2>Outline</h2>
+  <div class="sb-row">
+    <%= sp_button("Outline Primary",     type: :outline, variant: :primary) %>
+    <%= sp_button("Outline Secondary",   type: :outline, variant: :secondary) %>
+    <%= sp_button("Outline Destructive", type: :outline, variant: :destructive) %>
+  </div>
+</section>
 
-  <%# ── Disabled ────────────────────────────────────────────────────────── %>
-  <%= sp_button("Disabled",           disabled: true) %>
-  <%= sp_button("Disabled secondary", type: :secondary, disabled: true) %>
+<section id="button-ghost">
+  <h2>Ghost</h2>
+  <div class="sb-row">
+    <%= sp_button("Ghost Primary",     type: :ghost, variant: :primary) %>
+    <%= sp_button("Ghost Secondary",   type: :ghost, variant: :secondary) %>
+    <%= sp_button("Ghost Destructive", type: :ghost, variant: :destructive) %>
+  </div>
+</section>
 
-  <%# ── With icons ─────────────────────────────────────────────────────────── %>
-  <%= sp_button("Save",   icon_leading: :check) %>
-  <%= sp_button("Delete", icon_trailing: :x) %>
+<section id="button-fab">
+  <h2>FAB</h2>
+  <div class="sb-row">
+    <%= sp_button("FAB",             type: :fab) %>
+    <%= sp_button("FAB Destructive", type: :fab, variant: :destructive) %>
+  </div>
+</section>
 
-  <%# ── Icon only (must have accessible name) ──────────────────────────────── %>
-  <%= sp_button(icon_leading: :x, aria: { label: "Close" }) %>
-</div>
+<section id="button-fab-outline">
+  <h2>FAB Outline</h2>
+  <div class="sb-row">
+    <%= sp_button("FAB Outline",             type: :fab_outline) %>
+    <%= sp_button("FAB Outline Destructive", type: :fab_outline, variant: :destructive) %>
+  </div>
+</section>
+
+<section id="button-dashed">
+  <h2>Dashed</h2>
+  <div class="sb-row">
+    <%= sp_button("Dashed",             type: :dashed) %>
+    <%= sp_button("Dashed Destructive", type: :dashed, variant: :destructive) %>
+  </div>
+</section>
+
+<section id="button-card">
+  <h2>Card</h2>
+  <div class="sb-col">
+    <%= sp_button("Get started",        type: :card) %>
+    <%= sp_button("View documentation", type: :card, icon_leading: :book) %>
+    <%= sp_button("Download",           type: :card, icon_leading: :download, icon_trailing: :"arrow-right") %>
+  </div>
+</section>
+
+<section id="button-icons">
+  <h2>Icons</h2>
+  <div class="sb-col">
+    <%# ── Icon leading / trailing ───────────────────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_button("Save",   icon_leading: :check) %>
+      <%= sp_button("Delete", icon_trailing: :close) %>
+    </div>
+    <%# ── Icon only (must have accessible name) ──────────────────────────── %>
+    <div class="sb-row">
+      <%= sp_button(icon_leading: :close, aria: { label: "Close" }) %>
+      <%= sp_button(icon_leading: :close, aria: { label: "Close" }, type: :outline, variant: :secondary) %>
+    </div>
+  </div>
+</section>
+
+<section id="button-disabled">
+  <h2>Disabled</h2>
+  <div class="sb-row">
+    <%= sp_button("Default",     type: :default,     disabled: true) %>
+    <%= sp_button("Outline",     type: :outline,     disabled: true) %>
+    <%= sp_button("Ghost",       type: :ghost,       disabled: true) %>
+    <%= sp_button("FAB",         type: :fab,         disabled: true) %>
+    <%= sp_button("FAB Outline", type: :fab_outline, disabled: true) %>
+    <%= sp_button("Dashed",      type: :dashed,      disabled: true) %>
+    <%= sp_button("Card",        type: :card,        disabled: true) %>
+  </div>
+</section>

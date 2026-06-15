@@ -1,34 +1,93 @@
 <h1>Field error</h1>
 
-<div id="field-error">
-  <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <h2>Required</h2>
-    <%= f.field :name, as: :text, label: "Full name", required: true %>
+<% countries = [["Australia", "au"], ["New Zealand", "nz"], ["Singapore", "sg"]] %>
+<% fresh = SignUp.new %>
+<% error_form = SignUp.new.tap do |f|
+     f.errors.add(:email, "is already taken")
+     f.errors.add(:name, "can't be blank")
+     f.errors.add(:bio, "can't be blank")
+     f.errors.add(:country, "is invalid")
+     f.errors.add(:newsletter, "must be accepted")
+     f.errors.add(:resume, "is required")
+   end %>
 
-    <h2>With hint</h2>
-    <%= f.field :email, as: :email, label: "Email", hint: "We'll never share your email." %>
+<section id="field-error-required">
+  <h2>Required</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Error from model</h2>
-    <%# @form already has errors on :email and :name added in the controller %>
-    <%= f.field :name, as: :text, label: "Name" %>
+<section id="field-error-hint">
+  <h2>With hint</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :email, as: :email, label: "Email", hint: "We'll never share your email." %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Error override</h2>
-    <%= f.field :name, as: :text, label: "Username", error: "This field is required." %>
+<section id="field-error-model">
+  <h2>Error from model</h2>
+  <div class="sb-col">
+    <%= form_with(model: error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Name" %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Visually hidden label</h2>
-    <%= f.field :name, as: :text, label: "Search query", hide_label: true %>
+<section id="field-error-override">
+  <h2>Error override</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Username", error: "This field is required." %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Textarea with error</h2>
-    <%= f.field :bio, as: :text_area, label: "Bio" %>
+<section id="field-error-hidden-label">
+  <h2>Visually hidden label</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Search query", hide_label: true %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Select with error</h2>
-    <% countries = [["Australia", "au"], ["New Zealand", "nz"], ["Singapore", "sg"]] %>
-    <%= f.field :country, as: :select, label: "Country", choices: countries %>
+<section id="field-error-textarea">
+  <h2>Textarea with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :bio, as: :text_area, label: "Bio" %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Checkbox with error</h2>
-    <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+<section id="field-error-select">
+  <h2>Select with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :country, as: :select, label: "Country", choices: countries %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>File with error</h2>
-    <%= f.field :resume, as: :file, label: "Resume" %>
-  <% end %>
-</div>
+<section id="field-error-checkbox">
+  <h2>Checkbox with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="field-error-file">
+  <h2>File with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :resume, as: :file, label: "Resume" %>
+    <% end %>
+  </div>
+</section>

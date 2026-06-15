@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     get :card
     get :link
     get :divider
+    get :icon
     get :popover
   end
 

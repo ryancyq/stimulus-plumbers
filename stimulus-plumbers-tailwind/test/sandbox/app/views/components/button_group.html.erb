@@ -54,16 +54,16 @@
     <%# ── Icon trailing ──────────────────────────────────────────────────────── %>
     <div class="sb-row">
       <%= sp_button_group do |group| %>
-        <%= group.button("Download", icon_trailing: "arrow-down-tray") %>
+        <%= group.button("Download", icon_trailing: "download") %>
         <%= group.button("Next",     icon_trailing: "arrow-right") %>
-        <%= group.button("Send",     icon_leading: "envelope", icon_trailing: "arrow-right") %>
+        <%= group.button("Send",     icon_leading: "email", icon_trailing: "arrow-right") %>
       <% end %>
     </div>
     <%# ── Icon only ──────────────────────────────────────────────────────────── %>
     <div class="sb-row">
       <%= sp_button_group do |group| %>
         <%= group.button(icon_leading: "plus",   aria: { label: "Add" }) %>
-        <%= group.button(icon_leading: "pencil", aria: { label: "Edit" },   type: :outline, variant: :secondary) %>
+        <%= group.button(icon_leading: "edit",   aria: { label: "Edit" },   type: :outline, variant: :secondary) %>
         <%= group.button(icon_leading: "trash",  aria: { label: "Delete" }, type: :fab,     variant: :destructive) %>
       <% end %>
     </div>

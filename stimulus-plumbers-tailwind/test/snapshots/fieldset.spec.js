@@ -38,5 +38,25 @@ test.describe("fieldset", () => {
         "fieldset-checkbox-error.png",
       );
     });
+
+    test("required", async ({ page }) => {
+      await expect(page.locator("#fieldset-checkbox-required")).toHaveScreenshot(
+        "fieldset-checkbox-required.png",
+      );
+    });
+
+    test("hint", async ({ page }) => {
+      await expect(page.locator("#fieldset-checkbox-hint")).toHaveScreenshot(
+        "fieldset-checkbox-hint.png",
+      );
+    });
+  });
+
+  test.describe("radio hint", () => {
+    test("hint", async ({ page }) => {
+      await expect(page.locator("#fieldset-radio-hint")).toHaveScreenshot(
+        "fieldset-radio-hint.png",
+      );
+    });
   });
 });
