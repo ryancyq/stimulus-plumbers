@@ -17,16 +17,17 @@ class SubmitTest < ActionView::TestCase
     doc = build_form { |f| f.submit "Save" }
 
     assert_css doc, "button[type='submit']"
-    assert_includes doc.at_css("button[type='submit']").text, "Save"
+    assert_css doc, "button[type='submit'] > span"
+    assert_includes doc.at_css("button[type='submit'] > span").text, "Save"
   end
 
   def test_submit_uses_default_value_when_omitted
     doc = build_form(&:submit)
 
-    button = doc.at_css("button[type='submit']")
+    span = doc.at_css("button[type='submit'] > span")
 
-    assert_not_nil button
-    refute_empty button.text.strip
+    assert_not_nil span
+    refute_empty span.text.strip
   end
 
   def test_submit_with_default_type_does_not_raise
@@ -63,9 +64,11 @@ class SubmitTest < ActionView::TestCase
     doc = build_form { |f| f.submit class: "btn" }
 
     button = doc.at_css("button[type='submit']")
+    span   = doc.at_css("button[type='submit'] > span")
 
     assert_not_nil button
     assert_includes button["class"].to_s, "btn"
-    refute_empty button.text.strip
+    assert_not_nil span
+    refute_empty span.text.strip
   end
 end

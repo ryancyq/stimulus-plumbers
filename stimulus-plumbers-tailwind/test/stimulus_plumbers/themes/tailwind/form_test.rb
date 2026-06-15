@@ -43,32 +43,6 @@ class TailwindThemeFormTest < Minitest::Test
     refute_includes classes_for(:form_group, layout: :inline), "flex-col"
   end
 
-  # :form_submit
-
-  def test_form_submit_default_type_includes_button_layout_classes
-    assert_includes classes_for(:form_submit), "inline-flex"
-  end
-
-  def test_form_submit_default_type_includes_primary_variant
-    assert_includes classes_for(:form_submit), "[--btn-bg:var(--sp-color-primary)]"
-  end
-
-  def test_form_submit_outline_type_includes_button_layout_classes
-    assert_includes classes_for(:form_submit, type: :outline), "inline-flex"
-  end
-
-  def test_form_submit_outline_type_excludes_solid_text
-    refute_includes classes_for(:form_submit, type: :outline), "text-(--btn-fg)"
-  end
-
-  def test_form_submit_card_type_skips_size_classes
-    result = classes_for(:form_submit, type: :card)
-
-    refute_includes result, "h-9"
-    refute_includes result, "h-7"
-    refute_includes result, "h-14"
-  end
-
   def test_form_group_error_does_not_change_layout_classes
     stacked         = classes_for(:form_group, layout: :stacked)
     stacked_error   = classes_for(:form_group, layout: :stacked, error: true)
