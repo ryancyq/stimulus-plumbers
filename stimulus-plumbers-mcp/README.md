@@ -54,7 +54,23 @@ bundle install
 
 ## IDE Setup
 
-Add to your IDE's MCP config:
+Two equivalent entry points — use whichever fits your IDE config:
+
+**`bin/mcp` (root-level wrapper, no `cwd` needed):**
+
+```json
+{
+  "mcpServers": {
+    "stimulus-plumbers": {
+      "command": "bundle",
+      "args": ["exec", "ruby", "bin/mcp"],
+      "cwd": "/path/to/stimulus-plumbers"
+    }
+  }
+}
+```
+
+**`bin/server` (inside the mcp package):**
 
 ```json
 {
@@ -62,7 +78,7 @@ Add to your IDE's MCP config:
     "stimulus-plumbers": {
       "command": "bundle",
       "args": ["exec", "ruby", "bin/server"],
-      "cwd": "/path/to/stimulus-plumbers-mcp"
+      "cwd": "/path/to/stimulus-plumbers/stimulus-plumbers-mcp"
     }
   }
 }

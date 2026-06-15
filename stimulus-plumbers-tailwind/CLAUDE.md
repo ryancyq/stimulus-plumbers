@@ -17,6 +17,8 @@ stimulus-plumbers-tailwind/
 │               ├── list.rb                  # List CSS classes
 │               ├── avatar.rb               # Avatar CSS classes
 │               ├── button.rb               # Button CSS classes
+│               ├── button/
+│               │   └── group.rb            # Button::Group CSS classes
 │               ├── calendar.rb             # Calendar CSS classes
 │               ├── card.rb                 # Card CSS classes + Card::VARIANTS (--card-ring)
 │               ├── combobox.rb             # Combobox CSS classes
@@ -30,7 +32,8 @@ stimulus-plumbers-tailwind/
 │               │   ├── custom.rb           # Custom icons from icons/customs/
 │               │   ├── heroicons/          # Bundled heroicon SVGs (outline/ + solid/)
 │               │   └── customs/            # Custom icon SVGs (e.g. spinner.svg)
-│               └── layout.rb              # Layout CSS classes
+│               ├── layout.rb              # Layout CSS classes
+│               └── link.rb                # Link CSS classes
 ├── test/
 │   ├── stimulus_plumbers/
 │   │   └── themes/

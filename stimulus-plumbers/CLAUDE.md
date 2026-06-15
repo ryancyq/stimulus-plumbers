@@ -12,21 +12,31 @@ stimulus-plumbers/
 │   ├── controllers/                 # Stimulus controllers
 │   │   ├── *_controller.js
 │   ├── plumbers/                    # Core plumber utilities
+│   │   ├── formatters/              # Input formatter strategies
+│   │   │   └── *.js
 │   │   ├── plumber/                 # Base plumber classes
+│   │   │   ├── config.js
+│   │   │   ├── date.js
+│   │   │   ├── geometry.js
 │   │   │   ├── index.js
-│   │   │   └── support.js
+│   │   │   └── window_observer.js
 │   │   └── *.js
 │   ├── index.js                     # Main entry point
 │   ├── requestor.js                 # HTTP request helper
 │   └── researcher.js                # Fuzzy match / filter helper
 ├── tests/
 │   ├── unit/
+│   │   ├── accessibility/
+│   │   │   └── *.test.js
 │   │   ├── controllers/
 │   │   │   └── *.test.js
-│   │   └── plumbers/
-│   │       ├── plumber/
-│   │       │   └── *.test.js
-│   │       └── *.test.js
+│   │   ├── plumbers/
+│   │   │   ├── formatters/
+│   │   │   │   └── *.test.js
+│   │   │   ├── plumber/
+│   │   │   │   └── *.test.js
+│   │   │   └── *.test.js
+│   │   └── *.test.js
 │   └── setup.js
 ├── eslint.config.js
 ├── package.json

@@ -77,7 +77,6 @@ The loaders/tools are correct in isolation but the real question is whether a **
 
 Why it pays off: this is the layer that catches tool-through-server crashes (e.g. a `define_tool` block calling a module-private helper) and measures whether the exposed surface is *sufficient* — not just non-erroring.
 
-**Known gaps (validated 2026-06-13):** All 6 UX friction gaps from the initial dogfood run are fixed (guide discovery, helper signature grouping, f.submit, icon lookup, sp_button_group, card.with_body block flag).
 
 ## Unit Test Convention
 
