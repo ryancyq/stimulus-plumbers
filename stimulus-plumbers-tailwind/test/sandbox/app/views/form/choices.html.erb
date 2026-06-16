@@ -35,7 +35,7 @@
           label:   "Country",
           hint:    "Select your country of residence.",
           choices: countries %>
-    <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+    <%= f.choice :terms_of_service, as: :check_box, label: "I agree to the terms and conditions", required: true %>
     <%= f.submit "Save preferences" %>
   <% end %>
   </div>

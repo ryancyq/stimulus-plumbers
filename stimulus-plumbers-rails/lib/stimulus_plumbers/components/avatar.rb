@@ -27,16 +27,24 @@ module StimulusPlumbers
         if block_given?
           template.capture(&block)
         elsif url
-          img_options = merge_html_options(
-            theme.resolve(:avatar_image),
-            { src: url, alt: name.present? ? I18n.t("stimulus_plumbers.avatar.image_alt", name: name) : "", onerror: "this.src=''" }
-          )
-          template.tag.img(**img_options)
+          img_avatar(name, url)
         elsif initials
           initials_svg(initials)
         else
           fallback_svg
         end
+      end
+
+      def img_avatar(name, url)
+        img_options = merge_html_options(
+          theme.resolve(:avatar_image),
+          {
+            src:     url,
+            alt:     name.present? ? I18n.t("stimulus_plumbers.avatar.image_alt", name: name) : "",
+            onerror: "this.src=''"
+          }
+        )
+        template.tag.img(**img_options)
       end
 
       def resolve_variant(variant, name, initials)

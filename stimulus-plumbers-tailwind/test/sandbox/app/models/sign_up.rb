@@ -10,6 +10,7 @@ class SignUp
                 :age,
                 :birth_date,
                 :newsletter,
+                :terms_of_service,
                 :gender,
                 :country,
                 :role,
