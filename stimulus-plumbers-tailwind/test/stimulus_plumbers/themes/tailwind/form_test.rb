@@ -47,11 +47,13 @@ class TailwindThemeFormTest < Minitest::Test
 
   def test_form_submit_returns_empty_hash
     result = @theme.resolve(:form_submit)
+
     assert_equal({}, result)
   end
 
   def test_form_submit_returns_empty_hash_with_type_and_variant
     result = @theme.resolve(:form_submit, type: :default, variant: :primary)
+
     assert_equal({}, result)
   end
 

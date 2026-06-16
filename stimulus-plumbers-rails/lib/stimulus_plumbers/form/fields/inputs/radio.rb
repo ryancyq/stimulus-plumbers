@@ -52,10 +52,12 @@ module StimulusPlumbers
           def render_radio_button_label(builder, label_opts, type = :default)
             html_options = merge_html_options(label_opts)
             if %i[button card].include?(type)
-              @template.safe_join([
-                builder.radio_button,
-                builder.label(**html_options) { builder.text }
-              ])
+              @template.safe_join(
+                [
+                  builder.radio_button,
+                  builder.label(**html_options) { builder.text }
+                ]
+              )
             else
               builder.label(**html_options) { @template.safe_join([builder.radio_button, builder.text]) }
             end

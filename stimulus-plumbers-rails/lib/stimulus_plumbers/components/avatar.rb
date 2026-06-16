@@ -29,7 +29,11 @@ module StimulusPlumbers
         elsif url
           img_options = merge_html_options(
             theme.resolve(:avatar_image),
-            { src: url, alt: name.present? ? I18n.t("stimulus_plumbers.avatar.image_alt", name: name) : "", onerror: "this.src=''" }
+            {
+              src:     url,
+              alt:     name.present? ? I18n.t("stimulus_plumbers.avatar.image_alt", name: name) : "",
+              onerror: "this.src=''"
+            }
           )
           template.tag.img(**img_options)
         elsif initials
