@@ -94,7 +94,8 @@ module StimulusPlumbers
         combobox_time:                      {}.freeze,
         combobox_time_drum:                 { type: { default: :unit, validate: %i[unit period] } }.freeze,
         combobox_date_navigation:           {}.freeze,
-        combobox_date_navigation_navigator: {}.freeze
+        combobox_date_navigation_navigator: {}.freeze,
+        combobox_date_navigation_title:     {}.freeze
       }.freeze
 
       FORM = {

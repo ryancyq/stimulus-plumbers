@@ -13,14 +13,8 @@ module StimulusPlumbers
         html_options = merge_html_options(
           theme.resolve(:calendar),
           kwargs,
-          {
-            data: {
-              controller:                                         "#{MONTH_STIMULUS_CONTROLLER} #{OBSERVER_STIMULUS_CONTROLLER}",
-              action:                                             STIMULUS_ACTION,
-              "#{MONTH_STIMULUS_CONTROLLER}-row-class":          theme.resolve(:calendar_row).fetch(:classes, ""),
-              "#{MONTH_STIMULUS_CONTROLLER}-day-of-month-class": theme.resolve(:calendar_day).fetch(:classes, "")
-            }
-          }
+          { data: stimulus_options },
+          { data: stimulus_theme_options }
         )
         template.content_tag(:div, **html_options, role: "grid") do
           template.safe_join([month, year, decade])
@@ -47,6 +41,21 @@ module StimulusPlumbers
       end
 
       private
+
+      def stimulus_options
+        {
+          controller: "#{MONTH_STIMULUS_CONTROLLER} #{OBSERVER_STIMULUS_CONTROLLER}",
+          action:     STIMULUS_ACTION
+        }
+      end
+
+      def stimulus_theme_options
+        {
+          "#{MONTH_STIMULUS_CONTROLLER}-row-class":                theme.resolve(:calendar_row).fetch(:classes, ""),
+          "#{MONTH_STIMULUS_CONTROLLER}-day-of-month-class":       theme.resolve(:calendar_day).fetch(:classes, ""),
+          "#{MONTH_STIMULUS_CONTROLLER}-day-of-other-month-class": theme.resolve(:calendar_day, outside: true).fetch(:classes, "")
+        }
+      end
 
       def dow_options
         merge_html_options(

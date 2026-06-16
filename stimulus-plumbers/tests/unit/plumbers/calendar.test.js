@@ -277,6 +277,56 @@ describe('Calendar', () => {
       expect(calendar.monthsOfYear[0].value).toBe(0)
       expect(calendar.monthsOfYear[11].value).toBe(11)
     })
+
+    it('marks months fully before since as disabled', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', since: '2026-04-01' })
+
+      expect(calendar.monthsOfYear[0].disabled).toBe(true)  // Jan fully before April
+      expect(calendar.monthsOfYear[1].disabled).toBe(true)  // Feb fully before April
+      expect(calendar.monthsOfYear[2].disabled).toBe(true)  // Mar fully before April
+      expect(calendar.monthsOfYear[3].disabled).toBe(false) // Apr partially in range
+    })
+
+    it('marks months fully after till as disabled', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', till: '2026-10-15' })
+
+      expect(calendar.monthsOfYear[9].disabled).toBe(false)  // Oct partially in range (ends Oct 31 > Oct 15)
+      expect(calendar.monthsOfYear[10].disabled).toBe(true)  // Nov fully after Oct 15
+      expect(calendar.monthsOfYear[11].disabled).toBe(true)  // Dec fully after Oct 15
+    })
+
+    it('does not disable months partially in range', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', since: '2026-03-15' })
+
+      expect(calendar.monthsOfYear[2].disabled).toBe(false) // March partially in range
+    })
+
+    it('marks months in disabledMonths by index as disabled', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', disabledMonths: [0] })
+
+      expect(calendar.monthsOfYear[0].disabled).toBe(true)
+      expect(calendar.monthsOfYear[1].disabled).toBe(false)
+    })
+
+    it('marks months in disabledMonths by short name as disabled', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', disabledMonths: ['Jan'] })
+
+      expect(calendar.monthsOfYear[0].disabled).toBe(true)
+      expect(calendar.monthsOfYear[1].disabled).toBe(false)
+    })
+
+    it('marks months in disabledMonths by long name as disabled', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', disabledMonths: ['January'] })
+
+      expect(calendar.monthsOfYear[0].disabled).toBe(true)
+      expect(calendar.monthsOfYear[1].disabled).toBe(false)
+    })
+
+    it('does not disable months when no rules apply', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01' })
+
+      expect(calendar.monthsOfYear.every((m) => !m.disabled)).toBe(true)
+    })
   })
 
   describe('buildYearsOfDecade', () => {
@@ -306,19 +356,46 @@ describe('Calendar', () => {
       expect(current[0].value).toBe(2026)
     })
 
-    it('marks buffer years as outside', () => {
+    it('marks buffer years as disabled', () => {
       const calendar = new Calendar(mockController, { today: '2026-06-01' })
-      const outside = calendar.yearsOfDecade.filter((y) => y.outside)
+      const disabled = calendar.yearsOfDecade.filter((y) => y.disabled)
 
-      expect(outside).toHaveLength(2)
-      expect(outside.map((y) => y.value)).toEqual([2019, 2030])
+      expect(disabled).toHaveLength(2)
+      expect(disabled.map((y) => y.value)).toEqual([2019, 2030])
     })
 
-    it('does not mark decade years as outside', () => {
+    it('does not disable decade years by default', () => {
       const calendar = new Calendar(mockController, { today: '2026-06-01' })
-      const inside = calendar.yearsOfDecade.filter((y) => !y.outside)
+      const enabled = calendar.yearsOfDecade.filter((y) => !y.disabled)
 
-      expect(inside).toHaveLength(10)
+      expect(enabled).toHaveLength(10)
+    })
+
+    it('marks years before since as disabled', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', since: '2023-01-01' })
+
+      expect(calendar.yearsOfDecade.find((y) => y.value === 2022).disabled).toBe(true)
+      expect(calendar.yearsOfDecade.find((y) => y.value === 2023).disabled).toBe(false)
+    })
+
+    it('marks years after till as disabled', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', till: '2027-12-31' })
+
+      expect(calendar.yearsOfDecade.find((y) => y.value === 2028).disabled).toBe(true)
+      expect(calendar.yearsOfDecade.find((y) => y.value === 2027).disabled).toBe(false)
+    })
+
+    it('marks years in disabledYears as disabled by integer', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', disabledYears: [2025] })
+
+      expect(calendar.yearsOfDecade.find((y) => y.value === 2025).disabled).toBe(true)
+      expect(calendar.yearsOfDecade.find((y) => y.value === 2026).disabled).toBe(false)
+    })
+
+    it('marks years in disabledYears as disabled by string', () => {
+      const calendar = new Calendar(mockController, { today: '2026-06-01', disabledYears: ['2025'] })
+
+      expect(calendar.yearsOfDecade.find((y) => y.value === 2025).disabled).toBe(true)
     })
   })
 

@@ -3,9 +3,8 @@
 require "test_helper"
 
 class CalendarTurboMonthsOfYearTest < ActionView::TestCase
-  def renderer(date: Date.new(2026, 6, 1), today: Date.new(2026, 6, 1), selected_date: nil, format: :short)
-    StimulusPlumbers::Components::Calendar::Turbo::MonthsOfYear
-      .new(self, date: date, today: today, selected_date: selected_date, format: format)
+  def renderer(date: Date.new(2026, 6, 1), today: Date.new(2026, 6, 1), **opts)
+    StimulusPlumbers::Components::Calendar::Turbo::MonthsOfYear.new(self, date: date, today: today, **opts)
   end
 
   def doc(**kwargs)
@@ -132,5 +131,73 @@ class CalendarTurboMonthsOfYearTest < ActionView::TestCase
     result.css("button[role='gridcell']").each do |btn|
       assert_nil btn["aria-label"]
     end
+  end
+
+  def test_no_months_are_disabled_by_default
+    result = doc
+
+    assert_equal 0, result.css("[aria-disabled='true']").length
+  end
+
+  def test_since_disables_months_fully_before_range
+    # since = April 1 → Jan, Feb, Mar fully before → disabled
+    result = doc(since: Date.new(2026, 4, 1))
+
+    disabled = result.css("[aria-disabled='true']").map { |el| el["data-month"].to_i }.sort
+
+    assert_equal [1, 2, 3], disabled
+  end
+
+  def test_since_does_not_disable_month_partially_in_range
+    # since = March 15 → March has days within range
+    result = doc(since: Date.new(2026, 3, 15))
+
+    assert_nil result.at_css("[data-month='3'][aria-disabled='true']")
+  end
+
+  def test_till_disables_months_fully_after_range
+    # till = Sept 30 → Oct, Nov, Dec fully after → disabled
+    result = doc(till: Date.new(2026, 9, 30))
+
+    disabled = result.css("[aria-disabled='true']").map { |el| el["data-month"].to_i }.sort
+
+    assert_equal [10, 11, 12], disabled
+  end
+
+  def test_disabled_months_list_by_integer
+    result = doc(disabled_months: [1])
+
+    assert result.at_css("[data-month='1'][aria-disabled='true']")
+    assert_nil result.at_css("[data-month='2'][aria-disabled='true']")
+  end
+
+  def test_disabled_months_list_by_abbreviated_name
+    result = doc(disabled_months: ["Jan"])
+
+    assert result.at_css("[data-month='1'][aria-disabled='true']")
+    assert_nil result.at_css("[data-month='2'][aria-disabled='true']")
+  end
+
+  def test_disabled_months_list_by_full_name
+    result = doc(disabled_months: ["January"])
+
+    assert result.at_css("[data-month='1'][aria-disabled='true']")
+    assert_nil result.at_css("[data-month='2'][aria-disabled='true']")
+  end
+
+  def test_disabled_month_has_tabindex_minus_one
+    result = doc(
+      date:            Date.new(2026, 6, 1),
+      today:           Date.new(2026, 6, 1),
+      disabled_months: [6]
+    )
+
+    assert_equal "-1", result.at_css("[data-month='6']")["tabindex"]
+  end
+
+  def test_disabled_month_has_aria_disabled_true
+    result = doc(disabled_months: [3])
+
+    assert result.at_css("[data-month='3'][aria-disabled='true']")
   end
 end

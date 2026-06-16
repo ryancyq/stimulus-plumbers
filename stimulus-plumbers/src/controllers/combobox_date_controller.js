@@ -46,7 +46,7 @@ export default class extends Controller {
 
   async selectMonth(event) {
     const btn = event.target.closest('button[data-month]');
-    if (!btn) return;
+    if (!btn || btn.getAttribute('aria-disabled') === 'true') return;
     const month = parseInt(btn.dataset.month, 10) - 1; // data-month is 1-indexed
     const { year } = this.calendarMonthOutlet.calendar;
     await this.calendarMonthOutlet.calendar.navigate(new Date(year, month, 1));
@@ -163,6 +163,7 @@ export default class extends Controller {
       if (m.value === today.getMonth() && year === today.getFullYear()) {
         btn.setAttribute('aria-current', 'month');
       }
+      if (m.disabled) btn.setAttribute('aria-disabled', 'true');
       cells.push(btn);
     }
 
@@ -184,7 +185,7 @@ export default class extends Controller {
       btn.setAttribute('role', 'gridcell');
       btn.setAttribute('aria-selected', y.value === year ? 'true' : 'false');
       if (y.value === todayYear) btn.setAttribute('aria-current', 'year');
-      if (y.outside) btn.setAttribute('aria-disabled', 'true');
+      if (y.disabled) btn.setAttribute('aria-disabled', 'true');
       cells.push(btn);
     }
 

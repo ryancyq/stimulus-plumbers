@@ -60,7 +60,8 @@ module StimulusPlumbers
 
         DATE_NAV = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
 
-        DATE_NAV_BTN = %w[size-(--sp-calendar-day-size)].freeze
+        DATE_NAV_BTN   = %w[size-(--sp-control-size)].freeze
+        DATE_NAV_TITLE = %w[flex-1 text-center].freeze
 
         CONTAINER = %w[relative].freeze
         POPOVER   = %w[absolute top-full left-0 min-w-full].freeze
@@ -127,6 +128,10 @@ module StimulusPlumbers
 
         def combobox_date_navigation_navigator_classes
           { classes: klasses(*DATE_NAV_BTN) }
+        end
+
+        def combobox_date_navigation_title_classes
+          { classes: klasses(*DATE_NAV_TITLE) }
         end
       end
     end

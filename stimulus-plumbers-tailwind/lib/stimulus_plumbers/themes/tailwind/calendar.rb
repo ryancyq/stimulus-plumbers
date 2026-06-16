@@ -23,6 +23,12 @@ module StimulusPlumbers
           aria-selected:hover:bg-(--sp-color-primary)/90
           aria-[hidden=true]:pointer-events-none
           aria-[hidden=true]:hover:bg-transparent
+          aria-[disabled=true]:text-(--sp-color-muted-fg)
+          aria-[disabled=true]:pointer-events-none
+          aria-[disabled=true]:hover:bg-transparent
+          disabled:text-(--sp-color-muted-fg)
+          disabled:pointer-events-none
+          disabled:hover:bg-transparent
         ].freeze
 
         QUARTER_GRID = %w[grid grid-cols-4 gap-(--sp-space-1)].freeze
@@ -31,26 +37,30 @@ module StimulusPlumbers
 
         MONTH = %w[
           rounded-(--sp-radius-md) flex items-center justify-center
-          text-(length:--sp-text-sm) h-10 flex-1
+          text-(length:--sp-text-sm) h-10 flex-1 px-(--sp-space-2)
           hover:bg-(--sp-color-muted) cursor-pointer
           aria-selected:bg-(--sp-color-primary)
           aria-selected:text-(--sp-color-primary-fg)
           aria-selected:hover:bg-(--sp-color-primary)/90
-          aria-disabled:pointer-events-none aria-disabled:text-(--sp-color-disabled-fg)
           aria-[current=month]:font-bold
+          aria-[disabled=true]:text-(--sp-color-muted-fg)
+          aria-[disabled=true]:pointer-events-none
+          aria-[disabled=true]:hover:bg-transparent
         ].freeze
 
         YEARS_OF_DECADE = "contents"
 
         YEAR = %w[
           rounded-(--sp-radius-md) flex items-center justify-center
-          text-(length:--sp-text-sm) h-10 flex-1
+          text-(length:--sp-text-sm) h-10 flex-1 px-(--sp-space-2)
           hover:bg-(--sp-color-muted) cursor-pointer
           aria-selected:bg-(--sp-color-primary)
           aria-selected:text-(--sp-color-primary-fg)
           aria-selected:hover:bg-(--sp-color-primary)/90
-          aria-disabled:pointer-events-none aria-disabled:text-(--sp-color-disabled-fg)
           aria-[current=year]:font-bold
+          aria-[disabled=true]:text-(--sp-color-muted-fg)
+          aria-[disabled=true]:pointer-events-none
+          aria-[disabled=true]:hover:bg-transparent
         ].freeze
 
         private
@@ -80,21 +90,13 @@ module StimulusPlumbers
         end
 
         def calendar_day_classes(outside: false, **)
-          {
-            classes: klasses(
-              *DAY,
-              *(outside ? %w[text-(--sp-color-disabled-fg)] : [])
-            )
-          }
+          extra = outside ? %w[text-(--sp-color-muted-fg)] : []
+          { classes: klasses(*DAY, *extra) }
         end
 
-        def calendar_month_classes(**)
-          { classes: klasses(*MONTH) }
-        end
+        def calendar_month_classes(**) = { classes: klasses(*MONTH) }
 
-        def calendar_year_classes(**)
-          { classes: klasses(*YEAR) }
-        end
+        def calendar_year_classes(**)  = { classes: klasses(*YEAR) }
 
         def calendar_quarter_grid_classes
           { classes: klasses(*QUARTER_GRID) }

@@ -4,7 +4,7 @@ import { tryParseDate } from '../plumbers/plumber/date';
 
 export default class extends Controller {
   static targets = ['daysOfWeek', 'daysOfMonth'];
-  static classes = ['dayOfWeek', 'dayOfMonth', 'row'];
+  static classes = ['dayOfWeek', 'dayOfMonth', 'dayOfOtherMonth', 'row'];
   static values = {
     locales: { type: Array, default: ['default'] },
     weekdayFormat: { type: String, default: 'short' },
@@ -44,7 +44,13 @@ export default class extends Controller {
 
   onSelect(event) {
     const iso = event.detail?.iso;
-    if (iso) this.selectedValue = iso;
+    if (!iso) return;
+    const date = tryParseDate(iso);
+    if (!date) return;
+    this.selectedValue = iso;
+    if (date.getMonth() !== this.calendar.month || date.getFullYear() !== this.calendar.year) {
+      this.calendar.navigate(date);
+    }
   }
 
   draw() {
@@ -93,17 +99,21 @@ export default class extends Controller {
     const today = new Date(t.getFullYear(), t.getMonth(), t.getDate()).getTime();
     const daysOfMonth = [];
     for (const date of this.calendar.daysOfMonth) {
-      const dayDisabled =
-        !date.current || this.calendar.isDisabled(date.date) || !this.calendar.isWithinRange(date.date);
+      const dayRuleDisabled = this.calendar.isDisabled(date.date) || !this.calendar.isWithinRange(date.date);
+      const dayOutsideNavigable = !date.current && this.daysOfOtherMonthValue && !dayRuleDisabled;
       const dayText = date.current || this.daysOfOtherMonthValue ? date.value : '';
       const dayElement = this.createDayElement(dayText, {
-        selectable: date.current,
-        disabled: dayDisabled,
+        selectable: date.current || dayOutsideNavigable,
+        disabled: date.current ? dayRuleDisabled : !dayOutsideNavigable,
       });
 
       if (today === date.date.getTime()) dayElement.setAttribute('aria-current', 'date');
       if (date.current || this.daysOfOtherMonthValue) dayElement.setAttribute('aria-selected', '');
-      if (this.hasDayOfMonthClass) dayElement.classList.add(...this.dayOfMonthClasses);
+      if (!date.current && this.daysOfOtherMonthValue && this.hasDayOfOtherMonthClass) {
+        dayElement.classList.add(...this.dayOfOtherMonthClasses);
+      } else if (this.hasDayOfMonthClass) {
+        dayElement.classList.add(...this.dayOfMonthClasses);
+      }
 
       const time = document.createElement('time');
       time.dateTime = date.iso;

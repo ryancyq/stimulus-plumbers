@@ -21,6 +21,10 @@ module StimulusPlumbers
         selectable: false,
         selected_date: nil,
         show_other_months: false,
+        since: nil,
+        till: nil,
+        disabled_months: [],
+        disabled_years: [],
         **kwargs
       )
         safe_join(
@@ -36,6 +40,8 @@ module StimulusPlumbers
                 selectable:        selectable,
                 selected_date:     selected_date,
                 show_other_months: show_other_months,
+                since:             since,
+                till:              till,
                 **kwargs
               )
             end,
@@ -45,7 +51,14 @@ module StimulusPlumbers
               hidden: true,
               data:   { "combobox-date-target": "yearView" }
             ) do
-              calendar_turbo_renderer.year(date: date, today: today, selected_date: selected_date)
+              calendar_turbo_renderer.year(
+                date:            date,
+                today:           today,
+                selected_date:   selected_date,
+                since:           since,
+                till:            till,
+                disabled_months: disabled_months
+              )
             end,
             content_tag(
               :turbo_frame,
@@ -53,7 +66,14 @@ module StimulusPlumbers
               hidden: true,
               data:   { "combobox-date-target": "decadeView" }
             ) do
-              calendar_turbo_renderer.decade(date: date, today: today, selected_date: selected_date)
+              calendar_turbo_renderer.decade(
+                date:           date,
+                today:          today,
+                selected_date:  selected_date,
+                since:          since,
+                till:           till,
+                disabled_years: disabled_years
+              )
             end
           ]
         )
