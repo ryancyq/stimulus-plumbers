@@ -10,6 +10,10 @@ module StimulusPlumbers
       module Icon
         ALIASES = {
           "close"         => "x-mark",
+          "download"      => "arrow-down-tray",
+          "book"          => "book-open",
+          "edit"          => "pencil",
+          "email"         => "envelope",
           "calendar"      => "calendar-days",
           "external-link" => "arrow-top-right-on-square"
         }.freeze

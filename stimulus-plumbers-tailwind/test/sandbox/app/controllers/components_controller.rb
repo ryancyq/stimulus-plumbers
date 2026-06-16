@@ -33,6 +33,8 @@ class ComponentsController < ApplicationController
 
   def divider; end
 
+  def icon; end
+
   def popover; end
 
   private

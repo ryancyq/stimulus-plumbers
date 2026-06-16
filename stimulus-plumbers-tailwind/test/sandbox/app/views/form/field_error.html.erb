@@ -19,3 +19,40 @@
     <%= f.field :name, as: :text, label: "Search query", hide_label: true %>
   <% end %>
 </section>
+
+<section id="field-error-textarea" class="sb-section">
+  <h2>Textarea with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :bio, as: :text_area, label: "Bio" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="field-error-select" class="sb-section">
+  <h2>Select with error</h2>
+  <div class="sb-col">
+    <% countries = [["Australia", "au"], ["New Zealand", "nz"], ["Singapore", "sg"]] %>
+    <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :country, as: :select, label: "Country", choices: countries %>
+    <% end %>
+  </div>
+</section>
+
+<section id="field-error-checkbox" class="sb-section">
+  <h2>Checkbox with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="field-error-file" class="sb-section">
+  <h2>File with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :resume, as: :file, label: "Resume" %>
+    <% end %>
+  </div>
+</section>

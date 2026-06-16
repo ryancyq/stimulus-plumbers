@@ -81,4 +81,11 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
 
     assert_accessible context: "#combobox-typeahead-error"
   end
+
+  def test_passes_wcag_with_typeahead_error_open
+    visit "/components/combobox"
+    find("#combobox-typeahead-error input[role='combobox']").click
+
+    assert_accessible context: "#combobox-typeahead-error"
+  end
 end

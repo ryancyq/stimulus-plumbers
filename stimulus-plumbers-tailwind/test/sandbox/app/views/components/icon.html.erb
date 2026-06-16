@@ -1,0 +1,31 @@
+<h1>Icon components</h1>
+
+<section id="icon-decorative" class="sb-section">
+  <h2>Decorative (aria-hidden)</h2>
+  <div class="sb-row">
+    <%# ── Decorative icons hidden from AT, paired with visible text ─────── %>
+    <p><%= sp_icon(name: :check) %> Completed</p>
+    <p><%= sp_icon(name: :close) %> Removed</p>
+    <p><%= sp_icon(name: :bell) %> Notifications</p>
+  </div>
+</section>
+
+<section id="icon-functional" class="sb-section">
+  <h2>Functional (with accessible name)</h2>
+  <div class="sb-row">
+    <%# ── Standalone icons must expose a label via role="img" + aria-label ─ %>
+    <%= sp_icon(name: :check,    role: "img", aria: { hidden: "false", label: "Completed" }) %>
+    <%= sp_icon(name: :close, role: "img", aria: { hidden: "false", label: "Removed" }) %>
+  </div>
+</section>
+
+<section id="icon-in-button" class="sb-section">
+  <h2>Icons in buttons</h2>
+  <div class="sb-row">
+    <%# ── Leading icon auto-hidden, button text is the accessible name ──── %>
+    <%= sp_button("Save",   icon_leading: :check) %>
+    <%= sp_button("Delete", icon_trailing: :close) %>
+    <%# ── Icon-only button must supply aria-label ─────────────────────────── %>
+    <%= sp_button(icon_leading: :close, aria: { label: "Close dialog" }) %>
+  </div>
+</section>

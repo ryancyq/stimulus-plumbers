@@ -1,24 +1,59 @@
 <h1>Floating label</h1>
 
-<div id="floating-label">
-  <%= form_with(model: @form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <h2>Filled variant</h2>
-    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  floating: :filled %>
+<% fresh = SignUp.new %>
+<% error_form = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") } %>
 
-    <h2>Filled variant – optional</h2>
-    <%= f.field :email, as: :email, label: "Email address", required: false, floating: :filled %>
+<section id="floating-label-filled">
+  <h2>Filled variant</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, floating: :filled %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Filled variant – with hint</h2>
-    <%= f.field :bio,   as: :text_area, label: "Bio",       required: false, floating: :filled,
-                hint: "Tell us a little about yourself." %>
+<section id="floating-label-filled-optional">
+  <h2>Filled variant — optional</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :email, as: :email, label: "Email address", required: false, floating: :filled %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Outlined variant</h2>
-    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  floating: :outlined %>
+<section id="floating-label-filled-hint">
+  <h2>Filled variant — with hint</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :bio, as: :text_area, label: "Bio", required: false, floating: :filled,
+                  hint: "Tell us a little about yourself." %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Standard variant</h2>
-    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  floating: :standard %>
+<section id="floating-label-outlined">
+  <h2>Outlined variant</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, floating: :outlined %>
+    <% end %>
+  </div>
+</section>
 
-    <h2>Filled variant – with error</h2>
-    <%= f.field :name,  as: :text,  label: "Full name",     required: true,  floating: :filled %>
-  <% end %>
-</div>
+<section id="floating-label-standard">
+  <h2>Standard variant</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, floating: :standard %>
+    <% end %>
+  </div>
+</section>
+
+<section id="floating-label-filled-error">
+  <h2>Filled variant — with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, floating: :filled %>
+    <% end %>
+  </div>
+</section>

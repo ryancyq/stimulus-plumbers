@@ -67,6 +67,8 @@ stimulus-plumbers-tailwind/
 
 ## Sandbox View Convention
 
+**Icon naming:** Both the core and tailwind sandbox views must use generic icon names (e.g., `close`, `download`, `book`, `edit`, `email`), never heroicon-specific compound names (e.g., `x-mark`, `arrow-down-tray`, `book-open`, `pencil`, `envelope`). When a new generic name is needed, add a mapping to `Icon::ALIASES` in `lib/stimulus_plumbers/themes/tailwind/icon.rb`. Names that are already generic and need no alias: `arrow-right`, `arrow-left`, `check`, `bell`, `trash`, `plus`, `user`, `cog`, `folder`, `home`, `chevron-right`, `chart-bar`.
+
 Four rules for sandbox views and their matching snapshot specs:
 
 1. **Section IDs** — `{component}-{usecase}`, unique across all pages. Encodes the render mode or variant directly in HTML (e.g. `calendar-stimulus`, `calendar-turbo`, `combobox-date-error`). Never reuse the same ID on different pages. Never use bare `{component}` alone (e.g. `id="card"` is wrong; `id="card-default"` is correct).

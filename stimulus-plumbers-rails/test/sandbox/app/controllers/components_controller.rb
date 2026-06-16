@@ -31,4 +31,8 @@ class ComponentsController < ApplicationController
   def avatar; end
 
   def divider; end
+
+  def icon; end
+
+  def button_group; end
 end
