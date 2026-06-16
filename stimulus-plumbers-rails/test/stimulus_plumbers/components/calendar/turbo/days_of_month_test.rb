@@ -7,6 +7,12 @@ class CalendarTurboDaysOfMonthTest < ActionView::TestCase
     StimulusPlumbers::Components::Calendar::Turbo::DaysOfMonth.new(self, date: date, **opts)
   end
 
+  def cells_for_month(doc, month)
+    doc.css("[role='gridcell']").select do |el|
+      el.at_css("time")&.[]("datetime")&.then { |d| Date.parse(d).month == month }
+    end
+  end
+
   def test_renders_rowgroup
     assert_css parse_html(renderer.render), "[role='rowgroup']"
   end
@@ -100,5 +106,56 @@ class CalendarTurboDaysOfMonthTest < ActionView::TestCase
 
   def test_merges_custom_class
     assert_includes renderer.render(class: "my-days"), "my-days"
+  end
+
+  # Outside day navigation
+  def test_outside_day_is_button_when_selectable_and_show_other_months
+    # Apr 2026: 3 prev-month days (Mar 29-31) + 2 next-month days (May 1-2)
+    html = renderer(selectable: true, show_other_months: true).render
+
+    doc = parse_html(html)
+    outside_buttons = doc.css("button[role='gridcell'][aria-selected='false']").select do |btn|
+      btn.at_css("time")&.[]("datetime")&.then { |d| Date.parse(d) }&.then { |d| d.month != 4 }
+    end
+
+    assert_equal 5, outside_buttons.length
+  end
+
+  def test_outside_day_has_no_aria_disabled_when_selectable_and_in_range
+    html = renderer(selectable: true, show_other_months: true).render
+
+    doc = parse_html(html)
+    outside_buttons = doc.css("button[role='gridcell']").select do |btn|
+      btn.at_css("time")&.[]("datetime")&.then { |d| Date.parse(d) }&.then { |d| d.month != 4 }
+    end
+
+    outside_buttons.each do |btn|
+      assert_nil btn["aria-disabled"]
+    end
+  end
+
+  def test_outside_day_is_span_with_aria_disabled_when_not_selectable
+    html = renderer(show_other_months: true).render
+
+    assert_not_includes html, "<button"
+    assert_includes html, 'aria-disabled="true"'
+  end
+
+  def test_outside_day_beyond_till_is_disabled_even_when_selectable
+    # Apr 2026: May 1-2 are outside trailing days; set till = Apr 30
+    doc = parse_html(renderer(selectable: true, show_other_months: true, till: Date.new(2026, 4, 30)).render)
+    may_cells = cells_for_month(doc, 5)
+
+    assert(may_cells.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
+    assert_equal 2, may_cells.length
+  end
+
+  def test_outside_day_before_since_is_disabled_even_when_selectable
+    # Apr 2026: Mar 29-31 are leading outside days; set since = Apr 1
+    doc = parse_html(renderer(selectable: true, show_other_months: true, since: Date.new(2026, 4, 1)).render)
+    march_cells = cells_for_month(doc, 3)
+
+    assert(march_cells.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
+    assert_equal 3, march_cells.length
   end
 end

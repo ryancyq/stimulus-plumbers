@@ -58,6 +58,7 @@ Metrics/ClassLength:
 Metrics/ModuleLength:
   Exclude:
     - lib/stimulus_plumbers/themes/tailwind/button.rb
+    - lib/stimulus_plumbers/themes/tailwind/combobox.rb
     - lib/stimulus_plumbers/themes/tailwind/form.rb
     - lib/stimulus_plumbers/themes/tailwind/form/field.rb
     - lib/stimulus_plumbers/themes/tailwind/form/input.rb

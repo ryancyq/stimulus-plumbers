@@ -8,13 +8,24 @@ module StimulusPlumbers
           YEARS_PER_ROW = 4
           DECADE_SIZE   = 10
 
-          attr_reader :date, :today, :selected_date
+          attr_reader :date, :today, :selected_date, :since, :till, :disabled_years
 
-          def initialize(template, date: Date.today, today: Date.today, selected_date: nil)
+          def initialize(
+            template,
+            date: Date.today,
+            today: Date.today,
+            selected_date: nil,
+            since: nil,
+            till: nil,
+            disabled_years: []
+          )
             super(template)
-            @date          = date
-            @today         = today
-            @selected_date = selected_date
+            @date           = date
+            @today          = today
+            @selected_date  = selected_date
+            @since          = since
+            @till           = till
+            @disabled_years = disabled_years
           end
 
           def render(...)
@@ -46,34 +57,51 @@ module StimulusPlumbers
           def year_names
             decade_start = (date.year / DECADE_SIZE) * DECADE_SIZE
             ((decade_start - 1)..(decade_start + DECADE_SIZE)).map do |y|
-              [y, y < decade_start || y > decade_start + DECADE_SIZE - 1]
+              [y, year_disabled?(y, decade_start)]
             end
           end
 
           def years_in_row(years)
-            template.safe_join(years.map { |year, outside| year_cell(year, outside) })
+            template.safe_join(years.map { |year, disabled| year_cell(year, disabled) })
           end
 
-          def year_cell(year, outside)
-            template.content_tag(:button, year.to_s, **year_cell_html_options(year, outside))
+          def year_cell(year, disabled)
+            template.content_tag(:button, year.to_s, **year_cell_html_options(year, disabled))
           end
 
-          def year_cell_html_options(year, outside)
-            is_current_year = year == today.year
-            is_focused      = selected_date_in_year?(year) || (is_current_year && !selected_date)
+          def year_cell_html_options(year, disabled)
             merge_html_options(
-              theme.resolve(:calendar_year, outside: outside),
+              theme.resolve(:calendar_year),
               {
                 role:     "gridcell",
-                tabindex: is_focused ? 0 : -1,
+                tabindex: focused_year?(year, disabled) ? 0 : -1,
                 data:     { year: year },
                 aria:     {
-                  current:  is_current_year ? "year" : nil,
+                  current:  current_year?(year) ? "year" : nil,
                   selected: selected_date_in_year?(year) ? "true" : "false",
-                  disabled: outside ? "true" : nil
+                  disabled: disabled ? "true" : nil
                 }
               }
             )
+          end
+
+          def year_disabled?(year, decade_start)
+            outside_decade?(year, decade_start) ||
+              (since && year < since.year) ||
+              (till && year > till.year) ||
+              disabled_years.any? { |v| v.to_s == year.to_s }
+          end
+
+          def outside_decade?(year, decade_start)
+            year < decade_start || year > (decade_start + DECADE_SIZE - 1)
+          end
+
+          def current_year?(year)
+            year == today.year
+          end
+
+          def focused_year?(year, disabled)
+            !disabled && (selected_date_in_year?(year) || (current_year?(year) && !selected_date))
           end
 
           def selected_date_in_year?(year)

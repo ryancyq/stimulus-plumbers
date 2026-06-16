@@ -1,29 +1,59 @@
 import { Controller } from '@hotwired/stimulus';
 import { initCalendar } from '../plumbers';
+import { attachCalendarDaySelector } from '../plumbers/calendar-selector';
 import { tryParseDate } from '../plumbers/plumber/date';
 
 export default class extends Controller {
   static targets = ['daysOfWeek', 'daysOfMonth'];
-  static classes = ['dayOfWeek', 'dayOfMonth', 'row'];
+  static classes = ['dayOfWeek', 'dayOfMonth', 'dayOfOtherMonth', 'row'];
   static values = {
+    year: Number,
+    month: Number,
+    today: { type: String, default: '' },
+    selected: { type: String, default: '' },
+    since: { type: String, default: '' },
+    till: { type: String, default: '' },
     locales: { type: Array, default: ['default'] },
     weekdayFormat: { type: String, default: 'short' },
     dayFormat: { type: String, default: 'numeric' },
     daysOfOtherMonth: { type: Boolean, default: false },
-    today: { type: String, default: '' },
-    selected: { type: String, default: '' },
   };
 
   initialize() {
-    initCalendar(this, { today: this.todayValue });
+    this.selector = attachCalendarDaySelector(this, { onSelect: 'select' });
+    initCalendar(this, {
+      today: this.todayValue,
+      since: this.sinceValue || null,
+      till: this.tillValue || null,
+    });
   }
 
   connect() {
-    this.draw();
+    this.selector.attach();
+    this.navigated();
   }
 
-  navigated() {
-    this.draw();
+  disconnect() {
+    this.selector.detach();
+  }
+
+  yearValueChanged() {
+    if (!this.calendar || !this.hasYearValue) return;
+    this._scheduleNavigate();
+  }
+  monthValueChanged() {
+    if (!this.calendar || !this.hasYearValue) return;
+    this._scheduleNavigate();
+  }
+
+  _scheduleNavigate() {
+    if (this._navigatePending) return;
+    this._navigatePending = true;
+    queueMicrotask(async () => {
+      this._navigatePending = false;
+      await this.calendar.navigate(this.currentDate);
+      this.navigated();
+    });
   }
 
   selectedValueChanged() {
@@ -39,18 +69,36 @@ export default class extends Controller {
     if (!parsed) return;
 
     const time = this.daysOfMonthTarget.querySelector(`time[datetime="${parsed.toISOString()}"]`);
-    if (time) time.closest('[aria-selected]').setAttribute('aria-selected', 'true');
+    if (time) time.closest('[aria-selected]')?.setAttribute('aria-selected', 'true');
   }
 
-  onSelect(event) {
-    const iso = event.detail?.iso;
-    if (iso) this.selectedValue = iso;
+  navigate(date) {
+    this.yearValue = date.getFullYear();
+    this.monthValue = date.getMonth();
   }
 
-  draw() {
+  step(unit, dir) {
+    return this.calendar.step(unit, dir);
+  }
+
+  select(iso) {
+    const date = tryParseDate(iso);
+    if (!date) return;
+    this.selectedValue = iso;
+    if (date.getMonth() !== this.calendar.month || date.getFullYear() !== this.calendar.year) {
+      this.calendar.navigate(date);
+    }
+    this.dispatch('selected', { detail: { epoch: date.getTime(), iso } });
+  }
+
+  navigated() {
     this.drawDaysOfWeek();
     this.drawDaysOfMonth();
     this.selectedValueChanged();
+  }
+
+  get currentDate() {
+    return new Date(this.yearValue, this.monthValue, 1);
   }
 
   createDayElement(day, { selectable = false, disabled = false } = {}) {
@@ -93,17 +141,21 @@ export default class extends Controller {
     const today = new Date(t.getFullYear(), t.getMonth(), t.getDate()).getTime();
     const daysOfMonth = [];
     for (const date of this.calendar.daysOfMonth) {
-      const dayDisabled =
-        !date.current || this.calendar.isDisabled(date.date) || !this.calendar.isWithinRange(date.date);
+      const dayRuleDisabled = this.calendar.isDisabled(date.date) || !this.calendar.isWithinRange(date.date);
+      const dayOutsideNavigable = !date.current && this.daysOfOtherMonthValue && !dayRuleDisabled;
       const dayText = date.current || this.daysOfOtherMonthValue ? date.value : '';
       const dayElement = this.createDayElement(dayText, {
-        selectable: date.current,
-        disabled: dayDisabled,
+        selectable: date.current || dayOutsideNavigable,
+        disabled: date.current ? dayRuleDisabled : !dayOutsideNavigable,
       });
 
       if (today === date.date.getTime()) dayElement.setAttribute('aria-current', 'date');
       if (date.current || this.daysOfOtherMonthValue) dayElement.setAttribute('aria-selected', '');
-      if (this.hasDayOfMonthClass) dayElement.classList.add(...this.dayOfMonthClasses);
+      if (!date.current && this.daysOfOtherMonthValue && this.hasDayOfOtherMonthClass) {
+        dayElement.classList.add(...this.dayOfOtherMonthClasses);
+      } else if (this.hasDayOfMonthClass) {
+        dayElement.classList.add(...this.dayOfMonthClasses);
+      }
 
       const time = document.createElement('time');
       time.dateTime = date.iso;

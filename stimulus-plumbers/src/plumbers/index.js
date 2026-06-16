@@ -3,6 +3,11 @@
  */
 
 export { initCalendar } from './calendar';
+export {
+  attachCalendarDaySelector,
+  attachCalendarMonthSelector,
+  attachCalendarYearSelector,
+} from './calendar-selector';
 export { attachContentLoader } from './content_loader';
 export { attachDismisser } from './dismisser';
 export { attachFlipper } from './flipper';

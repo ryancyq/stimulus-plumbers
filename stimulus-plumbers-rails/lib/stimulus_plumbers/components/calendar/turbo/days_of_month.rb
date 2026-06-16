@@ -5,9 +5,9 @@ module StimulusPlumbers
     class Calendar
       class Turbo
         class DaysOfMonth < Plumber::Base
-          DAYS_IN_WEEK = 7
+          DAYS_PER_ROW = 7
 
-          attr_reader :date, :today, :selectable, :selected_date, :show_other_months
+          attr_reader :date, :today, :selectable, :selected_date, :show_other_months, :since, :till
 
           def initialize(
             template,
@@ -15,7 +15,9 @@ module StimulusPlumbers
             today: Date.today,
             selectable: false,
             selected_date: nil,
-            show_other_months: false
+            show_other_months: false,
+            since: nil,
+            till: nil
           )
             super(template)
             @date              = date
@@ -23,6 +25,8 @@ module StimulusPlumbers
             @selectable        = selectable
             @selected_date     = selected_date
             @show_other_months = show_other_months
+            @since             = since
+            @till              = till
           end
 
           def render(...)
@@ -45,7 +49,7 @@ module StimulusPlumbers
               { role: "row" }
             )
             template.safe_join(
-              build_days.each_slice(DAYS_IN_WEEK).map do |days|
+              build_days.each_slice(DAYS_PER_ROW).map do |days|
                 template.content_tag(:div, **week_options) { days_in_row(days) }
               end
             )
@@ -76,7 +80,7 @@ module StimulusPlumbers
           def next_filler_days(last_day_of_month, days_in_month)
             week_start_offset = last_day_of_month.beginning_of_month.wday
             total             = week_start_offset + days_in_month
-            next_count = (DAYS_IN_WEEK - (total % DAYS_IN_WEEK)) % DAYS_IN_WEEK
+            next_count = (DAYS_PER_ROW - (total % DAYS_PER_ROW)) % DAYS_PER_ROW
             next_count.positive? ? (last_day_of_month + 1).upto(last_day_of_month + next_count).to_a : []
           end
 
@@ -136,6 +140,24 @@ module StimulusPlumbers
           end
 
           def other_month_day_cell(date)
+            if selectable && outside_day_navigable?(date)
+              navigable_other_month_day_cell(date)
+            else
+              disabled_other_month_day_cell(date)
+            end
+          end
+
+          def navigable_other_month_day_cell(date)
+            options = merge_html_options(
+              theme.resolve(:calendar_day, outside: true),
+              { role: "gridcell", tabindex: -1, aria: { selected: "false" } }
+            )
+            template.content_tag(:button, **options, type: "button") do
+              template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
+            end
+          end
+
+          def disabled_other_month_day_cell(date)
             options = merge_html_options(
               theme.resolve(:calendar_day, outside: true),
               { role: "gridcell", tabindex: -1, aria: { disabled: "true", selected: "false" } }
@@ -143,6 +165,10 @@ module StimulusPlumbers
             template.content_tag(:span, **options) do
               template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
             end
+          end
+
+          def outside_day_navigable?(date)
+            (since.nil? || date >= since) && (till.nil? || date <= till)
           end
         end
       end

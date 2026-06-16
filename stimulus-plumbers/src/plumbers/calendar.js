@@ -1,7 +1,9 @@
 import Plumber from './plumber';
 import { isValidDate, tryParseDate } from './plumber/date';
 
-const DAYS_OF_WEEK = 7;
+const DAYS_PER_ROW = 7;
+const YEAR_SIZE = 12;
+const DECADE_SIZE = 10;
 
 const defaultOptions = {
   locales: ['default'],
@@ -131,8 +133,8 @@ export class Calendar extends Plumber {
       const current = new Date(currentYear, currentMonth, i);
       daysOfMonth.push(parseDate(current));
     }
-    const mod = daysOfMonth.length % DAYS_OF_WEEK;
-    const trailing = mod === 0 ? 0 : DAYS_OF_WEEK - mod;
+    const mod = daysOfMonth.length % DAYS_PER_ROW;
+    const trailing = mod === 0 ? 0 : DAYS_PER_ROW - mod;
     for (let i = 1; i <= trailing; i++) {
       const next = new Date(currentYear, currentMonth + 1, i);
       daysOfMonth.push(parseDate(next));
@@ -150,14 +152,21 @@ export class Calendar extends Plumber {
     const numericFormatter = new Intl.DateTimeFormat(this.localesValue, { month: 'numeric' });
 
     const monthsOfYear = [];
-    for (let i = 0; i < 12; i++) {
-      const month = new Date(this.year, i);
+    for (let i = 0; i < YEAR_SIZE; i++) {
+      const date = new Date(this.year, i);
+      const monthStart = new Date(this.year, i, 1);
+      const monthEnd = new Date(this.year, i + 1, 0);
+      const shortName = shortFormatter.format(date);
+      const longName = longFormatter.format(date);
+      const rangeDisabled = (this.since && monthEnd < this.since) || (this.till && monthStart > this.till);
+      const listDisabled = this.disabledMonths.some((str) => i == str || shortName === str || longName === str);
       monthsOfYear.push({
-        date: month,
-        value: month.getMonth(),
-        long: longFormatter.format(month),
-        short: shortFormatter.format(month),
-        numeric: numericFormatter.format(month),
+        date: date,
+        value: date.getMonth(),
+        long: longName,
+        short: shortName,
+        numeric: numericFormatter.format(date),
+        disabled: rangeDisabled || listDisabled,
       });
     }
     return monthsOfYear;
@@ -169,13 +178,16 @@ export class Calendar extends Plumber {
    * @returns {Array<Object>} Array of year objects
    */
   buildYearsOfDecade() {
-    const decadeStart = Math.floor(this.year / 10) * 10;
+    const decadeStart = Math.floor(this.year / DECADE_SIZE) * DECADE_SIZE;
     const yearsOfDecade = [];
-    for (let i = decadeStart - 1; i <= decadeStart + 10; i++) {
+    for (let i = decadeStart - 1; i <= decadeStart + DECADE_SIZE; i++) {
+      const bufferYear = i < decadeStart || i > decadeStart + DECADE_SIZE - 1;
+      const rangeDisabled = (this.since && i < this.since.getFullYear()) || (this.till && i > this.till.getFullYear());
+      const listDisabled = this.disabledYears.some((str) => i == str);
       yearsOfDecade.push({
         value: i,
         current: i === this.year,
-        outside: i < decadeStart || i > decadeStart + 9,
+        disabled: bufferYear || rangeDisabled || listDisabled,
       });
     }
     return yearsOfDecade;

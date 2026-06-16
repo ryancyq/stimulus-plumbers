@@ -187,11 +187,15 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "justify-between"
   end
 
-  def test_combobox_date_navigation_navigator_includes_button_classes
-    result = classes_for(:combobox_date_navigation_navigator)
+  def test_combobox_date_navigation_navigator_includes_size_class
+    assert_includes classes_for(:combobox_date_navigation_navigator), "size-(--sp-control-size)"
+  end
 
-    assert_includes result, "inline-flex"
-    assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
-    assert_includes result, "disabled:opacity-50"
+  def test_combobox_date_navigation_title_includes_flex_grow
+    assert_includes classes_for(:combobox_date_navigation_title), "flex-1"
+  end
+
+  def test_combobox_date_navigation_title_includes_text_center
+    assert_includes classes_for(:combobox_date_navigation_title), "text-center"
   end
 end

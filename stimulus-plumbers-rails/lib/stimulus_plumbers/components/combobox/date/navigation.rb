@@ -22,7 +22,7 @@ module StimulusPlumbers
           def navigators(stimulus_controller, step, view, date)
             [
               navigator(stimulus_controller, target: "previous", icon: "arrow-left", label: prev_label(step)),
-              view_title_navigator(stimulus_controller, view, date),
+              view(stimulus_controller, view, date),
               navigator(stimulus_controller, target: "next", icon: "arrow-right", label: next_label(step))
             ]
           end
@@ -36,16 +36,20 @@ module StimulusPlumbers
             Navigator.new(template).render(**opts)
           end
 
-          def view_title_navigator(stimulus_controller, view, date)
-            Navigator.new(template).render(
+          def view(stimulus_controller, view, date)
+            html_options = merge_html_options(
+              theme.resolve(:combobox_date_navigation_title),
               data: {
                 "#{stimulus_controller}-target" => "viewTitle",
                 action:                           "click->#{stimulus_controller}#zoomOut"
               }
-            ) { view_title_label(view, date) }
+            )
+            Components::Button.new(template).render(
+              type: :ghost, variant: :tertiary, size: nil, **html_options
+            ) { view_label(view, date) }
           end
 
-          def view_title_label(view, date)
+          def view_label(view, date)
             case view
             when "year"   then date.year.to_s
             when "decade" then decade_label(date)

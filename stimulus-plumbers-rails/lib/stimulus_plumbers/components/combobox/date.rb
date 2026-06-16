@@ -4,17 +4,21 @@ module StimulusPlumbers
   module Components
     class Combobox
       class Date < Plumber::Base
-        STIMULUS_CONTROLLER = "combobox-date"
-        CALENDAR_OUTLET     = "#{STIMULUS_CONTROLLER}-calendar-month-outlet".freeze
-        STIMULUS_ACTION     = [
-          "calendar-observer:selected->#{STIMULUS_CONTROLLER}#onSelect",
+        STIMULUS_CONTROLLER     = "combobox-date"
+        CALENDAR_MONTH_OUTLET   = "#{STIMULUS_CONTROLLER}-calendar-month-outlet".freeze
+        CALENDAR_YEAR_OUTLET    = "#{STIMULUS_CONTROLLER}-calendar-year-outlet".freeze
+        CALENDAR_DECADE_OUTLET  = "#{STIMULUS_CONTROLLER}-calendar-decade-outlet".freeze
+        STIMULUS_ACTION         = [
+          "calendar-month:selected->#{STIMULUS_CONTROLLER}#onDaySelect",
+          "calendar-year:selected->#{STIMULUS_CONTROLLER}#onMonthSelect",
+          "calendar-decade:selected->#{STIMULUS_CONTROLLER}#onYearSelect",
           "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
         ].join(" ").freeze
 
-        def self.calendar_id_for(panel_id)
-          [panel_id, "calendar"].compact.join("_")
-        end
+        def self.month_id_for(panel_id)   = [panel_id, "calendar_month"].compact.join("_")
+        def self.year_id_for(panel_id)    = [panel_id, "calendar_year"].compact.join("_")
+        def self.decade_id_for(panel_id)  = [panel_id, "calendar_decade"].compact.join("_")
 
         module Metadata
           module_function
@@ -31,21 +35,26 @@ module StimulusPlumbers
         private
 
         def render_date(panel_attrs: {}, value: nil, label: nil, labelledby: nil)
-          calendar_id = self.class.calendar_id_for(panel_attrs[:id])
+          panel_id  = panel_attrs[:id]
+          month_id  = self.class.month_id_for(panel_id)
+          year_id   = self.class.year_id_for(panel_id)
+          decade_id = self.class.decade_id_for(panel_id)
 
           template.content_tag(
             :div,
-            **merge_html_options(panel_attrs, dialog_attrs(value, calendar_id, label, labelledby))
+            **merge_html_options(panel_attrs, dialog_attrs(value, month_id, year_id, decade_id, label, labelledby))
           ) do
-            template.safe_join([navigation, calendar(id: calendar_id)])
+            template.safe_join([navigation, calendar(month_id: month_id, year_id: year_id, decade_id: decade_id)])
           end
         end
 
-        def dialog_attrs(value, calendar_id, label, labelledby)
+        def dialog_attrs(value, month_id, year_id, decade_id, label, labelledby)
           data = {
-            controller:      STIMULUS_CONTROLLER,
-            CALENDAR_OUTLET  => "##{calendar_id}",
-            action:          STIMULUS_ACTION,
+            controller:             STIMULUS_CONTROLLER,
+            CALENDAR_MONTH_OUTLET   => "##{month_id}",
+            CALENDAR_YEAR_OUTLET    => "##{year_id}",
+            CALENDAR_DECADE_OUTLET  => "##{decade_id}",
+            action:                 STIMULUS_ACTION,
             "#{STIMULUS_CONTROLLER}-date-value" => value
           }.compact
 
@@ -60,8 +69,15 @@ module StimulusPlumbers
           )
         end
 
-        def calendar(**kwargs)
-          Calendar.new(template).render(**kwargs)
+        def calendar(month_id:, year_id:, decade_id:)
+          cal = Calendar.new(template)
+          template.safe_join(
+            [
+              cal.month(id: month_id),
+              cal.year(id: year_id),
+              cal.decade(id: decade_id)
+            ]
+          )
         end
       end
     end

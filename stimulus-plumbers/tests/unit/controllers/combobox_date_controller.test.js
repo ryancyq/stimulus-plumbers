@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Application } from '@hotwired/stimulus'
 import ComboboxDateController from '../../../src/controllers/combobox_date_controller'
 import CalendarMonthController from '../../../src/controllers/calendar_month_controller'
+import CalendarYearController from '../../../src/controllers/calendar_year_controller'
+import CalendarDecadeController from '../../../src/controllers/calendar_decade_controller'
 
 describe('ComboboxDateController', () => {
   let application
@@ -13,6 +15,8 @@ describe('ComboboxDateController', () => {
     application = Application.start()
     application.register('combobox-date', ComboboxDateController)
     application.register('calendar-month', CalendarMonthController)
+    application.register('calendar-year', CalendarYearController)
+    application.register('calendar-decade', CalendarDecadeController)
   })
 
   afterEach(() => {
@@ -25,18 +29,25 @@ describe('ComboboxDateController', () => {
     document.body.innerHTML = `
       <div data-controller="combobox-date"
            data-combobox-date-locales-value='["en-US"]'
-           data-combobox-date-calendar-month-outlet="[data-controller~='calendar-month']">
+           data-combobox-date-calendar-month-outlet="#month_view"
+           data-combobox-date-calendar-year-outlet="#year_view"
+           data-combobox-date-calendar-decade-outlet="#decade_view"
+           data-action="calendar-year:selected->combobox-date#onMonthSelect calendar-decade:selected->combobox-date#onYearSelect">
         <button data-combobox-date-target="previous">Prev</button>
         <button data-combobox-date-target="day"></button>
         <button data-combobox-date-target="month"></button>
         <button data-combobox-date-target="year"></button>
         <button data-combobox-date-target="viewTitle"></button>
         <button data-combobox-date-target="next">Next</button>
-        <div data-combobox-date-target="yearView" hidden></div>
-        <div data-combobox-date-target="decadeView" hidden></div>
-        <div data-controller="calendar-month">
+        <div id="month_view" data-controller="calendar-month">
           <div data-calendar-month-target="daysOfWeek"></div>
           <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+        <div id="year_view" hidden data-controller="calendar-year" role="grid" aria-label="Year view">
+          <div data-calendar-year-target="grid" role="rowgroup"></div>
+        </div>
+        <div id="decade_view" hidden data-controller="calendar-decade" role="grid" aria-label="Decade view">
+          <div data-calendar-decade-target="grid" role="rowgroup"></div>
         </div>
       </div>
     `
@@ -47,10 +58,10 @@ describe('ComboboxDateController', () => {
       <div data-controller="combobox-date"
            data-combobox-date-locales-value='["en-US"]'
            data-combobox-date-date-value="${date}"
-           data-combobox-date-calendar-month-outlet="[data-controller~='calendar-month']">
+           data-combobox-date-calendar-month-outlet="#month_view">
         <button data-combobox-date-target="month"></button>
         <button data-combobox-date-target="year"></button>
-        <div data-controller="calendar-month">
+        <div id="month_view" data-controller="calendar-month">
           <div data-calendar-month-target="daysOfWeek"></div>
           <div data-calendar-month-target="daysOfMonth"></div>
         </div>
@@ -133,7 +144,7 @@ describe('ComboboxDateController', () => {
     })
   })
 
-  describe('onSelect', () => {
+  describe('onDaySelect', () => {
     it('dispatches combobox-date:selected with the iso value', async () => {
       setupWithDate('')
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
@@ -142,7 +153,7 @@ describe('ComboboxDateController', () => {
       const spy = vi.fn()
       el.addEventListener('combobox-date:selected', spy)
 
-      getController().onSelect({ detail: { iso: '2024-06-15T00:00:00.000Z' } })
+      getController().onDaySelect({ detail: { iso: '2024-06-15T00:00:00.000Z' } })
 
       expect(spy).toHaveBeenCalledTimes(1)
       expect(spy.mock.calls[0][0].detail.value).toBe('2024-06-15T00:00:00.000Z')
@@ -150,7 +161,7 @@ describe('ComboboxDateController', () => {
 
     it('does not throw without a calendar outlet', () => {
       setup()
-      expect(() => getController()?.onSelected({ detail: { iso: '2024-06-15T00:00:00.000Z' } })).not.toThrow()
+      expect(() => getController()?.onDaySelect({ detail: { iso: '2024-06-15T00:00:00.000Z' } })).not.toThrow()
     })
   })
 
@@ -205,32 +216,32 @@ describe('ComboboxDateController', () => {
     })
   })
 
-  describe('grid visibility', () => {
+  describe('view visibility', () => {
     beforeEach(setup)
 
-    it('yearView is hidden in month view', async () => {
+    it('year outlet element is hidden in month view', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
-      expect(document.querySelector('[data-combobox-date-target="yearView"]').hidden).toBe(true)
+      expect(document.querySelector('#year_view').hidden).toBe(true)
     })
 
-    it('yearView is visible in year view', async () => {
+    it('year outlet element is visible in year view', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
       getController().zoomOut()
-      expect(document.querySelector('[data-combobox-date-target="yearView"]').hidden).toBe(false)
+      expect(document.querySelector('#year_view').hidden).toBe(false)
     })
 
-    it('decadeView is visible in decade view', async () => {
+    it('decade outlet element is visible in decade view', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
       getController().zoomOut()
       getController().zoomOut()
-      expect(document.querySelector('[data-combobox-date-target="decadeView"]').hidden).toBe(false)
+      expect(document.querySelector('#decade_view').hidden).toBe(false)
     })
 
-    it('yearView is hidden in decade view', async () => {
+    it('year outlet element is hidden in decade view', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
       getController().zoomOut()
       getController().zoomOut()
-      expect(document.querySelector('[data-combobox-date-target="yearView"]').hidden).toBe(true)
+      expect(document.querySelector('#year_view').hidden).toBe(true)
     })
 
     it('day grid is hidden in year view', async () => {
@@ -248,40 +259,72 @@ describe('ComboboxDateController', () => {
   describe('year grid contents', () => {
     beforeEach(setup)
 
-    it('renders 12 month buttons', async () => {
+    it('renders 12 month buttons in calendar-year grid', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
-      const cells = document.querySelector('[data-combobox-date-target="yearView"]').querySelectorAll('[role="gridcell"]')
+      const cells = document.querySelector('#year_view').querySelectorAll('[role="gridcell"]')
       expect(cells).toHaveLength(12)
     })
 
-    it('marks current month with aria-current', async () => {
+    it('marks today month with aria-current', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
-      const current = document.querySelector('[data-combobox-date-target="yearView"] [aria-current="month"]')
+      const current = document.querySelector('#year_view [aria-current="month"]')
       expect(current).not.toBeNull()
       expect(current.dataset.month).toBe('10') // October = 10 (1-indexed)
+    })
+
+    it('year view has grid role', async () => {
+      await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
+      expect(document.querySelector('#year_view').getAttribute('role')).toBe('grid')
+    })
+
+    it('year view rowgroup wraps 3 rows of 4 month cells', async () => {
+      await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
+      const rowgroup = document.querySelector('#year_view [role="rowgroup"]')
+      expect(rowgroup).not.toBeNull()
+      const rows = rowgroup.querySelectorAll('[role="row"]')
+      expect(rows).toHaveLength(3)
+      rows.forEach((row) => {
+        expect(row.querySelectorAll('[role="gridcell"]')).toHaveLength(4)
+      })
     })
   })
 
   describe('decade grid contents', () => {
     beforeEach(setup)
 
-    it('renders 12 year buttons', async () => {
+    it('renders 12 year buttons in calendar-decade grid', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
-      const cells = document.querySelector('[data-combobox-date-target="decadeView"]').querySelectorAll('[role="gridcell"]')
+      const cells = document.querySelector('#decade_view').querySelectorAll('[role="gridcell"]')
       expect(cells).toHaveLength(12)
     })
 
     it('marks current year with aria-current', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
-      const current = document.querySelector('[data-combobox-date-target="decadeView"] [aria-current="year"]')
+      const current = document.querySelector('#decade_view [aria-current="year"]')
       expect(current).not.toBeNull()
       expect(current.dataset.year).toBe('2024')
     })
 
     it('marks buffer years with aria-disabled', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
-      const disabled = document.querySelectorAll('[data-combobox-date-target="decadeView"] [aria-disabled="true"]')
+      const disabled = document.querySelectorAll('#decade_view [aria-disabled="true"]')
       expect(disabled).toHaveLength(2)
+    })
+
+    it('decade view has grid role', async () => {
+      await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
+      expect(document.querySelector('#decade_view').getAttribute('role')).toBe('grid')
+    })
+
+    it('decade view rowgroup wraps 3 rows of 4 year cells', async () => {
+      await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
+      const rowgroup = document.querySelector('#decade_view [role="rowgroup"]')
+      expect(rowgroup).not.toBeNull()
+      const rows = rowgroup.querySelectorAll('[role="row"]')
+      expect(rows).toHaveLength(3)
+      rows.forEach((row) => {
+        expect(row.querySelectorAll('[role="gridcell"]')).toHaveLength(4)
+      })
     })
   })
 
@@ -300,7 +343,8 @@ describe('ComboboxDateController', () => {
       getController().zoomOut()
       document.querySelector('[data-combobox-date-target="previous"]').click()
       await vi.waitFor(() => {
-        expect(document.querySelector('[data-combobox-date-target="year"]').textContent).toBe('2023')
+        expect(document.querySelector('[data-combobox-date-target="viewTitle"]').textContent).toBe('2023')
+        expect(document.querySelector('#year_view').querySelectorAll('[role="gridcell"]').length).toBe(12)
       })
     })
 
@@ -319,30 +363,31 @@ describe('ComboboxDateController', () => {
       getController().zoomOut()
       document.querySelector('[data-combobox-date-target="next"]').click()
       await vi.waitFor(() => {
-        expect(document.querySelector('[data-combobox-date-target="year"]').textContent).toBe('2025')
+        expect(document.querySelector('[data-combobox-date-target="viewTitle"]').textContent).toBe('2025')
+        expect(document.querySelector('#year_view').querySelectorAll('[role="gridcell"]').length).toBe(12)
       })
     })
   })
 
-  describe('selectMonth', () => {
+  describe('onMonthSelect', () => {
     beforeEach(setup)
 
     it('navigates to selected month and returns to month view', async () => {
       await vi.waitUntil(() => getController()?.hasCalendarMonthOutlet)
       getController().zoomOut()
 
-      const marchBtn = [...document.querySelectorAll('[data-combobox-date-target="yearView"] [data-month]')]
+      const marchBtn = [...document.querySelectorAll('#year_view [data-month]')]
         .find((btn) => btn.dataset.month === '3')
       marchBtn.click()
 
       await vi.waitFor(() => {
         expect(document.querySelector('[data-combobox-date-target="month"]').textContent).toBe('March')
-        expect(document.querySelector('[data-combobox-date-target="yearView"]').hidden).toBe(true)
+        expect(document.querySelector('#year_view').hidden).toBe(true)
       })
     })
   })
 
-  describe('selectYear', () => {
+  describe('onYearSelect', () => {
     beforeEach(setup)
 
     it('navigates to selected year and returns to year view', async () => {
@@ -350,14 +395,13 @@ describe('ComboboxDateController', () => {
       getController().zoomOut()
       getController().zoomOut()
 
-      const btn2022 = [...document.querySelectorAll('[data-combobox-date-target="decadeView"] [data-year]')]
+      const btn2022 = [...document.querySelectorAll('#decade_view [data-year]')]
         .find((btn) => btn.dataset.year === '2022')
       btn2022.click()
 
       await vi.waitFor(() => {
-        expect(document.querySelector('[data-combobox-date-target="year"]').textContent).toBe('2022')
-        expect(document.querySelector('[data-combobox-date-target="decadeView"]').hidden).toBe(true)
-        expect(document.querySelector('[data-combobox-date-target="yearView"]').hidden).toBe(false)
+        expect(document.querySelector('#decade_view').hidden).toBe(true)
+        expect(document.querySelector('#year_view').hidden).toBe(false)
       })
     })
 
@@ -366,11 +410,13 @@ describe('ComboboxDateController', () => {
       getController().zoomOut()
       getController().zoomOut()
 
-      const disabledBtn = document.querySelector('[data-combobox-date-target="decadeView"] [aria-disabled="true"]')
+      const disabledBtn = document.querySelector('#decade_view [aria-disabled="true"]')
+      const currentCells = document.querySelector('#decade_view').querySelectorAll('[role="gridcell"]').length
       disabledBtn.click()
 
       await vi.waitFor(() => {
-        expect(document.querySelector('[data-combobox-date-target="year"]').textContent).toBe('2024')
+        // Still in decade view, same cells
+        expect(document.querySelector('#decade_view').querySelectorAll('[role="gridcell"]').length).toBe(currentCells)
       })
     })
   })

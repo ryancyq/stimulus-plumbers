@@ -3,9 +3,22 @@
 require "test_helper"
 
 class CalendarTurboYearsOfDecadeTest < ActionView::TestCase
-  def renderer(date: Date.new(2026, 6, 1), today: Date.new(2026, 6, 1), selected_date: nil)
+  def renderer(
+    date: Date.new(2026, 6, 1),
+    today: Date.new(2026, 6, 1),
+    selected_date: nil,
+    since: nil,
+    till: nil,
+    disabled_years: []
+  )
     StimulusPlumbers::Components::Calendar::Turbo::YearsOfDecade
-      .new(self, date: date, today: today, selected_date: selected_date)
+      .new(self,
+           date:           date,
+           today:          today,
+           selected_date:  selected_date,
+           since:          since,
+           till:           till,
+           disabled_years: disabled_years)
   end
 
   def doc(**kwargs)
@@ -90,5 +103,42 @@ class CalendarTurboYearsOfDecadeTest < ActionView::TestCase
 
     assert_equal 1, result.css("[tabindex='0']").length
     assert_equal "2026", result.at_css("[tabindex='0']")["data-year"]
+  end
+
+  def test_disabled_cell_does_not_get_tabindex_zero
+    result = doc(
+      date:           Date.new(2026, 1, 1),
+      today:          Date.new(2026, 6, 1),
+      disabled_years: [2026]
+    )
+
+    assert_equal 0, result.css("[tabindex='0']").length
+  end
+
+  def test_since_disables_years_before_range
+    result = doc(date: Date.new(2026, 1, 1), since: Date.new(2023, 1, 1))
+
+    assert result.at_css("[data-year='2022'][aria-disabled='true']")
+    assert_nil result.at_css("[data-year='2023'][aria-disabled='true']")
+  end
+
+  def test_till_disables_years_after_range
+    result = doc(date: Date.new(2026, 1, 1), till: Date.new(2027, 12, 31))
+
+    assert result.at_css("[data-year='2028'][aria-disabled='true']")
+    assert_nil result.at_css("[data-year='2027'][aria-disabled='true']")
+  end
+
+  def test_disabled_years_list_disables_by_integer
+    result = doc(date: Date.new(2026, 1, 1), disabled_years: [2025])
+
+    assert result.at_css("[data-year='2025'][aria-disabled='true']")
+    assert_nil result.at_css("[data-year='2026'][aria-disabled='true']")
+  end
+
+  def test_disabled_years_list_disables_by_string
+    result = doc(date: Date.new(2026, 1, 1), disabled_years: ["2025"])
+
+    assert result.at_css("[data-year='2025'][aria-disabled='true']")
   end
 end

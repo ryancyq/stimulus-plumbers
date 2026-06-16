@@ -4,7 +4,8 @@ require_relative "../../test_helper"
 
 class StimulusManifestTest < Minitest::Test
   EXPECTED_IDENTIFIERS = %w[
-    calendar-month calendar-observer clipboard combobox-date combobox-dropdown
+    calendar-decade calendar-decade-selector calendar-month calendar-month-selector
+    calendar-year calendar-year-selector clipboard combobox-date combobox-dropdown
     combobox-time dismisser flipper input-clearable input-combobox input-formatter
     modal panner popover visibility
   ].freeze
@@ -69,6 +70,8 @@ class StimulusManifestTest < Minitest::Test
 
   def test_combobox_date_outlets
     assert_includes @controllers["combobox-date"]["outlets"], "calendar-month"
+    assert_includes @controllers["combobox-date"]["outlets"], "calendar-year"
+    assert_includes @controllers["combobox-date"]["outlets"], "calendar-decade"
   end
 
   def test_each_controller_has_required_keys

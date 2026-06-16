@@ -53,10 +53,12 @@ Layout/HashAlignment:
 
 Metrics/ClassLength:
   Exclude:
+    - lib/stimulus_plumbers/components/calendar/turbo.rb
     - lib/stimulus_plumbers/components/calendar/turbo/*.rb
     - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/field.rb
     - test/stimulus_plumbers/components/calendar/turbo_test.rb
+    - test/stimulus_plumbers/components/calendar/turbo/*_test.rb
     - test/stimulus_plumbers/components/combobox/time_test.rb
     - test/stimulus_plumbers/components/link_test.rb
     - test/stimulus_plumbers/form/**/*_test.rb
@@ -90,6 +92,8 @@ Layout/LineLength:
 Metrics/ParameterLists:
   Max: 6
   Exclude:
+    - lib/stimulus_plumbers/components/calendar/turbo.rb
+    - lib/stimulus_plumbers/components/calendar/turbo/*.rb
     - lib/stimulus_plumbers/components/combobox/trigger.rb
     - lib/stimulus_plumbers/form/base.rb
     - lib/stimulus_plumbers/form/builder.rb
@@ -99,6 +103,7 @@ Metrics/ParameterLists:
     - lib/stimulus_plumbers/form/fields/inputs/search.rb
     - lib/stimulus_plumbers/form/fields/inputs/select.rb
     - lib/stimulus_plumbers/form/fields/inputs/select/grouped.rb
+    - lib/stimulus_plumbers/helpers/calendar_turbo_helper.rb
 
 Minitest/MultipleAssertions:
   Max: 8
