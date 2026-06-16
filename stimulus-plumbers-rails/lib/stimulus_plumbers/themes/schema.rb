@@ -92,7 +92,7 @@ module StimulusPlumbers
         combobox_typeahead_loading_icon:    {}.freeze,
         combobox_typeahead_empty:           {}.freeze,
         combobox_time:                      {}.freeze,
-        combobox_time_drum:                 { target: { default: "hour" } }.freeze,
+        combobox_time_drum:                 { type: { default: :unit, validate: %i[unit period] } }.freeze,
         combobox_date_navigation:           {}.freeze,
         combobox_date_navigation_navigator: {}.freeze
       }.freeze

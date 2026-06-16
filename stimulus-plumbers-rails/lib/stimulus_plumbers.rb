@@ -55,7 +55,6 @@ require_relative "stimulus_plumbers/components/combobox/date/navigation"
 require_relative "stimulus_plumbers/components/combobox/dropdown"
 require_relative "stimulus_plumbers/components/combobox/typeahead"
 require_relative "stimulus_plumbers/components/combobox/time"
-require_relative "stimulus_plumbers/components/combobox/time/drum"
 require_relative "stimulus_plumbers/components/combobox/builder"
 
 # -- Form --

@@ -3,6 +3,12 @@ en:
     combobox:
       typeahead:
         empty: "No results"
+      time:
+        hour_label: "Hour"
+        minute_label: "Minute"
+        period_label: "Period"
+        am: "AM"
+        pm: "PM"
     form:
       password:
         show: "Show password"
