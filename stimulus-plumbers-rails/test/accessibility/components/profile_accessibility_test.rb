@@ -27,7 +27,7 @@ class ProfileAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/profile"
 
     find("input[aria-label='Date']").click
-    find("button[aria-label='Previous Month']").click
+    find("button[aria-label='Previous month']").click
 
     assert_accessible context: "#profile"
   end
@@ -36,7 +36,7 @@ class ProfileAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/profile"
 
     find("input[aria-label='Date']").click
-    find("button[aria-label='Next Month']").click
+    find("button[aria-label='Next month']").click
 
     assert_accessible context: "#profile"
   end

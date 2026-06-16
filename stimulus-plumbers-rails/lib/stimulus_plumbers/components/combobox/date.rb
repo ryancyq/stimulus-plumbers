@@ -30,7 +30,7 @@ module StimulusPlumbers
 
         private
 
-        def render_date(panel_attrs: {}, value: nil, label: "Picker", labelledby: nil)
+        def render_date(panel_attrs: {}, value: nil, label: nil, labelledby: nil)
           calendar_id = self.class.calendar_id_for(panel_attrs[:id])
 
           template.content_tag(
@@ -49,7 +49,8 @@ module StimulusPlumbers
             "#{STIMULUS_CONTROLLER}-date-value" => value
           }.compact
 
-          { role: "dialog", aria: labelled_aria(label, labelledby: labelledby), data: data }
+          resolved_label = label || I18n.t("stimulus_plumbers.combobox.date.dialog_label")
+          { role: "dialog", aria: labelled_aria(resolved_label, labelledby: labelledby), data: data }
         end
 
         def navigation

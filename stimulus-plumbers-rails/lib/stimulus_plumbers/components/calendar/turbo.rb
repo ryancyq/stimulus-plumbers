@@ -42,7 +42,7 @@ module StimulusPlumbers
           html_options = merge_html_options(
             theme.resolve(:calendar_quarter_grid),
             kwargs,
-            { role: "grid", aria: { label: "Year view" } }
+            { role: "grid", aria: { label: I18n.t("stimulus_plumbers.calendar.year_view") } }
           )
           template.content_tag(:div, **html_options) do
             Turbo::MonthsOfYear.new(template, date: date, today: today, selected_date: selected_date, format: month_format).render
@@ -53,7 +53,7 @@ module StimulusPlumbers
           html_options = merge_html_options(
             theme.resolve(:calendar_quarter_grid),
             kwargs,
-            { role: "grid", aria: { label: "Decade view" } }
+            { role: "grid", aria: { label: I18n.t("stimulus_plumbers.calendar.decade_view") } }
           )
           template.content_tag(:div, **html_options) do
             Turbo::YearsOfDecade.new(template, date: date, today: today, selected_date: selected_date).render

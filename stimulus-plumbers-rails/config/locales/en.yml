@@ -1,14 +1,29 @@
 en:
   stimulus_plumbers:
+    avatar:
+      image_alt: "%{name}'s avatar"
+    calendar:
+      year_view: "Year view"
+      decade_view: "Decade view"
     combobox:
       typeahead:
         empty: "No results"
       time:
+        dialog_label: "Picker"
         hour_label: "Hour"
         minute_label: "Minute"
         period_label: "Period"
         am: "AM"
         pm: "PM"
+      date:
+        dialog_label: "Picker"
+        navigation_label: "Date picker navigation"
+        previous_month: "Previous month"
+        previous_year: "Previous year"
+        previous_decade: "Previous decade"
+        next_month: "Next month"
+        next_year: "Next year"
+        next_decade: "Next decade"
     form:
       password:
         show: "Show password"
