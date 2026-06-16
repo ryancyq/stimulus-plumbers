@@ -13,10 +13,12 @@ stimulus-plumbers-rails/
 │       │   │   ├── group.rb
 │       │   │   └── slots.rb
 │       │   ├── calendar.rb               # sp_calendar_month renderer
-│       │   ├── calendar/month/turbo.rb   # Turbo-compatible calendar grid
-│       │   ├── calendar/month/turbo/
+│       │   ├── calendar/turbo.rb         # Turbo-compatible calendar grid
+│       │   ├── calendar/turbo/
 │       │   │   ├── days_of_month.rb
-│       │   │   └── days_of_week.rb
+│       │   │   ├── days_of_week.rb
+│       │   │   ├── months_of_year.rb
+│       │   │   └── years_of_decade.rb
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
 │       │   │   └── slots.rb
@@ -30,9 +32,7 @@ stimulus-plumbers-rails/
 │       │   │   ├── options/
 │       │   │   │   ├── option.rb
 │       │   │   │   └── option_group.rb
-│       │   │   ├── time.rb               # combobox-time drum picker body + nested Metadata — panel IS the role=dialog (hosts the controller)
-│       │   │   ├── time/
-│       │   │   │   └── drum.rb           # Single drum column renderer
+│       │   │   ├── time.rb               # combobox-time drum picker body + nested Metadata — panel IS the role=dialog (hosts the controller); drum columns rendered inline
 │       │   │   ├── trigger.rb            # Combobox trigger input (<input role="combobox">)
 │       │   │   ├── date/
 │       │   │   │   ├── navigation.rb     # Date picker navigation bar (prev/next + view-title buttons)
@@ -51,7 +51,6 @@ stimulus-plumbers-rails/
 │       │   │   └── section.rb
 │       │   ├── popover.rb                # sp_popover renderer; render (with wrapper) / build (without wrapper)
 │       │   └── popover/
-│       │       ├── builder.rb            # Builder DSL: p.trigger / p.panel (auto-wired) / p.build_panel (caller-wired) — yielded by render/build
 │       │       ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
 │       │       └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_attrs for caller to wire)
 │       ├── helpers/
@@ -68,7 +67,7 @@ stimulus-plumbers-rails/
 │       │   ├── plumber_helper.rb         # sp_dom_id
 │       │   └── popover_helper.rb         # sp_popover
 │       ├── form/
-│       │   ├── builder.rb                # Form builder: FIELD_RENDERER/COLLECTION_FIELD_RENDERER/CHOICE_RENDERER constants + f.field/collection_field/choice
+│       │   ├── builder.rb                # Form builder: f.field/collection_field/choice — dispatches via Fields::Renderer::FIELD/COLLECTION/CHOICE
 │       │   ├── base.rb                   # Form::Base — shared init, error?, described_by, render_hint/errors
 │       │   ├── field.rb                  # Form::Field < Base — label + input + hint + error; TYPES, COLLECTION_TYPES, VARIANTS, hide_label
 │       │   └── fields/
@@ -239,9 +238,9 @@ Three builder methods provide the complete accessible field pattern:
 
 | Method | Renderer constant | `as:` values |
 | --- | --- | --- |
-| `f.field(attr, as:)` | `FIELD_RENDERER` | `:text`, `:email`, `:number`, `:url`, `:tel`, `:color`, `:month`, `:week`, `:range`, `:datetime_local`, `:text_area`, `:file`, `:password`, `:date`, `:time`, `:select`, `:search` |
-| `f.collection_field(attr, as:, collection:, value_method:, text_method:)` | `COLLECTION_FIELD_RENDERER` | `:collection_select`, `:grouped_collection_select` |
-| `f.choice(attr, as:, collection:, value_method:, text_method:)` | `CHOICE_RENDERER` | `:radio`, `:check_box` |
+| `f.field(attr, as:)` | `Renderer::FIELD` | `:text`, `:email`, `:number`, `:url`, `:tel`, `:color`, `:month`, `:week`, `:range`, `:datetime_local`, `:text_area`, `:file`, `:password`, `:date`, `:time`, `:select`, `:search` |
+| `f.collection_field(attr, as:, collection:, value_method:, text_method:)` | `Renderer::COLLECTION` | `:collection_select`, `:grouped_collection_select` |
+| `f.choice(attr, as:, collection:, value_method:, text_method:)` | `Renderer::CHOICE` | `:radio`, `:check_box` |
 
 Field-chrome options (`label:`, `hint:`, `error:`, `required:`, `hide_label:`, `layout:`) are only meaningful on the full-field helpers — they are **not** processed by native overrides.
 

@@ -42,71 +42,22 @@ For the JS controller API (targets, values, keyboard behaviour), see the [JS pac
 
 ### Rendered HTML structure
 
-`sp_calendar_month` renders a `calendar-month` + `calendar-observer` controller shell. The JS controller populates the day/week grids on connect and on each navigation.
+`sp_calendar_month` renders a `calendar-month` controller shell. The JS controller populates the day/week grids on connect and on each navigation. Year/decade drill-down views are separate controllers wired by `combobox-date` — see the [JS package docs](../../../stimulus-plumbers/docs/component/calendar.md).
 
 ```html
-<!-- combobox-date drives navigation and view switching -->
+<!-- sp_calendar_month(date: Date.new(2024, 2, 15)) -->
 <div
-  data-controller="combobox-date"
-  data-combobox-date-calendar-month-outlet="[data-controller~='calendar-month']"
-  data-combobox-date-date-value="2024-02-15"
+  data-controller="calendar-month"
+  data-calendar-month-year-value="2024"
+  data-calendar-month-month-value="1"
+  data-calendar-month-day-value="15"
+  role="grid"
 >
-  <!-- view-title button drills up (month → year → decade) -->
-  <button
-    data-combobox-date-target="viewTitle"
-    data-action="click->combobox-date#zoomOut"
-    type="button"
-  >
-    February 2024
-  </button>
+  <!-- days-of-week header row (JS-populated) -->
+  <div data-calendar-month-target="daysOfWeek"></div>
 
-  <!-- month view (CSR-rendered by calendar-month controller) -->
-  <div
-    data-controller="calendar-month calendar-observer"
-    data-calendar-month-year-value="2024"
-    data-calendar-month-month-value="1"
-    data-calendar-month-day-value="15"
-    data-action="click->calendar-observer#onSelect"
-    role="grid"
-  >
-    <!-- month-value is 0-indexed: January=0, February=1, … December=11 -->
-
-    <!-- days-of-week header row (JS-generated) -->
-    <div data-calendar-month-target="daysOfWeek">
-      <div role="row">
-        <div role="columnheader" title="Sunday">Su</div>
-        <!-- … -->
-      </div>
-    </div>
-
-    <!-- days-of-month body (JS-generated) -->
-    <div role="rowgroup" data-calendar-month-target="daysOfMonth">
-      <div role="row">
-        <div role="gridcell" tabindex="0" aria-selected="false">
-          <time datetime="2024-02-01T00:00:00.000Z">1</time>
-        </div>
-        <!-- … -->
-      </div>
-    </div>
-
-    <!-- year view — hidden until user drills up; JS-generated -->
-    <div
-      hidden
-      data-controller="calendar-year"
-      data-calendar-year-target="yearView"
-    >
-      <!-- month buttons inserted by combobox-date#drawYearView -->
-    </div>
-
-    <!-- decade view — hidden until user drills up twice; JS-generated -->
-    <div
-      hidden
-      data-controller="calendar-decade"
-      data-calendar-decade-target="decadeView"
-    >
-      <!-- year buttons inserted by combobox-date#drawDecadeView -->
-    </div>
-  </div>
+  <!-- days-of-month body (JS-populated) -->
+  <div role="rowgroup" data-calendar-month-target="daysOfMonth"></div>
 </div>
 ```
 
@@ -130,48 +81,57 @@ end
 <%= sp_calendar_turbo(date: @date, today: @today, selectable: true) %>
 ```
 
-Individual view helpers render a single view (used for Turbo Frame responses):
+Individual view helpers render a single view (used for Turbo Frame responses). They accept the same common options plus extras:
 
 ```erb
 <%# Month view (days grid) %>
-<%= sp_calendar_turbo_month(date: @date, today: @today) %>
+<%= sp_calendar_turbo_month(date: @date, today: @today, weekday_format: :narrow) %>
 
 <%# Year view (months grid) %>
-<%= sp_calendar_turbo_year(date: @date, today: @today) %>
+<%= sp_calendar_turbo_year(date: @date, today: @today, month_format: :long) %>
 
 <%# Decade view (years grid) %>
 <%= sp_calendar_turbo_decade(date: @date, today: @today) %>
 ```
 
-| Option              | Description                                         |
-| ------------------- | --------------------------------------------------- |
-| `date`              | `Date` — the month/year being displayed             |
-| `today`             | `Date` — used to mark today and aria-current        |
-| `selectable`        | `true` renders day cells as `<button>` (month only) |
-| `selected_date`     | `Date` — marks the selected cell with aria-selected |
-| `show_other_months` | `true` shows padding days from adjacent months      |
+| Helper                    | Extra option     | Description                                                        |
+| ------------------------- | ---------------- | ------------------------------------------------------------------ |
+| `sp_calendar_turbo_month` | `weekday_format` | `:short` (default) \| `:long` \| `:narrow` — weekday header format |
+| `sp_calendar_turbo_year`  | `month_format`   | `:short` (default) \| `:long` \| `:narrow` — month button format   |
+
+**Common options** (all helpers and `sp_calendar_turbo`):
+
+| Option              | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| `date`              | `Date` — the month/year being displayed                  |
+| `today`             | `Date` — used to mark today and aria-current             |
+| `selectable`        | `true` renders day cells as `<button>` (month only)      |
+| `selected_date`     | `Date` — marks the selected cell with aria-selected      |
+| `show_other_months` | `true` shows padding days from adjacent months           |
+| `since`             | `Date` — minimum selectable date (disables earlier days) |
+| `till`              | `Date` — maximum selectable date (disables later days)   |
+| `disabled_months`   | Array — month numbers/names to disable in the year view  |
+| `disabled_years`    | Array — years to disable in the decade view              |
 
 ### Rendered HTML structure
 
 #### Month view (`sp_calendar_turbo_month`)
 
 ```html
-<div
-  role="grid"
-  data-controller="calendar-observer"
-  data-action="click->calendar-observer#onSelect"
->
+<!-- sp_calendar_turbo_month(date: @date, today: @today, selectable: true) -->
+<div role="grid" data-controller="calendar-month-selector">
   <!-- weekday column headers -->
   <div role="row">
-    <div role="columnheader" title="Sunday">Su</div>
+    <span role="columnheader">Su</span>
     <!-- … -->
   </div>
 
   <!-- day cells -->
   <div role="rowgroup">
     <div role="row">
+      <!-- selectable: true → <button>; selectable: false → <span> -->
       <button role="gridcell" tabindex="0" aria-selected="false">
-        <time datetime="2024-02-01T00:00:00.000Z">1</time>
+        <time datetime="2024-02-01">1</time>
       </button>
       <!-- … -->
     </div>
@@ -184,9 +144,13 @@ Individual view helpers render a single view (used for Turbo Frame responses):
 Displays 12 month buttons in a 4-column grid. Used when drilling up from the month view.
 
 ```html
-<div role="grid" aria-label="Year view" class="grid grid-cols-4 …">
+<!-- sp_calendar_turbo_year(date: @date, today: @today) -->
+<div
+  role="grid"
+  aria-label="Year view"
+  data-controller="calendar-year-selector"
+>
   <div role="rowgroup">
-    <!-- class="contents" -->
     <div role="row">
       <button
         role="gridcell"
@@ -204,12 +168,16 @@ Displays 12 month buttons in a 4-column grid. Used when drilling up from the mon
 
 #### Decade view (`sp_calendar_turbo_decade`)
 
-Displays 10 year buttons in a 4-column grid (2 padding cells). Used when drilling up from the year view.
+Displays 10 year buttons in a 4-column grid (plus 2 buffer cells, disabled). Used when drilling up from the year view.
 
 ```html
-<div role="grid" aria-label="Decade view" class="grid grid-cols-4 …">
+<!-- sp_calendar_turbo_decade(date: @date, today: @today) -->
+<div
+  role="grid"
+  aria-label="Decade view"
+  data-controller="calendar-decade-selector"
+>
   <div role="rowgroup">
-    <!-- class="contents" -->
     <div role="row">
       <button
         role="gridcell"

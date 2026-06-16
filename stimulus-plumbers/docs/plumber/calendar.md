@@ -63,6 +63,9 @@ Returns a `Calendar` instance; the controller accesses it via `this.calendar`.
 
 ## Dispatches & callbacks
 
-| Moment        | Dispatch             | Callback                       |
-| ------------- | -------------------- | ------------------------------ |
-| Post-navigate | `{prefix}:navigated` | `onNavigated({ year, month })` |
+| Moment        | Dispatch             | Callback                    |
+| ------------- | -------------------- | --------------------------- |
+| Pre-navigate  | `{prefix}:navigate`  | —                           |
+| Post-navigate | `{prefix}:navigated` | `onNavigated({ from, to })` |
+
+Both dispatches include `detail: { from: isoString, to: isoString }` where `from`/`to` are ISO date strings.

@@ -11,15 +11,21 @@ Renders an accessible calendar grid for a given month. Driven by the `Calendar` 
 
 ## Classes
 
-| Class        | Description                         |
-| ------------ | ----------------------------------- |
-| `dayOfWeek`  | Applied to each weekday header cell |
-| `dayOfMonth` | Applied to each day cell            |
+| Class             | Description                               |
+| ----------------- | ----------------------------------------- |
+| `dayOfWeek`       | Applied to each weekday header cell       |
+| `dayOfMonth`      | Applied to each day cell                  |
+| `dayOfOtherMonth` | Applied to day cells from adjacent months |
+| `row`             | Applied to each week row                  |
 
 ## Values
 
 | Value              | Type    | Default       | Description                                                                            |
 | ------------------ | ------- | ------------- | -------------------------------------------------------------------------------------- |
+| `year`             | Number  | —             | Year being displayed                                                                   |
+| `month`            | Number  | —             | Month being displayed (0-indexed)                                                      |
+| `since`            | String  | `""`          | Earliest selectable date (ISO string)                                                  |
+| `till`             | String  | `""`          | Latest selectable date (ISO string)                                                    |
 | `locales`          | Array   | `["default"]` | `Intl.DateTimeFormat` locale(s)                                                        |
 | `weekdayFormat`    | String  | `"short"`     | Weekday header format: `"short"` \| `"long"` \| `"narrow"`                             |
 | `dayFormat`        | String  | `"numeric"`   | Day number format                                                                      |
@@ -27,30 +33,30 @@ Renders an accessible calendar grid for a given month. Driven by the `Calendar` 
 | `today`            | String  | `""`          | Override the "today" marker (ISO date string); defaults to system date                 |
 | `selected`         | String  | `""`          | Currently selected date (ISO string); sets `aria-selected="true"` on the matching cell |
 
-## Calendar plumber options
+## Calendar plumber options (programmatic only)
 
-Pass these as data attributes using the `calendar-month-*-value` prefix:
+These options are not exposed as Stimulus values and must be passed via a subclass or custom controller:
 
-| Option             | Description                                    |
-| ------------------ | ---------------------------------------------- |
-| `since`            | Minimum selectable date (ISO string or `Date`) |
-| `till`             | Maximum selectable date (ISO string or `Date`) |
-| `firstDayOfWeek`   | `0` = Sunday, `1` = Monday, … (default `0`)    |
-| `disabledDates`    | Array of ISO date strings to disable           |
-| `disabledWeekdays` | Array of weekday names or numbers to disable   |
-| `disabledDays`     | Array of day-of-month numbers to disable       |
-| `disabledMonths`   | Array of month names or numbers to disable     |
+| Option             | Description                                  |
+| ------------------ | -------------------------------------------- |
+| `firstDayOfWeek`   | `0` = Sunday, `1` = Monday, … (default `0`)  |
+| `disabledDates`    | Array of ISO date strings to disable         |
+| `disabledWeekdays` | Array of weekday names or numbers to disable |
+| `disabledDays`     | Array of day-of-month numbers to disable     |
+| `disabledMonths`   | Array of month names or numbers to disable   |
 
 ## Standalone usage
 
 ```html
 <div
   data-controller="calendar-month"
+  data-calendar-month-year-value="2024"
+  data-calendar-month-month-value="1"
   data-calendar-month-locales-value='["en-US"]'
-  data-calendar-month-first-day-of-week-value="1"
+  role="grid"
 >
   <div data-calendar-month-target="daysOfWeek"></div>
-  <div data-calendar-month-target="daysOfMonth"></div>
+  <div role="rowgroup" data-calendar-month-target="daysOfMonth"></div>
 </div>
 ```
 
@@ -75,51 +81,22 @@ end
 
 ## Actions
 
-| Method            | Description                                                                                       |
-| ----------------- | ------------------------------------------------------------------------------------------------- |
-| `onSelect(event)` | Reads `event.detail.iso` and sets `selectedValue`, updating `aria-selected` without a full redraw |
+| Method            | Description                                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `select(iso)`     | Selects a date by ISO string — sets `selectedValue`, updates `aria-selected`, dispatches `calendar-month:selected` |
+| `navigate(date)`  | Navigates to the given `Date` — updates `yearValue`/`monthValue` and re-renders the grid                           |
+| `step(unit, dir)` | Steps the calendar by `unit` (`'day'`/`'month'`/`'year'`) in `dir` (`1`/`-1`)                                      |
 
-Use `onSelect` to wire the observer's `selected` event directly to the calendar:
-
-```html
-<div
-  data-controller="calendar-month"
-  data-action="calendar-month-observer:selected->calendar-month#onSelect"
-  data-calendar-month-selected-value="2024-10-15"
->
-  <div data-calendar-month-target="daysOfWeek"></div>
-  <div
-    role="grid"
-    data-controller="calendar-month-observer"
-    data-calendar-month-target="daysOfMonth"
-    data-action="click->calendar-month-observer#onSelect"
-  ></div>
-</div>
-```
-
-## calendar-month-observer
-
-Companion controller that listens for clicks on gridcell elements and dispatches selection events. Pair it with `calendar-month` via `data-action`.
-
-**Methods**
-
-| Method            | Wired via           | Description                                                                                  |
-| ----------------- | ------------------- | -------------------------------------------------------------------------------------------- |
-| `onSelect(event)` | `click` on the grid | Event adapter — validates the clicked cell, dispatches `selecting`, calls `select(iso)`      |
-| `select(iso)`     | —                   | Programmatic API — dispatches `selected` with `{ epoch, iso }` for the given ISO date string |
+Click-handling is wired internally — `calendar-month` handles clicks on its own grid and dispatches `calendar-month:selected` automatically.
 
 **Dispatches**
 
-| Event                               | Detail           | When                                                |
-| ----------------------------------- | ---------------- | --------------------------------------------------- |
-| `calendar-month-observer:selecting` | —                | On every valid cell click, before date is confirmed |
-| `calendar-month-observer:selected`  | `{ epoch, iso }` | After a valid date is parsed from the clicked cell  |
-
-```html
-<div role="grid" data-controller="calendar-month-observer" data-action="click->calendar-month-observer#onSelect">
-  <!-- gridcell buttons rendered by calendar-month -->
-</div>
-```
+| Event                      | Detail           | When                                                |
+| -------------------------- | ---------------- | --------------------------------------------------- |
+| `calendar-month:selecting` | —                | On every valid cell click, before date is confirmed |
+| `calendar-month:selected`  | `{ epoch, iso }` | After a valid date is parsed from the clicked cell  |
+| `calendar-month:navigate`  | `{ from, to }`   | Before navigation begins (ISO strings)              |
+| `calendar-month:navigated` | `{ from, to }`   | After navigation completes (ISO strings)            |
 
 ## Accessibility
 
@@ -128,3 +105,49 @@ Companion controller that listens for clicks on gridcell elements and dispatches
 - Today is marked with `aria-current="date"`
 - Disabled dates use `disabled` (buttons) or `aria-disabled="true"` (non-interactive)
 - Selected dates use `aria-selected="true"`
+
+## calendar-year
+
+Year-view grid controller — renders a 12-month grid and dispatches a `calendar-year:selected` event when a month button is clicked. Pair with `combobox-date` via `data-action` on the orchestrator element.
+
+**Dispatches**
+
+| Event                    | Detail      | When                                              |
+| ------------------------ | ----------- | ------------------------------------------------- |
+| `calendar-year:selected` | `{ month }` | After a valid month button is clicked (1-indexed) |
+
+```html
+<!-- action wired on the combobox-date element -->
+<div
+  data-controller="combobox-date"
+  data-action="calendar-year:selected->combobox-date#onMonthSelect"
+  data-combobox-date-calendar-year-outlet="#year_view"
+>
+  <div id="year_view" hidden data-controller="calendar-year" role="grid" aria-label="Year view">
+    <div data-calendar-year-target="grid" role="rowgroup"></div>
+  </div>
+</div>
+```
+
+## calendar-decade
+
+Decade-view grid controller — renders a 12-year grid and dispatches a `calendar-decade:selected` event when a year button is clicked. Pair with `combobox-date` via `data-action` on the orchestrator element.
+
+**Dispatches**
+
+| Event                      | Detail     | When                                 |
+| -------------------------- | ---------- | ------------------------------------ |
+| `calendar-decade:selected` | `{ year }` | After a valid year button is clicked |
+
+```html
+<!-- action wired on the combobox-date element -->
+<div
+  data-controller="combobox-date"
+  data-action="calendar-decade:selected->combobox-date#onYearSelect"
+  data-combobox-date-calendar-decade-outlet="#decade_view"
+>
+  <div id="decade_view" hidden data-controller="calendar-decade" role="grid" aria-label="Decade view">
+    <div data-calendar-decade-target="grid" role="rowgroup"></div>
+  </div>
+</div>
+```
