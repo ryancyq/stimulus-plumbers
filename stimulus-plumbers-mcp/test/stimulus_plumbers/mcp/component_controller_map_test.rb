@@ -35,7 +35,11 @@ class ComponentControllerMapTest < Minitest::Test
     controllers = @mapping[:calendar]
 
     assert_includes controllers, "calendar-month"
-    assert_includes controllers, "calendar-observer"
+    assert_includes controllers, "calendar-year"
+    assert_includes controllers, "calendar-decade"
+    assert_includes controllers, "calendar-month-selector"
+    assert_includes controllers, "calendar-year-selector"
+    assert_includes controllers, "calendar-decade-selector"
   end
 
   def test_button_has_no_controllers
