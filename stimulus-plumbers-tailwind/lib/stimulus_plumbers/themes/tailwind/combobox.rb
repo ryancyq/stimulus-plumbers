@@ -54,17 +54,13 @@ module StimulusPlumbers
           py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
-        TIME = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
+        TIME           = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
+        TIME_DRUM_HHMM = %w[flex-1 min-w-0].freeze
+        TIME_DRUM_AMPM = %w[shrink-0].freeze
 
         DATE_NAV = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
 
-        DATE_NAV_BTN = [
-          *Control::BASE,
-          "inline-flex items-center justify-center",
-          "size-(--sp-calendar-day-size) rounded-(--sp-radius-md)",
-          "text-(--sp-color-fg) hover:bg-(--sp-color-muted)",
-          "focus-visible:ring-(--sp-focus-ring-color)"
-        ].freeze
+        DATE_NAV_BTN = %w[size-(--sp-calendar-day-size)].freeze
 
         CONTAINER = %w[relative].freeze
         POPOVER   = %w[absolute top-full left-0 min-w-full].freeze
@@ -119,6 +115,10 @@ module StimulusPlumbers
 
         def combobox_time_classes
           { classes: klasses(*TIME) }
+        end
+
+        def combobox_time_drum_classes(target: "hour")
+          { classes: klasses(*(target == "period" ? TIME_DRUM_AMPM : TIME_DRUM_HHMM)) }
         end
 
         def combobox_date_navigation_classes

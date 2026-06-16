@@ -67,13 +67,13 @@ module StimulusPlumbers
             rounded-(--sp-radius-md)
             bg-(--sp-color-bg) text-(--btn-accent)
             border border-(--btn-border)
-            hover:bg-(--btn-bg)/10
+            hover:bg-(--btn-accent)/10
           ].freeze,
           ghost:       %w[
             rounded-(--sp-radius-md)
             bg-transparent text-(--btn-accent)
             border border-transparent
-            hover:bg-(--btn-bg)/10
+            hover:bg-(--btn-accent)/10
           ].freeze,
           fab:         %w[
             rounded-(--sp-radius-full)
@@ -93,13 +93,13 @@ module StimulusPlumbers
             rounded-(--sp-radius-md)
             bg-(--sp-color-bg) text-(--btn-accent)
             border border-dashed border-(--btn-border)
-            hover:bg-(--btn-bg)/10
+            hover:bg-(--btn-accent)/10
           ].freeze,
           card:        %w[
             rounded-(--sp-radius-md)
             bg-(--sp-color-bg) text-(--btn-accent)
             border border-(--btn-border) shadow-(--sp-shadow-xs)
-            hover:bg-(--btn-bg)/10
+            hover:bg-(--btn-accent)/10
           ].freeze
         }.freeze
 

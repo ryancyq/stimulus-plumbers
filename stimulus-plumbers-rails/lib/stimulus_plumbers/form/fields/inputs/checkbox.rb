@@ -104,7 +104,7 @@ module StimulusPlumbers
           def build_check_box_label(field, attribute, input_id, check_box_html)
             label_opts = merge_html_options(theme.resolve(:form_field_checkbox_label))
             label_text = field.label || attribute.to_s.humanize
-            @template.content_tag(:label, for: input_id, **label_opts) do
+            @template.content_tag(:label, **label_opts, for: input_id) do
               @template.safe_join([check_box_html, label_text])
             end
           end

@@ -87,13 +87,19 @@ class TailwindThemeFormFieldTest < Minitest::Test
 
     assert_includes result, "flex"
     assert_includes result, "justify-between"
-    assert_includes result, "items-start"
+    assert_includes result, "items-center"
+    assert_includes result, "gap-(--sp-space-3)"
     assert_includes result, "bg-(--sp-color-bg)"
     assert_includes result, "border-(--sp-color-border)"
     assert_includes result, "rounded-(--sp-radius-md)"
     assert_includes result, "hover:bg-(--sp-color-muted)"
     assert_includes result, "hover:border-(--sp-color-border-strong)"
     assert_includes result, "hover:text-(--sp-color-fg)"
+  end
+
+  def test_form_field_checkbox_label_card_type_checked_states
+    result = classes_for(:form_field_checkbox_label, type: :card)
+
     assert_includes result, "has-[:checked]:border-(--card-ring)"
     assert_includes result, "has-[:checked]:bg-(--card-ring)/10"
     assert_includes result, "has-[:checked]:text-(--sp-color-fg)"

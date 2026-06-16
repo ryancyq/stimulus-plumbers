@@ -16,7 +16,7 @@ module StimulusPlumbers
         @trigger_html = nil
         @panel_html   = nil
         yield self
-        template.safe_join([@trigger_html, @panel_html].compact)
+        template.safe_join([@trigger_html, @panel_html])
       end
 
       def trigger(haspopup: "dialog", controls: @panel_id, **kwargs, &block)

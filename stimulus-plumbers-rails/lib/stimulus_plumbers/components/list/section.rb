@@ -44,7 +44,7 @@ module StimulusPlumbers
                    **merge_html_options(theme.resolve(:list_section_description))
                  )
                end)
-            ].compact
+            ]
           )
         end
 

@@ -260,5 +260,8 @@ class TailwindThemeFormInputTest < Minitest::Test
 
     assert_includes result, "border-0"
     assert_includes result, "cursor-pointer"
+    assert_includes result, "rounded-(--sp-radius-sm)"
+    assert_includes result, "hover:bg-(--sp-color-muted)"
+    assert_includes result, "hover:text-(--sp-color-fg)"
   end
 end

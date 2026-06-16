@@ -44,14 +44,21 @@ module StimulusPlumbers
               @template.collection_radio_buttons(
                 @object_name, attribute, collection, value_method, text_method, {}, item_opts
               ) do |builder|
-                render_radio_button_label(builder, theme.resolve(:form_field_radio_label, type: type, variant: variant))
+                render_radio_button_label(builder, theme.resolve(:form_field_radio_label, type: type, variant: variant), type)
               end
             end
           end
 
-          def render_radio_button_label(builder, label_opts)
+          def render_radio_button_label(builder, label_opts, type = :default)
             html_options = merge_html_options(label_opts)
-            builder.label(**html_options) { @template.safe_join([builder.radio_button, builder.text]) }
+            if %i[button card].include?(type)
+              @template.safe_join([
+                builder.radio_button,
+                builder.label(**html_options) { builder.text }
+              ])
+            else
+              builder.label(**html_options) { @template.safe_join([builder.radio_button, builder.text]) }
+            end
           end
         end
       end

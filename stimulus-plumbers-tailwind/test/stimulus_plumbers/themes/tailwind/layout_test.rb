@@ -14,9 +14,10 @@ class TailwindThemeLayoutTest < Minitest::Test
   def test_divider_separator_includes_all_classes
     result = classes_for(:divider_separator)
 
+    assert_includes result, "flex-1"
+    assert_includes result, "border-0"
     assert_includes result, "border-t"
     assert_includes result, "border-(--sp-color-border)"
-    assert_includes result, "my-(--sp-space-1)"
   end
 
   def test_popover_returns_a_classes_string

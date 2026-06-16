@@ -16,7 +16,7 @@ module StimulusPlumbers
               theme.resolve(:combobox_date_navigation_navigator),
               kwargs
             )
-            Components::Button.new(template).render(variant: :ghost, size: nil, icon_leading: icon, **html_options, &block)
+            Components::Button.new(template).render(type: :ghost, variant: :tertiary, size: nil, icon_leading: icon, **html_options, &block)
           end
         end
       end

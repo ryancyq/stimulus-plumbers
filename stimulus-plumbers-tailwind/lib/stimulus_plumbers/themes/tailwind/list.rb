@@ -42,7 +42,7 @@ module StimulusPlumbers
         private
 
         def list_classes
-          { classes: klasses("py-(--sp-space-1) divide-y divide-(--sp-color-border)") }
+          { classes: klasses("py-(--sp-space-1)") }
         end
 
         def list_section_classes

@@ -5,6 +5,7 @@ module StimulusPlumbers
     module Tailwind
       module Card
         BASE = %w[
+          flex flex-col
           rounded-(--sp-radius-md) border border-(--card-ring)
           bg-(--sp-color-bg) shadow-(--sp-shadow-xs)
         ].freeze
@@ -21,7 +22,7 @@ module StimulusPlumbers
 
         HEADER_BASE = %w[
           flex items-center gap-(--sp-space-3)
-          px-(--sp-space-6) pt-(--sp-space-6)
+          px-(--sp-space-6) py-(--sp-space-6)
         ].freeze
 
         ICON_BASE = %w[
@@ -33,12 +34,10 @@ module StimulusPlumbers
         ].freeze
 
         BODY_BASE = %w[
-          px-(--sp-space-6) pt-(--sp-space-3)
+          px-(--sp-space-6) py-(--sp-space-3)
         ].freeze
 
-        ACTION_BASE = %w[
-          px-(--sp-space-6) pb-(--sp-space-6) pt-(--sp-space-4)
-        ].freeze
+        ACTION_BASE = %w[w-full justify-start].freeze
 
         private
 

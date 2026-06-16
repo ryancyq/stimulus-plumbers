@@ -153,7 +153,7 @@ class TailwindThemeButtonTest < Minitest::Test
   end
 
   def test_button_outline_type_hover_tints_bg
-    assert_includes classes_for(:button, type: :outline), "hover:bg-(--btn-bg)/10"
+    assert_includes classes_for(:button, type: :outline), "hover:bg-(--btn-accent)/10"
   end
 
   def test_button_outline_type_does_not_change_text_on_hover
@@ -166,7 +166,7 @@ class TailwindThemeButtonTest < Minitest::Test
     assert_includes result, "[--btn-bg:var(--sp-color-destructive)]"
     assert_includes result, "bg-(--sp-color-bg)"
     assert_includes result, "text-(--btn-accent)"
-    assert_includes result, "hover:bg-(--btn-bg)/10"
+    assert_includes result, "hover:bg-(--btn-accent)/10"
   end
 
   # ── type: :ghost ─────────────────────────────────────────────────────────────
@@ -184,7 +184,7 @@ class TailwindThemeButtonTest < Minitest::Test
   end
 
   def test_button_ghost_type_hover_tints_bg
-    assert_includes classes_for(:button, type: :ghost), "hover:bg-(--btn-bg)/10"
+    assert_includes classes_for(:button, type: :ghost), "hover:bg-(--btn-accent)/10"
   end
 
   # ── type: :fab ───────────────────────────────────────────────────────────────
@@ -272,7 +272,7 @@ class TailwindThemeButtonTest < Minitest::Test
   end
 
   def test_button_dashed_type_hover_tints_bg
-    assert_includes classes_for(:button, type: :dashed), "hover:bg-(--btn-bg)/10"
+    assert_includes classes_for(:button, type: :dashed), "hover:bg-(--btn-accent)/10"
   end
 
   # ── type: :card ──────────────────────────────────────────────────────────────
@@ -297,7 +297,7 @@ class TailwindThemeButtonTest < Minitest::Test
   end
 
   def test_button_card_type_hover_tints_bg
-    assert_includes classes_for(:button, type: :card), "hover:bg-(--btn-bg)/10"
+    assert_includes classes_for(:button, type: :card), "hover:bg-(--btn-accent)/10"
   end
 
   def test_button_card_type_uses_justify_start_layout

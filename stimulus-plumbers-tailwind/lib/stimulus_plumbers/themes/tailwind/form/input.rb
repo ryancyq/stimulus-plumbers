@@ -71,7 +71,7 @@ module StimulusPlumbers
           ].freeze
           BUTTON_CLEAR = %w[
             self-stretch border-0 bg-transparent px-(--sp-space-2) cursor-pointer text-(--sp-color-muted-fg)
-            hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
+            rounded-(--sp-radius-sm) hover:bg-(--sp-color-muted) hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
           ].freeze
 
           private
