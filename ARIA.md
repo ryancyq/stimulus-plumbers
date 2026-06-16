@@ -42,14 +42,6 @@
 - Three views: month (days grid), year (months grid), decade (years grid); zoom out via `combobox-date#zoomOut`
 - Arrow keys navigate cells; Enter/Space select; Escape closes picker
 
-#### Action List (`action_list/`)
-- Static list: `role="list"` + `role="listitem"`
-- Interactive menu: `role="menu"` + `role="menuitem"`; Arrow keys navigate; Enter activates
-- Selected item: `aria-selected` (listbox) or `aria-checked` (menuitemcheckbox)
-- Grouped/nested sections: section body `<ul aria-label="…">` inside a `<li>` wrapper; `aria-label` provides group labeling for screen readers; no `role="group"` needed for plain grouped lists
-- Section headers: `<hN>` when `heading_level:` is set on the list; `<span aria-hidden="true">` otherwise — inner `<ul>` carries the accessible label via `aria-label`
-- Nested section builder: `list.section { |s| s.section(title: "Sub") { |sub| sub.item("…") } }` — heading level increments automatically per nesting depth
-
 #### Form Fields (`form/`, `form-field_controller`)
 - Every input must have a visible `<label>` via `for`/`id` or `aria-labelledby`
 - Required fields: `required` attribute + `aria-required="true"`
@@ -69,6 +61,10 @@
 - Use `<button>` (not `<div>` / `<a>`) for actions
 - Icon-only buttons must have `aria-label` or visually-hidden text
 - Disabled: `disabled` attribute (not `aria-disabled` alone) unless intentionally focusable
+
+#### List (`sp_list`, `sp_list_item`)
+- Static list: `role="list"` + `role="listitem"` (explicitly set to preserve semantics when CSS resets strip list role)
+- Active item: `aria-current="page"` on `<a>` links; `aria-current="true"` on `<button>` items — the value differs by element type per the ARIA spec
 
 #### Avatar / Card / Icon
 - Decorative images/icons: `aria-hidden="true"` or `alt=""`

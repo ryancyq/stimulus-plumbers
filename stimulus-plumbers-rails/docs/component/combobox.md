@@ -2,7 +2,7 @@
 
 Rails helpers that render fully-wired combobox components. Each variant shares the same wrapper structure (`input-combobox` + `input-formatter`) and differs only in its popover body.
 
-See [docs/component/combobox-controllers.md](../../stimulus-plumbers/docs/component/combobox.md) in the JS package for the underlying controller API.
+See [docs/component/combobox.md](../../stimulus-plumbers/docs/component/combobox.md) in the JS package for the underlying controller API.
 
 ## Helpers
 
