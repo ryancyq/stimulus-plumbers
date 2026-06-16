@@ -15,12 +15,8 @@ class CalendarTurboComponentTest < ActionView::TestCase
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
-  def test_has_calendar_observer_controller
-    assert_includes renderer.month(date: Date.new(2026, 4, 1)), 'data-controller="calendar-observer"'
-  end
-
-  def test_has_click_action_for_observer_controller
-    assert_includes renderer.month(date: Date.new(2026, 4, 1)), "click-&gt;calendar-observer#onSelect"
+  def test_has_calendar_month_selector_controller
+    assert_includes renderer.month(date: Date.new(2026, 4, 1)), 'data-controller="calendar-month-selector"'
   end
 
   def test_has_grid_role
@@ -147,12 +143,20 @@ class CalendarTurboComponentTest < ActionView::TestCase
     assert_includes renderer.year(date: Date.new(2026, 4, 1)), 'aria-label="Year view"'
   end
 
+  def test_year_has_calendar_year_selector_controller
+    assert_includes renderer.year(date: Date.new(2026, 4, 1)), 'data-controller="calendar-year-selector"'
+  end
+
   def test_decade_has_grid_role
     assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'role="grid"'
   end
 
   def test_decade_has_decade_view_aria_label
     assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'aria-label="Decade view"'
+  end
+
+  def test_decade_has_calendar_decade_selector_controller
+    assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'data-controller="calendar-decade-selector"'
   end
 
   def test_non_selected_cells_have_aria_selected_false

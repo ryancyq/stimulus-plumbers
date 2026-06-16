@@ -1,9 +1,9 @@
 import Plumber from './plumber';
 import { isValidDate, tryParseDate } from './plumber/date';
 
-const DAYS_PER_ROW  = 7;
-const YEAR_SIZE     = 12;
-const DECADE_SIZE   = 10;
+const DAYS_PER_ROW = 7;
+const YEAR_SIZE = 12;
+const DECADE_SIZE = 10;
 
 const defaultOptions = {
   locales: ['default'],

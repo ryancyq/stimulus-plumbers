@@ -40,9 +40,9 @@ test.describe("fieldset", () => {
     });
 
     test("required", async ({ page }) => {
-      await expect(page.locator("#fieldset-checkbox-required")).toHaveScreenshot(
-        "fieldset-checkbox-required.png",
-      );
+      await expect(
+        page.locator("#fieldset-checkbox-required"),
+      ).toHaveScreenshot("fieldset-checkbox-required.png");
     });
 
     test("hint", async ({ page }) => {

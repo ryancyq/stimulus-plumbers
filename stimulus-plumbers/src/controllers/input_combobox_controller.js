@@ -8,7 +8,6 @@ export default class extends Controller {
   };
   static outlets = ['combobox-dropdown'];
 
-  // Commits the value only; popover#closeOnSelect handles dismissal.
   onSelect(event) {
     if (event.detail?.value !== undefined) this.valueValue = event.detail.value;
   }

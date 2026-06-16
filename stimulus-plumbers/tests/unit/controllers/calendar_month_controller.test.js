@@ -299,7 +299,7 @@ describe('CalendarMonthController', () => {
       }
     });
 
-    it('onSelect() sets aria-selected="true" on the matching cell', async () => {
+    it('select() sets aria-selected="true" on the matching cell', async () => {
       document.body.innerHTML = `
         <div data-controller="calendar-month">
           <div data-calendar-month-target="daysOfMonth"></div>
@@ -311,7 +311,7 @@ describe('CalendarMonthController', () => {
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
       const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
 
-      ctrl.onSelect(new CustomEvent('selected', { detail: { iso: new Date(2024, 9, 10).toISOString() } }));
+      ctrl.select(new Date(2024, 9, 10).toISOString());
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const selected = daysOfMonth.querySelectorAll('[aria-selected="true"]');
@@ -319,7 +319,7 @@ describe('CalendarMonthController', () => {
       expect(selected[0].textContent).toContain('10');
     });
 
-    it('onSelect() does nothing when detail iso is absent', async () => {
+    it('select() does nothing for an unparseable iso', async () => {
       document.body.innerHTML = `
         <div data-controller="calendar-month" data-calendar-month-selected-value="2024-10-15">
           <div data-calendar-month-target="daysOfMonth"></div>
@@ -331,7 +331,7 @@ describe('CalendarMonthController', () => {
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
       const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
 
-      ctrl.onSelect(new CustomEvent('selected', { detail: {} }));
+      ctrl.select('not-a-date');
       await new Promise(resolve => setTimeout(resolve, 10));
 
       const selected = daysOfMonth.querySelectorAll('[aria-selected="true"]');
@@ -404,7 +404,7 @@ describe('CalendarMonthController', () => {
       expect(fillerDivs.length).toBe(4); // Sep 29-30 + Nov 1-2
     });
 
-    it('onSelect() with outside day navigates to that month and selects the day', async () => {
+    it('select() with outside day navigates to that month and selects the day', async () => {
       document.body.innerHTML = `
         <div data-controller="calendar-month" data-calendar-month-days-of-other-month-value="true">
           <div data-calendar-month-target="daysOfMonth"></div>
@@ -416,9 +416,9 @@ describe('CalendarMonthController', () => {
       const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
       const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
 
-      // Click Nov 1 (outside day — trailing padding for Oct 2024)
+      // Select Nov 1 (outside day — trailing padding for Oct 2024)
       const nov1 = new Date(2024, 10, 1);
-      ctrl.onSelect(new CustomEvent('selected', { detail: { iso: nov1.toISOString() } }));
+      ctrl.select(nov1.toISOString());
       await new Promise(resolve => setTimeout(resolve, 50));
 
       // Calendar should have navigated to November 2024
@@ -431,7 +431,7 @@ describe('CalendarMonthController', () => {
       expect(selected[0].textContent).toContain('1');
     });
 
-    it('onSelect() with current-month day does not navigate', async () => {
+    it('select() with current-month day does not navigate', async () => {
       document.body.innerHTML = `
         <div data-controller="calendar-month" data-calendar-month-days-of-other-month-value="true">
           <div data-calendar-month-target="daysOfMonth"></div>
@@ -442,7 +442,7 @@ describe('CalendarMonthController', () => {
       const el = document.querySelector('[data-controller="calendar-month"]');
       const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
 
-      ctrl.onSelect(new CustomEvent('selected', { detail: { iso: new Date(2024, 9, 10).toISOString() } }));
+      ctrl.select(new Date(2024, 9, 10).toISOString());
       await new Promise(resolve => setTimeout(resolve, 10));
 
       // Still October
@@ -461,6 +461,74 @@ describe('CalendarMonthController', () => {
         'calendar-month'
       );
       expect(controller.calendar).toBeDefined();
+    });
+  });
+
+  describe('yearValue/monthValue navigation', () => {
+    it('re-renders the day grid when yearValue changes', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month"
+             data-calendar-month-year-value="2024"
+             data-calendar-month-month-value="9">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const el = document.querySelector('[data-controller="calendar-month"]');
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
+
+      el.dataset.calendarMonthYearValue = '2025';
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(ctrl.calendar.year).toBe(2025);
+      expect(daysOfMonth.querySelectorAll('[role="gridcell"]').length).toBeGreaterThan(0);
+    });
+
+    it('re-renders the day grid when monthValue changes', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month"
+             data-calendar-month-year-value="2024"
+             data-calendar-month-month-value="9">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const el = document.querySelector('[data-controller="calendar-month"]');
+      const daysOfMonth = document.querySelector('[data-calendar-month-target="daysOfMonth"]');
+      const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
+
+      el.dataset.calendarMonthMonthValue = '1'; // February
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(ctrl.calendar.month).toBe(1);
+      const buttons = Array.from(daysOfMonth.querySelectorAll('button[role="gridcell"]'));
+      expect(buttons.some(btn => btn.textContent.trim() === '29')).toBe(true);
+    });
+
+    it('coalesces simultaneous year+month changes into one render', async () => {
+      document.body.innerHTML = `
+        <div data-controller="calendar-month"
+             data-calendar-month-year-value="2024"
+             data-calendar-month-month-value="9">
+          <div data-calendar-month-target="daysOfMonth"></div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const el = document.querySelector('[data-controller="calendar-month"]');
+      const ctrl = application.getControllerForElementAndIdentifier(el, 'calendar-month');
+      const navigateSpy = vi.spyOn(ctrl.calendar, 'navigate');
+
+      el.dataset.calendarMonthYearValue = '2025';
+      el.dataset.calendarMonthMonthValue = '2'; // March
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(navigateSpy).toHaveBeenCalledTimes(1);
+      expect(ctrl.calendar.year).toBe(2025);
+      expect(ctrl.calendar.month).toBe(2);
     });
   });
 });

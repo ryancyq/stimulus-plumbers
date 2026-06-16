@@ -3,15 +3,19 @@ import { readFileSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
-import PopoverController               from '../../src/controllers/popover_controller'
-import InputComboboxController         from '../../src/controllers/input_combobox_controller'
-import ComboboxDropdownController      from '../../src/controllers/combobox_dropdown_controller'
-import ComboboxTimeController          from '../../src/controllers/combobox_time_controller'
-import ComboboxDateController          from '../../src/controllers/combobox_date_controller'
-import InputFormatterController        from '../../src/controllers/input_formatter_controller'
-import InputClearableController        from '../../src/controllers/input_clearable_controller'
-import CalendarMonthController         from '../../src/controllers/calendar_month_controller'
-import CalendarObserverController from '../../src/controllers/calendar_observer_controller'
+import PopoverController                    from '../../src/controllers/popover_controller'
+import InputComboboxController              from '../../src/controllers/input_combobox_controller'
+import ComboboxDropdownController           from '../../src/controllers/combobox_dropdown_controller'
+import ComboboxTimeController               from '../../src/controllers/combobox_time_controller'
+import ComboboxDateController               from '../../src/controllers/combobox_date_controller'
+import InputFormatterController             from '../../src/controllers/input_formatter_controller'
+import InputClearableController             from '../../src/controllers/input_clearable_controller'
+import CalendarMonthController              from '../../src/controllers/calendar_month_controller'
+import CalendarMonthSelectorController      from '../../src/controllers/calendar_month_selector_controller'
+import CalendarYearController               from '../../src/controllers/calendar_year_controller'
+import CalendarYearSelectorController       from '../../src/controllers/calendar_year_selector_controller'
+import CalendarDecadeController             from '../../src/controllers/calendar_decade_controller'
+import CalendarDecadeSelectorController     from '../../src/controllers/calendar_decade_selector_controller'
 
 const CONTROLLERS_DIR = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -37,11 +41,12 @@ describe('Ruby action binding contract', () => {
       ['input-combobox',          InputComboboxController,         ['onSelect', 'onInput']],
       ['combobox-dropdown',       ComboboxDropdownController,      ['select', 'onNavigate']],
       ['combobox-time',           ComboboxTimeController,          ['select', 'onNavigate']],
-      ['combobox-date',           ComboboxDateController,          ['onSelect']],
+      ['combobox-date',           ComboboxDateController,          ['onDaySelect', 'onMonthSelect', 'onYearSelect']],
       ['input-formatter',         InputFormatterController,        ['format', 'toggle']],
       ['input-clearable',         InputClearableController,        ['clear']],
-      ['calendar-month',          CalendarMonthController,         ['onSelect']],
-      ['calendar-observer', CalendarObserverController, ['onSelect', 'select']],
+      ['calendar-month',          CalendarMonthController,         ['select', 'navigate', 'step']],
+      ['calendar-year',           CalendarYearController,          ['navigate', 'step']],
+      ['calendar-decade',         CalendarDecadeController,        ['navigate', 'step']],
     ]
 
     for (const [identifier, Controller, methods] of METHOD_CONTRACT) {
@@ -62,7 +67,7 @@ describe('Ruby action binding contract', () => {
 
   describe('custom event names', () => {
     const DISPATCH_CONTRACT = [
-      ['calendar-observer', 'calendar_observer_controller.js', 'selected'],
+      ['calendar-month', 'calendar_month_controller.js', 'selected'],
       ['combobox-date',           'combobox_date_controller.js',           'selected'],
       ['combobox-dropdown',       'combobox_dropdown_controller.js',       'selected'],
       ['combobox-time',           'combobox_time_controller.js',           'selected'],

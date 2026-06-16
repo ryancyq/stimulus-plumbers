@@ -4,8 +4,9 @@ module StimulusPlumbers
   module Components
     class Calendar
       class Turbo < Plumber::Base
-        STIMULUS_CONTROLLER = "calendar-observer"
-        STIMULUS_ACTION     = "click->#{STIMULUS_CONTROLLER}#onSelect".freeze
+        MONTH_SELECTOR_CONTROLLER   = "calendar-month-selector"
+        YEAR_SELECTOR_CONTROLLER    = "calendar-year-selector"
+        DECADE_SELECTOR_CONTROLLER  = "calendar-decade-selector"
 
         def month(
           date: Date.today,
@@ -21,7 +22,7 @@ module StimulusPlumbers
           html_options = merge_html_options(
             theme.resolve(:calendar),
             kwargs,
-            { data: { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION } }
+            { data: { controller: MONTH_SELECTOR_CONTROLLER } }
           )
           template.content_tag(:div, role: "grid", **html_options) do
             template.safe_join(
@@ -55,7 +56,11 @@ module StimulusPlumbers
           html_options = merge_html_options(
             theme.resolve(:calendar_quarter_grid),
             kwargs,
-            { role: "grid", aria: { label: I18n.t("stimulus_plumbers.calendar.year_view") } }
+            {
+              role: "grid",
+              aria: { label: I18n.t("stimulus_plumbers.calendar.year_view") },
+              data: { controller: YEAR_SELECTOR_CONTROLLER }
+            }
           )
           template.content_tag(:div, **html_options) do
             Turbo::MonthsOfYear.new(
@@ -83,7 +88,11 @@ module StimulusPlumbers
           html_options = merge_html_options(
             theme.resolve(:calendar_quarter_grid),
             kwargs,
-            { role: "grid", aria: { label: I18n.t("stimulus_plumbers.calendar.decade_view") } }
+            {
+              role: "grid",
+              aria: { label: I18n.t("stimulus_plumbers.calendar.decade_view") },
+              data: { controller: DECADE_SELECTOR_CONTROLLER }
+            }
           )
           template.content_tag(:div, **html_options) do
             Turbo::YearsOfDecade.new(

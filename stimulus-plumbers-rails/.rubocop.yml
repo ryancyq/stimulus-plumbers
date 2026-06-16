@@ -53,6 +53,7 @@ Layout/HashAlignment:
 
 Metrics/ClassLength:
   Exclude:
+    - lib/stimulus_plumbers/components/calendar/turbo.rb
     - lib/stimulus_plumbers/components/calendar/turbo/*.rb
     - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/field.rb

@@ -1,29 +1,59 @@
 import { Controller } from '@hotwired/stimulus';
 import { initCalendar } from '../plumbers';
+import { attachCalendarDaySelector } from '../plumbers/calendar-selector';
 import { tryParseDate } from '../plumbers/plumber/date';
 
 export default class extends Controller {
   static targets = ['daysOfWeek', 'daysOfMonth'];
   static classes = ['dayOfWeek', 'dayOfMonth', 'dayOfOtherMonth', 'row'];
   static values = {
+    year: Number,
+    month: Number,
+    today: { type: String, default: '' },
+    selected: { type: String, default: '' },
+    since: { type: String, default: '' },
+    till: { type: String, default: '' },
     locales: { type: Array, default: ['default'] },
     weekdayFormat: { type: String, default: 'short' },
     dayFormat: { type: String, default: 'numeric' },
     daysOfOtherMonth: { type: Boolean, default: false },
-    today: { type: String, default: '' },
-    selected: { type: String, default: '' },
   };
 
   initialize() {
-    initCalendar(this, { today: this.todayValue });
+    this.selector = attachCalendarDaySelector(this, { onSelect: 'select' });
+    initCalendar(this, {
+      today: this.todayValue,
+      since: this.sinceValue || null,
+      till: this.tillValue || null,
+    });
   }
 
   connect() {
-    this.draw();
+    this.selector.attach();
+    this.navigated();
   }
 
-  navigated() {
-    this.draw();
+  disconnect() {
+    this.selector.detach();
+  }
+
+  yearValueChanged() {
+    if (!this.calendar || !this.hasYearValue) return;
+    this._scheduleNavigate();
+  }
+  monthValueChanged() {
+    if (!this.calendar || !this.hasYearValue) return;
+    this._scheduleNavigate();
+  }
+
+  _scheduleNavigate() {
+    if (this._navigatePending) return;
+    this._navigatePending = true;
+    queueMicrotask(async () => {
+      this._navigatePending = false;
+      await this.calendar.navigate(this.currentDate);
+      this.navigated();
+    });
   }
 
   selectedValueChanged() {
@@ -39,24 +69,36 @@ export default class extends Controller {
     if (!parsed) return;
 
     const time = this.daysOfMonthTarget.querySelector(`time[datetime="${parsed.toISOString()}"]`);
-    if (time) time.closest('[aria-selected]').setAttribute('aria-selected', 'true');
+    if (time) time.closest('[aria-selected]')?.setAttribute('aria-selected', 'true');
   }
 
-  onSelect(event) {
-    const iso = event.detail?.iso;
-    if (!iso) return;
+  navigate(date) {
+    this.yearValue = date.getFullYear();
+    this.monthValue = date.getMonth();
+  }
+
+  step(unit, dir) {
+    return this.calendar.step(unit, dir);
+  }
+
+  select(iso) {
     const date = tryParseDate(iso);
     if (!date) return;
     this.selectedValue = iso;
     if (date.getMonth() !== this.calendar.month || date.getFullYear() !== this.calendar.year) {
       this.calendar.navigate(date);
     }
+    this.dispatch('selected', { detail: { epoch: date.getTime(), iso } });
   }
 
-  draw() {
+  navigated() {
     this.drawDaysOfWeek();
     this.drawDaysOfMonth();
     this.selectedValueChanged();
+  }
+
+  get currentDate() {
+    return new Date(this.yearValue, this.monthValue, 1);
   }
 
   createDayElement(day, { selectable = false, disabled = false } = {}) {

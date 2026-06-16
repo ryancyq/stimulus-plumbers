@@ -16,7 +16,7 @@ module StimulusPlumbers
                        else
                          kwargs
                        end
-        calendar_renderer.render(**html_options)
+        calendar_renderer.month(**html_options)
       end
 
       private
