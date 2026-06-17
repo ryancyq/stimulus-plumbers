@@ -5,7 +5,7 @@
 <section id="floating-filled-optional" class="sb-section">
   <h2>Filled — optional</h2>
   <div class="sb-col">
-    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: SignUp.new, url: "/demo", scope: "floating_filled_optional", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :email, as: :email, label: "Email address", required: false, floating: :filled %>
     <% end %>
   </div>
@@ -14,7 +14,7 @@
 <section id="floating-filled-hint" class="sb-section">
   <h2>Filled — with hint</h2>
   <div class="sb-col">
-    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: SignUp.new, url: "/demo", scope: "floating_filled_hint", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :bio, as: :text_area, label: "Bio", required: false, floating: :filled,
                   hint: "Tell us a little about yourself." %>
     <% end %>
@@ -24,7 +24,7 @@
 <section id="floating-filled" class="sb-section">
   <h2>Filled</h2>
   <div class="sb-col">
-    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: SignUp.new, url: "/demo", scope: "floating_filled", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :filled %>
     <% end %>
   </div>
@@ -33,7 +33,7 @@
 <section id="floating-filled-error" class="sb-section">
   <h2>Filled — error</h2>
   <div class="sb-col">
-    <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: @error_form, url: "/demo", scope: "floating_filled_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :filled %>
     <% end %>
   </div>
@@ -44,7 +44,7 @@
 <section id="floating-outlined" class="sb-section">
   <h2>Outlined</h2>
   <div class="sb-col">
-    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: SignUp.new, url: "/demo", scope: "floating_outlined", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :outlined %>
     <% end %>
   </div>
@@ -53,7 +53,7 @@
 <section id="floating-outlined-error" class="sb-section">
   <h2>Outlined — error</h2>
   <div class="sb-col">
-    <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: @error_form, url: "/demo", scope: "floating_outlined_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :outlined %>
     <% end %>
   </div>
@@ -64,7 +64,7 @@
 <section id="floating-standard" class="sb-section">
   <h2>Standard</h2>
   <div class="sb-col">
-    <%= form_with(model: SignUp.new, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: SignUp.new, url: "/demo", scope: "floating_standard", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :standard %>
     <% end %>
   </div>
@@ -73,7 +73,7 @@
 <section id="floating-standard-error" class="sb-section">
   <h2>Standard — error</h2>
   <div class="sb-col">
-    <%= form_with(model: @error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: @error_form, url: "/demo", scope: "floating_standard_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :text, label: "Full name", required: true, floating: :standard %>
     <% end %>
   </div>

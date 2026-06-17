@@ -13,7 +13,7 @@
   <h2>Error</h2>
   <div class="sb-col">
     <% search_error = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") } %>
-    <%= form_with(model: search_error, url: "#", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: search_error, url: "#", scope: "search_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :search, label: "Search" %>
     <% end %>
   </div>

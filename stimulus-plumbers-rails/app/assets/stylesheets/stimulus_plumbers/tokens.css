@@ -26,20 +26,17 @@
   --sp-color-success:        oklch(52% 0.18 145);
   --sp-color-success-fg:     oklch(98% 0.01 145);
   --sp-color-success-border: oklch(62% 0.18 145);
-  --sp-color-success-ring:   oklch(82% 0.12 145);
+  --sp-color-success-ring:   oklch(72% 0.12 145);
 
   --sp-color-warning:        oklch(68% 0.17 65);
   --sp-color-warning-fg:     oklch(98% 0.01 65);
   --sp-color-warning-border: oklch(78% 0.17 65);
   --sp-color-warning-ring:   oklch(88% 0.10 65);
 
-  --sp-color-dark:           oklch(18% 0.02 250);
-  --sp-color-dark-fg:        oklch(98% 0.01 250);
-
   --sp-color-info:        oklch(55% 0.18 220);
   --sp-color-info-fg:     oklch(98% 0.01 220);
   --sp-color-info-border: oklch(65% 0.18 220);
-  --sp-color-info-ring:   oklch(82% 0.12 220);
+  --sp-color-info-ring:   oklch(75% 0.12 220);
 
   --sp-color-error:          oklch(40% 0.20 25);
 
@@ -51,6 +48,7 @@
   --sp-color-border:         oklch(90% 0.02 250);
   --sp-color-border-strong:  oklch(75% 0.03 250);
   --sp-color-bg:             oklch(100% 0 0);
+  --sp-color-bg-muted:       oklch(96% 0.02 250);
   --sp-color-fg:             oklch(10% 0.02 250);
 
 
@@ -61,17 +59,17 @@
 
 
   /* ── Avatar palette (10 slots, index chosen by name hash) ────────────── */
-  --sp-avatar-color-1:  #b45309;
-  --sp-avatar-color-2:  #4d7c0f;
-  --sp-avatar-color-3:  #0369a1;
-  --sp-avatar-color-4:  #0e7490;
-  --sp-avatar-color-5:  #0f766e;
-  --sp-avatar-color-6:  #047857;
-  --sp-avatar-color-7:  #4338ca;
-  --sp-avatar-color-8:  #a21caf;
-  --sp-avatar-color-9:  #be123c;
-  --sp-avatar-color-10: #be185d;
-  --sp-avatar-fg:       #ffffff;
+  --sp-avatar-color-1:  oklch(55% 0.15 58);
+  --sp-avatar-color-2:  oklch(54% 0.16 129);
+  --sp-avatar-color-3:  oklch(51% 0.13 233);
+  --sp-avatar-color-4:  oklch(53% 0.10 209);
+  --sp-avatar-color-5:  oklch(53% 0.09 186);
+  --sp-avatar-color-6:  oklch(51% 0.13 161);
+  --sp-avatar-color-7:  oklch(46% 0.22 277);
+  --sp-avatar-color-8:  oklch(49% 0.23 316);
+  --sp-avatar-color-9:  oklch(44% 0.21 16);
+  --sp-avatar-color-10: oklch(48% 0.22 348);
+  --sp-avatar-fg:       oklch(100% 0 0);
 
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */

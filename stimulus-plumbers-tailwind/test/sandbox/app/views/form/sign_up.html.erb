@@ -3,7 +3,7 @@
 <section id="sign-up" class="sb-section">
   <h2>Default</h2>
   <div class="sb-col">
-    <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: @form, url: "/users", scope: "sign_up_default", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name,       as: :text,     label: "Full name",     required: true %>
       <%= f.field :email,      as: :email,    label: "Email address", required: true,
                                               hint: "We'll never share your email." %>
@@ -21,7 +21,7 @@
 <section id="sign-up-floating" class="sb-section">
   <h2>Floating labels</h2>
   <div class="sb-col">
-    <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: @form, url: "/users", scope: "sign_up_floating", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name,     as: :text,     label: "Full name",     required: true, floating: :outlined %>
       <%= f.field :email,    as: :email,    label: "Email address", required: true, floating: :outlined %>
       <%= f.field :password, as: :password, label: "Password",      required: true, floating: :outlined, revealable: true %>

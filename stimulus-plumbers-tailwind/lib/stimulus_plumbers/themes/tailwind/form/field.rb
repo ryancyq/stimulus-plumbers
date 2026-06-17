@@ -13,6 +13,7 @@ module StimulusPlumbers
           FLOATING_INPUT_BASE = %w[
             peer w-full text-(length:--sp-text-sm) text-(--sp-color-fg) appearance-none
             focus:outline-none focus:ring-0
+            focus-visible:outline-none focus-visible:ring-0
           ].freeze
           FLOATING_INPUT_TYPES = {
             filled:   %w[
