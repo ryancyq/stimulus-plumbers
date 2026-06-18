@@ -10,28 +10,6 @@ module StimulusPlumbers
           HINT          = %w[text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
           ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
 
-          FLOATING_INPUT_BASE = %w[
-            peer w-full text-(length:--sp-text-sm) text-(--sp-color-fg) appearance-none
-            focus:outline-none focus:ring-0
-            focus-visible:outline-none focus-visible:ring-0
-          ].freeze
-          FLOATING_INPUT_TYPES = {
-            filled:   %w[
-              rounded-t-(--sp-radius-md) px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-5)
-              bg-(--sp-color-bg-muted) border-0 border-b-2
-            ].freeze,
-            outlined: %w[
-              px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-4)
-              bg-transparent rounded-(--sp-radius-md) border
-            ].freeze,
-            standard: %w[
-              py-(--sp-space-2-5) px-0
-              bg-transparent border-0 border-b-2
-            ].freeze
-          }.freeze
-          FLOATING_INPUT_ERROR   = %w[border-(--sp-color-error)].freeze
-          FLOATING_INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:border-(--sp-color-primary)].freeze
-
           FLOATING_GROUP_TYPES = {
             filled:   %w[relative].freeze,
             outlined: %w[relative].freeze,
@@ -118,27 +96,17 @@ module StimulusPlumbers
 
           private
 
-          def form_field_floating_classes(type: nil, error: false)
-            {
-              classes: klasses(
-                *FLOATING_INPUT_BASE,
-                *FLOATING_INPUT_TYPES.fetch(type, []),
-                *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT)
-              )
-            }
+          def form_field_input_group_classes(floating: nil)
+            { classes: klasses(*FLOATING_GROUP_TYPES.fetch(floating, [])) }
           end
 
-          def form_field_floating_group_classes(type: nil)
-            { classes: klasses(*FLOATING_GROUP_TYPES.fetch(type, [])) }
-          end
-
-          def form_field_floating_label_classes(type: nil, error: false)
-            color = error ? FLOATING_LABEL_ERROR : FLOATING_LABEL_FOCUS
-            { classes: klasses(*FLOATING_LABEL_BASE, *FLOATING_LABEL_TYPES.fetch(type, []), *color) }
-          end
-
-          def form_field_label_classes(hidden: false, **)
-            { classes: klasses(*LABEL, hidden ? "sr-only" : nil) }
+          def form_field_label_classes(floating: nil, hidden: false, error: false, **)
+            if floating
+              color = error ? FLOATING_LABEL_ERROR : FLOATING_LABEL_FOCUS
+              { classes: klasses(*FLOATING_LABEL_BASE, *FLOATING_LABEL_TYPES.fetch(floating, []), *color) }
+            else
+              { classes: klasses(*LABEL, hidden ? "sr-only" : nil) }
+            end
           end
 
           def form_field_required_mark_classes

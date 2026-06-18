@@ -21,7 +21,16 @@ module StimulusPlumbers
 
           private
 
-          def render_combobox_date(attribute, html_opts, opts, error, icon_leading: nil, icon_trailing: nil, **kwargs)
+          def render_combobox_date(
+            attribute,
+            html_opts,
+            opts,
+            error,
+            floating: nil,
+            icon_leading: nil,
+            icon_trailing: nil,
+            **kwargs
+          )
             current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
             labelledby    = Field.label_id(html_opts[:id])
             combobox_opts = {
@@ -34,6 +43,7 @@ module StimulusPlumbers
               input_id: html_opts[:id],
               opts:     combobox_opts,
               error:    error,
+              floating: floating,
               **kwargs
             ) do |c|
               c.date(value: current_value, labelledby: labelledby)
@@ -45,6 +55,7 @@ module StimulusPlumbers
             html_opts,
             opts,
             error,
+            floating: nil,
             format: :h12,
             step: 1,
             icon_leading: nil,
@@ -63,6 +74,7 @@ module StimulusPlumbers
               input_id: html_opts[:id],
               opts:     combobox_opts,
               error:    error,
+              floating: floating,
               **kwargs
             ) do |c|
               c.time(format: format, step: step, value: current_value, labelledby: labelledby)

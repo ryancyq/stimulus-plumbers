@@ -5,9 +5,8 @@ module StimulusPlumbers
     module Fields
       module Inputs
         module Password
-          def password_field(attribute, options = {})
-            revealable = options.delete(:revealable) { false }
-            html_options = merge_html_options(theme.resolve(:form_field_input), options)
+          def password_field(attribute, floating: nil, revealable: false, **options)
+            html_options = merge_html_options(theme.resolve(:form_field_input, floating: floating), options)
             if revealable
               render_revealable_password(false) do
                 super(attribute, merge_html_options(html_options, { data: { input_formatter_target: "input" } }))
@@ -19,20 +18,19 @@ module StimulusPlumbers
 
           private
 
-          def render_password_input(attribute, html_opts, opts, error, revealable: false, **kwargs)
+          def render_password_input(attribute, html_opts, opts, error, floating: nil, revealable: false, **kwargs)
+            html_options = merge_html_options(
+              theme.resolve(:form_field_input, floating: floating, error: error),
+              opts,
+              html_opts,
+              kwargs
+            )
             if revealable
-              html_options = merge_html_options(
-                theme.resolve(:form_field_input, error: error),
-                opts,
-                html_opts,
-                kwargs,
-                { data: { input_formatter_target: "input" } }
-              )
               render_revealable_password(error) do
-                @template.password_field(@object_name, attribute, objectify_options(html_options))
+                revealable_html_options = merge_html_options(html_options, { data: { input_formatter_target: "input" } })
+                @template.password_field(@object_name, attribute, objectify_options(revealable_html_options))
               end
             else
-              html_options = merge_html_options(theme.resolve(:form_field_input, error: error), opts, html_opts, kwargs)
               @template.password_field(@object_name, attribute, objectify_options(html_options))
             end
           end

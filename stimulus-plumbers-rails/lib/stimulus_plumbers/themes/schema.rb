@@ -8,6 +8,7 @@ require_relative "schema/card/ranges"
 require_relative "schema/link/ranges"
 require_relative "schema/form/ranges"
 require_relative "schema/form/checkbox/ranges"
+require_relative "schema/form/floating/ranges"
 require_relative "schema/form/radio/ranges"
 require_relative "schema/icon"
 
@@ -105,7 +106,9 @@ module StimulusPlumbers
         }.freeze,
         form_field_label:               {
           required: { default: false, validate: Ranges::BOOL },
-          hidden:   { default: false, validate: Ranges::BOOL }
+          hidden:   { default: false, validate: Ranges::BOOL },
+          floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] },
+          error:    { default: false, validate: Ranges::BOOL }
         }.freeze,
         form_field_required_mark:       {}.freeze,
         form_field_hint:                {}.freeze,
@@ -121,21 +124,25 @@ module StimulusPlumbers
           type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
-        form_field_input:               { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_field_floating:            {
-          error: { default: false, validate: Ranges::BOOL },
-          type:  { default: nil,   validate: StimulusPlumbers::Form::Field::FLOATING_TYPES }
+        form_field_input:               {
+          error:    { default: false, validate: Ranges::BOOL },
+          floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_floating_group:      {
-          type: { default: nil, validate: StimulusPlumbers::Form::Field::FLOATING_TYPES }
+        form_field_input_group:         {
+          floating: { default: nil, validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_floating_label:      {
-          type:  { default: nil,   validate: StimulusPlumbers::Form::Field::FLOATING_TYPES },
-          error: { default: false, validate: Ranges::BOOL }
+        form_field_input_textarea:      {
+          error:    { default: false, validate: Ranges::BOOL },
+          floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_input_textarea:      { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_field_input_file:          { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_field_input_select:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_field_input_file:          {
+          error:    { default: false, validate: Ranges::BOOL },
+          floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
+        }.freeze,
+        form_field_input_select:        {
+          error:    { default: false, validate: Ranges::BOOL },
+          floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
+        }.freeze,
         form_field_input_checkbox:      {
           error:   { default: false,     validate: Ranges::BOOL },
           type:    { default: :default,  validate: Form::Checkbox::Ranges::TYPE },
@@ -146,7 +153,10 @@ module StimulusPlumbers
           type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
-        form_field_input_combobox:      { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_field_input_combobox:      {
+          error:    { default: false, validate: Ranges::BOOL },
+          floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
+        }.freeze,
         form_field_input_reveal:        { error: { default: false, validate: Ranges::BOOL } }.freeze,
         form_field_input_clearable:     {}.freeze,
         form_field_input_button_reveal: {}.freeze,

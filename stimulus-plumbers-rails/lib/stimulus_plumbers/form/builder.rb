@@ -73,7 +73,13 @@ module StimulusPlumbers
         field = Field.new(@template, **field_opts)
         field.render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error|
           Plumber::Dispatcher.build(
-            Fields::Renderer::FIELD.fetch(as), attribute, html_opts, opts, error, **input_opts
+            Fields::Renderer::FIELD.fetch(as),
+            attribute,
+            html_opts,
+            opts,
+            error,
+            floating: field.floating,
+            **input_opts
           ).call(self)
         end
       end

@@ -6,7 +6,7 @@ module StimulusPlumbers
       module Layout
         DIVIDER_SEPARATOR = %w[flex-1 border-0 border-t border-(--sp-color-border)].freeze
         DIVIDER           = %w[flex items-center gap-(--sp-space-3)].freeze
-        DIVIDER_LABEL     = %w[text-(length:--sp-text-sm) text-(--sp-color-fg-muted) whitespace-nowrap font-medium].freeze
+        DIVIDER_LABEL     = %w[text-(length:--sp-text-sm) text-(--sp-color-muted-fg) whitespace-nowrap font-medium].freeze
         POPOVER_WRAPPER = %w[relative inline-block].freeze
         POPOVER_TRIGGER = [
           *Control::BASE,

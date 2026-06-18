@@ -26,6 +26,7 @@ module StimulusPlumbers
             html_opts,
             opts,
             error,
+            floating: nil,
             icon_leading: nil,
             icon_trailing: nil,
             choices: [],
@@ -44,7 +45,8 @@ module StimulusPlumbers
               attribute,
               input_id: html_opts[:id],
               opts:     combobox_opts,
-              error:    error
+              error:    error,
+              floating: floating
             ) do |c|
               c.dropdown(options: all_choices, value: current_value, labelledby: labelledby, **kwargs)
             end

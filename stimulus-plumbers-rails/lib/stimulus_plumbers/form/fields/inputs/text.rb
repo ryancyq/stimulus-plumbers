@@ -19,8 +19,8 @@ module StimulusPlumbers
           }.freeze
 
           TEXT_FIELD_METHODS.each_value do |template_method|
-            define_method(template_method) do |attribute, options = {}|
-              html_options = merge_html_options(theme.resolve(:form_field_input), options)
+            define_method(template_method) do |attribute, floating: nil, **options|
+              html_options = merge_html_options(theme.resolve(:form_field_input, floating: floating), options)
               super(attribute, html_options)
             end
           end
@@ -33,8 +33,13 @@ module StimulusPlumbers
             end
           end
 
-          def render_text(attribute, html_opts, opts, error, template_method, **kwargs)
-            html_options = merge_html_options(theme.resolve(:form_field_input, error: error), opts, html_opts, kwargs)
+          def render_text(attribute, html_opts, opts, error, template_method, floating: nil, **kwargs)
+            html_options = merge_html_options(
+              theme.resolve(:form_field_input, floating: floating, error: error),
+              opts,
+              html_opts,
+              kwargs
+            )
             @template.public_send(template_method, @object_name, attribute, objectify_options(html_options))
           end
         end

@@ -5,9 +5,32 @@ module StimulusPlumbers
     module Tailwind
       module Form
         module Input
+          FLOATING_INPUT_BASE = %w[
+            peer w-full text-(length:--sp-text-sm) text-(--sp-color-fg) appearance-none
+            focus:outline-none focus:ring-0
+            focus-visible:outline-none focus-visible:ring-0
+          ].freeze
+          FLOATING_INPUT_TYPES = {
+            filled:   %w[
+              rounded-t-(--sp-radius-md) px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-5)
+              bg-(--sp-color-bg-muted) border-0 border-b-2
+            ].freeze,
+            outlined: %w[
+              px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-4)
+              bg-transparent rounded-(--sp-radius-md) border
+            ].freeze,
+            standard: %w[
+              py-(--sp-space-2-5) px-0
+              bg-transparent border-0 border-b-2
+            ].freeze
+          }.freeze
+          FLOATING_INPUT_ERROR   = %w[border-(--sp-color-error)].freeze
+          FLOATING_INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:border-(--sp-color-primary)].freeze
+
           INPUT_BASE = %w[
-            w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2) text-(length:--sp-text-sm)
-            text-(--sp-color-fg) bg-(--sp-color-bg) focus:outline-none focus:ring-2 focus:ring-offset-0
+            w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2)
+            text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
+            focus:outline-none focus:ring-(length:--sp-focus-ring-width) focus:ring-offset-0
           ].freeze
           INPUT_ERROR   = %w[border-(--sp-color-error) focus:ring-(--sp-color-error)].freeze
           INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:ring-(--sp-focus-ring-color)].freeze
@@ -16,20 +39,20 @@ module StimulusPlumbers
             default: %w[
               size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
               border border-(--sp-color-border) bg-(--sp-color-muted)
-              focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+              focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none
               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
             ].freeze,
             button:  %w[
               size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
               border border-(--sp-color-border) bg-(--sp-color-muted)
-              focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+              focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none
               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
             ].freeze,
             card:    %w[
               size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
               border border-(--sp-color-border) bg-(--sp-color-muted)
               checked:border-(--card-ring)
-              focus:ring-2 focus:ring-(--card-ring) focus:outline-none
+              focus:ring-(length:--sp-focus-ring-width) focus:ring-(--card-ring) focus:outline-none
               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
             ].freeze
           }.freeze
@@ -38,7 +61,7 @@ module StimulusPlumbers
             default: %w[
               size-(--sp-control-size) rounded-full shrink-0
               [accent-color:var(--sp-color-primary)] cursor-pointer
-              focus:ring-2 focus:ring-(--sp-focus-ring-color) focus:outline-none
+              focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none
               disabled:opacity-50 disabled:cursor-not-allowed
             ].freeze,
             button:  %w[hidden peer].freeze,
@@ -76,20 +99,29 @@ module StimulusPlumbers
 
           private
 
-          def form_field_input_classes(error: false)
-            { classes: klasses(*INPUT_BASE, *(error ? INPUT_ERROR : INPUT_DEFAULT)) }
+          def form_field_input_classes(floating: nil, error: false)
+            if floating
+              { classes: klasses(
+                *FLOATING_INPUT_BASE,
+                *FLOATING_INPUT_TYPES.fetch(floating, []),
+                *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT)
+              )
+}
+            else
+              { classes: klasses(*INPUT_BASE, *(error ? INPUT_ERROR : INPUT_DEFAULT)) }
+            end
           end
 
-          def form_field_input_textarea_classes(error: false)
-            form_field_input_classes(error: error)
+          def form_field_input_textarea_classes(floating: nil, error: false)
+            form_field_input_classes(floating: floating, error: error)
           end
 
-          def form_field_input_file_classes(error: false)
-            form_field_input_classes(error: error)
+          def form_field_input_file_classes(floating: nil, error: false)
+            form_field_input_classes(floating: floating, error: error)
           end
 
-          def form_field_input_select_classes(error: false)
-            form_field_input_classes(error: error)
+          def form_field_input_select_classes(floating: nil, error: false)
+            form_field_input_classes(floating: floating, error: error)
           end
 
           def form_field_input_checkbox_classes(type: :default, variant: :default, **)
@@ -106,14 +138,31 @@ module StimulusPlumbers
             { classes: klasses(*INPUT_GROUP_BASE, INPUT_GROUP_BORDER[error ? :error : :default]) }
           end
 
-          def form_field_input_combobox_classes(error: false)
-            { classes: klasses(
-              *INPUT_BASE,
-              *(error ? INPUT_ERROR : INPUT_DEFAULT),
-              *COMBOBOX_INPUT,
-              *COMBOBOX_TRIGGER_GROUP
-            )
-}
+          def form_field_input_combobox_classes(floating: nil, error: false)
+            if floating
+              form_field_input_combobox_floating_classes(floating, error)
+            else
+              {
+                classes: klasses(
+                  *INPUT_BASE,
+                  *(error ? INPUT_ERROR : INPUT_DEFAULT),
+                  *COMBOBOX_INPUT,
+                  *COMBOBOX_TRIGGER_GROUP
+                )
+              }
+            end
+          end
+
+          def form_field_input_combobox_floating_classes(floating: :standard, error: false)
+            {
+              classes: klasses(
+                *FLOATING_INPUT_BASE,
+                *FLOATING_INPUT_TYPES.fetch(floating, []),
+                *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT),
+                *COMBOBOX_INPUT,
+                *COMBOBOX_TRIGGER_GROUP
+              )
+            }
           end
 
           def form_field_input_reveal_classes(**)

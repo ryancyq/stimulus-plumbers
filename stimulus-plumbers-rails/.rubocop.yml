@@ -90,15 +90,10 @@ Layout/LineLength:
   Max: 130
 
 Metrics/ParameterLists:
-  Max: 6
+  Max: 8
   Exclude:
     - lib/stimulus_plumbers/components/calendar/turbo.rb
-    - lib/stimulus_plumbers/components/calendar/turbo/*.rb
     - lib/stimulus_plumbers/components/combobox/trigger.rb
-    - lib/stimulus_plumbers/form/base.rb
-    - lib/stimulus_plumbers/form/builder.rb
-    - lib/stimulus_plumbers/form/field.rb
-    - lib/stimulus_plumbers/form/fields/inputs/checkbox.rb
     - lib/stimulus_plumbers/form/fields/inputs/datetime.rb
     - lib/stimulus_plumbers/form/fields/inputs/search.rb
     - lib/stimulus_plumbers/form/fields/inputs/select.rb

@@ -12,9 +12,9 @@ class FormFieldsLabelFloatingTest < ActionView::TestCase
 
   INPUT_ID = "user_email"
   LABEL_ID = "user_email_label"
-  TYPE         = :filled
+  FLOATING = :filled
 
-  DEFAULT_ARGS = { text: "Email", for_id: INPUT_ID, id: LABEL_ID, type: TYPE, required: false, error: false }.freeze
+  DEFAULT_ARGS = { text: "Email", for_id: INPUT_ID, id: LABEL_ID, floating: FLOATING, required: false, error: false }.freeze
 
   def test_renders_wrapper_div
     assert_css parse_html(floating_label(**DEFAULT_ARGS)), "div"
@@ -50,7 +50,7 @@ class FormFieldsLabelFloatingTest < ActionView::TestCase
         text:     "Email",
         for_id:   INPUT_ID,
         id:       LABEL_ID,
-        type:     TYPE,
+        floating: FLOATING,
         required: true,
         error:    false
       )
@@ -61,7 +61,7 @@ class FormFieldsLabelFloatingTest < ActionView::TestCase
   end
 
   def test_block_content_is_captured
-    html = floating_label(text: "Email", for_id: INPUT_ID, id: LABEL_ID, type: TYPE, required: false, error: false) do
+    html = floating_label(text: "Email", for_id: INPUT_ID, id: LABEL_ID, floating: FLOATING, required: false, error: false) do
       "<input type='email' id='#{INPUT_ID}'>".html_safe
     end
 
