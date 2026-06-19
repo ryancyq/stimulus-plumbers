@@ -5,6 +5,19 @@ module StimulusPlumbers
     module Tailwind
       module Form
         module Input
+          # ── Standalone input ──────────────────────────────────────────────────
+          INPUT_BASE = %w[
+            w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2)
+            text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
+            focus:outline-none focus:ring-(length:--sp-focus-ring-width) focus:ring-offset-0
+          ].freeze
+          INPUT_DEFAULT = %w[
+            border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
+            focus:ring-(--sp-focus-ring-color)
+          ].freeze
+          INPUT_ERROR = %w[border-(--sp-color-error) focus:ring-(--sp-color-error)].freeze
+
+          # ── Floating input ────────────────────────────────────────────────────
           FLOATING_INPUT_BASE = %w[
             peer w-full text-(length:--sp-text-sm) text-(--sp-color-fg) appearance-none
             focus:outline-none focus:ring-0
@@ -24,18 +37,48 @@ module StimulusPlumbers
               bg-transparent border-0 border-b-2
             ].freeze
           }.freeze
-          FLOATING_INPUT_ERROR   = %w[border-(--sp-color-error)].freeze
-          FLOATING_INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
-                                      focus:border-(--sp-color-primary)].freeze
-
-          INPUT_BASE = %w[
-            w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2)
-            text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
-            focus:outline-none focus:ring-(length:--sp-focus-ring-width) focus:ring-offset-0
+          FLOATING_INPUT_DEFAULT = %w[
+            border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
+            focus:border-(--sp-color-primary)
           ].freeze
-          INPUT_ERROR   = %w[border-(--sp-color-error) focus:ring-(--sp-color-error)].freeze
-          INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) hover:border-(--sp-color-fg) focus:ring-(--sp-focus-ring-color)].freeze
+          FLOATING_INPUT_ERROR = %w[border-(--sp-color-error)].freeze
 
+          # ── Input group ───────────────────────────────────────────────────────
+          INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
+          INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
+
+          # ── Floating input group ──────────────────────────────────────────────
+          FLOATING_INPUT_GROUP_BASE = %w[flex items-center overflow-hidden peer].freeze
+          FLOATING_INPUT_GROUP_TYPES = {
+            filled:   %w[rounded-t-(--sp-radius-md) bg-(--sp-color-bg-muted) border-0 border-b-2].freeze,
+            outlined: %w[rounded-(--sp-radius-md) border].freeze,
+            standard: %w[rounded-none bg-transparent border-0 border-b-2].freeze
+          }.freeze
+          FLOATING_INPUT_GROUP_DEFAULT = %w[
+            border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
+            focus-within:border-(--sp-color-primary)
+          ].freeze
+          FLOATING_INPUT_GROUP_ERROR = %w[border-(--sp-color-error)].freeze
+
+          # ── Combobox wrappers ─────────────────────────────────────────────────
+          COMBOBOX_INPUT = %w[
+            [&>input:not([type=hidden])]:border-0
+            [&>input:not([type=hidden])]:rounded-none
+            [&>input:not([type=hidden])]:px-0
+            [&>input:not([type=hidden])]:py-0
+            [&>input:not([type=hidden])]:bg-transparent
+            [&>input:not([type=hidden])]:shadow-none
+            [&>input:not([type=hidden])]:focus:ring-0
+          ].freeze
+          COMBOBOX_TRIGGER_GROUP = %w[
+            [&>div:first-child]:border-0
+            [&>div:first-child]:rounded-none
+            [&>div:first-child]:px-0
+            [&>div:first-child]:py-0
+            [&>div:first-child]:focus-within:ring-0
+          ].freeze
+
+          # ── Choice inputs ─────────────────────────────────────────────────────
           CHECKBOX_TYPES = {
             default: %w[
               size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
@@ -69,36 +112,7 @@ module StimulusPlumbers
             card:    %w[hidden].freeze
           }.freeze
 
-          INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
-          INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
-
-          FLOATING_INPUT_GROUP_BASE = %w[flex items-center overflow-hidden peer].freeze
-          FLOATING_INPUT_GROUP_TYPES = {
-            filled:   %w[rounded-t-(--sp-radius-md) bg-(--sp-color-bg-muted) border-0 border-b-2].freeze,
-            outlined: %w[rounded-(--sp-radius-md) border].freeze,
-            standard: %w[rounded-none bg-transparent border-0 border-b-2].freeze
-          }.freeze
-          FLOATING_INPUT_GROUP_DEFAULT = %w[border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
-                                            focus-within:border-(--sp-color-primary)].freeze
-          FLOATING_INPUT_GROUP_ERROR   = %w[border-(--sp-color-error)].freeze
-
-          COMBOBOX_INPUT = %w[
-            [&>input:not([type=hidden])]:border-0
-            [&>input:not([type=hidden])]:rounded-none
-            [&>input:not([type=hidden])]:px-0
-            [&>input:not([type=hidden])]:py-0
-            [&>input:not([type=hidden])]:bg-transparent
-            [&>input:not([type=hidden])]:shadow-none
-            [&>input:not([type=hidden])]:focus:ring-0
-          ].freeze
-          COMBOBOX_TRIGGER_GROUP = %w[
-            [&>div:first-child]:border-0
-            [&>div:first-child]:rounded-none
-            [&>div:first-child]:px-0
-            [&>div:first-child]:py-0
-            [&>div:first-child]:focus-within:ring-0
-          ].freeze
-
+          # ── Utility buttons ───────────────────────────────────────────────────
           BUTTON_REVEAL = [
             *Control::BASE,
             "inline-flex items-center justify-center",

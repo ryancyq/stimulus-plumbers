@@ -4,6 +4,25 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Button
+        # ── Structure ─────────────────────────────────────────────────────────
+        BASE = [
+          *Control::BASE,
+          "whitespace-nowrap",
+          "focus-visible:ring-(--btn-ring)"
+        ].freeze
+
+        LAYOUT = %w[
+          inline-flex items-center justify-center gap-(--sp-space-2)
+          [&:not(:has(>span))]:aspect-square
+          [&:not(:has(>span))]:px-0
+        ].freeze
+
+        CARD = %w[
+          inline-flex justify-start items-center flex-1 gap-(--sp-space-3) p-(--sp-space-4)
+          [&>:last-child:not(:first-child)]:ml-auto
+        ].freeze
+
+        # ── Color tokens ──────────────────────────────────────────────────────
         VARIANTS = {
           primary:     %w[
             [--btn-bg:var(--sp-color-primary)]
@@ -56,6 +75,7 @@ module StimulusPlumbers
           ].freeze
         }.freeze
 
+        # ── Type styles ───────────────────────────────────────────────────────
         TYPES = {
           default:     %w[
             rounded-(--sp-radius-md)
@@ -103,6 +123,7 @@ module StimulusPlumbers
           ].freeze
         }.freeze
 
+        # ── Sizes ─────────────────────────────────────────────────────────────
         SIZES = {
           xs: %w[h-7 px-(--sp-space-2) text-(length:--sp-text-xs)].freeze,
           sm: %w[h-8 px-(--sp-space-3) text-(length:--sp-text-sm)].freeze,
@@ -110,23 +131,6 @@ module StimulusPlumbers
           lg: %w[h-11 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze,
           xl: %w[h-14 px-(--sp-space-6) text-(length:--sp-text-lg)].freeze
         }.freeze
-
-        BASE = [
-          *Control::BASE,
-          "whitespace-nowrap",
-          "focus-visible:ring-(--btn-ring)"
-        ].freeze
-
-        LAYOUT = %w[
-          inline-flex items-center justify-center gap-(--sp-space-2)
-          [&:not(:has(>span))]:aspect-square
-          [&:not(:has(>span))]:px-0
-        ].freeze
-
-        CARD = %w[
-          inline-flex justify-start items-center flex-1 gap-(--sp-space-3) p-(--sp-space-4)
-          [&>:last-child:not(:first-child)]:ml-auto
-        ].freeze
 
         private
 
