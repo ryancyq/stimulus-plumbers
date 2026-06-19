@@ -77,7 +77,7 @@ module StimulusPlumbers
         end
 
         def link_icon_classes
-          { classes: klasses("size-(--sp-control-size)", "stroke-current") }
+          { classes: klasses("size-(--sp-icon-size-sm)", "stroke-current") }
         end
       end
     end

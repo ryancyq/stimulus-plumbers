@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --sp-avatar-size: 2.5rem;
+    --sp-avatar-size-md: 2.5rem;
   }
 }
 

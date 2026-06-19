@@ -367,7 +367,7 @@ class TailwindThemeButtonTest < Minitest::Test
   end
 
   def test_button_icon_includes_size_token
-    assert_includes classes_for(:button_icon), "size-(--sp-control-size)"
+    assert_includes classes_for(:button_icon), "size-(--sp-icon-size-sm)"
   end
 
   def test_button_icon_includes_stroke_current

@@ -20,8 +20,8 @@ module StimulusPlumbers
         }.freeze
 
         SIZES = {
-          sm: "size-(--sp-icon-size)",
-          md: "size-(--sp-avatar-size)",
+          sm: "size-(--sp-avatar-size-sm)",
+          md: "size-(--sp-avatar-size-md)",
           lg: "size-(--sp-avatar-size-lg)"
         }.freeze
 
