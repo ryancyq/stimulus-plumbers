@@ -64,9 +64,21 @@ stimulus-plumbers-tailwind/
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
-- **Snapshot tests** using Playwright (`npm run test:snapshots`); update baselines with `npm run test:snapshots:update`
+- **Snapshot tests** using Playwright (`npm run test:snapshots`)
 - **Lint tests** using Rubocop (`rake rubocop`)
 - **Snapshot tests must be a superset of `stimulus-plumbers-rails` a11y tests** — every page + interactive state covered by an a11y test must also have a corresponding snapshot test. When adding a11y tests in the core gem, add matching snapshot coverage here.
+
+## Visual Validation
+
+Start the sandbox webserver (see `playwright.config.js`) to inspect rendered HTML before writing snapshot specs:
+
+```sh
+RAILS_ENV=test bundle exec puma test/sandbox/config.ru --bind tcp://127.0.0.1:4001
+```
+
+Routes: `/components/{button,combobox,calendar_stimulus,…}` and `/form/{floating_label,choices,field_error,…}` at `http://127.0.0.1:4001`.
+
+**Never run `npm run test:snapshots:update`** — the user does this.
 
 ## Sandbox View Convention
 
