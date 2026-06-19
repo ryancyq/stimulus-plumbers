@@ -134,6 +134,10 @@ module StimulusPlumbers
             card_color = %i[button card].include?(type) ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:tertiary]) : []
             { classes: klasses(*RADIO_LABEL_TYPES.fetch(type), *card_color) }
           end
+
+          def form_field_radio_item_group_classes
+            { classes: "contents group" }
+          end
         end
       end
     end

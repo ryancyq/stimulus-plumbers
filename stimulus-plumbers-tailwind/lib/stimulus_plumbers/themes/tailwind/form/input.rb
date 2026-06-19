@@ -64,8 +64,8 @@ module StimulusPlumbers
               focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none
               disabled:opacity-50 disabled:cursor-not-allowed
             ].freeze,
-            button:  %w[hidden peer].freeze,
-            card:    %w[hidden peer].freeze
+            button:  %w[hidden].freeze,
+            card:    %w[hidden].freeze
           }.freeze
 
           INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze

@@ -143,14 +143,14 @@ class TailwindThemeFormInputTest < Minitest::Test
     result = classes_for(:form_field_input_radio, type: :button)
 
     assert_includes result, "hidden"
-    assert_includes result, "peer"
+    refute_includes result, "peer"
   end
 
   def test_form_field_input_radio_card_type
     result = classes_for(:form_field_input_radio, type: :card)
 
     assert_includes result, "hidden"
-    assert_includes result, "peer"
+    refute_includes result, "peer"
   end
 
   def test_form_field_input_radio_card_type_uses_card_ring

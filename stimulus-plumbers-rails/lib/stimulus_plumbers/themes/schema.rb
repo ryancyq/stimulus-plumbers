@@ -124,6 +124,7 @@ module StimulusPlumbers
           type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
+        form_field_radio_item_group:    {}.freeze,
         form_field_input:               {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
