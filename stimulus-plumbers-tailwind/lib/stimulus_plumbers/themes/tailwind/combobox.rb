@@ -5,7 +5,7 @@ module StimulusPlumbers
     module Tailwind
       module Combobox
         TRIGGER = %w[
-          w-full rounded-(--sp-radius-md) border border-(--sp-color-muted-fg)
+          w-full rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
           px-(--sp-space-3) py-(--sp-space-2)
           text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
           focus:outline-none focus:ring-2 focus:ring-(--sp-focus-ring-color)
@@ -13,7 +13,7 @@ module StimulusPlumbers
 
         TRIGGER_GROUP = %w[
           flex items-center gap-(--sp-space-2) overflow-hidden
-          rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) bg-(--sp-color-bg)
+          rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) hover:border-(--sp-color-fg) bg-(--sp-color-bg)
           px-(--sp-space-3) py-(--sp-space-2)
           focus-within:outline-none focus-within:ring-2 focus-within:ring-(--sp-focus-ring-color)
           [&>input]:border-0 [&>input]:rounded-none

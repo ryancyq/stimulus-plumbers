@@ -25,7 +25,8 @@ module StimulusPlumbers
             ].freeze
           }.freeze
           FLOATING_INPUT_ERROR   = %w[border-(--sp-color-error)].freeze
-          FLOATING_INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:border-(--sp-color-primary)].freeze
+          FLOATING_INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
+                                      focus:border-(--sp-color-primary)].freeze
 
           INPUT_BASE = %w[
             w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2)
@@ -33,7 +34,7 @@ module StimulusPlumbers
             focus:outline-none focus:ring-(length:--sp-focus-ring-width) focus:ring-offset-0
           ].freeze
           INPUT_ERROR   = %w[border-(--sp-color-error) focus:ring-(--sp-color-error)].freeze
-          INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:ring-(--sp-focus-ring-color)].freeze
+          INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) hover:border-(--sp-color-fg) focus:ring-(--sp-focus-ring-color)].freeze
 
           CHECKBOX_TYPES = {
             default: %w[
@@ -77,7 +78,8 @@ module StimulusPlumbers
             outlined: %w[rounded-(--sp-radius-md) border].freeze,
             standard: %w[rounded-none bg-transparent border-0 border-b-2].freeze
           }.freeze
-          FLOATING_INPUT_GROUP_DEFAULT = %w[border-(--sp-color-muted-fg) focus-within:border-(--sp-color-primary)].freeze
+          FLOATING_INPUT_GROUP_DEFAULT = %w[border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
+                                            focus-within:border-(--sp-color-primary)].freeze
           FLOATING_INPUT_GROUP_ERROR   = %w[border-(--sp-color-error)].freeze
 
           COMBOBOX_INPUT = %w[

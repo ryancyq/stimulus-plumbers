@@ -37,6 +37,22 @@ class TailwindThemeFormInputTest < Minitest::Test
     refute_includes classes_for(:form_field_input, error: true), "border-(--sp-color-muted-fg)"
   end
 
+  def test_form_field_input_includes_hover_border_when_no_error
+    assert_includes classes_for(:form_field_input), "hover:border-(--sp-color-fg)"
+  end
+
+  def test_form_field_input_excludes_hover_border_when_error
+    refute_includes classes_for(:form_field_input, error: true), "hover:border-(--sp-color-fg)"
+  end
+
+  def test_form_field_input_floating_filled_includes_hover_border_when_no_error
+    assert_includes classes_for(:form_field_input, floating: :filled), "hover:border-(--sp-color-fg)"
+  end
+
+  def test_form_field_input_floating_filled_excludes_hover_border_when_error
+    refute_includes classes_for(:form_field_input, floating: :filled, error: true), "hover:border-(--sp-color-fg)"
+  end
+
   # :form_field_input_textarea
 
   def test_form_field_input_textarea_includes_default_border_when_no_error

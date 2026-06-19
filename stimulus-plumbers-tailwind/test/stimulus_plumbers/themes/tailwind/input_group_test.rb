@@ -37,4 +37,12 @@ class TailwindThemeInputGroupTest < Minitest::Test
   def test_input_group_excludes_default_border_when_error
     refute_includes classes_for(:input_group, error: true), "border-(--sp-color-muted-fg)"
   end
+
+  def test_input_group_floating_includes_hover_border_when_no_error
+    assert_includes classes_for(:input_group, floating: :filled), "hover:border-(--sp-color-fg)"
+  end
+
+  def test_input_group_floating_excludes_hover_border_when_error
+    refute_includes classes_for(:input_group, floating: :filled, error: true), "hover:border-(--sp-color-fg)"
+  end
 end

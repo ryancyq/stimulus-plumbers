@@ -39,6 +39,10 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "focus:ring-(--sp-focus-ring-color)"
   end
 
+  def test_combobox_trigger_includes_hover_border
+    assert_includes classes_for(:combobox_trigger), "hover:border-(--sp-color-fg)"
+  end
+
   # ── trigger group ─────────────────────────────────────────────────────────
 
   def test_combobox_trigger_group_includes_flex_layout_classes
@@ -63,6 +67,10 @@ class TailwindThemeComboboxTest < Minitest::Test
 
     assert_includes result, "focus-within:ring-2"
     assert_includes result, "focus-within:ring-(--sp-focus-ring-color)"
+  end
+
+  def test_combobox_trigger_group_includes_hover_border
+    assert_includes classes_for(:combobox_trigger_group), "hover:border-(--sp-color-fg)"
   end
 
   # ── listbox ───────────────────────────────────────────────────────────────
