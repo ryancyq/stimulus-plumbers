@@ -173,7 +173,10 @@ module StimulusPlumbers
       }.freeze
 
       INPUT_GROUP = {
-        input_group: { error: { default: false, validate: Ranges::BOOL } }.freeze
+        input_group: {
+          error:    { default: false, validate: Ranges::BOOL },
+          floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
+        }.freeze
       }.freeze
 
       LINK = {

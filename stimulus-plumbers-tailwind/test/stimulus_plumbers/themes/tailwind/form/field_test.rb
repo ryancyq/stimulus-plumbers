@@ -265,25 +265,28 @@ class TailwindThemeFormFieldTest < Minitest::Test
     result = classes_for(:form_field_label, floating: :filled)
 
     assert_includes result, "peer-placeholder-shown:scale-100"
-    assert_includes result, "peer-focus:scale-75"
+    assert_includes result, "peer-has-[input:not(:focus):placeholder-shown]:scale-100"
+    assert_includes result, "peer-focus-within:scale-75"
   end
 
   def test_form_field_floating_label_outlined_includes_peer_placeholder_classes
     result = classes_for(:form_field_label, floating: :outlined)
 
     assert_includes result, "peer-placeholder-shown:scale-100"
-    assert_includes result, "peer-focus:scale-75"
+    assert_includes result, "peer-has-[input:not(:focus):placeholder-shown]:scale-100"
+    assert_includes result, "peer-focus-within:scale-75"
   end
 
   def test_form_field_floating_label_standard_includes_peer_placeholder_classes
     result = classes_for(:form_field_label, floating: :standard)
 
     assert_includes result, "peer-placeholder-shown:scale-100"
-    assert_includes result, "peer-focus:scale-75"
+    assert_includes result, "peer-has-[input:not(:focus):placeholder-shown]:scale-100"
+    assert_includes result, "peer-focus-within:scale-75"
   end
 
   def test_form_field_floating_label_includes_focus_color_when_no_error
-    assert_includes classes_for(:form_field_label, floating: :filled), "peer-focus:text-(--sp-color-primary)"
+    assert_includes classes_for(:form_field_label, floating: :filled), "peer-focus-within:text-(--sp-color-primary)"
   end
 
   def test_form_field_floating_label_includes_error_color_when_error
@@ -292,7 +295,7 @@ class TailwindThemeFormFieldTest < Minitest::Test
 
   def test_form_field_floating_label_excludes_focus_color_when_error
     refute_includes classes_for(:form_field_label, floating: :filled, error: true),
-                    "peer-focus:text-(--sp-color-primary)"
+                    "peer-focus-within:text-(--sp-color-primary)"
   end
 
   # :form_field_choice_items

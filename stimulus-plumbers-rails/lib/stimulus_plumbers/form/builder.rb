@@ -116,8 +116,10 @@ module StimulusPlumbers
         Fields::Fieldset.new(@template).render(object, attribute, field_id(attribute), field, &block)
       end
 
-      def render_input_group(error:, leading: nil, trailing: nil, **wrapper_opts, &block)
-        Components::InputGroup.new(@template).render(leading: leading, trailing: trailing, error: error, **wrapper_opts, &block)
+      def render_input_group(error:, floating: nil, leading: nil, trailing: nil, **group_options, &block)
+        Components::InputGroup.new(@template).render(
+          leading: leading, trailing: trailing, error: error, floating: floating, **group_options, &block
+        )
       end
 
       # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity

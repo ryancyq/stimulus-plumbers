@@ -249,8 +249,19 @@ class TailwindThemeFormInputTest < Minitest::Test
   def test_form_field_input_button_reveal_includes_base_classes
     result = classes_for(:form_field_input_button_reveal)
 
+    assert_includes result, "font-medium"
+    assert_includes result, "transition-colors"
+    assert_includes result, "disabled:opacity-50"
+    assert_includes result, "inline-flex"
+    assert_includes result, "items-center"
+    assert_includes result, "justify-center"
+    assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
+    assert_includes result, "self-stretch"
     assert_includes result, "border-0"
     assert_includes result, "cursor-pointer"
+    assert_includes result, "rounded-(--sp-radius-sm)"
+    assert_includes result, "hover:bg-(--sp-color-muted)"
+    assert_includes result, "hover:text-(--sp-color-fg)"
   end
 
   # :form_field_input_button_clear
@@ -258,10 +269,95 @@ class TailwindThemeFormInputTest < Minitest::Test
   def test_form_field_input_button_clear_includes_base_classes
     result = classes_for(:form_field_input_button_clear)
 
+    assert_includes result, "font-medium"
+    assert_includes result, "transition-colors"
+    assert_includes result, "disabled:opacity-50"
+    assert_includes result, "inline-flex"
+    assert_includes result, "items-center"
+    assert_includes result, "justify-center"
+    assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
+    assert_includes result, "self-stretch"
     assert_includes result, "border-0"
     assert_includes result, "cursor-pointer"
     assert_includes result, "rounded-(--sp-radius-sm)"
     assert_includes result, "hover:bg-(--sp-color-muted)"
     assert_includes result, "hover:text-(--sp-color-fg)"
+  end
+
+  # :input_group (non-floating)
+
+  def test_input_group_includes_base_flex_and_border
+    result = classes_for(:input_group)
+
+    assert_includes result, "flex"
+    assert_includes result, "items-center"
+    assert_includes result, "border"
+    assert_includes result, "rounded-(--sp-radius-md)"
+  end
+
+  def test_input_group_default_border_color
+    result = classes_for(:input_group)
+
+    assert_includes result, "border-(--sp-color-muted-fg)"
+    refute_includes result, "border-(--sp-color-error)"
+  end
+
+  def test_input_group_error_border_color
+    result = classes_for(:input_group, error: true)
+
+    assert_includes result, "border-(--sp-color-error)"
+    refute_includes result, "border-(--sp-color-muted-fg)"
+  end
+
+  # :input_group (floating)
+
+  def test_input_group_floating_filled_includes_filled_visual
+    result = classes_for(:input_group, floating: :filled)
+
+    assert_includes result, "peer"
+    assert_includes result, "rounded-t-(--sp-radius-md)"
+    assert_includes result, "bg-(--sp-color-bg-muted)"
+    assert_includes result, "border-b-2"
+    refute_includes result, "rounded-(--sp-radius-md)"
+  end
+
+  def test_input_group_floating_outlined_includes_outlined_visual
+    result = classes_for(:input_group, floating: :outlined)
+
+    assert_includes result, "peer"
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "border"
+  end
+
+  def test_input_group_floating_standard_includes_standard_visual
+    result = classes_for(:input_group, floating: :standard)
+
+    assert_includes result, "peer"
+    assert_includes result, "border-b-2"
+    assert_includes result, "border-0"
+    refute_includes result, "rounded-(--sp-radius-md)"
+  end
+
+  def test_input_group_floating_default_border_includes_focus_within
+    result = classes_for(:input_group, floating: :outlined)
+
+    assert_includes result, "border-(--sp-color-muted-fg)"
+    assert_includes result, "focus-within:border-(--sp-color-primary)"
+    refute_includes result, "border-(--sp-color-error)"
+  end
+
+  def test_input_group_floating_error_border
+    result = classes_for(:input_group, floating: :outlined, error: true)
+
+    assert_includes result, "border-(--sp-color-error)"
+    refute_includes result, "border-(--sp-color-muted-fg)"
+    refute_includes result, "focus-within:border-(--sp-color-primary)"
+  end
+
+  def test_input_group_floating_excludes_non_floating_border
+    result = classes_for(:input_group, floating: :outlined)
+
+    refute_includes result, "border-(--sp-color-muted-fg)\nborder" # no INPUT_GROUP_BASE mixed in
+    assert_includes result, "peer"
   end
 end

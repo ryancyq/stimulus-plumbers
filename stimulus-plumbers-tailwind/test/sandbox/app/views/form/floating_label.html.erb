@@ -59,6 +59,26 @@
   </div>
 </section>
 
+<%# ── Outlined + revealable ─────────────────────────────────────────────── %>
+
+<section id="floating-outlined-revealable" class="sb-section">
+  <h2>Outlined — revealable password</h2>
+  <div class="sb-col">
+    <%= form_with(model: SignUp.new, url: "/demo", scope: "floating_outlined_revealable", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :password, as: :password, label: "Password", required: true, floating: :outlined, revealable: true %>
+    <% end %>
+  </div>
+</section>
+
+<section id="floating-filled-revealable" class="sb-section">
+  <h2>Filled — revealable password</h2>
+  <div class="sb-col">
+    <%= form_with(model: SignUp.new, url: "/demo", scope: "floating_filled_revealable", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :password, as: :password, label: "Password", required: true, floating: :filled, revealable: true %>
+    <% end %>
+  </div>
+</section>
+
 <%# ── Standard ─────────────────────────────────────────────────────────── %>
 
 <section id="floating-standard" class="sb-section">

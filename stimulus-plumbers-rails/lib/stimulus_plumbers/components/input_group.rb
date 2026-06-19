@@ -3,9 +3,9 @@
 module StimulusPlumbers
   module Components
     class InputGroup < Plumber::Base
-      def render(leading: nil, trailing: nil, error: false, **kwargs, &block)
+      def render(leading: nil, trailing: nil, error: false, floating: nil, **kwargs, &block)
         html_options = merge_html_options(
-          theme.resolve(:input_group, error: error),
+          theme.resolve(:input_group, error: error, floating: floating),
           kwargs
         )
         template.content_tag(:div, **html_options) do

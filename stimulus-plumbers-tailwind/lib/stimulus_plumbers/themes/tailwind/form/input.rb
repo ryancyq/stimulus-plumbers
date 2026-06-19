@@ -71,6 +71,15 @@ module StimulusPlumbers
           INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
           INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
+          FLOATING_INPUT_GROUP_BASE = %w[flex items-center overflow-hidden peer].freeze
+          FLOATING_INPUT_GROUP_TYPES = {
+            filled:   %w[rounded-t-(--sp-radius-md) bg-(--sp-color-bg-muted) border-0 border-b-2].freeze,
+            outlined: %w[rounded-(--sp-radius-md) border].freeze,
+            standard: %w[rounded-none bg-transparent border-0 border-b-2].freeze
+          }.freeze
+          FLOATING_INPUT_GROUP_DEFAULT = %w[border-(--sp-color-muted-fg) focus-within:border-(--sp-color-primary)].freeze
+          FLOATING_INPUT_GROUP_ERROR   = %w[border-(--sp-color-error)].freeze
+
           COMBOBOX_INPUT = %w[
             [&>input:not([type=hidden])]:border-0
             [&>input:not([type=hidden])]:rounded-none
@@ -88,13 +97,19 @@ module StimulusPlumbers
             [&>div:first-child]:focus-within:ring-0
           ].freeze
 
-          BUTTON_REVEAL = %w[
-            self-stretch border-0 bg-transparent px-(--sp-space-3) cursor-pointer text-(--sp-color-muted-fg)
-            hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
+          BUTTON_REVEAL = [
+            *Control::BASE,
+            "inline-flex items-center justify-center",
+            "focus-visible:ring-(--sp-focus-ring-color)",
+            "self-stretch px-(--sp-space-2) border-0 bg-transparent cursor-pointer text-(--sp-color-muted-fg)",
+            "rounded-(--sp-radius-sm) hover:bg-(--sp-color-muted) hover:text-(--sp-color-fg)"
           ].freeze
-          BUTTON_CLEAR = %w[
-            self-stretch border-0 bg-transparent px-(--sp-space-2) cursor-pointer text-(--sp-color-muted-fg)
-            rounded-(--sp-radius-sm) hover:bg-(--sp-color-muted) hover:text-(--sp-color-fg) text-(length:--sp-text-sm)
+          BUTTON_CLEAR = [
+            *Control::BASE,
+            "inline-flex items-center justify-center",
+            "focus-visible:ring-(--sp-focus-ring-color)",
+            "self-stretch px-(--sp-space-2) border-0 bg-transparent cursor-pointer text-(--sp-color-muted-fg)",
+            "rounded-(--sp-radius-sm) hover:bg-(--sp-color-muted) hover:text-(--sp-color-fg)"
           ].freeze
 
           private
@@ -134,13 +149,18 @@ module StimulusPlumbers
             { classes: klasses(*RADIO_TYPES.fetch(type), *card_color) }
           end
 
-          def input_group_classes(error: false)
-            { classes: klasses(*INPUT_GROUP_BASE, INPUT_GROUP_BORDER[error ? :error : :default]) }
+          def input_group_classes(error: false, floating: nil)
+            if floating
+              color = error ? FLOATING_INPUT_GROUP_ERROR : FLOATING_INPUT_GROUP_DEFAULT
+              { classes: klasses(*FLOATING_INPUT_GROUP_BASE, *FLOATING_INPUT_GROUP_TYPES.fetch(floating, []), *color) }
+            else
+              { classes: klasses(*INPUT_GROUP_BASE, INPUT_GROUP_BORDER[error ? :error : :default]) }
+            end
           end
 
           def form_field_input_combobox_classes(floating: nil, error: false)
             if floating
-              form_field_input_combobox_floating_classes(floating, error)
+              form_field_input_combobox_floating_classes(floating: floating, error: error)
             else
               {
                 classes: klasses(
@@ -168,6 +188,7 @@ module StimulusPlumbers
           def form_field_input_reveal_classes(**)
             {
               classes: klasses(
+                "peer",
                 "[&>input]:border-0",
                 "[&>input]:rounded-none",
                 "[&>input]:bg-transparent",

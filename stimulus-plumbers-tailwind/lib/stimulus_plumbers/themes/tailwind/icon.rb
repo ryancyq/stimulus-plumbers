@@ -15,7 +15,8 @@ module StimulusPlumbers
           "edit"          => "pencil",
           "email"         => "envelope",
           "calendar"      => "calendar-days",
-          "external-link" => "arrow-top-right-on-square"
+          "external-link" => "arrow-top-right-on-square",
+          "reveal"        => "eye"
         }.freeze
 
         ICONS = StimulusPlumbers::Themes::Icons::Registry.new(

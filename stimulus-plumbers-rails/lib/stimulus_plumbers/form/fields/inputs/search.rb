@@ -51,6 +51,7 @@ module StimulusPlumbers
             render_input_group(
               trailing: clearable ? method(:clear_button) : nil,
               error:    error,
+              floating: floating,
               **merge_html_options(theme.resolve(:form_field_input_clearable), { data: { controller: "input-clearable" } })
             ) do
               build_combobox_typeahead(
@@ -79,17 +80,28 @@ module StimulusPlumbers
           end
 
           def clear_button
-            Components::Button.new(@template).render(
-              icon_leading: "close",
+            build_clear_button do
+              Components::Icon.new(@template).render(
+                name: "close",
+                aria: { hidden: "true" },
+                **theme.resolve(:button_icon)
+              )
+            end
+          end
+
+          def build_clear_button(&block)
+            @template.content_tag(
+              :button,
               **merge_html_options(
                 theme.resolve(:form_field_input_button_clear),
                 {
-                  aria:   { label: I18n.t("stimulus_plumbers.form.search.clear", default: "Clear search") },
+                  type:   "button",
                   hidden: true,
+                  aria:   { label: I18n.t("stimulus_plumbers.form.search.clear", default: "Clear search") },
                   data:   { input_clearable_target: "clear", action: "click->input-clearable#clear" }
                 }
               )
-            )
+            ) { @template.capture(&block) }
           end
         end
       end

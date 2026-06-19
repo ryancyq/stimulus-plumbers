@@ -20,28 +20,42 @@ module StimulusPlumbers
             absolute text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
             duration-300 transform origin-[0]
           ].freeze
-          FLOATING_LABEL_FOCUS   = %w[peer-focus:text-(--sp-color-primary)].freeze
+          FLOATING_LABEL_FOCUS   = %w[peer-focus-within:text-(--sp-color-primary)].freeze
           FLOATING_LABEL_ERROR   = %w[text-(--sp-color-error)].freeze
           FLOATING_LABEL_TYPES = {
             filled:   %w[
               -translate-y-(--sp-space-4) scale-75 top-(--sp-space-4) z-10 start-(--sp-space-2-5)
-              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-4)
-              rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:translate-y-0
+              peer-has-[input:not(:focus):placeholder-shown]:scale-100
+              peer-has-[input:not(:focus):placeholder-shown]:translate-y-0
+              peer-focus-within:scale-75
+              peer-focus-within:-translate-y-(--sp-space-4)
+              rtl:peer-focus-within:translate-x-1/4 rtl:peer-focus-within:left-auto
             ].freeze,
             outlined: %w[
               -translate-y-(--sp-space-4) scale-75 top-(--sp-space-2) z-10 start-1
-              bg-(--sp-color-bg) px-(--sp-space-2) peer-focus:px-(--sp-space-2)
-              peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2
-              peer-focus:top-(--sp-space-2) peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-4)
-              rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+              bg-(--sp-color-bg) px-(--sp-space-2) peer-focus-within:px-(--sp-space-2)
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:-translate-y-1/2
+              peer-placeholder-shown:top-1/2
+              peer-has-[input:not(:focus):placeholder-shown]:scale-100
+              peer-has-[input:not(:focus):placeholder-shown]:-translate-y-1/2
+              peer-has-[input:not(:focus):placeholder-shown]:top-1/2
+              peer-focus-within:top-(--sp-space-2) peer-focus-within:scale-75
+              peer-focus-within:-translate-y-(--sp-space-4)
+              rtl:peer-focus-within:translate-x-1/4 rtl:peer-focus-within:left-auto
             ].freeze,
             standard: %w[
               -translate-y-(--sp-space-6) scale-75 top-(--sp-space-3) -z-10 start-0
-              peer-focus:start-0
-              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-6)
-              rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+              peer-focus-within:start-0
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:translate-y-0
+              peer-has-[input:not(:focus):placeholder-shown]:scale-100
+              peer-has-[input:not(:focus):placeholder-shown]:translate-y-0
+              peer-focus-within:scale-75
+              peer-focus-within:-translate-y-(--sp-space-6)
+              rtl:peer-focus-within:translate-x-1/4 rtl:peer-focus-within:left-auto
             ].freeze
           }.freeze
 
