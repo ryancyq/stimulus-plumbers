@@ -90,16 +90,16 @@ module StimulusPlumbers
               text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
               bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md)
               hover:bg-(--sp-color-muted)
-              peer-checked:border-(--card-ring) peer-checked:bg-(--card-ring)/10
-              peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--card-ring)/15
+              group-has-[:checked]:border-(--card-ring) group-has-[:checked]:bg-(--card-ring)/10
+              group-has-[:checked]:text-(--sp-color-fg) group-has-[:checked]:hover:bg-(--card-ring)/15
             ].freeze,
             card:    %w[
               flex items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
               text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
               bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
               hover:bg-(--sp-color-muted) hover:border-(--sp-color-border-strong) hover:text-(--sp-color-fg)
-              peer-checked:border-(--card-ring) peer-checked:bg-(--card-ring)/10
-              peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--card-ring)/15
+              group-has-[:checked]:border-(--card-ring) group-has-[:checked]:bg-(--card-ring)/10
+              group-has-[:checked]:text-(--sp-color-fg) group-has-[:checked]:hover:bg-(--card-ring)/15
             ].freeze
           }.freeze
 

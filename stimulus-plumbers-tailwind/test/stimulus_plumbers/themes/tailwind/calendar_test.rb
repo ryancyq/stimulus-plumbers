@@ -22,7 +22,8 @@ class TailwindThemeCalendarTest < Minitest::Test
     result = classes_for(:calendar_day)
 
     assert_includes result, "flex"
-    assert_includes result, "cursor-pointer"
+    assert_includes result, "[&:is(button)]:cursor-pointer"
+    assert_includes result, "[&:is(button)]:hover:bg-(--sp-color-muted)"
   end
 
   def test_calendar_day_includes_today_aria_variant
@@ -45,7 +46,6 @@ class TailwindThemeCalendarTest < Minitest::Test
 
     assert_includes result, "aria-[disabled=true]:text-(--sp-color-muted-fg)"
     assert_includes result, "aria-[disabled=true]:pointer-events-none"
-    assert_includes result, "aria-[disabled=true]:hover:bg-transparent"
   end
 
   def test_calendar_day_includes_native_disabled_variants
@@ -53,7 +53,6 @@ class TailwindThemeCalendarTest < Minitest::Test
 
     assert_includes result, "disabled:text-(--sp-color-muted-fg)"
     assert_includes result, "disabled:pointer-events-none"
-    assert_includes result, "disabled:hover:bg-transparent"
   end
 
   def test_calendar_day_outside_includes_muted_text

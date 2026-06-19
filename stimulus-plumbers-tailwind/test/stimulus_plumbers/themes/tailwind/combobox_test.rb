@@ -78,6 +78,10 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes classes_for(:combobox_listbox), "overflow-y-auto"
   end
 
+  def test_combobox_listbox_includes_min_height_class
+    assert_includes classes_for(:combobox_listbox), "min-h-(--sp-space-6)"
+  end
+
   # ── option ────────────────────────────────────────────────────────────────
 
   def test_combobox_option_returns_a_classes_string
@@ -187,8 +191,8 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "justify-between"
   end
 
-  def test_combobox_date_navigation_navigator_includes_size_class
-    assert_includes classes_for(:combobox_date_navigation_navigator), "size-(--sp-control-size)"
+  def test_combobox_date_navigation_navigator_returns_empty_classes
+    refute_includes classes_for(:combobox_date_navigation_navigator), "size-(--sp-control-size)"
   end
 
   def test_combobox_date_navigation_title_includes_flex_grow

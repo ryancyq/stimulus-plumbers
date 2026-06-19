@@ -45,7 +45,7 @@ module StimulusPlumbers
               }
             )
             Components::Button.new(template).render(
-              type: :ghost, variant: :tertiary, size: nil, **html_options
+              type: :ghost, variant: :tertiary, size: :sm, **html_options
             ) { view_label(view, date) }
           end
 

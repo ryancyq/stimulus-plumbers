@@ -212,6 +212,24 @@ class TailwindThemeFormInputTest < Minitest::Test
     assert_includes result, "[&>div:first-child]:focus-within:ring-0"
   end
 
+  def test_form_field_input_combobox_floating_includes_floating_input_base
+    result = classes_for(:form_field_input_combobox, floating: :outlined)
+
+    assert_includes result, "peer"
+    assert_includes result, "w-full"
+    assert_includes result, "[&>input:not([type=hidden])]:border-0"
+    assert_includes result, "[&>div:first-child]:border-0"
+    assert_includes result, "border-(--sp-color-muted-fg)"
+    refute_includes result, "border-(--sp-color-error)"
+  end
+
+  def test_form_field_input_combobox_floating_error_border
+    result = classes_for(:form_field_input_combobox, floating: :outlined, error: true)
+
+    assert_includes result, "border-(--sp-color-error)"
+    refute_includes result, "border-(--sp-color-muted-fg)"
+  end
+
   # :form_field_input_reveal
 
   def test_form_field_input_reveal_resets_child_input_styles
@@ -257,6 +275,7 @@ class TailwindThemeFormInputTest < Minitest::Test
     assert_includes result, "justify-center"
     assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
     assert_includes result, "self-stretch"
+    assert_includes result, "px-(--sp-space-2)"
     assert_includes result, "border-0"
     assert_includes result, "cursor-pointer"
     assert_includes result, "rounded-(--sp-radius-sm)"
@@ -277,6 +296,7 @@ class TailwindThemeFormInputTest < Minitest::Test
     assert_includes result, "justify-center"
     assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
     assert_includes result, "self-stretch"
+    assert_includes result, "px-(--sp-space-2)"
     assert_includes result, "border-0"
     assert_includes result, "cursor-pointer"
     assert_includes result, "rounded-(--sp-radius-sm)"

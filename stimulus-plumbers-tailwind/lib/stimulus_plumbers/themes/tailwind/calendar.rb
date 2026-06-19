@@ -16,19 +16,16 @@ module StimulusPlumbers
         DAY = %w[
           size-(--sp-calendar-day-size) rounded-(--sp-radius-md)
           flex items-center justify-center text-(length:--sp-text-sm)
-          hover:bg-(--sp-color-muted) cursor-pointer
+          [&:is(button)]:hover:bg-(--sp-color-muted) [&:is(button)]:cursor-pointer
           aria-[current=date]:font-bold
           aria-selected:bg-(--sp-color-primary)
           aria-selected:text-(--sp-color-primary-fg)
           aria-selected:hover:bg-(--sp-color-primary)/90
           aria-[hidden=true]:pointer-events-none
-          aria-[hidden=true]:hover:bg-transparent
           aria-[disabled=true]:text-(--sp-color-muted-fg)
           aria-[disabled=true]:pointer-events-none
-          aria-[disabled=true]:hover:bg-transparent
           disabled:text-(--sp-color-muted-fg)
           disabled:pointer-events-none
-          disabled:hover:bg-transparent
         ].freeze
 
         QUARTER_GRID = %w[grid grid-cols-4 gap-(--sp-space-1)].freeze
