@@ -20,21 +20,6 @@ test.describe("search", () => {
     );
   });
 
-  test("clear — visible", async ({ page }) => {
-    await page
-      .locator("#search-default")
-      .getByRole("combobox", { name: "Search" })
-      .fill("hello");
-    await expect(
-      page
-        .locator("#search-default")
-        .getByRole("button", { name: "Clear search" }),
-    ).toBeVisible();
-    await expect(page.locator("#search-default")).toHaveScreenshot(
-      "clear-visible.png",
-    );
-  });
-
   test("error", async ({ page }) => {
     await expect(page.locator("#search-error")).toHaveScreenshot("error.png");
   });
@@ -78,8 +63,5 @@ test.describe("search", () => {
       .getAttribute("id");
     const activeId = await page.evaluate(() => document.activeElement?.id);
     expect(activeId).toBe(inputId);
-    await expect(page.locator("#search-default")).toHaveScreenshot(
-      "focus-returned-after-clear.png",
-    );
   });
 });

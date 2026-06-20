@@ -15,9 +15,10 @@ class TailwindThemeLayoutTest < Minitest::Test
     result = classes_for(:divider_separator)
 
     assert_includes result, "flex-1"
+    assert_includes result, "h-px"
     assert_includes result, "border-0"
-    assert_includes result, "border-t"
-    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "bg-(--sp-color-border)"
+    refute_includes result, "border-t"
   end
 
   def test_popover_returns_a_classes_string
@@ -48,6 +49,7 @@ class TailwindThemeLayoutTest < Minitest::Test
   def test_divider_includes_flex_and_gap_classes
     result = classes_for(:divider)
 
+    assert_includes result, "w-full"
     assert_includes result, "flex"
     assert_includes result, "items-center"
     assert_includes result, "gap-(--sp-space-3)"

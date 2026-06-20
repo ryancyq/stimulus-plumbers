@@ -37,6 +37,22 @@ class TailwindThemeFormInputTest < Minitest::Test
     refute_includes classes_for(:form_field_input, error: true), "border-(--sp-color-muted-fg)"
   end
 
+  def test_form_field_input_includes_hover_border_when_no_error
+    assert_includes classes_for(:form_field_input), "hover:border-(--sp-color-fg)"
+  end
+
+  def test_form_field_input_excludes_hover_border_when_error
+    refute_includes classes_for(:form_field_input, error: true), "hover:border-(--sp-color-fg)"
+  end
+
+  def test_form_field_input_floating_filled_includes_hover_border_when_no_error
+    assert_includes classes_for(:form_field_input, floating: :filled), "hover:border-(--sp-color-fg)"
+  end
+
+  def test_form_field_input_floating_filled_excludes_hover_border_when_error
+    refute_includes classes_for(:form_field_input, floating: :filled, error: true), "hover:border-(--sp-color-fg)"
+  end
+
   # :form_field_input_textarea
 
   def test_form_field_input_textarea_includes_default_border_when_no_error
@@ -89,7 +105,7 @@ class TailwindThemeFormInputTest < Minitest::Test
     assert_includes result, "border"
     assert_includes result, "border-(--sp-color-border)"
     assert_includes result, "bg-(--sp-color-muted)"
-    assert_includes result, "focus:ring-2"
+    assert_includes result, "focus:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "focus:ring-(--sp-focus-ring-color)"
     assert_includes result, "focus:outline-none"
     assert_includes result, "cursor-pointer"
@@ -130,7 +146,7 @@ class TailwindThemeFormInputTest < Minitest::Test
     assert_includes result, "size-(--sp-control-size)"
     assert_includes result, "rounded-full"
     assert_includes result, "[accent-color:var(--sp-color-primary)]"
-    assert_includes result, "focus:ring-2"
+    assert_includes result, "focus:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "focus:ring-(--sp-focus-ring-color)"
     assert_includes result, "focus:outline-none"
     assert_includes result, "cursor-pointer"
@@ -143,14 +159,14 @@ class TailwindThemeFormInputTest < Minitest::Test
     result = classes_for(:form_field_input_radio, type: :button)
 
     assert_includes result, "hidden"
-    assert_includes result, "peer"
+    refute_includes result, "peer"
   end
 
   def test_form_field_input_radio_card_type
     result = classes_for(:form_field_input_radio, type: :card)
 
     assert_includes result, "hidden"
-    assert_includes result, "peer"
+    refute_includes result, "peer"
   end
 
   def test_form_field_input_radio_card_type_uses_card_ring
@@ -212,6 +228,24 @@ class TailwindThemeFormInputTest < Minitest::Test
     assert_includes result, "[&>div:first-child]:focus-within:ring-0"
   end
 
+  def test_form_field_input_combobox_floating_includes_floating_input_base
+    result = classes_for(:form_field_input_combobox, floating: :outlined)
+
+    assert_includes result, "peer"
+    assert_includes result, "w-full"
+    assert_includes result, "[&>input:not([type=hidden])]:border-0"
+    assert_includes result, "[&>div:first-child]:border-0"
+    assert_includes result, "border-(--sp-color-muted-fg)"
+    refute_includes result, "border-(--sp-color-error)"
+  end
+
+  def test_form_field_input_combobox_floating_error_border
+    result = classes_for(:form_field_input_combobox, floating: :outlined, error: true)
+
+    assert_includes result, "border-(--sp-color-error)"
+    refute_includes result, "border-(--sp-color-muted-fg)"
+  end
+
   # :form_field_input_reveal
 
   def test_form_field_input_reveal_resets_child_input_styles
@@ -249,8 +283,20 @@ class TailwindThemeFormInputTest < Minitest::Test
   def test_form_field_input_button_reveal_includes_base_classes
     result = classes_for(:form_field_input_button_reveal)
 
+    assert_includes result, "font-medium"
+    assert_includes result, "transition-colors"
+    assert_includes result, "disabled:opacity-50"
+    assert_includes result, "inline-flex"
+    assert_includes result, "items-center"
+    assert_includes result, "justify-center"
+    assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
+    assert_includes result, "self-stretch"
+    assert_includes result, "px-(--sp-space-2)"
     assert_includes result, "border-0"
     assert_includes result, "cursor-pointer"
+    assert_includes result, "rounded-(--sp-radius-sm)"
+    assert_includes result, "hover:bg-(--sp-color-muted)"
+    assert_includes result, "hover:text-(--sp-color-fg)"
   end
 
   # :form_field_input_button_clear
@@ -258,10 +304,96 @@ class TailwindThemeFormInputTest < Minitest::Test
   def test_form_field_input_button_clear_includes_base_classes
     result = classes_for(:form_field_input_button_clear)
 
+    assert_includes result, "font-medium"
+    assert_includes result, "transition-colors"
+    assert_includes result, "disabled:opacity-50"
+    assert_includes result, "inline-flex"
+    assert_includes result, "items-center"
+    assert_includes result, "justify-center"
+    assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
+    assert_includes result, "self-stretch"
+    assert_includes result, "px-(--sp-space-2)"
     assert_includes result, "border-0"
     assert_includes result, "cursor-pointer"
     assert_includes result, "rounded-(--sp-radius-sm)"
     assert_includes result, "hover:bg-(--sp-color-muted)"
     assert_includes result, "hover:text-(--sp-color-fg)"
+  end
+
+  # :input_group (non-floating)
+
+  def test_input_group_includes_base_flex_and_border
+    result = classes_for(:input_group)
+
+    assert_includes result, "flex"
+    assert_includes result, "items-center"
+    assert_includes result, "border"
+    assert_includes result, "rounded-(--sp-radius-md)"
+  end
+
+  def test_input_group_default_border_color
+    result = classes_for(:input_group)
+
+    assert_includes result, "border-(--sp-color-muted-fg)"
+    refute_includes result, "border-(--sp-color-error)"
+  end
+
+  def test_input_group_error_border_color
+    result = classes_for(:input_group, error: true)
+
+    assert_includes result, "border-(--sp-color-error)"
+    refute_includes result, "border-(--sp-color-muted-fg)"
+  end
+
+  # :input_group (floating)
+
+  def test_input_group_floating_filled_includes_filled_visual
+    result = classes_for(:input_group, floating: :filled)
+
+    assert_includes result, "peer"
+    assert_includes result, "rounded-t-(--sp-radius-md)"
+    assert_includes result, "bg-(--sp-color-bg-muted)"
+    assert_includes result, "border-b-2"
+    refute_includes result, "rounded-(--sp-radius-md)"
+  end
+
+  def test_input_group_floating_outlined_includes_outlined_visual
+    result = classes_for(:input_group, floating: :outlined)
+
+    assert_includes result, "peer"
+    assert_includes result, "rounded-(--sp-radius-md)"
+    assert_includes result, "border"
+  end
+
+  def test_input_group_floating_standard_includes_standard_visual
+    result = classes_for(:input_group, floating: :standard)
+
+    assert_includes result, "peer"
+    assert_includes result, "border-b-2"
+    assert_includes result, "border-0"
+    refute_includes result, "rounded-(--sp-radius-md)"
+  end
+
+  def test_input_group_floating_default_border_includes_focus_within
+    result = classes_for(:input_group, floating: :outlined)
+
+    assert_includes result, "border-(--sp-color-muted-fg)"
+    assert_includes result, "focus-within:border-(--sp-color-primary)"
+    refute_includes result, "border-(--sp-color-error)"
+  end
+
+  def test_input_group_floating_error_border
+    result = classes_for(:input_group, floating: :outlined, error: true)
+
+    assert_includes result, "border-(--sp-color-error)"
+    refute_includes result, "border-(--sp-color-muted-fg)"
+    refute_includes result, "focus-within:border-(--sp-color-primary)"
+  end
+
+  def test_input_group_floating_excludes_non_floating_border
+    result = classes_for(:input_group, floating: :outlined)
+
+    refute_includes result, "border-(--sp-color-muted-fg)\nborder" # no INPUT_GROUP_BASE mixed in
+    assert_includes result, "peer"
   end
 end

@@ -26,6 +26,23 @@ test.describe("sign up form", () => {
       "sign-up-floating.png",
     );
   });
+
+  test("floating labels — filled", async ({ page }) => {
+    const section = page.locator("#sign-up-floating");
+    await section.locator("input[type='text']").fill("Jane Doe");
+    await section.locator("input[type='email']").fill("jane@example.com");
+    await section.locator("input[type='password']").fill("secret123");
+    await expect(section).toHaveScreenshot("sign-up-floating-filled.png");
+  });
+
+  test("floating labels — password revealed", async ({ page }) => {
+    const section = page.locator("#sign-up-floating");
+    await section.locator("input[type='password']").fill("secret123");
+    await section.getByLabel("Show password").click();
+    await expect(section).toHaveScreenshot(
+      "sign-up-floating-password-revealed.png",
+    );
+  });
 });
 
 // ── Field error form ─────────────────────────────────────────────────────────
@@ -153,6 +170,42 @@ test.describe("floating label form", () => {
       await expect(page.locator("#floating-standard-error")).toHaveScreenshot(
         "floating-standard-error.png",
       );
+    });
+  });
+
+  test.describe("outlined revealable", () => {
+    test("hidden", async ({ page }) => {
+      await expect(
+        page.locator("#floating-outlined-revealable"),
+      ).toHaveScreenshot("floating-outlined-revealable-hidden.png");
+    });
+
+    test("revealed", async ({ page }) => {
+      await page
+        .locator("#floating-outlined-revealable")
+        .getByLabel("Show password")
+        .click();
+      await expect(
+        page.locator("#floating-outlined-revealable"),
+      ).toHaveScreenshot("floating-outlined-revealable-revealed.png");
+    });
+  });
+
+  test.describe("filled revealable", () => {
+    test("hidden", async ({ page }) => {
+      await expect(
+        page.locator("#floating-filled-revealable"),
+      ).toHaveScreenshot("floating-filled-revealable-hidden.png");
+    });
+
+    test("revealed", async ({ page }) => {
+      await page
+        .locator("#floating-filled-revealable")
+        .getByLabel("Show password")
+        .click();
+      await expect(
+        page.locator("#floating-filled-revealable"),
+      ).toHaveScreenshot("floating-filled-revealable-revealed.png");
     });
   });
 });

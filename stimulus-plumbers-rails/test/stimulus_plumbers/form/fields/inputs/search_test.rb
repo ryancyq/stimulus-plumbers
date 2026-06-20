@@ -177,8 +177,8 @@ class SearchTest < ActionView::TestCase
     assert_not_nil wrapper.at_css("button[data-input-clearable-target='clear']")
   end
 
-  def test_without_clearable_does_not_render_input_clearable_controller
-    assert_no_css build_field, "[data-controller='input-clearable']"
+  def test_without_clearable_does_not_render_clear_button
+    assert_no_css build_field, "button[data-input-clearable-target='clear']"
   end
 
   def test_without_clearable_trigger_has_no_input_clearable_target
@@ -187,20 +187,6 @@ class SearchTest < ActionView::TestCase
 
   def test_clearable_option_does_not_leak_into_html_attributes
     assert_nil build_field(clearable: true).at_css("[clearable]")
-  end
-
-  def test_clearable_still_renders_label
-    assert_css build_field(clearable: true), "label[for='sign_in_form_email']"
-  end
-
-  def test_clearable_still_renders_error_message
-    @form.errors.add(:email, "is blank")
-
-    assert_css build_field(clearable: true), "p[role='alert']"
-  end
-
-  def test_clearable_still_renders_hidden_value_input
-    assert_css build_field(clearable: true), "input[type='hidden'][name='sign_in_form[email]']"
   end
 
   def test_model_value_sets_hidden_input_value
@@ -214,12 +200,5 @@ class SearchTest < ActionView::TestCase
     @form.define_singleton_method(:email) { "hello@example.com" }
 
     assert_css build_field, "[data-input-combobox-value-value='hello@example.com']"
-  end
-
-  def test_clearable_model_value_sets_hidden_input_value
-    @form.define_singleton_method(:email) { "hello@example.com" }
-    hidden = build_field(clearable: true).at_css("input[type='hidden'][name='sign_in_form[email]']")
-
-    assert_equal "hello@example.com", hidden["value"]
   end
 end

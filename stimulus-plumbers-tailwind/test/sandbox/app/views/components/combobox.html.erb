@@ -35,12 +35,39 @@
   </div>
 </section>
 
+<%# ── Preselected ────────────────────────────────────────────────────────── %>
+<section id="combobox-preselected" class="sb-section">
+  <h2>Preselected value</h2>
+  <div class="sb-col">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]],
+          value:   "ca"
+        ) %>
+  </div>
+</section>
+
+<%# ── Disabled option ────────────────────────────────────────────────────── %>
+<section id="combobox-disabled-option" class="sb-section">
+  <h2>Disabled option</h2>
+  <div class="sb-col">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          options: [
+            ["Australia",      "au"],
+            ["Canada (n/a)",   "ca", { disabled: true }],
+            ["United States",  "us"]
+          ]
+        ) %>
+  </div>
+</section>
+
 <%# ── Date (with error) ──────────────────────────────────────────────────── %>
 <section id="combobox-date-error" class="sb-section">
   <h2>Date picker — Error</h2>
   <div class="sb-col">
     <% date_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
-    <%= form_with(model: date_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: date_error, url: "/demo", scope: "combobox_date_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :birth_date, as: :date, label: "Birthday" %>
     <% end %>
   </div>
@@ -51,7 +78,7 @@
   <h2>Time picker — Error</h2>
   <div class="sb-col">
     <% time_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
-    <%= form_with(model: time_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: time_error, url: "/demo", scope: "combobox_time_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :birth_date, as: :time, label: "Meeting Time" %>
     <% end %>
   </div>
@@ -62,7 +89,7 @@
   <h2>Dropdown — Error</h2>
   <div class="sb-col">
     <% dropdown_error = SignUp.new.tap { |f| f.errors.add(:country, "is invalid") } %>
-    <%= form_with(model: dropdown_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: dropdown_error, url: "/demo", scope: "combobox_dropdown_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :country, as: :select, label: "Country",
             choices: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]] %>
     <% end %>
@@ -74,7 +101,7 @@
   <h2>Typeahead — Error</h2>
   <div class="sb-col">
     <% typeahead_error = SignUp.new.tap { |f| f.errors.add(:name, "is invalid") } %>
-    <%= form_with(model: typeahead_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: typeahead_error, url: "/demo", scope: "combobox_typeahead_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name, as: :search, label: "City" %>
     <% end %>
   </div>

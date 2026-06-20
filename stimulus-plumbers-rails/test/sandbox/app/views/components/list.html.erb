@@ -54,3 +54,16 @@
     <% end %>
   <% end %>
 </div>
+
+<div id="list-with-icons">
+  <%# List with icon slots %>
+  <%= sp_list do |list| %>
+    <%= list.item("Dashboard", url: "/") do |slots| %>
+      <% slots.with_icon_leading(:home) %>
+      <% slots.with_icon_trailing(:"chevron-right") %>
+    <% end %>
+    <%= list.item("Reports", url: "/") do |slots| %>
+      <% slots.with_icon_leading(:"chart-bar") %>
+    <% end %>
+  <% end %>
+</div>

@@ -15,7 +15,8 @@ module StimulusPlumbers
           "edit"          => "pencil",
           "email"         => "envelope",
           "calendar"      => "calendar-days",
-          "external-link" => "arrow-top-right-on-square"
+          "external-link" => "arrow-top-right-on-square",
+          "reveal"        => "eye"
         }.freeze
 
         ICONS = StimulusPlumbers::Themes::Icons::Registry.new(
@@ -30,7 +31,7 @@ module StimulusPlumbers
         private
 
         def icon_classes
-          { classes: "size-(--sp-icon-default)" }
+          { classes: "size-(--sp-icon-size-lg)" }
         end
       end
     end

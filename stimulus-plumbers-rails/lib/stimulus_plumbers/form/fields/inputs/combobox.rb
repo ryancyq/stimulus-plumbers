@@ -7,13 +7,13 @@ module StimulusPlumbers
         module Combobox
           private
 
-          def render_combobox(attribute, input_id:, opts:, error:, **kwargs, &block)
+          def render_combobox(attribute, input_id:, opts:, error:, floating: nil, **kwargs, &block)
             combobox_opts = opts.deep_merge(input: { name: field_name(attribute) })
 
             Components::Combobox.new(@template).render(
               id: input_id,
               **combobox_opts,
-              **merge_html_options(theme.resolve(:form_field_input_combobox, error: error), kwargs),
+              **merge_html_options(theme.resolve(:form_field_input_combobox, floating: floating, error: error), kwargs),
               &block
             )
           end

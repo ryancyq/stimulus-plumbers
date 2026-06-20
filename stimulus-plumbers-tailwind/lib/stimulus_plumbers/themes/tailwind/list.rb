@@ -4,6 +4,19 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module List
+        # ── Section ───────────────────────────────────────────────────────────
+        SECTION_TITLE_BASE = %w[
+          block px-(--sp-space-2) pb-(--sp-space-1)
+          text-(length:--sp-text-xs) font-semibold uppercase tracking-wider
+          text-(--sp-color-muted-fg)
+        ].freeze
+
+        SECTION_DESCRIPTION_BASE = %w[
+          block px-(--sp-space-2) pb-(--sp-space-1)
+          text-(length:--sp-text-xs) text-(--sp-color-muted-fg)
+        ].freeze
+
+        # ── Item ──────────────────────────────────────────────────────────────
         ITEM_BASE = [
           *Control::BASE,
           "flex items-center gap-(--sp-space-2) w-full",
@@ -25,17 +38,6 @@ module StimulusPlumbers
         ].freeze
 
         ITEM_DESCRIPTION_BASE = %w[
-          text-(length:--sp-text-xs) text-(--sp-color-muted-fg)
-        ].freeze
-
-        SECTION_TITLE_BASE = %w[
-          block px-(--sp-space-2) pb-(--sp-space-1)
-          text-(length:--sp-text-xs) font-semibold uppercase tracking-wider
-          text-(--sp-color-muted-fg)
-        ].freeze
-
-        SECTION_DESCRIPTION_BASE = %w[
-          block px-(--sp-space-2) pb-(--sp-space-1)
           text-(length:--sp-text-xs) text-(--sp-color-muted-fg)
         ].freeze
 
@@ -62,7 +64,7 @@ module StimulusPlumbers
         end
 
         def list_item_icon_classes
-          { classes: klasses("size-(--sp-control-size)", "stroke-current") }
+          { classes: klasses("size-(--sp-icon-size-sm)", "stroke-current") }
         end
 
         def list_item_content_classes

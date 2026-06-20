@@ -10,27 +10,6 @@ module StimulusPlumbers
           HINT          = %w[text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
           ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
 
-          FLOATING_INPUT_BASE = %w[
-            peer w-full text-(length:--sp-text-sm) text-(--sp-color-fg) appearance-none
-            focus:outline-none focus:ring-0
-          ].freeze
-          FLOATING_INPUT_TYPES = {
-            filled:   %w[
-              rounded-t-(--sp-radius-md) px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-5)
-              bg-(--sp-color-bg-muted) border-0 border-b-2
-            ].freeze,
-            outlined: %w[
-              px-(--sp-space-2-5) pb-(--sp-space-2-5) pt-(--sp-space-4)
-              bg-transparent rounded-(--sp-radius-md) border
-            ].freeze,
-            standard: %w[
-              py-(--sp-space-2-5) px-0
-              bg-transparent border-0 border-b-2
-            ].freeze
-          }.freeze
-          FLOATING_INPUT_ERROR   = %w[border-(--sp-color-error)].freeze
-          FLOATING_INPUT_DEFAULT = %w[border-(--sp-color-muted-fg) focus:border-(--sp-color-primary)].freeze
-
           FLOATING_GROUP_TYPES = {
             filled:   %w[relative].freeze,
             outlined: %w[relative].freeze,
@@ -41,28 +20,42 @@ module StimulusPlumbers
             absolute text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
             duration-300 transform origin-[0]
           ].freeze
-          FLOATING_LABEL_FOCUS   = %w[peer-focus:text-(--sp-color-primary)].freeze
+          FLOATING_LABEL_FOCUS   = %w[peer-focus-within:text-(--sp-color-primary)].freeze
           FLOATING_LABEL_ERROR   = %w[text-(--sp-color-error)].freeze
           FLOATING_LABEL_TYPES = {
             filled:   %w[
               -translate-y-(--sp-space-4) scale-75 top-(--sp-space-4) z-10 start-(--sp-space-2-5)
-              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-4)
-              rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:translate-y-0
+              peer-has-[input:not(:focus):placeholder-shown]:scale-100
+              peer-has-[input:not(:focus):placeholder-shown]:translate-y-0
+              peer-focus-within:scale-75
+              peer-focus-within:-translate-y-(--sp-space-4)
+              rtl:peer-focus-within:translate-x-1/4 rtl:peer-focus-within:left-auto
             ].freeze,
             outlined: %w[
               -translate-y-(--sp-space-4) scale-75 top-(--sp-space-2) z-10 start-1
-              bg-(--sp-color-bg) px-(--sp-space-2) peer-focus:px-(--sp-space-2)
-              peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2
-              peer-focus:top-(--sp-space-2) peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-4)
-              rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+              bg-(--sp-color-bg) px-(--sp-space-2) peer-focus-within:px-(--sp-space-2)
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:-translate-y-1/2
+              peer-placeholder-shown:top-1/2
+              peer-has-[input:not(:focus):placeholder-shown]:scale-100
+              peer-has-[input:not(:focus):placeholder-shown]:-translate-y-1/2
+              peer-has-[input:not(:focus):placeholder-shown]:top-1/2
+              peer-focus-within:top-(--sp-space-2) peer-focus-within:scale-75
+              peer-focus-within:-translate-y-(--sp-space-4)
+              rtl:peer-focus-within:translate-x-1/4 rtl:peer-focus-within:left-auto
             ].freeze,
             standard: %w[
               -translate-y-(--sp-space-6) scale-75 top-(--sp-space-3) -z-10 start-0
-              peer-focus:start-0
-              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
-              peer-focus:scale-75 peer-focus:-translate-y-(--sp-space-6)
-              rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto
+              peer-focus-within:start-0
+              peer-placeholder-shown:scale-100
+              peer-placeholder-shown:translate-y-0
+              peer-has-[input:not(:focus):placeholder-shown]:scale-100
+              peer-has-[input:not(:focus):placeholder-shown]:translate-y-0
+              peer-focus-within:scale-75
+              peer-focus-within:-translate-y-(--sp-space-6)
+              rtl:peer-focus-within:translate-x-1/4 rtl:peer-focus-within:left-auto
             ].freeze
           }.freeze
 
@@ -97,16 +90,16 @@ module StimulusPlumbers
               text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
               bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md)
               hover:bg-(--sp-color-muted)
-              peer-checked:border-(--card-ring) peer-checked:bg-(--card-ring)/10
-              peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--card-ring)/15
+              group-has-[:checked]:border-(--card-ring) group-has-[:checked]:bg-(--card-ring)/10
+              group-has-[:checked]:text-(--sp-color-fg) group-has-[:checked]:hover:bg-(--card-ring)/15
             ].freeze,
             card:    %w[
               flex items-start flex-1 p-(--sp-space-4) cursor-pointer select-none
               text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
               bg-(--sp-color-bg) border border-(--sp-color-border) rounded-(--sp-radius-md) shadow-(--sp-shadow-xs)
               hover:bg-(--sp-color-muted) hover:border-(--sp-color-border-strong) hover:text-(--sp-color-fg)
-              peer-checked:border-(--card-ring) peer-checked:bg-(--card-ring)/10
-              peer-checked:text-(--sp-color-fg) peer-checked:hover:bg-(--card-ring)/15
+              group-has-[:checked]:border-(--card-ring) group-has-[:checked]:bg-(--card-ring)/10
+              group-has-[:checked]:text-(--sp-color-fg) group-has-[:checked]:hover:bg-(--card-ring)/15
             ].freeze
           }.freeze
 
@@ -117,27 +110,17 @@ module StimulusPlumbers
 
           private
 
-          def form_field_floating_classes(type: nil, error: false)
-            {
-              classes: klasses(
-                *FLOATING_INPUT_BASE,
-                *FLOATING_INPUT_TYPES.fetch(type, []),
-                *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT)
-              )
-            }
+          def form_field_input_group_classes(floating: nil)
+            { classes: klasses(*FLOATING_GROUP_TYPES.fetch(floating, [])) }
           end
 
-          def form_field_floating_group_classes(type: nil)
-            { classes: klasses(*FLOATING_GROUP_TYPES.fetch(type, [])) }
-          end
-
-          def form_field_floating_label_classes(type: nil, error: false)
-            color = error ? FLOATING_LABEL_ERROR : FLOATING_LABEL_FOCUS
-            { classes: klasses(*FLOATING_LABEL_BASE, *FLOATING_LABEL_TYPES.fetch(type, []), *color) }
-          end
-
-          def form_field_label_classes(hidden: false, **)
-            { classes: klasses(*LABEL, hidden ? "sr-only" : nil) }
+          def form_field_label_classes(floating: nil, hidden: false, error: false, **)
+            if floating
+              color = error ? FLOATING_LABEL_ERROR : FLOATING_LABEL_FOCUS
+              { classes: klasses(*FLOATING_LABEL_BASE, *FLOATING_LABEL_TYPES.fetch(floating, []), *color) }
+            else
+              { classes: klasses(*LABEL, hidden ? "sr-only" : nil) }
+            end
           end
 
           def form_field_required_mark_classes
@@ -164,6 +147,10 @@ module StimulusPlumbers
           def form_field_radio_label_classes(type: :default, variant: :default)
             card_color = %i[button card].include?(type) ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:tertiary]) : []
             { classes: klasses(*RADIO_LABEL_TYPES.fetch(type), *card_color) }
+          end
+
+          def form_field_radio_item_group_classes
+            { classes: "contents group" }
           end
         end
       end

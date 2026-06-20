@@ -27,4 +27,8 @@ class ListAccessibilityTest < ApplicationAccessibilityTestCase
   def test_hierarchical_sections_pass_wcag
     assert_accessible context: "#list-hierarchical"
   end
+
+  def test_list_with_icons_passes_wcag
+    assert_accessible context: "#list-with-icons"
+  end
 end

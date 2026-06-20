@@ -17,7 +17,7 @@ module StimulusPlumbers
               kwargs
             )
             Components::Button.new(template).render(
-              type: :ghost, variant: :tertiary, size: nil, icon_leading: icon, **html_options, &block
+              type: :ghost, variant: :tertiary, size: :sm, icon_leading: icon, **html_options, &block
             )
           end
         end

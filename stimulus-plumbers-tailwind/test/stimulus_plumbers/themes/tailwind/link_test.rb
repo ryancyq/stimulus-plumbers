@@ -308,7 +308,7 @@ class TailwindThemeLinkTest < Minitest::Test
   end
 
   def test_link_icon_includes_size_class
-    assert_includes classes_for(:link_icon), "size-(--sp-control-size)"
+    assert_includes classes_for(:link_icon), "size-(--sp-icon-size-sm)"
   end
 
   def test_link_icon_includes_stroke_current

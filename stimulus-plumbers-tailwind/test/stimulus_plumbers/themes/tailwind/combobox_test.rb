@@ -39,6 +39,10 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "focus:ring-(--sp-focus-ring-color)"
   end
 
+  def test_combobox_trigger_includes_hover_border
+    assert_includes classes_for(:combobox_trigger), "hover:border-(--sp-color-fg)"
+  end
+
   # ── trigger group ─────────────────────────────────────────────────────────
 
   def test_combobox_trigger_group_includes_flex_layout_classes
@@ -65,6 +69,10 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "focus-within:ring-(--sp-focus-ring-color)"
   end
 
+  def test_combobox_trigger_group_includes_hover_border
+    assert_includes classes_for(:combobox_trigger_group), "hover:border-(--sp-color-fg)"
+  end
+
   # ── listbox ───────────────────────────────────────────────────────────────
 
   def test_combobox_listbox_returns_a_classes_string
@@ -76,6 +84,10 @@ class TailwindThemeComboboxTest < Minitest::Test
 
   def test_combobox_listbox_includes_overflow_class
     assert_includes classes_for(:combobox_listbox), "overflow-y-auto"
+  end
+
+  def test_combobox_listbox_includes_min_height_class
+    assert_includes classes_for(:combobox_listbox), "min-h-(--sp-space-6)"
   end
 
   # ── option ────────────────────────────────────────────────────────────────
@@ -187,8 +199,8 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "justify-between"
   end
 
-  def test_combobox_date_navigation_navigator_includes_size_class
-    assert_includes classes_for(:combobox_date_navigation_navigator), "size-(--sp-control-size)"
+  def test_combobox_date_navigation_navigator_returns_empty_classes
+    refute_includes classes_for(:combobox_date_navigation_navigator), "size-(--sp-control-size)"
   end
 
   def test_combobox_date_navigation_title_includes_flex_grow

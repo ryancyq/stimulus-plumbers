@@ -1,7 +1,7 @@
 PATH
   remote: ../stimulus-plumbers-rails
   specs:
-    stimulus_plumbers (0.3.3)
+    stimulus_plumbers (0.4.0)
       actionview (>= 6.1, < 8.2)
 
 PATH

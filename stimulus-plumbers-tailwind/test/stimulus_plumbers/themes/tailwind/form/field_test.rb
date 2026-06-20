@@ -141,10 +141,10 @@ class TailwindThemeFormFieldTest < Minitest::Test
     assert_includes result, "bg-(--sp-color-bg)"
     assert_includes result, "border-(--sp-color-border)"
     assert_includes result, "rounded-(--sp-radius-md)"
-    assert_includes result, "peer-checked:border-(--card-ring)"
-    assert_includes result, "peer-checked:bg-(--card-ring)/10"
-    assert_includes result, "peer-checked:text-(--sp-color-fg)"
-    assert_includes result, "peer-checked:hover:bg-(--card-ring)/15"
+    assert_includes result, "group-has-[:checked]:border-(--card-ring)"
+    assert_includes result, "group-has-[:checked]:bg-(--card-ring)/10"
+    assert_includes result, "group-has-[:checked]:text-(--sp-color-fg)"
+    assert_includes result, "group-has-[:checked]:hover:bg-(--card-ring)/15"
     assert_includes result, "hover:bg-(--sp-color-muted)"
     assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
@@ -165,10 +165,10 @@ class TailwindThemeFormFieldTest < Minitest::Test
     assert_includes result, "shadow-(--sp-shadow-xs)"
     assert_includes result, "hover:border-(--sp-color-border-strong)"
     assert_includes result, "hover:text-(--sp-color-fg)"
-    assert_includes result, "peer-checked:border-(--card-ring)"
-    assert_includes result, "peer-checked:bg-(--card-ring)/10"
-    assert_includes result, "peer-checked:text-(--sp-color-fg)"
-    assert_includes result, "peer-checked:hover:bg-(--card-ring)/15"
+    assert_includes result, "group-has-[:checked]:border-(--card-ring)"
+    assert_includes result, "group-has-[:checked]:bg-(--card-ring)/10"
+    assert_includes result, "group-has-[:checked]:text-(--sp-color-fg)"
+    assert_includes result, "group-has-[:checked]:hover:bg-(--card-ring)/15"
     assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
   end
 
@@ -185,10 +185,10 @@ class TailwindThemeFormFieldTest < Minitest::Test
     refute_includes result, "--card-ring"
   end
 
-  # :form_field_floating
+  # :form_field_input (floating)
 
   def test_form_field_floating_includes_base_classes
-    result = classes_for(:form_field_floating, type: :filled)
+    result = classes_for(:form_field_input, floating: :filled)
 
     assert_includes result, "w-full"
     assert_includes result, "text-(--sp-color-fg)"
@@ -197,7 +197,7 @@ class TailwindThemeFormFieldTest < Minitest::Test
   end
 
   def test_form_field_floating_filled_includes_type_classes
-    result = classes_for(:form_field_floating, type: :filled)
+    result = classes_for(:form_field_input, floating: :filled)
 
     assert_includes result, "rounded-t-(--sp-radius-md)"
     assert_includes result, "bg-(--sp-color-bg-muted)"
@@ -206,7 +206,7 @@ class TailwindThemeFormFieldTest < Minitest::Test
   end
 
   def test_form_field_floating_outlined_includes_type_classes
-    result = classes_for(:form_field_floating, type: :outlined)
+    result = classes_for(:form_field_input, floating: :outlined)
 
     assert_includes result, "rounded-(--sp-radius-md)"
     assert_includes result, "border"
@@ -214,7 +214,7 @@ class TailwindThemeFormFieldTest < Minitest::Test
   end
 
   def test_form_field_floating_standard_includes_type_classes
-    result = classes_for(:form_field_floating, type: :standard)
+    result = classes_for(:form_field_input, floating: :standard)
 
     assert_includes result, "px-0"
     assert_includes result, "bg-transparent"
@@ -222,38 +222,38 @@ class TailwindThemeFormFieldTest < Minitest::Test
   end
 
   def test_form_field_floating_includes_default_border_when_no_error
-    assert_includes classes_for(:form_field_floating, type: :filled), "border-(--sp-color-muted-fg)"
+    assert_includes classes_for(:form_field_input, floating: :filled), "border-(--sp-color-muted-fg)"
   end
 
   def test_form_field_floating_includes_error_border_when_error
-    assert_includes classes_for(:form_field_floating, type: :filled, error: true), "border-(--sp-color-error)"
+    assert_includes classes_for(:form_field_input, floating: :filled, error: true), "border-(--sp-color-error)"
   end
 
   def test_form_field_floating_excludes_default_border_when_error
-    refute_includes classes_for(:form_field_floating, type: :filled, error: true), "border-(--sp-color-muted-fg)"
+    refute_includes classes_for(:form_field_input, floating: :filled, error: true), "border-(--sp-color-muted-fg)"
   end
 
-  # :form_field_floating_group
+  # :form_field_input_group
 
   def test_form_field_floating_group_filled_includes_relative_class
-    assert_includes classes_for(:form_field_floating_group, type: :filled), "relative"
+    assert_includes classes_for(:form_field_input_group, floating: :filled), "relative"
   end
 
   def test_form_field_floating_group_outlined_includes_relative_class
-    assert_includes classes_for(:form_field_floating_group, type: :outlined), "relative"
+    assert_includes classes_for(:form_field_input_group, floating: :outlined), "relative"
   end
 
   def test_form_field_floating_group_standard_includes_z_index_class
-    result = classes_for(:form_field_floating_group, type: :standard)
+    result = classes_for(:form_field_input_group, floating: :standard)
 
     assert_includes result, "relative"
     assert_includes result, "z-0"
   end
 
-  # :form_field_floating_label
+  # :form_field_label (floating)
 
   def test_form_field_floating_label_includes_base_classes
-    result = classes_for(:form_field_floating_label, type: :filled)
+    result = classes_for(:form_field_label, floating: :filled)
 
     assert_includes result, "absolute"
     assert_includes result, "text-(--sp-color-muted-fg)"
@@ -262,37 +262,40 @@ class TailwindThemeFormFieldTest < Minitest::Test
   end
 
   def test_form_field_floating_label_filled_includes_peer_placeholder_classes
-    result = classes_for(:form_field_floating_label, type: :filled)
+    result = classes_for(:form_field_label, floating: :filled)
 
     assert_includes result, "peer-placeholder-shown:scale-100"
-    assert_includes result, "peer-focus:scale-75"
+    assert_includes result, "peer-has-[input:not(:focus):placeholder-shown]:scale-100"
+    assert_includes result, "peer-focus-within:scale-75"
   end
 
   def test_form_field_floating_label_outlined_includes_peer_placeholder_classes
-    result = classes_for(:form_field_floating_label, type: :outlined)
+    result = classes_for(:form_field_label, floating: :outlined)
 
     assert_includes result, "peer-placeholder-shown:scale-100"
-    assert_includes result, "peer-focus:scale-75"
+    assert_includes result, "peer-has-[input:not(:focus):placeholder-shown]:scale-100"
+    assert_includes result, "peer-focus-within:scale-75"
   end
 
   def test_form_field_floating_label_standard_includes_peer_placeholder_classes
-    result = classes_for(:form_field_floating_label, type: :standard)
+    result = classes_for(:form_field_label, floating: :standard)
 
     assert_includes result, "peer-placeholder-shown:scale-100"
-    assert_includes result, "peer-focus:scale-75"
+    assert_includes result, "peer-has-[input:not(:focus):placeholder-shown]:scale-100"
+    assert_includes result, "peer-focus-within:scale-75"
   end
 
   def test_form_field_floating_label_includes_focus_color_when_no_error
-    assert_includes classes_for(:form_field_floating_label, type: :filled), "peer-focus:text-(--sp-color-primary)"
+    assert_includes classes_for(:form_field_label, floating: :filled), "peer-focus-within:text-(--sp-color-primary)"
   end
 
   def test_form_field_floating_label_includes_error_color_when_error
-    assert_includes classes_for(:form_field_floating_label, type: :filled, error: true), "text-(--sp-color-error)"
+    assert_includes classes_for(:form_field_label, floating: :filled, error: true), "text-(--sp-color-error)"
   end
 
   def test_form_field_floating_label_excludes_focus_color_when_error
-    refute_includes classes_for(:form_field_floating_label, type: :filled, error: true),
-                    "peer-focus:text-(--sp-color-primary)"
+    refute_includes classes_for(:form_field_label, floating: :filled, error: true),
+                    "peer-focus-within:text-(--sp-color-primary)"
   end
 
   # :form_field_choice_items

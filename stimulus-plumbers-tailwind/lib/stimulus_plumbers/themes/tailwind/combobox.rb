@@ -4,8 +4,13 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Combobox
+        # ── Container / popover ───────────────────────────────────────────────
+        CONTAINER = %w[relative].freeze
+        POPOVER   = %w[absolute top-full left-0 min-w-full].freeze
+
+        # ── Trigger ───────────────────────────────────────────────────────────
         TRIGGER = %w[
-          w-full rounded-(--sp-radius-md) border border-(--sp-color-muted-fg)
+          w-full rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
           px-(--sp-space-3) py-(--sp-space-2)
           text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
           focus:outline-none focus:ring-2 focus:ring-(--sp-focus-ring-color)
@@ -13,7 +18,7 @@ module StimulusPlumbers
 
         TRIGGER_GROUP = %w[
           flex items-center gap-(--sp-space-2) overflow-hidden
-          rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) bg-(--sp-color-bg)
+          rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) hover:border-(--sp-color-fg) bg-(--sp-color-bg)
           px-(--sp-space-3) py-(--sp-space-2)
           focus-within:outline-none focus-within:ring-2 focus-within:ring-(--sp-focus-ring-color)
           [&>input]:border-0 [&>input]:rounded-none
@@ -22,8 +27,9 @@ module StimulusPlumbers
           [&>input]:focus:ring-0
         ].freeze
 
+        # ── Listbox / options ─────────────────────────────────────────────────
         LISTBOX = %w[
-          py-(--sp-space-1) overflow-y-auto max-h-60
+          py-(--sp-space-1) overflow-y-auto max-h-60 min-h-(--sp-space-6)
         ].freeze
 
         OPTION_BASE = %w[
@@ -44,6 +50,7 @@ module StimulusPlumbers
 
         OPTION_GROUP = %w[py-(--sp-space-1)].freeze
 
+        # ── Typeahead states ──────────────────────────────────────────────────
         TYPEAHEAD_LOADING = %w[
           flex items-center justify-center
           py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
@@ -54,17 +61,15 @@ module StimulusPlumbers
           py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
+        # ── Time picker ───────────────────────────────────────────────────────
         TIME             = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
         TIME_DRUM_UNIT   = %w[flex-1 min-w-0].freeze
         TIME_DRUM_PERIOD = %w[shrink-0].freeze
 
-        DATE_NAV = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
-
-        DATE_NAV_BTN   = %w[size-(--sp-control-size)].freeze
+        # ── Date navigation ───────────────────────────────────────────────────
+        DATE_NAV       = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
+        DATE_NAV_BTN   = %w[].freeze
         DATE_NAV_TITLE = %w[flex-1 text-center].freeze
-
-        CONTAINER = %w[relative].freeze
-        POPOVER   = %w[absolute top-full left-0 min-w-full].freeze
 
         private
 
@@ -107,7 +112,7 @@ module StimulusPlumbers
         end
 
         def combobox_typeahead_loading_icon_classes
-          { classes: klasses("size-(--sp-icon-size)", "animate-spin") }
+          { classes: klasses("size-(--sp-icon-size-md)", "animate-spin") }
         end
 
         def combobox_typeahead_empty_classes

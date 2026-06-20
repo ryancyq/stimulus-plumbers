@@ -17,3 +17,12 @@
     <%= group.button("Messages", type: :outline) %>
   <% end %>
 </div>
+
+<div id="button-group-icons">
+  <%# ── Group with icons ────────────────────────────────────────────────── %>
+  <%= sp_button_group do |group| %>
+    <%= group.button("Save",   icon_leading: :check) %>
+    <%= group.button("Delete", icon_leading: :trash, variant: :destructive) %>
+    <%= group.button(icon_leading: :close, aria: { label: "Close" }) %>
+  <% end %>
+</div>

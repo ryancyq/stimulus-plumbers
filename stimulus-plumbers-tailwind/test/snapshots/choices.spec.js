@@ -167,6 +167,16 @@ test.describe("collection checkbox", () => {
   });
 });
 
+// ── Card variants ─────────────────────────────────────────────────────────
+
+test.describe("card variants", () => {
+  test("all variants selected", async ({ page }) => {
+    await expect(page.locator("#choices-card-variants")).toHaveScreenshot(
+      "card-variants.png",
+    );
+  });
+});
+
 // ── Error states ─────────────────────────────────────────────────────────
 
 test.describe("error states", () => {

@@ -4,34 +4,7 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Link
-        VARIANTS = {
-          default:     %w[
-            [--link-color:var(--sp-color-primary)]
-            [--link-ring:var(--sp-color-primary)]
-            [--link-bg:var(--sp-color-primary)]
-          ].freeze,
-          success:     %w[
-            [--link-color:var(--sp-color-success)]
-            [--link-ring:var(--sp-color-success-ring)]
-            [--link-bg:var(--sp-color-success)]
-          ].freeze,
-          destructive: %w[
-            [--link-color:var(--sp-color-destructive)]
-            [--link-ring:var(--sp-color-destructive)]
-            [--link-bg:var(--sp-color-destructive)]
-          ].freeze,
-          warning:     %w[
-            [--link-color:var(--sp-color-warning)]
-            [--link-ring:var(--sp-color-warning-ring)]
-            [--link-bg:var(--sp-color-warning)]
-          ].freeze,
-          info:        %w[
-            [--link-color:var(--sp-color-info)]
-            [--link-ring:var(--sp-color-info-ring)]
-            [--link-bg:var(--sp-color-info)]
-          ].freeze
-        }.freeze
-
+        # ── Type styles ───────────────────────────────────────────────────────
         BASE = [
           *Control::BASE,
           "inline-flex items-center gap-(--sp-space-1)",
@@ -65,6 +38,35 @@ module StimulusPlumbers
           "focus-visible:ring-(--link-ring)"
         ].freeze
 
+        # ── Color tokens ──────────────────────────────────────────────────────
+        VARIANTS = {
+          default:     %w[
+            [--link-color:var(--sp-color-primary)]
+            [--link-ring:var(--sp-color-primary)]
+            [--link-bg:var(--sp-color-primary)]
+          ].freeze,
+          success:     %w[
+            [--link-color:var(--sp-color-success)]
+            [--link-ring:var(--sp-color-success-ring)]
+            [--link-bg:var(--sp-color-success)]
+          ].freeze,
+          destructive: %w[
+            [--link-color:var(--sp-color-destructive)]
+            [--link-ring:var(--sp-color-destructive)]
+            [--link-bg:var(--sp-color-destructive)]
+          ].freeze,
+          warning:     %w[
+            [--link-color:var(--sp-color-warning)]
+            [--link-ring:var(--sp-color-warning-ring)]
+            [--link-bg:var(--sp-color-warning)]
+          ].freeze,
+          info:        %w[
+            [--link-color:var(--sp-color-info)]
+            [--link-ring:var(--sp-color-info-ring)]
+            [--link-bg:var(--sp-color-info)]
+          ].freeze
+        }.freeze
+
         private
 
         def link_classes(type: :default, variant: :default)
@@ -77,7 +79,7 @@ module StimulusPlumbers
         end
 
         def link_icon_classes
-          { classes: klasses("size-(--sp-control-size)", "stroke-current") }
+          { classes: klasses("size-(--sp-icon-size-sm)", "stroke-current") }
         end
       end
     end

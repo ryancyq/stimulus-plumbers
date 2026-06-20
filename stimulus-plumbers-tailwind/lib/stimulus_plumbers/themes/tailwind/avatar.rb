@@ -4,6 +4,18 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Avatar
+        BASE = %w[
+          rounded-(--sp-radius-full)
+          overflow-hidden
+          inline-flex items-center justify-center
+        ].freeze
+
+        SIZES = {
+          sm: "size-(--sp-avatar-size-sm)",
+          md: "size-(--sp-avatar-size-md)",
+          lg: "size-(--sp-avatar-size-lg)"
+        }.freeze
+
         VARIANTS = {
           amber:   "text-white bg-amber-600",
           lime:    "text-white bg-lime-600",
@@ -18,18 +30,6 @@ module StimulusPlumbers
           violet:  "text-white bg-violet-600",
           blue:    "text-white bg-blue-600"
         }.freeze
-
-        SIZES = {
-          sm: "size-(--sp-icon-size)",
-          md: "size-(--sp-avatar-size)",
-          lg: "size-(--sp-avatar-size-lg)"
-        }.freeze
-
-        BASE = %w[
-          rounded-(--sp-radius-full)
-          overflow-hidden
-          inline-flex items-center justify-center
-        ].freeze
 
         def avatar_variants
           VARIANTS

@@ -73,7 +73,13 @@ module StimulusPlumbers
         field = Field.new(@template, **field_opts)
         field.render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error|
           Plumber::Dispatcher.build(
-            Fields::Renderer::FIELD.fetch(as), attribute, html_opts, opts, error, **input_opts
+            Fields::Renderer::FIELD.fetch(as),
+            attribute,
+            html_opts,
+            opts,
+            error,
+            floating: field.floating,
+            **input_opts
           ).call(self)
         end
       end
@@ -110,8 +116,10 @@ module StimulusPlumbers
         Fields::Fieldset.new(@template).render(object, attribute, field_id(attribute), field, &block)
       end
 
-      def render_input_group(error:, leading: nil, trailing: nil, **wrapper_opts, &block)
-        Components::InputGroup.new(@template).render(leading: leading, trailing: trailing, error: error, **wrapper_opts, &block)
+      def render_input_group(error:, floating: nil, leading: nil, trailing: nil, **group_options, &block)
+        Components::InputGroup.new(@template).render(
+          leading: leading, trailing: trailing, error: error, floating: floating, **group_options, &block
+        )
       end
 
       # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity

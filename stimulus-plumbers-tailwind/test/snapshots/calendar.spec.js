@@ -55,6 +55,20 @@ test.describe("stimulus calendar", () => {
       "stimulus-other-months.png",
     );
   });
+
+  test("selected day", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_stimulus?year=${FIXED_YEAR}&month=${FIXED_MONTH}`,
+    );
+    await page.waitForSelector("#calendar-stimulus [role='gridcell']");
+    await page
+      .locator("#calendar-stimulus [role='gridcell']")
+      .filter({ hasText: /^15$/ })
+      .click();
+    await expect(page.locator("#calendar-stimulus")).toHaveScreenshot(
+      "stimulus-selected.png",
+    );
+  });
 });
 
 // ── Turbo calendar ───────────────────────────────────────────────────────────
@@ -127,6 +141,26 @@ test.describe("turbo calendar", () => {
     await page.waitForSelector("[role='grid']");
     await expect(page.locator("#calendar-turbo")).toHaveScreenshot(
       "turbo-selectable-other-months.png",
+    );
+  });
+
+  test("selected date", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_turbo?year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+    );
+    await page.waitForSelector("#calendar-turbo-selected [role='grid']");
+    await expect(page.locator("#calendar-turbo-selected")).toHaveScreenshot(
+      "turbo-selected.png",
+    );
+  });
+
+  test("date range (since/till)", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_turbo?year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+    );
+    await page.waitForSelector("#calendar-turbo-range [role='grid']");
+    await expect(page.locator("#calendar-turbo-range")).toHaveScreenshot(
+      "turbo-range.png",
     );
   });
 

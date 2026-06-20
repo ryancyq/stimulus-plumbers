@@ -27,4 +27,14 @@ test.describe("list", () => {
       "with-icons.png",
     );
   });
+
+  test("nested sections", async ({ page }) => {
+    await expect(page.locator("#list-nested")).toHaveScreenshot("nested.png");
+  });
+
+  test("hierarchical sections", async ({ page }) => {
+    await expect(page.locator("#list-hierarchical")).toHaveScreenshot(
+      "hierarchical.png",
+    );
+  });
 });

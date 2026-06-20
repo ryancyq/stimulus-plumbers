@@ -33,6 +33,37 @@
   </div>
 </section>
 
+<section id="list-nested" class="sb-section">
+  <h2>Nested sections</h2>
+  <div class="sb-col">
+    <%= sp_list(heading_level: 3) do |list| %>
+      <%= list.section(title: "Reports") do |s| %>
+        <%= s.item("Summary", url: "/") %>
+        <%= s.section(title: "Detailed") do |sub| %>
+          <%= sub.item("Monthly", url: "/") %>
+          <%= sub.item("Annual",  url: "/") %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="list-hierarchical" class="sb-section">
+  <h2>Hierarchical sections</h2>
+  <div class="sb-col">
+    <%= sp_list(heading_level: 3) do |list| %>
+      <%= list.section(title: "Navigation") do |s| %>
+        <%= s.item("Dashboard", url: "/") %>
+        <%= s.item("Reports",   url: "/") %>
+      <% end %>
+      <%= list.section(title: "Account") do |s| %>
+        <%= s.item("Profile") %>
+        <%= s.item("Sign out") %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
 <section id="list-with-icons" class="sb-section">
   <h2>With icons</h2>
   <div class="sb-col">

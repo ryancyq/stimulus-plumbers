@@ -13,7 +13,10 @@ class ComponentsController < ApplicationController
     @selectable        = params[:selectable] == "true"
     @show_other_months = params[:show_other_months] == "true"
     @view              = params[:view]
-    @date              = Date.today
+    @date              = parse_date(:date) || Date.today
+    @selected_date     = parse_date(:selected_date)
+    @since             = parse_date(:since)
+    @till              = parse_date(:till)
   end
 
   def combobox; end
@@ -35,4 +38,10 @@ class ComponentsController < ApplicationController
   def icon; end
 
   def button_group; end
+
+  private
+
+  def parse_date(key)
+    Date.parse(params[key]) if params[key]
+  end
 end

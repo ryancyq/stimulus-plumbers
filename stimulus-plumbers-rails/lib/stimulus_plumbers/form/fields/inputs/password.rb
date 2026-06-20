@@ -5,9 +5,8 @@ module StimulusPlumbers
     module Fields
       module Inputs
         module Password
-          def password_field(attribute, options = {})
-            revealable = options.delete(:revealable) { false }
-            html_options = merge_html_options(theme.resolve(:form_field_input), options)
+          def password_field(attribute, floating: nil, revealable: false, **options)
+            html_options = merge_html_options(theme.resolve(:form_field_input, floating: floating), options)
             if revealable
               render_revealable_password(false) do
                 super(attribute, merge_html_options(html_options, { data: { input_formatter_target: "input" } }))
@@ -19,27 +18,27 @@ module StimulusPlumbers
 
           private
 
-          def render_password_input(attribute, html_opts, opts, error, revealable: false, **kwargs)
+          def render_password_input(attribute, html_opts, opts, error, floating: nil, revealable: false, **kwargs)
+            html_options = merge_html_options(
+              theme.resolve(:form_field_input, floating: floating, error: error),
+              opts,
+              html_opts,
+              kwargs
+            )
             if revealable
-              html_options = merge_html_options(
-                theme.resolve(:form_field_input, error: error),
-                opts,
-                html_opts,
-                kwargs,
-                { data: { input_formatter_target: "input" } }
-              )
-              render_revealable_password(error) do
-                @template.password_field(@object_name, attribute, objectify_options(html_options))
+              render_revealable_password(error, floating: floating) do
+                revealable_html_options = merge_html_options(html_options, { data: { input_formatter_target: "input" } })
+                @template.password_field(@object_name, attribute, objectify_options(revealable_html_options))
               end
             else
-              html_options = merge_html_options(theme.resolve(:form_field_input, error: error), opts, html_opts, kwargs)
               @template.password_field(@object_name, attribute, objectify_options(html_options))
             end
           end
 
-          def render_revealable_password(error, &block)
+          def render_revealable_password(error, floating: nil, &block)
             render_input_group(
               error:    error,
+              floating: floating,
               trailing: method(:reveal_button),
               **merge_html_options(
                 theme.resolve(:form_field_input_reveal, error: error),
@@ -49,15 +48,27 @@ module StimulusPlumbers
           end
 
           def reveal_button
-            html_options = merge_html_options(
-              theme.resolve(:form_field_input_button_reveal),
-              {
-                type: "button",
-                aria: { label: I18n.t("stimulus_plumbers.form.password.show", default: "Show password"), pressed: "false" },
-                data: { input_formatter_target: "toggle", action: "click->input-formatter#toggle" }
-              }
-            )
-            @template.content_tag(:button, "", **html_options)
+            build_reveal_button do
+              Components::Icon.new(@template).render(
+                name: "reveal",
+                aria: { hidden: "true" },
+                **theme.resolve(:button_icon)
+              )
+            end
+          end
+
+          def build_reveal_button(&block)
+            @template.content_tag(
+              :button,
+              **merge_html_options(
+                theme.resolve(:form_field_input_button_reveal),
+                {
+                  type: "button",
+                  aria: { label: I18n.t("stimulus_plumbers.form.password.show", default: "Show password"), pressed: "false" },
+                  data: { input_formatter_target: "toggle", action: "click->input-formatter#toggle" }
+                }
+              )
+            ) { @template.capture(&block) }
           end
         end
       end
