@@ -17,7 +17,8 @@ module StimulusPlumbers
         **Schema::ICON,
         **Schema::INPUT_GROUP,
         **Schema::LAYOUT,
-        **Schema::LINK
+        **Schema::LINK,
+        **Schema::TIMELINE
       }.freeze
 
       def name

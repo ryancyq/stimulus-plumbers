@@ -88,6 +88,7 @@ application.register('panner',                   PannerController)
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
 | `clipboard` | Copy-to-clipboard and paste interception | [docs/component/clipboard.md](docs/component/clipboard.md) |
 | `panner` | Keeps content element within viewport on resize | [docs/component/panner.md](docs/component/panner.md) |
+| `timeline` | Manages expandable timeline event items with keyboard navigation | — |
 
 ## Utilities
 

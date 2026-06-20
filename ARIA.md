@@ -69,3 +69,11 @@
 #### Avatar / Card / Icon
 - Decorative images/icons: `aria-hidden="true"` or `alt=""`
 - Meaningful images: descriptive `alt` text
+
+#### Timeline (`timeline_controller`)
+- List: `<ol>` (ordered) for chronological events; static timelines need no ARIA additions beyond semantic HTML
+- Each item: `<li>`; timestamp displayed via `<time datetime="YYYY-MM-DD">`
+- Indicators (dots, icons, avatars): decorative — always `aria-hidden="true"`
+- Expandable items: trigger `<button>` with `aria-expanded="false/true"` + `aria-controls` → detail element id; detail has `hidden` attribute toggled by controller
+- Trigger lives inside `<h3>` (`<h3><button aria-expanded>Title</button></h3>`) — WAI-ARIA Accordion pattern
+- Keyboard (interactive): Up/Down arrows move focus between item triggers; Enter/Space toggle expansion (native button behaviour)

@@ -50,9 +50,14 @@ stimulus-plumbers-rails/
 │       │   │   │   └── slots.rb
 │       │   │   └── section.rb
 │       │   ├── popover.rb                # sp_popover renderer; render (with wrapper) / build (without wrapper)
-│       │   └── popover/
-│       │       ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
-│       │       └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_attrs for caller to wire)
+│       │   ├── popover/
+│       │   │   ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
+│       │   │   └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_attrs for caller to wire)
+│       │   ├── timeline.rb               # sp_timeline renderer
+│       │   └── timeline/
+│       │       ├── event.rb              # Timeline::Event — renders <li> with indicator, time, heading, description, detail, actions
+│       │       └── event/
+│       │           └── slots.rb          # Timeline::Event::Slots — DSL with short-name setters (indicator/time/title/trigger/description/detail/actions)
 │       ├── helpers/
 │       │   ├── avatar_helper.rb          # sp_avatar
 │       │   ├── button_helper.rb          # sp_button, sp_button_group
@@ -65,7 +70,8 @@ stimulus-plumbers-rails/
 │       │   ├── link_helper.rb            # sp_link
 │       │   ├── list_helper.rb            # sp_list
 │       │   ├── plumber_helper.rb         # sp_dom_id
-│       │   └── popover_helper.rb         # sp_popover
+│       │   ├── popover_helper.rb         # sp_popover
+│       │   └── timeline_helper.rb        # sp_timeline
 │       ├── form/
 │       │   ├── builder.rb                # Form builder: f.field/collection_field/choice — dispatches via Fields::Renderer::FIELD/COLLECTION/CHOICE
 │       │   ├── base.rb                   # Form::Base — shared init, error?, described_by, render_hint/errors

@@ -1,0 +1,40 @@
+<h1>Timeline components</h1>
+
+<div id="timeline-static">
+  <h2>Static</h2>
+  <%= sp_timeline do |t| %>
+    <% t.event(datetime: "2024-01-15") do |e| %>
+      <% e.indicator %>
+      <% e.time { "January 2024" } %>
+      <% e.title { "Application UI code in Tailwind CSS" } %>
+      <% e.description { "Get access to over 20 pages including a dashboard layout." } %>
+      <% e.actions { sp_link("Learn more", url: "/") } %>
+    <% end %>
+    <% t.event(datetime: "2024-03-01") do |e| %>
+      <% e.indicator(icon: "book") %>
+      <% e.time { "March 2024" } %>
+      <% e.title { "Documentation published" } %>
+      <% e.description { "Full API documentation is now available." } %>
+    <% end %>
+  <% end %>
+</div>
+
+<div id="timeline-interactive">
+  <h2>Interactive</h2>
+  <%= sp_timeline(interactive: true) do |t| %>
+    <% t.event(datetime: "2024-01-15") do |e| %>
+      <% e.indicator %>
+      <% e.time { "January 2024" } %>
+      <% e.trigger { "Application UI code in Tailwind CSS" } %>
+      <% e.description { "Get access to over 20 pages including a dashboard layout." } %>
+      <% e.detail { "Full release notes: Added 20+ pages, improved performance by 40%." } %>
+      <% e.actions { sp_link("Learn more", url: "/") } %>
+    <% end %>
+    <% t.event(datetime: "2024-03-01") do |e| %>
+      <% e.indicator %>
+      <% e.time { "March 2024" } %>
+      <% e.trigger { "Documentation published" } %>
+      <% e.detail { "Full API documentation with examples is now available." } %>
+    <% end %>
+  <% end %>
+</div>
