@@ -1,6 +1,27 @@
 {
+  "model": "sonnet",
+  "theme": "dark-ansi",
+  "effortLevel": "medium",
+  "permissions": {
+    "allow": [
+      "Bash(bundle exec rake *)",
+      "Bash(bundle exec install *)",
+      "Bash(bundle exec rspec *)",
+      "Bash(bundle exec ruby *)",
+      "Bash(bundle exec rubocop *)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "git branch --show-current 2>/dev/null | xargs -I{} echo \"branch: {}\"",
+    "refreshInterval": 10
+  },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
-    "security-guidance@claude-plugins-official": true
+    "security-guidance@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true
   }
 }
