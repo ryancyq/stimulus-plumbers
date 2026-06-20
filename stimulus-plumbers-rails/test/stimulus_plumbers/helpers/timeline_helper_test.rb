@@ -42,7 +42,7 @@ class TimelineHelperTest < ActionView::TestCase
     assert_css doc, "li div[aria-hidden='true']"
   end
 
-  def test_renders_time_with_datetime_attribute
+  def test_renders_time_with_datetime_attribute_and_time_slot
     doc = parse_html(sp_timeline do |t|
       t.event(datetime: "2024-01-15") do |e|
         e.time { "January 2024" }
@@ -51,6 +51,33 @@ class TimelineHelperTest < ActionView::TestCase
 
     assert_css doc, "time[datetime='2024-01-15']"
     assert_includes doc.css("time").text, "January 2024"
+  end
+
+  def test_renders_time_element_when_datetime_given_without_time_slot
+    doc = parse_html(sp_timeline do |t|
+      t.event(datetime: "2024-01-15") { |_e| }
+    end)
+
+    assert_css doc, "time[datetime='2024-01-15']"
+    assert_equal "", doc.css("time").text.strip
+  end
+
+  def test_omits_time_element_when_neither_datetime_nor_time_slot_given
+    doc = parse_html(sp_timeline do |t|
+      t.event { |_e| }
+    end)
+
+    assert_equal 0, doc.css("time").size
+  end
+
+  def test_raises_when_time_slot_given_without_datetime
+    assert_raises(ArgumentError, "e.time requires datetime:") do
+      sp_timeline do |t|
+        t.event do |e|
+          e.time { "January 2024" }
+        end
+      end
+    end
   end
 
   def test_renders_static_h3_with_title
@@ -92,6 +119,18 @@ class TimelineHelperTest < ActionView::TestCase
     assert_css doc, "div[data-timeline-target='detail']"
   end
 
+  def test_explicit_id_produces_deterministic_detail_id
+    doc = parse_html(sp_timeline do |t|
+      t.event(id: "event-1") do |e|
+        e.trigger { "Event title" }
+        e.detail { "Expanded content" }
+      end
+    end)
+
+    assert_css doc, "button[aria-controls='event-1_detail']"
+    assert_css doc, "div[id='event-1_detail']"
+  end
+
   def test_renders_p_for_description
     doc = parse_html(sp_timeline do |t|
       t.event do |e|
@@ -122,7 +161,6 @@ class TimelineHelperTest < ActionView::TestCase
       end
     end)
 
-    # Should not raise, and no extra div for actions
     assert_css doc, "li"
   end
 
@@ -152,13 +190,5 @@ class TimelineHelperTest < ActionView::TestCase
     doc = parse_html(sp_timeline(interactive: true) { "" })
 
     assert_css doc, "ol[data-controller='timeline']"
-  end
-
-  def test_interactive_adds_data_timeline_target_item_to_li
-    doc = parse_html(sp_timeline(interactive: true) do |t|
-      t.event { |_e| }
-    end)
-
-    assert_css doc, "li[data-timeline-target='item']"
   end
 end

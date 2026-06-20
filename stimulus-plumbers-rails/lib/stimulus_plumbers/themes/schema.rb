@@ -197,22 +197,22 @@ module StimulusPlumbers
       }.freeze
 
       TIMELINE = {
-        timeline:                 {
+        timeline:                  {
           orientation: { default: :vertical, validate: %i[vertical horizontal] }
         }.freeze,
-        timeline_item:            {
+        timeline_item:             {
           orientation: { default: :vertical, validate: %i[vertical horizontal] }
         }.freeze,
-        timeline_indicator:       {
+        timeline_item_indicator:   {
           type: { default: :dot, validate: %i[dot icon] }
         }.freeze,
-        timeline_time:            {}.freeze,
-        timeline_title:           {}.freeze,
-        timeline_trigger_wrapper: {}.freeze,
-        timeline_trigger:         {}.freeze,
-        timeline_description:     {}.freeze,
-        timeline_detail:          {}.freeze,
-        timeline_actions:         {}.freeze
+        timeline_item_time:        {}.freeze,
+        timeline_item_title:       {}.freeze,
+        timeline_item_heading:     {}.freeze,
+        timeline_item_trigger:     {}.freeze,
+        timeline_item_description: {}.freeze,
+        timeline_item_detail:      {}.freeze,
+        timeline_item_actions:     {}.freeze
       }.freeze
     end
   end

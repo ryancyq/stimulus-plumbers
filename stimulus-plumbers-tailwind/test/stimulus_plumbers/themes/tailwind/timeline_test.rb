@@ -52,74 +52,74 @@ class TailwindThemeTimelineTest < Minitest::Test
     refute_includes classes_for(:timeline_item, orientation: :horizontal), "ms-6"
   end
 
-  def test_timeline_indicator_dot_includes_rounded_full_and_size_3
-    result = classes_for(:timeline_indicator, type: :dot)
+  def test_timeline_item_indicator_dot_includes_rounded_full_and_size_3
+    result = classes_for(:timeline_item_indicator, type: :dot)
 
     assert_includes result, "rounded-full"
     assert_includes result, "size-3"
   end
 
-  def test_timeline_indicator_dot_does_not_include_size_7
-    refute_includes classes_for(:timeline_indicator, type: :dot), "size-7"
+  def test_timeline_item_indicator_dot_does_not_include_size_7
+    refute_includes classes_for(:timeline_item_indicator, type: :dot), "size-7"
   end
 
-  def test_timeline_indicator_icon_includes_size_7_and_primary_bg
-    result = classes_for(:timeline_indicator, type: :icon)
+  def test_timeline_item_indicator_icon_includes_size_7_and_primary_bg
+    result = classes_for(:timeline_item_indicator, type: :icon)
 
     assert_includes result, "size-7"
     assert_includes result, "bg-(--sp-color-primary)"
   end
 
-  def test_timeline_indicator_icon_does_not_include_size_3
-    refute_includes classes_for(:timeline_indicator, type: :icon), "size-3"
+  def test_timeline_item_indicator_icon_does_not_include_size_3
+    refute_includes classes_for(:timeline_item_indicator, type: :icon), "size-3"
   end
 
-  def test_timeline_trigger_includes_focus_visible_ring_2
-    assert_includes classes_for(:timeline_trigger), "focus-visible:ring-2"
+  def test_timeline_item_trigger_includes_focus_visible_ring_2
+    assert_includes classes_for(:timeline_item_trigger), "focus-visible:ring-2"
   end
 
-  def test_timeline_trigger_includes_font_semibold
-    assert_includes classes_for(:timeline_trigger), "font-semibold"
+  def test_timeline_item_trigger_includes_font_semibold
+    assert_includes classes_for(:timeline_item_trigger), "font-semibold"
   end
 
-  def test_timeline_trigger_includes_hover_text_primary
-    assert_includes classes_for(:timeline_trigger), "hover:text-(--sp-color-primary)"
+  def test_timeline_item_trigger_includes_hover_text_primary
+    assert_includes classes_for(:timeline_item_trigger), "hover:text-(--sp-color-primary)"
   end
 
-  def test_timeline_actions_includes_flex_and_gap_2
-    result = classes_for(:timeline_actions)
+  def test_timeline_item_actions_includes_flex_and_gap_2
+    result = classes_for(:timeline_item_actions)
 
     assert_includes result, "flex"
     assert_includes result, "gap-2"
   end
 
-  def test_timeline_actions_includes_flex_wrap
-    assert_includes classes_for(:timeline_actions), "flex-wrap"
+  def test_timeline_item_actions_includes_flex_wrap
+    assert_includes classes_for(:timeline_item_actions), "flex-wrap"
   end
 
-  def test_timeline_time_includes_block_and_text_sm
-    result = classes_for(:timeline_time)
+  def test_timeline_item_time_includes_block_and_text_sm
+    result = classes_for(:timeline_item_time)
 
     assert_includes result, "block"
     assert_includes result, "text-sm"
   end
 
-  def test_timeline_title_includes_font_semibold_and_text_base
-    result = classes_for(:timeline_title)
+  def test_timeline_item_title_includes_font_semibold_and_text_base
+    result = classes_for(:timeline_item_title)
 
     assert_includes result, "font-semibold"
     assert_includes result, "text-base"
   end
 
-  def test_timeline_description_includes_text_sm
-    assert_includes classes_for(:timeline_description), "text-sm"
+  def test_timeline_item_description_includes_text_sm
+    assert_includes classes_for(:timeline_item_description), "text-sm"
   end
 
-  def test_timeline_detail_includes_mt_2
-    assert_includes classes_for(:timeline_detail), "mt-2"
+  def test_timeline_item_detail_includes_mt_2
+    assert_includes classes_for(:timeline_item_detail), "mt-2"
   end
 
-  def test_timeline_trigger_wrapper_includes_mb_1
-    assert_includes classes_for(:timeline_trigger_wrapper), "mb-1"
+  def test_timeline_item_heading_includes_mb_1
+    assert_includes classes_for(:timeline_item_heading), "mb-1"
   end
 end
