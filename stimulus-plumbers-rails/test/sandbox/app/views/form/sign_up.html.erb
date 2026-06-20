@@ -37,3 +37,14 @@
     <%= sp_button("Sign in", url: "#", variant: :secondary) %>
   <% end %>
 </div>
+
+<div id="sign-up-floating">
+  <%= sp_card do %>
+    <%= form_with(model: @form, url: "/users", scope: "sign_up_floating", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name,     as: :text,     label: "Full name",     required: true, floating: :outlined %>
+      <%= f.field :email,    as: :email,    label: "Email address", required: true, floating: :outlined %>
+      <%= f.field :password, as: :password, label: "Password",      required: true, floating: :outlined, revealable: true %>
+      <%= f.submit "Create account" %>
+    <% end %>
+  <% end %>
+</div>

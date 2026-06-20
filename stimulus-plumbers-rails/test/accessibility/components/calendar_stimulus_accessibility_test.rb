@@ -31,4 +31,11 @@ class CalendarStimulusAccessibilityTest < ApplicationAccessibilityTestCase
 
     assert_accessible context: "#calendar"
   end
+
+  def test_passes_wcag_with_selected_day
+    visit "/components/calendar_stimulus?year=2026&month=3"
+    find("#calendar [role='gridcell']", text: "15").click
+
+    assert_accessible context: "#calendar"
+  end
 end

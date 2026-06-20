@@ -57,3 +57,39 @@
     <% end %>
   </div>
 </section>
+
+<section id="floating-label-outlined-error">
+  <h2>Outlined variant — with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, floating: :outlined %>
+    <% end %>
+  </div>
+</section>
+
+<section id="floating-label-standard-error">
+  <h2>Standard variant — with error</h2>
+  <div class="sb-col">
+    <%= form_with(model: error_form, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name, as: :text, label: "Full name", required: true, floating: :standard %>
+    <% end %>
+  </div>
+</section>
+
+<section id="floating-label-filled-revealable">
+  <h2>Filled variant — revealable password</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :password, as: :password, label: "Password", required: true, floating: :filled, revealable: true %>
+    <% end %>
+  </div>
+</section>
+
+<section id="floating-label-outlined-revealable">
+  <h2>Outlined variant — revealable password</h2>
+  <div class="sb-col">
+    <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :password, as: :password, label: "Password", required: true, floating: :outlined, revealable: true %>
+    <% end %>
+  </div>
+</section>

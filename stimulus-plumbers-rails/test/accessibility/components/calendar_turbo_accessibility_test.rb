@@ -53,4 +53,18 @@ class CalendarTurboAccessibilityTest < ApplicationAccessibilityTestCase
 
     assert_accessible context: "#calendar"
   end
+
+  def test_passes_wcag_with_selected_date
+    # selectable grid with aria-selected="true" on the matching day cell
+    visit "/components/calendar_turbo?date=2026-06-01&selectable=true&selected_date=2026-06-15"
+
+    assert_accessible context: "#calendar"
+  end
+
+  def test_passes_wcag_with_date_range
+    # cells outside [since, till] range rendered with aria-disabled="true"
+    visit "/components/calendar_turbo?date=2026-06-01&selectable=true&since=2026-06-05&till=2026-06-25"
+
+    assert_accessible context: "#calendar"
+  end
 end

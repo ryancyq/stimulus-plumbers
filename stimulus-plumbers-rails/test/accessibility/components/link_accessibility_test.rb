@@ -8,6 +8,10 @@ class LinkAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/link"
   end
 
+  def test_inline_passes_wcag
+    assert_accessible context: "#link-inline"
+  end
+
   def test_default_passes_wcag
     assert_accessible context: "#link-default"
   end

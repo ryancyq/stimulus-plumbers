@@ -56,4 +56,22 @@
       <%= f.field :name, as: :search, label: "City" %>
     <% end %>
   </section>
+
+  <%# ── Dropdown (pre-selected) ──────────────────────────────────────────────── %>
+  <section id="combobox-dropdown-selected">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          value:   "ca",
+          options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
+        ) %>
+  </section>
+
+  <%# ── Dropdown (with disabled option) ──────────────────────────────────────── %>
+  <section id="combobox-dropdown-disabled">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          options: [["Australia", "au"], ["Canada", "ca", { disabled: true }], ["United States", "us"]]
+        ) %>
+  </section>
+
 </div>

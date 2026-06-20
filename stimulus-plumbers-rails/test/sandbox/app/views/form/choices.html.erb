@@ -144,3 +144,67 @@
           collection: genders, **coll %>
   <% end %>
 </section>
+
+<%# ── Collection Checkbox (card type — variants) ──────────────────────────── %>
+
+<section id="collection-checkbox-card-variants">
+  <h2>Collection Checkbox — Card variants</h2>
+
+  <%= form_with(model: @form, url: "/users", scope: "card_success", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          type:       :card,
+          variant:    :success,
+          collection: interests, **coll %>
+  <% end %>
+
+  <%= form_with(model: @form, url: "/users", scope: "card_warning", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          type:       :card,
+          variant:    :warning,
+          collection: interests, **coll %>
+  <% end %>
+
+  <%= form_with(model: @form, url: "/users", scope: "card_destructive", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          type:       :card,
+          variant:    :destructive,
+          collection: interests, **coll %>
+  <% end %>
+
+  <%= form_with(model: @form, url: "/users", scope: "card_info", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          type:       :card,
+          variant:    :info,
+          collection: interests, **coll %>
+  <% end %>
+</section>
+
+<%# ── Collection Checkbox (stacked layout) ────────────────────────────────── %>
+
+<section id="collection-checkbox-stacked">
+  <h2>Collection Checkbox — Stacked layout</h2>
+
+  <%= form_with(model: @form, url: "/users", scope: "coll_checkbox_stacked", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :interests, as: :check_box,
+          label:      "Interests",
+          layout:     :stacked,
+          collection: interests, **coll %>
+  <% end %>
+</section>
+
+<%# ── Collection Radio (stacked layout) ──────────────────────────────────── %>
+
+<section id="collection-radio-stacked">
+  <h2>Collection Radio — Stacked layout</h2>
+
+  <%= form_with(model: @form, url: "/users", scope: "coll_radio_stacked", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.choice :gender, as: :radio,
+          label:      "Gender",
+          layout:     :stacked,
+          collection: genders, **coll %>
+  <% end %>
+</section>
