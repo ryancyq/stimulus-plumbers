@@ -35,6 +35,33 @@
   </div>
 </section>
 
+<%# ── Preselected ────────────────────────────────────────────────────────── %>
+<section id="combobox-preselected" class="sb-section">
+  <h2>Preselected value</h2>
+  <div class="sb-col">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]],
+          value:   "ca"
+        ) %>
+  </div>
+</section>
+
+<%# ── Disabled option ────────────────────────────────────────────────────── %>
+<section id="combobox-disabled-option" class="sb-section">
+  <h2>Disabled option</h2>
+  <div class="sb-col">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          options: [
+            ["Australia",      "au"],
+            ["Canada (n/a)",   "ca", { disabled: true }],
+            ["United States",  "us"]
+          ]
+        ) %>
+  </div>
+</section>
+
 <%# ── Date (with error) ──────────────────────────────────────────────────── %>
 <section id="combobox-date-error" class="sb-section">
   <h2>Date picker — Error</h2>

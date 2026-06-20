@@ -25,4 +25,10 @@ test.describe("avatar", () => {
   test("sizes", async ({ page }) => {
     await expect(page.locator("#avatar-sizes")).toHaveScreenshot("sizes.png");
   });
+
+  test("explicit variants", async ({ page }) => {
+    await expect(page.locator("#avatar-variants")).toHaveScreenshot(
+      "variants.png",
+    );
+  });
 });

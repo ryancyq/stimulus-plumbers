@@ -14,3 +14,28 @@
     <% end %>
   </div>
 </section>
+
+<section id="calendar-turbo-selected" class="sb-section">
+  <h2>Turbo — selected date</h2>
+  <div class="sb-col">
+    <%= sp_calendar_turbo_month(
+          date:          Date.new(2024, 2, 1),
+          today:         Date.new(2024, 2, 29),
+          selectable:    true,
+          selected_date: Date.new(2024, 2, 15)
+        ) %>
+  </div>
+</section>
+
+<section id="calendar-turbo-range" class="sb-section">
+  <h2>Turbo — date range</h2>
+  <div class="sb-col">
+    <%= sp_calendar_turbo_month(
+          date:       Date.new(2024, 2, 1),
+          today:      Date.new(2024, 2, 29),
+          selectable: true,
+          since:      Date.new(2024, 2, 5),
+          till:       Date.new(2024, 2, 25)
+        ) %>
+  </div>
+</section>

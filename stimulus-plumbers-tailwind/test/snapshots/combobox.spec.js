@@ -90,6 +90,24 @@ test.describe("combobox", () => {
     await screenshotWithPanel(page, section, "typeahead-empty.png");
   });
 
+  test("preselected — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-preselected")).toHaveScreenshot(
+      "preselected-closed.png",
+    );
+  });
+
+  test("preselected — open", async ({ page }) => {
+    const section = page.locator("#combobox-preselected");
+    await section.getByRole("combobox", { name: "Country" }).click();
+    await screenshotWithPanel(page, section, "preselected-open.png");
+  });
+
+  test("disabled option — open", async ({ page }) => {
+    const section = page.locator("#combobox-disabled-option");
+    await section.getByRole("combobox", { name: "Country" }).click();
+    await screenshotWithPanel(page, section, "disabled-option-open.png");
+  });
+
   test("date error — closed", async ({ page }) => {
     await expect(page.locator("#combobox-date-error")).toHaveScreenshot(
       "date-error-closed.png",

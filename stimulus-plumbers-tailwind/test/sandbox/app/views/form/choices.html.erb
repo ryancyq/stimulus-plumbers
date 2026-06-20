@@ -231,6 +231,26 @@
   </div>
 </section>
 
+<%# ── Card variants ───────────────────────────────────────────────── %>
+
+<section id="choices-card-variants" class="sb-section">
+  <h2>Card variants</h2>
+  <div class="sb-row">
+    <% [:success, :warning, :destructive, :info].each do |variant| %>
+      <% vform = SignUp.new(gender: "option") %>
+      <%= form_with(model: vform, url: "/users", scope: "card_var_#{variant}", builder: StimulusPlumbers::Form::Builder) do |f| %>
+        <%= f.choice :gender, as: :radio,
+              label:        variant.to_s.capitalize,
+              type:         :card,
+              variant:      variant,
+              collection:   [["option", "Option"]],
+              value_method: :first,
+              text_method:  :last %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
 <%# ── Single Checkbox (with error) ────────────────────────────────── %>
 
 <section id="single-checkbox-error" class="sb-section">
