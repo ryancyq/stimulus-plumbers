@@ -17,7 +17,7 @@ describe('TimelineController', () => {
 
   const buildHTML = ({ expanded1 = false, expanded2 = false, omitAriaExpanded = false } = {}) => `
     <ol data-controller="timeline">
-      <li data-timeline-target="item">
+      <li>
         <h3>
           <button data-timeline-target="trigger"
                   data-action="timeline#toggle"
@@ -30,7 +30,7 @@ describe('TimelineController', () => {
           Detail 1
         </div>
       </li>
-      <li data-timeline-target="item">
+      <li>
         <h3>
           <button data-timeline-target="trigger"
                   data-action="timeline#toggle"
@@ -49,11 +49,10 @@ describe('TimelineController', () => {
   describe('toggle', () => {
     it('expands a collapsed item', async () => {
       document.body.innerHTML = buildHTML({ expanded1: false });
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const trigger = document.querySelectorAll('[data-timeline-target="trigger"]')[0];
       const detail = document.getElementById('detail-1');
-
       trigger.click();
 
       expect(trigger.getAttribute('aria-expanded')).toBe('true');
@@ -62,11 +61,10 @@ describe('TimelineController', () => {
 
     it('collapses an expanded item', async () => {
       document.body.innerHTML = buildHTML({ expanded1: true });
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const trigger = document.querySelectorAll('[data-timeline-target="trigger"]')[0];
       const detail = document.getElementById('detail-1');
-
       trigger.click();
 
       expect(trigger.getAttribute('aria-expanded')).toBe('false');
@@ -78,7 +76,7 @@ describe('TimelineController', () => {
     it('expands item', async () => {
       document.body.innerHTML = `
         <ol data-controller="timeline">
-          <li data-timeline-target="item">
+          <li>
             <h3>
               <button data-timeline-target="trigger"
                       data-action="timeline#expand"
@@ -91,11 +89,10 @@ describe('TimelineController', () => {
           </li>
         </ol>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const trigger = document.querySelector('[data-timeline-target="trigger"]');
       const detail = document.getElementById('detail-3');
-
       trigger.click();
 
       expect(trigger.getAttribute('aria-expanded')).toBe('true');
@@ -107,7 +104,7 @@ describe('TimelineController', () => {
     it('collapses item', async () => {
       document.body.innerHTML = `
         <ol data-controller="timeline">
-          <li data-timeline-target="item">
+          <li>
             <h3>
               <button data-timeline-target="trigger"
                       data-action="timeline#collapse"
@@ -120,11 +117,10 @@ describe('TimelineController', () => {
           </li>
         </ol>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const trigger = document.querySelector('[data-timeline-target="trigger"]');
       const detail = document.getElementById('detail-4');
-
       trigger.click();
 
       expect(trigger.getAttribute('aria-expanded')).toBe('false');
@@ -132,10 +128,10 @@ describe('TimelineController', () => {
     });
   });
 
-  describe('connect', () => {
+  describe('triggerTargetConnected', () => {
     it('initializes aria-expanded="false" on triggers that lack it', async () => {
       document.body.innerHTML = buildHTML({ omitAriaExpanded: true });
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const triggers = document.querySelectorAll('[data-timeline-target="trigger"]');
       triggers.forEach((trigger) => {
@@ -143,9 +139,9 @@ describe('TimelineController', () => {
       });
     });
 
-    it('does NOT overwrite existing aria-expanded value', async () => {
+    it('does not overwrite an existing aria-expanded value', async () => {
       document.body.innerHTML = buildHTML({ expanded1: true, expanded2: false });
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const triggers = document.querySelectorAll('[data-timeline-target="trigger"]');
       expect(triggers[0].getAttribute('aria-expanded')).toBe('true');
@@ -153,20 +149,57 @@ describe('TimelineController', () => {
     });
   });
 
+  describe('dateFormatValue', () => {
+    const FORMAT = JSON.stringify({ month: 'long', year: 'numeric', day: 'numeric', timeZone: 'UTC' });
+
+    it('fills empty <time datetime> elements with formatted text', async () => {
+      document.body.innerHTML = `
+        <ol data-controller="timeline" data-timeline-date-format-value='${FORMAT}'>
+          <time datetime="2024-01-15"></time>
+        </ol>
+      `;
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      expect(document.querySelector('time').textContent.trim()).not.toBe('');
+    });
+
+    it('does not overwrite <time> elements that already have text content', async () => {
+      document.body.innerHTML = `
+        <ol data-controller="timeline" data-timeline-date-format-value='${FORMAT}'>
+          <time datetime="2024-01-15">January 2024</time>
+        </ol>
+      `;
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      expect(document.querySelector('time').textContent.trim()).toBe('January 2024');
+    });
+
+    it('skips formatting when dateFormatValue is empty', async () => {
+      document.body.innerHTML = `
+        <ol data-controller="timeline">
+          <time datetime="2024-01-15"></time>
+        </ol>
+      `;
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      expect(document.querySelector('time').textContent.trim()).toBe('');
+    });
+  });
+
   describe('keyboard navigation', () => {
     beforeEach(async () => {
       document.body.innerHTML = buildHTML();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
-    it('ArrowDown moves focus to next trigger', () => {
+    it('ArrowDown moves focus to the next trigger', () => {
       const triggers = document.querySelectorAll('[data-timeline-target="trigger"]');
       triggers[0].focus();
       triggers[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
       expect(document.activeElement).toBe(triggers[1]);
     });
 
-    it('ArrowUp moves focus to previous trigger', () => {
+    it('ArrowUp moves focus to the previous trigger', () => {
       const triggers = document.querySelectorAll('[data-timeline-target="trigger"]');
       triggers[1].focus();
       triggers[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
@@ -184,6 +217,20 @@ describe('TimelineController', () => {
       const triggers = document.querySelectorAll('[data-timeline-target="trigger"]');
       triggers[0].focus();
       triggers[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+      expect(document.activeElement).toBe(triggers[triggers.length - 1]);
+    });
+
+    it('Home moves focus to first trigger', () => {
+      const triggers = document.querySelectorAll('[data-timeline-target="trigger"]');
+      triggers[1].focus();
+      triggers[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+      expect(document.activeElement).toBe(triggers[0]);
+    });
+
+    it('End moves focus to last trigger', () => {
+      const triggers = document.querySelectorAll('[data-timeline-target="trigger"]');
+      triggers[0].focus();
+      triggers[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
       expect(document.activeElement).toBe(triggers[triggers.length - 1]);
     });
   });

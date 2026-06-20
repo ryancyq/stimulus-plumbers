@@ -1,26 +1,19 @@
 import { Controller } from '@hotwired/stimulus';
+import { DateFormatter } from '../plumbers/formatters/date';
 
 export default class extends Controller {
-  static targets = ['trigger', 'detail', 'item'];
+  static targets = ['trigger', 'detail'];
   static values = {
-    orientation: { type: String, default: 'vertical' },
+    dateFormat: { type: Object, default: {} },
   };
 
   connect() {
-    this.triggerTargets.forEach((trigger) => {
-      if (!trigger.hasAttribute('aria-expanded')) {
-        trigger.setAttribute('aria-expanded', 'false');
-      }
-    });
+    this.formatTimes();
   }
 
   toggle(event) {
     const trigger = event.currentTarget;
-    if (trigger.getAttribute('aria-expanded') === 'true') {
-      this.collapseItem(trigger);
-    } else {
-      this.expandItem(trigger);
-    }
+    trigger.getAttribute('aria-expanded') === 'true' ? this.collapseItem(trigger) : this.expandItem(trigger);
   }
 
   expand(event) {
@@ -44,6 +37,7 @@ export default class extends Controller {
   }
 
   triggerTargetConnected(trigger) {
+    if (!trigger.hasAttribute('aria-expanded')) trigger.setAttribute('aria-expanded', 'false');
     trigger.addEventListener('keydown', this.onKeydown);
   }
 
@@ -51,9 +45,19 @@ export default class extends Controller {
     trigger.removeEventListener('keydown', this.onKeydown);
   }
 
+  formatTimes() {
+    if (!Object.keys(this.dateFormatValue).length) return;
+    this.element.querySelectorAll('time[datetime]').forEach((el) => {
+      if (el.textContent.trim()) return;
+      const formatted = DateFormatter.format(el.getAttribute('datetime'), this.dateFormatValue);
+      if (formatted) el.textContent = formatted;
+    });
+  }
+
   onKeydown = (event) => {
     const triggers = this.triggerTargets;
     const index = triggers.indexOf(event.currentTarget);
+    if (index === -1) return;
 
     switch (event.key) {
       case 'ArrowDown':
