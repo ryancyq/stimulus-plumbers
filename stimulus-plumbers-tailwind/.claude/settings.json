@@ -1,12 +1,11 @@
 {
+  "enabledPlugins": {
+    "ruby-lsp@claude-plugins-official": true
+  },
   "permissions": {
     "allow": [
       "Bash(bundle install*)",
-      "Bash(bundle exec rake*)",
-      "Bash(bundle exec rubocop*)",
-      "Bash(npm run build:css*)",
-      "Bash(npm run clean:snapshots*)",
-      "Bash(npm run test:snapshots*)"
+      "Bash(bundle exec rake*)"
     ]
   }
 }

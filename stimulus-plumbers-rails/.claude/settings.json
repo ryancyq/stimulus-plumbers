@@ -1,10 +1,11 @@
 {
+  "enabledPlugins": {
+    "ruby-lsp@claude-plugins-official": true
+  },
   "permissions": {
     "allow": [
       "Bash(bundle install*)",
-      "Bash(bundle exec rake*)",
-      "Bash(bundle exec rubocop*)",
-      "Bash(bundle exec appraisal*)"
+      "Bash(bundle exec rake*)"
     ]
   }
 }
