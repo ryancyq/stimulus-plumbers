@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           cache: npm
@@ -31,7 +31,7 @@ jobs:
         working-directory: stimulus-plumbers
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           cache: npm
@@ -48,7 +48,7 @@ jobs:
         working-directory: stimulus-plumbers
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           cache: npm
@@ -65,7 +65,7 @@ jobs:
         working-directory: stimulus-plumbers-tailwind
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           cache: npm
@@ -84,7 +84,7 @@ jobs:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/Gemfile"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: rm Gemfile.lock
 
       - uses: ruby/setup-ruby@v1
@@ -105,7 +105,7 @@ jobs:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-tailwind/Gemfile"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: rm Gemfile.lock
 
       - uses: ruby/setup-ruby@v1
@@ -126,7 +126,7 @@ jobs:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-mcp/Gemfile"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: rm Gemfile.lock
 
       - uses: ruby/setup-ruby@v1
