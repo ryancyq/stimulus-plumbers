@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { announce, connectTriggerToTarget, disconnectTriggerFromTarget } from '../../../src/accessibility/aria';
+import { announce, connectTriggerToTarget, disconnectTriggerFromTarget, setHidden } from '../../../src/accessibility/aria';
 
 describe('ARIA utilities', () => {
   let trigger;
@@ -228,6 +228,23 @@ describe('ARIA utilities', () => {
       expect(() => {
         disconnectTriggerFromTarget({ trigger, target: null });
       }).not.toThrow();
+    });
+  });
+
+  describe('setHidden', () => {
+    it('sets hidden attribute when true', () => {
+      const el = document.createElement('div');
+      document.body.appendChild(el);
+      setHidden(el, true);
+      expect(el.hasAttribute('hidden')).toBe(true);
+    });
+
+    it('removes hidden attribute when false', () => {
+      const el = document.createElement('div');
+      el.setAttribute('hidden', '');
+      document.body.appendChild(el);
+      setHidden(el, false);
+      expect(el.hasAttribute('hidden')).toBe(false);
     });
   });
 

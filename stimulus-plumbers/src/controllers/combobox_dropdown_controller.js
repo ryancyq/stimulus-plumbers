@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { Requestor } from '../requestor';
 import { filterOptions } from '../researcher';
+import { ListboxNavigation } from '../accessibility/keyboard';
 
 export default class extends Controller {
   static targets = ['listbox', 'loading', 'empty'];
@@ -12,6 +13,16 @@ export default class extends Controller {
 
   initialize() {
     this._requestor = new Requestor();
+  }
+
+  connect() {
+    if (this.hasListboxTarget) {
+      this.listboxNav = new ListboxNavigation(this.listboxTarget);
+    }
+  }
+
+  disconnect() {
+    this._requestor.cancel();
   }
 
   onSelect(event) {
@@ -29,27 +40,7 @@ export default class extends Controller {
   }
 
   onNavigate(event) {
-    if (!['ArrowUp', 'ArrowDown', 'Enter', ' '].includes(event.key)) return;
-    event.preventDefault();
-    if (event.key === 'Enter' || event.key === ' ') {
-      this.listboxTarget.querySelector('[aria-selected="true"]')?.click();
-      return;
-    }
-    this.step(event.key === 'ArrowDown' ? 1 : -1);
-  }
-
-  step(delta) {
-    const options = [
-      ...this.listboxTarget.querySelectorAll('[role="option"]:not([aria-disabled="true"]):not([hidden])'),
-    ];
-    if (!options.length) return;
-    const current = this.listboxTarget.querySelector('[aria-selected="true"]');
-    const idx = options.indexOf(current);
-    const next = delta > 0 ? options[Math.min(idx + 1, options.length - 1)] : options[Math.max(idx - 1, 0)];
-    if (!next || next === current) return;
-    options.forEach((o) => o.setAttribute('aria-selected', 'false'));
-    next.setAttribute('aria-selected', 'true');
-    next.scrollIntoView({ block: 'nearest' });
+    this.listboxNav?.handleKeyDown(event);
   }
 
   filter(query) {
@@ -89,9 +80,5 @@ export default class extends Controller {
 
   setEmpty(on) {
     if (this.hasEmptyTarget) this.emptyTarget.hidden = !on;
-  }
-
-  disconnect() {
-    this._requestor.cancel();
   }
 }

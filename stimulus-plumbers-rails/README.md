@@ -51,6 +51,7 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 | Combobox — time | `sp_combobox_time` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_time) |
 | Calendar | `sp_calendar_month` | [docs/component/calendar.md](docs/component/calendar.md) |
 | Popover | `sp_popover` | [docs/component/popover.md](docs/component/popover.md) |
+| Timeline | `sp_timeline` | [docs/component/timeline.md](docs/component/timeline.md) |
 | Modal | — (JS only) | [docs/component/modal.md](docs/component/modal.md) |
 
 ## Form Builder

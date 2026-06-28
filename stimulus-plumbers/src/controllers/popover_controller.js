@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { focusFirst } from '../accessibility/focus';
+import { announce } from '../accessibility/aria';
 import { attachContentLoader, attachDismisser, attachVisibility } from '../plumbers';
 
 export default class extends Controller {
@@ -11,6 +12,8 @@ export default class extends Controller {
     reload: { type: String, default: 'never' },
     staleAfter: { type: Number, default: 3600 },
     closeOnSelect: { type: Boolean, default: true },
+    announceOpen: { type: String, default: 'Panel opened' },
+    announceClose: { type: String, default: 'Panel closed' },
   };
 
   connect() {
@@ -55,10 +58,12 @@ export default class extends Controller {
   async shown() {
     await this.load();
     if (this.hasPanelTarget) focusFirst(this.panelTarget);
+    announce(this.announceOpenValue);
   }
 
   async hidden() {
     if (this.hasTriggerTarget) this.triggerTarget.focus();
+    announce(this.announceCloseValue);
   }
 
   canLoad() {

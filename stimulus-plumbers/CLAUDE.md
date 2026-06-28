@@ -53,6 +53,7 @@ stimulus-plumbers/
 - import statements should not end with .js
 - **Unit tests** using Vitest
 - **Lint tests** (eslint)
+- **Accessibility helpers** — use `RovingTabIndex.activate()` / `ListboxNavigation` / `FocusTrap` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract.
 
 ## WCAG / ARIA Reference
 See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns. Controllers in this package are responsible for keyboard navigation, focus management, and dynamic ARIA state.

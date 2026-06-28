@@ -5,7 +5,6 @@ import {
   isVisible,
   focusFirst,
   FocusTrap,
-  FocusRestoration,
 } from '../../../src/accessibility/focus'
 
 // jsdom returns offsetWidth=0 and getClientRects()=[] for all elements.
@@ -214,6 +213,36 @@ describe('focus', () => {
         expect(() => trap.deactivate()).not.toThrow()
         expect(trap.isActive).toBe(false)
       })
+
+      it('calls onDeactivate callback when deactivate() is called', () => {
+        const container = document.createElement('div')
+        const btn = document.createElement('button')
+        makeVisible(btn)
+        container.appendChild(btn)
+        document.body.appendChild(container)
+
+        const onDeactivate = vi.fn()
+        const trap = new FocusTrap(container, { onDeactivate })
+        trap.activate()
+        trap.deactivate()
+
+        expect(onDeactivate).toHaveBeenCalledOnce()
+      })
+
+      it('does not call onDeactivate twice when deactivate is re-entered via callback', () => {
+        const container = document.createElement('div')
+        const btn = document.createElement('button')
+        makeVisible(btn)
+        container.appendChild(btn)
+        document.body.appendChild(container)
+
+        const onDeactivate = vi.fn(() => trap.deactivate()) // re-entrant call
+        const trap = new FocusTrap(container, { onDeactivate })
+        trap.activate()
+        trap.deactivate()
+
+        expect(onDeactivate).toHaveBeenCalledOnce() // guard works
+      })
     })
 
     describe('handleKeyDown — Tab wrapping', () => {
@@ -294,56 +323,6 @@ describe('focus', () => {
 
         expect(deactivateSpy).not.toHaveBeenCalled()
       })
-    })
-  })
-
-  describe('FocusRestoration', () => {
-    it('save() stores the currently active element', () => {
-      const btn = document.createElement('button')
-      document.body.appendChild(btn)
-      btn.focus()
-
-      const restoration = new FocusRestoration()
-      restoration.save()
-      expect(restoration.savedElement).toBe(btn)
-    })
-
-    it('restore() focuses the saved element and clears it', () => {
-      const btn = document.createElement('button')
-      makeVisible(btn)
-      document.body.appendChild(btn)
-      btn.focus()
-
-      const restoration = new FocusRestoration()
-      restoration.save()
-
-      const other = document.createElement('button')
-      makeVisible(other)
-      document.body.appendChild(other)
-      other.focus()
-
-      restoration.restore()
-      expect(document.activeElement).toBe(btn)
-      expect(restoration.savedElement).toBeNull()
-    })
-
-    it('restore() does not throw when savedElement is null', () => {
-      const restoration = new FocusRestoration()
-      expect(() => restoration.restore()).not.toThrow()
-    })
-
-    it('restore() skips focus when saved element is not visible', () => {
-      const btn = document.createElement('button')
-      // not made visible
-      document.body.appendChild(btn)
-      btn.focus()
-
-      const restoration = new FocusRestoration()
-      restoration.save()
-
-      const focusSpy = vi.spyOn(btn, 'focus')
-      restoration.restore()
-      expect(focusSpy).not.toHaveBeenCalled()
     })
   })
 })

@@ -22,7 +22,10 @@ export default class extends Controller {
       modal.addEventListener('cancel', this.onCancel);
       modal.addEventListener('click', this.onBackdropClick);
     } else {
-      this.focusTrap = new FocusTrap(modal, { escapeDeactivates: true });
+      this.focusTrap = new FocusTrap(modal, {
+        escapeDeactivates: true,
+        onDeactivate: () => this.close(),
+      });
       attachDismisser(this, { element: modal });
     }
   }
