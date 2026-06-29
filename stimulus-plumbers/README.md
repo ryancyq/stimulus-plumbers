@@ -118,11 +118,11 @@ Wire event adapters via `data-action`; call programmatic APIs directly from othe
 npm install
 
 npm test              # run all tests (Vitest)
-npm run test:ui       # Vitest UI
-npm run test:coverage # coverage report
-npm run lint          # ESLint
-npm run format:write  # Prettier (write)
-npm run build         # build dist/
+node --run test:ui       # Vitest UI
+node --run test:coverage # coverage report
+node --run lint          # ESLint
+node --run format:write  # Prettier (write)
+node --run build         # build dist/
 ```
 
 ## License

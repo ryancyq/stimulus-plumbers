@@ -11,7 +11,7 @@ module StimulusPlumbers
         unless File.exist?(MANIFEST_PATH)
           StimulusPlumbers::Logger.warn(
             "controllers.manifest.json not found at #{MANIFEST_PATH}. " \
-            "Run `npm run build:manifest` in stimulus-plumbers/ to generate it."
+            "Run `node --run build:manifest` in stimulus-plumbers/ to generate it."
           )
           return {}
         end

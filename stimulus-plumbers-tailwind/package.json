@@ -4,9 +4,9 @@
   "scripts": {
     "build:css": "./node_modules/.bin/tailwindcss -i test/sandbox/tailwind.css -o test/sandbox/public/tailwind.css",
     "clean:snapshots": "rm -rf test/snapshots/__screenshots__",
-    "test:snapshots": "npm run build:css && playwright test",
-    "test:snapshots:ui": "npm run build:css && playwright test --ui",
-    "test:snapshots:update": "npm run build:css && playwright test --update-snapshots",
+    "test:snapshots": "node --run build:css && playwright test",
+    "test:snapshots:ui": "node --run build:css && playwright test --ui",
+    "test:snapshots:update": "node --run build:css && playwright test --update-snapshots",
     "format:write": "prettier --write \"test/snapshots/**/*.js\"",
     "format:check": "prettier --check \"test/snapshots/**/*.js\""
   },

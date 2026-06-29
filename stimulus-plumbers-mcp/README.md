@@ -90,7 +90,7 @@ Two equivalent entry points — use whichever fits your IDE config:
 bundle install
 
 # Build the Stimulus controller manifest (pure Node, no toolchain install needed)
-cd ../stimulus-plumbers && npm run build:manifest && cd -
+cd ../stimulus-plumbers && node --run build:manifest && cd -
 
 # Start the server
 bundle exec ruby bin/server

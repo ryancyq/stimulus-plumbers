@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run build:manifest",
+    "build": "vite build && node --run build:manifest",
     "build:manifest": "node scripts/build-controllers-manifest.mjs",
     "preview": "vite preview",
     "test": "vitest run",
@@ -51,6 +51,6 @@
     "vitest": "^4.1.4"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   }
 }

@@ -85,8 +85,8 @@ bundle install
 npm install
 
 bundle exec rake test:unit    # unit tests
-npm run test:snapshots         # visual snapshot tests (Playwright)
-npm run test:snapshots:update  # regenerate baseline screenshots
+node --run test:snapshots         # visual snapshot tests (Playwright)
+node --run test:snapshots:update  # regenerate baseline screenshots
 bundle exec rake rubocop       # lint
 bundle exec rake coverage      # run tests with coverage + collate report
 ```

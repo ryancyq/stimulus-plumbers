@@ -5,7 +5,10 @@
   "permissions": {
     "allow": [
       "Bash(bundle install*)",
-      "Bash(bundle exec rake*)"
+      "Bash(bundle exec rake*)",
+      "Bash(node --run build:css*)",
+      "Bash(node --run clean:snapshots*)",
+      "Bash(node --run test:snapshots*)"
     ]
   }
 }
