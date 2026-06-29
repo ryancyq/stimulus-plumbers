@@ -258,9 +258,8 @@ test.describe("collection radio", () => {
 
       test("selected", async ({ page }) => {
         await page
-          .locator('#collection-radio-button-inline input[type="radio"]')
+          .locator("#collection-radio-button-inline label")
           .first()
-          .locator("xpath=ancestor::label")
           .click();
         await expect(
           page.locator("#collection-radio-button-inline"),
@@ -277,9 +276,8 @@ test.describe("collection radio", () => {
 
       test("selected", async ({ page }) => {
         await page
-          .locator('#collection-radio-button-stacked input[type="radio"]')
+          .locator("#collection-radio-button-stacked label")
           .first()
-          .locator("xpath=ancestor::label")
           .click();
         await expect(
           page.locator("#collection-radio-button-stacked"),
@@ -298,9 +296,8 @@ test.describe("collection radio", () => {
 
       test("selected", async ({ page }) => {
         await page
-          .locator('#collection-radio-card-inline input[type="radio"]')
+          .locator("#collection-radio-card-inline label")
           .first()
-          .locator("xpath=ancestor::label")
           .click();
         await expect(
           page.locator("#collection-radio-card-inline"),
@@ -317,9 +314,8 @@ test.describe("collection radio", () => {
 
       test("selected", async ({ page }) => {
         await page
-          .locator('#collection-radio-card-stacked input[type="radio"]')
+          .locator("#collection-radio-card-stacked label")
           .first()
-          .locator("xpath=ancestor::label")
           .click();
         await expect(
           page.locator("#collection-radio-card-stacked"),
