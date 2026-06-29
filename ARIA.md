@@ -15,6 +15,15 @@
 | 4.1.2 Name, Role, Value | A | All UI components must have accessible name, role, and state via ARIA or native semantics; state must stay in sync dynamically (e.g. `aria-expanded`, `aria-selected`, `aria-checked`) |
 | 4.1.3 Status Messages | AA | Status/error messages announced via `role="status"` or `aria-live` without focus move |
 
+## JS Keyboard Navigation Patterns
+
+Two helper classes handle keyboard navigation in controllers — see [`stimulus-plumbers/docs/accessibility/design.md`](stimulus-plumbers/docs/accessibility/design.md) for full API.
+
+| Pattern | Class | When to use |
+| --- | --- | --- |
+| Roving tabindex | `RovingTabIndex` | Disclosure widgets, trees, toolbars — focus moves between items |
+| Managed focus / listbox | `ListboxNavigation` | Combobox listbox, `role="listbox"` — input keeps focus, `aria-selected` moves |
+
 ## Component-Specific Patterns (APG)
 
 #### Modal (`modal_controller`)
@@ -69,3 +78,11 @@
 #### Avatar / Card / Icon
 - Decorative images/icons: `aria-hidden="true"` or `alt=""`
 - Meaningful images: descriptive `alt` text
+
+#### Timeline (`timeline_controller`)
+- List: `<ol>` (ordered) for chronological events; static timelines need no ARIA additions beyond semantic HTML
+- Each item: `<li>`; timestamp displayed via `<time datetime="YYYY-MM-DD">`
+- Indicators (dots, icons, avatars): decorative — always `aria-hidden="true"`
+- Expandable items: trigger `<button>` with `aria-expanded="false/true"` + `aria-controls` → detail element id; detail has `hidden` attribute toggled by controller
+- Trigger lives inside `<h3>` (`<h3><button aria-expanded>Title</button></h3>`) — WAI-ARIA Accordion pattern
+- Keyboard (interactive): Up/Down arrows move focus between item triggers; Home/End jump to first/last trigger; Enter/Space toggle expansion (native button behaviour)

@@ -39,6 +39,8 @@ class ComponentsController < ApplicationController
 
   def button_group; end
 
+  def timeline; end
+
   private
 
   def parse_date(key)

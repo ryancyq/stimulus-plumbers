@@ -37,6 +37,8 @@ class ComponentsController < ApplicationController
 
   def popover; end
 
+  def timeline; end
+
   private
 
   def month_date_from_params(year_key, month_key)

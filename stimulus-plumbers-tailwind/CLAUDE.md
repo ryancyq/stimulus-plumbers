@@ -62,6 +62,8 @@ stimulus-plumbers-tailwind/
 ## Styling Guidelines
 - **Always use CSS custom properties (CSS variables) instead of hardcoded values** — colors, spacing, sizing, and other design tokens must reference CSS variables (e.g., `var(--sp-color-primary)`) so consumers can theme the library without overriding classes.
 
+> **Architecture decisions** (constant ownership, icon-only pattern, card style, floating fields) are documented in [docs/architecture.md](docs/architecture.md).
+
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
 - **Snapshot tests** using Playwright (`npm run test:snapshots`)
@@ -111,37 +113,16 @@ Four rules for sandbox views and their matching snapshot specs:
 
 **Coverage rule:** every resolver param that branches the output (`error:`, `variant:`, `size:`, `selected:`, `disabled:`, `hidden:`, `layout:`, `color:`, `type:`) needs both a positive assertion (`assert_includes`) and the corresponding negative case (`refute_includes` for the excluded class when the flag is off).
 
-## Theme Architecture
+**Use-case rule:** tests assert visual/behavioral outcomes, not CSS implementation choices.
 
-`StimulusPlumbers::Themes::TailwindTheme` extends `StimulusPlumbers::Themes::Base` and is split into concern modules under `StimulusPlumbers::Themes::Tailwind::*`. Each module provides CSS class resolution for one component family. The `Icon` module also owns the icon registry (`icons/`) which lazily parses SVG files from the bundled heroicons set and a `customs/` directory.
+- **Test names** describe what the user sees or the layout behavior — never the CSS mechanism.
+  - Bad: `test_track_uses_border_s`, `test_item_uses_ms_6_offset`
+  - Good: `test_indicator_is_in_flow_not_absolute`, `test_dot_uses_neutral_not_primary_color`
+- **Assert** semantic color tokens (`bg-(--sp-color-primary)`), visual properties (`font-semibold`, `text-sm`), and behavioral outcomes (`refute "absolute"` = in-flow, `assert "ring-4"` = halo).
+- **Don't assert** spacing/offset magic numbers (`mt-1.5`, `start-3`, `ms-6`, `pb-10`) or layout mechanism choices (`flex-1`, `relative`, `absolute`) — these express *how*, not *what*.
+- Exception: `refute_includes result, "absolute"` is a valid use-case assertion when the intent is "element is in normal flow".
 
-### Constant ownership rules
-
-- **No local aliases** — never re-export another module's constant (e.g. `MY_CONST = Other::CONST`). Always reference it directly at the call site.
-- **No `TYPES`/`VARIANTS` prefix redundancy** — name constants after what they represent, not where they live. `Button::VARIANTS` not `Button::BUTTON_VARIANTS`; `Card::VARIANTS` not `Card::CARD_VARIANTS`.
-- **Shared interactive foundation** — `Control::BASE` holds the CSS shared by all focusable, disableable controls (`font-medium`, `transition-colors`, focus ring tokens, `disabled:*`). Components add their ring color variable on top. Do not duplicate these classes in individual component constants.
-- **Composition over duplication** — when a constant is a superset of existing constants, compose with array splat: `[*Control::BASE, *Card::BASE, *Button::CARD, "extra-class"].freeze`.
-
-### Icon-only square pattern
-
-The core gem wraps button/link text in `<span>`; icon-only renders no `<span>`. The theme detects this via CSS:
-
-- `Button::LAYOUT` carries `[&:not(:has(>span))]:aspect-square [&:not(:has(>span))]:px-0` — applies to all non-card types. `fab`/`fab_outline` become circles.
-- `Link::BUTTON` carries the same two classes. `type: :card` is unaffected (wide `flex-1` layout).
-
-### Card style pattern
-
-Button, link, checkbox, and radio all share a unified card style. Key rules:
-
-- **`--card-ring` variable** — set by `Card::VARIANTS`, which maps `:default/:success/:destructive/:warning/:info` to the matching `--sp-color-*` value. Referenced by all card-type components via `Card::VARIANTS.fetch(variant, Card::VARIANTS[:default])`.
-- **Button card** (`type: :card`) — `Button::BASE` + `Button::CARD` layout + `Button::VARIANTS` (sets `--btn-*` vars) + `Button::TYPES[:card]`; `size:` is ignored.
-- **Link card** (`type: :card`) — `Link::CARD` composes `Control::BASE + Card::BASE + Button::CARD`; `Card::VARIANTS` sets `--card-ring`.
-- **Checkbox card** (`type: :card`) — input visible; label uses `has-[:checked]:border-(--card-ring)`; `Card::VARIANTS` applied to both input and label. Checkbox `button` type does not use `--card-ring`.
-- **Radio card/button** (`type: :card` or `type: :button`) — input is `hidden peer`; label uses `peer-checked:border-(--card-ring)`; `Card::VARIANTS` applied to both input and label for both types. The `variant:` param on `f.choice` selects the `Card::VARIANTS` entry.
-
-### Floating field keys
-
-Floating-label theme keys (`form_field_floating`, `form_field_floating_group`, `form_field_floating_label`) and their constants (`FLOATING_INPUT_*`, `FLOATING_GROUP_TYPES`, `FLOATING_LABEL_*`) live in `Form::Field` (`form/field.rb`), not `Form::Input`. Floating is a field-layout concern, not an input-element concern.
+## Theme Registration
 
 The theme is registered on load (via the Engine initializer in Rails, or directly otherwise):
 

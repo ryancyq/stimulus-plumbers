@@ -7,7 +7,7 @@ class StimulusManifestTest < Minitest::Test
     calendar-decade calendar-decade-selector calendar-month calendar-month-selector
     calendar-year calendar-year-selector clipboard combobox-date combobox-dropdown
     combobox-time dismisser flipper input-clearable input-combobox input-formatter
-    modal panner popover visibility
+    modal panner popover timeline visibility
   ].freeze
 
   def setup

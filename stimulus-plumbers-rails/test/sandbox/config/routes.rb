@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get :avatar
     get :divider
     get :icon
+    get :timeline
   end
 
   scope "/form", controller: "form" do

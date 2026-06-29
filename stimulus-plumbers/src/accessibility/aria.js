@@ -63,6 +63,12 @@ export const setPressed = (element, pressed) => setAriaState(element, 'aria-pres
 export const setChecked = (element, checked) => setAriaState(element, 'aria-checked', checked);
 
 /**
+ * Set or remove the hidden attribute
+ */
+export const setHidden = (element, hidden) =>
+  hidden ? element.setAttribute('hidden', '') : element.removeAttribute('hidden');
+
+/**
  * Update aria-disabled state and manage tabindex
  */
 export function setDisabled(element, disabled) {

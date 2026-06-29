@@ -59,6 +59,7 @@ stimulus-plumbers-mcp/     # Ruby gem: stimulus_plumbers_mcp — MCP server expo
 - **ARIA attribute tests** (roles, labels, states)
 - **Visual snapshot tests** using Playwright (`npm run test:snapshots` in `stimulus-plumbers-tailwind/`)
 - read html output from test output first during a11y violation analysis
+- **Test use cases, not implementation** — test names describe visual or behavioral outcomes; assertions target semantic tokens and observable effects, not specific CSS utilities or layout mechanisms. Bad: `test_track_uses_border_s`, `assert ms-6`. Good: `test_indicator_is_in_flow_not_absolute`, `assert bg-(--sp-color-primary)`.
 
 ## WCAG / ARIA Reference
 See [ARIA.md](ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns.

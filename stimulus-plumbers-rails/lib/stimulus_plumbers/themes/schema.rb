@@ -195,6 +195,37 @@ module StimulusPlumbers
         popover_trigger:   {}.freeze,
         popover:           {}.freeze
       }.freeze
+
+      TIMELINE = {
+        timeline:                          {
+          orientation: { default: :vertical, validate: %i[vertical horizontal] }
+        }.freeze,
+        timeline_item:                     {
+          orientation: { default: :vertical, validate: %i[vertical horizontal] }
+        }.freeze,
+        timeline_item_indicator:           {
+          type:        { default: :dot,      validate: %i[dot icon] },
+          orientation: { default: :vertical, validate: %i[vertical horizontal] }
+        }.freeze,
+        timeline_item_time:                {
+          type: { default: :default, validate: %i[default badge] }
+        }.freeze,
+        timeline_item_title:               {}.freeze,
+        timeline_item_heading:             {}.freeze,
+        timeline_item_trigger:             {}.freeze,
+        timeline_item_description:         {}.freeze,
+        timeline_item_detail:              {}.freeze,
+        timeline_item_actions:             {}.freeze,
+        timeline_item_indicator_dot:       {}.freeze,
+        timeline_item_connector:           {}.freeze,
+        timeline_item_content:             {}.freeze,
+        timeline_track_line:               {}.freeze,
+        timeline_item_indicator_icon_slot: {}.freeze,
+        timeline_group:                    {}.freeze,
+        timeline_group_section:            {}.freeze,
+        timeline_group_section_date:       {}.freeze,
+        timeline_group_section_list:       {}.freeze
+      }.freeze
     end
   end
 end

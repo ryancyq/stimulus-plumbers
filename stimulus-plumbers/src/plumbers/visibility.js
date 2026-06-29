@@ -1,5 +1,6 @@
 import Plumber from './plumber';
 import { visibilityConfig } from './plumber/config';
+import { setExpanded, setHidden } from '../accessibility/aria';
 
 const defaultOptions = {
   visibility: 'visibility',
@@ -62,8 +63,7 @@ export class Visibility extends Plumber {
       if (visible) target.classList.remove(hiddenClass);
       else target.classList.add(hiddenClass);
     } else {
-      if (visible) target.removeAttribute('hidden');
-      else target.setAttribute('hidden', true);
+      setHidden(target, !visible);
     }
   }
 
@@ -72,7 +72,7 @@ export class Visibility extends Plumber {
    * @param {boolean} isExpanded - True to mark as expanded, false to mark as collapsed
    */
   activate(isExpanded) {
-    if (this.activator) this.activator.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    if (this.activator) setExpanded(this.activator, isExpanded);
   }
 
   /**

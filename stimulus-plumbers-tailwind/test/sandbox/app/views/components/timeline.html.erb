@@ -1,0 +1,95 @@
+<h1>Timeline components</h1>
+
+<section id="timeline-static" class="sb-section">
+  <h2>Static</h2>
+  <div class="sb-col">
+    <%= sp_timeline do |t| %>
+      <% t.event(datetime: "2024-01-15") do |e| %>
+        <% e.with_indicator %>
+        <% e.with_time { "January 2024" } %>
+        <% e.with_title { "Application UI code in Tailwind CSS" } %>
+        <% e.with_description { "Get access to over 20 pages including a dashboard layout." } %>
+        <% e.with_actions { sp_link("Learn more", url: "/") } %>
+      <% end %>
+      <% t.event(datetime: "2024-03-01") do |e| %>
+        <% e.with_indicator(icon: "book") %>
+        <% e.with_time { "March 2024" } %>
+        <% e.with_title { "Documentation published" } %>
+        <% e.with_description { "Full API documentation is now available." } %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="timeline-interactive" class="sb-section">
+  <h2>Interactive</h2>
+  <div class="sb-col">
+    <%= sp_timeline(
+          interactive: true,
+          data: { "timeline-date-format-value": { month: "long", year: "numeric", day: "numeric", timeZone: "UTC" }.to_json }
+        ) do |t| %>
+      <% t.event(id: "ev-1", datetime: "2024-01-15") do |e| %>
+        <% e.with_indicator %>
+        <% e.with_trigger { "Application UI code in Tailwind CSS" } %>
+        <% e.with_description { "Get access to over 20 pages including a dashboard layout." } %>
+        <% e.with_detail { "Full release notes: Added 20+ pages, improved performance by 40%." } %>
+        <% e.with_actions { sp_link("Learn more", url: "/") } %>
+      <% end %>
+      <% t.event(id: "ev-2", datetime: "2024-03-01") do |e| %>
+        <% e.with_indicator %>
+        <% e.with_trigger { "Documentation published" } %>
+        <% e.with_detail { "Full API documentation with examples is now available." } %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="timeline-horizontal" class="sb-section">
+  <h2>Horizontal Stepper</h2>
+  <div class="sb-col">
+    <%= sp_timeline(orientation: :horizontal) do |t| %>
+      <% t.event(datetime: "2024-01-15") do |e| %>
+        <% e.with_indicator %>
+        <% e.with_time { "Jan 2024" } %>
+        <% e.with_title { "Project kickoff" } %>
+      <% end %>
+      <% t.event(datetime: "2024-03-01") do |e| %>
+        <% e.with_indicator(icon: "book") %>
+        <% e.with_time { "Mar 2024" } %>
+        <% e.with_title { "Documentation" } %>
+      <% end %>
+      <% t.event(datetime: "2024-06-01") do |e| %>
+        <% e.with_indicator %>
+        <% e.with_time { "Jun 2024" } %>
+        <% e.with_title { "Release" } %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="timeline-grouped" class="sb-section">
+  <h2>Grouped</h2>
+  <div class="sb-col">
+    <%= sp_timeline_group do |g| %>
+      <% g.section(date: "January 2025", datetime: "2025-01-15") do |t| %>
+        <% t.event(datetime: "2025-01-15") do |e| %>
+          <% e.with_indicator %>
+          <% e.with_title { "Application UI v1.0" } %>
+          <% e.with_description { "Initial release with 20+ pages." } %>
+        <% end %>
+        <% t.event(datetime: "2025-01-20") do |e| %>
+          <% e.with_indicator(icon: "check") %>
+          <% e.with_title { "Bug fixes shipped" } %>
+        <% end %>
+      <% end %>
+      <% g.section(date: "February 2025", datetime: "2025-02-01") do |t| %>
+        <% t.event(datetime: "2025-02-01") do |e| %>
+          <% e.with_indicator %>
+          <% e.with_title { "Documentation v2" } %>
+          <% e.with_description { "Full API docs published." } %>
+          <% e.with_actions { sp_link("Read docs", url: "/") } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

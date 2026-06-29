@@ -79,6 +79,10 @@ export class FocusTrap {
     if (returnElement && isVisible(returnElement)) {
       returnElement.focus();
     }
+
+    if (typeof this.options.onDeactivate === 'function') {
+      this.options.onDeactivate();
+    }
   }
 
   handleKeyDown = (event) => {
@@ -105,24 +109,4 @@ export class FocusTrap {
       firstElement.focus();
     }
   };
-}
-
-/**
- * Save and restore focus utility
- */
-export class FocusRestoration {
-  constructor() {
-    this.savedElement = null;
-  }
-
-  save() {
-    this.savedElement = document.activeElement;
-  }
-
-  restore() {
-    if (this.savedElement && isVisible(this.savedElement)) {
-      this.savedElement.focus();
-      this.savedElement = null;
-    }
-  }
 }

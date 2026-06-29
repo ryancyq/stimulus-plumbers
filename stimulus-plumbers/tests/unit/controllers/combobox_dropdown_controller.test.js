@@ -171,15 +171,15 @@ describe('ComboboxDropdownController', () => {
     })
 
     it('ignores unrelated keys', () => {
-      const ctrl = getController()
-      const spy = vi.spyOn(ctrl, 'step')
       const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+      const preventSpy = vi.spyOn(event, 'preventDefault')
       getController().onNavigate(event)
-      expect(spy).not.toHaveBeenCalled()
+      expect(preventSpy).not.toHaveBeenCalled()
+      expect(document.querySelector('[data-value="a"]').getAttribute('aria-selected')).toBe('true')
     })
   })
 
-  describe('step', () => {
+  describe('navigation via ListboxNavigation', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
         <div data-controller="combobox-dropdown">
@@ -193,8 +193,8 @@ describe('ComboboxDropdownController', () => {
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
-    it('advances selection forward', () => {
-      getController().step(1)
+    it('advances selection forward on ArrowDown', () => {
+      getController().onNavigate(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))
       expect(document.querySelector('[data-value="b"]').getAttribute('aria-selected')).toBe('true')
       expect(document.querySelector('[data-value="a"]').getAttribute('aria-selected')).toBe('false')
     })
@@ -202,32 +202,32 @@ describe('ComboboxDropdownController', () => {
     it('does not advance past the last enabled option', () => {
       document.querySelector('[data-value="a"]').setAttribute('aria-selected', 'false')
       document.querySelector('[data-value="b"]').setAttribute('aria-selected', 'true')
-      getController().step(1)
+      getController().onNavigate(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))
       expect(document.querySelector('[data-value="b"]').getAttribute('aria-selected')).toBe('true')
     })
 
     it('does not go before the first option', () => {
-      getController().step(-1)
+      getController().onNavigate(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true }))
       expect(document.querySelector('[data-value="a"]').getAttribute('aria-selected')).toBe('true')
     })
 
     it('skips disabled options', () => {
       document.querySelector('[data-value="a"]').setAttribute('aria-selected', 'false')
       document.querySelector('[data-value="b"]').setAttribute('aria-selected', 'true')
-      getController().step(1)
+      getController().onNavigate(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))
       // c is disabled, so b stays selected
       expect(document.querySelector('[data-value="b"]').getAttribute('aria-selected')).toBe('true')
     })
 
     it('skips hidden options', () => {
       document.querySelector('[data-value="b"]').hidden = true
-      getController().step(1)
+      getController().onNavigate(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))
       // b is hidden, only a is enabled — a stays selected
       expect(document.querySelector('[data-value="a"]').getAttribute('aria-selected')).toBe('true')
     })
   })
 
-  describe('step (empty listbox)', () => {
+  describe('navigation via ListboxNavigation (empty listbox)', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
         <div data-controller="combobox-dropdown">
@@ -238,8 +238,9 @@ describe('ComboboxDropdownController', () => {
     })
 
     it('does nothing when there are no enabled visible options', () => {
-      expect(() => getController().step(1)).not.toThrow()
-      expect(() => getController().step(-1)).not.toThrow()
+      const ctrl = getController()
+      expect(() => ctrl.onNavigate(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))).not.toThrow()
+      expect(() => ctrl.onNavigate(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true }))).not.toThrow()
     })
   })
 

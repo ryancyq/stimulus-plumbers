@@ -88,14 +88,15 @@ application.register('panner',                   PannerController)
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
 | `clipboard` | Copy-to-clipboard and paste interception | [docs/component/clipboard.md](docs/component/clipboard.md) |
 | `panner` | Keeps content element within viewport on resize | [docs/component/panner.md](docs/component/panner.md) |
+| `timeline` | Manages expandable timeline event items with keyboard navigation | [docs/component/timeline.md](docs/component/timeline.md) |
 
 ## Utilities
 
 | Export | Description | Docs |
 |--------|-------------|------|
-| `announce`, `generateId`, `ensureId`, `connectTriggerToTarget` | ARIA state helpers | [docs/utility/accessibility.md](docs/utility/accessibility.md#srca11yariajs) |
-| `FocusTrap`, `FocusRestoration`, `focusFirst` | Focus management | [docs/utility/accessibility.md](docs/utility/accessibility.md#srca11yfocusjs) |
-| `isActivationKey`, `isArrowKey`, `RovingTabIndex` | Keyboard interaction | [docs/utility/accessibility.md](docs/utility/accessibility.md#srca11ykeyboardjs) |
+| `setExpanded`, `setHidden`, `announce`, `generateId`, `ensureId`, `connectTriggerToTarget` | ARIA state helpers | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
+| `FocusTrap`, `getFocusableElements`, `focusFirst` | Focus management | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
+| `RovingTabIndex`, `ListboxNavigation`, `isActivationKey`, `isArrowKey` | Keyboard interaction | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
 | `Requestor` | Fetch wrapper with lifecycle events | [docs/utility/requestor.md](docs/utility/requestor.md) |
 | `fuzzyMatcher`, `filterOptions` | Option filtering for comboboxes | [docs/utility/researcher.md](docs/utility/researcher.md) |
 
@@ -105,8 +106,8 @@ Controllers follow a consistent naming pattern:
 
 | Pattern | Parameter | Role | Example |
 |---------|-----------|------|---------|
-| `x(value)` | raw value | Programmatic API — pure logic, callable directly | `select('us')`, `format('4242…')`, `step(1)`, `filter('query')` |
-| `onX(event)` | DOM event | Event adapter — extracts payload, calls programmatic API | `onSelect(event)`, `onChange(event)`, `onPaste(event)`, `onInput(event)`, `onNavigate(event)` |
+| `x(value)` | raw value | Programmatic API — pure logic, callable directly | `select('us')`, `format('4242…')`, `filter('query')` |
+| `onX(event)` | DOM event | Event adapter — extracts payload, calls programmatic API | `onSelect(event)`, `onChange(event)`, `onPaste(event)`, `onInput(event)` |
 | `past()` | — | Plumber callback — called by plumber after async operation completes | `shown()`, `dismissed()`, `flipped()`, `contentLoaded()` |
 
 Wire event adapters via `data-action`; call programmatic APIs directly from other controllers or outlets.

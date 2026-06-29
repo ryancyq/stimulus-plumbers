@@ -235,6 +235,33 @@ describe('ModalController', () => {
         await new Promise(resolve => setTimeout(resolve, 10));
       }).not.toThrow();
     });
+
+    it('Escape key closes non-native modal and hides overlay', async () => {
+      // setup: non-native modal with overlay
+      document.body.innerHTML = `
+        <div data-controller="modal">
+          <button data-action="modal#open" id="opener">Open</button>
+          <div data-modal-target="overlay" hidden>
+            <div data-modal-target="modal" role="dialog">
+              <button data-action="modal#close">Close</button>
+            </div>
+          </div>
+        </div>
+      `;
+      await new Promise((r) => setTimeout(r, 10));
+
+      document.getElementById('opener').click();
+      await new Promise((r) => setTimeout(r, 10));
+
+      const overlay = document.querySelector('[data-modal-target="overlay"]');
+      expect(overlay.hasAttribute('hidden')).toBe(false); // modal is open
+
+      const modal = document.querySelector('[data-modal-target="modal"]');
+      modal.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      await new Promise((r) => setTimeout(r, 10));
+
+      expect(overlay.hasAttribute('hidden')).toBe(true); // modal closed
+    });
   });
 
   describe('custom implementation without overlay', () => {

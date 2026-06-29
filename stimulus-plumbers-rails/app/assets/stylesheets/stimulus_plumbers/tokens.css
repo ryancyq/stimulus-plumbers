@@ -52,6 +52,10 @@
   --sp-color-fg:             oklch(10% 0.02 250);
 
 
+  /* ── Component tokens ───────────────────────────────────────────────── */
+  --sp-color-indicator: oklch(75% 0.02 250); /* timeline dot fill */
+
+
   /* ── Focus ring ──────────────────────────────────────────────────────── */
   --sp-focus-ring-color:  var(--sp-color-primary);
   --sp-focus-ring-width:  2px;

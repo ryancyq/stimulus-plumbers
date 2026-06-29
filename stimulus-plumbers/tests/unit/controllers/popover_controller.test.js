@@ -374,6 +374,77 @@ describe('PopoverController', () => {
     });
   });
 
+  describe('screen reader announcements', () => {
+    it('announces "Panel opened" when opened', async () => {
+      document.body.innerHTML = `
+        <div data-controller="popover">
+          <button data-popover-target="trigger" data-action="popover#toggle">Open</button>
+          <div data-popover-target="panel" hidden>Content</div>
+        </div>
+      `;
+      await new Promise((r) => setTimeout(r, 10));
+
+      document.querySelector('[data-action="popover#toggle"]').click();
+      await new Promise((r) => setTimeout(r, 10));
+
+      const liveRegion = document.querySelector('[aria-live]');
+      // aria.js announce() uses setTimeout(100) to set textContent
+      await new Promise((r) => setTimeout(r, 150));
+      expect(liveRegion?.textContent).toBe('Panel opened');
+    });
+
+    it('announces "Panel closed" when closed', async () => {
+      document.body.innerHTML = `
+        <div data-controller="popover">
+          <button data-popover-target="trigger" data-action="popover#toggle">Open</button>
+          <div data-popover-target="panel">Content</div>
+        </div>
+      `;
+      await new Promise((r) => setTimeout(r, 10));
+
+      // close (panel starts visible — no hidden attr)
+      document.querySelector('[data-action="popover#toggle"]').click();
+      await new Promise((r) => setTimeout(r, 150));
+
+      const liveRegion = document.querySelector('[aria-live]');
+      expect(liveRegion?.textContent).toBe('Panel closed');
+    });
+  });
+
+  describe('announce values', () => {
+    it('uses data-popover-announce-open-value when provided', async () => {
+      document.body.innerHTML = `
+        <div data-controller="popover"
+             data-popover-announce-open-value="Ouvrir panneau">
+          <button data-popover-target="trigger">Open</button>
+          <div data-popover-target="panel" hidden>Content</div>
+        </div>
+      `;
+      await new Promise((r) => setTimeout(r, 10));
+      const controller = application.getControllerForElementAndIdentifier(
+        document.querySelector('[data-controller="popover"]'),
+        'popover'
+      );
+      expect(controller.announceOpenValue).toBe('Ouvrir panneau');
+    });
+
+    it('defaults announceOpenValue to "Panel opened"', async () => {
+      document.body.innerHTML = `
+        <div data-controller="popover">
+          <button data-popover-target="trigger">Open</button>
+          <div data-popover-target="panel" hidden>Content</div>
+        </div>
+      `;
+      await new Promise((r) => setTimeout(r, 10));
+      const controller = application.getControllerForElementAndIdentifier(
+        document.querySelector('[data-controller="popover"]'),
+        'popover'
+      );
+      expect(controller.announceOpenValue).toBe('Panel opened');
+      expect(controller.announceCloseValue).toBe('Panel closed');
+    });
+  });
+
   describe('without targets', () => {
     it('connects without panel target', async () => {
       document.body.innerHTML = '<div data-controller="popover"></div>';
