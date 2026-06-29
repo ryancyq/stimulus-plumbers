@@ -171,8 +171,7 @@ stimulus-plumbers-rails/
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
 - **Accessibility tests** using Capybara + axe-core (`rake test:accessibility`)
-- **Lint tests** using Rubocop (`rake rubocop`)
-- **Always run linting** after appraisal command
+- **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
 
 ## Unit Test Convention
 

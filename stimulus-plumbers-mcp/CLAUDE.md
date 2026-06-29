@@ -57,7 +57,7 @@ stimulus-plumbers-mcp/
 ## Guidelines
 
 - **Unit tests** using Minitest (`rake test:unit`)
-- **Lint** using Rubocop (`rake rubocop`)
+- **Lint** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
 - **Accuracy test** (`accuracy_test.rb`) — iterates every documented component that also exists in schema, asserting each valid param value appears in the parsed signature option tables (not just raw markdown); also cross-checks `field_as` values against form.md raw content; runs as part of `rake test`
 - **Integration test** (`server_test.rb`) — drives every tool through `Server#handle_json`, the path that exercises `define_tool` block scope (unit tests only call loaders directly)
 
