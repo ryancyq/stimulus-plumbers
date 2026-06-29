@@ -42,7 +42,16 @@ jobs:
 
       - run: npm ci
 
-      - run: npm version ${{ env.VERSION }} --no-git-tag-version
+      - name: Build + publish
+        run: bin/release ${{ env.VERSION }} --only npm --no-git
+        working-directory: ${{ github.workspace }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: stimulus-plumbers-dist
+          path: stimulus-plumbers/dist/
 
       - uses: orhun/git-cliff-action@v4
         with:
@@ -63,16 +72,6 @@ jobs:
           commit-message: "Bump npm @stimulus-plumbers/controllers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers/v${{ env.VERSION }}
 
-      - run: npm run build
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: stimulus-plumbers-dist
-          path: stimulus-plumbers/dist/
-
-      - name: Publish to NPM
-        run: npm publish --provenance --access public
-
   rubygem-rails:
     name: Publish stimulus-plumbers to RubyGems
     runs-on: ubuntu-latest
@@ -90,12 +89,13 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - uses: actions/download-artifact@v8
         with:
           name: stimulus-plumbers-dist
           path: stimulus-plumbers-rails/app/assets/javascripts/stimulus-plumbers
 
-      # https://bundler.io/blog/2018/01/17/making-gem-development-a-little-better.html
+      # Must precede setup-ruby --bundler-cache so bundle regenerates lockfiles
       - run: rm Gemfile.lock
       - run: rm gemfiles/*.gemfile.lock
 
@@ -105,11 +105,11 @@ jobs:
           bundler: 2.7.2
           bundler-cache: true
 
-      - run: bin/bump-version ${{ env.VERSION }}
-        shell: bash
+      - uses: rubygems/configure-rubygems-credentials@v2.1.0
 
-      - run: bundle exec rake appraisal:setup
-      - run: bundle exec rake rubocop:autocorrect_all
+      - name: Build + publish
+        run: bin/release ${{ env.VERSION }} --only rails --no-git
+        working-directory: ${{ github.workspace }}
 
       - uses: orhun/git-cliff-action@v4
         with:
@@ -131,18 +131,6 @@ jobs:
           commit-message: "Bump rubygem stimulus-plumbers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers-rails/v${{ env.VERSION }}
 
-      - run: bundle exec rake build
-
-      - name: Configure RubyGems trusted publishing credentials
-        uses: rubygems/configure-rubygems-credentials@v2.1.0
-
-      - name: Push gem
-        run: |
-          for gem in pkg/stimulus-plumbers-$VERSION*.gem ; do
-            gem push "$gem" --host https://rubygems.org
-          done
-        shell: bash
-
   rubygem-tailwind:
     name: Publish stimulus-plumbers-tailwind to RubyGems
     runs-on: ubuntu-latest
@@ -161,6 +149,7 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Must precede setup-ruby --bundler-cache
       - run: rm Gemfile.lock
 
       - uses: ruby/setup-ruby@v1
@@ -169,10 +158,11 @@ jobs:
           bundler: 2.7.2
           bundler-cache: true
 
-      - run: bin/bump-version ${{ env.VERSION }}
-        shell: bash
+      - uses: rubygems/configure-rubygems-credentials@v2.1.0
 
-      - run: bundle exec rake rubocop:autocorrect_all
+      - name: Build + publish
+        run: bin/release ${{ env.VERSION }} --only tailwind --no-git
+        working-directory: ${{ github.workspace }}
 
       - uses: orhun/git-cliff-action@v4
         with:
@@ -193,14 +183,42 @@ jobs:
           commit-message: "Bump rubygem stimulus-plumbers-tailwind version to ${{ env.VERSION }}"
           tag: stimulus-plumbers-tailwind/v${{ env.VERSION }}
 
-      - run: bundle exec rake build
+  rubygem-mcp:
+    name: Publish stimulus-plumbers-mcp to RubyGems
+    runs-on: ubuntu-latest
+    needs: rubygem-tailwind
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-mcp
+    permissions:
+      contents: write
+      id-token: write
+    environment: release
+    timeout-minutes: 5
 
-      - name: Configure RubyGems trusted publishing credentials
-        uses: rubygems/configure-rubygems-credentials@v2.1.0
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-      - name: Push gem
-        run: |
-          for gem in pkg/stimulus-plumbers-tailwind-$VERSION*.gem ; do
-            gem push "$gem" --host https://rubygems.org
-          done
-        shell: bash
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler: 2.7.2
+          bundler-cache: true
+
+      - uses: rubygems/configure-rubygems-credentials@v2.1.0
+
+      - name: Build + publish
+        run: bin/release ${{ env.VERSION }} --only mcp --no-git
+        working-directory: ${{ github.workspace }}
+
+      - uses: ryancyq/github-signed-commit@v1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          files: |
+            stimulus-plumbers-mcp/Gemfile.lock
+            stimulus-plumbers-mcp/lib/stimulus_plumbers/mcp/version.rb
+          commit-message: "Bump rubygem stimulus-plumbers-mcp version to ${{ env.VERSION }}"
+          tag: stimulus-plumbers-mcp/v${{ env.VERSION }}

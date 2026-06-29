@@ -13,7 +13,7 @@ PATH
 PATH
   remote: .
   specs:
-    stimulus-plumbers-mcp (0.1.0)
+    stimulus-plumbers-mcp (0.4.0)
       actionview (>= 6.1)
       mcp (>= 0.8)
       stimulus-plumbers
@@ -218,7 +218,7 @@ CHECKSUMS
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
   stimulus-plumbers (0.4.0)
-  stimulus-plumbers-mcp (0.1.0)
+  stimulus-plumbers-mcp (0.4.0)
   stimulus-plumbers-tailwind (0.4.0)
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (3.2.0) sha256=0cdd96b5681a5949cdbc2c55e7b420facae74c4aaf9a9815eee1087cb1853c42
