@@ -12,28 +12,40 @@ class CalendarStimulusAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_passes_wcag_for_28_cell_grid
-    # Feb 2026: no padding rows (month=1 is Feb in JS 0-indexed)
-    visit "/components/calendar_stimulus?year=2026&month=1"
-
-    assert_accessible context: "#calendar"
-  end
-
-  def test_passes_wcag_for_35_cell_grid
-    # Apr 2026: 5-week month (month=3 is Apr in JS 0-indexed)
-    visit "/components/calendar_stimulus?year=2026&month=3"
+    # Feb 2026: no padding rows
+    visit "/components/calendar_stimulus?year=2026&month=2"
 
     assert_accessible context: "#calendar"
   end
 
   def test_passes_wcag_for_42_cell_grid
-    # Jul 2023: 6-week month (month=6 is Jul in JS 0-indexed)
-    visit "/components/calendar_stimulus?year=2023&month=6"
+    # Jul 2023: 6-week month
+    visit "/components/calendar_stimulus?year=2023&month=7"
 
     assert_accessible context: "#calendar"
   end
 
-  def test_passes_wcag_with_selected_day
-    visit "/components/calendar_stimulus?year=2026&month=3"
+  def test_passes_wcag_with_other_months_visible
+    visit "/components/calendar_stimulus?year=2026&month=4&show_other_months=true"
+
+    assert_accessible context: "#calendar"
+  end
+
+  def test_passes_wcag_with_date_range
+    # Apr 2026: since/till spans into padding months to cover current + other-month + disabled cell states
+    visit "/components/calendar_stimulus?year=2026&month=4&since=2026-03-30&till=2026-04-20"
+
+    assert_accessible context: "#calendar"
+  end
+
+  def test_passes_wcag_with_date_range_and_other_months_visible
+    visit "/components/calendar_stimulus?year=2026&month=4&since=2026-03-30&till=2026-04-20&show_other_months=true"
+
+    assert_accessible context: "#calendar"
+  end
+
+  def test_passes_wcag_with_selected_date
+    visit "/components/calendar_stimulus?year=2026&month=6"
     find("#calendar [role='gridcell']", text: "15").click
 
     assert_accessible context: "#calendar"

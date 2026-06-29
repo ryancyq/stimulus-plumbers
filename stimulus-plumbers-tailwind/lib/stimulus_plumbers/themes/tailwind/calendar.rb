@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Calendar
-        GRID = %w[w-full].freeze
+        GRID = [].freeze
 
         DAYS_OF_WEEK = %w[
           grid grid-cols-7 text-center text-(length:--sp-text-xs)
@@ -23,8 +23,10 @@ module StimulusPlumbers
           aria-selected:hover:bg-(--sp-color-primary)/90
           aria-[hidden=true]:pointer-events-none
           aria-[disabled=true]:text-(--sp-color-muted-fg)
+          aria-[disabled=true]:opacity-40
           aria-[disabled=true]:pointer-events-none
           disabled:text-(--sp-color-muted-fg)
+          disabled:opacity-40
           disabled:pointer-events-none
         ].freeze
 
@@ -41,6 +43,7 @@ module StimulusPlumbers
           aria-selected:hover:bg-(--sp-color-primary)/90
           aria-[current=month]:font-bold
           aria-[disabled=true]:text-(--sp-color-muted-fg)
+          aria-[disabled=true]:opacity-40
           aria-[disabled=true]:pointer-events-none
           aria-[disabled=true]:hover:bg-transparent
         ].freeze
@@ -56,6 +59,7 @@ module StimulusPlumbers
           aria-selected:hover:bg-(--sp-color-primary)/90
           aria-[current=year]:font-bold
           aria-[disabled=true]:text-(--sp-color-muted-fg)
+          aria-[disabled=true]:opacity-40
           aria-[disabled=true]:pointer-events-none
           aria-[disabled=true]:hover:bg-transparent
         ].freeze

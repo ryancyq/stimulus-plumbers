@@ -12,7 +12,7 @@ class CalendarTurboAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#calendar"
   end
 
-  def test_passes_wcag_when_selectable
+  def test_passes_wcag_with_selectable
     # button gridcells with aria-selected
     visit "/components/calendar_turbo?selectable=true"
 
@@ -26,7 +26,7 @@ class CalendarTurboAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#calendar"
   end
 
-  def test_passes_wcag_when_selectable_with_other_months_visible
+  def test_passes_wcag_with_selectable_and_other_months_visible
     # button gridcells + disabled other-month gridcells
     visit "/components/calendar_turbo?selectable=true&show_other_months=true"
 
@@ -62,8 +62,22 @@ class CalendarTurboAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_passes_wcag_with_date_range
-    # cells outside [since, till] range rendered with aria-disabled="true"
+    # Jun 2026: out-of-range current-month cells are disabled spans (non-selectable, the SSR default)
+    visit "/components/calendar_turbo?date=2026-06-01&since=2026-06-05&till=2026-06-25"
+
+    assert_accessible context: "#calendar"
+  end
+
+  def test_passes_wcag_with_date_range_selectable
+    # Jun 2026: in-range cells are buttons, out-of-range cells are disabled spans
     visit "/components/calendar_turbo?date=2026-06-01&selectable=true&since=2026-06-05&till=2026-06-25"
+
+    assert_accessible context: "#calendar"
+  end
+
+  def test_passes_wcag_with_date_range_and_other_months_visible
+    # Apr 2026: all 4 cell states — current/other-month × in-range/out-of-range (selectable for richest ARIA)
+    visit "/components/calendar_turbo?date=2026-04-01&selectable=true&since=2026-03-30&till=2026-04-20&show_other_months=true"
 
     assert_accessible context: "#calendar"
   end

@@ -108,6 +108,44 @@ class CalendarTurboDaysOfMonthTest < ActionView::TestCase
     assert_includes renderer.render(class: "my-days"), "my-days"
   end
 
+  # Current-month range (since/till)
+  def test_current_month_out_of_range_cell_is_disabled_span_when_selectable
+    # Apr 2026: days 21-30 are past till=Apr 20, so they're disabled spans even with selectable=true
+    html = renderer(selectable: true, till: Date.new(2026, 4, 20)).render
+    late_april = cells_for_month(parse_html(html), 4).select { |el| el.at_css("time").text.to_i > 20 }
+
+    assert_equal 10, late_april.length
+    assert(late_april.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
+  end
+
+  def test_current_month_in_range_cells_are_buttons_when_selectable
+    # Apr 2026: days 1-20 within till=Apr 20 render as buttons
+    html = renderer(selectable: true, till: Date.new(2026, 4, 20)).render
+    doc  = parse_html(html)
+    early_april = cells_for_month(doc, 4).select { |el| Date.parse(el.at_css("time")["datetime"]).day <= 20 }
+
+    assert_equal 20, early_april.length
+    assert(early_april.all? { |el| el.name == "button" })
+  end
+
+  def test_non_selectable_out_of_range_cells_are_disabled_spans
+    # Even without selectable, out-of-range current-month cells have aria-disabled
+    html = renderer(till: Date.new(2026, 4, 20)).render
+    doc  = parse_html(html)
+    late_april = cells_for_month(doc, 4).select { |el| Date.parse(el.at_css("time")["datetime"]).day > 20 }
+
+    assert(late_april.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
+  end
+
+  def test_current_month_cells_before_since_are_disabled
+    # Apr 2026: days 1-4 before since=Apr 5
+    html = renderer(selectable: true, since: Date.new(2026, 4, 5)).render
+    early_april = cells_for_month(parse_html(html), 4).select { |el| el.at_css("time").text.to_i < 5 }
+
+    assert_equal 4, early_april.length
+    assert(early_april.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
+  end
+
   # Outside day navigation
   def test_outside_day_is_button_when_selectable_and_show_other_months
     # Apr 2026: 3 prev-month days (Mar 29-31) + 2 next-month days (May 1-2)

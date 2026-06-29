@@ -30,14 +30,6 @@ test.describe("stimulus calendar", () => {
     );
   });
 
-  test("35-cell grid (Apr 2026)", async ({ page }) => {
-    await page.goto("/components/calendar_stimulus?year=2026&month=4");
-    await page.waitForSelector("[role='grid']");
-    await expect(page.locator("#calendar-stimulus")).toHaveScreenshot(
-      "stimulus-35-cell.png",
-    );
-  });
-
   test("42-cell grid (Jul 2023)", async ({ page }) => {
     await page.goto("/components/calendar_stimulus?year=2023&month=7");
     await page.waitForSelector("[role='grid']");
@@ -56,7 +48,27 @@ test.describe("stimulus calendar", () => {
     );
   });
 
-  test("selected day", async ({ page }) => {
+  test("date range", async ({ page }) => {
+    await page.goto(
+      "/components/calendar_stimulus?year=2026&month=4&since=2026-03-30&till=2026-04-20",
+    );
+    await page.waitForSelector("#calendar-stimulus [role='grid']");
+    await expect(page.locator("#calendar-stimulus")).toHaveScreenshot(
+      "stimulus-range.png",
+    );
+  });
+
+  test("date range with other months visible", async ({ page }) => {
+    await page.goto(
+      "/components/calendar_stimulus?year=2026&month=4&since=2026-03-30&till=2026-04-20&show_other_months=true",
+    );
+    await page.waitForSelector("#calendar-stimulus [role='grid']");
+    await expect(page.locator("#calendar-stimulus")).toHaveScreenshot(
+      "stimulus-range-other-months.png",
+    );
+  });
+
+  test("selected date", async ({ page }) => {
     await page.goto(
       `/components/calendar_stimulus?year=${FIXED_YEAR}&month=${FIXED_MONTH}`,
     );
@@ -91,16 +103,6 @@ test.describe("turbo calendar", () => {
     await page.waitForSelector("[role='grid']");
     await expect(page.locator("#calendar-turbo")).toHaveScreenshot(
       "turbo-28-cell.png",
-    );
-  });
-
-  test("35-cell grid (Apr 2026)", async ({ page }) => {
-    await page.goto(
-      `/components/calendar_turbo?year=2026&month=4&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
-    );
-    await page.waitForSelector("[role='grid']");
-    await expect(page.locator("#calendar-turbo")).toHaveScreenshot(
-      "turbo-35-cell.png",
     );
   });
 
@@ -146,21 +148,41 @@ test.describe("turbo calendar", () => {
 
   test("selected date", async ({ page }) => {
     await page.goto(
-      `/components/calendar_turbo?year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+      `/components/calendar_turbo?year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}&selectable=true&selected_date=2024-02-15`,
     );
-    await page.waitForSelector("#calendar-turbo-selected [role='grid']");
-    await expect(page.locator("#calendar-turbo-selected")).toHaveScreenshot(
+    await page.waitForSelector("#calendar-turbo [role='grid']");
+    await expect(page.locator("#calendar-turbo")).toHaveScreenshot(
       "turbo-selected.png",
     );
   });
 
-  test("date range (since/till)", async ({ page }) => {
+  test("date range", async ({ page }) => {
     await page.goto(
-      `/components/calendar_turbo?year=${FIXED_YEAR}&month=${FIXED_MONTH}&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}`,
+      `/components/calendar_turbo?year=2026&month=4&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}&since=2026-03-30&till=2026-04-20`,
     );
-    await page.waitForSelector("#calendar-turbo-range [role='grid']");
-    await expect(page.locator("#calendar-turbo-range")).toHaveScreenshot(
+    await page.waitForSelector("#calendar-turbo [role='grid']");
+    await expect(page.locator("#calendar-turbo")).toHaveScreenshot(
       "turbo-range.png",
+    );
+  });
+
+  test("date range (selectable)", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_turbo?year=2026&month=4&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}&selectable=true&since=2026-03-30&till=2026-04-20`,
+    );
+    await page.waitForSelector("#calendar-turbo [role='grid']");
+    await expect(page.locator("#calendar-turbo")).toHaveScreenshot(
+      "turbo-range-selectable.png",
+    );
+  });
+
+  test("date range with other months visible", async ({ page }) => {
+    await page.goto(
+      `/components/calendar_turbo?year=2026&month=4&today_year=${FIXED_YEAR}&today_month=${FIXED_MONTH}&today_day=${FIXED_DAY}&selectable=true&since=2026-03-30&till=2026-04-20&show_other_months=true`,
+    );
+    await page.waitForSelector("#calendar-turbo [role='grid']");
+    await expect(page.locator("#calendar-turbo")).toHaveScreenshot(
+      "turbo-range-other-months.png",
     );
   });
 

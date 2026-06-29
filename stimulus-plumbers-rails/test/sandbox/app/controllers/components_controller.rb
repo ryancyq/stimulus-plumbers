@@ -4,9 +4,12 @@ class ComponentsController < ApplicationController
   def profile; end
 
   def calendar_stimulus
-    year  = params[:year]&.to_i
-    month = params[:month]&.to_i
-    @date = year && month ? Date.new(year, month, 1) : nil
+    year               = params[:year]&.to_i
+    month              = params[:month]&.to_i
+    @date              = year && month ? Date.new(year, month, 1) : nil
+    @show_other_months = params[:show_other_months] == "true"
+    @since             = parse_date(:since)
+    @till              = parse_date(:till)
   end
 
   def calendar_turbo

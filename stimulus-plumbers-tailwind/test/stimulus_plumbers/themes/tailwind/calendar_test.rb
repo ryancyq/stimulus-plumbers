@@ -68,10 +68,6 @@ class TailwindThemeCalendarTest < Minitest::Test
     refute_equal inside_result, outside_result
   end
 
-  def test_calendar_includes_width_class
-    assert_includes classes_for(:calendar), "w-full"
-  end
-
   def test_calendar_days_of_week_includes_grid_classes
     result = classes_for(:calendar_days_of_week)
 
