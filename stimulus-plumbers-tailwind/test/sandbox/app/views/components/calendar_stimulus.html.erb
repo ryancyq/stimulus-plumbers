@@ -1,18 +1,15 @@
 <h1>Calendar (Stimulus / CSR)</h1>
 
-<div data-controller="combobox-date"
-     data-combobox-date-calendar-month-outlet="[data-controller~='calendar-month']">
-  <button data-combobox-date-target="viewSwitch"
-          data-action="click->combobox-date#zoomOut"
-          type="button"></button>
-
-  <section id="calendar-stimulus" class="sb-section">
-    <h2>Stimulus (CSR)</h2>
-    <div class="sb-col">
-      <%= sp_calendar_month(
-            date: @date,
-            data: @show_other_months ? { "calendar-month-days-of-other-month-value": true } : {}
-          ) %>
-    </div>
-  </section>
-</div>
+<section id="calendar-stimulus" class="sb-section">
+  <h2>Stimulus (CSR)</h2>
+  <div class="sb-col">
+    <%= sp_calendar_month(
+          date: @date,
+          data: {}.tap do |d|
+            d["calendar-month-days-of-other-month-value"] = true        if @show_other_months
+            d["calendar-month-since-value"]               = @since.iso8601 if @since
+            d["calendar-month-till-value"]                = @till.iso8601  if @till
+          end
+        ) %>
+  </div>
+</section>

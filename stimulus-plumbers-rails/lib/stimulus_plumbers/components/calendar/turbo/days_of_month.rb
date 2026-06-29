@@ -117,8 +117,22 @@ module StimulusPlumbers
           end
 
           def current_month_day_cell(date)
-            tag = selectable ? :button : :span
-            template.content_tag(tag, **day_cell_html_options(date)) do
+            if in_range?(date)
+              tag = selectable ? :button : :span
+              template.content_tag(tag, **day_cell_html_options(date)) do
+                template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
+              end
+            else
+              disabled_current_month_day_cell(date)
+            end
+          end
+
+          def disabled_current_month_day_cell(date)
+            html_options = merge_html_options(
+              theme.resolve(:calendar_day),
+              { role: "gridcell", tabindex: -1, aria: { disabled: "true" } }
+            )
+            template.content_tag(:span, **html_options) do
               template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
             end
           end
@@ -140,7 +154,7 @@ module StimulusPlumbers
           end
 
           def other_month_day_cell(date)
-            if selectable && outside_day_navigable?(date)
+            if selectable && in_range?(date)
               navigable_other_month_day_cell(date)
             else
               disabled_other_month_day_cell(date)
@@ -167,7 +181,7 @@ module StimulusPlumbers
             end
           end
 
-          def outside_day_navigable?(date)
+          def in_range?(date)
             (since.nil? || date >= since) && (till.nil? || date <= till)
           end
         end

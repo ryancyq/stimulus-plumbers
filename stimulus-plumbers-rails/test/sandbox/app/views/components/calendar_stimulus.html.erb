@@ -1,5 +1,12 @@
 <h1>Calendar (Stimulus / CSR)</h1>
 
 <div id="calendar">
-  <%= sp_calendar_month(date: @date) %>
+  <%= sp_calendar_month(
+        date: @date,
+        data: {}.tap do |d|
+          d["calendar-month-days-of-other-month-value"] = true   if @show_other_months
+          d["calendar-month-since-value"]               = @since.iso8601 if @since
+          d["calendar-month-till-value"]                = @till.iso8601  if @till
+        end
+      ) %>
 </div>
