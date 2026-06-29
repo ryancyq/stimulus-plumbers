@@ -3,7 +3,7 @@
 require_relative "lib/stimulus_plumbers/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "stimulus_plumbers"
+  spec.name = "stimulus-plumbers"
   spec.version = StimulusPlumbers::VERSION
   spec.authors = ["Ryan Chang"]
   spec.email = ["ryancyq@gmail.com"]

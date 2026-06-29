@@ -3,4 +3,4 @@
 require "minitest/autorun"
 require "minitest/mock"
 
-require_relative "../lib/stimulus_plumbers_mcp"
+require_relative "../lib/stimulus-plumbers-mcp"

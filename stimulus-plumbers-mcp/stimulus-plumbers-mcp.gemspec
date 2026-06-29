@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/stimulus_plumbers_mcp/version"
+require_relative "lib/stimulus_plumbers/mcp/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "stimulus_plumbers_mcp"
-  spec.version = StimulusPlumbersMcp::VERSION
+  spec.name = "stimulus-plumbers-mcp"
+  spec.version = StimulusPlumbers::MCP::VERSION
   spec.authors = ["Ryan Chang"]
   spec.email = ["ryancyq@gmail.com"]
 
@@ -22,6 +22,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "actionview", ">= 6.1"
   spec.add_dependency "mcp", ">= 0.8"
-  spec.add_dependency "stimulus_plumbers"
-  spec.add_dependency "stimulus_plumbers_tailwind"
+  spec.add_dependency "stimulus-plumbers"
+  spec.add_dependency "stimulus-plumbers-tailwind"
 end

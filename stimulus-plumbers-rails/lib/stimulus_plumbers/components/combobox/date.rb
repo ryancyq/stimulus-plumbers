@@ -58,7 +58,7 @@ module StimulusPlumbers
             "#{STIMULUS_CONTROLLER}-date-value" => value
           }.compact
 
-          resolved_label = label || I18n.t("stimulus_plumbers.combobox.date.dialog_label")
+          resolved_label = label || I18n.t("stimulus-plumbers.combobox.date.dialog_label")
           { role: "dialog", aria: labelled_aria(resolved_label, labelledby: labelledby), data: data }
         end
 

@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "stimulus_plumbers", path: "../stimulus-plumbers-rails"
+gem "stimulus-plumbers", path: "../stimulus-plumbers-rails"
 
 gem "railties", ">= 6.1", "< 8.2"
 

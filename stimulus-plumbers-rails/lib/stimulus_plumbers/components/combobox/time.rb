@@ -39,7 +39,7 @@ module StimulusPlumbers
         end
 
         def dialog_attrs(label, labelledby)
-          resolved_label = label || I18n.t("stimulus_plumbers.combobox.time.dialog_label")
+          resolved_label = label || I18n.t("stimulus-plumbers.combobox.time.dialog_label")
           {
             role: "dialog",
             aria: labelled_aria(resolved_label, labelledby: labelledby),
@@ -121,7 +121,7 @@ module StimulusPlumbers
         end
 
         def t(key)
-          I18n.t("stimulus_plumbers.combobox.time.#{key}")
+          I18n.t("stimulus-plumbers.combobox.time.#{key}")
         end
       end
     end

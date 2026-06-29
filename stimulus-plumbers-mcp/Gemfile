@@ -4,8 +4,8 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "stimulus_plumbers",          path: "../stimulus-plumbers-rails"
-gem "stimulus_plumbers_tailwind", path: "../stimulus-plumbers-tailwind"
+gem "stimulus-plumbers",          path: "../stimulus-plumbers-rails"
+gem "stimulus-plumbers-tailwind", path: "../stimulus-plumbers-tailwind"
 
 group :development, :test do
   gem "rake", "~> 13.3"

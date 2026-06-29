@@ -4,19 +4,19 @@
 [![CI][ci_badge]][ci]
 [![Coverage][coverage_badge]][coverage]
 
-Tailwind CSS v4 theme for [`stimulus_plumbers`](../stimulus-plumbers-rails). Extends the base theme with utility classes for all components.
+Tailwind CSS v4 theme for [`stimulus-plumbers`](../stimulus-plumbers-rails). Extends the base theme with utility classes for all components.
 
 ## Requirements
 
 - Ruby >= 3.0
-- `stimulus_plumbers` >= 0.2.9
+- `stimulus-plumbers` >= 0.2.9
 - Tailwind CSS v4 in your build toolchain
 
 ## Installation
 
 ```ruby
 # Gemfile
-gem "stimulus_plumbers_tailwind"
+gem "stimulus-plumbers-tailwind"
 ```
 
 ```bash
@@ -35,10 +35,10 @@ Tell Tailwind to scan the gem's lib files so component class names are included 
 
 ```css
 @import "tailwindcss";
-@source "/path/to/gems/stimulus_plumbers_tailwind-VERSION/lib/**/*.rb";
+@source "/path/to/gems/stimulus-plumbers-tailwind-VERSION/lib/**/*.rb";
 ```
 
-Use `bundle show stimulus_plumbers_tailwind` to get the exact installed path.
+Use `bundle show stimulus-plumbers-tailwind` to get the exact installed path.
 
 ## Theming
 
@@ -103,8 +103,8 @@ bundle exec puma test/sandbox/config.ru
 
 [MIT](https://opensource.org/licenses/MIT)
 
-[rubygems_badge]: https://img.shields.io/gem/v/stimulus_plumbers_tailwind.svg
-[rubygems]: https://rubygems.org/gems/stimulus_plumbers_tailwind
+[rubygems_badge]: https://img.shields.io/gem/v/stimulus-plumbers-tailwind.svg
+[rubygems]: https://rubygems.org/gems/stimulus-plumbers-tailwind
 [ci_badge]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-tailwind.yml/badge.svg
 [ci]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-tailwind.yml
 [coverage_badge]: https://codecov.io/gh/ryancyq/stimulus-plumbers/graph/badge.svg?token=Z77H6M5GER&flag=tailwind

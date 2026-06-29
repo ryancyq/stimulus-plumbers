@@ -71,7 +71,7 @@ module StimulusPlumbers
           end
 
           def t(key)
-            I18n.t("stimulus_plumbers.combobox.date.#{key}")
+            I18n.t("stimulus-plumbers.combobox.date.#{key}")
           end
         end
       end

@@ -97,7 +97,7 @@ module StimulusPlumbers
                 {
                   type:   "button",
                   hidden: true,
-                  aria:   { label: I18n.t("stimulus_plumbers.form.search.clear", default: "Clear search") },
+                  aria:   { label: I18n.t("stimulus-plumbers.form.search.clear", default: "Clear search") },
                   data:   { input_clearable_target: "clear", action: "click->input-clearable#clear" }
                 }
               )

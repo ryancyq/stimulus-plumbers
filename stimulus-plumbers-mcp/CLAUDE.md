@@ -8,11 +8,10 @@ stimulus-plumbers-mcp/
 │   ├── server                                  # MCP stdio server entry point
 │   └── mcp-query                               # Manual stdio query tool (tools/resources/tool/read subcommands)
 ├── lib/
-│   ├── stimulus_plumbers_mcp.rb                # Top-level require: upstream gems → version → loaders → plugins → server
-│   ├── stimulus_plumbers_mcp/
-│   │   └── version.rb                          # StimulusPlumbersMcp::VERSION
+│   ├── stimulus-plumbers-mcp.rb                # Top-level require: upstream gems → version → loaders → plugins → server
 │   └── stimulus_plumbers/
 │       └── mcp/
+│           ├── version.rb                      # StimulusPlumbers::MCP::VERSION
 │           ├── server.rb                       # Server.build — wires all plugins, registers resources + tools
 │           ├── loaders/                        # Each loads one source into store[LOADER_KEY]
 │           │   ├── guide_loader.rb             # Reads guide/overview.md → guide://overview (entry-point map)
@@ -51,7 +50,7 @@ stimulus-plumbers-mcp/
 │           └── server_test.rb                 # Integration: drives every tool through the built server
 ├── Gemfile                                     # gemspec + path: sibling gems
 ├── Rakefile
-└── stimulus_plumbers_mcp.gemspec
+└── stimulus-plumbers-mcp.gemspec
 ```
 
 ## Guidelines

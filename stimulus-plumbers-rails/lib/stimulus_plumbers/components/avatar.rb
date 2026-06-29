@@ -40,7 +40,7 @@ module StimulusPlumbers
           theme.resolve(:avatar_image),
           {
             src:     url,
-            alt:     name.present? ? I18n.t("stimulus_plumbers.avatar.image_alt", name: name) : "",
+            alt:     name.present? ? I18n.t("stimulus-plumbers.avatar.image_alt", name: name) : "",
             onerror: "this.src=''"
           }
         )

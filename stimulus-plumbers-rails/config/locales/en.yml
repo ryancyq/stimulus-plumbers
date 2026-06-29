@@ -1,5 +1,5 @@
 en:
-  stimulus_plumbers:
+  stimulus-plumbers:
     avatar:
       image_alt: "%{name}'s avatar"
     calendar:

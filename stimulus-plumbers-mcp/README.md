@@ -1,6 +1,6 @@
 # stimulus-plumbers-mcp
 
-MCP server for [`stimulus_plumbers`](../stimulus-plumbers-rails). Exposes the component API schema, documentation, and Stimulus controller metadata to LLM-powered IDEs.
+MCP server for [`stimulus-plumbers`](../stimulus-plumbers-rails). Exposes the component API schema, documentation, and Stimulus controller metadata to LLM-powered IDEs.
 
 ## Requirements
 

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require_relative "lib/stimulus_plumbers_tailwind/version"
+require_relative "lib/stimulus_plumbers/tailwind/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "stimulus_plumbers_tailwind"
-  spec.version = StimulusPlumbersTailwind::VERSION
+  spec.name = "stimulus-plumbers-tailwind"
+  spec.version = StimulusPlumbers::Tailwind::VERSION
   spec.authors = ["Ryan Chang"]
   spec.email = ["ryancyq@gmail.com"]
 
-  spec.summary     = "Tailwind CSS theme for stimulus_plumbers"
-  spec.description = "Extends stimulus_plumbers with a Tailwind CSS v4 theme"
+  spec.summary     = "Tailwind CSS theme for stimulus-plumbers"
+  spec.description = "Extends stimulus-plumbers with a Tailwind CSS v4 theme"
   spec.homepage    = "https://github.com/ryancyq/stimulus-plumbers"
   spec.license     = "MIT"
 
@@ -32,5 +32,5 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 3.0"
   spec.required_rubygems_version = ">= 3.2.0"
 
-  spec.add_dependency "stimulus_plumbers", ">= 0.3.1"
+  spec.add_dependency "stimulus-plumbers", ">= 0.3.1"
 end

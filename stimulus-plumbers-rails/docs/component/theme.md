@@ -5,7 +5,7 @@ Stimulus Plumbers uses a theme system to apply presentational CSS classes to for
 ## Configuration
 
 ```ruby
-# config/initializers/stimulus_plumbers.rb
+# config/initializers/stimulus-plumbers.rb
 StimulusPlumbers.configure do |config|
   config.theme.use(:tailwind)
   # config.theme.use(MyCustomTheme.new)

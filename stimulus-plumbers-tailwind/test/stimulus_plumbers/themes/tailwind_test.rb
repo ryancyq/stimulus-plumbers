@@ -21,7 +21,7 @@ class TailwindThemeTest < Minitest::Test
 
   def test_registers_theme_without_rails_engine
     rails_engine = Rails.send(:remove_const, :Engine)
-    load File.expand_path("../../../lib/stimulus_plumbers_tailwind.rb", __dir__)
+    load File.expand_path("../../../lib/stimulus-plumbers-tailwind.rb", __dir__)
 
     assert_equal StimulusPlumbers::Themes::TailwindTheme, StimulusPlumbers.config.theme.registry[:tailwind]
   ensure
@@ -29,8 +29,8 @@ class TailwindThemeTest < Minitest::Test
   end
 
   def test_loads_engine_with_rails_engine
-    load File.expand_path("../../../lib/stimulus_plumbers_tailwind.rb", __dir__)
+    load File.expand_path("../../../lib/stimulus-plumbers-tailwind.rb", __dir__)
 
-    assert_operator StimulusPlumbersTailwind::Engine, :<, Rails::Engine
+    assert_operator StimulusPlumbers::Tailwind::Engine, :<, Rails::Engine
   end
 end

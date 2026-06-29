@@ -88,7 +88,7 @@ module StimulusPlumbers
               theme.resolve(:combobox_typeahead_empty),
               { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "empty" } }
             )
-          ) { I18n.t("stimulus_plumbers.combobox.typeahead.empty", default: "No results") }
+          ) { I18n.t("stimulus-plumbers.combobox.typeahead.empty", default: "No results") }
         end
       end
     end

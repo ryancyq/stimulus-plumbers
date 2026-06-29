@@ -24,7 +24,7 @@ module StimulusPlumbers
           {
             hidden: true,
             role:   "grid",
-            aria:   { label: I18n.t("stimulus_plumbers.calendar.year_view") },
+            aria:   { label: I18n.t("stimulus-plumbers.calendar.year_view") },
             data:   { controller: YEAR_STIMULUS_CONTROLLER }
           },
           kwargs
@@ -39,7 +39,7 @@ module StimulusPlumbers
           {
             hidden: true,
             role:   "grid",
-            aria:   { label: I18n.t("stimulus_plumbers.calendar.decade_view") },
+            aria:   { label: I18n.t("stimulus-plumbers.calendar.decade_view") },
             data:   { controller: DECADE_STIMULUS_CONTROLLER }
           },
           kwargs

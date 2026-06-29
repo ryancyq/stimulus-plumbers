@@ -2,7 +2,7 @@
 
 require_relative "application"
 
-require "stimulus_plumbers_tailwind"
+require "stimulus-plumbers-tailwind"
 
 StimulusPlumbers.configure do |c|
   c.theme.register(:tailwind, StimulusPlumbers::Themes::TailwindTheme)

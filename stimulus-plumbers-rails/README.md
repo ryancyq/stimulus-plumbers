@@ -16,7 +16,7 @@ Rails helpers for accessible, WCAG 2.1 AA compliant UI components built on [Stim
 
 ```ruby
 # Gemfile
-gem "stimulus_plumbers"
+gem "stimulus-plumbers"
 ```
 
 ```bash
@@ -69,7 +69,7 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 
 ## Theming
 
-Supports custom themes by subclassing `StimulusPlumbers::Themes::Base`. A ready-made Tailwind CSS v4 theme is available via the [`stimulus_plumbers_tailwind`](../stimulus-plumbers-tailwind) gem.
+Supports custom themes by subclassing `StimulusPlumbers::Themes::Base`. A ready-made Tailwind CSS v4 theme is available via the [`stimulus-plumbers-tailwind`](../stimulus-plumbers-tailwind) gem.
 
 → [docs/component/theme.md](docs/component/theme.md)
 
@@ -96,8 +96,8 @@ Available appraisals: `rails_6.1`, `rails_7.0`, `rails_7.1`, `rails_7.2`, `rails
 
 [MIT](https://opensource.org/licenses/MIT)
 
-[rubygems_badge]: https://img.shields.io/gem/v/stimulus_plumbers.svg
-[rubygems]: https://rubygems.org/gems/stimulus_plumbers
+[rubygems_badge]: https://img.shields.io/gem/v/stimulus-plumbers.svg
+[rubygems]: https://rubygems.org/gems/stimulus-plumbers
 [ci_badge]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-rails.yml/badge.svg
 [ci]: https://github.com/ryancyq/stimulus-plumbers/actions/workflows/ci-rails.yml
 [coverage_badge]: https://codecov.io/gh/ryancyq/stimulus-plumbers/graph/badge.svg?token=Z77H6M5GER&flag=ruby

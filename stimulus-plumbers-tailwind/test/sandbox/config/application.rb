@@ -11,7 +11,7 @@ require "active_model"
 require "active_support/core_ext"
 require "rails"
 require "sprockets/railtie" if Rails.version < "7.0"
-require "stimulus_plumbers_tailwind"
+require "stimulus-plumbers-tailwind"
 
 class TestApp < Rails::Application
   rails_version = Rails.gem_version.segments.first(2).join(".")

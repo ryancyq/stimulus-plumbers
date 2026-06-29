@@ -22,6 +22,10 @@ Style/HashSyntax:
 Style/Documentation:
   Enabled: false
 
+Naming/FileName:
+  Exclude:
+    - lib/stimulus-plumbers-tailwind.rb
+
 Style/Alias:
   EnforcedStyle: prefer_alias_method
 

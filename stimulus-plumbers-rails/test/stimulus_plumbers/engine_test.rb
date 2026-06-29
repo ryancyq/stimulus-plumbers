@@ -8,7 +8,7 @@ class EngineTest < Minitest::Test
 
     assert_silent do
       StimulusPlumbers::Engine.initializers
-                              .find { |i| i.name == "stimulus_plumbers.assets" }
+                              .find { |i| i.name == "stimulus-plumbers.assets" }
                               .run(app)
     end
   end
@@ -16,7 +16,7 @@ class EngineTest < Minitest::Test
   # sprockets (assets pipeline) is only present in Rails < 7.0 in this project
   if defined?(Rails::Engine) && Rails.version < "7.0"
     def test_booted_app_precompile_includes_tokens_css
-      assert_includes Rails.application.config.assets.precompile, "stimulus_plumbers/tokens.css"
+      assert_includes Rails.application.config.assets.precompile, "stimulus-plumbers/tokens.css"
     end
   end
 end

@@ -5,11 +5,11 @@
 ```
 stimulus-plumbers-tailwind/
 ├── lib/
-│   ├── stimulus_plumbers_tailwind.rb       # Entry point: registers :tailwind theme
-│   ├── stimulus_plumbers_tailwind/
-│   │   ├── engine.rb                       # Rails::Engine — registers :tailwind theme on boot
-│   │   └── version.rb
+│   ├── stimulus-plumbers-tailwind.rb       # Entry point: registers :tailwind theme
 │   └── stimulus_plumbers/
+│       ├── tailwind/
+│       │   ├── engine.rb                   # Rails::Engine — registers :tailwind theme on boot
+│       │   └── version.rb                  # StimulusPlumbers::Tailwind::VERSION
 │       └── themes/
 │           ├── tailwind_theme.rb            # TailwindTheme < Base (includes component modules)
 │           └── tailwind/

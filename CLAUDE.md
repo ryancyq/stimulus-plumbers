@@ -9,8 +9,8 @@ A library of accessible Stimulus controllers that follow WCAG 2.1+ standards. Th
 ```
 stimulus-plumbers/         # npm: @stimulus-plumbers/controllers
 stimulus-plumbers-rails/   # Ruby gem: stimulus-plumbers
-stimulus-plumbers-tailwind/ # Ruby gem: stimulus_plumbers_tailwind
-stimulus-plumbers-mcp/     # Ruby gem: stimulus_plumbers_mcp — MCP server exposing API schema + docs to LLM IDEs
+stimulus-plumbers-tailwind/ # Ruby gem: stimulus-plumbers-tailwind
+stimulus-plumbers-mcp/     # Ruby gem: stimulus-plumbers-mcp — MCP server exposing API schema + docs to LLM IDEs
 ```
 
 ## Design Principle

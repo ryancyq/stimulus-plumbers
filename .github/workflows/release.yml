@@ -74,7 +74,7 @@ jobs:
         run: npm publish --provenance --access public
 
   rubygem-rails:
-    name: Publish stimulus_plumbers to RubyGems
+    name: Publish stimulus-plumbers to RubyGems
     runs-on: ubuntu-latest
     needs: npm
     defaults:
@@ -128,7 +128,7 @@ jobs:
             stimulus-plumbers-rails/gemfiles/*.gemfile.lock
             stimulus-plumbers-rails/lib/stimulus_plumbers/version.rb
             stimulus-plumbers-rails/CHANGELOG.md
-          commit-message: "Bump rubygem stimulus_plumbers version to ${{ env.VERSION }}"
+          commit-message: "Bump rubygem stimulus-plumbers version to ${{ env.VERSION }}"
           tag: stimulus-plumbers-rails/v${{ env.VERSION }}
 
       - run: bundle exec rake build
@@ -138,13 +138,13 @@ jobs:
 
       - name: Push gem
         run: |
-          for gem in pkg/stimulus_plumbers-$VERSION*.gem ; do
+          for gem in pkg/stimulus-plumbers-$VERSION*.gem ; do
             gem push "$gem" --host https://rubygems.org
           done
         shell: bash
 
   rubygem-tailwind:
-    name: Publish stimulus_plumbers_tailwind to RubyGems
+    name: Publish stimulus-plumbers-tailwind to RubyGems
     runs-on: ubuntu-latest
     needs: rubygem-rails
     defaults:
@@ -188,9 +188,9 @@ jobs:
         with:
           files: |
             stimulus-plumbers-tailwind/Gemfile.lock
-            stimulus-plumbers-tailwind/lib/stimulus_plumbers_tailwind/version.rb
+            stimulus-plumbers-tailwind/lib/stimulus_plumbers/tailwind/version.rb
             stimulus-plumbers-tailwind/CHANGELOG.md
-          commit-message: "Bump rubygem stimulus_plumbers_tailwind version to ${{ env.VERSION }}"
+          commit-message: "Bump rubygem stimulus-plumbers-tailwind version to ${{ env.VERSION }}"
           tag: stimulus-plumbers-tailwind/v${{ env.VERSION }}
 
       - run: bundle exec rake build
@@ -200,7 +200,7 @@ jobs:
 
       - name: Push gem
         run: |
-          for gem in pkg/stimulus_plumbers_tailwind-$VERSION*.gem ; do
+          for gem in pkg/stimulus-plumbers-tailwind-$VERSION*.gem ; do
             gem push "$gem" --host https://rubygems.org
           done
         shell: bash
