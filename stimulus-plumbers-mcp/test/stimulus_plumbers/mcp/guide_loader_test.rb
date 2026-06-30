@@ -36,4 +36,9 @@ class GuideLoaderTest < Minitest::Test
     assert_includes @overview, %({ "error": "..." })
     assert_match(%r{isError}, @overview)
   end
+
+  def test_documents_tailwind_install_generator
+    assert_includes @overview, "stimulus_plumbers_tailwind:install"
+    assert_includes @overview, "TAILWIND_CSS_FILE"
+  end
 end

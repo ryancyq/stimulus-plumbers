@@ -54,6 +54,7 @@ Layout/HashAlignment:
 Metrics/ClassLength:
   Exclude:
     - test/stimulus_plumbers/themes/**/*_test.rb
+    - test/generators/**/*_test.rb
 
 Metrics/ModuleLength:
   Exclude:
