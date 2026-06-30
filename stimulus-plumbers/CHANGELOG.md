@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.3](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.2..stimulus-plumbers/v0.4.3) - 2026-06-30
+
+### Tests
+
+- use axe core dev deps instead of cdn for a11y tests - ([3f3969b](https://github.com/ryancyq/stimulus-plumbers/commit/3f3969b505770d2d11f8bbd17a333fd3f67c3fe5)) - Ryan Chang
+
+---
 ## [0.4.1](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.0..stimulus-plumbers/v0.4.1) - 2026-06-30
 
 ### Bug Fixes
