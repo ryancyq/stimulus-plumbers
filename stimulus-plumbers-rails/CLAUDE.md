@@ -223,31 +223,7 @@ Sandbox views must have matching wrapper IDs:
 
 ## Form Builder Convention
 
-The form builder operates at two levels:
-
-### Level 1 — Native ActionView overrides (theme classes only)
-
-Standard Rails helpers (`email_field`, `text_area`, `check_box`, `select`, `date_field`, etc.) are overridden to apply theme CSS classes but render **no** label, hint, or error wrapper. Use them when controlling surrounding markup manually.
-
-```erb
-<%= f.email_field :email %>
-<%= f.select      :country, options %>
-<%= f.check_box   :agree %>
-```
-
-`password_field` additionally supports `revealable: true` at the input level (renders an input-formatter wrapper). `search_field` additionally supports `clearable: true`.
-
-### Level 2 — Full-field helpers (label + input + hint + error)
-
-Three builder methods provide the complete accessible field pattern:
-
-| Method | Renderer constant | `as:` values |
-| --- | --- | --- |
-| `f.field(attr, as:)` | `Renderer::FIELD` | `:text`, `:email`, `:number`, `:url`, `:tel`, `:color`, `:month`, `:week`, `:range`, `:datetime_local`, `:text_area`, `:file`, `:password`, `:date`, `:time`, `:select`, `:search` |
-| `f.collection_field(attr, as:, collection:, value_method:, text_method:)` | `Renderer::COLLECTION` | `:collection_select`, `:grouped_collection_select` |
-| `f.choice(attr, as:, collection:, value_method:, text_method:)` | `Renderer::CHOICE` | `:radio`, `:check_box` |
-
-Field-chrome options (`label:`, `hint:`, `error:`, `required:`, `hide_label:`, `layout:`) are only meaningful on the full-field helpers — they are **not** processed by native overrides.
+> See [docs/component/form.md](docs/component/form.md) for the two-level builder API (Level 1 native overrides, Level 2 full-field helpers, shared field options, rendered HTML structure).
 
 ## WCAG / ARIA Reference
 See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns. Renderers in this package own the HTML structure and ARIA attributes for all components.
@@ -256,7 +232,6 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
 > Key internal docs: `plumber.md` (Base / Renderer / Options::Html), `dispatcher.md` (Dispatcher strategies), `form.md` (two-level field API).
-> Ensure examples provided are tested.
 
 > See [docs/architecture.md](docs/architecture.md) for schema ranges convention and icon-only detection contract.
 

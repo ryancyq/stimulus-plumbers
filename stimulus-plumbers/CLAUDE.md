@@ -61,4 +61,3 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 ## Controller / Plumber Design Principles
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
-> Ensure examples provided are tested.
