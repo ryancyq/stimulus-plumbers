@@ -31,14 +31,30 @@ StimulusPlumbers.configure do |config|
 end
 ```
 
-Tell Tailwind to scan the gem's lib files so component class names are included in the generated CSS. Add an `@source` directive pointing at the gem's installed path:
+Run the install generator once to inject the required `@source` directive into your Tailwind CSS entry file:
 
-```css
-@import "tailwindcss";
-@source "/path/to/gems/stimulus_plumbers_tailwind-VERSION/lib/**/*.rb";
+```bash
+bin/rails generate stimulus_plumbers_tailwind:install
 ```
 
-Use `bundle show stimulus_plumbers_tailwind` to get the exact installed path.
+The generator checks these files in order:
+
+- `app/assets/stylesheets/application.tailwind.css`
+- `app/assets/stylesheets/application.css`
+- `app/javascript/entrypoints/application.css`
+
+Override the detected file for both the generator and rake task with `TAILWIND_CSS_FILE=/path/to/entry.css`.
+
+After the initial install, the `@source` path is kept current automatically — no manual re-run needed after `bundle update`. The engine hooks `stimulus_plumbers_tailwind:install` as a prerequisite of:
+
+- `assets:precompile` (Sprockets and Propshaft both define this task)
+- `tailwindcss:build` (when `tailwindcss-rails` is present)
+
+To trigger an update manually without a full compile (useful for debugging or after `bundle update`):
+
+```bash
+bin/rails stimulus_plumbers_tailwind:install
+```
 
 ## Theming
 

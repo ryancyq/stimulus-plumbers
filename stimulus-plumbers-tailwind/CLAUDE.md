@@ -9,6 +9,12 @@ stimulus-plumbers-tailwind/
 │   ├── stimulus_plumbers_tailwind/
 │   │   ├── engine.rb                       # Rails::Engine — registers :tailwind theme on boot
 │   │   └── version.rb
+│   ├── generators/
+│   │   └── stimulus_plumbers_tailwind/
+│   │       └── install/
+│   │           └── install_generator.rb    # `rails g stimulus_plumbers_tailwind:install` — injects @source into Tailwind entry CSS
+│   ├── tasks/
+│   │   └── stimulus_plumbers_tailwind.rake # Consumer rake task: install, hooked into assets:precompile + tailwindcss:build
 │   └── stimulus_plumbers/
 │       └── themes/
 │           ├── tailwind_theme.rb            # TailwindTheme < Base (includes component modules)
@@ -35,6 +41,9 @@ stimulus-plumbers-tailwind/
 │               ├── layout.rb              # Layout CSS classes
 │               └── link.rb                # Link CSS classes
 ├── test/
+│   ├── generators/
+│   │   └── stimulus_plumbers_tailwind/
+│   │       └── install_generator_test.rb   # Generator unit tests (Rails::Generators::TestCase)
 │   ├── stimulus_plumbers/
 │   │   └── themes/
 │   │       ├── tailwind_test.rb            # TailwindTheme integration tests
@@ -65,7 +74,7 @@ stimulus-plumbers-tailwind/
 > **Architecture decisions** (constant ownership, icon-only pattern, card style, floating fields) are documented in [docs/architecture.md](docs/architecture.md).
 
 ## Guidelines
-- **Unit tests** using Rails minitest (`rake test:unit`)
+- **Unit tests** using Rails minitest (`rake test:unit`) — covers theme modules and generators
 - **Snapshot tests** using Playwright (`node --run test:snapshots`)
 - **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
 - **Snapshot tests must be a superset of `stimulus-plumbers-rails` a11y tests** — every page + interactive state covered by an a11y test must also have a corresponding snapshot test. When adding a11y tests in the core gem, add matching snapshot coverage here.
@@ -121,6 +130,16 @@ Four rules for sandbox views and their matching snapshot specs:
 - **Assert** semantic color tokens (`bg-(--sp-color-primary)`), visual properties (`font-semibold`, `text-sm`), and behavioral outcomes (`refute "absolute"` = in-flow, `assert "ring-4"` = halo).
 - **Don't assert** spacing/offset magic numbers (`mt-1.5`, `start-3`, `ms-6`, `pb-10`) or layout mechanism choices (`flex-1`, `relative`, `absolute`) — these express *how*, not *what*.
 - Exception: `refute_includes result, "absolute"` is a valid use-case assertion when the intent is "element is in normal flow".
+
+## Generator Test Convention
+
+**Class:** `Rails::Generators::TestCase` with `tests`, `destination`, and `setup :prepare_destination`.
+
+**Pattern:** create CSS fixtures in `destination_root` via a `write_entry_css` helper, run the generator, then `assert_file` the modified content.
+
+**Coverage rule:** every branch in `install` needs a test — in execution order: identical (no-op, already current), update (stale gem path), insert (after `@import`), append (no `@import`), and the no-entry-file fallback. Entry file detection also needs tests: first candidate, each fallback candidate, `TAILWIND_CSS_FILE` override (existing file), and `TAILWIND_CSS_FILE` pointing to a non-existent file (falls through to candidates).
+
+**Idempotency logic:** the generator uses two-stage detection — `content.include?(source_line)` for an exact match (handles re-runs on the same machine), then a `GEM_NAME` regex for stale paths from old versions. Tests for idempotency count total `@source` occurrences (`css.scan("@source").length`) rather than filtering by gem name, so they work regardless of whether the path uses underscores (installed gem) or hyphens (dev path gem).
 
 ## Theme Registration
 

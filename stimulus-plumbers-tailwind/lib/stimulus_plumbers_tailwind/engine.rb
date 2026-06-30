@@ -7,5 +7,9 @@ module StimulusPlumbersTailwind
         c.theme.register(:tailwind, StimulusPlumbers::Themes::TailwindTheme)
       end
     end
+
+    rake_tasks do
+      load File.join(__dir__, "../tasks/stimulus_plumbers_tailwind.rake")
+    end
   end
 end
