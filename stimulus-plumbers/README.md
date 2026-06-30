@@ -8,7 +8,7 @@ Accessible Stimulus controllers following WCAG 2.1+ standards.
 
 ## Requirements
 
-- Node.js >= 18
+- Node.js >= 22
 - `@hotwired/stimulus` ^2.0 or ^3.0 (peer dependency)
 
 ## Installation

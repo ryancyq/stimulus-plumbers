@@ -15,5 +15,8 @@
     "@tailwindcss/cli": "^4.1.0",
     "prettier": "^3.9.1",
     "tailwindcss": "^4.1.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }
