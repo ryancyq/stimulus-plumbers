@@ -15,13 +15,15 @@ This controller is also the visibility/dismissal layer for the combobox family �
 
 ## Values
 
-| Value           | Type    | Default   | Description                                          |
-| --------------- | ------- | --------- | ---------------------------------------------------- |
-| `url`           | String  | —         | Remote URL to fetch content from                     |
-| `reload`        | String  | `"never"` | When to reload: `"never"` \| `"always"` \| `"stale"` |
-| `staleAfter`    | Number  | `3600`    | Seconds after which content is considered stale      |
-| `loadedAt`      | String  | —         | ISO timestamp of last load (set automatically)       |
-| `closeOnSelect` | Boolean | `true`    | Whether a `#closeOnSelect` call dismisses the panel  |
+| Value           | Type    | Default          | Description                                          |
+| --------------- | ------- | ---------------- | ---------------------------------------------------- |
+| `url`           | String  | —                | Remote URL to fetch content from                     |
+| `reload`        | String  | `"never"`        | When to reload: `"never"` \| `"always"` \| `"stale"` |
+| `staleAfter`    | Number  | `3600`           | Seconds after which content is considered stale      |
+| `loadedAt`      | String  | —                | ISO timestamp of last load (set automatically)       |
+| `closeOnSelect` | Boolean | `true`           | Whether a `#closeOnSelect` call dismisses the panel  |
+| `announceOpen`  | String  | `"Panel opened"` | Screen-reader announcement on panel show             |
+| `announceClose` | String  | `"Panel closed"` | Screen-reader announcement on panel hide             |
 
 ## Methods
 

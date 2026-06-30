@@ -44,15 +44,22 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 
 | Component | Helper(s) | Docs |
 |-----------|-----------|------|
+| Avatar | `sp_avatar` | [docs/component/avatar.md](docs/component/avatar.md) |
 | Button | `sp_button`, `sp_button_group` | [docs/component/button.md](docs/component/button.md) |
+| Calendar | `sp_calendar_month` | [docs/component/calendar.md](docs/component/calendar.md) |
+| Calendar (Turbo) | `sp_calendar_turbo`, `sp_calendar_turbo_month`, `sp_calendar_turbo_year`, `sp_calendar_turbo_decade` | [docs/component/calendar.md](docs/component/calendar.md) |
+| Card | `sp_card` | [docs/component/card.md](docs/component/card.md) |
 | Combobox — date | `sp_combobox_date` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_date) |
 | Combobox — dropdown | `sp_combobox_dropdown` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_dropdown) |
 | Combobox — typeahead | `sp_combobox_typeahead` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_typeahead) |
 | Combobox — time | `sp_combobox_time` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_time) |
-| Calendar | `sp_calendar_month` | [docs/component/calendar.md](docs/component/calendar.md) |
+| Divider | `sp_divider` | [docs/component/divider.md](docs/component/divider.md) |
+| Icon | `sp_icon` | [docs/component/icon.md](docs/component/icon.md) |
+| Link | `sp_link` | [docs/component/link.md](docs/component/link.md) |
+| List | `sp_list` | [docs/component/list.md](docs/component/list.md) |
+| Modal | — (JS only) | [docs/component/modal.md](docs/component/modal.md) |
 | Popover | `sp_popover` | [docs/component/popover.md](docs/component/popover.md) |
 | Timeline | `sp_timeline` | [docs/component/timeline.md](docs/component/timeline.md) |
-| Modal | — (JS only) | [docs/component/modal.md](docs/component/modal.md) |
 
 ## Form Builder
 

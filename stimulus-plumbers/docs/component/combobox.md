@@ -89,21 +89,26 @@ Formats and displays values. Always co-located with `input-combobox`.
 
 ## combobox-date
 
-Navigates a calendar grid with month, year, and decade views. Requires a `calendar-month` outlet.
+Navigates a calendar grid with month, year, and decade views. Requires a `calendar-month` outlet; `calendar-year` and `calendar-decade` are optional for drill-down. View switching hides/shows outlet elements directly — no named targets for view containers.
 
 **Targets**
 
-| Target       | Description                                                                |
-| ------------ | -------------------------------------------------------------------------- |
-| `previous`   | Button that steps backward (one month / one year / one decade by view)     |
-| `next`       | Button that steps forward (one month / one year / one decade by view)      |
-| `viewTitle`  | Button showing the current view label (e.g. "June 2025" / "2025")          |
-| `day`        | Rendered day label element (display only)                                  |
-| `month`      | Rendered month label element (display only)                                |
-| `year`       | Rendered year label element (display only)                                 |
-| `monthView`  | Container for the month view (days grid); hidden in year/decade views      |
-| `yearView`   | Container for the year view (months grid); each cell calls `selectMonth()` |
-| `decadeView` | Container for the decade view (years grid); each cell calls `selectYear()` |
+| Target      | Description                                                            |
+| ----------- | ---------------------------------------------------------------------- |
+| `previous`  | Button that steps backward (one month / one year / one decade by view) |
+| `next`      | Button that steps forward (one month / one year / one decade by view)  |
+| `viewTitle` | Button showing the current view label (e.g. "June 2025" / "2025")      |
+| `day`       | Rendered day label element (display only)                              |
+| `month`     | Rendered month label element (display only)                            |
+| `year`      | Rendered year label element (display only)                             |
+
+**Outlets**
+
+| Outlet            | Description                                                  |
+| ----------------- | ------------------------------------------------------------ |
+| `calendar-month`  | Required — provides the day grid and calendar navigation API |
+| `calendar-year`   | Optional — year view grid; shown when `view` is `"year"`     |
+| `calendar-decade` | Optional — decade view grid; shown when `view` is `"decade"` |
 
 **Values**
 
@@ -118,14 +123,14 @@ Navigates a calendar grid with month, year, and decade views. Requires a `calend
 
 **Methods**
 
-| Method            | Wired via                    | Description                                                                           |
-| ----------------- | ---------------------------- | ------------------------------------------------------------------------------------- |
-| `previous()`      | click on `previous` target   | Steps back: one month (month view), one year (year view), one decade (decade view)    |
-| `next()`          | click on `next` target       | Steps forward: one month (month view), one year (year view), one decade (decade view) |
-| `zoomOut()`       | click on `viewTitle` target  | Zooms out: month → year → decade view                                                 |
-| `selectMonth()`   | click on `yearView` cell     | Selects a month and switches to month view                                            |
-| `selectYear()`    | click on `decadeView` cell   | Selects a year and switches to year view                                              |
-| `onSelect(event)` | `calendar-observer:selected` | Event adapter — updates `dateValue`, redraws labels, dispatches `selected`            |
+| Method                 | Wired via                   | Description                                                                              |
+| ---------------------- | --------------------------- | ---------------------------------------------------------------------------------------- |
+| `previous()`           | click on `previous` target  | Steps back: one month (month view), one year (year view), one decade (decade view)       |
+| `next()`               | click on `next` target      | Steps forward: one month (month view), one year (year view), one decade (decade view)    |
+| `zoomOut()`            | click on `viewTitle` target | Zooms out: month → year → decade view                                                    |
+| `onDaySelect(event)`   | `calendar-month:selected`   | Event adapter — updates `dateValue`, redraws labels, dispatches `combobox-date:selected` |
+| `onMonthSelect(event)` | `calendar-year:selected`    | Event adapter — navigates calendar to selected month, switches to month view             |
+| `onYearSelect(event)`  | `calendar-decade:selected`  | Event adapter — navigates calendar to selected year, switches to year view               |
 
 **Dispatches**
 

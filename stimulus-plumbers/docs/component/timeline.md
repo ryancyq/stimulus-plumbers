@@ -8,10 +8,11 @@ Manages expandable/collapsible timeline event items with keyboard navigation and
 
 ## Targets
 
-| Name      | Element                       | Purpose                                            |
-| --------- | ----------------------------- | -------------------------------------------------- |
-| `trigger` | `<button>` inside each `<h3>` | Controls expand/collapse of its associated detail  |
-| `detail`  | Collapsible region            | Content shown/hidden via `aria-controls` reference |
+| Name      | Element                       | Purpose                                                                                 |
+| --------- | ----------------------------- | --------------------------------------------------------------------------------------- |
+| `trigger` | `<button>` inside each `<h3>` | Controls expand/collapse of its associated detail                                       |
+| `detail`  | Collapsible region            | Content shown/hidden via `aria-controls` reference                                      |
+| `time`    | `<time datetime="…">`         | Empty `<time>` elements whose text content is set from `datetime` via `dateFormatValue` |
 
 ## Values
 
@@ -35,6 +36,15 @@ Manages expandable/collapsible timeline event items with keyboard navigation and
 | `ArrowUp`   | Focus previous trigger (wraps) |
 | `Home`      | Focus first trigger            |
 | `End`       | Focus last trigger             |
+
+## Dispatches
+
+| Event                | Detail                | When                              |
+| -------------------- | --------------------- | --------------------------------- |
+| `timeline:expand`    | `{ trigger, detail }` | When an item begins expanding     |
+| `timeline:expanded`  | `{ trigger, detail }` | After an item finishes expanding  |
+| `timeline:collapse`  | `{ trigger, detail }` | When an item begins collapsing    |
+| `timeline:collapsed` | `{ trigger, detail }` | After an item finishes collapsing |
 
 ## Example HTML
 

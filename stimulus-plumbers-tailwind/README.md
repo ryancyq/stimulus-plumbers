@@ -27,7 +27,7 @@ Activate the theme in an initializer or `config/application.rb`:
 
 ```ruby
 StimulusPlumbers.configure do |config|
-  config.theme = :tailwind
+  config.theme.use(:tailwind)
 end
 ```
 
@@ -46,7 +46,6 @@ Use `bundle show stimulus_plumbers_tailwind` to get the exact installed path.
 
 | Module | Components |
 |--------|------------|
-| `Tailwind::ActionList` | Action list, menu items |
 | `Tailwind::Avatar` | Avatar |
 | `Tailwind::Button` | Button |
 | `Tailwind::Calendar` | Calendar grid, date picker |
@@ -55,6 +54,9 @@ Use `bundle show stimulus_plumbers_tailwind` to get the exact installed path.
 | `Tailwind::Form` | Form fields, labels, errors |
 | `Tailwind::Icon` | Icon (SVG rendering, icon registry) |
 | `Tailwind::Layout` | Layout primitives |
+| `Tailwind::Link` | Link |
+| `Tailwind::List` | List |
+| `Tailwind::Timeline` | Timeline |
 
 Custom themes can subclass `TailwindTheme` to override individual methods, or subclass `StimulusPlumbers::Themes::Base` directly.
 

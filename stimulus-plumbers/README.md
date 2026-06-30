@@ -42,6 +42,7 @@ import {
   FlipperController,
   ClipboardController,
   PannerController,
+  TimelineController,
 } from '@stimulus-plumbers/controllers'
 
 const application = Application.start()
@@ -64,6 +65,7 @@ application.register('dismisser',                DismisserController)
 application.register('flipper',                  FlipperController)
 application.register('clipboard',                ClipboardController)
 application.register('panner',                   PannerController)
+application.register('timeline',                 TimelineController)
 ```
 
 ## Controllers
@@ -99,6 +101,7 @@ application.register('panner',                   PannerController)
 | `RovingTabIndex`, `ListboxNavigation`, `isActivationKey`, `isArrowKey` | Keyboard interaction | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
 | `Requestor` | Fetch wrapper with lifecycle events | [docs/utility/requestor.md](docs/utility/requestor.md) |
 | `fuzzyMatcher`, `filterOptions` | Option filtering for comboboxes | [docs/utility/researcher.md](docs/utility/researcher.md) |
+| `Formatter`, `FORMATTER_TYPES` | Input formatter plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/formatter.md](docs/plumber/formatter.md) |
 
 ## Method naming convention
 
