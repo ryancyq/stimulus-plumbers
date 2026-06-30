@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    stimulus_plumbers (0.4.2)
+    stimulus_plumbers (0.4.3)
       actionview (>= 6.1, < 8.2)
 
 GEM
