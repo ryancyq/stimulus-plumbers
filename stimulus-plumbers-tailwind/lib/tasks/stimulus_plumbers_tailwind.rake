@@ -10,10 +10,6 @@ namespace :stimulus_plumbers_tailwind do
   end
 end
 
-if Rake::Task.task_defined?("assets:precompile")
-  Rake::Task["assets:precompile"].enhance(["stimulus_plumbers_tailwind:install"])
-end
+Rake::Task["assets:precompile"].enhance(["stimulus_plumbers_tailwind:install"]) if Rake::Task.task_defined?("assets:precompile")
 
-if Rake::Task.task_defined?("tailwindcss:build")
-  Rake::Task["tailwindcss:build"].enhance(["stimulus_plumbers_tailwind:install"])
-end
+Rake::Task["tailwindcss:build"].enhance(["stimulus_plumbers_tailwind:install"]) if Rake::Task.task_defined?("tailwindcss:build")

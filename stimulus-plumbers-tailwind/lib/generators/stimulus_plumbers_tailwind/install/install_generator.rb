@@ -15,34 +15,46 @@ module StimulusPlumbersTailwind
 
       def install
         css_file = entry_css_file
-        unless css_file
-          tried = CSS_CANDIDATES.map { |c| File.join(destination_root, c) }
-          tried.unshift(File.expand_path(ENV[TAILWIND_CSS_FILE])) if ENV[TAILWIND_CSS_FILE]
-          say "Could not find a Tailwind CSS entry file. Tried: #{tried.join(", ")}. " \
-              "Set #{TAILWIND_CSS_FILE}=/path/to/entry.css and re-run.", :red
-          return
-        end
+        return warn_entry_css_not_found unless css_file
 
-        source_line = build_source_line
-        content     = File.read(css_file)
-
-        if content.include?(source_line)
-          say_status :identical, relative_to_destination(css_file)
-        elsif (existing = content.match(/@source "[^"]*#{Regexp.escape(GEM_NAME)}[^"]*";/))
-          File.write(css_file, content.sub(existing[0], source_line))
-          say_status :update, relative_to_destination(css_file), :green
-        elsif (import_line = content.match(/@import "tailwindcss"[^;]*;/))
-          File.write(css_file, content.sub(import_line[0], "#{import_line[0]}\n#{source_line}"))
-          say_status :insert, relative_to_destination(css_file), :green
-        else
-          File.write(css_file, "#{content.rstrip}\n#{source_line}\n")
-          say_status :append, relative_to_destination(css_file), :green
-        end
+        apply_edit(css_file)
       end
 
       private
 
-      def build_source_line
+      def warn_entry_css_not_found
+        tried = CSS_CANDIDATES.map { |c| File.join(destination_root, c) }
+        tried.unshift(File.expand_path(ENV[TAILWIND_CSS_FILE])) if ENV[TAILWIND_CSS_FILE]
+        say "Could not find a Tailwind CSS entry file. Tried: #{tried.join(", ")}. " \
+            "Set #{TAILWIND_CSS_FILE}=/path/to/entry.css and re-run.",
+            :red
+      end
+
+      def apply_edit(css_file)
+        content              = File.read(css_file)
+        new_content, status  = content_edit(content, source_directive)
+
+        if new_content
+          File.write(css_file, new_content)
+          say_status status, relative_to_destination(css_file), :green
+        else
+          say_status :identical, relative_to_destination(css_file)
+        end
+      end
+
+      def content_edit(content, source_line)
+        if content.include?(source_line)
+          nil
+        elsif (existing = content.match(%r{@source "[^"]*#{Regexp.escape(GEM_NAME)}[^"]*";}))
+          [content.sub(existing[0], source_line), :update]
+        elsif (import_line = content.match(%r{@import "tailwindcss"[^;]*;}))
+          [content.sub(import_line[0], "#{import_line[0]}\n#{source_line}"), :insert]
+        else
+          ["#{content.rstrip}\n#{source_line}\n", :append]
+        end
+      end
+
+      def source_directive
         spec = Gem.loaded_specs[GEM_NAME]
         %(@source "#{spec.gem_dir}/lib/**/*.rb";)
       end
