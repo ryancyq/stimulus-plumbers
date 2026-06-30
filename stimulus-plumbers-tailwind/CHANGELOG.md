@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.2](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.0..stimulus-plumbers-tailwind/v0.4.2) - 2026-06-30
+
+### Bug Fixes
+
+- form submit button style ([#127](https://github.com/ryancyq/stimulus-plumbers/issues/127)) - ([2bbc73f](https://github.com/ryancyq/stimulus-plumbers/commit/2bbc73f15b7ffa2d9d8f87991adead33fab8156e)) - Ryan Chang
+- various component styles ([#128](https://github.com/ryancyq/stimulus-plumbers/issues/128)) - ([011cc69](https://github.com/ryancyq/stimulus-plumbers/commit/011cc69bb6df3770949564521cdf949493d028cc)) - Ryan Chang
+- use generic icon in core gem then provide alias in tailwind gem ([#129](https://github.com/ryancyq/stimulus-plumbers/issues/129)) - ([5c87d0d](https://github.com/ryancyq/stimulus-plumbers/commit/5c87d0da0c012652a3afa5aa8345b58d03e6ce5b)) - Ryan Chang
+- combobox time ([#130](https://github.com/ryancyq/stimulus-plumbers/issues/130)) - ([ff5d968](https://github.com/ryancyq/stimulus-plumbers/commit/ff5d968da34fc723b0112a791bd95ef43f2b1640)) - Ryan Chang
+- extract img avatar building block ([#132](https://github.com/ryancyq/stimulus-plumbers/issues/132)) - ([c3808b8](https://github.com/ryancyq/stimulus-plumbers/commit/c3808b8df38eecef940b51dab29f50bc815b4e74)) - Ryan Chang
+- update floating style to label/input/group ([#135](https://github.com/ryancyq/stimulus-plumbers/issues/135)) - ([3947f38](https://github.com/ryancyq/stimulus-plumbers/commit/3947f38467e0a498fe51101d1859a573db93349f)) - Ryan Chang
+- accessibility + plumber helpers ([#136](https://github.com/ryancyq/stimulus-plumbers/issues/136)) - ([e84053d](https://github.com/ryancyq/stimulus-plumbers/commit/e84053d43db4726c3704d459a0464f70529fff8b)) - Ryan Chang
+- calendar disabled + out of range ([#148](https://github.com/ryancyq/stimulus-plumbers/issues/148)) - ([7bd1ca2](https://github.com/ryancyq/stimulus-plumbers/commit/7bd1ca21af1b982cf7df9460e0ba1c9e78866a87)) - Ryan Chang
+
+### Dependencies
+
+- **(deps-dev)** bump @playwright/test in /stimulus-plumbers-tailwind ([#147](https://github.com/ryancyq/stimulus-plumbers/issues/147)) - ([941634d](https://github.com/ryancyq/stimulus-plumbers/commit/941634de18e2accc39f926258cb3d1b2534d11dc)) - dependabot[bot]
+- **(deps-dev)** bump prettier in /stimulus-plumbers-tailwind ([#146](https://github.com/ryancyq/stimulus-plumbers/issues/146)) - ([570c8ff](https://github.com/ryancyq/stimulus-plumbers/commit/570c8ff7630039bdbdc6e3d89c6a181bbc706dd8)) - dependabot[bot]
+
+### Documentation
+
+- update readme and component doc ([#134](https://github.com/ryancyq/stimulus-plumbers/issues/134)) - ([3e5f462](https://github.com/ryancyq/stimulus-plumbers/commit/3e5f4621c4fbf142af061659cfbb8cd3e99fd093)) - Ryan Chang
+- update component documentation - ([89ecb78](https://github.com/ryancyq/stimulus-plumbers/commit/89ecb786d88eed66ab925921ac182aa84560207d)) - Ryan Chang
+
+### Features
+
+- calendar redesign  ([#133](https://github.com/ryancyq/stimulus-plumbers/issues/133)) - ([e19df95](https://github.com/ryancyq/stimulus-plumbers/commit/e19df95f3814b3d947142722ff0295f1bdcef6b3)) - Ryan Chang
+
+### Tests
+
+- update sandbox view and spec coverage ([#122](https://github.com/ryancyq/stimulus-plumbers/issues/122)) - ([0fd3381](https://github.com/ryancyq/stimulus-plumbers/commit/0fd33817325070c29ffed82d37843b4c4be3e911)) - Ryan Chang
+- update collection radio locator - ([f0fa9e8](https://github.com/ryancyq/stimulus-plumbers/commit/f0fa9e85bc0b835b3adc46f5dc406a8bdedbeefe)) - Ryan Chang
+
+---
 ## [0.4.0](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.3.3..stimulus-plumbers-tailwind/v0.4.0) - 2026-06-14
 
 ### Bug Fixes
