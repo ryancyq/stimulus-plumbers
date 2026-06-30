@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.4](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.3..stimulus-plumbers-rails/v0.4.4) - 2026-06-30
+
+### Dependencies
+
+- update npm package dist to have both es + umd + source map - ([64ec309](https://github.com/ryancyq/stimulus-plumbers/commit/64ec309ca171584d1604e4e7d3d3533878ebed7a)) - Ryan Chang
+
+---
 ## [0.4.3](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.2..stimulus-plumbers-rails/v0.4.3) - 2026-06-30
 
 ### Tests
