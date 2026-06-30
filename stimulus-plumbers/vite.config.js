@@ -12,8 +12,9 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.js'),
       name: 'StimulusPlumbersControllers',
       formats: ['es', 'umd'],
-      fileName: (format) => `stimulus-plumbers-controllers.${format}.js`
+      fileName: (format) => `index.${format}.js`
     },
+    sourcemap: true,
     rollupOptions: {
       external: ['@hotwired/stimulus'],
       output: {

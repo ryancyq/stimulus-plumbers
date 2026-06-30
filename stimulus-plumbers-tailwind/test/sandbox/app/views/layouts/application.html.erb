@@ -13,6 +13,21 @@
     <main class="container mx-auto py-4">
       <%= yield %>
     </main>
-    <%= render "layouts/stimulus_setup" %>
+    <script type="module">
+      import { Application } from "@hotwired/stimulus";
+      import * as StimulusPlumbers from "/dist/index.es.js";
+
+      const app = Application.start();
+
+      Object.entries(StimulusPlumbers)
+        .filter(([name]) => name.endsWith("Controller"))
+        .forEach(([name, controller]) => {
+          const identifier = name
+            .replace("Controller", "")
+            .replace(/([a-z])([A-Z])/g, "$1-$2")
+            .toLowerCase();
+          app.register(identifier, controller);
+        });
+    </script>
   </body>
 </html>
