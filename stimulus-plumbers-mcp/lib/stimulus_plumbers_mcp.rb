@@ -8,7 +8,7 @@ require "action_view"
 require "stimulus_plumbers"
 require "stimulus_plumbers_tailwind"
 
-require_relative "stimulus_plumbers_mcp/version"
+require_relative "stimulus_plumbers/mcp/version"
 require_relative "stimulus_plumbers/mcp/loaders/guide_loader"
 require_relative "stimulus_plumbers/mcp/loaders/schema_loader"
 require_relative "stimulus_plumbers/mcp/loaders/docs_loader"

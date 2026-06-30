@@ -31,7 +31,7 @@ module StimulusPlumbers
       def self.new_server
         ::MCP::Server.new(
           name:               "stimulus-plumbers",
-          version:            StimulusPlumbersMcp::VERSION,
+          version:            StimulusPlumbers::MCP::VERSION,
           instructions:       INSTRUCTIONS,
           resources:          PLUGINS.flat_map { |p| p::STATIC_RESOURCES },
           resource_templates: PLUGINS.flat_map { |p| p::DYNAMIC_RESOURCE_TEMPLATES }

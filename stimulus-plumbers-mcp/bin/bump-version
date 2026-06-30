@@ -8,13 +8,13 @@ if VERSION.nil? || VERSION.empty?
   exit 1
 end
 
-OUTPUT_FILE = File.expand_path("../lib/stimulus_plumbers/tailwind/version.rb", __dir__)
+OUTPUT_FILE = File.expand_path("../lib/stimulus_plumbers/mcp/version.rb", __dir__)
 
 output = <<~RUBY
   # frozen_string_literal: true
 
   module StimulusPlumbers
-    module Tailwind
+    module MCP
       VERSION = "#{VERSION}"
     end
   end

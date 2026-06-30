@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/stimulus_plumbers_tailwind/version"
+require_relative "lib/stimulus_plumbers/tailwind/version"
 
 Gem::Specification.new do |spec|
   spec.name = "stimulus_plumbers_tailwind"
-  spec.version = StimulusPlumbersTailwind::VERSION
+  spec.version = StimulusPlumbers::Tailwind::VERSION
   spec.authors = ["Ryan Chang"]
   spec.email = ["ryancyq@gmail.com"]
 
