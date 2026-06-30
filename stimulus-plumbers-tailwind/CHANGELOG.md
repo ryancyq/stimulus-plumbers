@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.3](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.2..stimulus-plumbers-tailwind/v0.4.3) - 2026-06-30
+
+### Bug Fixes
+
+- tailwind generator ([#149](https://github.com/ryancyq/stimulus-plumbers/issues/149)) - ([9dafae0](https://github.com/ryancyq/stimulus-plumbers/commit/9dafae03b5d49fb543d08f84cdb718d944dce49f)) - Ryan Chang
+
+---
 ## [0.4.2](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.0..stimulus-plumbers-tailwind/v0.4.2) - 2026-06-30
 
 ### Bug Fixes
