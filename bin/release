@@ -1,0 +1,173 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Usage (local):
+#   bin/release <version>                         # build + commit + publish all
+#   bin/release <version> --dry-run               # build only, no git, no publish
+#   bin/release <version> --only npm|rails|tailwind|mcp
+#
+# Usage (CI — called by release.yml):
+#   bin/release <version> --no-git --only <pkg>   # build + publish; CI handles git
+
+VERSION    = ARGV[0]
+NO_GIT     = ARGV.include?("--no-git")
+NO_PUBLISH = ARGV.include?("--no-publish")
+DRY_RUN    = ARGV.include?("--dry-run")
+ONLY       = (i = ARGV.index("--only")) ? ARGV[i + 1] : nil
+CI         = ENV["CI"] == "true"
+
+# --dry-run implies both --no-git and --no-publish
+SKIP_GIT     = NO_GIT     || DRY_RUN
+SKIP_PUBLISH = NO_PUBLISH || DRY_RUN
+
+ROOT = File.expand_path("..", __dir__)
+
+if VERSION.nil? || VERSION !~ /\A\d+\.\d+\.\d+(\.\w+)?\z/
+  warn "Usage: #{$PROGRAM_NAME} <version> [--dry-run] [--no-git] [--no-publish] [--only npm|rails|tailwind|mcp]"
+  exit 1
+end
+
+VALID_TARGETS = %w[npm rails tailwind mcp].freeze
+if ONLY && !VALID_TARGETS.include?(ONLY)
+  warn "Unknown target '#{ONLY}'. Valid: #{VALID_TARGETS.join(", ")}"
+  exit 1
+end
+
+mode = DRY_RUN ? "DRY RUN" : (CI ? "CI" : "local")
+puts "==> Release #{VERSION} [#{mode}]#{ONLY ? " — #{ONLY} only" : ""}"
+puts
+
+def run!(cmd, dir: ROOT)
+  puts "  $ #{cmd}"
+  success = system(cmd, chdir: dir)
+  abort "  FAILED: #{cmd}" unless success
+end
+
+def section(name)
+  puts "── #{name} " + "─" * [0, 60 - name.length].max
+end
+
+def skip?(target)
+  ONLY && ONLY != target
+end
+
+# Tracks files to stage for the local git commit
+CHANGED_FILES = []
+
+# ── npm: @stimulus-plumbers/controllers ──────────────────────────────────────
+unless skip?("npm")
+  section("npm @stimulus-plumbers/controllers")
+  npm_dir = File.join(ROOT, "stimulus-plumbers")
+
+  run! "npm version #{VERSION} --no-git-tag-version --allow-same-version", dir: npm_dir
+  run! "npm run build", dir: npm_dir
+
+  # Copy compiled dist into the rails gem's vendored JS asset directory.
+  # In CI this is done via artifact upload/download between jobs; locally we copy directly.
+  unless CI
+    rails_js = File.join(ROOT, "stimulus-plumbers-rails/app/assets/javascripts/stimulus-plumbers")
+    run! "cp -r #{File.join(npm_dir, "dist/.")} #{rails_js}"
+  end
+
+  unless SKIP_PUBLISH
+    provenance = CI ? " --provenance" : ""
+    run! "npm publish#{provenance} --access public", dir: npm_dir
+  end
+
+  CHANGED_FILES.concat([
+    "stimulus-plumbers/package.json",
+    "stimulus-plumbers/package-lock.json"
+  ])
+  puts
+end
+
+# ── rubygem: stimulus-plumbers (rails) ────────────────────────────────────────
+unless skip?("rails")
+  section("rubygem stimulus-plumbers")
+  rails_dir = File.join(ROOT, "stimulus-plumbers-rails")
+
+  run! "bin/bump-version #{VERSION}",              dir: rails_dir
+  run! "bundle exec rake appraisal:setup",         dir: rails_dir if CI
+  run! "bundle exec rake rubocop:autocorrect_all", dir: rails_dir
+  run! "bundle exec rake build",                   dir: rails_dir
+
+  unless SKIP_PUBLISH
+    gems = Dir[File.join(rails_dir, "pkg/stimulus_plumbers-#{VERSION}*.gem")]
+    abort "  No gem matching stimulus_plumbers-#{VERSION}" if gems.empty?
+    gems.each { |g| run! "gem push #{g}" }
+  end
+
+  CHANGED_FILES.concat([
+    "stimulus-plumbers-rails/lib/stimulus_plumbers/version.rb",
+    "stimulus-plumbers-rails/Gemfile.lock",
+    "stimulus-plumbers-rails/gemfiles"
+  ])
+  puts
+end
+
+# ── rubygem: stimulus-plumbers-tailwind ──────────────────────────────────────
+unless skip?("tailwind")
+  section("rubygem stimulus-plumbers-tailwind")
+  tailwind_dir = File.join(ROOT, "stimulus-plumbers-tailwind")
+
+  run! "bin/bump-version #{VERSION}",              dir: tailwind_dir
+  run! "bundle exec rake rubocop:autocorrect_all", dir: tailwind_dir
+  run! "bundle exec rake build",                   dir: tailwind_dir
+
+  unless SKIP_PUBLISH
+    gems = Dir[File.join(tailwind_dir, "pkg/stimulus_plumbers_tailwind-#{VERSION}*.gem")]
+    abort "  No gem matching stimulus_plumbers_tailwind-#{VERSION}" if gems.empty?
+    gems.each { |g| run! "gem push #{g}" }
+  end
+
+  CHANGED_FILES.concat([
+    "stimulus-plumbers-tailwind/lib/stimulus_plumbers/tailwind/version.rb",
+    "stimulus-plumbers-tailwind/Gemfile.lock"
+  ])
+  puts
+end
+
+# ── rubygem: stimulus-plumbers-mcp ───────────────────────────────────────────
+unless skip?("mcp")
+  section("rubygem stimulus-plumbers-mcp")
+  mcp_dir = File.join(ROOT, "stimulus-plumbers-mcp")
+
+  run! "bin/bump-version #{VERSION}", dir: mcp_dir
+  run! "bundle exec rake build",      dir: mcp_dir
+
+  unless SKIP_PUBLISH
+    gems = Dir[File.join(mcp_dir, "pkg/stimulus_plumbers_mcp-#{VERSION}*.gem")]
+    abort "  No gem matching stimulus_plumbers_mcp-#{VERSION}" if gems.empty?
+    gems.each { |g| run! "gem push #{g}" }
+  end
+
+  CHANGED_FILES.concat([
+    "stimulus-plumbers-mcp/lib/stimulus_plumbers/mcp/version.rb",
+    "stimulus-plumbers-mcp/Gemfile.lock"
+  ])
+  puts
+end
+
+# ── git commit + tag (local only; CI uses ryancyq/github-signed-commit) ───────
+unless SKIP_GIT
+  section("git")
+
+  tags = []
+  tags << "stimulus-plumbers/v#{VERSION}"          unless skip?("npm")
+  tags << "stimulus-plumbers-rails/v#{VERSION}"    unless skip?("rails")
+  tags << "stimulus-plumbers-tailwind/v#{VERSION}" unless skip?("tailwind")
+  tags << "stimulus-plumbers-mcp/v#{VERSION}"      unless skip?("mcp")
+
+  CHANGED_FILES.each { |f| run! "git add #{f}" }
+  run! "git commit -m 'chore: release #{VERSION}'"
+  tags.each { |tag| run! "git tag #{tag}" }
+  puts
+end
+
+if DRY_RUN
+  puts "==> Build complete (dry run — nothing published or committed)"
+elsif SKIP_GIT && SKIP_PUBLISH
+  puts "==> Build complete"
+else
+  puts "==> Released #{VERSION}"
+end

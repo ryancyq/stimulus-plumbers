@@ -7,8 +7,7 @@ stimulus-plumbers-tailwind/
 ├── lib/
 │   ├── stimulus_plumbers_tailwind.rb       # Entry point: registers :tailwind theme
 │   ├── stimulus_plumbers_tailwind/
-│   │   ├── engine.rb                       # Rails::Engine — registers :tailwind theme on boot
-│   │   └── version.rb
+│   │   └── engine.rb                       # Rails::Engine — registers :tailwind theme on boot
 │   ├── generators/
 │   │   └── stimulus_plumbers_tailwind/
 │   │       └── install/
@@ -16,6 +15,8 @@ stimulus-plumbers-tailwind/
 │   ├── tasks/
 │   │   └── stimulus_plumbers_tailwind.rake # Consumer rake task: install, hooked into assets:precompile + tailwindcss:build
 │   └── stimulus_plumbers/
+│       ├── tailwind/
+│       │   └── version.rb                  # StimulusPlumbers::Tailwind::VERSION
 │       └── themes/
 │           ├── tailwind_theme.rb            # TailwindTheme < Base (includes component modules)
 │           └── tailwind/
