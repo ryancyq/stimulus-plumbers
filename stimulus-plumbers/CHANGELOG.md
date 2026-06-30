@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.1](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.0..stimulus-plumbers/v0.4.1) - 2026-06-30
+
+### Bug Fixes
+
+- accessibility + plumber helpers ([#136](https://github.com/ryancyq/stimulus-plumbers/issues/136)) - ([e84053d](https://github.com/ryancyq/stimulus-plumbers/commit/e84053d43db4726c3704d459a0464f70529fff8b)) - Ryan Chang
+- calendar disabled + out of range ([#148](https://github.com/ryancyq/stimulus-plumbers/issues/148)) - ([7bd1ca2](https://github.com/ryancyq/stimulus-plumbers/commit/7bd1ca21af1b982cf7df9460e0ba1c9e78866a87)) - Ryan Chang
+
+### Dependencies
+
+- **(deps-dev)** bump eslint from 10.4.0 to 10.5.0 in /stimulus-plumbers ([#123](https://github.com/ryancyq/stimulus-plumbers/issues/123)) - ([e305b40](https://github.com/ryancyq/stimulus-plumbers/commit/e305b40b8dff88e843d183bcf71ca99e417ac45e)) - dependabot[bot]
+- **(deps-dev)** bump globals in /stimulus-plumbers ([#145](https://github.com/ryancyq/stimulus-plumbers/issues/145)) - ([cc6aba2](https://github.com/ryancyq/stimulus-plumbers/commit/cc6aba20745311f49c234c7e69bcb947e8854958)) - dependabot[bot]
+- **(deps-dev)** bump prettier from 3.8.1 to 3.9.3 in /stimulus-plumbers ([#143](https://github.com/ryancyq/stimulus-plumbers/issues/143)) - ([aa5c665](https://github.com/ryancyq/stimulus-plumbers/commit/aa5c665784c1a46f3d8ea91e9e35f15a53231ba3)) - dependabot[bot]
+- **(deps-dev)** bump eslint from 10.5.0 to 10.6.0 in /stimulus-plumbers ([#142](https://github.com/ryancyq/stimulus-plumbers/issues/142)) - ([d32cacf](https://github.com/ryancyq/stimulus-plumbers/commit/d32cacf4557c332b28f1217298eafb5802ecf959)) - dependabot[bot]
+
+### Documentation
+
+- update readme and component doc ([#134](https://github.com/ryancyq/stimulus-plumbers/issues/134)) - ([3e5f462](https://github.com/ryancyq/stimulus-plumbers/commit/3e5f4621c4fbf142af061659cfbb8cd3e99fd093)) - Ryan Chang
+- update component documentation - ([89ecb78](https://github.com/ryancyq/stimulus-plumbers/commit/89ecb786d88eed66ab925921ac182aa84560207d)) - Ryan Chang
+
+### Features
+
+- calendar redesign  ([#133](https://github.com/ryancyq/stimulus-plumbers/issues/133)) - ([e19df95](https://github.com/ryancyq/stimulus-plumbers/commit/e19df95f3814b3d947142722ff0295f1bdcef6b3)) - Ryan Chang
+
+---
 ## [0.4.0](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.3.3..stimulus-plumbers/v0.4.0) - 2026-06-14
 
 ### Bug Fixes
