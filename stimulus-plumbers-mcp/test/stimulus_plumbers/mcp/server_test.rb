@@ -15,7 +15,8 @@ class ServerTest < Minitest::Test
     "list_controllers"      => {},
     "get_controller_schema" => { controller: "input-combobox" },
     "get_theme_interface"   => { component: "button" },
-    "get_tailwind_classes"  => { component: "button" }
+    "get_tailwind_classes"  => { component: "button" },
+    "get_source_versions"   => {}
   }.freeze
 
   def setup
@@ -40,6 +41,28 @@ class ServerTest < Minitest::Test
 
     assert data.key?("controllers"), "expected controllers key in #{data.inspect}"
     assert_includes data["controllers"], "input-combobox"
+  end
+
+  def test_versions_sources_resource_matches_get_source_versions_tool
+    request = { jsonrpc: "2.0", id: 1, method: "resources/read", params: { uri: "versions://sources" } }
+    response = JSON.parse(@server.handle_json(JSON.generate(request)))
+    resource_data = JSON.parse(response.dig("result", "contents", 0, "text"))
+
+    tool_data = JSON.parse(call_tool("get_source_versions").dig("result", "content", 0, "text"))
+
+    assert_equal tool_data, resource_data
+    assert resource_data.key?("schema")
+    assert resource_data.dig("stimulus", "version")
+  end
+
+  def test_unknown_resource_uri_returns_structured_error
+    request = { jsonrpc: "2.0", id: 1, method: "resources/read", params: { uri: "guide://nope" } }
+    response = JSON.parse(@server.handle_json(JSON.generate(request)))
+
+    payload = JSON.parse(response.dig("result", "contents", 0, "text"))
+
+    assert payload.key?("error"), "expected structured error, got #{payload.inspect}"
+    assert_includes payload["error"], "guide://overview"
   end
 
   def test_report_sources_warns_on_empty_source
