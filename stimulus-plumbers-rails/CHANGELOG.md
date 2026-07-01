@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.5](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.4..stimulus-plumbers-rails/v0.4.5) - 2026-07-01
+
+### Bug Fixes
+
+- mcp executable ([#151](https://github.com/ryancyq/stimulus-plumbers/issues/151)) - ([5e772ce](https://github.com/ryancyq/stimulus-plumbers/commit/5e772ce2d8ceb7c517c2e7fdd44d3438b1e38139)) - Ryan Chang
+
+---
 ## [0.4.4](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.3..stimulus-plumbers-rails/v0.4.4) - 2026-06-30
 
 ### Dependencies
