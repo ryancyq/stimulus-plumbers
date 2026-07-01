@@ -77,4 +77,9 @@ class DocsLoaderTest < Minitest::Test
       refute_match(%r{\s\z}, example, "example has trailing whitespace")
     end
   end
+
+  def test_docs_dir_exists
+    assert File.directory?(StimulusPlumbers::MCP::DocsLoader.docs_dir),
+           "docs_dir does not exist: #{StimulusPlumbers::MCP::DocsLoader.docs_dir}"
+  end
 end

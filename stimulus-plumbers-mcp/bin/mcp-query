@@ -12,9 +12,9 @@
 require "bundler/setup"
 require "json"
 require "open3"
+require "rbconfig"
 
-SCRIPT_DIR = File.dirname(__FILE__)
-SERVER     = File.join(SCRIPT_DIR, "server")
+SERVER = File.join(__dir__, "server")
 
 def usage
   warn <<~USAGE
@@ -29,7 +29,7 @@ end
 
 def die(message)
   warn "error: #{message}"
-  usage
+  exit 1
 end
 
 def build_requests(*requests)
@@ -43,11 +43,16 @@ def build_requests(*requests)
 end
 
 def query_server(requests)
-  stdout, _stderr, = Open3.capture3("ruby #{SERVER}", stdin_data: requests)
-  lines = stdout.lines.map(&:strip).reject(&:empty?)
-  raise "No response from server" if lines.empty?
+  stdout, _stderr, = Open3.capture3(RbConfig.ruby, SERVER, stdin_data: requests)
+  parsed = stdout.each_line.filter_map do |l|
+    JSON.parse(l.strip)
+  rescue StandardError
+    nil
+  end
+  response = parsed.find { |r| r["id"] == 2 }
+  raise "No response from server" unless response
 
-  JSON.parse(lines.last)
+  response
 end
 
 def print_error_and_exit(response)

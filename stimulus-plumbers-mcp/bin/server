@@ -1,10 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# Monorepo dev entry point — loads lib via require_relative (no gem install needed).
 require "bundler/setup"
 require_relative "../lib/stimulus_plumbers_mcp"
 
-server = StimulusPlumbers::MCP::Server.build
-warn "[stimulus-plumbers-mcp] server started (version #{StimulusPlumbers::MCP::VERSION})"
-transport = MCP::Server::Transports::StdioTransport.new(server)
-transport.open
+StimulusPlumbers::MCP::CLI.run

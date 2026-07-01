@@ -13,9 +13,20 @@ Gem::Specification.new do |spec|
   spec.homepage    = "https://github.com/ryancyq/stimulus-plumbers"
   spec.license     = "MIT"
 
-  # Run-from-clone dev tool, not a published gem — bundler loads it via the
-  # `gemspec` directive (require_paths), so there is no publish/packaging metadata.
-  spec.files         = Dir["lib/**/*.rb"]
+  spec.metadata = {
+    "rubygems_mfa_required" => "true",
+    "allowed_push_host"     => "https://rubygems.org",
+    "changelog_uri"         => "https://github.com/ryancyq/stimulus-plumbers/blob/main/CHANGELOG.md",
+    "homepage_uri"          => spec.homepage,
+    "source_code_uri"       => "https://github.com/ryancyq/stimulus-plumbers/tree/main/stimulus-plumbers-mcp"
+  }
+
+  spec.executables   = ["stimulus-plumbers-mcp"]
+  spec.files         = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
+    ls.readlines("\x0", chomp: true).select do |f|
+      f.start_with?(*%w[lib/ bin/ LICENSE README.md CHANGELOG.md])
+    end
+  end
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 3.0"

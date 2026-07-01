@@ -13,3 +13,6 @@
 # Bundler
 /.bundle/
 /vendor/bundle/
+
+# Generated at release time — not git-tracked
+/vendor/controllers.manifest.json

@@ -62,6 +62,11 @@ unless skip?("npm")
   run! "npm version #{VERSION} --no-git-tag-version --allow-same-version", dir: npm_dir
   run! "npm run build", dir: npm_dir
 
+  # Runs in both local and CI — CI uploads this file in the artifact for the Rails gem job.
+  rails_vendor = File.join(ROOT, "stimulus-plumbers-rails/vendor")
+  run! "mkdir -p #{rails_vendor}"
+  run! "cp #{File.join(npm_dir, "dist/controllers.manifest.json")} #{rails_vendor}/"
+
   # Copy compiled dist into the rails gem's vendored JS asset directory.
   # In CI this is done via artifact upload/download between jobs; locally we copy directly.
   unless CI

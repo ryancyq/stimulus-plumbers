@@ -3,13 +3,20 @@
 module StimulusPlumbers
   module MCP
     class DocsLoader
-      DOCS_DIR = File.expand_path(
-        "../../../../../stimulus-plumbers-rails/docs/component",
-        __dir__
-      )
+      def self.docs_dir
+        @docs_dir ||= resolve_docs_dir
+      end
+
+      def self.resolve_docs_dir
+        gem_dir = Gem::Specification.find_by_name("stimulus_plumbers").gem_dir
+        File.join(gem_dir, "docs/component")
+      rescue Gem::MissingSpecError
+        File.expand_path("../../../../../stimulus-plumbers-rails/docs/component", __dir__)
+      end
+      private_class_method :resolve_docs_dir
 
       def self.call
-        Dir[File.join(DOCS_DIR, "*.md")].each_with_object({}) do |path, result|
+        Dir[File.join(docs_dir, "*.md")].each_with_object({}) do |path, result|
           name = File.basename(path, ".md").to_sym
           content = File.read(path)
           result[name] = {
