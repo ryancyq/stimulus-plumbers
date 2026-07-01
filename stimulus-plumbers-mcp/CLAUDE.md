@@ -5,8 +5,10 @@
 ```
 stimulus-plumbers-mcp/
 ├── bin/
-│   ├── server                                  # MCP stdio server entry point
-│   └── mcp-query                               # Manual stdio query tool (tools/resources/tool/read subcommands)
+│   ├── stimulus-plumbers-mcp                   # gem exec entry point (installed gem path; no clone needed)
+│   ├── server                                  # MCP stdio server entry point (clone/dev path)
+│   ├── mcp-query                               # Manual stdio query tool (tools/resources/tool/read subcommands)
+│   └── bump-version                            # Version bump helper used by bin/release
 ├── lib/
 │   ├── stimulus_plumbers_mcp.rb                # Top-level require: upstream gems → version → loaders → plugins → server
 │   └── stimulus_plumbers/
@@ -18,8 +20,8 @@ stimulus-plumbers-mcp/
 │           │   ├── guide/
 │           │   │   └── overview.md             # Overview guide source (extracted from heredoc)
 │           │   ├── schema_loader.rb            # Reads Themes::Base::SCHEMA + form renderer constants (live source)
-│           │   ├── docs_loader.rb              # Reads ../stimulus-plumbers-rails/docs/component/*.md (live source)
-│           │   ├── stimulus_manifest.rb        # Reads ../stimulus-plumbers/dist/controllers.manifest.json (built artifact)
+│           │   ├── docs_loader.rb              # Reads docs/component/*.md via stimulus_plumbers gem_dir; sibling path as dev fallback
+│           │   ├── stimulus_manifest.rb        # 3-path resolution: node_modules → gem vendor/ → sibling dist/ (dev fallback)
 │           │   ├── component_controller_map.rb # Maps component keys → Stimulus controller identifiers (live source)
 │           │   ├── theme_loader.rb             # Extracts theme method signatures from Themes::Base
 │           │   └── tailwind_theme_loader.rb    # Extracts Tailwind CSS classes per component variant
@@ -52,6 +54,16 @@ stimulus-plumbers-mcp/
 ├── Rakefile
 └── stimulus_plumbers_mcp.gemspec
 ```
+
+## Deployment Design
+
+IDE setup via `gem exec` (Ruby 3.3+) — no clone, no `cwd`:
+
+```json
+{ "command": "gem", "args": ["exec", "stimulus-plumbers-mcp"] }
+```
+
+Clone path is for contributors only.
 
 ## Guidelines
 

@@ -5,17 +5,12 @@ MCP server for [`stimulus_plumbers`](../stimulus-plumbers-rails). Exposes the co
 ## Requirements
 
 - Ruby >= 3.0
-- A checkout of the [stimulus-plumbers monorepo](https://github.com/ryancyq/stimulus-plumbers) — the server reads the sibling `stimulus-plumbers-rails/` and `stimulus-plumbers/` packages directly.
-- Node (only to build the Stimulus controller manifest — see [Development](#development))
+- Node (contributors only — to build the Stimulus controller manifest)
 
 ## Installation
 
-This is a dev tool run from a monorepo checkout, not a published gem. Clone the repo and install dependencies:
-
 ```bash
-git clone https://github.com/ryancyq/stimulus-plumbers
-cd stimulus-plumbers/stimulus-plumbers-mcp
-bundle install
+gem install stimulus_plumbers_mcp
 ```
 
 ## Resources
@@ -54,39 +49,34 @@ bundle install
 
 ## IDE Setup
 
-Two equivalent entry points — use whichever fits your IDE config:
-
-**`bin/mcp` (root-level wrapper, no `cwd` needed):**
-
 ```json
 {
   "mcpServers": {
     "stimulus-plumbers": {
-      "command": "bundle",
-      "args": ["exec", "ruby", "bin/mcp"],
-      "cwd": "/path/to/stimulus-plumbers"
+      "command": "gem",
+      "args": ["exec", "stimulus-plumbers-mcp"]
     }
   }
 }
 ```
 
-**`bin/server` (inside the mcp package):**
+Requires Ruby >= 3.3. No `cwd` required. Pin a specific version by adding it to your `Gemfile` and running `bundle exec gem exec stimulus-plumbers-mcp`.
 
-```json
-{
-  "mcpServers": {
-    "stimulus-plumbers": {
-      "command": "bundle",
-      "args": ["exec", "ruby", "bin/server"],
-      "cwd": "/path/to/stimulus-plumbers/stimulus-plumbers-mcp"
-    }
-  }
-}
-```
+## Stimulus Manifest
+
+`stimulus://` resources require the controller manifest. The server resolves it in order:
+
+1. `node_modules/@stimulus-plumbers/controllers/dist/controllers.manifest.json` — npm/yarn/bun projects
+2. `vendor/controllers.manifest.json` inside the installed `stimulus_plumbers` gem — importmaps fallback
+3. `../stimulus-plumbers/dist/controllers.manifest.json` — monorepo dev fallback
+
+No extra steps needed for setups 1 or 2.
 
 ## Development
 
 ```bash
+git clone https://github.com/ryancyq/stimulus-plumbers
+cd stimulus-plumbers/stimulus-plumbers-mcp
 bundle install
 
 # Build the Stimulus controller manifest (pure Node, no toolchain install needed)

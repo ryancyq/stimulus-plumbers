@@ -51,7 +51,9 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: stimulus-plumbers-dist
-          path: stimulus-plumbers/dist/
+          path: |
+            stimulus-plumbers/dist/
+            stimulus-plumbers-rails/vendor/controllers.manifest.json
 
       - uses: orhun/git-cliff-action@v4
         with:
@@ -93,7 +95,11 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: stimulus-plumbers-dist
-          path: stimulus-plumbers-rails/app/assets/javascripts/stimulus-plumbers
+          path: .
+
+      - name: Copy dist to Rails JS assets
+        run: cp -r stimulus-plumbers/dist/. stimulus-plumbers-rails/app/assets/javascripts/stimulus-plumbers
+        working-directory: ${{ github.workspace }}
 
       # Must precede setup-ruby --bundler-cache so bundle regenerates lockfiles
       - run: rm Gemfile.lock

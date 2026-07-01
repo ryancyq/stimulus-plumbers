@@ -7,7 +7,7 @@ module StimulusPlumbers
         extend Base
 
         LOADER_KEY = :stimulus
-        LOADER     = StimulusManifest
+        LOADER     = StimulusManifestLoader
 
         STATIC_RESOURCES = [
           ::MCP::Resource.new(

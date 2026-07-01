@@ -2,7 +2,7 @@
 
 require_relative "../../test_helper"
 
-class StimulusManifestTest < Minitest::Test
+class StimulusManifestLoaderTest < Minitest::Test
   EXPECTED_IDENTIFIERS = %w[
     calendar-decade calendar-decade-selector calendar-month calendar-month-selector
     calendar-year calendar-year-selector clipboard combobox-date combobox-dropdown
@@ -11,7 +11,7 @@ class StimulusManifestTest < Minitest::Test
   ].freeze
 
   def setup
-    @controllers = StimulusPlumbers::MCP::StimulusManifest.call
+    @controllers = StimulusPlumbers::MCP::StimulusManifestLoader.call
   end
 
   def test_all_expected_controllers_present
@@ -80,6 +80,17 @@ class StimulusManifestTest < Minitest::Test
         assert data.key?(key), "Controller #{id} missing key: #{key}"
       end
       assert_equal id, data["identifier"], "Controller #{id} has wrong identifier"
+    end
+  end
+
+  def test_returns_empty_hash_when_no_manifest_found
+    StimulusPlumbers::MCP::StimulusManifestLoader.stub(
+      :manifest_paths,
+      ["/nonexistent/a.json", "/nonexistent/b.json", "/nonexistent/c.json"]
+    ) do
+      result = StimulusPlumbers::MCP::StimulusManifestLoader.call
+
+      assert_equal({}, result)
     end
   end
 end

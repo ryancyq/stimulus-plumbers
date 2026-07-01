@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# gem exec entry point — loads via installed gem load path (no clone needed).
+require "stimulus_plumbers_mcp"
+
+StimulusPlumbers::MCP::CLI.run
