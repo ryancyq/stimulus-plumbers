@@ -18,6 +18,7 @@ gem install stimulus_plumbers_mcp
 | URI | Content |
 |-----|---------|
 | `guide://overview` | **Start here** — map of the form/view/stimulus API with pointers to every tool/resource |
+| `aria://reference` | WCAG 2.1 AA criteria, keyboard navigation patterns, and per-component ARIA patterns |
 | `schema://components` | Index of all component theme keys |
 | `schema://components/{name}` | Params, valid values, defaults + required controllers |
 | `schema://icons` | All available icon names |

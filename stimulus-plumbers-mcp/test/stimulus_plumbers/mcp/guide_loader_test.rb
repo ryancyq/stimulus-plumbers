@@ -13,7 +13,14 @@ class GuideLoaderTest < Minitest::Test
   end
 
   def test_points_at_the_key_entry_points
-    %w[f.field get_helper_signature get_field_as_values schema://stimulus docs://components/form].each do |pointer|
+    %w[
+      f.field
+      get_helper_signature
+      get_field_as_values
+      schema://stimulus
+      docs://components/form
+      aria://reference
+    ].each do |pointer|
       assert_includes @overview, pointer, "overview should point at #{pointer}"
     end
   end

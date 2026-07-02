@@ -66,6 +66,7 @@ unless skip?("npm")
   rails_vendor = File.join(ROOT, "stimulus-plumbers-rails/vendor")
   run! "mkdir -p #{rails_vendor}"
   run! "cp #{File.join(npm_dir, "dist/controllers.manifest.json")} #{rails_vendor}/"
+  run! "cp #{File.join(ROOT, "ARIA.md")} #{rails_vendor}/"
 
   # Copy compiled dist into the rails gem's vendored JS asset directory.
   # In CI this is done via artifact upload/download between jobs; locally we copy directly.

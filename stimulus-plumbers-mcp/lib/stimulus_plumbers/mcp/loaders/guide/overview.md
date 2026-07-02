@@ -51,6 +51,8 @@ Controller details (targets/values/outlets/classes): `get_controller_schema(id)`
 - **Resources** (`schema://`, `docs://`, `helper://`, `theme://`, `tailwind://`, `guide://`,
   `versions://`) are for browsing/pulling context; **tools** (`get_*`, `list_*`) are for targeted
   lookups. They expose the same data two ways — use whichever your client prefers.
+- `aria://reference` — WCAG 2.1 AA criteria and component ARIA patterns. For generic ARIA/WCAG reference,
+  connect the MDN MCP server too: `claude mcp add --transport http mdn https://mcp.mdn.mozilla.net/`
 - Each source (schema, docs, theme, tailwind, stimulus) is read from an independently-versioned
   gem/npm package — `versions://sources` / `get_source_versions` reports what's actually resolved,
   useful if data looks stale or inconsistent with the app code you're generating for.
