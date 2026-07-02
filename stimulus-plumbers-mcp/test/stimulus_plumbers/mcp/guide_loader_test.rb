@@ -37,6 +37,12 @@ class GuideLoaderTest < Minitest::Test
     assert_match(%r{isError}, @overview)
   end
 
+  def test_documents_js_package_setup_for_non_rails_consumers
+    assert_includes @overview, "npm install @stimulus-plumbers/controllers"
+    assert_includes @overview, "application.register"
+    assert_includes @overview, "stimulus://controllers"
+  end
+
   def test_documents_tailwind_install_generator
     assert_includes @overview, "stimulus_plumbers_tailwind:install"
     assert_includes @overview, "TAILWIND_CSS_FILE"

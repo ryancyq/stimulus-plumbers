@@ -9,7 +9,8 @@ module StimulusPlumbers
         Plugins::Docs,
         Plugins::Stimulus,
         Plugins::Theme,
-        Plugins::Tailwind
+        Plugins::Tailwind,
+        Plugins::Versions
       ].freeze
 
       INSTRUCTIONS = "Use these resources and tools for accurate API references when " \
@@ -22,10 +23,16 @@ module StimulusPlumbers
 
         server = new_server
         server.resources_read_handler do |params|
-          PLUGINS.lazy.filter_map { |plugin| plugin.read(params[:uri], store) }.first || []
+          PLUGINS.lazy.filter_map { |plugin| plugin.read(params[:uri], store) }.first ||
+            unknown_resource(params[:uri])
         end
         PLUGINS.each { |plugin| plugin.register_tools(server, store) }
         server
+      end
+
+      def self.unknown_resource(uri)
+        message = "unknown resource: #{uri} — read guide://overview for a map of available resources"
+        [{ uri: uri, mimeType: "application/json", text: JSON.generate(error: message) }]
       end
 
       def self.new_server

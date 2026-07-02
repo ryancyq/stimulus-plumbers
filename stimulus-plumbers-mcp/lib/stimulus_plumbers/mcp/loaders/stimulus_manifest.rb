@@ -6,19 +6,24 @@ module StimulusPlumbers
       MANIFEST_FILENAME = "controllers.manifest.json"
 
       def self.call
-        paths = manifest_paths
-        path  = paths.find { |p| File.exist?(p) }
+        path = resolved_path
 
         unless path
           StimulusPlumbers::Logger.warn(
             "#{MANIFEST_FILENAME} not found. Tried:\n" \
-            "#{paths.map { |p| "  - #{p}" }.join("\n")}\n" \
+            "#{manifest_paths.map { |p| "  - #{p}" }.join("\n")}\n" \
             "Run `node --run build:manifest` in stimulus-plumbers/ to generate it."
           )
           return {}
         end
 
         JSON.parse(File.read(path))
+      end
+
+      # The manifest path actually resolved (or nil) — reused by SourceVersionsLoader
+      # to report which of the 3 fallback locations is serving stimulus:// data.
+      def self.resolved_path
+        manifest_paths.find { |p| File.exist?(p) }
       end
 
       def self.manifest_paths
