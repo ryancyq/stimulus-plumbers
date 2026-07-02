@@ -6,7 +6,7 @@ Start here, then drill into the per-component resources/tools below.
 ## Tailwind theme setup
 The `stimulus_plumbers_tailwind` gem provides themed CSS classes for all components. After adding it to
 your Gemfile, run the install generator once:
-  bin/rails generate stimulus_plumbers_tailwind:install
+  bin/rails generate stimulus_plumbers:tailwind:install
 This injects an `@source` directive into your Tailwind CSS entry file so component classes are included
 in the compiled output. The generator checks `app/assets/stylesheets/application.tailwind.css`,
 `app/assets/stylesheets/application.css`, and `app/javascript/entrypoints/application.css` in that

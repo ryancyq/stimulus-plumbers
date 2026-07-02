@@ -6,17 +6,17 @@
 stimulus-plumbers-tailwind/
 ├── lib/
 │   ├── stimulus_plumbers_tailwind.rb       # Entry point: registers :tailwind theme
-│   ├── stimulus_plumbers_tailwind/
-│   │   └── engine.rb                       # Rails::Engine — registers :tailwind theme on boot
 │   ├── generators/
-│   │   └── stimulus_plumbers_tailwind/
-│   │       └── install/
-│   │           └── install_generator.rb    # `rails g stimulus_plumbers_tailwind:install` — injects @source into Tailwind entry CSS
+│   │   └── stimulus_plumbers/
+│   │       └── tailwind/
+│   │           └── install/
+│   │               └── install_generator.rb # `rails g stimulus_plumbers:tailwind:install` — injects @source into Tailwind entry CSS
 │   ├── tasks/
 │   │   └── stimulus_plumbers_tailwind.rake # Consumer rake task: install, hooked into assets:precompile + tailwindcss:build
 │   └── stimulus_plumbers/
 │       ├── tailwind/
-│       │   └── version.rb                  # StimulusPlumbers::Tailwind::VERSION
+│       │   ├── version.rb                  # StimulusPlumbers::Tailwind::VERSION
+│       │   └── engine.rb                   # StimulusPlumbers::Tailwind::Engine < Rails::Engine — registers :tailwind theme on boot
 │       └── themes/
 │           ├── tailwind_theme.rb            # TailwindTheme < Base (includes component modules)
 │           └── tailwind/

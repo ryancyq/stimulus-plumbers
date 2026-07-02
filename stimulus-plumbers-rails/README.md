@@ -40,6 +40,20 @@ Or use the form builder globally:
 config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 ```
 
+Run the install generator once to inject the `tokens.css` import into your CSS entry file:
+
+```bash
+bin/rails generate stimulus_plumbers:install
+```
+
+The generator checks these files in order:
+
+- `app/assets/stylesheets/application.tailwind.css`
+- `app/assets/stylesheets/application.css`
+- `app/javascript/entrypoints/application.css`
+
+Override the detected file with `STIMULUS_PLUMBERS_CSS_FILE=/path/to/entry.css`. After the initial install, the import stays current automatically — the engine hooks `stimulus_plumbers:install` as a prerequisite of `assets:precompile`.
+
 ## Components
 
 | Component | Helper(s) | Docs |

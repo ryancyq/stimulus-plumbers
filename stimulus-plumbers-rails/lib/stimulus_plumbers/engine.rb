@@ -18,5 +18,9 @@ module StimulusPlumbers
         include StimulusPlumbers::Helpers
       end
     end
+
+    rake_tasks do
+      load File.join(__dir__, "../tasks/stimulus_plumbers.rake")
+    end
   end
 end

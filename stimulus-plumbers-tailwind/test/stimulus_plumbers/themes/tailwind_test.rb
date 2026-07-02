@@ -31,6 +31,6 @@ class TailwindThemeTest < Minitest::Test
   def test_loads_engine_with_rails_engine
     load File.expand_path("../../../lib/stimulus_plumbers_tailwind.rb", __dir__)
 
-    assert_operator StimulusPlumbersTailwind::Engine, :<, Rails::Engine
+    assert_operator StimulusPlumbers::Tailwind::Engine, :<, Rails::Engine
   end
 end
