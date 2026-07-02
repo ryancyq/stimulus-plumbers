@@ -13,7 +13,7 @@ module StimulusPlumbers
         def render(datetime: nil, id: nil, interactive: false, orientation: :vertical, **kwargs, &block)
           @detail_id = self.class.detail_id_for(id || template.sp_dom_id)
 
-          slots = Timeline::Event::Slots.new
+          slots = Timeline::Event::Slots.new(template)
           yield slots if block_given?
 
           validate_slots!(slots, datetime: datetime)

@@ -103,6 +103,28 @@ end
 
 ---
 
+## Plumber::Slots
+
+Base class for a component's slot DSL (e.g. `renderer.with_title(value)`, `renderer.with_content { ... }`). Used by `Card`, `Button`, `Link`, `List::Item`, `Timeline::Event`, and `Combobox::Builder`.
+
+```ruby
+class MySlots < StimulusPlumbers::Plumber::Slots
+  slot :icon, :title              # flat slots: with_icon(value) / with_title(value)
+  slot :header, by: HeaderSlots   # nested slots: with_header { |h| h.with_x(...) }
+end
+```
+
+Always construct with the view `template` — required for a slot's multi-line block form (`with_content do ... end`) to render correctly:
+
+```ruby
+slots = MySlots.new(template)
+yield slots if block_given?
+```
+
+Slots needing custom validation (e.g. a required keyword) define `with_*` manually instead of using the `slot` DSL — see `Card::Slots#with_action`.
+
+---
+
 ## Plumber::Options::Html
 
 Mixin for safely deep-merging HTML attribute hashes. Handles three concerns that a plain `Hash#merge` gets wrong:

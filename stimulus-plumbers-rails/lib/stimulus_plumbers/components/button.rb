@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Components
     class Button < Plumber::Base
       def render(content = nil, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
-        slots = Button::Slots.new
+        slots = Button::Slots.new(template)
         slots.with_icon_leading(icon_leading) if icon_leading
         slots.with_icon_trailing(icon_trailing) if icon_trailing
 

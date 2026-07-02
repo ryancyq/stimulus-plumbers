@@ -231,7 +231,7 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 ## Component Architecture
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
-> Key internal docs: `plumber.md` (Base / Renderer / Options::Html), `dispatcher.md` (Dispatcher strategies), `form.md` (two-level field API).
+> Key internal docs: `plumber.md` (Base / Renderer / Options::Html / Slots), `dispatcher.md` (Dispatcher strategies), `form.md` (two-level field API).
 
 > See [docs/architecture.md](docs/architecture.md) for schema ranges convention and icon-only detection contract.
 
