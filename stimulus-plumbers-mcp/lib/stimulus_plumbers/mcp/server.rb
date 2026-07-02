@@ -9,6 +9,7 @@ module StimulusPlumbers
         Plugins::Schema,
         Plugins::Docs,
         Plugins::Stimulus,
+        Plugins::StimulusControllerDocs,
         Plugins::Theme,
         Plugins::Tailwind,
         Plugins::Versions

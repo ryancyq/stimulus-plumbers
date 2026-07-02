@@ -41,6 +41,8 @@ For a non-Rails / plain JS consumer: `npm install @stimulus-plumbers/controllers
 `application.register(identifier, ControllerClass)` for each controller you use — see the npm
 package README for the full import list and identifiers. Controller identifiers and their
 targets/values/outlets: `stimulus://controllers`, `get_controller_schema(id)`.
+- `stimulus://docs/{name}` (or `get_controller_docs`) — narrative usage docs for controller families,
+  e.g. `combobox` covers `combobox-date`/`combobox-dropdown`/`combobox-time`/`input-combobox`
 
 ## Stimulus wiring
 Most display components are pure markup; interactive ones (combobox, popover, calendar) emit their

@@ -8,6 +8,8 @@ class ServerTest < Minitest::Test
   TOOL_ARGS = {
     "list_components"       => {},
     "get_component_schema"  => { component: "button" },
+    "list_controller_docs"  => {},
+    "get_controller_docs"   => { name: "modal" },
     "get_field_as_values"   => { builder_method: "field" },
     "get_erb_examples"      => { component: "card" },
     "get_helper_signature"  => { component: "button" },
@@ -83,6 +85,7 @@ class ServerTest < Minitest::Test
   UNKNOWN_ARGS = {
     "get_component_schema"  => { component: "nope" },
     "get_controller_schema" => { controller: "nope" },
+    "get_controller_docs"   => { name: "nope" },
     "get_theme_interface"   => { component: "nope" },
     "get_tailwind_classes"  => { component: "nope" },
     "get_helper_signature"  => { component: "nope" },

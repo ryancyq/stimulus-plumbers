@@ -53,7 +53,8 @@ module StimulusPlumbers
           text_tool(
             server,
             name:         "get_controller_schema",
-            description:  "Returns targets, values (with types and defaults), outlets, and classes for a Stimulus controller",
+            description:  "Returns targets, values (with types and defaults), outlets, and classes for a " \
+                          "Stimulus controller. For narrative usage docs use get_controller_docs",
             input_schema: { properties: { controller: { type: "string" } }, required: ["controller"] }
           ) do |controller:|
             data = controllers[controller]

@@ -17,3 +17,4 @@
 # Generated at release time — not git-tracked
 /vendor/controllers.manifest.json
 /vendor/ARIA.md
+/vendor/controller-docs/
