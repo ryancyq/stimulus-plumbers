@@ -4,11 +4,12 @@ Stimulus Plumbers uses a theme system to apply presentational CSS classes to for
 
 ## Configuration
 
+Adding the `stimulus_plumbers_tailwind` gem registers and activates the Tailwind theme automatically — no config needed. To switch to a custom theme instead:
+
 ```ruby
 # config/initializers/stimulus_plumbers.rb
 StimulusPlumbers.configure do |config|
-  config.theme.use(:tailwind)
-  # config.theme.use(MyCustomTheme.new)
+  config.theme.use(MyCustomTheme.new)
 end
 ```
 

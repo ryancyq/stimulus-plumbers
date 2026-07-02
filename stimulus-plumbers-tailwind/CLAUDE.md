@@ -144,10 +144,11 @@ Four rules for sandbox views and their matching snapshot specs:
 
 ## Theme Registration
 
-The Engine initializer registers the theme automatically in Rails. Outside Rails, call directly:
+The Engine initializer registers and activates the theme automatically in Rails. Outside Rails, call directly:
 
 ```ruby
-StimulusPlumbers.configure do |c|
-  c.theme.register(:tailwind, StimulusPlumbers::Themes::TailwindTheme)
+StimulusPlumbers.configure do |config|
+  config.theme.register(:tailwind, StimulusPlumbers::Themes::TailwindTheme)
+  config.theme.use(:tailwind)
 end
 ```

@@ -23,7 +23,7 @@ gem "stimulus_plumbers_tailwind"
 bundle install
 ```
 
-Activate the theme in an initializer or `config/application.rb`:
+In a Rails app, the theme registers and activates automatically — no config needed. Outside Rails, it only registers; activate it explicitly:
 
 ```ruby
 StimulusPlumbers.configure do |config|

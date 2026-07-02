@@ -6,6 +6,7 @@ module StimulusPlumbers
       initializer "stimulus_plumbers_tailwind.register_theme" do
         StimulusPlumbers.configure do |c|
           c.theme.register(:tailwind, StimulusPlumbers::Themes::TailwindTheme)
+          c.theme.use(:tailwind)
         end
       end
 
