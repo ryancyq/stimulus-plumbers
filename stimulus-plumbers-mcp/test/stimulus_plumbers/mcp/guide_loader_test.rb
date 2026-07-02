@@ -15,10 +15,10 @@ class GuideLoaderTest < Minitest::Test
   def test_points_at_the_key_entry_points
     %w[
       f.field
-      get_helper_signature
+      get_component_helper
       get_field_as_values
-      schema://stimulus
-      docs://components/form
+      component://integration
+      component://form/docs
       aria://reference
     ].each do |pointer|
       assert_includes @overview, pointer, "overview should point at #{pointer}"
@@ -47,8 +47,8 @@ class GuideLoaderTest < Minitest::Test
   def test_documents_js_package_setup_for_non_rails_consumers
     assert_includes @overview, "npm install @stimulus-plumbers/controllers"
     assert_includes @overview, "application.register"
-    assert_includes @overview, "stimulus://controllers"
-    assert_includes @overview, "stimulus://docs"
+    assert_includes @overview, "controller://index"
+    assert_includes @overview, "controller://docs"
   end
 
   def test_documents_tailwind_install_generator

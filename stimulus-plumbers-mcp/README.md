@@ -19,34 +19,40 @@ gem install stimulus_plumbers_mcp
 |-----|---------|
 | `guide://overview` | **Start here** — map of the form/view/stimulus API with pointers to every tool/resource |
 | `aria://reference` | WCAG 2.1 AA criteria, keyboard navigation patterns, and per-component ARIA patterns |
-| `schema://components` | Index of all component theme keys |
-| `schema://components/{name}` | Params, valid values, defaults + required controllers |
-| `schema://icons` | All available icon names |
-| `schema://stimulus` | Map from component key → required Stimulus controller identifiers |
-| `docs://components/{name}` | Full markdown doc with ERB examples |
-| `helper://components/{name}` | Full `sp_` helper surface: keyword options + defaults (grouped by helper signature) + slot methods (with block-required flag) |
-| `stimulus://controllers` | Index of Stimulus controller identifiers |
-| `stimulus://controllers/{identifier}` | Targets, values, outlets, classes for a controller |
+| `component://index` | Index of all component theme keys |
+| `component://icons` | All available icon names |
+| `component://integration` | Map from component key → required Stimulus controller identifiers |
+| `component://{name}/schema` | Params, valid values, defaults + required controllers |
+| `component://{name}/docs` | Full markdown doc with ERB examples |
+| `component://{name}/helper` | Full `sp_` helper surface: keyword options + defaults (grouped by helper signature) + slot methods |
+| `component://theme` | Index of theme-implementable component keys |
+| `component://{name}/theme` | Method name, param signature, return contract |
 | `theme://base` | Custom theme authoring guide |
-| `theme://components` | Index of theme-implementable component keys |
-| `theme://components/{name}` | Method name, param signature, return contract |
-| `tailwind://components` | Index of Tailwind theme component keys |
-| `tailwind://components/{name}` | Tailwind CSS classes per variant |
+| `component://tailwind` | Index of Tailwind theme component keys |
+| `component://{name}/tailwind` | Tailwind CSS classes per variant |
+| `controller://index` | Index of Stimulus controller identifiers |
+| `controller://{name}/schema` | Targets, values, outlets, classes for a controller |
+| `controller://docs` | Index of JS controller narrative docs, grouped by controller family |
+| `controller://docs/{name}` | Narrative usage doc for a controller family (plain-JS/Hotwire, no Rails helpers) |
+| `versions://sources` | Resolved version (and resolution path) of each source gem/package |
 
 ## Tools
 
 | Tool | Input | Output |
 |------|-------|--------|
 | `list_components` | — | All component theme keys |
-| `list_docs` | — | Components with markdown docs + helper signatures (the `docs://`/`helper://` `{name}` set) |
-| `get_component_schema` | `component` | Themed params (type/variant/size) + defaults + required controllers |
-| `get_helper_signature` | `component` | Full `sp_` helper surface — keyword options grouped by helper signature (incl. `icon_leading`) + slot methods |
-| `get_erb_examples` | `component` | ERB code fences from docs |
-| `get_field_types` | `builder_method` (`field`/`collection_field`/`choice`) | Valid `as:` values |
+| `list_component_docs` | — | Components with markdown docs + helper signatures (the `component://{name}/docs`+`/helper` set) |
+| `get_component_schema` | `name` | Themed params (type/variant/size) + defaults + required controllers |
+| `get_component_helper` | `name` | Full `sp_` helper surface — keyword options grouped by helper signature (incl. `icon_leading`) + slot methods |
+| `get_component_examples` | `name` | ERB code fences from docs |
+| `get_field_as_values` | `builder_method` (`field`/`collection_field`/`choice`) | Valid `as:` values |
+| `get_component_theme` | `name` | Method signature + return contract for custom theme |
+| `get_component_tailwind` | `name` | Tailwind CSS utility classes per variant |
 | `list_controllers` | — | All Stimulus controller identifiers |
-| `get_controller_schema` | `controller` | Targets, values, outlets, classes |
-| `get_theme_interface` | `component` | Method signature + return contract for custom theme |
-| `get_tailwind_classes` | `component` | Tailwind CSS utility classes per variant |
+| `get_controller_schema` | `name` | Targets, values, outlets, classes |
+| `list_controller_docs` | — | Controller doc families available at `controller://docs/{name}` |
+| `get_controller_docs` | `name` | Narrative usage doc for a controller family |
+| `get_source_versions` | — | Resolved version (and resolution path) of each source |
 
 ## IDE Setup
 
@@ -65,7 +71,7 @@ Requires Ruby >= 3.3. No `cwd` required. Pin a specific version by adding it to 
 
 ## Stimulus Manifest
 
-`stimulus://` resources require the controller manifest. The server resolves it in order:
+`controller://` resources require the controller manifest. The server resolves it in order:
 
 1. `node_modules/@stimulus-plumbers/controllers/dist/controllers.manifest.json` — npm/yarn/bun projects
 2. `vendor/controllers.manifest.json` inside the installed `stimulus_plumbers` gem — importmaps fallback
@@ -95,9 +101,9 @@ bundle exec ruby bin/server
 bundle exec ruby bin/mcp-query tools                                  # list tools
 bundle exec ruby bin/mcp-query resources                              # list resources
 bundle exec ruby bin/mcp-query tool list_components                   # call a tool (no args)
-bundle exec ruby bin/mcp-query tool get_component_schema '{"component":"button"}'
+bundle exec ruby bin/mcp-query tool get_component_schema '{"name":"button"}'
 bundle exec ruby bin/mcp-query read guide://overview
-bundle exec ruby bin/mcp-query read docs://components/form
+bundle exec ruby bin/mcp-query read component://form/docs
 ```
 
 ```bash

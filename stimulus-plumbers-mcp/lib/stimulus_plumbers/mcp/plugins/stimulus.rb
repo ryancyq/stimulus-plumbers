@@ -11,8 +11,8 @@ module StimulusPlumbers
 
         STATIC_RESOURCES = [
           ::MCP::Resource.new(
-            uri:         "stimulus://controllers",
-            name:        "stimulus-controllers-index",
+            uri:         "controller://index",
+            name:        "controllers-index",
             description: "Index of all Stimulus controller identifiers in @stimulus-plumbers/controllers",
             mime_type:   "application/json"
           )
@@ -20,8 +20,8 @@ module StimulusPlumbers
 
         DYNAMIC_RESOURCE_TEMPLATES = [
           ::MCP::ResourceTemplate.new(
-            uri_template: "stimulus://controllers/{identifier}",
-            name:         "stimulus-controller-schema",
+            uri_template: "controller://{name}/schema",
+            name:         "controller-schema",
             description:  "Targets, values, outlets, and classes for a Stimulus controller",
             mime_type:    "application/json"
           )
@@ -31,9 +31,9 @@ module StimulusPlumbers
           controllers = store[:stimulus]
 
           case uri
-          when "stimulus://controllers"
+          when "controller://index"
             json_resource(uri, controllers.keys)
-          when %r{\Astimulus://controllers/(.+)\z}
+          when %r{\Acontroller://([^/]+)/schema\z}
             identifier = Regexp.last_match(1)
             json_resource(uri, controllers[identifier] || { error: "unknown controller: #{identifier}" })
           end
@@ -55,10 +55,10 @@ module StimulusPlumbers
             name:         "get_controller_schema",
             description:  "Returns targets, values (with types and defaults), outlets, and classes for a " \
                           "Stimulus controller. For narrative usage docs use get_controller_docs",
-            input_schema: { properties: { controller: { type: "string" } }, required: ["controller"] }
-          ) do |controller:|
-            data = controllers[controller]
-            data ? JSON.generate(data) : not_found("unknown controller: #{controller}")
+            input_schema: { properties: { name: { type: "string" } }, required: ["name"] }
+          ) do |name:|
+            data = controllers[name]
+            data ? JSON.generate(data) : not_found("unknown controller: #{name}")
           end
         end
       end

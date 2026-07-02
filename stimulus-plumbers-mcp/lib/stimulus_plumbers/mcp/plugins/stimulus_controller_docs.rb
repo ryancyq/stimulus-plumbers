@@ -3,9 +3,9 @@
 module StimulusPlumbers
   module MCP
     module Plugins
-      # Shares the stimulus:// scheme with Plugins::Stimulus, distinguished by the
-      # docs/ path segment (controllers/ is schema data; docs/ is narrative markdown,
-      # grouped by controller family, not individual identifier — see plan constraints).
+      # Shares the controller:// scheme with Plugins::Stimulus, distinguished by the
+      # docs/ path segment (Plugins::Stimulus is per-identifier schema data; docs/ is
+      # narrative markdown, grouped by controller family, not individual identifier).
       module StimulusControllerDocs
         extend Base
 
@@ -14,8 +14,8 @@ module StimulusPlumbers
 
         STATIC_RESOURCES = [
           ::MCP::Resource.new(
-            uri:         "stimulus://docs",
-            name:        "stimulus-controller-docs-index",
+            uri:         "controller://docs",
+            name:        "controller-docs-index",
             description: "Index of JS controller narrative docs, grouped by controller family " \
                          "(e.g. :calendar covers calendar-month/-year/-decade)",
             mime_type:   "application/json"
@@ -24,8 +24,8 @@ module StimulusPlumbers
 
         DYNAMIC_RESOURCE_TEMPLATES = [
           ::MCP::ResourceTemplate.new(
-            uri_template: "stimulus://docs/{name}",
-            name:         "stimulus-controller-doc",
+            uri_template: "controller://docs/{name}",
+            name:         "controller-doc",
             description:  "Narrative usage doc for a controller family, for plain-JS/Hotwire consumers " \
                           "without Rails helpers",
             mime_type:    "text/markdown"
@@ -36,9 +36,9 @@ module StimulusPlumbers
           docs = store[:stimulus_docs]
 
           case uri
-          when "stimulus://docs"
+          when "controller://docs"
             json_resource(uri, docs.keys)
-          when %r{\Astimulus://docs/(.+)\z}
+          when %r{\Acontroller://docs/(.+)\z}
             key = Regexp.last_match(1).to_sym
             docs[key] ? text_resource(uri, "text/markdown", docs[key]) : missing(uri, key)
           end
@@ -55,7 +55,7 @@ module StimulusPlumbers
           text_tool(
             server,
             name:        "list_controller_docs",
-            description: "Lists controller doc families available at stimulus://docs/{name} — " \
+            description: "Lists controller doc families available at controller://docs/{name} — " \
                          "grouped by family, not individual controller identifier"
           ) do
             JSON.generate(docs.keys)

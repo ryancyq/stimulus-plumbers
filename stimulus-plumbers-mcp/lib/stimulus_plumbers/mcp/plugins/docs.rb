@@ -12,14 +12,14 @@ module StimulusPlumbers
         STATIC_RESOURCES = [].freeze
         DYNAMIC_RESOURCE_TEMPLATES = [
           ::MCP::ResourceTemplate.new(
-            uri_template: "docs://components/{name}",
+            uri_template: "component://{name}/docs",
             name:         "component-docs",
             description:  "Full markdown documentation and ERB examples for a component",
             mime_type:    "text/markdown"
           ),
           ::MCP::ResourceTemplate.new(
-            uri_template: "helper://components/{name}",
-            name:         "component-helper-signature",
+            uri_template: "component://{name}/helper",
+            name:         "component-helper",
             description:  "Full sp_ helper option surface: keyword options with defaults and slot methods",
             mime_type:    "application/json"
           )
@@ -29,10 +29,10 @@ module StimulusPlumbers
           docs = store[:docs]
 
           case uri
-          when %r{\Adocs://components/(.+)\z}
+          when %r{\Acomponent://([^/]+)/docs\z}
             doc = docs[Regexp.last_match(1).to_sym]
             doc ? text_resource(uri, "text/markdown", doc[:content]) : missing(uri, Regexp.last_match(1))
-          when %r{\Ahelper://components/(.+)\z}
+          when %r{\Acomponent://([^/]+)/helper\z}
             doc = docs[Regexp.last_match(1).to_sym]
             doc ? json_resource(uri, doc[:signature]) : missing(uri, Regexp.last_match(1))
           end
@@ -48,33 +48,33 @@ module StimulusPlumbers
 
           text_tool(
             server,
-            name:        "list_docs",
-            description: "Lists components that have markdown docs (docs://components/{name}) and " \
-                         "helper signatures (helper://components/{name})"
+            name:        "list_component_docs",
+            description: "Lists components that have markdown docs (component://{name}/docs) and " \
+                         "helper signatures (component://{name}/helper)"
           ) do
             JSON.generate(docs.keys)
           end
 
           text_tool(
             server,
-            name:         "get_erb_examples",
+            name:         "get_component_examples",
             description:  "Returns ERB usage examples for a component from the documentation",
-            input_schema: { properties: { component: { type: "string" } }, required: ["component"] }
-          ) do |component:|
-            examples = docs[component.to_sym]&.dig(:examples) || []
-            examples.empty? ? not_found("no examples for: #{component}") : examples.join("\n\n")
+            input_schema: { properties: { name: { type: "string" } }, required: ["name"] }
+          ) do |name:|
+            examples = docs[name.to_sym]&.dig(:examples) || []
+            examples.empty? ? not_found("no examples for: #{name}") : examples.join("\n\n")
           end
 
           text_tool(
             server,
-            name:         "get_helper_signature",
+            name:         "get_component_helper",
             description:  "Returns the full sp_ helper surface for a component: keyword options with " \
                           "defaults plus slot methods (e.g. icon_leading, card.with_action). For themed " \
                           "params/controllers use get_component_schema",
-            input_schema: { properties: { component: { type: "string" } }, required: ["component"] }
-          ) do |component:|
-            doc = docs[component.to_sym]
-            doc ? JSON.generate(doc[:signature]) : not_found("no documentation for: #{component}")
+            input_schema: { properties: { name: { type: "string" } }, required: ["name"] }
+          ) do |name:|
+            doc = docs[name.to_sym]
+            doc ? JSON.generate(doc[:signature]) : not_found("no documentation for: #{name}")
           end
         end
       end

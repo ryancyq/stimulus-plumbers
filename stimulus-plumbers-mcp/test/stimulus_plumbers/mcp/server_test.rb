@@ -6,19 +6,19 @@ require_relative "../../test_helper"
 # which is the path that exercises define_tool block scope.
 class ServerTest < Minitest::Test
   TOOL_ARGS = {
-    "list_components"       => {},
-    "get_component_schema"  => { component: "button" },
-    "list_controller_docs"  => {},
-    "get_controller_docs"   => { name: "modal" },
-    "get_field_as_values"   => { builder_method: "field" },
-    "get_erb_examples"      => { component: "card" },
-    "get_helper_signature"  => { component: "button" },
-    "list_docs"             => {},
-    "list_controllers"      => {},
-    "get_controller_schema" => { controller: "input-combobox" },
-    "get_theme_interface"   => { component: "button" },
-    "get_tailwind_classes"  => { component: "button" },
-    "get_source_versions"   => {}
+    "list_components"        => {},
+    "get_component_schema"   => { name: "button" },
+    "list_controller_docs"   => {},
+    "get_controller_docs"    => { name: "modal" },
+    "get_field_as_values"    => { builder_method: "field" },
+    "get_component_examples" => { name: "card" },
+    "get_component_helper"   => { name: "button" },
+    "list_component_docs"    => {},
+    "list_controllers"       => {},
+    "get_controller_schema"  => { name: "input-combobox" },
+    "get_component_theme"    => { name: "button" },
+    "get_component_tailwind" => { name: "button" },
+    "get_source_versions"    => {}
   }.freeze
 
   def setup
@@ -39,7 +39,7 @@ class ServerTest < Minitest::Test
   end
 
   def test_get_component_schema_returns_params_and_controllers
-    data = JSON.parse(call_tool("get_component_schema", { component: "combobox" }).dig("result", "content", 0, "text"))
+    data = JSON.parse(call_tool("get_component_schema", { name: "combobox" }).dig("result", "content", 0, "text"))
 
     assert data.key?("controllers"), "expected controllers key in #{data.inspect}"
     assert_includes data["controllers"], "input-combobox"
@@ -55,6 +55,30 @@ class ServerTest < Minitest::Test
     assert_equal tool_data, resource_data
     assert resource_data.key?("schema")
     assert resource_data.dig("stimulus", "version")
+  end
+
+  SHARED_SCHEME_URIS = {
+    "component://button/schema"          => "application/json",
+    "component://button/docs"            => "text/markdown",
+    "component://button/helper"          => "application/json",
+    "component://button/theme"           => "application/json",
+    "component://button/tailwind"        => "application/json",
+    "controller://input-combobox/schema" => "application/json",
+    "controller://docs/combobox"         => "text/markdown"
+  }.freeze
+
+  def read_resource(uri)
+    request = { jsonrpc: "2.0", id: 1, method: "resources/read", params: { uri: uri } }
+    JSON.parse(@server.handle_json(JSON.generate(request)))
+  end
+
+  def test_shared_scheme_routes_to_the_right_plugin_per_facet
+    SHARED_SCHEME_URIS.each do |uri, expected_mime|
+      content = read_resource(uri).dig("result", "contents", 0)
+
+      refute_nil content, "#{uri} returned no content"
+      assert_equal expected_mime, content["mimeType"], "#{uri} routed to the wrong plugin"
+    end
   end
 
   def test_unknown_resource_uri_returns_structured_error
@@ -83,13 +107,13 @@ class ServerTest < Minitest::Test
   # Free-string tools route not-found through Base#not_found. (get_field_as_values is
   # enum-validated by the MCP gem, so its bad input never reaches the block.)
   UNKNOWN_ARGS = {
-    "get_component_schema"  => { component: "nope" },
-    "get_controller_schema" => { controller: "nope" },
-    "get_controller_docs"   => { name: "nope" },
-    "get_theme_interface"   => { component: "nope" },
-    "get_tailwind_classes"  => { component: "nope" },
-    "get_helper_signature"  => { component: "nope" },
-    "get_erb_examples"      => { component: "nope" }
+    "get_component_schema"   => { name: "nope" },
+    "get_controller_schema"  => { name: "nope" },
+    "get_controller_docs"    => { name: "nope" },
+    "get_component_theme"    => { name: "nope" },
+    "get_component_tailwind" => { name: "nope" },
+    "get_component_helper"   => { name: "nope" },
+    "get_component_examples" => { name: "nope" }
   }.freeze
 
   def test_unknown_arguments_return_uniform_structured_errors

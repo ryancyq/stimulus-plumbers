@@ -11,20 +11,20 @@ module StimulusPlumbers
 
         STATIC_RESOURCES = [
           ::MCP::Resource.new(
-            uri:         "schema://components",
+            uri:         "component://index",
             name:        "components-index",
             description: "Index of all stimulus-plumbers component theme keys",
             mime_type:   "application/json"
           ),
           ::MCP::Resource.new(
-            uri:         "schema://icons",
+            uri:         "component://icons",
             name:        "icons",
             description: "All available icon names from the active theme registry",
             mime_type:   "application/json"
           ),
           ::MCP::Resource.new(
-            uri:         "schema://stimulus",
-            name:        "stimulus-wiring",
+            uri:         "component://integration",
+            name:        "component-integration",
             description: "Mapping from Rails component name to the Stimulus controller identifiers it requires",
             mime_type:   "application/json"
           )
@@ -32,7 +32,7 @@ module StimulusPlumbers
 
         DYNAMIC_RESOURCE_TEMPLATES = [
           ::MCP::ResourceTemplate.new(
-            uri_template: "schema://components/{name}",
+            uri_template: "component://{name}/schema",
             name:         "component-schema",
             description:  "Params, valid values, defaults, and required controllers for a component",
             mime_type:    "application/json"
@@ -43,13 +43,13 @@ module StimulusPlumbers
           schema = store[:schema]
 
           case uri
-          when "schema://components"
+          when "component://index"
             json_resource(uri, schema[:components].keys)
-          when "schema://icons"
+          when "component://icons"
             json_resource(uri, schema[:icons])
-          when "schema://stimulus"
+          when "component://integration"
             json_resource(uri, schema[:stimulus])
-          when %r{\Aschema://components/(.+)\z}
+          when %r{\Acomponent://([^/]+)/schema\z}
             key = Regexp.last_match(1).to_sym
             json_resource(uri, component_data(schema, key) || { error: "unknown component: #{key}" })
           end
@@ -68,11 +68,12 @@ module StimulusPlumbers
             name:         "get_component_schema",
             description:  "Returns themed params (e.g. type/variant/size) with valid values, defaults, and " \
                           "required Stimulus controllers. For the full helper surface (icon options, slots) " \
-                          "use get_helper_signature",
-            input_schema: { properties: { component: { type: "string" } }, required: ["component"] }
-          ) do |component:|
-            data = data_by_component[component.to_sym]
-            data ? JSON.generate(data) : not_found("unknown component: #{component}")
+                          "use get_component_helper. Keys are renderer-level (e.g. combobox_listbox), not " \
+                          "f.field(as:) values — for the as: -> controller mapping see component://form/docs",
+            input_schema: { properties: { name: { type: "string" } }, required: ["name"] }
+          ) do |name:|
+            data = data_by_component[name.to_sym]
+            data ? JSON.generate(data) : not_found("unknown component: #{name}")
           end
 
           text_tool(

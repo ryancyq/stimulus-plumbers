@@ -11,8 +11,8 @@ module StimulusPlumbers
 
         STATIC_RESOURCES = [
           ::MCP::Resource.new(
-            uri:         "tailwind://components",
-            name:        "tailwind-components-index",
+            uri:         "component://tailwind",
+            name:        "component-tailwind-index",
             description: "Index of component keys implemented by the stimulus-plumbers Tailwind theme",
             mime_type:   "application/json"
           )
@@ -20,8 +20,8 @@ module StimulusPlumbers
 
         DYNAMIC_RESOURCE_TEMPLATES = [
           ::MCP::ResourceTemplate.new(
-            uri_template: "tailwind://components/{name}",
-            name:         "tailwind-component-classes",
+            uri_template: "component://{name}/tailwind",
+            name:         "component-tailwind-classes",
             description:  "Tailwind CSS utility classes emitted per variant for a component",
             mime_type:    "application/json"
           )
@@ -31,9 +31,9 @@ module StimulusPlumbers
           tailwind = store[:tailwind]
 
           case uri
-          when "tailwind://components"
+          when "component://tailwind"
             json_resource(uri, tailwind.keys)
-          when %r{\Atailwind://components/(.+)\z}
+          when %r{\Acomponent://([^/]+)/tailwind\z}
             key = Regexp.last_match(1).to_sym
             json_resource(uri, tailwind[key] || { error: "unknown component: #{key}" })
           end
@@ -44,14 +44,14 @@ module StimulusPlumbers
 
           text_tool(
             server,
-            name:         "get_tailwind_classes",
+            name:         "get_component_tailwind",
             description:  "Returns Tailwind CSS utility classes emitted per variant for a component. " \
                           "For themed params/controllers use get_component_schema; for the Rails helper " \
-                          "surface use get_helper_signature",
-            input_schema: { properties: { component: { type: "string" } }, required: ["component"] }
-          ) do |component:|
-            data = tailwind[component.to_sym]
-            data ? JSON.generate(data) : not_found("unknown component: #{component}")
+                          "surface use get_component_helper",
+            input_schema: { properties: { name: { type: "string" } }, required: ["name"] }
+          ) do |name:|
+            data = tailwind[name.to_sym]
+            data ? JSON.generate(data) : not_found("unknown component: #{name}")
           end
         end
       end

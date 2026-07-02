@@ -118,9 +118,34 @@ Three methods render a complete, accessible field:
 
 Use `f.time_field` for a plain `<input type="time">`.
 
-**Select** (`as: :select`) — read-only listbox backed by `combobox-dropdown`. Accepts `choices:`, `include_blank:`, `prompt:`, `selected:`. Use `f.select` for a native `<select>`.
+**Select** (`as: :select`) — read-only listbox backed by `combobox-dropdown`.
 
-**Search** (`as: :search`) — editable typeahead backed by `combobox-dropdown`. Accepts `choices:`, `url:`, `clearable:`. Use `f.search_field` for a native `<input type="search">`.
+| Option          | Values         | Default | Description                                                   |
+| --------------- | -------------- | ------- | ------------------------------------------------------------- |
+| `choices`       | Array          | `[]`    | `[label, value]` pairs, or a flat array of strings            |
+| `include_blank` | Boolean/String | `nil`   | Prepends a blank option; String overrides its label           |
+| `prompt`        | Boolean/String | `nil`   | Prepends a disabled placeholder option                        |
+| `selected`      | Value          | `nil`   | Pre-selected value; defaults to the attribute's current value |
+
+Use `f.select` for a native `<select>`.
+
+**Search** (`as: :search`) — editable typeahead backed by `combobox-dropdown`.
+
+| Option      | Values  | Default | Description                                                                         |
+| ----------- | ------- | ------- | ----------------------------------------------------------------------------------- |
+| `choices`   | Array   | `[]`    | Client-side options to filter; omit when using `url:`                               |
+| `url`       | String  | `nil`   | Server-side endpoint, receives `?q=<query>`, returns `<li role="option">` fragments |
+| `clearable` | Boolean | `false` | Adds a clear button that resets the input                                           |
+
+Use `f.search_field` for a native `<input type="search">`.
+
+**Password** (`as: :password`) — reveal-toggle wrapper backed by `input-formatter`.
+
+| Option       | Values  | Default | Description                                 |
+| ------------ | ------- | ------- | ------------------------------------------- |
+| `revealable` | Boolean | `false` | Adds a show/hide toggle button on the input |
+
+Use `f.password_field` for a plain `<input type="password">` (also accepts `revealable:`).
 
 ---
 
@@ -169,9 +194,9 @@ Renders a `<fieldset>` / `<legend>` for accessible grouping, or a single checkbo
 
 **Card / button behaviour:**
 
-- **Checkbox card** — input visible on right; card border changes on check via `has-[:checked]:`
-- **Radio card** — input hidden (`hidden peer`); entire card is the clickable area via `peer-checked:`
-- **Radio button** — input hidden (`hidden peer`); inline pill style via `peer-checked:`
+- **Checkbox card** — input visible on the right; the card border highlights when checked
+- **Radio card** — input visually hidden; the whole card is the clickable target and highlights when selected
+- **Radio button** — input visually hidden; renders as an inline pill that highlights when selected
 
 ---
 
@@ -185,7 +210,8 @@ Renders a `<fieldset>` / `<legend>` for accessible grouping, or a single checkbo
   <input
     id="user_email"
     type="email"
-    aria-describedby="user_email_hint"
+    aria-describedby="user_email_hint user_email_error"
+    aria-invalid="true"
     required
     aria-required="true"
   />
