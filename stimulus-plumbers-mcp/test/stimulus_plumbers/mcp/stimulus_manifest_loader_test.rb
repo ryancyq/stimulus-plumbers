@@ -4,10 +4,13 @@ require_relative "../../test_helper"
 
 class StimulusManifestLoaderTest < Minitest::Test
   EXPECTED_IDENTIFIERS = %w[
-    calendar-decade calendar-decade-selector calendar-month calendar-month-selector
-    calendar-year calendar-year-selector clipboard combobox-date combobox-dropdown
-    combobox-time dismisser flipper input-clearable input-combobox input-formatter
-    modal panner popover timeline visibility
+    calendar-decade calendar-decade-selector
+    calendar-month calendar-month-selector
+    calendar-year calendar-year-selector
+    combobox-date combobox-time combobox-dropdown
+    input-clearable input-combobox input-formatter
+    clipboard timeline dismisser flipper
+    modal panner popover visibility
   ].freeze
 
   def setup

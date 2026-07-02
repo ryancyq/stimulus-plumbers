@@ -5,6 +5,7 @@ module StimulusPlumbers
     module Server
       PLUGINS = [
         Plugins::Guide,
+        Plugins::Aria,
         Plugins::Schema,
         Plugins::Docs,
         Plugins::Stimulus,
