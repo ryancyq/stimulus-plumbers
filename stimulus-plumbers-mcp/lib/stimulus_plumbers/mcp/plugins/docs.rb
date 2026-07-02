@@ -69,7 +69,8 @@ module StimulusPlumbers
             server,
             name:         "get_helper_signature",
             description:  "Returns the full sp_ helper surface for a component: keyword options with " \
-                          "defaults plus slot methods (e.g. icon_leading, card.with_action)",
+                          "defaults plus slot methods (e.g. icon_leading, card.with_action). For themed " \
+                          "params/controllers use get_component_schema",
             input_schema: { properties: { component: { type: "string" } }, required: ["component"] }
           ) do |component:|
             doc = docs[component.to_sym]

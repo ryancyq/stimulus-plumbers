@@ -3,7 +3,6 @@
 module StimulusPlumbers
   module MCP
     class SourceVersionsLoader
-      # store key => backing gem, for sources read straight from Ruby gem internals
       GEM_SOURCES = {
         schema:   "stimulus_plumbers",
         docs:     "stimulus_plumbers",
@@ -29,9 +28,7 @@ module StimulusPlumbers
         { version: npm_version(path), resolved_from: resolved_from(path) }
       end
 
-      # node_modules / monorepo sibling paths sit next to a package.json; the gem
-      # vendor path has none — its version is the stimulus_plumbers gem's version,
-      # since that's what vendored the manifest at release time.
+      # No package.json next to the gem vendor path — fall back to the gem's own version.
       def self.npm_version(manifest_path)
         package_json = File.join(File.dirname(manifest_path), "..", "package.json")
         return gem_version("stimulus_plumbers") unless File.exist?(package_json)
