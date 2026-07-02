@@ -8,7 +8,7 @@ class ServerTest < Minitest::Test
   TOOL_ARGS = {
     "list_components"       => {},
     "get_component_schema"  => { component: "button" },
-    "get_field_types"       => { builder_method: "field" },
+    "get_field_as_values"   => { builder_method: "field" },
     "get_erb_examples"      => { component: "card" },
     "get_helper_signature"  => { component: "button" },
     "list_docs"             => {},
@@ -78,7 +78,7 @@ class ServerTest < Minitest::Test
     end
   end
 
-  # Free-string tools route not-found through Base#not_found. (get_field_types is
+  # Free-string tools route not-found through Base#not_found. (get_field_as_values is
   # enum-validated by the MCP gem, so its bad input never reaches the block.)
   UNKNOWN_ARGS = {
     "get_component_schema"  => { component: "nope" },

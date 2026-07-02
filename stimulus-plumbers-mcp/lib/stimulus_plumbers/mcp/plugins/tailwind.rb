@@ -45,7 +45,9 @@ module StimulusPlumbers
           text_tool(
             server,
             name:         "get_tailwind_classes",
-            description:  "Returns Tailwind CSS utility classes emitted per variant for a component",
+            description:  "Returns Tailwind CSS utility classes emitted per variant for a component. " \
+                          "For themed params/controllers use get_component_schema; for the Rails helper " \
+                          "surface use get_helper_signature",
             input_schema: { properties: { component: { type: "string" } }, required: ["component"] }
           ) do |component:|
             data = tailwind[component.to_sym]

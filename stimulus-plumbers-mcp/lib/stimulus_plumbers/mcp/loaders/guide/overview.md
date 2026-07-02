@@ -18,7 +18,7 @@ Use `StimulusPlumbers::Form::Builder` (set `config.action_view.default_form_buil
 `builder:` to `form_with`). Two levels:
 - **Level 2 — recommended.** Full accessible field (label + input + hint + error):
   `f.field(attr, as:)`, `f.collection_field(attr, as:, collection:, ...)`, `f.choice(attr, as:)`.
-  Valid `as:` values come from `get_field_types` (pass `builder_method: "field"`, `"collection_field"`, or `"choice"`).
+  Valid `as:` values come from `get_field_as_values` (pass `builder_method: "field"`, `"collection_field"`, or `"choice"`).
 - **Level 1.** Native helper overrides (`f.text_field`, `f.select`, `f.check_box`, ...) render
   only the themed input element — use when you control the surrounding markup.
 Submit with `f.submit` (themed button). Full form reference + examples: read `docs://components/form`.

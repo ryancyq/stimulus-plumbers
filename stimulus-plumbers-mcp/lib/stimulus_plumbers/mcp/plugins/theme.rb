@@ -53,7 +53,9 @@ module StimulusPlumbers
           text_tool(
             server,
             name:         "get_theme_interface",
-            description:  "Returns the method name, param signature, and return contract for a custom theme component",
+            description:  "Returns the method name, param signature, and return contract for implementing " \
+                          "a component in a custom theme. For the built-in Tailwind theme's output use " \
+                          "get_tailwind_classes; for themed params use get_component_schema",
             input_schema: { properties: { component: { type: "string" } }, required: ["component"] }
           ) do |component:|
             data = theme[:components][component.to_sym]

@@ -77,7 +77,7 @@ module StimulusPlumbers
 
           text_tool(
             server,
-            name:         "get_field_types",
+            name:         "get_field_as_values",
             description:  "Returns valid as: values for a form builder method",
             input_schema: {
               properties: { builder_method: { type: "string", enum: %w[field collection_field choice] } },

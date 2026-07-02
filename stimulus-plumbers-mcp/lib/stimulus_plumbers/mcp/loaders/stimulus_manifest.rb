@@ -20,8 +20,7 @@ module StimulusPlumbers
         JSON.parse(File.read(path))
       end
 
-      # The manifest path actually resolved (or nil) — reused by SourceVersionsLoader
-      # to report which of the 3 fallback locations is serving stimulus:// data.
+      # Reused by SourceVersionsLoader to report which fallback location resolved.
       def self.resolved_path
         manifest_paths.find { |p| File.exist?(p) }
       end
