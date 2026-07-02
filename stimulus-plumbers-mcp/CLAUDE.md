@@ -21,6 +21,7 @@ stimulus-plumbers-mcp/
 │           │   │   └── overview.md             # Overview guide source (extracted from heredoc)
 │           │   ├── schema_loader.rb            # Reads Themes::Base::SCHEMA + form renderer constants (live source)
 │           │   ├── docs_loader.rb              # Reads docs/component/*.md via stimulus_plumbers gem_dir; sibling path as dev fallback
+│           │   ├── docs_table_parser.rb        # Parses `| Option |`/`| Slot method |` tables into the helper surface for docs_loader.rb
 │           │   ├── stimulus_manifest.rb        # 3-path resolution: node_modules → gem vendor/ → sibling dist/ (dev fallback)
 │           │   ├── component_controller_map.rb # Maps component keys → Stimulus controller identifiers (live source)
 │           │   ├── theme_loader.rb             # Extracts theme method signatures from Themes::Base
@@ -28,11 +29,14 @@ stimulus-plumbers-mcp/
 │           └── plugins/                        # One per source: STATIC_RESOURCES, templates, read(uri), register_tools
 │               ├── base.rb                     # Shared contract: text_tool, json/text_resource, not_found
 │               ├── guide.rb                    # guide:// resource
-│               ├── schema.rb                   # schema:// resources + list_components/get_component_schema/get_field_types
-│               ├── docs.rb                     # docs://, helper:// resources + get_erb_examples/get_helper_signature
-│               ├── stimulus.rb                 # stimulus:// resources + list_controllers/get_controller_schema
-│               ├── theme.rb                    # theme:// resources + get_theme_interface
-│               └── tailwind.rb                 # tailwind:// resources + get_tailwind_classes
+│               ├── aria.rb                     # aria:// resource
+│               ├── schema.rb                   # component://index/icons/integration + component://{name}/schema
+│               ├── docs.rb                     # component://{name}/docs+helper + list_component_docs/get_component_examples/get_component_helper
+│               ├── stimulus.rb                 # controller:// resources + list_controllers/get_controller_schema
+│               ├── stimulus_controller_docs.rb # controller://docs resources + list_controller_docs/get_controller_docs
+│               ├── theme.rb                    # theme://base + component://theme resources + get_component_theme
+│               ├── tailwind.rb                 # component://tailwind resources + get_component_tailwind
+│               └── versions.rb                 # versions:// resource + get_source_versions
 ├── tasks/
 │   ├── coverage.rake
 │   ├── rubocop.rake

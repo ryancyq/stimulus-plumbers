@@ -82,4 +82,32 @@ class DocsLoaderTest < Minitest::Test
     assert File.directory?(StimulusPlumbers::MCP::DocsLoader.docs_dir),
            "docs_dir does not exist: #{StimulusPlumbers::MCP::DocsLoader.docs_dir}"
   end
+
+  def form_helpers
+    @docs[:form][:signature][:helpers]
+  end
+
+  def test_bold_subheadings_are_composed_with_parent_heading
+    signatures = form_helpers.map { |h| h[:signature] }
+
+    assert_includes signatures, "f.field — Time"
+    assert_includes signatures, "f.field — Select"
+    assert_includes signatures, "f.field — Search"
+  end
+
+  def test_bold_subheading_does_not_leak_across_a_fenced_code_block
+    combobox_dropdown = @docs[:combobox][:signature][:helpers].find { |h| h[:signature] == "sp_combobox_dropdown" }
+
+    refute_nil combobox_dropdown,
+               "sp_combobox_dropdown table should not be mislabeled with the preceding " \
+               "'Option formats:' bold aside, which is separated from it by a code fence"
+  end
+
+  def test_bold_subheading_does_not_leak_to_a_second_table_under_the_same_heading
+    select_options = form_helpers.find { |h| h[:signature] == "f.field — Select" }[:options].map { |o| o[:option] }
+    search_options = form_helpers.find { |h| h[:signature] == "f.field — Search" }[:options].map { |o| o[:option] }
+
+    assert_includes select_options, "include_blank"
+    refute_includes search_options, "include_blank", "Select's options leaked into Search's table"
+  end
 end

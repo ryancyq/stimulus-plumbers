@@ -58,8 +58,8 @@ module StimulusPlumbers
 
         ## Component Keys
 
-        See `theme://components` for the full list of component keys that can be themed.
-        Use `theme://components/{name}` for the method signature and param details per component.
+        See `component://theme` for the full list of component keys that can be themed.
+        Use `component://{name}/theme` for the method signature and param details per component.
 
         ## Partial Implementation
 
