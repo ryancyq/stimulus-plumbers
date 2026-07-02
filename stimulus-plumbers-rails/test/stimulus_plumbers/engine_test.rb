@@ -19,4 +19,11 @@ class EngineTest < Minitest::Test
       assert_includes Rails.application.config.assets.precompile, "stimulus_plumbers/tokens.css"
     end
   end
+
+  def test_rake_tasks_file_exists_and_defines_install_task
+    rake_file = File.expand_path("../../lib/tasks/stimulus_plumbers.rake", __dir__)
+
+    assert_path_exists rake_file
+    assert_includes File.read(rake_file), "stimulus_plumbers:install"
+  end
 end

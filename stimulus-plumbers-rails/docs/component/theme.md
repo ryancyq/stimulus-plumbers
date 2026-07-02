@@ -12,6 +12,18 @@ StimulusPlumbers.configure do |config|
 end
 ```
 
+## Design tokens
+
+- Component classes reference CSS custom properties (e.g. `--sp-color-primary`) defined in `stimulus_plumbers/tokens.css`
+- Run `bin/rails generate stimulus_plumbers:install` once to import it — see the [README](../../README.md#installation)
+- Override tokens with your own `:root` block after the generated import — the cascade applies your values without forking the file
+
+```css
+:root {
+  --sp-color-primary: oklch(60% 0.18 260);
+}
+```
+
 ## Theme keys
 
 Each row lists the theme key, the component that uses it, and the variants it accepts.

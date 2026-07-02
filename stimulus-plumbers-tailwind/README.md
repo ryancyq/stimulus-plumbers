@@ -31,10 +31,10 @@ StimulusPlumbers.configure do |config|
 end
 ```
 
-Run the install generator once to inject the required `@source` directive into your Tailwind CSS entry file:
+Run the install generator once to inject the required `@source` directive (and the `stimulus_plumbers` tokens.css import) into your Tailwind CSS entry file:
 
 ```bash
-bin/rails generate stimulus_plumbers_tailwind:install
+bin/rails generate stimulus_plumbers:tailwind:install
 ```
 
 The generator checks these files in order:
@@ -45,7 +45,7 @@ The generator checks these files in order:
 
 Override the detected file for both the generator and rake task with `TAILWIND_CSS_FILE=/path/to/entry.css`.
 
-After the initial install, the `@source` path is kept current automatically — no manual re-run needed after `bundle update`. The engine hooks `stimulus_plumbers_tailwind:install` as a prerequisite of:
+After the initial install, the `@source` path is kept current automatically — no manual re-run needed after `bundle update`. The engine hooks `stimulus_plumbers:tailwind:install` as a prerequisite of:
 
 - `assets:precompile` (Sprockets and Propshaft both define this task)
 - `tailwindcss:build` (when `tailwindcss-rails` is present)
@@ -53,7 +53,7 @@ After the initial install, the `@source` path is kept current automatically — 
 To trigger an update manually without a full compile (useful for debugging or after `bundle update`):
 
 ```bash
-bin/rails stimulus_plumbers_tailwind:install
+bin/rails stimulus_plumbers:tailwind:install
 ```
 
 ## Theming
