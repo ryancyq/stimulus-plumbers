@@ -28,6 +28,9 @@ jobs:
     environment: release
     timeout-minutes: 5
 
+    outputs:
+      commit-sha: ${{ steps.commit.outputs.commit-sha }}
+
     steps:
       - uses: actions/checkout@v7
         with:
@@ -64,6 +67,7 @@ jobs:
           GITHUB_REPO: ${{ github.repository }}
 
       - uses: ryancyq/github-signed-commit@v1
+        id: commit
         env:
           GH_TOKEN: ${{ github.token }}
         with:
@@ -87,10 +91,14 @@ jobs:
     environment: release
     timeout-minutes: 5
 
+    outputs:
+      commit-sha: ${{ steps.commit.outputs.commit-sha }}
+
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: ${{ needs.npm.outputs.commit-sha }}
 
       - uses: actions/download-artifact@v8
         with:
@@ -126,6 +134,7 @@ jobs:
           GITHUB_REPO: ${{ github.repository }}
 
       - uses: ryancyq/github-signed-commit@v1
+        id: commit
         env:
           GH_TOKEN: ${{ github.token }}
         with:
@@ -150,10 +159,14 @@ jobs:
     environment: release
     timeout-minutes: 5
 
+    outputs:
+      commit-sha: ${{ steps.commit.outputs.commit-sha }}
+
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: ${{ needs.rubygem-rails.outputs.commit-sha }}
 
       # Must precede setup-ruby --bundler-cache
       - run: rm Gemfile.lock
@@ -179,6 +192,7 @@ jobs:
           GITHUB_REPO: ${{ github.repository }}
 
       - uses: ryancyq/github-signed-commit@v1
+        id: commit
         env:
           GH_TOKEN: ${{ github.token }}
         with:
@@ -206,6 +220,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: ${{ needs.rubygem-tailwind.outputs.commit-sha }}
 
       # Must precede setup-ruby --bundler-cache
       - run: rm Gemfile.lock
