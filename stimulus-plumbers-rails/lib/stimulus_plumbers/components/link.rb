@@ -6,7 +6,7 @@ module StimulusPlumbers
       def render(content = nil, url:, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
         icon_trailing ||= "external-link" if kwargs[:target] == "_blank"
 
-        slots = Link::Slots.new
+        slots = Link::Slots.new(template)
         slots.with_icon_leading(icon_leading) if icon_leading
         slots.with_icon_trailing(icon_trailing) if icon_trailing
 

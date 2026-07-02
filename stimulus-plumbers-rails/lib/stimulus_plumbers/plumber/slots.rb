@@ -11,8 +11,9 @@ module StimulusPlumbers
         end
       end
 
-      def initialize
+      def initialize(template = nil)
         @slots = {}
+        @template = template
       end
 
       def resolve(name)
@@ -20,7 +21,7 @@ module StimulusPlumbers
         return unless entry
 
         value = entry[:value]
-        value = value.call if value.is_a?(Proc)
+        value = capture_block(value) if value.is_a?(Proc)
         block_given? ? yield(value) : value
       end
 
@@ -38,6 +39,12 @@ module StimulusPlumbers
 
       private
 
+      # Runs the slot block through the view so its ERB output is returned,
+      # not written to whatever buffer happens to be active.
+      def capture_block(block)
+        @template ? @template.capture(&block) : block.call
+      end
+
       def set_slot(name, value, options = {})
         @slots[name] = { value: value, options: options }
       end
@@ -54,7 +61,7 @@ module StimulusPlumbers
 
         def define_by_slot(name, by)
           define_method(:"with_#{name}") do |&block|
-            sub = by.new
+            sub = by.new(@template)
             block&.call(sub)
             set_slot(name, sub)
             nil

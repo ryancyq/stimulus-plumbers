@@ -5,7 +5,7 @@ module StimulusPlumbers
     class List
       class Item < Plumber::Base
         def render(content = nil, **kwargs, &block)
-          slots = List::Item::Slots.new
+          slots = List::Item::Slots.new(template)
           slots.with_title(content) if content
           slots.with_icon_trailing("external-link") if kwargs[:url].present? && kwargs[:target] == "_blank"
           yield slots if block_given?

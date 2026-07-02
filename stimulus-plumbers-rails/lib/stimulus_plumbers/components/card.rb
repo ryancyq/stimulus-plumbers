@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Components
     class Card < Plumber::Base
       def render(variant: :tertiary, title_tag: :h2, **kwargs, &block)
-        slots = Card::Slots.new
+        slots = Card::Slots.new(template)
         yield slots if block_given?
 
         html_options = merge_html_options(theme.resolve(:card, variant: variant), kwargs)

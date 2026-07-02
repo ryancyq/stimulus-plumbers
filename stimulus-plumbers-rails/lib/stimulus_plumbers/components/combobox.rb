@@ -21,7 +21,7 @@ module StimulusPlumbers
       private
 
       def resolve_builder
-        builder = Combobox::Builder.new
+        builder = Combobox::Builder.new(template)
         yield builder if block_given?
         builder
       end

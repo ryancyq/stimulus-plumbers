@@ -99,6 +99,22 @@ class PlumberSlotsTest < ActionView::TestCase
     refute_predicate header, :any?
   end
 
+  # ── resolve with captured ERB block content ───────────────────────────────────
+  # Needs real ERB compilation, not a plain Ruby block — `<% %>` tags inside a
+  # multi-line block only exercise capture once they're compiled.
+
+  def test_resolve_captures_multiline_erb_block_content
+    doc = parse_html(render(inline: <<~ERB, type: :erb))
+      <% slots = PlumberSlotsTest::TestSlots.new(self) %>
+      <% slots.with_name do %>
+        <p>Nested content</p>
+      <% end %>
+      <%= slots.resolve(:name) %>
+    ERB
+
+    assert_css doc, "p", text: "Nested content"
+  end
+
   # ── resolve with transform block ─────────────────────────────────────────────
 
   def test_resolve_yields_value_to_block_when_set
