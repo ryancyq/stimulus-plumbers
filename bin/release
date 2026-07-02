@@ -67,6 +67,8 @@ unless skip?("npm")
   run! "mkdir -p #{rails_vendor}"
   run! "cp #{File.join(npm_dir, "dist/controllers.manifest.json")} #{rails_vendor}/"
   run! "cp #{File.join(ROOT, "ARIA.md")} #{rails_vendor}/"
+  run! "mkdir -p #{rails_vendor}/controller-docs"
+  run! "cp #{File.join(npm_dir, "docs/component")}/*.md #{rails_vendor}/controller-docs/"
 
   # Copy compiled dist into the rails gem's vendored JS asset directory.
   # In CI this is done via artifact upload/download between jobs; locally we copy directly.

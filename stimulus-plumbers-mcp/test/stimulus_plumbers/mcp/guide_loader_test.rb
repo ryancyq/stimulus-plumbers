@@ -48,6 +48,7 @@ class GuideLoaderTest < Minitest::Test
     assert_includes @overview, "npm install @stimulus-plumbers/controllers"
     assert_includes @overview, "application.register"
     assert_includes @overview, "stimulus://controllers"
+    assert_includes @overview, "stimulus://docs"
   end
 
   def test_documents_tailwind_install_generator
