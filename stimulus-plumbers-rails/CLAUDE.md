@@ -167,6 +167,7 @@ stimulus-plumbers-rails/
 ```
 
 > See [README.md](README.md) for installation, usage examples, and developer setup.
+> See [docs/guide.md](docs/guide.md) for the forms/views usage guide (source of truth for `stimulus-plumbers-mcp`'s `guide://component`).
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)

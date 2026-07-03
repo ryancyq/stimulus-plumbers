@@ -39,7 +39,7 @@ Rails helper for rendering an accessible list of links, buttons, or grouped sect
 | `role:`          | `"list"` | ARIA role on the `<ul>` — use `"menu"` for interactive menus                             |
 | `**html_options` | —        | Forwarded to the `<ul>`                                                                  |
 
-### `list.section(title:, description:, **html_options)`
+### `list.section(title:, description:, **html_options, &block)`
 
 Renders a `<li>` with an optional heading/description and a nested `<ul>`.
 
@@ -60,7 +60,7 @@ Renders a `<li>` containing an `<a>` (when `url:` present) or `<button>`.
 | `target:`        | `nil`   | Forwarded to the `<a>` (e.g. `"_blank"`)                            |
 | `**html_options` | —       | Forwarded to the inner `<a>` or `<button>`                          |
 
-When `target: "_blank"` is set, `icon_trailing: "external-link"` is added automatically.
+When `url:` is present and `target: "_blank"` is set, `icon_trailing: "external-link"` is added automatically.
 
 ### Item slot methods (yielded as `item`)
 

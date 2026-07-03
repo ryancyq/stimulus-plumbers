@@ -2,9 +2,9 @@
 
 require_relative "../../test_helper"
 
-class TailwindThemeLoaderTest < Minitest::Test
+class TailwindLoaderTest < Minitest::Test
   def setup
-    @theme = StimulusPlumbers::MCP::TailwindThemeLoader.call
+    @theme = StimulusPlumbers::MCP::TailwindLoader.call
   end
 
   def test_returns_hash

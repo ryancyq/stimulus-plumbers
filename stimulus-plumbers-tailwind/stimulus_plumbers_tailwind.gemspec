@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
 
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
     ls.readlines("\x0", chomp: true).select do |f|
-      f.start_with?(*%w[app/ lib/ LICENSE README.md CHANGELOG.md])
+      f.start_with?(*%w[app/ lib/ docs/ LICENSE README.md CHANGELOG.md])
     end
   end
 

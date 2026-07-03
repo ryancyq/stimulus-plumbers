@@ -6,6 +6,8 @@
 
 Rails helpers for accessible, WCAG 2.1 AA compliant UI components built on [Stimulus](https://stimulus.hotwired.dev/). Pairs with the [`@stimulus-plumbers/controllers`](../stimulus-plumbers) npm package.
 
+See [docs/guide.md](docs/guide.md) for a quick guide to building forms and views with this gem.
+
 ## Requirements
 
 - Ruby >= 3.0

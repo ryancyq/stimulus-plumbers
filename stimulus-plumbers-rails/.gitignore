@@ -15,6 +15,7 @@
 /vendor/bundle/
 
 # Generated at release time — not git-tracked
-/vendor/controllers.manifest.json
+# Mirrors the MCP server's resource namespaces: controller/ backs controller://,
+# ARIA.md backs the standalone aria:// resource (no entity namespace).
 /vendor/ARIA.md
-/vendor/controller-docs/
+/vendor/controller/

@@ -62,13 +62,14 @@ unless skip?("npm")
   run! "npm version #{VERSION} --no-git-tag-version --allow-same-version", dir: npm_dir
   run! "npm run build", dir: npm_dir
 
-  # Runs in both local and CI — CI uploads this file in the artifact for the Rails gem job.
-  rails_vendor = File.join(ROOT, "stimulus-plumbers-rails/vendor")
+  # Runs in both local and CI — CI uploads these files in the artifact for the Rails gem job.
+  # vendor/controller/ mirrors the MCP server's controller:// resource namespace.
+  rails_vendor = File.join(ROOT, "stimulus-plumbers-rails/vendor/controller")
   run! "mkdir -p #{rails_vendor}"
-  run! "cp #{File.join(npm_dir, "dist/controllers.manifest.json")} #{rails_vendor}/"
-  run! "cp #{File.join(ROOT, "ARIA.md")} #{rails_vendor}/"
-  run! "mkdir -p #{rails_vendor}/controller-docs"
-  run! "cp #{File.join(npm_dir, "docs/component")}/*.md #{rails_vendor}/controller-docs/"
+  run! "cp #{File.join(npm_dir, "dist/controllers.manifest.json")} #{rails_vendor}/manifest.json"
+  run! "mkdir -p #{rails_vendor}/docs"
+  run! "cp #{File.join(npm_dir, "docs/component")}/*.md #{rails_vendor}/docs/"
+  run! "cp #{File.join(npm_dir, "docs/guide.md")} #{rails_vendor}/guide.md"
 
   # Copy compiled dist into the rails gem's vendored JS asset directory.
   # In CI this is done via artifact upload/download between jobs; locally we copy directly.
@@ -93,6 +94,13 @@ end
 unless skip?("rails")
   section("rubygem stimulus-plumbers")
   rails_dir = File.join(ROOT, "stimulus-plumbers-rails")
+
+  # ARIA.md doesn't depend on the npm build, so it's vendored here (not in the npm
+  # section) — a `--only rails` release, or the CI rubygem-rails job which never
+  # sees the npm job's artifact for it, still ships a fresh copy.
+  rails_vendor = File.join(rails_dir, "vendor")
+  run! "mkdir -p #{rails_vendor}"
+  run! "cp #{File.join(ROOT, "ARIA.md")} #{rails_vendor}/"
 
   run! "bin/bump-version #{VERSION}",              dir: rails_dir
   run! "bundle exec rake appraisal:setup",         dir: rails_dir if CI

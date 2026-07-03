@@ -107,7 +107,7 @@ Icons are rendered **inside** the `<button>`, before or after the label `<span>`
 
 ### Icon only
 
-When no text is provided, no `<span>` is rendered. The theme uses `:has(> span)` to detect this and applies `aspect-square` + `px-0`, making the button square (or a circle for `type: :fab` / `:fab_outline`):
+When no text is provided, no `<span>` is rendered, and the button becomes square (or a circle for `type: :fab` / `:fab_outline`):
 
 ```html
 <button type="button" aria-label="Add" class="[theme classes]">

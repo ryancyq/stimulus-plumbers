@@ -68,6 +68,7 @@ stimulus-plumbers-tailwind/
 ```
 
 > See [README.md](README.md) for installation and developer setup.
+> See [docs/guide.md](docs/guide.md) for the setup/theming quick guide (source of truth for `stimulus-plumbers-mcp`'s `guide://tailwind`).
 
 ## Styling Guidelines
 - **Always use CSS custom properties (CSS variables) instead of hardcoded values** — colors, spacing, sizing, and other design tokens must reference CSS variables (e.g., `var(--sp-color-primary)`) so consumers can theme the library without overriding classes.

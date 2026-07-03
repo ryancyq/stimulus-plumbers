@@ -6,6 +6,8 @@
 
 Tailwind CSS v4 theme for [`stimulus_plumbers`](../stimulus-plumbers-rails). Extends the base theme with utility classes for all components.
 
+See [docs/guide.md](docs/guide.md) for a quick setup/theming guide.
+
 ## Requirements
 
 - Ruby >= 3.0

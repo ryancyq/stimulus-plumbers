@@ -2,7 +2,7 @@
 
 require_relative "../../test_helper"
 
-class StimulusManifestLoaderTest < Minitest::Test
+class ControllerSchemaLoaderTest < Minitest::Test
   EXPECTED_IDENTIFIERS = %w[
     calendar-decade calendar-decade-selector
     calendar-month calendar-month-selector
@@ -14,7 +14,7 @@ class StimulusManifestLoaderTest < Minitest::Test
   ].freeze
 
   def setup
-    @controllers = StimulusPlumbers::MCP::StimulusManifestLoader.call
+    @controllers = StimulusPlumbers::MCP::ControllerSchemaLoader.call
   end
 
   def test_all_expected_controllers_present
@@ -87,11 +87,11 @@ class StimulusManifestLoaderTest < Minitest::Test
   end
 
   def test_returns_empty_hash_when_no_manifest_found
-    StimulusPlumbers::MCP::StimulusManifestLoader.stub(
+    StimulusPlumbers::MCP::ControllerSchemaLoader.stub(
       :manifest_paths,
       ["/nonexistent/a.json", "/nonexistent/b.json", "/nonexistent/c.json"]
     ) do
-      result = StimulusPlumbers::MCP::StimulusManifestLoader.call
+      result = StimulusPlumbers::MCP::ControllerSchemaLoader.call
 
       assert_equal({}, result)
     end

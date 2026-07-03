@@ -6,19 +6,25 @@ require_relative "../../test_helper"
 # which is the path that exercises define_tool block scope.
 class ServerTest < Minitest::Test
   TOOL_ARGS = {
-    "list_components"        => {},
-    "get_component_schema"   => { name: "button" },
-    "list_controller_docs"   => {},
-    "get_controller_docs"    => { name: "modal" },
-    "get_field_as_values"    => { builder_method: "field" },
-    "get_component_examples" => { name: "card" },
-    "get_component_helper"   => { name: "button" },
-    "list_component_docs"    => {},
-    "list_controllers"       => {},
-    "get_controller_schema"  => { name: "input-combobox" },
-    "get_component_theme"    => { name: "button" },
-    "get_component_tailwind" => { name: "button" },
-    "get_source_versions"    => {}
+    "list_components"         => {},
+    "get_component_schema"    => { name: "button" },
+    "list_controller_docs"    => {},
+    "get_controller_docs"     => { name: "modal" },
+    "get_field_as_values"     => { builder_method: "field" },
+    "get_field_as_controller" => { as: "select" },
+    "get_component_examples"  => { name: "card" },
+    "get_component_helper"    => { name: "button" },
+    "list_component_docs"     => {},
+    "list_controllers"        => {},
+    "get_controller_schema"   => { name: "input-combobox" },
+    "get_component_theme"     => { name: "button" },
+    "get_component_tailwind"  => { name: "button" },
+    "get_source_versions"     => {},
+    "list_icons"              => {},
+    "list_component_themes"   => {},
+    "list_component_tailwind" => {},
+    "list_guides"             => {},
+    "get_guide"               => { name: "component" }
   }.freeze
 
   def setup
@@ -38,6 +44,16 @@ class ServerTest < Minitest::Test
     end
   end
 
+  # Catches a new tool shipping without test coverage.
+  def test_tool_args_covers_every_registered_tool
+    registered = @server.instance_variable_get(:@tools).keys
+    missing = registered - TOOL_ARGS.keys
+
+    assert_empty missing,
+                 "new tool(s) #{missing.inspect} registered but missing from TOOL_ARGS " \
+                 "— add sample args so it's covered by test_every_tool_invokes_without_internal_error"
+  end
+
   def test_get_component_schema_returns_params_and_controllers
     data = JSON.parse(call_tool("get_component_schema", { name: "combobox" }).dig("result", "content", 0, "text"))
 
@@ -53,8 +69,8 @@ class ServerTest < Minitest::Test
     tool_data = JSON.parse(call_tool("get_source_versions").dig("result", "content", 0, "text"))
 
     assert_equal tool_data, resource_data
-    assert resource_data.key?("schema")
-    assert resource_data.dig("stimulus", "version")
+    assert resource_data.key?("component_schema")
+    assert resource_data.dig("controller_schema", "version")
   end
 
   SHARED_SCHEME_URIS = {
@@ -89,6 +105,25 @@ class ServerTest < Minitest::Test
 
     assert payload.key?("error"), "expected structured error, got #{payload.inspect}"
     assert_includes payload["error"], "guide://overview"
+  end
+
+  # Catches a new static resource whose read(uri) case was forgotten.
+  def test_every_static_resource_is_readable
+    @server.instance_variable_get(:@resources).each do |resource|
+      content = read_resource(resource.uri).dig("result", "contents", 0)
+
+      refute_nil content, "#{resource.uri} returned no content"
+      payload = parse_json(content["text"])
+
+      refute payload.is_a?(Hash) && payload["error"]&.start_with?("unknown resource"),
+             "#{resource.uri} is registered but read() doesn't handle it: #{payload}"
+    end
+  end
+
+  def parse_json(text)
+    JSON.parse(text)
+  rescue JSON::ParserError
+    nil
   end
 
   def test_report_sources_warns_on_empty_source

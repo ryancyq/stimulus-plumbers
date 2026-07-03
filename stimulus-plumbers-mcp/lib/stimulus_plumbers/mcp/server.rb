@@ -4,14 +4,18 @@ module StimulusPlumbers
   module MCP
     module Server
       PLUGINS = [
-        Plugins::Guide,
-        Plugins::Aria,
-        Plugins::Schema,
-        Plugins::Docs,
-        Plugins::Stimulus,
-        Plugins::StimulusControllerDocs,
-        Plugins::Theme,
+        Plugins::ComponentDocs,
+        Plugins::ComponentSchema,
+        Plugins::ComponentTheme,
+
+        Plugins::ControllerDocs,
+        Plugins::ControllerSchema,
+
+        Plugins::Icons,
         Plugins::Tailwind,
+
+        Plugins::Aria,
+        Plugins::Guide,
         Plugins::Versions
       ].freeze
 
@@ -20,7 +24,7 @@ module StimulusPlumbers
                      "Read guide://overview first for a map of the form/view/stimulus API."
 
       def self.build
-        store = PLUGINS.to_h { |plugin| [plugin::LOADER_KEY, plugin::LOADER.call] }
+        store = build_store
         report_sources(store)
 
         server = new_server
@@ -30,6 +34,10 @@ module StimulusPlumbers
         end
         PLUGINS.each { |plugin| plugin.register_tools(server, store) }
         server
+      end
+
+      def self.build_store
+        PLUGINS.to_h { |plugin| [plugin.loader_key, plugin.loader.call] }
       end
 
       def self.unknown_resource(uri)
@@ -42,8 +50,8 @@ module StimulusPlumbers
           name:               "stimulus-plumbers",
           version:            StimulusPlumbers::MCP::VERSION,
           instructions:       INSTRUCTIONS,
-          resources:          PLUGINS.flat_map { |p| p::STATIC_RESOURCES },
-          resource_templates: PLUGINS.flat_map { |p| p::DYNAMIC_RESOURCE_TEMPLATES }
+          resources:          PLUGINS.flat_map(&:static_resources),
+          resource_templates: PLUGINS.flat_map(&:dynamic_resource_templates)
         )
       end
 
