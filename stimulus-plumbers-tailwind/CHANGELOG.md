@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.8](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.5..stimulus-plumbers-tailwind/v0.4.8) - 2026-07-03
+
+### Bug Fixes
+
+- tailwind install generator ([#154](https://github.com/ryancyq/stimulus-plumbers/issues/154)) - ([db4bda0](https://github.com/ryancyq/stimulus-plumbers/commit/db4bda0b899a463e0608229927c65326233dd3a4)) - Ryan Chang
+- tailwind theme registration + activation (rails only) ([#157](https://github.com/ryancyq/stimulus-plumbers/issues/157)) - ([5998854](https://github.com/ryancyq/stimulus-plumbers/commit/5998854ed2a6ca9c67aa225f3c397e4f7bca7a51)) - Ryan Chang
+- mcp doc update + new tools validations ([#162](https://github.com/ryancyq/stimulus-plumbers/issues/162)) - ([beed1bb](https://github.com/ryancyq/stimulus-plumbers/commit/beed1bb14cbfcb8ec6f757145dc6a461d357c060)) - Ryan Chang
+
+---
 ## [0.4.4](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.3..stimulus-plumbers-tailwind/v0.4.4) - 2026-06-30
 
 ### Dependencies

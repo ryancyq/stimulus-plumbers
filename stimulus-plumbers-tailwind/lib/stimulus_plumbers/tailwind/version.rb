@@ -2,6 +2,6 @@
 
 module StimulusPlumbers
   module Tailwind
-    VERSION = "0.4.5"
+    VERSION = "0.4.8"
   end
 end
