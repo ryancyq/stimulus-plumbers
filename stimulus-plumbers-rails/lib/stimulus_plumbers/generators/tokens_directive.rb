@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "pathname"
+
 module StimulusPlumbers
   module Generators
     module TokensDirective
@@ -8,8 +10,10 @@ module StimulusPlumbers
 
       module_function
 
-      def directive
-        %(@import "#{GEM_ROOT}/#{TOKENS_CSS_REL_PATH}";)
+      def directive(from:)
+        path = Pathname.new(GEM_ROOT).join(TOKENS_CSS_REL_PATH)
+        rel  = path.relative_path_from(Pathname.new(from))
+        %(@import "#{rel}";)
       end
 
       def stale_pattern

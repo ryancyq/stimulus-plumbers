@@ -3,13 +3,21 @@
 module StimulusPlumbers
   module Generators
     module CssEntrypoint
-      STIMULUS_PLUMBERS_CSS_FILE = "STIMULUS_PLUMBERS_CSS_FILE"
+      STIMULUS_PLUMBERS_CSS_ENTRY = "STIMULUS_PLUMBERS_CSS_ENTRY"
 
-      def entry_css_file(candidates:, env_var:, fallback_env_var: nil)
-        [env_var, fallback_env_var].compact.each do |var|
-          next unless ENV[var]
+      # Shared with stimulus_plumbers_tailwind's InstallGenerator — checked in order,
+      # each path is another gem/tool's own default entry file. Detection is theme-
+      # agnostic: any of these may be the CSS entry regardless of which theme is active.
+      ENTRY_CANDIDATES = [
+        "app/assets/stylesheets/application.tailwind.css", # tailwindcss-rails 2.x default
+        "app/assets/tailwind/application.css",             # tailwindcss-rails 3.x+ default
+        "app/assets/stylesheets/application.css",          # Rails/Propshaft default manifest
+        "app/javascript/entrypoints/application.css"       # jsbundling-rails (esbuild/webpack) default
+      ].freeze
 
-          path = File.expand_path(ENV.fetch(var, nil))
+      def entry_css_file(candidates:, env_var:)
+        if ENV[env_var]
+          path = File.expand_path(ENV.fetch(env_var, nil))
           return path if File.exist?(path)
         end
 
@@ -18,11 +26,9 @@ module StimulusPlumbers
           .find { |f| File.exist?(f) }
       end
 
-      def warn_entry_css_not_found(candidates:, env_var:, label:, fallback_env_var: nil)
+      def warn_entry_css_not_found(candidates:, env_var:, label:)
         tried = candidates.map { |c| File.join(destination_root, c) }
-        [env_var, fallback_env_var].compact.each do |var|
-          tried.unshift(File.expand_path(ENV[var])) if ENV[var]
-        end
+        tried.unshift(File.expand_path(ENV[env_var])) if ENV[env_var]
         say "Could not find a #{label} entry file. Tried: #{tried.join(", ")}. " \
             "Set #{env_var}=/path/to/entry.css and re-run.",
             :red

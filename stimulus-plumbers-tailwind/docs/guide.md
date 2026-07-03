@@ -10,9 +10,9 @@ entry file:
 bin/rails generate stimulus_plumbers:tailwind:install
 ```
 
-It re-runs automatically on `assets:precompile`/`tailwindcss:build` after that — see
-[README.md](../README.md#installation) for file-detection order and the `TAILWIND_CSS_FILE`
-override.
+It re-runs automatically on `assets:precompile`/`tailwindcss:build` after that. File detection and
+the `STIMULUS_PLUMBERS_CSS_ENTRY` override are shared with the core gem — see
+[stimulus-plumbers-rails/docs/guide.md#css-entry-file-detection](../../stimulus-plumbers-rails/docs/guide.md#css-entry-file-detection).
 
 Icons: pass a kebab-case name to `sp_icon` or any `icon_leading:`/`icon_trailing:` option (append
 `/solid` for the filled variant) — see [README.md](../README.md#icons) for aliases and the

@@ -93,6 +93,8 @@ Routes: `/components/{button,combobox,calendar_stimulus,…}` and `/form/{floati
 
 **Never run `node --run test:snapshots:update`** — the user does this.
 
+**`test/sandbox/tailwind.css`'s generator-owned lines (`@import tokens.css`, `@source lib/**/*.rb`) must always match `stimulus_plumbers:tailwind:install`'s output** — `test/stimulus_plumbers/tailwind/sandbox_css_test.rb` enforces this by re-running the generator against it and diffing. If it fails, regenerate with `STIMULUS_PLUMBERS_CSS_ENTRY=test/sandbox/tailwind.css bin/rails generate stimulus_plumbers:tailwind:install` and commit the diff — never hand-edit those lines.
+
 ## Sandbox View Convention
 
 **Icon naming:** Both the core and tailwind sandbox views must use generic icon names (e.g., `close`, `download`, `book`, `edit`, `email`), never heroicon-specific compound names (e.g., `x-mark`, `arrow-down-tray`, `book-open`, `pencil`, `envelope`). When a new generic name is needed, add a mapping to `Icon::ALIASES` in `lib/stimulus_plumbers/themes/tailwind/icon.rb`. Names that are already generic and need no alias: `arrow-right`, `arrow-left`, `check`, `bell`, `trash`, `plus`, `user`, `cog`, `folder`, `home`, `chevron-right`, `chart-bar`.

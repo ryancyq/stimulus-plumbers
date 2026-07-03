@@ -9,20 +9,24 @@ module StimulusPlumbers
     class InstallGenerator < Rails::Generators::Base
       include StimulusPlumbers::Generators::CssEntrypoint
 
-      STIMULUS_PLUMBERS_CSS_FILE = CssEntrypoint::STIMULUS_PLUMBERS_CSS_FILE
-      CSS_CANDIDATES             = %w[
-        app/assets/stylesheets/application.tailwind.css
-        app/assets/stylesheets/application.css
-        app/javascript/entrypoints/application.css
-      ].freeze
-
       def install
-        css_file = entry_css_file(candidates: CSS_CANDIDATES, env_var: STIMULUS_PLUMBERS_CSS_FILE)
-        unless css_file
-          return warn_entry_css_not_found(candidates: CSS_CANDIDATES, env_var: STIMULUS_PLUMBERS_CSS_FILE, label: "CSS")
-        end
+        css_file = entry_css_file(**css_file_lookup_options)
+        return warn_entry_css_not_found(label: "CSS", **css_file_lookup_options) unless css_file
 
-        apply_edit(css_file, TokensDirective.directive, stale_pattern: TokensDirective.stale_pattern)
+        apply_edit(
+          css_file,
+          TokensDirective.directive(from: File.dirname(css_file)),
+          stale_pattern: TokensDirective.stale_pattern
+        )
+      end
+
+      private
+
+      def css_file_lookup_options
+        {
+          candidates: CssEntrypoint::ENTRY_CANDIDATES,
+          env_var:    CssEntrypoint::STIMULUS_PLUMBERS_CSS_ENTRY
+        }
       end
     end
   end
