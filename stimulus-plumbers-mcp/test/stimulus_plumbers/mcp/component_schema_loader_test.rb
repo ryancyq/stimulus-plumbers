@@ -2,16 +2,15 @@
 
 require_relative "../../test_helper"
 
-class SchemaLoaderTest < Minitest::Test
+class ComponentSchemaLoaderTest < Minitest::Test
   def setup
-    @schema = StimulusPlumbers::MCP::SchemaLoader.call
+    @schema = StimulusPlumbers::MCP::ComponentSchemaLoader.call
   end
 
-  def test_returns_components_field_as_icons_and_stimulus
+  def test_returns_components_field_as_and_controllers
     assert @schema.key?(:components)
     assert @schema.key?(:field_as)
-    assert @schema.key?(:icons)
-    assert @schema.key?(:stimulus)
+    assert @schema.key?(:controllers)
   end
 
   def test_components_includes_core_keys
@@ -65,14 +64,17 @@ class SchemaLoaderTest < Minitest::Test
     assert_includes values, :check_box
   end
 
-  def test_icons_is_an_array_of_strings
-    assert_instance_of Array, @schema[:icons]
-    refute_empty @schema[:icons]
-    assert(@schema[:icons].all?(String))
+  def test_controllers_is_a_hash_of_component_to_controllers
+    assert_instance_of Hash, @schema[:controllers]
+    refute_empty @schema[:controllers]
   end
 
-  def test_stimulus_is_a_hash_of_component_to_controllers
-    assert_instance_of Hash, @schema[:stimulus]
-    refute_empty @schema[:stimulus]
+  def test_field_as_controllers_maps_combobox_backed_as_values
+    assert_equal "combobox-dropdown", @schema[:field_as_controllers][:select]
+    assert_equal "combobox-date",     @schema[:field_as_controllers][:date]
+  end
+
+  def test_field_as_controllers_omits_plain_input_as_values
+    refute @schema[:field_as_controllers].key?(:text), "text has no dedicated controller"
   end
 end

@@ -132,7 +132,7 @@ Rails helper for rendering a themed timeline as an ordered list with optional in
 
 ## ARIA
 
-- See [ARIA.md](../../ARIA.md) for WCAG 2.1 AA criteria and disclosure widget patterns.
+- See [ARIA.md](../../../ARIA.md) for WCAG 2.1 AA criteria and disclosure widget patterns.
 - The trigger button uses `aria-expanded` (managed by the JS controller) and `aria-controls` pointing to the detail `id`.
 - Indicator elements carry `aria-hidden="true"` to hide decorative markup from screen readers.
-- For JS controller targets, values, and actions, see the [stimulus-plumbers JS controller doc](../../stimulus-plumbers/docs/component/timeline.md).
+- For JS controller targets, values, and actions, see the [stimulus-plumbers JS controller doc](../../../stimulus-plumbers/docs/component/timeline.md).

@@ -18,6 +18,7 @@ gem install stimulus_plumbers_mcp
 | URI | Content |
 |-----|---------|
 | `guide://overview` | **Start here** — map of the form/view/stimulus API with pointers to every tool/resource |
+| `guide://{name}` | Per-package usage guide: `component` (Rails forms/views), `controller` (plain-JS/non-Rails setup), `tailwind` (Tailwind install/theming), `theme` (custom theme integration contract) |
 | `aria://reference` | WCAG 2.1 AA criteria, keyboard navigation patterns, and per-component ARIA patterns |
 | `component://index` | Index of all component theme keys |
 | `component://icons` | All available icon names |
@@ -27,7 +28,7 @@ gem install stimulus_plumbers_mcp
 | `component://{name}/helper` | Full `sp_` helper surface: keyword options + defaults (grouped by helper signature) + slot methods |
 | `component://theme` | Index of theme-implementable component keys |
 | `component://{name}/theme` | Method name, param signature, return contract |
-| `theme://base` | Custom theme authoring guide |
+| `component://theme/base` | Custom theme authoring guide |
 | `component://tailwind` | Index of Tailwind theme component keys |
 | `component://{name}/tailwind` | Tailwind CSS classes per variant |
 | `controller://index` | Index of Stimulus controller identifiers |
@@ -53,6 +54,8 @@ gem install stimulus_plumbers_mcp
 | `list_controller_docs` | — | Controller doc families available at `controller://docs/{name}` |
 | `get_controller_docs` | `name` | Narrative usage doc for a controller family |
 | `get_source_versions` | — | Resolved version (and resolution path) of each source |
+| `list_guides` | — | Available per-package guide names (`component`/`controller`/`tailwind`/`theme`) |
+| `get_guide` | `name` | Per-package usage guide content |
 
 ## IDE Setup
 

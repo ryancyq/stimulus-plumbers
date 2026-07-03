@@ -94,10 +94,17 @@ Individual view helpers render a single view (used for Turbo Frame responses). T
 <%= sp_calendar_turbo_decade(date: @date, today: @today) %>
 ```
 
-| Helper                    | Extra option     | Description                                                        |
-| ------------------------- | ---------------- | ------------------------------------------------------------------ |
-| `sp_calendar_turbo_month` | `weekday_format` | `:short` (default) \| `:long` \| `:narrow` — weekday header format |
-| `sp_calendar_turbo_year`  | `month_format`   | `:short` (default) \| `:long` \| `:narrow` — month button format   |
+**`sp_calendar_turbo_month`** — extra option:
+
+| Option           | Description                                                        |
+| ---------------- | ------------------------------------------------------------------ |
+| `weekday_format` | `:short` (default) \| `:long` \| `:narrow` — weekday header format |
+
+**`sp_calendar_turbo_year`** — extra option:
+
+| Option         | Description                                                      |
+| -------------- | ---------------------------------------------------------------- |
+| `month_format` | `:short` (default) \| `:long` \| `:narrow` — month button format |
 
 **Common options** (all helpers and `sp_calendar_turbo`):
 

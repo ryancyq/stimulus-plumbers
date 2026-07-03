@@ -9,12 +9,12 @@ require_relative "../../test_helper"
 # field_as values are checked against raw form.md content (their table format differs).
 class AccuracyTest < Minitest::Test
   def setup
-    @schema = StimulusPlumbers::MCP::SchemaLoader.call
-    @docs   = StimulusPlumbers::MCP::DocsLoader.call
+    @schema = StimulusPlumbers::MCP::ComponentSchemaLoader.call
+    @docs   = StimulusPlumbers::MCP::ComponentDocsLoader.call
   end
 
   # Flatten all text from the parsed option tables (option name, default, description)
-  # and slot descriptions — the authoritative API surface extracted by DocsLoader.
+  # and slot descriptions — the authoritative API surface extracted by ComponentDocsLoader.
   def signature_text(signature)
     option_texts = signature[:helpers].flat_map do |h|
       h[:options].flat_map { |o| [o[:option], o[:default].to_s, o[:description]] }

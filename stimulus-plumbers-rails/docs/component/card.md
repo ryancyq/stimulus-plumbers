@@ -63,10 +63,12 @@ Rails helper for rendering a themed card with optional icon, title, body, and ac
   <!-- body -->
   <div class="[card_body theme classes]">Your account is active.</div>
 
-  <!-- action -->
-  <div class="[card_action theme classes]">
-    <a href="/settings">Manage</a>
-  </div>
+  <!-- action: a ghost/tertiary sp_button, with card_action classes merged directly onto it (no wrapping div) -->
+  <a
+    href="/settings"
+    class="[button ghost/tertiary + card_action theme classes]"
+    ><span>Manage</span></a
+  >
 </div>
 ```
 
@@ -74,14 +76,14 @@ Rails helper for rendering a themed card with optional icon, title, body, and ac
 
 ## Theme keys
 
-| Key           | Element                             | Variants                                      |
-| ------------- | ----------------------------------- | --------------------------------------------- |
-| `card`        | Outer `<div>`                       | `variant: :primary\|:secondary\|:tertiary\|…` |
-| `card_header` | Header wrapper `<div>` (icon+title) | —                                             |
-| `card_icon`   | Icon inside the header              | —                                             |
-| `card_title`  | Title element (`h2` etc.)           | —                                             |
-| `card_body`   | Body `<div>`                        | —                                             |
-| `card_action` | Action `<div>`                      | —                                             |
+| Key           | Element                                                       | Variants                                      |
+| ------------- | ------------------------------------------------------------- | --------------------------------------------- |
+| `card`        | Outer `<div>`                                                 | `variant: :primary\|:secondary\|:tertiary\|…` |
+| `card_header` | Header wrapper `<div>` (icon+title)                           | —                                             |
+| `card_icon`   | Icon inside the header                                        | —                                             |
+| `card_title`  | Title element (`h2` etc.)                                     | —                                             |
+| `card_body`   | Body `<div>`                                                  | —                                             |
+| `card_action` | Merged onto the action `<a>`/`<button>` (no wrapping element) | —                                             |
 
 ---
 

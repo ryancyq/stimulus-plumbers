@@ -47,6 +47,7 @@ stimulus-plumbers/
 ```
 
 > See [README.md](README.md) for installation, controller usage examples, and developer setup.
+> See [docs/guide.md](docs/guide.md) for the plain-JS / non-Rails usage guide (source of truth for `stimulus-plumbers-mcp`'s `guide://controller`).
 
 ## Guidelines
 - **native HTML5 first** - only use controllers when native elements have limitations

@@ -6,6 +6,8 @@
 
 Accessible Stimulus controllers following WCAG 2.1+ standards.
 
+For a plain-JS / non-Rails setup, see [docs/guide.md](docs/guide.md).
+
 ## Requirements
 
 - Node.js >= 22

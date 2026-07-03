@@ -3,38 +3,39 @@
 module StimulusPlumbers
   module MCP
     module Plugins
-      module Versions
-        extend Base
+      class Versions < Base
+        class << self
+          def loader_key = :versions
 
-        LOADER_KEY = :versions
-        LOADER     = SourceVersionsLoader
+          def loader = VersionsLoader
 
-        STATIC_RESOURCES = [
-          ::MCP::Resource.new(
-            uri:         "versions://sources",
-            name:        "source-versions",
-            description: "Resolved version (and resolution path, for stimulus) of each gem/package " \
-                         "backing this server's data — use to spot version drift between sources",
-            mime_type:   "application/json"
-          )
-        ].freeze
+          def static_resources
+            [
+              ::MCP::Resource.new(
+                uri:         "versions://sources",
+                name:        "source-versions",
+                description: "Resolved version (and resolution path, for stimulus) of each gem/package " \
+                             "backing this server's data — use to spot version drift between sources",
+                mime_type:   "application/json"
+              )
+            ].freeze
+          end
 
-        DYNAMIC_RESOURCE_TEMPLATES = [].freeze
+          def read(uri, store)
+            return unless uri == "versions://sources"
 
-        def self.read(uri, store)
-          return unless uri == "versions://sources"
+            json_resource(uri, store[:versions])
+          end
 
-          json_resource(uri, store[:versions])
-        end
-
-        def self.register_tools(server, store)
-          text_tool(
-            server,
-            name:        "get_source_versions",
-            description: "Returns the resolved version (and resolution path, for stimulus) of each " \
-                         "gem/package backing this server's data — use to spot version drift between sources"
-          ) do
-            JSON.generate(store[:versions])
+          def register_tools(server, store)
+            text_tool(
+              server,
+              name:        "get_source_versions",
+              description: "Returns the resolved version (and resolution path, for stimulus) of each " \
+                           "gem/package backing this server's data — use to spot version drift between sources"
+            ) do
+              JSON.generate(store[:versions])
+            end
           end
         end
       end

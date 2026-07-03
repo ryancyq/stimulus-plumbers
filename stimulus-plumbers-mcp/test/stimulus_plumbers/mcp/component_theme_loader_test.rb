@@ -2,9 +2,9 @@
 
 require_relative "../../test_helper"
 
-class ThemeLoaderTest < Minitest::Test
+class ComponentThemeLoaderTest < Minitest::Test
   def setup
-    @data = StimulusPlumbers::MCP::ThemeLoader.call
+    @data = StimulusPlumbers::MCP::ComponentThemeLoader.call
   end
 
   def test_returns_hash_with_base_doc_and_components
@@ -16,7 +16,7 @@ class ThemeLoaderTest < Minitest::Test
     assert_instance_of String, @data[:base_doc]
     assert_includes @data[:base_doc], "_classes"
     assert_includes @data[:base_doc], "StimulusPlumbers::Themes::Base"
-    assert_includes @data[:base_doc], "config.theme.register"
+    assert_includes @data[:base_doc], "config.theme.use"
   end
 
   def test_components_covers_all_schema_keys

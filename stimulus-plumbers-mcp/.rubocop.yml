@@ -57,19 +57,13 @@ Layout/HashAlignment:
 
 Metrics/MethodLength:
   Max: 15
-  # Plugin #register_tools methods are declarative: each registers several tools
-  # in sequence, so length tracks the tool count, not complexity.
-  Exclude:
-    - lib/stimulus_plumbers/mcp/plugins/*.rb
 
-Metrics/AbcSize:
-  # Loaders shape source data (icon dirs, Tailwind variant matrices) and the
-  # schema plugin builds its tool set inline — high A/B/C counts are inherent.
+Metrics/ClassLength:
+  # ServerTest is a flat fixture, and ComponentSchema covers the most resources/tools of any
+  # plugin — both track breadth, not per-method complexity (each method is already small).
   Exclude:
-    - lib/stimulus_plumbers/mcp/loaders/schema_loader.rb
-    - lib/stimulus_plumbers/mcp/loaders/tailwind_theme_loader.rb
-    - lib/stimulus_plumbers/mcp/plugins/schema.rb
-    - lib/stimulus_plumbers/mcp/plugins/docs.rb
+    - test/stimulus_plumbers/mcp/server_test.rb
+    - lib/stimulus_plumbers/mcp/plugins/component_schema.rb
 
 Layout/LineLength:
   Max: 130

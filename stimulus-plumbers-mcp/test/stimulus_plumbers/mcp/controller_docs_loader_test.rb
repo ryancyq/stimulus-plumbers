@@ -2,9 +2,9 @@
 
 require_relative "../../test_helper"
 
-class StimulusControllerDocsLoaderTest < Minitest::Test
+class ControllerDocsLoaderTest < Minitest::Test
   def setup
-    @docs = StimulusPlumbers::MCP::StimulusControllerDocsLoader.call
+    @docs = StimulusPlumbers::MCP::ControllerDocsLoader.call
   end
 
   def test_returns_hash_of_markdown_by_doc_key

@@ -2,9 +2,9 @@
 
 require_relative "../../test_helper"
 
-class DocsLoaderTest < Minitest::Test
+class ComponentDocsLoaderTest < Minitest::Test
   def setup
-    @docs = StimulusPlumbers::MCP::DocsLoader.call
+    @docs = StimulusPlumbers::MCP::ComponentDocsLoader.call
   end
 
   def test_loads_known_doc_files
@@ -79,8 +79,8 @@ class DocsLoaderTest < Minitest::Test
   end
 
   def test_docs_dir_exists
-    assert File.directory?(StimulusPlumbers::MCP::DocsLoader.docs_dir),
-           "docs_dir does not exist: #{StimulusPlumbers::MCP::DocsLoader.docs_dir}"
+    assert File.directory?(StimulusPlumbers::MCP::ComponentDocsLoader.docs_dir),
+           "docs_dir does not exist: #{StimulusPlumbers::MCP::ComponentDocsLoader.docs_dir}"
   end
 
   def form_helpers

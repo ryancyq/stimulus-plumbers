@@ -2,7 +2,7 @@
 
 Rails helpers that render fully-wired combobox components. Each variant shares the same wrapper structure (`input-combobox` + `input-formatter`) and differs only in its popover body.
 
-See [docs/component/combobox.md](../../stimulus-plumbers/docs/component/combobox.md) in the JS package for the underlying controller API.
+See [docs/component/combobox.md](../../../stimulus-plumbers/docs/component/combobox.md) in the JS package for the underlying controller API.
 
 ## Helpers
 
@@ -127,7 +127,7 @@ iOS-style drum/scroll-wheel time picker.
 
 ## Form Builder
 
-`StimulusPlumbers::Form::Builder` exposes combobox-backed fields through purpose-specific methods rather than a single generic helper. See [form_builder.md](form_builder.md) for the full API.
+`StimulusPlumbers::Form::Builder` exposes combobox-backed fields through purpose-specific methods rather than a single generic helper. See [form.md](form.md) for the full API.
 
 ```erb
 <%= form_with model: @user, builder: StimulusPlumbers::Form::Builder do |f| %>

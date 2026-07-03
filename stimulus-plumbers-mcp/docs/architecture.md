@@ -1,44 +1,61 @@
 # MCP Server Architecture
 
-## Loader vs. Manifest Naming
+## Loader Naming
 
-Naming encodes the source boundary:
+A loader assigned to a plugin's `.loader` is named `<Plugin><Loader>` — e.g. the `ComponentSchema`
+plugin's loader is `ComponentSchemaLoader`, `ControllerDocs`' is `ControllerDocsLoader`, `ComponentTheme`'s
+is `ComponentThemeLoader`. `GuideLoader` and `AriaLoader` already match their bare plugin names exactly,
+so they're unchanged.
 
-- **`*Loader` / `*Map`** — derive live from in-process Ruby constants or source files on disk (no build step).
-- **`*Manifest`** — consumes a pre-built artifact that crossed a language/compilation boundary (e.g. the JS build output).
+Not every class in `loaders/` is a plugin's `.loader`: `ComponentRequirements` (invoked by
+`ComponentSchemaLoader`, not a plugin itself) and `loaders/support/`'s `DocsTableParser`/`GemVendorPath`
+(pure parsing/path-resolution helpers, not sources) sit outside this naming rule — they don't get a
+`Loader` suffix because they aren't one.
 
 ## Store Shapes
 
-Each loader puts a typed value in `store[LOADER_KEY]`:
+Each loader puts a typed value in `store[loader_key]`:
 
-| Loader                | Key         | Shape                                             |
-| --------------------- | ----------- | ------------------------------------------------- |
-| `SchemaLoader`        | `:schema`   | `{ components:, field_as:, icons:, stimulus: }`   |
-| `DocsLoader`          | `:docs`     | `{ name => { content:, examples:, signature: } }` |
-| `StimulusManifest`    | `:stimulus` | parsed JSON hash (or `{}` if artifact absent)     |
-| `ThemeLoader`         | `:theme`    | `{ base_doc:, components: }`                      |
-| `TailwindThemeLoader` | `:tailwind` | `{ key => { "param:value" => classes } }`         |
-| `GuideLoader`         | `:guide`    | `String` (overview markdown)                      |
+| Loader                   | Key                  | Shape                                                                                                                                                                                                                  |
+| ------------------------ | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ComponentDocsLoader`    | `:component_docs`    | `{ name => { content:, examples:, signature: } }`                                                                                                                                                                      |
+| `ComponentSchemaLoader`  | `:component_schema`  | `{ components:, field_as:, field_as_controllers:, controllers: }`                                                                                                                                                      |
+| `ComponentThemeLoader`   | `:component_theme`   | `{ base_doc:, components: }` — `base_doc` reads `docs/component/theme.md`, same file `ComponentDocsLoader` also serves at `component://theme/docs`                                                                     |
+| `ControllerDocsLoader`   | `:controller_docs`   | `{ name => markdown String }`                                                                                                                                                                                          |
+| `ControllerSchemaLoader` | `:controller_schema` | parsed JSON hash (or `{}` if artifact absent)                                                                                                                                                                          |
+| `IconsLoader`            | `:icons`             | `Array` of icon name strings                                                                                                                                                                                           |
+| `TailwindLoader`         | `:tailwind`          | `{ component_key => { default: String, "param:value" => classes } }`                                                                                                                                                   |
+| `AriaLoader`             | `:aria`              | `String` (ARIA reference markdown)                                                                                                                                                                                     |
+| `GuideLoader`            | `:guide`             | `{ overview:, component:, controller:, tailwind:, theme: }` — each a markdown `String` read from its own package's `docs/guide.md` (or `docs/component/theme.md` for `theme`); only `overview` is MCP-authored         |
+| `VersionsLoader`         | `:versions`          | `{ source_key => { version:, resolved_from: } }` — `resolved_from` is only present for npm-backed sources (`controller_schema`/`controller_docs`/`controller_guide`); plain gem-backed sources are just `{ version: }` |
 
-## Plugin Module Contract
+## Plugin Class Contract
 
-Each plugin `extend`s `Plugins::Base` and declares:
+Each plugin subclasses `Plugins::Base`. Required members raise `NotImplementedError` naming the
+offending plugin if left undefined; optional members inherit a working default:
 
 ```ruby
-LOADER_KEY   # Symbol — key into the shared store
-LOADER       # Callable — single .call returns the store value
-STATIC_RESOURCES        # Array of resource descriptors
-DYNAMIC_RESOURCE_TEMPLATES  # Array of URI templates
-def self.read(uri, store)   # Returns content for a matching URI; nil otherwise
-def self.register_tools(server, store)  # Optional — registers MCP tools
+class << self
+  def loader_key           # required — Symbol key into the shared store
+  def loader                # required — Callable, single .call returns the store value
+  def read(uri, store)      # required — content for a matching URI, or nil
+
+  def static_resources            # optional — defaults to []
+  def dynamic_resource_templates  # optional — defaults to []
+  def register_tools(server, store)  # optional — defaults to no-op
+
+  private  # per-tool register_ helpers, missing/not_found, etc.
+end
 ```
 
-Adding a source = one new loader + one new plugin appended to `server.rb`'s `PLUGINS` list. `server.rb` itself does not change.
+Adding a source = one new loader + one new plugin class inserted into `server.rb`'s `PLUGINS` list
+(grouped by family, alphabetical within each — see the list itself for the grouping). `build`/`read`/
+`register_tools` are generic over `PLUGINS` and never need to change.
 
 ## Server.build Flow
 
 ```
-store = PLUGINS.to_h { |p| [p::LOADER_KEY, p::LOADER.call] }
+store = PLUGINS.to_h { |p| [p.loader_key, p.loader.call] }
 report_sources(store)   # warns loudly on any empty source
 
 MCP::Server.new(resources: ..., resource_templates: ...)
