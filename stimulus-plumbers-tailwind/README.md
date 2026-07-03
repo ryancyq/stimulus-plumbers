@@ -11,7 +11,7 @@ See [docs/guide.md](docs/guide.md) for a quick setup/theming guide.
 ## Requirements
 
 - Ruby >= 3.0
-- `stimulus_plumbers` >= 0.2.9
+- `stimulus_plumbers` >= 0.3.1
 - Tailwind CSS v4 in your build toolchain
 
 ## Installation

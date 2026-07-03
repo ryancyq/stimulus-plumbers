@@ -64,6 +64,36 @@ Rails helper for rendering a themed timeline as an ordered list with optional in
 - `e.with_detail` requires `e.with_trigger` — raises `ArgumentError` otherwise.
 - `e.with_time` requires `datetime:` on `t.event` — raises `ArgumentError` otherwise.
 
+### `sp_timeline_group`
+
+Groups events under dated sections, each with its own `<ol>` — for timelines broken up by day/month rather than one flat list.
+
+```erb
+<%= sp_timeline_group do |g| %>
+  <% g.section(date: "January 2025", datetime: "2025-01-15") do |t| %>
+    <% t.event do |e| %>
+      <% e.with_indicator %>
+      <% e.with_title { "Event title" } %>
+      <% e.with_description { "Brief text" } %>
+    <% end %>
+  <% end %>
+<% end %>
+```
+
+| Option           | Default | Description                    |
+| ---------------- | ------- | ------------------------------ |
+| `**html_options` | —       | Forwarded to the outer `<div>` |
+
+`g.section` options:
+
+| Option           | Default | Description                                        |
+| ---------------- | ------- | -------------------------------------------------- |
+| `date:`          | —       | Required — text content for the section's `<time>` |
+| `datetime:`      | `nil`   | Renders `<time datetime="...">` when set           |
+| `**html_options` | —       | Forwarded to the section's outer `<div>`           |
+
+Each `g.section` block yields a `t` scoped to that section (same `t.event` API as `sp_timeline`, always vertical/non-interactive).
+
 ---
 
 ## Rendered HTML Structure
@@ -115,18 +145,22 @@ Rails helper for rendering a themed timeline as an ordered list with optional in
 
 ## Theme keys
 
-| Key                         | Element                            | Variants              |
-| --------------------------- | ---------------------------------- | --------------------- |
-| `timeline`                  | Outer `<ol>`                       | `orientation:`        |
-| `timeline_item`             | `<li>`                             | `orientation:`        |
-| `timeline_item_indicator`   | Indicator `<div>`                  | `type: :dot \| :icon` |
-| `timeline_item_time`        | `<time>`                           | —                     |
-| `timeline_item_title`       | Static `<h3>`                      | —                     |
-| `timeline_item_heading`     | `<h3>` wrapping the trigger button | —                     |
-| `timeline_item_trigger`     | `<button>` inside the heading      | —                     |
-| `timeline_item_description` | `<p>`                              | —                     |
-| `timeline_item_detail`      | Collapsible `<div>`                | —                     |
-| `timeline_item_actions`     | Actions `<div>`                    | —                     |
+| Key                           | Element                            | Variants              |
+| ----------------------------- | ---------------------------------- | --------------------- |
+| `timeline`                    | Outer `<ol>`                       | `orientation:`        |
+| `timeline_item`               | `<li>`                             | `orientation:`        |
+| `timeline_item_indicator`     | Indicator `<div>`                  | `type: :dot \| :icon` |
+| `timeline_item_time`          | `<time>`                           | —                     |
+| `timeline_item_title`         | Static `<h3>`                      | —                     |
+| `timeline_item_heading`       | `<h3>` wrapping the trigger button | —                     |
+| `timeline_item_trigger`       | `<button>` inside the heading      | —                     |
+| `timeline_item_description`   | `<p>`                              | —                     |
+| `timeline_item_detail`        | Collapsible `<div>`                | —                     |
+| `timeline_item_actions`       | Actions `<div>`                    | —                     |
+| `timeline_group`              | `sp_timeline_group` outer `<div>`  | —                     |
+| `timeline_group_section`      | `g.section` outer `<div>`          | —                     |
+| `timeline_group_section_date` | Section `<time>`                   | —                     |
+| `timeline_group_section_list` | Section `<ol>`                     | —                     |
 
 ---
 

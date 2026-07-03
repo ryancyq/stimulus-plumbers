@@ -47,8 +47,11 @@ gem install stimulus_plumbers_mcp
 | `get_component_helper` | `name` | Full `sp_` helper surface — keyword options grouped by helper signature (incl. `icon_leading`) + slot methods |
 | `get_component_examples` | `name` | ERB code fences from docs |
 | `get_field_as_values` | `builder_method` (`field`/`collection_field`/`choice`) | Valid `as:` values |
+| `get_field_as_controller` | `as` | Stimulus controller identifier backing a controller-backed `as:` value |
+| `list_component_themes` | — | Component keys implementable in a custom theme |
 | `get_component_theme` | `name` | Method signature + return contract for custom theme |
 | `get_component_tailwind` | `name` | Tailwind CSS utility classes per variant |
+| `list_icons` | — | All available icon names bundled with the Tailwind theme |
 | `list_controllers` | — | All Stimulus controller identifiers |
 | `get_controller_schema` | `name` | Targets, values, outlets, classes |
 | `list_controller_docs` | — | Controller doc families available at `controller://docs/{name}` |
