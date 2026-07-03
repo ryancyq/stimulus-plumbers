@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.8](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.5..stimulus-plumbers-rails/v0.4.8) - 2026-07-03
+
+### Bug Fixes
+
+- tailwind install generator ([#154](https://github.com/ryancyq/stimulus-plumbers/issues/154)) - ([db4bda0](https://github.com/ryancyq/stimulus-plumbers/commit/db4bda0b899a463e0608229927c65326233dd3a4)) - Ryan Chang
+- plumber slots should yield proc/block via template capture instead of ruby call ([#156](https://github.com/ryancyq/stimulus-plumbers/issues/156)) - ([5b9039c](https://github.com/ryancyq/stimulus-plumbers/commit/5b9039cf7c88222cfae4865e4b7373c8b5e3c010)) - Ryan Chang
+- tailwind theme registration + activation (rails only) ([#157](https://github.com/ryancyq/stimulus-plumbers/issues/157)) - ([5998854](https://github.com/ryancyq/stimulus-plumbers/commit/5998854ed2a6ca9c67aa225f3c397e4f7bca7a51)) - Ryan Chang
+- reorganize mcp resources + tools ([#161](https://github.com/ryancyq/stimulus-plumbers/issues/161)) - ([2a63580](https://github.com/ryancyq/stimulus-plumbers/commit/2a635800ac439173b5c2eeeb2dc268dc3136f415)) - Ryan Chang
+- mcp doc update + new tools validations ([#162](https://github.com/ryancyq/stimulus-plumbers/issues/162)) - ([beed1bb](https://github.com/ryancyq/stimulus-plumbers/commit/beed1bb14cbfcb8ec6f757145dc6a461d357c060)) - Ryan Chang
+
+### Features
+
+- **(mcp)** add Aria plugin exposing aria://reference ([#159](https://github.com/ryancyq/stimulus-plumbers/issues/159)) - ([15d730d](https://github.com/ryancyq/stimulus-plumbers/commit/15d730d51ce8a956d5ba7c3172a5883ad072d219)) - Ryan Chang
+- add StimulusControllerDocs plugin exposing stimulus://docs/{name} ([#160](https://github.com/ryancyq/stimulus-plumbers/issues/160)) - ([beef823](https://github.com/ryancyq/stimulus-plumbers/commit/beef823f2c694623b714823a0dacf8f3c89341e9)) - Ryan Chang
+
+---
 ## [0.4.5](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.4..stimulus-plumbers-rails/v0.4.5) - 2026-07-01
 
 ### Bug Fixes
