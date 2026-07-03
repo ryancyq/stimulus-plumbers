@@ -25,3 +25,15 @@ Render components with `sp_*` helpers (`sp_button`, `sp_button_group`, `sp_card`
 
 Most display components are pure markup; interactive ones (combobox, popover, calendar) emit their
 `data-controller` attributes automatically — no manual wiring needed in Rails views.
+
+## CSS entry file detection
+
+`bin/rails generate stimulus_plumbers:install` (and `stimulus_plumbers_tailwind`'s own install
+generator) inject their CSS directives into the first entry file found, in order:
+
+1. `app/assets/stylesheets/application.tailwind.css` (`tailwindcss-rails` 2.x default)
+2. `app/assets/tailwind/application.css` (`tailwindcss-rails` 3.x+ default)
+3. `app/assets/stylesheets/application.css` (Rails/Propshaft default manifest)
+4. `app/javascript/entrypoints/application.css` (`jsbundling-rails` esbuild/webpack default)
+
+Override with `STIMULUS_PLUMBERS_CSS_ENTRY=/path/to/entry.css` — used by both gems' generators.

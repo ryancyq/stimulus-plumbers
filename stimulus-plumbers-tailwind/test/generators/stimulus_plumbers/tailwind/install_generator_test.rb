@@ -11,12 +11,9 @@ module StimulusPlumbers
       destination File.join(Dir.tmpdir, "stimulus_plumbers_tailwind_generator_test")
       setup :prepare_destination
 
-      GEM_NAME          = StimulusPlumbers::Tailwind::Generators::InstallGenerator::GEM_NAME
-      TAILWIND_CSS_FILE = StimulusPlumbers::Tailwind::Generators::InstallGenerator::TAILWIND_CSS_FILE
-      GEM_LIB_GLOB  = "#{Gem.loaded_specs[GEM_NAME].gem_dir}/lib/**/*.rb".freeze
-      SOURCE_LINE   = %(@source "#{GEM_LIB_GLOB}";).freeze
-      TOKENS_CSS_PATH = "/app/assets/stylesheets/stimulus_plumbers/tokens.css"
-      TOKENS_LINE = %(@import "#{Gem.loaded_specs["stimulus_plumbers"].gem_dir}#{TOKENS_CSS_PATH}";).freeze
+      GEM_NAME        = StimulusPlumbers::Tailwind::Generators::SourcesDirective::GEM_NAME
+      GEM_LIB_DIR     = "#{Gem.loaded_specs[GEM_NAME].gem_dir}/lib".freeze
+      TOKENS_CSS_PATH = "app/assets/stylesheets/stimulus_plumbers/tokens.css"
 
       # ── happy path ────────────────────────────────────────────────────────────
 
@@ -29,8 +26,10 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          assert_includes css, "@import \"tailwindcss\";\n#{SOURCE_LINE}"
-          assert_equal 1, css.scan(SOURCE_LINE).length
+          source_line = source_line_for("app/assets/stylesheets/application.tailwind.css")
+
+          assert_includes css, "@import \"tailwindcss\";\n#{source_line}"
+          assert_equal 1, css.scan(source_line).length
         end
       end
 
@@ -42,7 +41,7 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          assert_includes css, SOURCE_LINE
+          assert_includes css, source_line_for("app/assets/stylesheets/application.tailwind.css")
         end
       end
 
@@ -54,7 +53,10 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          assert_equal "#{TOKENS_LINE}\n@import \"tailwindcss\";\n#{SOURCE_LINE}\n", css
+          tokens_line = tokens_line_for("app/assets/stylesheets/application.tailwind.css")
+          source_line = source_line_for("app/assets/stylesheets/application.tailwind.css")
+
+          assert_equal "#{tokens_line}\n@import \"tailwindcss\";\n#{source_line}\n", css
         end
       end
 
@@ -66,7 +68,7 @@ module StimulusPlumbers
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
           assert_equal 1, css.scan("stimulus_plumbers/tokens.css").length
-          assert_equal 1, css.scan(SOURCE_LINE).length
+          assert_equal 1, css.scan(source_line_for("app/assets/stylesheets/application.tailwind.css")).length
         end
       end
 
@@ -92,7 +94,7 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          assert_includes css, SOURCE_LINE
+          assert_includes css, source_line_for("app/assets/stylesheets/application.tailwind.css")
           assert_no_match %r{old/gems}, css
           assert_equal 1, css.scan("@source").length
         end
@@ -107,10 +109,20 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          assert_includes css, SOURCE_LINE
+          assert_includes css, source_line_for("app/assets/stylesheets/application.tailwind.css")
         end
         assert_file "app/assets/stylesheets/application.css" do |css|
           assert_no_match %r{stimulus_plumbers_tailwind}, css
+        end
+      end
+
+      test "falls back to tailwindcss-rails default entry when application.tailwind.css absent" do
+        write_entry_css("app/assets/tailwind/application.css", "@import \"tailwindcss\";\n")
+
+        run_generator
+
+        assert_file "app/assets/tailwind/application.css" do |css|
+          assert_includes css, source_line_for("app/assets/tailwind/application.css")
         end
       end
 
@@ -120,7 +132,7 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/assets/stylesheets/application.css" do |css|
-          assert_includes css, SOURCE_LINE
+          assert_includes css, source_line_for("app/assets/stylesheets/application.css")
         end
       end
 
@@ -130,32 +142,34 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/javascript/entrypoints/application.css" do |css|
-          assert_includes css, SOURCE_LINE
+          assert_includes css, source_line_for("app/javascript/entrypoints/application.css")
         end
       end
 
-      test "falls through to candidates when TAILWIND_CSS_FILE points to non-existent file" do
+      test "falls through to candidates when STIMULUS_PLUMBERS_CSS_ENTRY points to non-existent file" do
         write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
 
-        with_env(TAILWIND_CSS_FILE => "/nonexistent/path/application.css") do
+        with_env(
+          StimulusPlumbers::Generators::CssEntrypoint::STIMULUS_PLUMBERS_CSS_ENTRY => "/nonexistent/path/application.css"
+        ) do
           run_generator
         end
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          assert_includes css, SOURCE_LINE
+          assert_includes css, source_line_for("app/assets/stylesheets/application.tailwind.css")
         end
       end
 
-      test "uses TAILWIND_CSS_FILE env var when set" do
+      test "uses STIMULUS_PLUMBERS_CSS_ENTRY env var when set" do
         write_entry_css("app/assets/stylesheets/custom.css", "@import \"tailwindcss\";\n")
         custom_path = File.join(destination_root, "app/assets/stylesheets/custom.css")
 
-        with_env(TAILWIND_CSS_FILE => custom_path) do
+        with_env(StimulusPlumbers::Generators::CssEntrypoint::STIMULUS_PLUMBERS_CSS_ENTRY => custom_path) do
           run_generator
         end
 
         assert_file "app/assets/stylesheets/custom.css" do |css|
-          assert_includes css, SOURCE_LINE
+          assert_includes css, source_line_for("app/assets/stylesheets/custom.css")
         end
       end
 
@@ -164,12 +178,34 @@ module StimulusPlumbers
       test "does not create or modify files when no entry file found" do
         run_generator
 
-        StimulusPlumbers::Tailwind::Generators::InstallGenerator::CSS_CANDIDATES.each do |candidate|
+        StimulusPlumbers::Generators::CssEntrypoint::ENTRY_CANDIDATES.each do |candidate|
           assert_no_file candidate
         end
       end
 
+      test "warns with all tried paths when no entry file found" do
+        output = run_generator
+
+        assert_match(%r{Could not find a Tailwind CSS entry file}, output)
+        StimulusPlumbers::Generators::CssEntrypoint::ENTRY_CANDIDATES.each do |candidate|
+          assert_includes output, File.join(destination_root, candidate)
+        end
+      end
+
       private
+
+      def source_line_for(css_relative_path)
+        css_dir = File.join(destination_root, File.dirname(css_relative_path))
+        rel     = Pathname.new(GEM_LIB_DIR).relative_path_from(Pathname.new(css_dir))
+        %(@source "#{rel}/**/*.rb";)
+      end
+
+      def tokens_line_for(css_relative_path)
+        gem_dir = Gem.loaded_specs["stimulus_plumbers"].gem_dir
+        css_dir = File.join(destination_root, File.dirname(css_relative_path))
+        rel     = Pathname.new(File.join(gem_dir, TOKENS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
+        %(@import "#{rel}";)
+      end
 
       def write_entry_css(relative_path, content)
         full_path = File.join(destination_root, relative_path)
