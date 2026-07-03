@@ -19,17 +19,20 @@ The Rails gem renders semantic, ARIA-wired HTML; the npm package provides the St
 
 ## MCP Server
 
-Connect your LLM IDE to the local MCP server via `bin/mcp` at the repo root:
+Connect your LLM IDE to [`stimulus_plumbers_mcp`](stimulus-plumbers-mcp/) — no clone needed:
 
 ```json
 {
   "mcpServers": {
     "stimulus-plumbers": {
-      "command": "/path/to/stimulus-plumbers/bin/mcp"
+      "command": "gem",
+      "args": ["exec", "stimulus-plumbers-mcp"]
     }
   }
 }
 ```
+
+See [stimulus-plumbers-mcp/README.md](stimulus-plumbers-mcp/README.md) for requirements, available tools/resources, and the contributor (clone) setup.
 
 ## License
 
