@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+# Runs bundle in a clean (non bundle-exec-polluted) environment so git-sourced
+# gems (e.g. rails_edge.gemfile's rails/rails branch source) resolve correctly.
+def bundle_lock_add_platform(gemfile, platform)
+  Bundler.with_original_env do
+    system({ "BUNDLE_GEMFILE" => gemfile }, "bundle", "lock", "--add-platform", platform)
+  end
+end
+
 namespace :appraisal do
   desc "Add required platforms to all appraisal gemfiles"
   task :add_platforms do
@@ -16,7 +24,7 @@ namespace :appraisal do
       puts "Adding platforms to #{File.basename(gemfile)}..."
 
       platforms.each do |platform|
-        system({ "BUNDLE_GEMFILE" => gemfile }, "bundle", "lock", "--add-platform", platform) || exit(1)
+        bundle_lock_add_platform(gemfile, platform) || exit(1)
       end
     end
 
