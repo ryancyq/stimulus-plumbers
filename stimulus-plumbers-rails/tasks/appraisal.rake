@@ -16,7 +16,9 @@ namespace :appraisal do
       puts "Adding platforms to #{File.basename(gemfile)}..."
 
       platforms.each do |platform|
-        system({ "BUNDLE_GEMFILE" => gemfile }, "bundle", "lock", "--add-platform", platform) || exit(1)
+        Bundler.with_original_env do
+          system({ "BUNDLE_GEMFILE" => gemfile }, "bundle", "lock", "--add-platform", platform) || exit(1)
+        end
       end
     end
 
