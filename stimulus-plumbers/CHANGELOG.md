@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.6](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.5..stimulus-plumbers/v0.4.6) - 2026-07-03
+
+### Bug Fixes
+
+- mcp doc update + new tools validations ([#162](https://github.com/ryancyq/stimulus-plumbers/issues/162)) - ([beed1bb](https://github.com/ryancyq/stimulus-plumbers/commit/beed1bb14cbfcb8ec6f757145dc6a461d357c060)) - Ryan Chang
+
+---
 ## [0.4.4](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.3..stimulus-plumbers/v0.4.4) - 2026-06-30
 
 ### Dependencies
