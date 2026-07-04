@@ -3,16 +3,17 @@
 module StimulusPlumbers
   module Components
     class OrderedList < Plumber::Base
-      def render(move_key: "Alt", editing: false, role: "list", **kwargs, &block)
+      def render(move_key: "Alt", editing: false, orientation: nil, role: "list", **kwargs, &block)
         stimulus = {
           data: {
-            controller:                   "reorderable",
-            "reorderable-move-key-value": move_key,
-            "reorderable-editing-value":  editing
-          }
+            controller:                      "reorderable",
+            "reorderable-move-key-value":    move_key,
+            "reorderable-editing-value":     editing,
+            "reorderable-orientation-value": orientation
+          }.compact
         }
-        html_options = merge_html_options(theme.resolve(:ordered_list), kwargs, { role: role }, stimulus)
-        template.content_tag(:ol, template.capture(self, &block), **html_options)
+        html_options = merge_html_options(theme.resolve(:ordered_list), kwargs, stimulus)
+        template.content_tag(:ol, template.capture(self, &block), **html_options, role: role)
       end
 
       def item(content = nil, **kwargs, &block)

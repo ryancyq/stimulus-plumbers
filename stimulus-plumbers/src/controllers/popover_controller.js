@@ -5,7 +5,6 @@ import { attachContentLoader, attachDismisser, attachVisibility } from '../plumb
 
 export default class extends Controller {
   static targets = ['trigger', 'panel', 'template', 'loader'];
-  static classes = ['hidden'];
   static values = {
     url: String,
     loadedAt: String,

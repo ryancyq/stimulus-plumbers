@@ -50,12 +50,12 @@ module StimulusPlumbers
         ].freeze
         ITEM_TITLE       = %w[mb-1 text-base font-semibold text-(--sp-color-fg)].freeze
         ITEM_HEADING     = %w[mb-1].freeze
-        ITEM_TRIGGER     = %w[
-          w-full text-left text-base font-semibold
-          text-(--sp-color-fg)
-          hover:text-(--sp-color-primary)
-          focus-visible:outline-none focus-visible:ring-2
-          focus-visible:ring-(--sp-color-primary) focus-visible:rounded-sm
+        ITEM_TRIGGER     = [
+          *Control::BASE,
+          "w-full text-left text-base font-semibold",
+          "text-(--sp-color-fg)",
+          "hover:text-(--sp-color-primary)",
+          "focus-visible:ring-(--sp-color-primary-ring) focus-visible:rounded-sm"
         ].freeze
         ITEM_DESCRIPTION = %w[text-sm text-(--sp-color-muted-fg)].freeze
         ITEM_DETAIL      = %w[mt-2 text-sm text-(--sp-color-muted-fg)].freeze

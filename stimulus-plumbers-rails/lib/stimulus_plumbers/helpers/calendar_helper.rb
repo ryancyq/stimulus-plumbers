@@ -16,13 +16,7 @@ module StimulusPlumbers
                        else
                          kwargs
                        end
-        calendar_renderer.month(**html_options)
-      end
-
-      private
-
-      def calendar_renderer
-        Components::Calendar.new(self)
+        Components::Calendar.new(self).month(**html_options)
       end
     end
   end

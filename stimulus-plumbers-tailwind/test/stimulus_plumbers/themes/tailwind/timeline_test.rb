@@ -85,7 +85,8 @@ class TailwindThemeTimelineTest < Minitest::Test
 
     assert_includes result, "font-semibold"
     assert_includes result, "hover:text-(--sp-color-primary)"
-    assert_includes result, "focus-visible:ring-2"
+    assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
+    assert_includes result, "focus-visible:ring-(--sp-color-primary-ring)"
   end
 
   # ── :timeline_item_time / title / description / detail / actions / heading ───

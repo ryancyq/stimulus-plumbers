@@ -39,6 +39,16 @@ class OrderedListComponentTest < ActionView::TestCase
     assert_css parse_html(renderer.render(editing: true) { "" }), "ol[data-reorderable-editing-value='true']"
   end
 
+  def test_orientation_is_unset_by_default
+    assert_no_css parse_html(renderer.render { "" }), "ol[data-reorderable-orientation-value]"
+  end
+
+  def test_orientation_can_be_set
+    doc = parse_html(renderer.render(orientation: "horizontal") { "" })
+
+    assert_css doc, "ol[data-reorderable-orientation-value='horizontal']"
+  end
+
   def test_item_convenience_method_delegates_to_ordered_list_item
     doc = parse_html(renderer.item("Row", id: "row-1"))
 

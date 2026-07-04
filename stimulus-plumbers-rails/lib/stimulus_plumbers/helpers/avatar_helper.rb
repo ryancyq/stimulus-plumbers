@@ -4,13 +4,7 @@ module StimulusPlumbers
   module Helpers
     module AvatarHelper
       def sp_avatar(...)
-        avatar_renderer.render(...)
-      end
-
-      private
-
-      def avatar_renderer
-        Components::Avatar.new(self)
+        Components::Avatar.new(self).render(...)
       end
     end
   end
