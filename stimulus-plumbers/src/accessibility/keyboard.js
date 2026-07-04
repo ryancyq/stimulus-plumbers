@@ -31,6 +31,8 @@ export function preventDefault(event) {
   event.stopPropagation();
 }
 
+export const MODIFIER_KEYS = { Alt: 'altKey', Control: 'ctrlKey', Shift: 'shiftKey', Meta: 'metaKey' };
+
 /**
  * Handle roving tabindex for a list of items
  */
@@ -40,6 +42,7 @@ export class RovingTabIndex {
     this.currentIndex = options.initialIndex ?? 0;
     this.orientation = options.orientation ?? 'both';
     this.wrap = options.wrap ?? true;
+    this.ignoreModifierKeys = options.ignoreModifierKeys ?? Object.keys(MODIFIER_KEYS);
     this._handleKeyDown = this._handleKeyDown.bind(this);
     this._handleClick = this._handleClick.bind(this);
   }
@@ -90,6 +93,8 @@ export class RovingTabIndex {
   }
 
   _handleKeyDown(event) {
+    if (this.ignoreModifierKeys.some((name) => event[MODIFIER_KEYS[name]])) return;
+
     const fromIndex = this.items.indexOf(event.currentTarget);
     if (fromIndex !== -1 && fromIndex !== this.currentIndex) {
       this.currentIndex = fromIndex;

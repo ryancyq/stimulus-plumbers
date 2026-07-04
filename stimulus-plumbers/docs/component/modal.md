@@ -57,4 +57,4 @@ Focus is trapped inside `modal` target using `FocusTrap`. Escape key and click-o
 - Focus is trapped — Tab/Shift+Tab cycle within the modal
 - Escape closes the modal
 - `body` scroll is locked while open (custom mode)
-- Status announcements via `aria-live` on open/close
+- See [ARIA.md's Modal pattern](../../../ARIA.md) for the status-announcement contract

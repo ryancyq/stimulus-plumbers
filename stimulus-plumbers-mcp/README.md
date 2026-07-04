@@ -73,7 +73,7 @@ gem install stimulus_plumbers_mcp
 }
 ```
 
-Requires Ruby >= 3.3. No `cwd` required. Pin a specific version by adding it to your `Gemfile` and running `bundle exec gem exec stimulus-plumbers-mcp`.
+Requires Ruby >= 3.3 for the `gem exec` subcommand (the gem itself supports Ruby >= 3.0). No `cwd` required. Pin a specific version by adding it to your `Gemfile` and running `bundle exec gem exec stimulus-plumbers-mcp`.
 
 ## Stimulus Manifest
 

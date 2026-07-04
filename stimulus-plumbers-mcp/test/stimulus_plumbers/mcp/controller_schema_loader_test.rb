@@ -9,7 +9,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
     calendar-year calendar-year-selector
     combobox-date combobox-time combobox-dropdown
     input-clearable input-combobox input-formatter
-    clipboard timeline dismisser flipper
+    clipboard reorderable timeline dismisser flipper
     modal panner popover visibility
   ].freeze
 
@@ -23,8 +23,8 @@ class ControllerSchemaLoaderTest < Minitest::Test
     end
   end
 
-  def test_controller_count
-    assert_equal EXPECTED_IDENTIFIERS.size, @controllers.size
+  def test_controllers
+    assert_equal EXPECTED_IDENTIFIERS.sort, @controllers.keys.sort
   end
 
   def test_modal_targets

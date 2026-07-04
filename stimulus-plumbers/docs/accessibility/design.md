@@ -29,6 +29,7 @@ this.rovingTabIndex?.updateItems(this.triggerTargets);
 - `orientation` (`'vertical'` | `'horizontal'` | `'both'`) — which arrow keys move focus; default `'both'`
 - `wrap` (boolean) — whether navigation wraps at boundaries; default `true`
 - `initialIndex` (number) — which item starts focused; default `0`
+- `ignoreModifierKeys` (array of `'Alt' | 'Control' | 'Shift' | 'Meta'`) — modifier keys that suppress arrow/Home/End handling entirely when held; default: all four. A modified key is ignored before any internal state changes (no `currentIndex` sync either). Narrow this list (or pass `[]`) if a specific modifier combination should still move focus.
 
 `orientation: 'vertical'` restricts to Up/Down/Home/End. Use `'horizontal'` for Left/Right, `'both'` for all four arrows (default).
 
@@ -184,6 +185,8 @@ Key predicates. `isActivationKey` matches Enter or Space; `isArrowKey` matches a
 ## Decision Log
 
 - **`RovingTabIndex` self-manages via `activate()`** — controllers should not manually wire `keydown` handlers for roving tabindex; `activate()` encapsulates the full lifecycle so controllers only call `activate()` / `deactivate()` / `updateItems()`.
+- **`RovingTabIndex` ignores all modifier keys by default, not just `Alt`** — the guard must be correct for any `moveKey` a co-located plumber might use (`Reorderable`'s `moveKey` is configurable to `Control`/`Shift`/`Meta`), and for any future `RovingTabIndex` consumer, without that consumer needing to know about a specific plumber. `ignoreModifierKeys` is a list, not a boolean, precisely so a future consumer that wants a modified combination (e.g. `Shift+Arrow` range-select) to still move focus can narrow it.
+- **Prefer a reserved-key guard over attach order for two listeners sharing one item** — if a future plumber needs to attach its own raw `keydown` listener to items also managed by `RovingTabIndex`, extend `ignoreModifierKeys` (or add an equivalent reserved-key convention) rather than relying on which `addEventListener` call runs first plus `stopImmediatePropagation()`. The latter is an implicit ordering that silently breaks if reordered; the former partitions the keyspace structurally.
 - **`ListboxNavigation` is passive** — combobox inputs already have their own `keydown` Stimulus actions; `ListboxNavigation` is a delegate, not an event owner. Auto-attach would conflict with the controller's action descriptor system.
 - **`FocusRestoration` was removed** — it was a thin wrapper around `save()/restore()` with no behaviour beyond `FocusTrap`'s built-in `returnFocus` option. `FocusTrap` handles the common case; callers that need manual save/restore can use `document.activeElement` directly.
 

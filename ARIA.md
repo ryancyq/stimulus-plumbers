@@ -30,6 +30,7 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - `role="dialog"`, `aria-modal="true"`, `aria-labelledby` pointing to heading
 - Focus moves into dialog on open; returns to trigger on close
 - Focus trapped inside — Tab/Shift+Tab cycle within; Escape closes
+- Status announcements ("Modal opened"/"Modal closed") via `aria-live` on open/close (WCAG 4.1.3)
 
 #### Popover (`popover_controller`)
 - `role="dialog"` or `role="tooltip"` depending on interactivity
@@ -61,6 +62,12 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Toggle button: `aria-label` describes action ("Show password" / "Hide password")
 - Or: `aria-pressed` on toggle button
 
+#### Input Clearable (`input_clearable_controller`)
+- Clear button: `hidden` attribute while the input is empty, removing it from the keyboard/AT tab order until there's something to clear
+- Escape inside the input clears it (keyboard equivalent to clicking the clear button, WCAG 2.1.1); default is prevented so it doesn't also close a parent overlay
+- Focus returns to the input after clearing (WCAG 2.4.3 Focus Order)
+- No `aria-live` announcement — clearing is user-initiated and the button's disappearance is self-explanatory
+
 #### Flipper / Visibility / Dismisser
 - Trigger: `aria-expanded="true/false"` when toggling a region
 - Controlled region: `aria-hidden="true"` when collapsed (or removed from DOM)
@@ -86,3 +93,9 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Expandable items: trigger `<button>` with `aria-expanded="false/true"` + `aria-controls` → detail element id; detail has `hidden` attribute toggled by controller
 - Trigger lives inside `<h3>` (`<h3><button aria-expanded>Title</button></h3>`) — WAI-ARIA Accordion pattern
 - Keyboard (interactive): Up/Down arrows move focus between item triggers; Home/End jump to first/last trigger; Enter/Space toggle expansion (native button behaviour)
+
+#### Reorderable (`reorderable_controller`)
+- Roving tabindex on `item` targets (`RovingTabIndex`) — plain Arrow/Home/End move focus only, unaffected by editing state
+- Keyboard move (`Alt+Arrow` on the axis matching `orientation`, default `ArrowUp`/`ArrowDown`; configurable modifier via `moveKey`; horizontal move-key meaning flips under `dir="rtl"`): moves the focused item, keeps focus on it, announces the new position via `role="status"`/`aria-live` (WCAG 4.1.3) — satisfies the keyboard-equivalent requirement (WCAG 2.1.1) for pointer drag
+- Pointer drag: does not move focus or announce — avoids stealing focus from a mouse user who never asked for it
+- `editingValue` gates both drag and keyboard-move; while `true`, every `trigger` target (`<a>`/`<button>` inside an item) gets `aria-disabled="true"` + `tabindex="-1"` — removes it from keyboard/AT activation and tab order without touching pointer clicks (apps/themes add their own `pointer-events: none` CSS rule for that half)
