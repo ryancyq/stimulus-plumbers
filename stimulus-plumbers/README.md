@@ -79,7 +79,7 @@ application.register('visibility',               VisibilityController)
 | Controller | Description | Docs |
 |-----------|-------------|------|
 | `input-combobox` | Wrapper: trigger, popover, hidden value | [docs/component/combobox.md](docs/component/combobox.md#input-combobox) |
-| `input-formatter` | Formats and displays values | [docs/component/combobox.md](docs/component/combobox.md#input-formatter) |
+| `input-formatter` | Formats and displays values | [docs/component/input-formatter.md](docs/component/input-formatter.md) |
 | `input-clearable` | Input with clear button | [docs/component/input-clearable.md](docs/component/input-clearable.md) |
 | `combobox-date` | Calendar grid date picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-date) |
 | `combobox-time` | Drum/scroll-wheel time picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-time) |

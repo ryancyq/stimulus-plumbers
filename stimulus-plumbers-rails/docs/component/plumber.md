@@ -203,3 +203,24 @@ def merge_html_options(*hashes)
   end
 end
 ```
+
+---
+
+## PlumberHelper
+
+### `sp_dom_id(record = nil, prefix: nil, suffix: nil)`
+
+Generates an `"sp_"`-prefixed DOM id for wiring `aria-controls`/`id` pairs between a trigger and its target. Not a component renderer — an internal id-generation utility used by `Combobox`, `Popover`, and `Timeline::Event` when the caller doesn't supply an explicit `id:`.
+
+| Param     | Description                                                                                                            |
+| --------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `record`  | ActiveRecord-like object — delegates to Rails' `dom_id(record, prefix)`. Omit for a random id (`SecureRandom.hex(8)`). |
+| `prefix:` | Forwarded to `dom_id` when `record` is given.                                                                          |
+| `suffix:` | Appended after an underscore, regardless of whether `record` is given.                                                 |
+
+```ruby
+sp_dom_id                                    # => "sp_3f9a1b2c4d5e6f70"
+sp_dom_id(suffix: "panel")                   # => "sp_3f9a1b2c4d5e6f70_panel"
+sp_dom_id(post)                              # => "sp_post_1"
+sp_dom_id(post, prefix: :edit, suffix: :form) # => "sp_edit_post_1_form"
+```

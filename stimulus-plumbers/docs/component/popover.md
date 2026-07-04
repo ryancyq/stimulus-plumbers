@@ -108,6 +108,4 @@ Selection events (from combobox sub-controllers, menu items, etc.) can be wired 
 
 ## Accessibility
 
-- `trigger` should have `aria-haspopup` describing the popup type; `aria-expanded` is toggled automatically.
-- `panel` should have an appropriate `role` (`dialog`, `tooltip`, `listbox`, etc.).
-- Esc and outside-click both close the panel; focus returns to the `trigger` on close.
+See [ARIA.md's Popover pattern](../../../ARIA.md) for role, `aria-haspopup`/`aria-expanded`, and focus-return requirements.

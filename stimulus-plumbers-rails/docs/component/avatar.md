@@ -82,3 +82,4 @@ Rails helper for rendering a user avatar — image, initials, or fallback silhou
 - Always renders `role="img"` with `aria-label` set to `name` (when provided).
 - Image `alt` is set to `"[name]'s avatar"`; for anonymous avatars `alt=""` is used.
 - `onerror` on `<img>` clears the `src` to prevent broken-image icons.
+- See [ARIA.md's Avatar / Card / Icon pattern](../../../ARIA.md) for the decorative-vs-meaningful image rule this follows.

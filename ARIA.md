@@ -58,9 +58,9 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Invalid fields: `aria-invalid="true"` + `aria-describedby` pointing to error message
 - Error message element: `role="alert"` or `aria-live="polite"` so it's announced
 
-#### Password Reveal (`password_reveal_controller`)
+#### Password Reveal (`input-formatter_controller`, `"password"` formatter)
 - Toggle button: `aria-label` describes action ("Show password" / "Hide password")
-- Or: `aria-pressed` on toggle button
+- `aria-pressed` managed on toggle button, reflecting revealed state
 
 #### Input Clearable (`input_clearable_controller`)
 - Clear button: `hidden` attribute while the input is empty, removing it from the keyboard/AT tab order until there's something to clear

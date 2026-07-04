@@ -133,3 +133,4 @@ When no text is provided, no `<span>` is rendered, and the button becomes square
 - `<button>` always has `type="button"` to prevent accidental form submission.
 - Icon-only buttons must supply an accessible label via `aria: { label: "..." }` in `html_options`.
 - For navigation actions (links), use `sp_link` instead — it renders an `<a>` element.
+- See [ARIA.md's Button pattern](../../../ARIA.md) for the `disabled` attribute requirement.

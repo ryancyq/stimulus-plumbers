@@ -66,6 +66,7 @@ bin/rails stimulus_plumbers:tailwind:install
 | `Tailwind::Layout` | Layout primitives |
 | `Tailwind::Link` | Link |
 | `Tailwind::List` | List |
+| `Tailwind::OrderedList` | Reorderable list (drag handle, item styling) |
 | `Tailwind::Timeline` | Timeline |
 
 Custom themes can subclass `TailwindTheme` to override individual methods, or subclass `StimulusPlumbers::Themes::Base` directly.
@@ -86,7 +87,7 @@ Icons render as inline `<svg>` with `size-6` by default. Override with `class:`:
 <%= sp_icon "arrow-left", class: "size-4 text-gray-500" %>
 ```
 
-**Built-in aliases:** `"close"` → `"x-mark"`, `"calendar"` → `"calendar-days"`.
+**Built-in aliases:** `"close"` → `"x-mark"`, `"download"` → `"arrow-down-tray"`, `"book"` → `"book-open"`, `"edit"` → `"pencil"`, `"email"` → `"envelope"`, `"calendar"` → `"calendar-days"`, `"external-link"` → `"arrow-top-right-on-square"`, `"reveal"` → `"eye"`, `"grip-vertical"` → `"bars-3"`.
 
 **Optional `heroicons` gem:** add `gem "heroicons"` to your `Gemfile` to load icons from the gem instead of the bundled files. The theme detects it automatically.
 

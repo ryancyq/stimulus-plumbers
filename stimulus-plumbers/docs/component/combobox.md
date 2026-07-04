@@ -53,37 +53,7 @@ Owns the trigger input, popover visibility, and hidden value. Always co-located 
 
 ## input-formatter
 
-Formats and displays values. Always co-located with `input-combobox`.
-
-**Targets**
-
-| Target   | Element                  | Description                                                               |
-| -------- | ------------------------ | ------------------------------------------------------------------------- |
-| `input`  | `<input>` or any element | Write destination — sets `.value` for `<input>`, `.textContent` otherwise |
-| `toggle` | `<button>`               | Reveal/conceal button (maskable/password types only)                      |
-
-**Values**
-
-| Value      | Type    | Default   | Description                                               |
-| ---------- | ------- | --------- | --------------------------------------------------------- |
-| `format`   | String  | `"plain"` | `plain` \| `password` \| `creditCard` \| `date` \| `time` |
-| `options`  | Object  | `{}`      | Formatter options (e.g. `{ format: "h12" }` for time)     |
-| `revealed` | Boolean | `false`   | Whether a masked value is currently revealed              |
-
-**Methods**
-
-| Method            | Wired via                | Description                                                                      |
-| ----------------- | ------------------------ | -------------------------------------------------------------------------------- |
-| `format(value)`   | —                        | Programmatic API — normalises, formats, writes to target, dispatches `formatted` |
-| `onChange(event)` | `input-combobox:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`             |
-| `onPaste(event)`  | `clipboard:pasted`       | Event adapter — normalises and validates pasted text, calls `format(value)`      |
-| `toggle()`        | `data-action`            | Action — flips `revealedValue` (maskable / password types only)                  |
-
-**Dispatches**
-
-| Event                       | Detail      | When                                    |
-| --------------------------- | ----------- | --------------------------------------- |
-| `input-formatter:formatted` | `{ value }` | After every write to the `input` target |
+Formats and displays values. Always co-located with `input-combobox`. See [input-formatter.md](input-formatter.md) for targets, values, methods, and dispatches.
 
 ---
 
