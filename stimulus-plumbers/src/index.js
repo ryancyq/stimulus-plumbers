@@ -37,3 +37,4 @@ export { default as PannerController } from './controllers/panner_controller.js'
 export { default as PopoverController } from './controllers/popover_controller.js';
 export { default as ReorderableController } from './controllers/reorderable_controller.js';
 export { default as TimelineController } from './controllers/timeline_controller.js';
+export { default as VisibilityController } from './controllers/visibility_controller.js';

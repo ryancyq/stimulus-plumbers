@@ -30,6 +30,7 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - `role="dialog"`, `aria-modal="true"`, `aria-labelledby` pointing to heading
 - Focus moves into dialog on open; returns to trigger on close
 - Focus trapped inside — Tab/Shift+Tab cycle within; Escape closes
+- Status announcements ("Modal opened"/"Modal closed") via `aria-live` on open/close (WCAG 4.1.3)
 
 #### Popover (`popover_controller`)
 - `role="dialog"` or `role="tooltip"` depending on interactivity
@@ -60,6 +61,12 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 #### Password Reveal (`password_reveal_controller`)
 - Toggle button: `aria-label` describes action ("Show password" / "Hide password")
 - Or: `aria-pressed` on toggle button
+
+#### Input Clearable (`input_clearable_controller`)
+- Clear button: `hidden` attribute while the input is empty, removing it from the keyboard/AT tab order until there's something to clear
+- Escape inside the input clears it (keyboard equivalent to clicking the clear button, WCAG 2.1.1); default is prevented so it doesn't also close a parent overlay
+- Focus returns to the input after clearing (WCAG 2.4.3 Focus Order)
+- No `aria-live` announcement — clearing is user-initiated and the button's disappearance is self-explanatory
 
 #### Flipper / Visibility / Dismisser
 - Trigger: `aria-expanded="true/false"` when toggling a region

@@ -46,6 +46,7 @@ import {
   PannerController,
   ReorderableController,
   TimelineController,
+  VisibilityController,
 } from '@stimulus-plumbers/controllers'
 
 const application = Application.start()
@@ -70,6 +71,7 @@ application.register('clipboard',                ClipboardController)
 application.register('panner',                   PannerController)
 application.register('reorderable',              ReorderableController)
 application.register('timeline',                 TimelineController)
+application.register('visibility',               VisibilityController)
 ```
 
 ## Controllers
@@ -96,6 +98,7 @@ application.register('timeline',                 TimelineController)
 | `panner` | Keeps content element within viewport on resize | [docs/component/panner.md](docs/component/panner.md) |
 | `reorderable` | Drag (pointer) or keyboard (`Alt+Arrow`) reordering for a vertical list | [docs/component/reorderable.md](docs/component/reorderable.md) |
 | `timeline` | Manages expandable timeline event items with keyboard navigation | [docs/component/timeline.md](docs/component/timeline.md) |
+| `visibility` | Show/hide a content element, kept within viewport, with click-outside dismissal | [docs/component/visibility.md](docs/component/visibility.md) |
 
 ## Utilities
 

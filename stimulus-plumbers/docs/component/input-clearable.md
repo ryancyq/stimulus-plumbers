@@ -34,10 +34,7 @@ Shows a clear button when an input has a value, hides it when empty, and clears 
 ## Accessibility
 
 - The clear button must carry `aria-label="Clear search"` — the controller never overrides it.
-- The clear button is hidden (`hidden` attribute) while the input is empty, so keyboard users only reach it when there is something to clear.
-- After clearing, focus returns to the input so the user can type immediately (WCAG 2.4.3 Focus Order).
-- Pressing Escape inside the input clears it when the field has a value; the event's default is prevented to avoid closing parent overlays unintentionally.
-- No `aria-live` region is needed — clearing is user-initiated and the button's disappearance is self-explanatory.
+- See [ARIA.md's Input Clearable pattern](../../../ARIA.md) for the clear-button tab-order, Escape-key, and focus-return contract.
 
 ## Notes
 

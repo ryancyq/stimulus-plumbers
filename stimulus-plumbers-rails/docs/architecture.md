@@ -9,8 +9,6 @@ Validation ranges for theme schema params live under `lib/stimulus_plumbers/them
 - If a component branches on the values internally (e.g. `when *FLOATING_TYPES`), the component owns the constant (`Form::Field::FLOATING_TYPES`). The schema references it directly — no alias.
 - If the component only passes the value through to the theme, the schema owns the range (e.g. `Schema::Button::Ranges::TYPE`).
 
-**Namespace rules:**
-
 **Namespaces:**
 
 - `Schema::Ranges` — cross-cutting constants (e.g. `BOOL`)

@@ -16,11 +16,11 @@ class ControllerDocsLoaderTest < Minitest::Test
 
   def test_covers_all_known_controller_doc_families
     expected = %i[
-      calendar clipboard
-      combobox dismisser flipper
+      calendar clipboard combobox
+      dismisser flipper
       input-clearable input-formatter
       modal panner popover
-      reorderable timeline
+      reorderable timeline visibility
     ].map(&:to_s).map(&:to_sym)
 
     assert_equal expected.sort, @docs.keys.sort
