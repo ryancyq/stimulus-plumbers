@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/components/button");
+  await page.goto("/components/controls/button");
   await page.waitForSelector("button");
 });
 

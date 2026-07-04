@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/components/avatar");
+  await page.goto("/components/display/avatar");
   await page.waitForSelector("[role='img']");
 });
 

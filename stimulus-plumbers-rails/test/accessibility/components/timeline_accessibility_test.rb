@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class TimelineAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/timeline"
+    visit "/components/display/timeline"
   end
 
   def test_static_timeline_passes_wcag

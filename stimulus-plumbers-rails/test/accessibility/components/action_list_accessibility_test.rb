@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class ListAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/list"
+    visit "/components/display/list"
   end
 
   def test_default_list_passes_wcag

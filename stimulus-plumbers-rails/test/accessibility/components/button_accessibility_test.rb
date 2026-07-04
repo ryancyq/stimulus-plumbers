@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class ButtonAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/button"
+    visit "/components/controls/button"
   end
 
   def test_default_passes_wcag

@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class SearchAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/search"
+    visit "/components/popover/search"
   end
 
   def test_passes_wcag_with_empty_input

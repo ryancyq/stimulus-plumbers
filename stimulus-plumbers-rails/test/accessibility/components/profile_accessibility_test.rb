@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class ProfileAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/profile"
+    visit "/components/showcase/profile"
   end
 
   def test_passes_wcag

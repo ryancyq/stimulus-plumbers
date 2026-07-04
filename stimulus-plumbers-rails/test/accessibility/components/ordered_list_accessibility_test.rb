@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class OrderedListAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/ordered_list"
+    visit "/components/display/ordered_list"
   end
 
   def test_default_ordered_list_passes_wcag

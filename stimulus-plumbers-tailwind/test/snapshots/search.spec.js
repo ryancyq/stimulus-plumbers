@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/components/search");
+  await page.goto("/components/popover/search");
   await page.waitForSelector("input[role='combobox']");
 });
 

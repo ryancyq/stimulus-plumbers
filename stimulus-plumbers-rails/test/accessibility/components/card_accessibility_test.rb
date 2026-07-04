@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class CardAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/card"
+    visit "/components/layout/card"
   end
 
   def test_default_cards_pass_wcag
