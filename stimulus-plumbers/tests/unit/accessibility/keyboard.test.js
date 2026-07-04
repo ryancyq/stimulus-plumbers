@@ -188,6 +188,77 @@ describe('RovingTabIndex', () => {
       expect(rti.currentIndex).toBe(1);
     });
   });
+
+  describe('ignoreModifierKeys', () => {
+    it('ignores ArrowDown with Alt held (default)', () => {
+      const [a, b] = makeButtons(['a', 'b']);
+      const rti = new RovingTabIndex([a, b], { orientation: 'vertical' });
+      rti.activate();
+      a.focus();
+      a.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true }));
+      expect(document.activeElement).toBe(a);
+    });
+
+    it('ignores ArrowDown with Control held (default)', () => {
+      const [a, b] = makeButtons(['a', 'b']);
+      const rti = new RovingTabIndex([a, b], { orientation: 'vertical' });
+      rti.activate();
+      a.focus();
+      a.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true, bubbles: true }));
+      expect(document.activeElement).toBe(a);
+    });
+
+    it('ignores ArrowDown with Shift held (default)', () => {
+      const [a, b] = makeButtons(['a', 'b']);
+      const rti = new RovingTabIndex([a, b], { orientation: 'vertical' });
+      rti.activate();
+      a.focus();
+      a.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', shiftKey: true, bubbles: true }));
+      expect(document.activeElement).toBe(a);
+    });
+
+    it('ignores ArrowDown with Meta held (default)', () => {
+      const [a, b] = makeButtons(['a', 'b']);
+      const rti = new RovingTabIndex([a, b], { orientation: 'vertical' });
+      rti.activate();
+      a.focus();
+      a.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', metaKey: true, bubbles: true }));
+      expect(document.activeElement).toBe(a);
+    });
+
+    it('still moves focus on a plain (unmodified) ArrowDown', () => {
+      const [a, b] = makeButtons(['a', 'b']);
+      const rti = new RovingTabIndex([a, b], { orientation: 'vertical' });
+      rti.activate();
+      a.focus();
+      keydown(a, 'ArrowDown');
+      expect(document.activeElement).toBe(b);
+    });
+
+    it('a modified keydown does not sync currentIndex either', () => {
+      const [a, b, c] = makeButtons(['a', 'b', 'c']);
+      const rti = new RovingTabIndex([a, b, c], { orientation: 'vertical' });
+      rti.activate();
+      // physically focus c without going through setCurrentIndex, then send a modified
+      // keydown on it — if the guard ran after the fromIndex sync, currentIndex would
+      // become 2 as a side effect even though navigation itself is ignored
+      c.focus();
+      c.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true }));
+      expect(rti.currentIndex).toBe(0);
+    });
+
+    it('ignoreModifierKeys can be overridden to a narrower list', () => {
+      const [a, b] = makeButtons(['a', 'b']);
+      const rti = new RovingTabIndex([a, b], { orientation: 'vertical', ignoreModifierKeys: ['Alt'] });
+      rti.activate();
+      a.focus();
+      a.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true }));
+      expect(document.activeElement).toBe(a); // Alt still ignored
+
+      a.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', shiftKey: true, bubbles: true }));
+      expect(document.activeElement).toBe(b); // Shift no longer ignored
+    });
+  });
 });
 
 describe('ListboxNavigation', () => {

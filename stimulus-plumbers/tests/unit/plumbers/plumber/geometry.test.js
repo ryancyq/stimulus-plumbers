@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { defineRect, directionMap, viewportRect, isWithinViewport } from '../../../../src/plumbers/plumber/geometry'
+import { defineRect, directionMap, viewportRect, isWithinViewport, centerOf } from '../../../../src/plumbers/plumber/geometry'
 
 describe('geometry utilities', () => {
   describe('defineRect', () => {
@@ -48,6 +48,28 @@ describe('geometry utilities', () => {
       expect(directionMap.bottom).toBe('top')
       expect(directionMap.left).toBe('right')
       expect(directionMap.right).toBe('left')
+    })
+  })
+
+  describe('centerOf', () => {
+    it('returns the vertical midpoint of a rect by default', () => {
+      expect(centerOf({ top: 20, height: 50 })).toBe(45)
+    })
+
+    it('handles a zero-height rect', () => {
+      expect(centerOf({ top: 100, height: 0 })).toBe(100)
+    })
+
+    it('returns the vertical midpoint when orientation is vertical', () => {
+      expect(centerOf({ top: 20, height: 50 }, 'vertical')).toBe(45)
+    })
+
+    it('returns the horizontal midpoint when orientation is horizontal', () => {
+      expect(centerOf({ left: 20, width: 50 }, 'horizontal')).toBe(45)
+    })
+
+    it('handles a zero-width rect', () => {
+      expect(centerOf({ left: 100, width: 0 }, 'horizontal')).toBe(100)
     })
   })
 

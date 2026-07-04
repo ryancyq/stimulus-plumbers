@@ -17,6 +17,10 @@ export function defineRect({ x, y, width, height }) {
   return { x, y, width, height, left: x, right: x + width, top: y, bottom: y + height };
 }
 
+export function centerOf(rect, orientation = 'vertical') {
+  return orientation === 'horizontal' ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
+}
+
 export function viewportRect() {
   return defineRect({
     x: 0,

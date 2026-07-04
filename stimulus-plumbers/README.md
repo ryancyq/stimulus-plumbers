@@ -44,6 +44,7 @@ import {
   FlipperController,
   ClipboardController,
   PannerController,
+  ReorderableController,
   TimelineController,
 } from '@stimulus-plumbers/controllers'
 
@@ -67,6 +68,7 @@ application.register('dismisser',                DismisserController)
 application.register('flipper',                  FlipperController)
 application.register('clipboard',                ClipboardController)
 application.register('panner',                   PannerController)
+application.register('reorderable',              ReorderableController)
 application.register('timeline',                 TimelineController)
 ```
 
@@ -92,6 +94,7 @@ application.register('timeline',                 TimelineController)
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
 | `clipboard` | Copy-to-clipboard and paste interception | [docs/component/clipboard.md](docs/component/clipboard.md) |
 | `panner` | Keeps content element within viewport on resize | [docs/component/panner.md](docs/component/panner.md) |
+| `reorderable` | Drag (pointer) or keyboard (`Alt+Arrow`) reordering for a vertical list | [docs/component/reorderable.md](docs/component/reorderable.md) |
 | `timeline` | Manages expandable timeline event items with keyboard navigation | [docs/component/timeline.md](docs/component/timeline.md) |
 
 ## Utilities
