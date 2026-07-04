@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/components/card");
+  await page.goto("/components/layout/card");
   await page.waitForSelector("h1");
 });
 

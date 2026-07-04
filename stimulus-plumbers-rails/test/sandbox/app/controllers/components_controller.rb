@@ -30,6 +30,8 @@ class ComponentsController < ApplicationController
 
   def list; end
 
+  def ordered_list; end
+
   def card; end
 
   def popover; end

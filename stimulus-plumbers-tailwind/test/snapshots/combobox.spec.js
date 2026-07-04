@@ -19,7 +19,7 @@ async function screenshotWithPanel(page, sectionLocator, filename) {
 
 test.beforeEach(async ({ page }) => {
   await page.clock.setFixedTime(FIXED_DATE);
-  await page.goto("/components/combobox");
+  await page.goto("/components/popover/combobox");
   await page.waitForSelector("input[aria-label='Birthday']");
 });
 

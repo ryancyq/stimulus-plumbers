@@ -89,7 +89,7 @@ Start the sandbox webserver (see `playwright.config.js`) to inspect rendered HTM
 RAILS_ENV=test bundle exec puma test/sandbox/config.ru --bind tcp://127.0.0.1:4001
 ```
 
-Routes: `/components/{button,combobox,calendar_stimulus,…}` and `/form/{floating_label,choices,field_error,…}` at `http://127.0.0.1:4001`.
+Routes: `/components/{controls,display,layout,popover,calendar,showcase}/{button,combobox,…}` and `/form/{floating_label,choices,field_error,…}` at `http://127.0.0.1:4001`.
 
 **Never run `node --run test:snapshots:update`** — the user does this.
 

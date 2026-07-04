@@ -2,6 +2,7 @@
 
 require_relative "tailwind/control"
 require_relative "tailwind/list"
+require_relative "tailwind/ordered_list"
 require_relative "tailwind/avatar"
 require_relative "tailwind/button"
 require_relative "tailwind/button/group"
@@ -20,6 +21,7 @@ module StimulusPlumbers
   module Themes
     class TailwindTheme < Base
       include Tailwind::List
+      include Tailwind::OrderedList
       include Tailwind::Combobox
       include Tailwind::Avatar
       include Tailwind::Button

@@ -1,0 +1,41 @@
+<h1>OrderedList components</h1>
+
+<section id="ordered-list-default" class="sb-section">
+  <h2>Default (whole-item handle)</h2>
+  <div class="sb-col">
+    <%= sp_ordered_list do |list| %>
+      <%= list.item("First", id: "item-1") %>
+      <%= list.item("Second", id: "item-2") %>
+      <%= list.item("Third", id: "item-3") %>
+    <% end %>
+  </div>
+</section>
+
+<section id="ordered-list-with-links" class="sb-section">
+  <h2>Links + leading-icon handle, editing</h2>
+  <div class="sb-col">
+    <%= sp_ordered_list(editing: true) do |list| %>
+      <%= list.item(id: "link-1", url: "/", handle: :leading) do |slots| %>
+        <% slots.with_title("Dashboard") %>
+        <% slots.with_description("Overview") %>
+      <% end %>
+      <%= list.item(id: "link-2", url: "/", handle: :leading) do |slots| %>
+        <% slots.with_title("Reports") %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="ordered-list-custom-handle-icon" class="sb-section">
+  <h2>Custom handle icon</h2>
+  <div class="sb-col">
+    <%= sp_ordered_list do |list| %>
+      <%= list.item("Track one", id: "track-1", handle: :leading) do |slots| %>
+        <% slots.with_icon_leading(:star) %>
+      <% end %>
+      <%= list.item("Track two", id: "track-2", handle: :leading) do |slots| %>
+        <% slots.with_icon_leading(:star) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

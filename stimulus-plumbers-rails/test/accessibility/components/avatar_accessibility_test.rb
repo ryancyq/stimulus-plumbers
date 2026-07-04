@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class AvatarAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/avatar"
+    visit "/components/display/avatar"
   end
 
   def test_initials_passes_wcag

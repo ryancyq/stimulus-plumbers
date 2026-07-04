@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/components/list");
+  await page.goto("/components/display/list");
   await page.waitForSelector("[role='list']");
 });
 

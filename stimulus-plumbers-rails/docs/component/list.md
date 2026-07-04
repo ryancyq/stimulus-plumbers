@@ -1,6 +1,6 @@
 # List
 
-Rails helper for rendering an accessible list of links, buttons, or grouped sections.
+Rails helper for rendering an accessible list of links, buttons, or grouped sections. For a flat, drag/keyboard-reorderable list, see [`OrderedList`](ordered_list.md) instead.
 
 ## Helper
 

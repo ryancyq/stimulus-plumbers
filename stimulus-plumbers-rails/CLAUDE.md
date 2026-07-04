@@ -49,6 +49,11 @@ stimulus-plumbers-rails/
 │       │   │   ├── item/
 │       │   │   │   └── slots.rb
 │       │   │   └── section.rb
+│       │   ├── ordered_list.rb           # sp_ordered_list renderer (reorderable JS controller-backed)
+│       │   ├── ordered_list/
+│       │   │   ├── item.rb
+│       │   │   └── item/
+│       │   │       └── slots.rb
 │       │   ├── popover.rb                # sp_popover renderer; render (with wrapper) / build (without wrapper)
 │       │   ├── popover/
 │       │   │   ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
@@ -69,6 +74,7 @@ stimulus-plumbers-rails/
 │       │   ├── icon_helper.rb            # sp_icon
 │       │   ├── link_helper.rb            # sp_link
 │       │   ├── list_helper.rb            # sp_list
+│       │   ├── ordered_list_helper.rb    # sp_ordered_list
 │       │   ├── plumber_helper.rb         # sp_dom_id
 │       │   ├── popover_helper.rb         # sp_popover
 │       │   └── timeline_helper.rb        # sp_timeline

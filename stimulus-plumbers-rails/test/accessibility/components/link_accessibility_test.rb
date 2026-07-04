@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class LinkAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/link"
+    visit "/components/controls/link"
   end
 
   def test_inline_passes_wcag

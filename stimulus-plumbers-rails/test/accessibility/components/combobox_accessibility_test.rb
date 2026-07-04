@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/combobox"
+    visit "/components/popover/combobox"
   end
 
   def test_passes_wcag_with_all_comboboxes_closed

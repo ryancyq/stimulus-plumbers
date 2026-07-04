@@ -27,6 +27,8 @@ class ComponentsController < ApplicationController
 
   def search; end
 
+  def ordered_list; end
+
   def avatar; end
 
   def button; end

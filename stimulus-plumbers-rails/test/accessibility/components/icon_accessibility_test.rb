@@ -5,7 +5,7 @@ require_relative "../application_accessibility_test_case"
 class IconAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
-    visit "/components/icon"
+    visit "/components/display/icon"
   end
 
   def test_decorative_icons_pass_wcag

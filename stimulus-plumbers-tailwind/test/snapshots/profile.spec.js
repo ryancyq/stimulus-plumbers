@@ -4,7 +4,7 @@ const FIXED_DATE = new Date("2024-02-29T12:00:00Z");
 
 test.beforeEach(async ({ page }) => {
   await page.clock.setFixedTime(FIXED_DATE);
-  await page.goto("/components/profile");
+  await page.goto("/components/showcase/profile");
   await page.waitForSelector("[data-controller]");
 });
 

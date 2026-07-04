@@ -27,6 +27,15 @@ module StimulusPlumbers
         list_item_description:    {}.freeze
       }.freeze
 
+      ORDERED_LIST = {
+        ordered_list:                  {}.freeze,
+        ordered_list_item:             {}.freeze,
+        ordered_list_item_handle:      {}.freeze,
+        ordered_list_item_content:     {}.freeze,
+        ordered_list_item_title:       {}.freeze,
+        ordered_list_item_description: {}.freeze
+      }.freeze
+
       AVATAR = {
         avatar:       {
           size:    { default: :md, validate: Avatar::Ranges::SIZE },

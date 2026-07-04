@@ -1,0 +1,35 @@
+<h1>OrderedList components</h1>
+
+<div id="ordered-list-default">
+  <%# ── Whole-item handle (default), content-only rows ──────────────────── %>
+  <%= sp_ordered_list do |list| %>
+    <%= list.item("First", id: "item-1") %>
+    <%= list.item("Second", id: "item-2") %>
+    <%= list.item("Third", id: "item-3") %>
+  <% end %>
+</div>
+
+<div id="ordered-list-with-links">
+  <%# ── Links + a dedicated leading-icon handle, editing enabled ─────────── %>
+  <%= sp_ordered_list(editing: true) do |list| %>
+    <%= list.item(id: "link-1", url: "/", handle: :leading) do |slots| %>
+      <% slots.with_title("Dashboard") %>
+      <% slots.with_description("Overview") %>
+    <% end %>
+    <%= list.item(id: "link-2", url: "/", handle: :leading) do |slots| %>
+      <% slots.with_title("Reports") %>
+    <% end %>
+  <% end %>
+</div>
+
+<div id="ordered-list-custom-handle-icon">
+  <%# ── Custom icon reused as the handle ──────────────────────────────────── %>
+  <%= sp_ordered_list do |list| %>
+    <%= list.item("Track one", id: "track-1", handle: :leading) do |slots| %>
+      <% slots.with_icon_leading(:star) %>
+    <% end %>
+    <%= list.item("Track two", id: "track-2", handle: :leading) do |slots| %>
+      <% slots.with_icon_leading(:star) %>
+    <% end %>
+  <% end %>
+</div>
