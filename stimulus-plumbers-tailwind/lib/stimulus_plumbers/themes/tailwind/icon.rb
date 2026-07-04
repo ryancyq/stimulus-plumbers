@@ -16,7 +16,8 @@ module StimulusPlumbers
           "email"         => "envelope",
           "calendar"      => "calendar-days",
           "external-link" => "arrow-top-right-on-square",
-          "reveal"        => "eye"
+          "reveal"        => "eye",
+          "grip-vertical" => "bars-3"
         }.freeze
 
         ICONS = StimulusPlumbers::Themes::Icons::Registry.new(

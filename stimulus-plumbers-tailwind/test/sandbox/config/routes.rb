@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     get :combobox
     get :search
     get :list
+    get :ordered_list
     get :avatar
     get :button
     get :button_group
