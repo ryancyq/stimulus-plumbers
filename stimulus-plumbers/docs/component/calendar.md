@@ -100,11 +100,8 @@ Click-handling is wired internally — `calendar-month` handles clicks on its ow
 
 ## Accessibility
 
-- Grid uses `role="grid"` → `role="row"` → `role="gridcell"`
 - Weekday headers use `role="columnheader"` with `title` for the long name
-- Today is marked with `aria-current="date"`
-- Disabled dates use `disabled` (buttons) or `aria-disabled="true"` (non-interactive)
-- Selected dates use `aria-selected="true"`
+- See [ARIA.md's Calendar / Date Picker pattern](../../../ARIA.md) for grid roles, selection/disabled state, and keyboard navigation
 
 ---
 
@@ -196,7 +193,7 @@ Decade-view grid controller — renders a 12-year grid and dispatches a `calenda
 
 Thin SSR/Turbo adapter for server-rendered month grids. Attaches click-to-select behaviour to a server-rendered day grid — no targets or values. The server renders each view as a `<turbo-frame>`; this controller handles day selection and emits the same `calendar-month:selected` event as `calendar-month`.
 
-Used with `sp_calendar_turbo_month` (Rails). Pair with `combobox-date` exactly as you would `calendar-month`.
+Used with `sp_calendar_turbo_month` (Rails). Pair with `combobox-date` exactly as you would `calendar-month`. See [docs/plumber/calendar-selector.md](../plumber/calendar-selector.md) for the underlying plumber.
 
 ---
 
@@ -204,7 +201,7 @@ Used with `sp_calendar_turbo_month` (Rails). Pair with `combobox-date` exactly a
 
 Thin SSR/Turbo adapter for server-rendered year (month-grid) views. Attaches click-to-select behaviour — no targets or values. Emits `calendar-year:selected` on month click.
 
-Used with `sp_calendar_turbo_year` (Rails).
+Used with `sp_calendar_turbo_year` (Rails). See [docs/plumber/calendar-selector.md](../plumber/calendar-selector.md) for the underlying plumber.
 
 ---
 
@@ -212,4 +209,4 @@ Used with `sp_calendar_turbo_year` (Rails).
 
 Thin SSR/Turbo adapter for server-rendered decade (year-grid) views. Attaches click-to-select behaviour — no targets or values. Emits `calendar-decade:selected` on year click.
 
-Used with `sp_calendar_turbo_decade` (Rails).
+Used with `sp_calendar_turbo_decade` (Rails). See [docs/plumber/calendar-selector.md](../plumber/calendar-selector.md) for the underlying plumber.

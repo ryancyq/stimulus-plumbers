@@ -154,8 +154,7 @@ When `url:` is present and `target: "_blank"` is set, `icon_trailing: "external-
 
 ## ARIA
 
-- Default `role="list"` is appropriate for navigation or command lists.
 - Use `role="menu"` + `role="menuitem"` (via `html_options`) only when items form a widget menu — arrow key navigation must then be wired via a Stimulus controller.
-- `active: true` adds `aria-current="page"` on links and `aria-current="true"` on buttons; pair this with a visual style change so the state is not communicated by color alone.
 - Section titles without `heading_level` use `aria-hidden="true"` on the `<span>` and set `aria-label` on the nested `<ul>` to avoid double-announcing.
 - Nested sections increment the heading level automatically (clamped at `h6`).
+- See [ARIA.md's List pattern](../../../ARIA.md) for the default `role="list"`/`role="listitem"` and `active:` → `aria-current` mapping (pair it with a visual style change so the state isn't communicated by color alone).

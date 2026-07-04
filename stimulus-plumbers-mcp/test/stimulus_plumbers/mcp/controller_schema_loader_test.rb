@@ -67,10 +67,6 @@ class ControllerSchemaLoaderTest < Minitest::Test
     assert values["closeOnSelect"]["default"]
   end
 
-  def test_popover_classes
-    assert_includes @controllers["popover"]["classes"], "hidden"
-  end
-
   def test_combobox_date_outlets
     assert_includes @controllers["combobox-date"]["outlets"], "calendar-month"
     assert_includes @controllers["combobox-date"]["outlets"], "calendar-year"

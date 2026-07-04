@@ -21,12 +21,13 @@ Rails helper for a flat, reorderable list — pointer-drag and keyboard reorder 
 <% end %>
 ```
 
-| Option           | Default  | Description                                                                               |
-| ---------------- | -------- | ----------------------------------------------------------------------------------------- |
-| `move_key:`      | `"Alt"`  | Maps to `data-reorderable-move-key-value`. One of `Alt`, `Control`, `Shift`, `Meta`.      |
-| `editing:`       | `false`  | Initial render-time state, maps to `data-reorderable-editing-value`.                      |
-| `role:`          | `"list"` | ARIA role on the `<ol>` — preserves list semantics when consumer CSS resets `list-style`. |
-| `**html_options` | —        | Forwarded to the outer `<ol>`.                                                            |
+| Option           | Default  | Description                                                                                                                                                                                                                                                 |
+| ---------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `move_key:`      | `"Alt"`  | Maps to `data-reorderable-move-key-value`. One of `Alt`, `Control`, `Shift`, `Meta`.                                                                                                                                                                        |
+| `editing:`       | `false`  | Initial render-time state, maps to `data-reorderable-editing-value`.                                                                                                                                                                                        |
+| `orientation:`   | `nil`    | Maps to `data-reorderable-orientation-value` when set; omitted entirely otherwise (JS controller defaults to `"vertical"`). See the [reorderable JS controller doc](../../../stimulus-plumbers/docs/component/reorderable.md) for `"horizontal"` semantics. |
+| `role:`          | `"list"` | ARIA role on the `<ol>` — preserves list semantics when consumer CSS resets `list-style`.                                                                                                                                                                   |
+| `**html_options` | —        | Forwarded to the outer `<ol>`.                                                                                                                                                                                                                              |
 
 ### `list.item(content, id:, handle:, url:, target:, active:, **html_options, &block)`
 

@@ -4,13 +4,7 @@ module StimulusPlumbers
   module Helpers
     module PopoverHelper
       def sp_popover(...)
-        popover_renderer.render(...)
-      end
-
-      private
-
-      def popover_renderer
-        Components::Popover.new(self)
+        Components::Popover.new(self).render(...)
       end
     end
   end

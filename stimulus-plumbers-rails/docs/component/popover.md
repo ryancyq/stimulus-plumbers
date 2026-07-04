@@ -130,9 +130,8 @@ end
 
 ## ARIA
 
-- Default trigger button has `aria-haspopup="dialog"`, `aria-expanded="false"`, and `aria-controls` pointing to the panel.
-- `aria-expanded` is toggled to `"true"` / `"false"` by the Stimulus controller.
 - Pass `role: "dialog"` or `role: "tooltip"` on `p.panel` based on whether the content is interactive.
 - `aria: { label: }` or `aria: { labelledby: }` on `p.panel` provides the accessible name.
+- See [ARIA.md's Popover pattern](../../../ARIA.md) for the trigger's `aria-haspopup`/`aria-expanded`/`aria-controls` wiring.
 
 For the JS controller API (targets, values, keyboard behaviour), see the [JS package docs](../../../stimulus-plumbers/docs/component/popover.md).

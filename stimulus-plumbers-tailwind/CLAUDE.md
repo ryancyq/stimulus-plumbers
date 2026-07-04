@@ -40,7 +40,11 @@ stimulus-plumbers-tailwind/
 │               │   ├── heroicons/          # Bundled heroicon SVGs (outline/ + solid/)
 │               │   └── customs/            # Custom icon SVGs (e.g. spinner.svg)
 │               ├── layout.rb              # Layout CSS classes
-│               └── link.rb                # Link CSS classes
+│               ├── link.rb                # Link CSS classes
+│               ├── ordered_list.rb        # OrderedList CSS classes (reorderable list, drag handle)
+│               ├── timeline.rb            # Timeline CSS classes
+│               └── timeline/
+│                   └── group.rb            # Timeline::Group CSS classes
 ├── test/
 │   ├── generators/
 │   │   └── stimulus_plumbers_tailwind/

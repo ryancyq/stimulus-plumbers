@@ -39,6 +39,6 @@ Rails helper for rendering a named icon from the active theme's icon registry.
 
 ## ARIA
 
-- Icons are **decorative by default** — the theme applies `aria-hidden="true"` so they are invisible to screen readers.
+- The theme applies `aria-hidden="true"` by default (see [ARIA.md's Avatar / Card / Icon pattern](../../../ARIA.md)).
 - For meaningful icons (standalone, no adjacent label), pass `aria: { label: "..." }` and `role: "img"` to override.
 - Button and link icons are rendered internally with `aria-hidden="true"`; callers do not need to set this manually.

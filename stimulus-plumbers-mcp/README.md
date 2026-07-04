@@ -50,6 +50,7 @@ gem install stimulus_plumbers_mcp
 | `get_field_as_controller` | `as` | Stimulus controller identifier backing a controller-backed `as:` value |
 | `list_component_themes` | — | Component keys implementable in a custom theme |
 | `get_component_theme` | `name` | Method signature + return contract for custom theme |
+| `list_component_tailwind` | — | Component keys implemented by the Tailwind theme |
 | `get_component_tailwind` | `name` | Tailwind CSS utility classes per variant |
 | `list_icons` | — | All available icon names bundled with the Tailwind theme |
 | `list_controllers` | — | All Stimulus controller identifiers |

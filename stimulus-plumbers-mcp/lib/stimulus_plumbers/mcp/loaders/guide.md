@@ -19,7 +19,7 @@ identifier: `get_field_as_controller(as:)` — `component://{name}/schema` keys 
 `get_component_schema(name)`; ERB examples: `get_component_examples(name)`. List everything with
 `list_components`; `list_component_docs` shows which components have full docs
 (`component://{name}/docs`) and helper signatures (`component://{name}/helper`). Icon options take a
-name from `component://icons` (or `list_icons`). All 77 schema components are queryable via
+name from `component://icons` (or `list_icons`). All schema components are queryable via
 `get_component_schema`; only a subset have full docs and ERB examples — use `list_component_docs` to
 see what's covered. Full form builder reference: `component://form/docs`.
 

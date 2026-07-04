@@ -85,6 +85,5 @@ Formatter.register('iban', {
 
 ## Accessibility
 
-- The `toggle` button must carry `aria-label` describing the action: `"Show password"` / `"Hide password"`.
-- `aria-pressed` is managed automatically — initialised to `"false"`, flipped to `"true"` when the value is revealed.
 - Password `type` attribute switches between `"password"` (masked) and `"text"` (revealed), so screen readers announce the field type correctly.
+- See [ARIA.md's Password Reveal pattern](../../../ARIA.md) for the `toggle` button's `aria-label`/`aria-pressed` requirements.

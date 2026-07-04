@@ -12,5 +12,5 @@ For full API, design decisions, and usage contracts see [`docs/accessibility/des
 - **`getFocusableElements(container)`** — returns focusable descendants in DOM order
 - **`setExpanded(el, value)`** — sets/clears `aria-expanded`
 - **`setHidden(el, value)`** — sets/clears `hidden`
-- **`announce(message, politeness?)`** — screen reader live region announcement
-- **`connectTriggerToTarget(trigger, target)`** — wires `aria-controls` and `aria-expanded`
+- **`announce(message, options?)`** — screen reader live region announcement (`options.politeness`, `options.atomic`, `options.relevant`)
+- **`connectTriggerToTarget({ trigger, target, role?, override? })`** — wires `aria-controls` and `role`/other ARIA relationships
