@@ -105,6 +105,7 @@ unless skip?("rails")
   run! "bin/bump-version #{VERSION}",              dir: rails_dir
   run! "bundle exec rake appraisal:setup",         dir: rails_dir if CI
   run! "bundle exec rake rubocop:autocorrect_all", dir: rails_dir
+  run! "bundle exec rake build:manifest",          dir: rails_dir
   run! "bundle exec rake build",                   dir: rails_dir
 
   unless SKIP_PUBLISH

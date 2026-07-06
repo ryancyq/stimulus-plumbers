@@ -21,7 +21,11 @@ module StimulusPlumbers
             return {}
           end
 
-          JSON.parse(File.read(path))
+          controllers = JSON.parse(File.read(path))
+          wiring = ComponentManifestLoader.call
+          default_wiring = { "actions" => [], "listens" => [], "targets" => [], "values" => [] }
+
+          controllers.transform_values { |data| data.merge("wiring" => wiring[data["identifier"]] || default_wiring) }
         end
 
         # Reused by VersionsLoader to report which fallback location resolved.

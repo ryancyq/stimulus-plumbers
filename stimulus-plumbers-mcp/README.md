@@ -86,6 +86,10 @@ Requires Ruby >= 3.3 for the `gem exec` subcommand (the gem itself supports Ruby
 
 No extra steps needed for setups 1 or 2.
 
+Each controller's schema also includes a `wiring` field (which methods/events/targets/values the
+`stimulus_plumbers` gem's Ruby helpers reference for it), sourced from that gem's own
+`vendor/component/manifest.json`, built by `rake build:manifest`.
+
 ## Development
 
 ```bash
@@ -95,6 +99,9 @@ bundle install
 
 # Build the Stimulus controller manifest (pure Node, no toolchain install needed)
 cd ../stimulus-plumbers && node --run build:manifest && cd -
+
+# Build the Ruby wiring manifest (needs the controller manifest above)
+cd ../stimulus-plumbers-rails && bundle exec rake build:manifest && cd -
 
 # Start the server
 bundle exec ruby bin/server

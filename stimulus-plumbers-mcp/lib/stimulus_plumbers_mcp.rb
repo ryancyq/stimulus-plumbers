@@ -17,6 +17,7 @@ require_relative "stimulus_plumbers/mcp/loaders/component_requirements"
 require_relative "stimulus_plumbers/mcp/loaders/component_schema_loader"
 require_relative "stimulus_plumbers/mcp/loaders/component_theme_loader"
 
+require_relative "stimulus_plumbers/mcp/loaders/component_manifest_loader"
 require_relative "stimulus_plumbers/mcp/loaders/controller_docs_loader"
 require_relative "stimulus_plumbers/mcp/loaders/controller_schema_loader"
 
