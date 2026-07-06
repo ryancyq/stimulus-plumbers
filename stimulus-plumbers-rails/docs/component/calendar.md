@@ -33,10 +33,10 @@ end
 </div>
 ```
 
-| Option           | Description                                                                          |
-| ---------------- | ------------------------------------------------------------------------------------ |
-| `date`           | `Date` — sets `year-value`, `month-value` (0-indexed), `day-value` on the controller |
-| `**html_options` | Forwarded to the `calendar-month` controller root element                            |
+| Option           | Description                                                             |
+| ---------------- | ----------------------------------------------------------------------- |
+| `date`           | `Date` — sets `year-value`, `month-value` (0-indexed) on the controller |
+| `**html_options` | Forwarded to the `calendar-month` controller root element               |
 
 For the JS controller API (targets, values, keyboard behaviour), see the [JS package docs](../../../stimulus-plumbers/docs/component/calendar.md).
 
@@ -50,7 +50,6 @@ For the JS controller API (targets, values, keyboard behaviour), see the [JS pac
   data-controller="calendar-month"
   data-calendar-month-year-value="2024"
   data-calendar-month-month-value="1"
-  data-calendar-month-day-value="15"
   role="grid"
 >
   <!-- days-of-week header row (JS-populated) -->
@@ -206,25 +205,17 @@ Renders all three frames. Used inside a `combobox-date` controller for drill-dow
 
 ```html
 <!-- month view frame — visible by default -->
-<turbo-frame id="calendar-month-frame" data-combobox-date-target="monthView">
+<turbo-frame id="calendar-month-frame">
   <!-- sp_calendar_turbo_month output -->
 </turbo-frame>
 
 <!-- year view frame — hidden until drill-up -->
-<turbo-frame
-  id="calendar-year-frame"
-  hidden
-  data-combobox-date-target="yearView"
->
+<turbo-frame id="calendar-year-frame" hidden>
   <!-- sp_calendar_turbo_year output -->
 </turbo-frame>
 
 <!-- decade view frame — hidden until drill-up twice -->
-<turbo-frame
-  id="calendar-decade-frame"
-  hidden
-  data-combobox-date-target="decadeView"
->
+<turbo-frame id="calendar-decade-frame" hidden>
   <!-- sp_calendar_turbo_decade output -->
 </turbo-frame>
 ```

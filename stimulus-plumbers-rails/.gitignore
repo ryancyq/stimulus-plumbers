@@ -14,8 +14,10 @@
 /.bundle/
 /vendor/bundle/
 
-# Generated at release time — not git-tracked
+# Generated at build/release time — not git-tracked
 # Mirrors the MCP server's resource namespaces: controller/ backs controller://,
-# ARIA.md backs the standalone aria:// resource (no entity namespace).
+# component/ backs the wiring data merged into controller://, ARIA.md backs the
+# standalone aria:// resource (no entity namespace).
 /vendor/ARIA.md
 /vendor/controller/
+/vendor/component/

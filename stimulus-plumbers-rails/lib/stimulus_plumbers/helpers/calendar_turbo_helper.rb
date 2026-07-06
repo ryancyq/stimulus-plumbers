@@ -31,8 +31,7 @@ module StimulusPlumbers
           [
             content_tag(
               :turbo_frame,
-              id:   "calendar-month-frame",
-              data: { "combobox-date-target": "monthView" }
+              id: "calendar-month-frame"
             ) do
               calendar_turbo_renderer.month(
                 date:              date,
@@ -48,8 +47,7 @@ module StimulusPlumbers
             content_tag(
               :turbo_frame,
               id:     "calendar-year-frame",
-              hidden: true,
-              data:   { "combobox-date-target": "yearView" }
+              hidden: true
             ) do
               calendar_turbo_renderer.year(
                 date:            date,
@@ -63,8 +61,7 @@ module StimulusPlumbers
             content_tag(
               :turbo_frame,
               id:     "calendar-decade-frame",
-              hidden: true,
-              data:   { "combobox-date-target": "decadeView" }
+              hidden: true
             ) do
               calendar_turbo_renderer.decade(
                 date:           date,

@@ -28,7 +28,8 @@ stimulus-plumbers-mcp/
 │           │   ├── component_schema_loader.rb  # Reads Themes::Base::SCHEMA + form renderer constants (live source)
 │           │   ├── icons_loader.rb             # Reads Tailwind theme's bundled icon SVG dirs + aliases (Tailwind-specific, not schema)
 │           │   ├── component_docs_loader.rb    # Reads docs/component/*.md via stimulus_plumbers gem_dir; sibling path as dev fallback
-│           │   ├── controller_schema_loader.rb # 3-path resolution: node_modules → gem vendor/ (GemVendorPath) → sibling dist/ (dev fallback)
+│           │   ├── controller_schema_loader.rb # 3-path resolution: node_modules → gem vendor/ (GemVendorPath) → sibling dist/ (dev fallback); merges in ComponentManifestLoader's data as each identifier's `wiring` key
+│           │   ├── component_manifest_loader.rb # Reads stimulus_plumbers gem's own vendor/component/manifest.json (GemVendorPath → sibling vendor/ dev fallback)
 │           │   ├── controller_docs_loader.rb   # Reads controller narrative docs from the JS package (monorepo dev path or vendored)
 │           │   ├── component_requirements.rb   # Maps component keys → required Stimulus controller identifiers (live source)
 │           │   ├── component_theme_loader.rb   # Extracts theme method signatures from Themes::Base; base_doc reads docs/component/theme.md (via ComponentDocsLoader.docs_dir)

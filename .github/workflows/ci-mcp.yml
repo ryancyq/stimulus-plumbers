@@ -39,14 +39,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          cache: npm
-          cache-dependency-path: stimulus-plumbers/package-lock.json
-
-      - run: npm ci
-        working-directory: stimulus-plumbers
-
-      - run: npm run build
-        working-directory: stimulus-plumbers
 
       - run: rm Gemfile.lock
 

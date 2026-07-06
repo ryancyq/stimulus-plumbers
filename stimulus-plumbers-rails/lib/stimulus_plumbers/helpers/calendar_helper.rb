@@ -9,8 +9,7 @@ module StimulusPlumbers
                          kwargs.deep_merge(
                            data: {
                              "calendar-month-year-value":  date.year,
-                             "calendar-month-month-value": date.month - 1,
-                             "calendar-month-day-value":   date.day
+                             "calendar-month-month-value": date.month - 1
                            }
                          )
                        else

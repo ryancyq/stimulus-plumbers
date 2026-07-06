@@ -19,17 +19,11 @@ class CalendarHelperTest < ActionView::TestCase
                "[data-calendar-month-month-value='3']"
   end
 
-  def test_sets_day_value_from_date
-    assert_css parse_html(sp_calendar_month(date: Date.new(2026, 4, 15))),
-               "[data-calendar-month-day-value='15']"
-  end
-
   def test_omits_date_values_when_date_is_nil
     doc = parse_html(sp_calendar_month)
 
     assert_no_css doc, "[data-calendar-month-year-value]"
     assert_no_css doc, "[data-calendar-month-month-value]"
-    assert_no_css doc, "[data-calendar-month-day-value]"
   end
 
   def test_merges_custom_data_attributes_with_date

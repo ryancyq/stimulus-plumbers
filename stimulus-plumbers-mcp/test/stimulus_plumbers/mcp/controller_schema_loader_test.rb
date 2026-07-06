@@ -82,6 +82,19 @@ class ControllerSchemaLoaderTest < Minitest::Test
     end
   end
 
+  def test_merges_wiring_from_component_manifest
+    popover = StimulusPlumbers::MCP::ControllerSchemaLoader.call["popover"]
+
+    assert popover.key?("wiring"), "expected controller schema to include a wiring key"
+    assert_includes popover["wiring"]["actions"], "open"
+  end
+
+  def test_wiring_defaults_to_empty_when_ruby_never_references_a_controller
+    ctrl = StimulusPlumbers::MCP::ControllerSchemaLoader.call["flipper"]
+
+    assert_equal({ "actions" => [], "listens" => [], "targets" => [], "values" => [] }, ctrl["wiring"])
+  end
+
   def test_returns_empty_hash_when_no_manifest_found
     StimulusPlumbers::MCP::ControllerSchemaLoader.stub(
       :manifest_paths,
