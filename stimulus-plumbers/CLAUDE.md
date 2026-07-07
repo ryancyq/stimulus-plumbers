@@ -52,8 +52,8 @@ stimulus-plumbers/
 ## Guidelines
 - **native HTML5 first** - only use controllers when native elements have limitations
 - import statements should not end with .js
-- **Unit tests** using Vitest
-- **Lint tests** (eslint + prettier) — run synchronously from this package's directory; never background or tail
+- **Unit tests** using Vitest (`npm test`)
+- **Lint tests** (`npm run lint`, `npm run format:check`) — run synchronously from this package's directory; never background or tail
 - **Accessibility helpers** — use `RovingTabIndex.activate()` / `ListboxNavigation` / `FocusTrap` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract.
 
 ## WCAG / ARIA Reference

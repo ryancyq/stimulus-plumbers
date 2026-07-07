@@ -16,6 +16,15 @@ stimulus-plumbers-mcp/     # Ruby gem: stimulus_plumbers_mcp — MCP server expo
 ## Design Principle
 - Follow WCAG 2.1 Level AA (see [ARIA.md](ARIA.md) for the full criteria table and component ARIA patterns)
 
+## Release
+- `bin/release <version>` — build + commit + publish all four packages (npm, rails, tailwind, mcp)
+- `bin/release <version> --dry-run` — build only, no git, no publish
+- `bin/release <version> --only npm|rails|tailwind|mcp` — release a single package
+- CI (`release.yml`) calls `bin/release <version> --no-git --only <pkg>` per package
+
+## Docs
+- `npm run format:docs` / `format:docs:check` — prettier over all `*/docs/**/*.md`
+
 ## Doc Update Rule
 - When changing component API (targets, values, options, HTML structure), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.
 - Keep docs concise — one-line bullets, minimal prose. If a sentence restates what the code makes obvious, cut it.
