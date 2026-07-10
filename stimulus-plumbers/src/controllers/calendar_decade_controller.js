@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { initCalendar } from '../plumbers';
 import { attachCalendarYearSelector } from '../plumbers/calendar-selector';
 import { tryParseDate } from '../plumbers/plumber/date';
+import { setSelected, setCurrent, setAriaDisabled } from '../accessibility/aria';
 
 const YEARS_PER_ROW = 4;
 
@@ -45,7 +46,7 @@ export default class extends Controller {
     const selectedYear = selected ? selected.getFullYear() : null;
     this.gridTarget.querySelectorAll('button[data-year]').forEach((btn) => {
       const year = parseInt(btn.dataset.year, 10);
-      btn.setAttribute('aria-selected', year === selectedYear ? 'true' : 'false');
+      setSelected(btn, year === selectedYear);
     });
   }
 
@@ -80,9 +81,9 @@ export default class extends Controller {
       btn.textContent = y.value;
       btn.dataset.year = y.value;
       btn.setAttribute('role', 'gridcell');
-      btn.setAttribute('aria-selected', y.value === selectedYear ? 'true' : 'false');
-      if (y.value === todayYear) btn.setAttribute('aria-current', 'year');
-      if (y.disabled) btn.setAttribute('aria-disabled', 'true');
+      setSelected(btn, y.value === selectedYear);
+      if (y.value === todayYear) setCurrent(btn, 'year');
+      if (y.disabled) setAriaDisabled(btn, true);
       cells.push(btn);
     }
 

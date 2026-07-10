@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { setSelected } from '../accessibility/aria';
 
 export default class extends Controller {
   static targets = ['hour', 'minute', 'period'];
@@ -11,8 +12,8 @@ export default class extends Controller {
     const item = event.target.closest('[role="option"]');
     if (!item) return;
     const drum = item.closest('[role="listbox"]');
-    drum.querySelectorAll('[role="option"]').forEach((o) => o.setAttribute('aria-selected', 'false'));
-    item.setAttribute('aria-selected', 'true');
+    drum.querySelectorAll('[role="option"]').forEach((o) => setSelected(o, false));
+    setSelected(item, true);
     this.select(this.toH24());
   }
 
@@ -32,8 +33,8 @@ export default class extends Controller {
     const idx = items.indexOf(current);
     const next = delta > 0 ? items[Math.min(idx + 1, items.length - 1)] : items[Math.max(idx - 1, 0)];
     if (!next || next === current) return;
-    items.forEach((o) => o.setAttribute('aria-selected', 'false'));
-    next.setAttribute('aria-selected', 'true');
+    items.forEach((o) => setSelected(o, false));
+    setSelected(next, true);
     next.scrollIntoView({ block: 'nearest' });
     this.select(this.toH24());
   }

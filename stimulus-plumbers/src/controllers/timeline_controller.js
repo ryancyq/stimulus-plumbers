@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { DateFormatter } from '../plumbers/formatters/date';
 import { RovingTabIndex } from '../accessibility/keyboard';
-import { setExpanded, setHidden, announce } from '../accessibility/aria';
+import { setExpanded, isExpanded, setHidden, announce } from '../accessibility/aria';
 
 export default class extends Controller {
   static targets = ['trigger', 'detail', 'time'];
@@ -21,7 +21,7 @@ export default class extends Controller {
 
   toggle(event) {
     const trigger = event.currentTarget;
-    trigger.getAttribute('aria-expanded') === 'true' ? this.collapseItem(trigger) : this.expandItem(trigger);
+    isExpanded(trigger) ? this.collapseItem(trigger) : this.expandItem(trigger);
   }
 
   expand(event) {
@@ -55,7 +55,7 @@ export default class extends Controller {
   }
 
   triggerTargetConnected(trigger) {
-    if (!trigger.hasAttribute('aria-expanded')) trigger.setAttribute('aria-expanded', 'false');
+    if (!trigger.hasAttribute('aria-expanded')) setExpanded(trigger, false);
     this.rovingTabIndex?.updateItems(this.triggerTargets);
   }
 

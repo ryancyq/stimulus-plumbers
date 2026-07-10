@@ -166,4 +166,54 @@ class SchemaIconTest < Minitest::Test
 
     assert_equal "0.25", result[:elements].first["opacity"]
   end
+
+  def test_circle_element_attrs_include_stroke_presentation_attrs
+    assert_includes Icon::ELEMENT_ATTRS[:circle], :stroke
+    assert_includes Icon::ELEMENT_ATTRS[:circle], :stroke_width
+    assert_includes Icon::ELEMENT_ATTRS[:circle], :stroke_linecap
+  end
+
+  def test_resolve_passes_through_stroke_presentation_attrs_on_circle_element
+    element = { tag: :circle, r: "18", stroke: "currentColor", stroke_width: "3", stroke_linecap: "round" }
+    result = Icon.resolve({ elements: [element] })
+
+    assert_equal "currentColor", result[:elements].first["stroke"]
+    assert_equal "3", result[:elements].first["stroke-width"]
+    assert_equal "round", result[:elements].first["stroke-linecap"]
+  end
+
+  def test_circle_element_attrs_include_class
+    assert_includes Icon::ELEMENT_ATTRS[:circle], :class
+  end
+
+  def test_resolve_passes_through_class_on_circle_element
+    result = Icon.resolve({ elements: [{ tag: :circle, r: "18", class: "track" }] })
+
+    assert_equal "track", result[:elements].first["class"]
+  end
+
+  def test_resolve_strips_class_on_path_element
+    result = Icon.resolve({ elements: [{ tag: :path, d: "M1 2", class: "stroke-current" }] })
+
+    refute_includes result[:elements].first, "class"
+  end
+
+  def test_resolve_passes_through_any_data_attribute_on_an_allowed_element
+    result = Icon.resolve({ elements: [{ tag: :circle, r: "18", data_progress_target: "fill" }] })
+
+    assert_equal "fill", result[:elements].first["data-progress-target"]
+  end
+
+  def test_resolve_passes_through_any_aria_attribute_on_an_allowed_element
+    result = Icon.resolve({ elements: [{ tag: :path, d: "M1 2", aria_hidden: "true" }] })
+
+    assert_equal "true", result[:elements].first["aria-hidden"]
+  end
+
+  def test_resolve_still_strips_unrelated_unknown_attrs_alongside_data_attrs
+    result = Icon.resolve({ elements: [{ tag: :circle, r: "18", data_progress_target: "fill", unknown: "ignored" }] })
+
+    assert_equal "fill", result[:elements].first["data-progress-target"]
+    refute_includes result[:elements].first, "unknown"
+  end
 end

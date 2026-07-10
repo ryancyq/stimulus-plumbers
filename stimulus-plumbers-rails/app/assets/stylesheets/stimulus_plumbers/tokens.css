@@ -128,3 +128,8 @@
   /* ── Z-index ─────────────────────────────────────────────────────────── */
   --sp-z-popover: 50;
 }
+
+/* Smooth width changes on the progress bar fill — renders with or without a theme. */
+[data-progress-target="fill"] {
+  transition: width 0.3s ease;
+}

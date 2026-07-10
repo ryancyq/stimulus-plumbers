@@ -46,6 +46,8 @@ class ComponentsController < ApplicationController
 
   def timeline; end
 
+  def progress; end
+
   private
 
   def parse_date(key)

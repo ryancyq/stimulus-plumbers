@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { initCalendar } from '../plumbers';
 import { attachCalendarMonthSelector } from '../plumbers/calendar-selector';
 import { tryParseDate } from '../plumbers/plumber/date';
+import { setSelected, setCurrent, setAriaDisabled } from '../accessibility/aria';
 
 const MONTHS_PER_ROW = 4;
 
@@ -46,7 +47,7 @@ export default class extends Controller {
     const selected = tryParseDate(this.selectedValue);
     this.gridTarget.querySelectorAll('button[data-month]').forEach((btn) => {
       const month = parseInt(btn.dataset.month, 10) - 1; // 0-indexed
-      btn.setAttribute('aria-selected', selected && selected.getMonth() === month ? 'true' : 'false');
+      setSelected(btn, Boolean(selected) && selected.getMonth() === month);
     });
   }
 
@@ -82,12 +83,12 @@ export default class extends Controller {
       btn.textContent = formatter.format(m.date);
       btn.dataset.month = m.value + 1; // 1-indexed
       btn.setAttribute('role', 'gridcell');
-      const isSelected = selectedDate && selectedDate.getMonth() === m.value;
-      btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      const isSelected = Boolean(selectedDate) && selectedDate.getMonth() === m.value;
+      setSelected(btn, isSelected);
       if (m.value === today.getMonth() && year === today.getFullYear()) {
-        btn.setAttribute('aria-current', 'month');
+        setCurrent(btn, 'month');
       }
-      if (m.disabled) btn.setAttribute('aria-disabled', 'true');
+      if (m.disabled) setAriaDisabled(btn, true);
       cells.push(btn);
     }
 

@@ -1,0 +1,17 @@
+<h1>Progress components</h1>
+
+<div id="progress-bar">
+  <%= sp_progress_bar(value: 65, max: 100, aria: { label: "Upload progress" }) %>
+</div>
+
+<div id="progress-bar-indeterminate">
+  <%= sp_progress_bar(value: 0, indeterminate: true, aria: { label: "Loading" }) %>
+</div>
+
+<div id="progress-ring">
+  <%= sp_progress_ring(value: 60, max: 100, aria: { label: "Storage used" }) %>
+</div>
+
+<div id="progress-meter">
+  <%= sp_progress_meter(value: 6, min: 0, max: 10, low: 3, high: 8, optimum: 9, aria: { label: "Disk usage" }) %>
+</div>

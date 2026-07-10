@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="44" height="44" fill="none">
+  <circle cx="22" cy="22" r="18" stroke-width="3" class="track"></circle>
+  <circle
+    cx="22"
+    cy="22"
+    r="18"
+    stroke="currentColor"
+    stroke-width="3"
+    stroke-linecap="round"
+    data-progress-target="fill"
+  ></circle>
+</svg>

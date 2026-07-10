@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { Requestor } from '../requestor';
 import { filterOptions } from '../researcher';
 import { ListboxNavigation } from '../accessibility/keyboard';
+import { isAriaDisabled, setSelected } from '../accessibility/aria';
 
 export default class extends Controller {
   static targets = ['listbox', 'loading', 'empty'];
@@ -27,15 +28,15 @@ export default class extends Controller {
 
   onSelect(event) {
     const option = event.target.closest('[role="option"]');
-    if (!option || option.getAttribute('aria-disabled') === 'true') return;
+    if (!option || isAriaDisabled(option)) return;
     this.select(option.dataset.value ?? '');
   }
 
   select(value) {
     const options = this.listboxTarget.querySelectorAll('[role="option"]');
-    options.forEach((o) => o.setAttribute('aria-selected', 'false'));
+    options.forEach((o) => setSelected(o, false));
     const option = [...options].find((o) => o.dataset.value === value);
-    if (option) option.setAttribute('aria-selected', 'true');
+    if (option) setSelected(option, true);
     this.dispatch('selected', { detail: { value }, bubbles: true });
   }
 

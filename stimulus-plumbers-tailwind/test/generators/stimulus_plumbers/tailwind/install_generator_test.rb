@@ -11,9 +11,10 @@ module StimulusPlumbers
       destination File.join(Dir.tmpdir, "stimulus_plumbers_tailwind_generator_test")
       setup :prepare_destination
 
-      GEM_NAME        = StimulusPlumbers::Tailwind::Generators::SourcesDirective::GEM_NAME
-      GEM_LIB_DIR     = "#{Gem.loaded_specs[GEM_NAME].gem_dir}/lib".freeze
-      TOKENS_CSS_PATH = "app/assets/stylesheets/stimulus_plumbers/tokens.css"
+      GEM_NAME            = StimulusPlumbers::Tailwind::Generators::SourcesDirective::GEM_NAME
+      GEM_LIB_DIR         = "#{Gem.loaded_specs[GEM_NAME].gem_dir}/lib".freeze
+      TOKENS_CSS_PATH     = "app/assets/stylesheets/stimulus_plumbers/tokens.css"
+      ANIMATIONS_CSS_PATH = "app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css"
 
       # ── happy path ────────────────────────────────────────────────────────────
 
@@ -45,7 +46,7 @@ module StimulusPlumbers
         end
       end
 
-      test "also injects the tokens.css import, ordered before @source" do
+      test "also injects the tokens.css and animations.css imports, ordered before @source" do
         write_entry_css("app/assets/stylesheets/application.tailwind.css", <<~CSS)
           @import "tailwindcss";
         CSS
@@ -53,14 +54,45 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          tokens_line = tokens_line_for("app/assets/stylesheets/application.tailwind.css")
-          source_line = source_line_for("app/assets/stylesheets/application.tailwind.css")
+          tokens_line     = tokens_line_for("app/assets/stylesheets/application.tailwind.css")
+          animations_line = animations_line_for("app/assets/stylesheets/application.tailwind.css")
+          source_line     = source_line_for("app/assets/stylesheets/application.tailwind.css")
 
-          assert_equal "#{tokens_line}\n@import \"tailwindcss\";\n#{source_line}\n", css
+          assert_equal "#{tokens_line}\n#{animations_line}\n@import \"tailwindcss\";\n#{source_line}\n", css
         end
       end
 
-      test "keeps both directives idempotent across reruns" do
+      test "inserts the animations.css import right after the tokens.css import" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", <<~CSS)
+          @import "tailwindcss";
+        CSS
+
+        run_generator
+
+        assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
+          tokens_line     = tokens_line_for("app/assets/stylesheets/application.tailwind.css")
+          animations_line = animations_line_for("app/assets/stylesheets/application.tailwind.css")
+
+          assert_includes css, "#{tokens_line}\n#{animations_line}"
+        end
+      end
+
+      test "updates stale @import animations.css when gem path has changed" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", <<~CSS)
+          @import "tailwindcss";
+          @import "/old/gems/stimulus_plumbers_tailwind-0.0.1/app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css";
+        CSS
+
+        run_generator
+
+        assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
+          assert_includes css, animations_line_for("app/assets/stylesheets/application.tailwind.css")
+          assert_no_match %r{old/gems}, css
+          assert_equal 1, css.scan("stimulus_plumbers/tailwind/animations.css").length
+        end
+      end
+
+      test "keeps all three directives idempotent across reruns" do
         write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
 
         run_generator
@@ -68,6 +100,7 @@ module StimulusPlumbers
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
           assert_equal 1, css.scan("stimulus_plumbers/tokens.css").length
+          assert_equal 1, css.scan("stimulus_plumbers/tailwind/animations.css").length
           assert_equal 1, css.scan(source_line_for("app/assets/stylesheets/application.tailwind.css")).length
         end
       end
@@ -204,6 +237,13 @@ module StimulusPlumbers
         gem_dir = Gem.loaded_specs["stimulus_plumbers"].gem_dir
         css_dir = File.join(destination_root, File.dirname(css_relative_path))
         rel     = Pathname.new(File.join(gem_dir, TOKENS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
+        %(@import "#{rel}";)
+      end
+
+      def animations_line_for(css_relative_path)
+        gem_dir = Gem.loaded_specs["stimulus_plumbers_tailwind"].gem_dir
+        css_dir = File.join(destination_root, File.dirname(css_relative_path))
+        rel     = Pathname.new(File.join(gem_dir, ANIMATIONS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
         %(@import "#{rel}";)
       end
 
