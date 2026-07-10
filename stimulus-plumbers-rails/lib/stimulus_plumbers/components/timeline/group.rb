@@ -4,7 +4,8 @@ module StimulusPlumbers
   module Components
     class Timeline
       class Group < Plumber::Base
-        def render(**kwargs, &block)
+        def render(orientation: :vertical, **kwargs, &block)
+          @orientation = orientation
           content = template.capture(self, &block)
           html_options = merge_html_options(theme.resolve(:timeline_group), kwargs)
           template.content_tag(:div, content, **html_options)
@@ -12,7 +13,7 @@ module StimulusPlumbers
 
         def section(date:, datetime: nil, **kwargs, &block)
           inner_tl = Timeline.new(template)
-          inner_tl.instance_variable_set(:@orientation, :vertical)
+          inner_tl.instance_variable_set(:@orientation, @orientation)
           inner_tl.instance_variable_set(:@interactive, false)
 
           events_html  = template.capture(inner_tl, &block)
@@ -29,10 +30,11 @@ module StimulusPlumbers
             theme.resolve(:timeline_group_section_date),
             datetime ? { datetime: datetime } : {}
           )
+          list_attrs = merge_html_options(theme.resolve(:timeline_group_section_list, orientation: @orientation))
           template.safe_join(
             [
               template.content_tag(:time, date, **date_attrs),
-              template.content_tag(:ol, events_html, **merge_html_options(theme.resolve(:timeline_group_section_list)))
+              template.content_tag(:ol, events_html, **list_attrs)
             ]
           )
         end

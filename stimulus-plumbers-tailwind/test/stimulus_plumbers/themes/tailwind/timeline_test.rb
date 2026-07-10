@@ -197,7 +197,7 @@ class TailwindThemeTimelineTest < Minitest::Test
   def test_group_wrapper_has_vertical_spacing
     result = classes_for(:timeline_group)
 
-    assert_includes result, "space-y-4"
+    assert_includes result, "gap-y-4"
   end
 
   def test_group_section_has_border_and_rounded_corners
@@ -218,6 +218,19 @@ class TailwindThemeTimelineTest < Minitest::Test
 
     assert_includes result, "divide-y"
     refute_includes result, "border-s"
+  end
+
+  def test_group_section_list_has_vertical_spacing_between_events
+    result = classes_for(:timeline_group_section_list)
+
+    assert_includes result, "[&>li]:py-2"
+  end
+
+  def test_group_section_list_horizontal_lays_out_as_row
+    result = classes_for(:timeline_group_section_list, orientation: :horizontal)
+
+    assert_includes result, "flex"
+    refute_includes result, "divide-y"
   end
 
   def test_vertical_track_line_spans_full_height_with_border_color

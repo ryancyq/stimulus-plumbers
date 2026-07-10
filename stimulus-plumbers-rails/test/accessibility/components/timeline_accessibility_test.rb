@@ -30,6 +30,10 @@ class TimelineAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#timeline-grouped"
   end
 
+  def test_grouped_horizontal_timeline_passes_wcag
+    assert_accessible context: "#timeline-grouped-horizontal"
+  end
+
   def test_interactive_timeline_date_format_fills_time_elements
     within("#timeline-interactive") do
       datetimes = all("time[datetime]").map { |el| el["datetime"] }
