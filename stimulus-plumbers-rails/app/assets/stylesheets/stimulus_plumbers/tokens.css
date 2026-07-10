@@ -8,52 +8,52 @@
 
 :root {
   /* ── Semantic colors ─────────────────────────────────────────────────── */
-  --sp-color-primary:        oklch(55% 0.2 250);
-  --sp-color-primary-fg:     oklch(98% 0.01 250);
-  --sp-color-primary-border: oklch(65% 0.2 250);
-  --sp-color-primary-ring:   oklch(75% 0.15 250);
+  --sp-color-primary:        oklch(50% 0.11 140);
+  --sp-color-primary-fg:     oklch(98% 0.01 140);
+  --sp-color-primary-border: oklch(60% 0.11 140);
+  --sp-color-primary-ring:   oklch(58% 0.15 140);
 
-  --sp-color-secondary:        oklch(55% 0.05 250);
-  --sp-color-secondary-fg:     oklch(98% 0.01 250);
-  --sp-color-secondary-border: oklch(65% 0.05 250);
-  --sp-color-secondary-ring:   oklch(75% 0.05 250);
+  --sp-color-secondary:        oklch(50% 0.03 140);
+  --sp-color-secondary-fg:     oklch(98% 0.01 140);
+  --sp-color-secondary-border: oklch(60% 0.03 140);
+  --sp-color-secondary-ring:   oklch(70% 0.02 140);
 
-  --sp-color-destructive:        oklch(55% 0.22 25);
-  --sp-color-destructive-fg:     oklch(98% 0.01 25);
-  --sp-color-destructive-border: oklch(65% 0.22 25);
-  --sp-color-destructive-ring:   oklch(75% 0.18 25);
+  --sp-color-destructive:        oklch(55% 0.13 30);
+  --sp-color-destructive-fg:     oklch(98% 0.01 30);
+  --sp-color-destructive-border: oklch(65% 0.13 30);
+  --sp-color-destructive-ring:   oklch(76% 0.09 30);
 
-  --sp-color-success:        oklch(52% 0.18 145);
-  --sp-color-success-fg:     oklch(98% 0.01 145);
-  --sp-color-success-border: oklch(62% 0.18 145);
-  --sp-color-success-ring:   oklch(72% 0.12 145);
+  --sp-color-success:        oklch(46% 0.13 165);
+  --sp-color-success-fg:     oklch(98% 0.01 165);
+  --sp-color-success-border: oklch(56% 0.13 165);
+  --sp-color-success-ring:   oklch(66% 0.09 165);
 
-  --sp-color-warning:        oklch(68% 0.17 65);
-  --sp-color-warning-fg:     oklch(98% 0.01 65);
-  --sp-color-warning-border: oklch(78% 0.17 65);
-  --sp-color-warning-ring:   oklch(88% 0.10 65);
+  --sp-color-warning:        oklch(68% 0.11 85);
+  --sp-color-warning-fg:     oklch(20% 0.02 85);
+  --sp-color-warning-border: oklch(78% 0.11 85);
+  --sp-color-warning-ring:   oklch(88% 0.07 85);
 
-  --sp-color-info:        oklch(55% 0.18 220);
-  --sp-color-info-fg:     oklch(98% 0.01 220);
-  --sp-color-info-border: oklch(65% 0.18 220);
-  --sp-color-info-ring:   oklch(75% 0.12 220);
+  --sp-color-info:        oklch(55% 0.10 210);
+  --sp-color-info-fg:     oklch(98% 0.01 210);
+  --sp-color-info-border: oklch(65% 0.10 210);
+  --sp-color-info-ring:   oklch(75% 0.07 210);
 
-  --sp-color-error:          oklch(40% 0.20 25);
+  --sp-color-error:          oklch(38% 0.16 25);
 
-  --sp-color-muted:        oklch(96% 0.02 250);
-  --sp-color-muted-fg:     oklch(45% 0.05 250);
-  --sp-color-muted-border: oklch(88% 0.02 250);
-  --sp-color-muted-ring:   oklch(82% 0.02 250);
+  --sp-color-muted:        oklch(95% 0.018 68);
+  --sp-color-muted-fg:     oklch(45% 0.05 68);
+  --sp-color-muted-border: oklch(88% 0.015 68);
+  --sp-color-muted-ring:   oklch(82% 0.015 68);
 
-  --sp-color-border:         oklch(90% 0.02 250);
-  --sp-color-border-strong:  oklch(75% 0.03 250);
-  --sp-color-bg:             oklch(100% 0 0);
-  --sp-color-bg-muted:       oklch(96% 0.02 250);
-  --sp-color-fg:             oklch(10% 0.02 250);
+  --sp-color-border:         oklch(88% 0.012 68);
+  --sp-color-border-strong:  oklch(75% 0.02 68);
+  --sp-color-bg:             oklch(99% 0.005 68);
+  --sp-color-bg-muted:       oklch(95% 0.015 68);
+  --sp-color-fg:             oklch(22% 0.02 68);
 
 
   /* ── Component tokens ───────────────────────────────────────────────── */
-  --sp-color-indicator: oklch(75% 0.02 250); /* timeline dot fill */
+  --sp-color-indicator: oklch(78% 0.015 68); /* timeline dot fill */
 
 
   /* ── Focus ring ──────────────────────────────────────────────────────── */
@@ -63,16 +63,16 @@
 
 
   /* ── Avatar palette (10 slots, index chosen by name hash) ────────────── */
-  --sp-avatar-color-1:  oklch(55% 0.15 58);
-  --sp-avatar-color-2:  oklch(54% 0.16 129);
-  --sp-avatar-color-3:  oklch(51% 0.13 233);
-  --sp-avatar-color-4:  oklch(53% 0.10 209);
-  --sp-avatar-color-5:  oklch(53% 0.09 186);
-  --sp-avatar-color-6:  oklch(51% 0.13 161);
-  --sp-avatar-color-7:  oklch(46% 0.22 277);
-  --sp-avatar-color-8:  oklch(49% 0.23 316);
-  --sp-avatar-color-9:  oklch(44% 0.21 16);
-  --sp-avatar-color-10: oklch(48% 0.22 348);
+  --sp-avatar-color-1:  oklch(55% 0.13 40);
+  --sp-avatar-color-2:  oklch(58% 0.12 85);
+  --sp-avatar-color-3:  oklch(52% 0.10 125);
+  --sp-avatar-color-4:  oklch(55% 0.08 150);
+  --sp-avatar-color-5:  oklch(52% 0.09 195);
+  --sp-avatar-color-6:  oklch(50% 0.08 230);
+  --sp-avatar-color-7:  oklch(48% 0.09 320);
+  --sp-avatar-color-8:  oklch(38% 0.15 8);
+  --sp-avatar-color-9:  oklch(45% 0.09 55);
+  --sp-avatar-color-10: oklch(58% 0.10 10);
   --sp-avatar-fg:       oklch(100% 0 0);
 
 
