@@ -19,6 +19,7 @@ module StimulusPlumbers
         **Schema::INPUT_GROUP,
         **Schema::LAYOUT,
         **Schema::LINK,
+        **Schema::PROGRESS,
         **Schema::TIMELINE
       }.freeze
 

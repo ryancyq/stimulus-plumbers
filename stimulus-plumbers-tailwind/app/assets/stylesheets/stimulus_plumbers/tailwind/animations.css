@@ -1,0 +1,18 @@
+@theme {
+  --animate-progress-slide: sp-progress-slide 1.5s ease-in-out infinite;
+}
+
+@keyframes sp-progress-slide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+/* Ring-only; core's transition covers width, not stroke-dashoffset. */
+[data-progress-target="fill"] {
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+/* Track color — kept out of the SVG so consumers can retheme it via CSS. */
+svg[role="progressbar"] .track {
+  stroke: var(--sp-color-muted);
+}

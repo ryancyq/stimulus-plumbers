@@ -53,6 +53,11 @@ export const setAriaState = (element, attribute, value) => {
 export const setExpanded = (element, expanded) => setAriaState(element, 'aria-expanded', expanded);
 
 /**
+ * Read aria-expanded state
+ */
+export const isExpanded = (element) => element.getAttribute('aria-expanded') === 'true';
+
+/**
  * Update aria-pressed state
  */
 export const setPressed = (element, pressed) => setAriaState(element, 'aria-pressed', pressed);
@@ -63,10 +68,36 @@ export const setPressed = (element, pressed) => setAriaState(element, 'aria-pres
 export const setChecked = (element, checked) => setAriaState(element, 'aria-checked', checked);
 
 /**
+ * Update aria-selected state
+ */
+export const setSelected = (element, selected) => setAriaState(element, 'aria-selected', selected);
+
+/**
+ * Set aria-current to a token (e.g. "date", "month", "year"), or remove it
+ */
+export const setCurrent = (element, value) =>
+  value ? element.setAttribute('aria-current', value) : element.removeAttribute('aria-current');
+
+/**
  * Set or remove the hidden attribute
  */
 export const setHidden = (element, hidden) =>
   hidden ? element.setAttribute('hidden', '') : element.removeAttribute('hidden');
+
+/**
+ * Update aria-hidden state
+ */
+export const setAriaHidden = (element, hidden) => setAriaState(element, 'aria-hidden', hidden);
+
+/**
+ * Update aria-disabled state only (see setDisabled for the interactive-control variant that also manages tabindex)
+ */
+export const setAriaDisabled = (element, disabled) => setAriaState(element, 'aria-disabled', disabled);
+
+/**
+ * Read aria-disabled state
+ */
+export const isAriaDisabled = (element) => element.getAttribute('aria-disabled') === 'true';
 
 /**
  * Update aria-disabled state and manage tabindex
@@ -75,6 +106,22 @@ export function setDisabled(element, disabled) {
   setAriaState(element, 'aria-disabled', disabled);
   disabled ? element.setAttribute('tabindex', '-1') : element.removeAttribute('tabindex');
 }
+
+/**
+ * Update aria-valuemin
+ */
+export const setValueMin = (element, value) => setAriaState(element, 'aria-valuemin', value);
+
+/**
+ * Update aria-valuemax
+ */
+export const setValueMax = (element, value) => setAriaState(element, 'aria-valuemax', value);
+
+/**
+ * Set aria-valuenow, or remove it when value is null/undefined (e.g. indeterminate progress)
+ */
+export const setValueNow = (element, value) =>
+  value == null ? element.removeAttribute('aria-valuenow') : setAriaState(element, 'aria-valuenow', value);
 
 /**
  * Maps ARIA roles to their appropriate aria-haspopup values

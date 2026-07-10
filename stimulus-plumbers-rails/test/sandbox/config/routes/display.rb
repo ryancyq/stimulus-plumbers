@@ -6,4 +6,5 @@ scope "/display", controller: "components" do
   get :avatar
   get :icon
   get :timeline
+  get :progress
 end

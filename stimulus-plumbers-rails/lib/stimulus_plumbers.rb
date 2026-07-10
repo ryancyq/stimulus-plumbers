@@ -41,6 +41,9 @@ require_relative "stimulus_plumbers/components/input_group"
 require_relative "stimulus_plumbers/components/popover"
 require_relative "stimulus_plumbers/components/popover/trigger"
 require_relative "stimulus_plumbers/components/popover/panel"
+require_relative "stimulus_plumbers/components/progress_bar"
+require_relative "stimulus_plumbers/components/progress_ring"
+require_relative "stimulus_plumbers/components/progress_meter"
 
 # -- Calendar --
 require_relative "stimulus_plumbers/components/calendar"

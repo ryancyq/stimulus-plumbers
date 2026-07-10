@@ -1,0 +1,36 @@
+<h1>Progress components</h1>
+
+<section id="progress-bar" class="sb-section">
+  <h2>Bar</h2>
+  <div class="sb-row">
+    <%= sp_progress_bar(value: 65, max: 100, aria: { label: "Upload progress" }) %>
+  </div>
+</section>
+
+<section id="progress-bar-indeterminate" class="sb-section">
+  <h2>Bar — indeterminate</h2>
+  <div class="sb-row">
+    <%= sp_progress_bar(value: 0, indeterminate: true, aria: { label: "Loading" }) %>
+  </div>
+</section>
+
+<section id="progress-ring" class="sb-section">
+  <h2>Ring</h2>
+  <div class="sb-row">
+    <%= sp_progress_ring(value: 60, max: 100, aria: { label: "Storage used" }) %>
+  </div>
+</section>
+
+<section id="progress-ring-indeterminate" class="sb-section">
+  <h2>Ring — indeterminate</h2>
+  <div class="sb-row">
+    <%= sp_progress_ring(value: 0, indeterminate: true, aria: { label: "Loading" }) %>
+  </div>
+</section>
+
+<section id="progress-meter" class="sb-section">
+  <h2>Meter</h2>
+  <div class="sb-row">
+    <%= sp_progress_meter(value: 6, min: 0, max: 10, low: 3, high: 8, optimum: 9, aria: { label: "Disk usage" }) %>
+  </div>
+</section>

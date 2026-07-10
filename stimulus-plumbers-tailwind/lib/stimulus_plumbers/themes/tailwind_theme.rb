@@ -15,6 +15,7 @@ require_relative "tailwind/form/input"
 require_relative "tailwind/icon"
 require_relative "tailwind/layout"
 require_relative "tailwind/link"
+require_relative "tailwind/progress"
 require_relative "tailwind/timeline"
 
 module StimulusPlumbers
@@ -34,6 +35,7 @@ module StimulusPlumbers
       include Tailwind::Icon
       include Tailwind::Layout
       include Tailwind::Link
+      include Tailwind::Progress
       include Tailwind::Timeline
       include Tailwind::Timeline::Group
 

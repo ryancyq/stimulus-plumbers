@@ -43,6 +43,8 @@ class ComponentsController < ApplicationController
 
   def popover; end
 
+  def progress; end
+
   def timeline; end
 
   private

@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "stimulus_plumbers/generators/tokens_directive"
+require "stimulus_plumbers/tailwind/generators/animations_directive"
 require "stimulus_plumbers/tailwind/generators/sources_directive"
 
 class TailwindSandboxCssTest < Minitest::Test
@@ -20,6 +21,18 @@ class TailwindSandboxCssTest < Minitest::Test
 
     assert_equal 1, content.scan(directive).length, <<~MSG
       test/sandbox/tailwind.css's @import for tokens.css doesn't match what the install
+      generator computes for this path. Regenerate it with:
+        STIMULUS_PLUMBERS_CSS_ENTRY=test/sandbox/tailwind.css bin/rails generate stimulus_plumbers:tailwind:install
+      then commit the diff.
+    MSG
+  end
+
+  def test_sandbox_tailwind_css_has_the_generator_computed_animations_import
+    content = File.read(SANDBOX_CSS)
+    directive = StimulusPlumbers::Tailwind::Generators::AnimationsDirective.directive(from: SANDBOX_CSS_DIR)
+
+    assert_equal 1, content.scan(directive).length, <<~MSG
+      test/sandbox/tailwind.css's @import for animations.css doesn't match what the install
       generator computes for this path. Regenerate it with:
         STIMULUS_PLUMBERS_CSS_ENTRY=test/sandbox/tailwind.css bin/rails generate stimulus_plumbers:tailwind:install
       then commit the diff.

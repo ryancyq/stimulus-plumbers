@@ -205,6 +205,13 @@ module StimulusPlumbers
         popover:           {}.freeze
       }.freeze
 
+      PROGRESS = {
+        progress_bar:      {}.freeze,
+        progress_bar_fill: {}.freeze,
+        progress_ring:     {}.freeze,
+        progress_meter:    {}.freeze
+      }.freeze
+
       TIMELINE = {
         timeline:                          {
           orientation: { default: :vertical, validate: %i[vertical horizontal] }

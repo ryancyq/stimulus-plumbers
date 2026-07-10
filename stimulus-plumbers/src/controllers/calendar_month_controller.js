@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { initCalendar } from '../plumbers';
 import { attachCalendarDaySelector } from '../plumbers/calendar-selector';
 import { tryParseDate } from '../plumbers/plumber/date';
+import { setSelected, setCurrent, setAriaDisabled, setAriaHidden } from '../accessibility/aria';
 
 export default class extends Controller {
   static targets = ['daysOfWeek', 'daysOfMonth'];
@@ -60,7 +61,7 @@ export default class extends Controller {
     if (!this.hasDaysOfMonthTarget) return;
 
     this.daysOfMonthTarget.querySelectorAll('[aria-selected]').forEach((el) => {
-      el.setAttribute('aria-selected', 'false');
+      setSelected(el, false);
     });
 
     if (!this.selectedValue) return;
@@ -69,7 +70,10 @@ export default class extends Controller {
     if (!parsed) return;
 
     const time = this.daysOfMonthTarget.querySelector(`time[datetime="${parsed.toISOString()}"]`);
-    if (time) time.closest('[aria-selected]')?.setAttribute('aria-selected', 'true');
+    if (time) {
+      const cell = time.closest('[aria-selected]');
+      if (cell) setSelected(cell, true);
+    }
   }
 
   navigate(date) {
@@ -105,10 +109,10 @@ export default class extends Controller {
     const element = document.createElement(selectable ? 'button' : 'div');
     element.tabIndex = -1;
     if (day) element.textContent = day;
-    else element.setAttribute('aria-hidden', 'true');
+    else setAriaHidden(element, true);
     if (disabled) {
       if (element instanceof HTMLButtonElement) element.disabled = true;
-      else element.setAttribute('aria-disabled', 'true');
+      else setAriaDisabled(element, true);
     }
     return element;
   }
@@ -149,7 +153,7 @@ export default class extends Controller {
         disabled: date.current ? dayRuleDisabled : !dayOutsideNavigable,
       });
 
-      if (today === date.date.getTime()) dayElement.setAttribute('aria-current', 'date');
+      if (today === date.date.getTime()) setCurrent(dayElement, 'date');
       if (date.current || this.daysOfOtherMonthValue) dayElement.setAttribute('aria-selected', '');
       if (!date.current && this.daysOfOtherMonthValue && this.hasDayOfOtherMonthClass) {
         dayElement.classList.add(...this.dayOfOtherMonthClasses);
