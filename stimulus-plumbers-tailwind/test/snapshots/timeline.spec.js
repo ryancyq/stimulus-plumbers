@@ -40,4 +40,10 @@ test.describe("timeline", () => {
       "grouped-default.png",
     );
   });
+
+  test("grouped horizontal", async ({ page }) => {
+    await expect(page.locator("#timeline-grouped-horizontal")).toHaveScreenshot(
+      "grouped-horizontal.png",
+    );
+  });
 });

@@ -249,7 +249,9 @@ module StimulusPlumbers
         timeline_group:                    {}.freeze,
         timeline_group_section:            {}.freeze,
         timeline_group_section_date:       {}.freeze,
-        timeline_group_section_list:       {}.freeze
+        timeline_group_section_list:       {
+          orientation: { default: :vertical, validate: %i[vertical horizontal] }
+        }.freeze
       }.freeze
     end
   end

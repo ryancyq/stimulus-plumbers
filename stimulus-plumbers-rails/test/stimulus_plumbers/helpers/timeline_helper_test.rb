@@ -411,6 +411,41 @@ class TimelineHelperTest < ActionView::TestCase
     assert_includes times.map(&:text), "February 2025"
   end
 
+  def test_group_horizontal_orientation_threads_to_section_events
+    doc = parse_html(
+      sp_timeline_group(orientation: :horizontal) do |g|
+        g.section(date: "January 2025") do |t|
+          t.event(datetime: "2025-01-15") do |e|
+            e.with_indicator
+            e.with_time { "Jan 15" }
+            e.with_title { "Step one" }
+          end
+        end
+      end
+    )
+
+    assert_empty doc.css("li > time"), "time must not be a direct child of li in horizontal mode"
+    assert_css   doc, "li time"
+  end
+
+  def test_group_default_orientation_stays_vertical
+    doc = parse_html(
+      sp_timeline_group do |g|
+        g.section(date: "January 2025") do |t|
+          t.event(datetime: "2025-01-15") do |e|
+            e.with_time { "Jan 15" }
+            e.with_title { "Step one" }
+          end
+        end
+      end
+    )
+
+    li = doc.css("li").first
+    direct_divs = li.children.select { |n| n.name == "div" }
+
+    assert_equal 1, direct_divs.size, "vertical event without indicator should have a single content wrapper div"
+  end
+
   def test_time_slot_accepts_badge_type_kwarg
     doc = parse_html(
       sp_timeline do |t|

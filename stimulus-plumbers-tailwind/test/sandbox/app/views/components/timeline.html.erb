@@ -93,3 +93,23 @@
     <% end %>
   </div>
 </section>
+
+<section id="timeline-grouped-horizontal" class="sb-section">
+  <h2>Grouped — horizontal</h2>
+  <div class="sb-col">
+    <%= sp_timeline_group(orientation: :horizontal) do |g| %>
+      <% g.section(date: "January 2025", datetime: "2025-01-15") do |t| %>
+        <% t.event(datetime: "2025-01-15") do |e| %>
+          <% e.with_indicator %>
+          <% e.with_time { "Jan 15" } %>
+          <% e.with_title { "Application UI v1.0" } %>
+        <% end %>
+        <% t.event(datetime: "2025-01-20") do |e| %>
+          <% e.with_indicator(icon: "check") %>
+          <% e.with_time { "Jan 20" } %>
+          <% e.with_title { "Bug fixes shipped" } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
