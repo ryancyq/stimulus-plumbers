@@ -98,6 +98,26 @@ class TailwindThemeIconTest < ActionView::TestCase
     assert_includes render_icon(name: "arrow-left", class: "my-icon"), "my-icon"
   end
 
+  # ── size ───────────────────────────────────────────────────────────────────
+
+  def test_defaults_to_large_size
+    assert_includes render_icon(name: "arrow-left"), "size-(--sp-icon-size-lg)"
+  end
+
+  def test_size_sm_renders_only_the_small_token
+    result = render_icon(name: "arrow-left", size: :sm)
+
+    assert_includes result, "size-(--sp-icon-size-sm)"
+    refute_includes result, "size-(--sp-icon-size-lg)"
+  end
+
+  def test_size_md_renders_only_the_medium_token
+    result = render_icon(name: "arrow-left", size: :md)
+
+    assert_includes result, "size-(--sp-icon-size-md)"
+    refute_includes result, "size-(--sp-icon-size-lg)"
+  end
+
   def test_passes_html_options
     assert_includes render_icon(name: "arrow-left", "aria-hidden": "true"), 'aria-hidden="true"'
   end

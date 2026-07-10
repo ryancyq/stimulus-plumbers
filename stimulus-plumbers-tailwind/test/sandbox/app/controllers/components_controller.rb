@@ -41,6 +41,8 @@ class ComponentsController < ApplicationController
 
   def icon; end
 
+  def indicator; end
+
   def popover; end
 
   def progress; end

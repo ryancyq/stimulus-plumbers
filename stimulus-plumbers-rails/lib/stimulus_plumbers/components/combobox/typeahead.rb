@@ -75,6 +75,7 @@ module StimulusPlumbers
           ) do
             Components::Icon.new(template).render(
               name:    "spinner",
+              size:    :md,
               classes: theme.resolve(:combobox_typeahead_loading_icon).fetch(:classes, ""),
               aria:    { hidden: "true" }
             )

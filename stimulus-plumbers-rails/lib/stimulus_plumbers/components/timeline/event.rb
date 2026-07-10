@@ -107,11 +107,12 @@ module StimulusPlumbers
           if type == :icon && icon_name
             Components::Icon.new(template).render(
               name:    icon_name,
+              size:    :sm,
               classes: theme.resolve(:timeline_item_indicator_icon_slot).fetch(:classes, ""),
               aria:    { hidden: "true" }
             )
           else
-            template.content_tag(:span, nil, **merge_html_options(theme.resolve(:timeline_item_indicator_dot)))
+            Components::Indicator.new(template).render(type: :dot, variant: :primary)
           end
         end
 

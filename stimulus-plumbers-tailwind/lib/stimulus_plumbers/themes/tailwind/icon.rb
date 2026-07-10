@@ -25,14 +25,20 @@ module StimulusPlumbers
           aliases: ALIASES
         )
 
+        SIZES = {
+          sm: "size-(--sp-icon-size-sm)",
+          md: "size-(--sp-icon-size-md)",
+          lg: "size-(--sp-icon-size-lg)"
+        }.freeze
+
         def icons
           ICONS
         end
 
         private
 
-        def icon_classes
-          { classes: "size-(--sp-icon-size-lg)" }
+        def icon_classes(size: :lg)
+          { classes: SIZES.fetch(size, SIZES[:lg]) }
         end
       end
     end

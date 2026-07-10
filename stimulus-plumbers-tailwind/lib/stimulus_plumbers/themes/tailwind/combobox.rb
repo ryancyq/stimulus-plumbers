@@ -112,7 +112,7 @@ module StimulusPlumbers
         end
 
         def combobox_typeahead_loading_icon_classes
-          { classes: klasses("size-(--sp-icon-size-md)", "animate-spin") }
+          { classes: klasses("animate-spin") }
         end
 
         def combobox_typeahead_empty_classes

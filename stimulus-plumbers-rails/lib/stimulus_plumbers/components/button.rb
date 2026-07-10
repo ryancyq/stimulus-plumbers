@@ -51,6 +51,7 @@ module StimulusPlumbers
 
           Components::Icon.new(template).render(
             name:    value,
+            size:    :sm,
             classes: theme.resolve(:button_icon).fetch(:classes, ""),
             aria:    { hidden: "true" }
           )

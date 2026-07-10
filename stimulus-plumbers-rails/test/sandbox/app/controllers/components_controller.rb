@@ -48,6 +48,8 @@ class ComponentsController < ApplicationController
 
   def progress; end
 
+  def indicator; end
+
   private
 
   def parse_date(key)

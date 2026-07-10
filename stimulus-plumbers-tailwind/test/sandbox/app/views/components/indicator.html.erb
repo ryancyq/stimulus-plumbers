@@ -1,0 +1,24 @@
+<h1>Indicator components</h1>
+
+<section id="indicator-dot" class="sb-section">
+  <h2>Dot</h2>
+  <div class="sb-row">
+    <span><%= sp_indicator(variant: :success) %><span class="sr-only">Online</span></span>
+    <span><%= sp_indicator(variant: :warning) %><span class="sr-only">Away</span></span>
+    <span><%= sp_indicator(variant: :destructive) %><span class="sr-only">Offline</span></span>
+  </div>
+</section>
+
+<section id="indicator-pulse" class="sb-section">
+  <h2>Pulse</h2>
+  <div class="sb-row">
+    <span><%= sp_indicator(type: :pulse, variant: :destructive, pulse: true) %><span class="sr-only">Live</span></span>
+  </div>
+</section>
+
+<section id="indicator-badge" class="sb-section">
+  <h2>Badge</h2>
+  <div class="sb-row">
+    <span><%= sp_indicator(type: :badge, variant: :primary) { "5" } %><span class="sr-only">5 unread notifications</span></span>
+  </div>
+</section>

@@ -7,9 +7,9 @@ module StimulusPlumbers
         value.is_a?(Symbol) || (value.is_a?(String) && !value.html_safe?)
       end
 
-      def render(name:, **kwargs)
+      def render(name:, size: :lg, **kwargs)
         html_options = merge_html_options(
-          theme.resolve(:icon),
+          theme.resolve(:icon, size: size),
           kwargs
         )
 

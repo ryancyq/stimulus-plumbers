@@ -16,6 +16,7 @@ module StimulusPlumbers
         **Schema::COMBOBOX,
         **Schema::FORM,
         **Schema::ICON,
+        **Schema::INDICATOR,
         **Schema::INPUT_GROUP,
         **Schema::LAYOUT,
         **Schema::LINK,

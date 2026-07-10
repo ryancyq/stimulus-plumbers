@@ -13,6 +13,7 @@ require_relative "tailwind/form"
 require_relative "tailwind/form/field"
 require_relative "tailwind/form/input"
 require_relative "tailwind/icon"
+require_relative "tailwind/indicator"
 require_relative "tailwind/layout"
 require_relative "tailwind/link"
 require_relative "tailwind/progress"
@@ -33,6 +34,7 @@ module StimulusPlumbers
       include Tailwind::Form::Field
       include Tailwind::Form::Input
       include Tailwind::Icon
+      include Tailwind::Indicator
       include Tailwind::Layout
       include Tailwind::Link
       include Tailwind::Progress

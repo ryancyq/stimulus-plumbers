@@ -5,6 +5,7 @@ require_relative "schema/ranges"
 require_relative "schema/avatar/ranges"
 require_relative "schema/button/ranges"
 require_relative "schema/card/ranges"
+require_relative "schema/indicator/ranges"
 require_relative "schema/link/ranges"
 require_relative "schema/form/ranges"
 require_relative "schema/form/checkbox/ranges"
@@ -178,7 +179,16 @@ module StimulusPlumbers
       }.freeze
 
       ICON = {
-        icon: {}.freeze
+        icon: { size: { default: :lg, validate: %i[sm md lg] } }.freeze
+      }.freeze
+
+      INDICATOR = {
+        indicator:         {
+          type:    { default: :dot,     validate: Indicator::Ranges::TYPE },
+          variant: { default: :primary, validate: Indicator::Ranges::VARIANT }
+        }.freeze,
+        indicator_wrapper: {}.freeze,
+        indicator_pulse:   {}.freeze
       }.freeze
 
       INPUT_GROUP = {
@@ -232,7 +242,6 @@ module StimulusPlumbers
         timeline_item_description:         {}.freeze,
         timeline_item_detail:              {}.freeze,
         timeline_item_actions:             {}.freeze,
-        timeline_item_indicator_dot:       {}.freeze,
         timeline_item_connector:           {}.freeze,
         timeline_item_content:             {}.freeze,
         timeline_track_line:               {}.freeze,

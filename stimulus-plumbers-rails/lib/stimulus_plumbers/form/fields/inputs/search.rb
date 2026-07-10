@@ -83,6 +83,7 @@ module StimulusPlumbers
             build_clear_button do
               Components::Icon.new(@template).render(
                 name: "close",
+                size: :sm,
                 aria: { hidden: "true" },
                 **theme.resolve(:button_icon)
               )

@@ -17,6 +17,7 @@ require_relative "stimulus_plumbers/plumber/base"
 
 # -- UI components --
 require_relative "stimulus_plumbers/components/icon"
+require_relative "stimulus_plumbers/components/indicator"
 require_relative "stimulus_plumbers/components/avatar"
 require_relative "stimulus_plumbers/components/button"
 require_relative "stimulus_plumbers/components/button/slots"

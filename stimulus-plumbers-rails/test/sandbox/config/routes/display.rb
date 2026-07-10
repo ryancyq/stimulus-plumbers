@@ -7,4 +7,5 @@ scope "/display", controller: "components" do
   get :icon
   get :timeline
   get :progress
+  get :indicator
 end

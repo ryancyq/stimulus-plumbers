@@ -26,7 +26,7 @@ module StimulusPlumbers
         ].freeze
 
         ICON_BASE = %w[
-          size-(--sp-space-6) shrink-0 stroke-current text-(--sp-color-muted-fg)
+          shrink-0 stroke-current text-(--sp-color-muted-fg)
         ].freeze
 
         TITLE_BASE = %w[
