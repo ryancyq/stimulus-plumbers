@@ -1,0 +1,24 @@
+<h1>Indicator components</h1>
+
+<div id="indicator-paired">
+  <%# ── Correct usage: paired with a visible/sr-only label ──────────────── %>
+  <span>
+    <%= sp_indicator(variant: :success) %>
+    <span class="sr-only">Online</span>
+  </span>
+
+  <span>
+    <%= sp_indicator(type: :pulse, variant: :destructive, pulse: true) %>
+    <span class="sr-only">Live</span>
+  </span>
+
+  <span>
+    <%= sp_indicator(type: :badge, variant: :primary) { "5" } %>
+    <span class="sr-only">5 unread notifications</span>
+  </span>
+</div>
+
+<div id="indicator-unpaired">
+  <%# ── Regression guard: role: "img" added for axe detectability (role-less span won't flag missing name) — indicator_accessibility_test.rb ──────────── %>
+  <%= sp_indicator(variant: :success, role: "img") %>
+</div>

@@ -91,10 +91,9 @@ class TailwindThemeCardTest < Minitest::Test
 
   # ── card_icon ───────────────────────────────────────────────────────────────
 
-  def test_card_icon_includes_size_and_stroke
+  def test_card_icon_includes_stroke_and_shrink
     result = classes_for(:card_icon)
 
-    assert_includes result, "size-(--sp-space-6)"
     assert_includes result, "stroke-current"
     assert_includes result, "shrink-0"
   end

@@ -17,7 +17,7 @@ module StimulusPlumbers
 
         HANDLE_BASE = %w[
           flex items-center justify-center shrink-0
-          size-(--sp-icon-size-sm) stroke-current
+          stroke-current
           text-(--sp-color-muted-fg)
           cursor-grab active:cursor-grabbing
           touch-none

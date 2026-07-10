@@ -18,7 +18,6 @@ module StimulusPlumbers
           mt-1 flex shrink-0 size-6 items-center justify-center rounded-full z-10
           bg-(--sp-color-bg) ring-4 ring-(--sp-color-bg)
         ].freeze
-        ITEM_INDICATOR_DOT_MARK = %w[size-3 rounded-full bg-(--sp-color-indicator)].freeze
 
         ITEM_INDICATOR_ICON = %w[
           mt-1 flex shrink-0 size-6 items-center justify-center rounded-full z-10
@@ -26,7 +25,7 @@ module StimulusPlumbers
           ring-4 ring-(--sp-color-bg)
         ].freeze
 
-        ITEM_INDICATOR_ICON_SLOT = %w[size-(--sp-icon-size-sm) stroke-current].freeze
+        ITEM_INDICATOR_ICON_SLOT = %w[stroke-current].freeze
 
         ITEM_INDICATOR_DOT_HORIZONTAL = %w[
           z-10 flex shrink-0 size-6 items-center justify-center rounded-full
@@ -93,7 +92,6 @@ module StimulusPlumbers
         def timeline_item_description_classes = { classes: klasses(ITEM_DESCRIPTION) }
         def timeline_item_detail_classes      = { classes: klasses(ITEM_DETAIL) }
         def timeline_item_actions_classes     = { classes: klasses(ITEM_ACTIONS) }
-        def timeline_item_indicator_dot_classes = { classes: klasses(ITEM_INDICATOR_DOT_MARK) }
         def timeline_item_connector_classes       = { classes: klasses(ITEM_CONNECTOR_HORIZONTAL) }
         def timeline_item_content_classes         = { classes: klasses(ITEM_CONTENT_HORIZONTAL) }
         def timeline_track_line_classes                = { classes: klasses(TRACK_LINE_VERTICAL) }

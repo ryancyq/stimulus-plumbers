@@ -86,6 +86,7 @@ module StimulusPlumbers
 
             Components::Icon.new(template).render(
               name:    value,
+              size:    :sm,
               classes: theme.resolve(:ordered_list_item_handle).fetch(:classes, ""),
               aria:    { hidden: "true" }
             )
@@ -95,6 +96,7 @@ module StimulusPlumbers
         def default_handle_icon
           Components::Icon.new(template).render(
             name:    "grip-vertical",
+            size:    :sm,
             classes: theme.resolve(:ordered_list_item_handle).fetch(:classes, ""),
             aria:    { hidden: "true" }
           )

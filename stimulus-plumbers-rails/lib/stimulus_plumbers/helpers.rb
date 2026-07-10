@@ -2,6 +2,7 @@
 
 require_relative "helpers/plumber_helper"
 require_relative "helpers/icon_helper"
+require_relative "helpers/indicator_helper"
 require_relative "helpers/list_helper"
 require_relative "helpers/ordered_list_helper"
 require_relative "helpers/avatar_helper"
@@ -20,6 +21,7 @@ module StimulusPlumbers
   module Helpers
     include PlumberHelper
     include IconHelper
+    include IndicatorHelper
     include ListHelper
     include OrderedListHelper
     include AvatarHelper

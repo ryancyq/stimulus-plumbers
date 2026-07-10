@@ -63,14 +63,6 @@ class TailwindThemeTimelineTest < Minitest::Test
     refute_includes result, "bg-(--sp-color-primary)"
   end
 
-  def test_dot_indicator_fill_uses_dedicated_color_token
-    result = classes_for(:timeline_item_indicator_dot)
-
-    assert_includes result, "rounded-full"
-    assert_includes result, "bg-(--sp-color-indicator)"
-    refute_includes result, "bg-(--sp-color-primary)"
-  end
-
   def test_icon_indicator_uses_primary_brand_background
     result = classes_for(:timeline_item_indicator, type: :icon)
 
@@ -235,10 +227,9 @@ class TailwindThemeTimelineTest < Minitest::Test
     assert_includes result, "bg-(--sp-color-border)"
   end
 
-  def test_indicator_icon_slot_uses_sm_icon_size
+  def test_indicator_icon_slot_uses_stroke_current
     result = classes_for(:timeline_item_indicator_icon_slot)
 
-    assert_includes result, "size-(--sp-icon-size-sm)"
     assert_includes result, "stroke-current"
   end
 end

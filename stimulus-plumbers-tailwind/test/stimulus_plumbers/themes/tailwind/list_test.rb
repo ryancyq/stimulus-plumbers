@@ -102,10 +102,9 @@ class TailwindThemeListTest < Minitest::Test
     assert_includes result, "text-(length:--sp-text-xs)"
   end
 
-  def test_list_item_icon_includes_size_and_stroke
+  def test_list_item_icon_includes_stroke_current
     result = classes_for(:list_item_icon)
 
-    assert_includes result, "size-(--sp-icon-size-sm)"
     assert_includes result, "stroke-current"
   end
 end

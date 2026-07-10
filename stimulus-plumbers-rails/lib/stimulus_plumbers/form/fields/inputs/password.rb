@@ -51,6 +51,7 @@ module StimulusPlumbers
             build_reveal_button do
               Components::Icon.new(@template).render(
                 name: "reveal",
+                size: :sm,
                 aria: { hidden: "true" },
                 **theme.resolve(:button_icon)
               )
