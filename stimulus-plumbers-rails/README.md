@@ -65,11 +65,13 @@ The import stays current automatically after that — the engine hooks `stimulus
 | Combobox — time | `sp_combobox_time` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_time) |
 | Divider | `sp_divider` | [docs/component/divider.md](docs/component/divider.md) |
 | Icon | `sp_icon` | [docs/component/icon.md](docs/component/icon.md) |
+| Indicator | `sp_indicator` | [docs/component/indicator.md](docs/component/indicator.md) |
 | Link | `sp_link` | [docs/component/link.md](docs/component/link.md) |
 | List | `sp_list` | [docs/component/list.md](docs/component/list.md) |
 | Modal | — (JS only) | [docs/component/modal.md](docs/component/modal.md) |
 | OrderedList | `sp_ordered_list` | [docs/component/ordered_list.md](docs/component/ordered_list.md) |
 | Popover | `sp_popover` | [docs/component/popover.md](docs/component/popover.md) |
+| Progress | `sp_progress_bar`, `sp_progress_ring`, `sp_progress_meter` | [docs/component/progress.md](docs/component/progress.md) |
 | Timeline | `sp_timeline`, `sp_timeline_group` | [docs/component/timeline.md](docs/component/timeline.md) |
 
 ## Form Builder

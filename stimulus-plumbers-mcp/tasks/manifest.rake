@@ -12,8 +12,16 @@ namespace :manifest do
     rails_dir = File.join(root, "stimulus-plumbers-rails")
     rails_manifest = File.join(rails_dir, "vendor/component/manifest.json")
     sh "bundle exec rake build:manifest", chdir: rails_dir unless File.exist?(rails_manifest)
+
+    # No rails rake task builds this; mirrors bin/release's copy.
+    rails_controller_vendor = File.join(rails_dir, "vendor/controller")
+    rails_controller_manifest = File.join(rails_controller_vendor, "manifest.json")
+    unless File.exist?(rails_controller_manifest)
+      sh "mkdir -p #{rails_controller_vendor}"
+      sh "cp #{js_manifest} #{rails_controller_manifest}"
+    end
   end
 end
 
-task test: %w[manifest:ensure]
+task "test:unit" => %w[manifest:ensure]
 task "coverage:run" => %w[manifest:ensure]
