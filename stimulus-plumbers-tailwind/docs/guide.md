@@ -3,8 +3,9 @@
 Adding this gem registers and activates the Tailwind theme automatically in Rails — no config
 needed. Outside Rails, activate it explicitly with `config.theme.use(:tailwind)`.
 
-Run the install generator once to wire the required `@source` directive into your Tailwind CSS
-entry file:
+Run the install generator once to wire the required `@source` directive and the `animations.css`
+import (registers the indeterminate progress bar's slide keyframe via `@theme`) into your Tailwind
+CSS entry file:
 
 ```bash
 bin/rails generate stimulus_plumbers:tailwind:install

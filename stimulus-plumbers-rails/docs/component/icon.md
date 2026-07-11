@@ -10,12 +10,14 @@ Rails helper for rendering a named icon from the active theme's icon registry.
 <%= sp_icon name: "check" %>
 <%= sp_icon name: "spinner", aria: { label: "Loading" }, role: "img" %>
 <%= sp_icon name: "unknown-icon" %>
+<%= sp_icon name: "check", size: :sm %>
 ```
 
-| Option           | Default    | Description                                 |
-| ---------------- | ---------- | ------------------------------------------- |
-| `name`           | (required) | Icon name — looked up in the theme registry |
-| `**html_options` | —          | Forwarded to the root element               |
+| Option           | Default    | Description                                         |
+| ---------------- | ---------- | --------------------------------------------------- |
+| `name`           | (required) | Icon name — looked up in the theme registry         |
+| `size`           | `:lg`      | `:sm` \| `:md` \| `:lg` — theme-resolved size class |
+| `**html_options` | —          | Forwarded to the root element                       |
 
 ---
 

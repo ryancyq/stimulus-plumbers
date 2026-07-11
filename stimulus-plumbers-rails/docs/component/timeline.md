@@ -80,9 +80,10 @@ Groups events under dated sections, each with its own `<ol>` — for timelines b
 <% end %>
 ```
 
-| Option           | Default | Description                    |
-| ---------------- | ------- | ------------------------------ |
-| `**html_options` | —       | Forwarded to the outer `<div>` |
+| Option           | Default     | Description                                                               |
+| ---------------- | ----------- | ------------------------------------------------------------------------- |
+| `orientation:`   | `:vertical` | Layout direction for each section's events — `:vertical` \| `:horizontal` |
+| `**html_options` | —           | Forwarded to the outer `<div>`                                            |
 
 `g.section` options:
 
@@ -92,7 +93,7 @@ Groups events under dated sections, each with its own `<ol>` — for timelines b
 | `datetime:`      | `nil`   | Renders `<time datetime="...">` when set           |
 | `**html_options` | —       | Forwarded to the section's outer `<div>`           |
 
-Each `g.section` block yields a `t` scoped to that section (same `t.event` API as `sp_timeline`, always vertical/non-interactive).
+Each `g.section` block yields a `t` scoped to that section (same `t.event` API as `sp_timeline`, non-interactive, orientation inherited from `sp_timeline_group`'s `orientation:`).
 
 ---
 
@@ -160,7 +161,7 @@ Each `g.section` block yields a `t` scoped to that section (same `t.event` API a
 | `timeline_group`              | `sp_timeline_group` outer `<div>`  | —                     |
 | `timeline_group_section`      | `g.section` outer `<div>`          | —                     |
 | `timeline_group_section_date` | Section `<time>`                   | —                     |
-| `timeline_group_section_list` | Section `<ol>`                     | —                     |
+| `timeline_group_section_list` | Section `<ol>`                     | `orientation:`        |
 
 ---
 

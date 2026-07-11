@@ -19,7 +19,7 @@ class ControllerDocsLoaderTest < Minitest::Test
       calendar clipboard combobox
       dismisser flipper
       input-clearable input-formatter
-      modal panner popover
+      modal panner popover progress
       reorderable timeline visibility
     ].map(&:to_s).map(&:to_sym)
 

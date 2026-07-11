@@ -40,6 +40,7 @@ import {
   CalendarDecadeSelectorController,
   ModalController,
   PopoverController,
+  ProgressController,
   DismisserController,
   FlipperController,
   ClipboardController,
@@ -65,6 +66,7 @@ application.register('calendar-decade',           CalendarDecadeController)
 application.register('calendar-decade-selector',  CalendarDecadeSelectorController)
 application.register('modal',                    ModalController)
 application.register('popover',                  PopoverController)
+application.register('progress',                 ProgressController)
 application.register('dismisser',                DismisserController)
 application.register('flipper',                  FlipperController)
 application.register('clipboard',                ClipboardController)
@@ -92,6 +94,7 @@ application.register('visibility',               VisibilityController)
 | `calendar-decade-selector` | SSR/Turbo thin selector for server-rendered decade grids | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade-selector) |
 | `modal` | Native `<dialog>` or custom overlay | [docs/component/modal.md](docs/component/modal.md) |
 | `popover` | Show/hide content with optional remote load | [docs/component/popover.md](docs/component/popover.md) |
+| `progress` | Value-driven progress bar/ring/meter | [docs/component/progress.md](docs/component/progress.md) |
 | `dismisser` | Click-outside dismissal | [docs/component/dismisser.md](docs/component/dismisser.md) |
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
 | `clipboard` | Copy-to-clipboard and paste interception | [docs/component/clipboard.md](docs/component/clipboard.md) |

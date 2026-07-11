@@ -33,7 +33,7 @@ StimulusPlumbers.configure do |config|
 end
 ```
 
-Run the install generator once to inject the required `@source` directive (and the `stimulus_plumbers` tokens.css import) into your Tailwind CSS entry file — see [docs/guide.md](docs/guide.md) for file-detection/override details:
+Run the install generator once to inject the required `@source` directive (and the `stimulus_plumbers` tokens.css + `animations.css` imports) into your Tailwind CSS entry file — see [docs/guide.md](docs/guide.md) for file-detection/override details:
 
 ```bash
 bin/rails generate stimulus_plumbers:tailwind:install
@@ -63,10 +63,12 @@ bin/rails stimulus_plumbers:tailwind:install
 | `Tailwind::Combobox` | Combobox (date, time, dropdown, typeahead) |
 | `Tailwind::Form` | Form fields, labels, errors |
 | `Tailwind::Icon` | Icon (SVG rendering, icon registry) |
+| `Tailwind::Indicator` | Indicator (dot, pulse, badge) |
 | `Tailwind::Layout` | Layout primitives |
 | `Tailwind::Link` | Link |
 | `Tailwind::List` | List |
 | `Tailwind::OrderedList` | Reorderable list (drag handle, item styling) |
+| `Tailwind::Progress` | Progress bar, progress ring, meter |
 | `Tailwind::Timeline` | Timeline |
 
 Custom themes can subclass `TailwindTheme` to override individual methods, or subclass `StimulusPlumbers::Themes::Base` directly.
