@@ -396,7 +396,7 @@ class TailwindThemeFormInputTest < Minitest::Test
   def test_input_group_floating_excludes_non_floating_border
     result = classes_for(:input_group, floating: :outlined)
 
-    refute_includes result, "border-(--sp-color-muted-fg)\nborder" # no INPUT_GROUP_BASE mixed in
+    refute_includes result, "border-(--sp-color-muted-fg)\nborder" # no INPUT_GROUP mixed in
     assert_includes result, "peer"
   end
 end

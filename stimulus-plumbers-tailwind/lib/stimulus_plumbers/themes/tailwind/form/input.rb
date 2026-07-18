@@ -6,7 +6,7 @@ module StimulusPlumbers
       module Form
         module Input
           # ── Standalone input ──────────────────────────────────────────────────
-          INPUT_BASE = %w[
+          INPUT = %w[
             w-full rounded-(--sp-radius-md) border px-(--sp-space-3) py-(--sp-space-2)
             text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
             focus:outline-none focus:ring-(length:--sp-focus-ring-width) focus:ring-offset-0
@@ -18,7 +18,7 @@ module StimulusPlumbers
           INPUT_ERROR = %w[border-(--sp-color-error) focus:ring-(--sp-color-error)].freeze
 
           # ── Floating input ────────────────────────────────────────────────────
-          FLOATING_INPUT_BASE = %w[
+          FLOATING_INPUT = %w[
             peer w-full text-(length:--sp-text-sm) text-(--sp-color-fg) appearance-none
             focus:outline-none focus:ring-0
             focus-visible:outline-none focus-visible:ring-0
@@ -44,11 +44,11 @@ module StimulusPlumbers
           FLOATING_INPUT_ERROR = %w[border-(--sp-color-error)].freeze
 
           # ── Input group ───────────────────────────────────────────────────────
-          INPUT_GROUP_BASE   = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
+          INPUT_GROUP        = %w[flex items-center overflow-hidden rounded-(--sp-radius-md) border].freeze
           INPUT_GROUP_BORDER = { error: "border-(--sp-color-error)", default: "border-(--sp-color-muted-fg)" }.freeze
 
           # ── Floating input group ──────────────────────────────────────────────
-          FLOATING_INPUT_GROUP_BASE = %w[flex items-center overflow-hidden peer].freeze
+          FLOATING_INPUT_GROUP = %w[flex items-center overflow-hidden peer].freeze
           FLOATING_INPUT_GROUP_TYPES = {
             filled:   %w[rounded-t-(--sp-radius-md) bg-(--sp-color-bg-muted) border-0 border-b-2].freeze,
             outlined: %w[rounded-(--sp-radius-md) border].freeze,
@@ -136,13 +136,13 @@ module StimulusPlumbers
           def form_field_input_classes(floating: nil, error: false)
             if floating
               { classes: klasses(
-                *FLOATING_INPUT_BASE,
+                *FLOATING_INPUT,
                 *FLOATING_INPUT_TYPES.fetch(floating, []),
                 *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT)
               )
 }
             else
-              { classes: klasses(*INPUT_BASE, *(error ? INPUT_ERROR : INPUT_DEFAULT)) }
+              { classes: klasses(*INPUT, *(error ? INPUT_ERROR : INPUT_DEFAULT)) }
             end
           end
 
@@ -171,9 +171,9 @@ module StimulusPlumbers
           def input_group_classes(error: false, floating: nil)
             if floating
               color = error ? FLOATING_INPUT_GROUP_ERROR : FLOATING_INPUT_GROUP_DEFAULT
-              { classes: klasses(*FLOATING_INPUT_GROUP_BASE, *FLOATING_INPUT_GROUP_TYPES.fetch(floating, []), *color) }
+              { classes: klasses(*FLOATING_INPUT_GROUP, *FLOATING_INPUT_GROUP_TYPES.fetch(floating, []), *color) }
             else
-              { classes: klasses(*INPUT_GROUP_BASE, INPUT_GROUP_BORDER[error ? :error : :default]) }
+              { classes: klasses(*INPUT_GROUP, INPUT_GROUP_BORDER[error ? :error : :default]) }
             end
           end
 
@@ -183,7 +183,7 @@ module StimulusPlumbers
             else
               {
                 classes: klasses(
-                  *INPUT_BASE,
+                  *INPUT,
                   *(error ? INPUT_ERROR : INPUT_DEFAULT),
                   *COMBOBOX_INPUT,
                   *COMBOBOX_TRIGGER_GROUP
@@ -195,7 +195,7 @@ module StimulusPlumbers
           def form_field_input_combobox_floating_classes(floating: :standard, error: false)
             {
               classes: klasses(
-                *FLOATING_INPUT_BASE,
+                *FLOATING_INPUT,
                 *FLOATING_INPUT_TYPES.fetch(floating, []),
                 *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT),
                 *COMBOBOX_INPUT,

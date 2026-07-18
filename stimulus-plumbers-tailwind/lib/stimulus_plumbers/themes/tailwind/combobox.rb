@@ -32,7 +32,7 @@ module StimulusPlumbers
           py-(--sp-space-1) overflow-y-auto max-h-60 min-h-(--sp-space-6)
         ].freeze
 
-        OPTION_BASE = %w[
+        OPTION = %w[
           flex items-center gap-(--sp-space-2) w-full
           px-(--sp-space-2) py-(--sp-space-1)
           rounded-(--sp-radius-sm) text-(length:--sp-text-sm)
@@ -96,7 +96,7 @@ module StimulusPlumbers
         def combobox_option_classes(selected: false, disabled: false)
           {
             classes: klasses(
-              *OPTION_BASE,
+              *OPTION,
               *(selected ? OPTION_SELECTED : []),
               *(disabled ? OPTION_DISABLED : [])
             )

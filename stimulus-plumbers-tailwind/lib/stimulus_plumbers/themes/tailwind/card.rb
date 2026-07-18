@@ -20,24 +20,24 @@ module StimulusPlumbers
           info:        %w[[--card-ring:var(--sp-color-info)]].freeze
         }.freeze
 
-        HEADER_BASE = %w[
+        HEADER = %w[
           flex items-center gap-(--sp-space-3)
           px-(--sp-space-6) py-(--sp-space-6)
         ].freeze
 
-        ICON_BASE = %w[
+        ICON = %w[
           shrink-0 stroke-current text-(--sp-color-muted-fg)
         ].freeze
 
-        TITLE_BASE = %w[
+        TITLE = %w[
           text-(length:--sp-text-base) font-semibold text-(--sp-color-fg)
         ].freeze
 
-        BODY_BASE = %w[
+        BODY = %w[
           px-(--sp-space-6) py-(--sp-space-3)
         ].freeze
 
-        ACTION_BASE = %w[w-full justify-start].freeze
+        ACTION = %w[w-full justify-start].freeze
 
         private
 
@@ -45,11 +45,11 @@ module StimulusPlumbers
           { classes: klasses(*VARIANTS.fetch(variant, VARIANTS[:tertiary]), *BASE) }
         end
 
-        def card_header_classes  = { classes: klasses(*HEADER_BASE) }
-        def card_icon_classes    = { classes: klasses(*ICON_BASE) }
-        def card_title_classes   = { classes: klasses(*TITLE_BASE) }
-        def card_body_classes    = { classes: klasses(*BODY_BASE) }
-        def card_action_classes  = { classes: klasses(*ACTION_BASE) }
+        def card_header_classes  = { classes: klasses(*HEADER) }
+        def card_icon_classes    = { classes: klasses(*ICON) }
+        def card_title_classes   = { classes: klasses(*TITLE) }
+        def card_body_classes    = { classes: klasses(*BODY) }
+        def card_action_classes  = { classes: klasses(*ACTION) }
       end
     end
   end
