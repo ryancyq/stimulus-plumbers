@@ -9,7 +9,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
     calendar-year calendar-year-selector
     combobox-date combobox-time combobox-dropdown
     input-clearable input-combobox input-formatter
-    clipboard reorderable progress timeline dismisser flipper
+    checklist clipboard reorderable progress timeline dismisser flipper
     modal panner popover visibility
   ].freeze
 

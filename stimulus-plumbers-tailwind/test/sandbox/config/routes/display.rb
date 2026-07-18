@@ -8,4 +8,5 @@ scope "/display", controller: "components" do
   get :indicator
   get :progress
   get :timeline
+  get :checklist
 end

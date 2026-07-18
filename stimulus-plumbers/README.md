@@ -38,6 +38,7 @@ import {
   CalendarYearSelectorController,
   CalendarDecadeController,
   CalendarDecadeSelectorController,
+  ChecklistController,
   ModalController,
   PopoverController,
   ProgressController,
@@ -64,6 +65,7 @@ application.register('calendar-year',             CalendarYearController)
 application.register('calendar-year-selector',    CalendarYearSelectorController)
 application.register('calendar-decade',           CalendarDecadeController)
 application.register('calendar-decade-selector',  CalendarDecadeSelectorController)
+application.register('checklist',                ChecklistController)
 application.register('modal',                    ModalController)
 application.register('popover',                  PopoverController)
 application.register('progress',                 ProgressController)
@@ -92,6 +94,7 @@ application.register('visibility',               VisibilityController)
 | `calendar-year-selector` | SSR/Turbo thin selector for server-rendered year grids | [docs/component/calendar.md](docs/component/calendar.md#calendar-year-selector) |
 | `calendar-decade` | Calendar decade grid — renders year buttons, dispatches selection events | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade) |
 | `calendar-decade-selector` | SSR/Turbo thin selector for server-rendered decade grids | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade-selector) |
+| `checklist` | Master "select all" toggle for native checkbox items | [docs/component/checklist.md](docs/component/checklist.md) |
 | `modal` | Native `<dialog>` or custom overlay | [docs/component/modal.md](docs/component/modal.md) |
 | `popover` | Show/hide content with optional remote load | [docs/component/popover.md](docs/component/popover.md) |
 | `progress` | Value-driven progress bar/ring/meter | [docs/component/progress.md](docs/component/progress.md) |

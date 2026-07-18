@@ -80,21 +80,24 @@ module StimulusPlumbers
 
           # ── Choice inputs ─────────────────────────────────────────────────────
           CHECKBOX_TYPES = {
-            default: %w[
-              size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
-              border border-(--sp-color-border) bg-(--sp-color-muted)
-              focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none
-              disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+            default: [
+              *Control::ACCENT,
+              "size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0",
+              "border border-(--sp-color-border) bg-(--sp-color-muted)",
+              "focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none",
+              "disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             ].freeze,
-            button:  %w[
-              size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
-              border border-(--sp-color-border) bg-(--sp-color-muted)
-              focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none
-              disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
+            button:  [
+              *Control::ACCENT,
+              "size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0",
+              "border border-(--sp-color-border) bg-(--sp-color-muted)",
+              "focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none",
+              "disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             ].freeze,
             card:    %w[
               size-(--sp-control-size) rounded-(--sp-radius-sm) shrink-0
               border border-(--sp-color-border) bg-(--sp-color-muted)
+              [accent-color:var(--card-ring)] cursor-pointer
               checked:border-(--card-ring)
               focus:ring-(length:--sp-focus-ring-width) focus:ring-(--card-ring) focus:outline-none
               disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
@@ -102,11 +105,11 @@ module StimulusPlumbers
           }.freeze
 
           RADIO_TYPES = {
-            default: %w[
-              size-(--sp-control-size) rounded-full shrink-0
-              [accent-color:var(--sp-color-primary)] cursor-pointer
-              focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none
-              disabled:opacity-50 disabled:cursor-not-allowed
+            default: [
+              *Control::ACCENT,
+              "size-(--sp-control-size) rounded-full shrink-0",
+              "focus:ring-(length:--sp-focus-ring-width) focus:ring-(--sp-focus-ring-color) focus:outline-none",
+              "disabled:opacity-50 disabled:cursor-not-allowed"
             ].freeze,
             button:  %w[hidden].freeze,
             card:    %w[hidden].freeze

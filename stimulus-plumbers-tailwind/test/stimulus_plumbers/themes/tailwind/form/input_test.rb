@@ -105,6 +105,7 @@ class TailwindThemeFormInputTest < Minitest::Test
     assert_includes result, "border"
     assert_includes result, "border-(--sp-color-border)"
     assert_includes result, "bg-(--sp-color-muted)"
+    assert_includes result, "[accent-color:var(--sp-color-primary)]"
     assert_includes result, "focus:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "focus:ring-(--sp-focus-ring-color)"
     assert_includes result, "focus:outline-none"
@@ -117,6 +118,7 @@ class TailwindThemeFormInputTest < Minitest::Test
 
     assert_includes result, "size-(--sp-control-size)"
     assert_includes result, "shrink-0"
+    assert_includes result, "[accent-color:var(--sp-color-primary)]"
     refute_includes result, "mt-(--sp-space-4)"
   end
 
@@ -134,6 +136,7 @@ class TailwindThemeFormInputTest < Minitest::Test
 
     assert_includes result, "checked:border-(--card-ring)"
     assert_includes result, "focus:ring-(--card-ring)"
+    assert_includes result, "[accent-color:var(--card-ring)]"
     assert_includes result, "[--card-ring:var(--sp-color-muted-fg)]"
     refute_includes result, "focus:ring-(--sp-focus-ring-color)"
   end

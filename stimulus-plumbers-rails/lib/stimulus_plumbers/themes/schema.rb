@@ -28,6 +28,15 @@ module StimulusPlumbers
         list_item_description:    {}.freeze
       }.freeze
 
+      CHECKLIST = {
+        checklist:                  {}.freeze,
+        checklist_item:             {}.freeze,
+        checklist_item_input:       {}.freeze,
+        checklist_item_content:     {}.freeze,
+        checklist_item_title:       {}.freeze,
+        checklist_item_description: {}.freeze
+      }.freeze
+
       ORDERED_LIST = {
         ordered_list:                  {}.freeze,
         ordered_list_item:             {}.freeze,

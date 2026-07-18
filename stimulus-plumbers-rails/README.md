@@ -59,6 +59,7 @@ The import stays current automatically after that — the engine hooks `stimulus
 | Calendar | `sp_calendar_month` | [docs/component/calendar.md](docs/component/calendar.md) |
 | Calendar (Turbo) | `sp_calendar_turbo`, `sp_calendar_turbo_month`, `sp_calendar_turbo_year`, `sp_calendar_turbo_decade` | [docs/component/calendar.md](docs/component/calendar.md) |
 | Card | `sp_card` | [docs/component/card.md](docs/component/card.md) |
+| Checklist | `sp_checklist` | [docs/component/checklist.md](docs/component/checklist.md) |
 | Combobox — date | `sp_combobox_date` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_date) |
 | Combobox — dropdown | `sp_combobox_dropdown` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_dropdown) |
 | Combobox — typeahead | `sp_combobox_typeahead` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_typeahead) |

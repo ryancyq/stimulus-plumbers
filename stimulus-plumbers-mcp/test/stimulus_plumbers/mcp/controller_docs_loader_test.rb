@@ -16,7 +16,7 @@ class ControllerDocsLoaderTest < Minitest::Test
 
   def test_covers_all_known_controller_doc_families
     expected = %i[
-      calendar clipboard combobox
+      calendar checklist clipboard combobox
       dismisser flipper
       input-clearable input-formatter
       modal panner popover progress
