@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.9](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.8..stimulus-plumbers-tailwind/v0.4.9) - 2026-07-18
+
+### Bug Fixes
+
+- css source + token in generator ([#163](https://github.com/ryancyq/stimulus-plumbers/issues/163)) - ([69165f5](https://github.com/ryancyq/stimulus-plumbers/commit/69165f523242e27cae5075f635c7e66c40a862ab)) - Ryan Chang
+
+### Documentation
+
+- update missing documentation ([#164](https://github.com/ryancyq/stimulus-plumbers/issues/164)) - ([edcd79d](https://github.com/ryancyq/stimulus-plumbers/commit/edcd79df3dd1739521641274863a50a32b5fcb36)) - Ryan Chang
+- align code example/instructions in doc and remove stale reference ([#167](https://github.com/ryancyq/stimulus-plumbers/issues/167)) - ([b1ace4d](https://github.com/ryancyq/stimulus-plumbers/commit/b1ace4da5117b70f4f22403f727655c1586606e1)) - Ryan Chang
+- update component documentation ([#173](https://github.com/ryancyq/stimulus-plumbers/issues/173)) - ([27240bc](https://github.com/ryancyq/stimulus-plumbers/commit/27240bc85265b249adba5186fd34b9c26423daa3)) - Ryan Chang
+
+### Features
+
+- ordered list ([#166](https://github.com/ryancyq/stimulus-plumbers/issues/166)) - ([cda05b5](https://github.com/ryancyq/stimulus-plumbers/commit/cda05b589e2f99ba992785fdb672b0ecef026046)) - Ryan Chang
+- progress ring/bar/meter ([#170](https://github.com/ryancyq/stimulus-plumbers/issues/170)) - ([b43087c](https://github.com/ryancyq/stimulus-plumbers/commit/b43087cec2b40fd8b3dced65215afdbbdfc2c435)) - Ryan Chang
+- status indicator ([#171](https://github.com/ryancyq/stimulus-plumbers/issues/171)) - ([ad3f330](https://github.com/ryancyq/stimulus-plumbers/commit/ad3f330bc8d999b4977f8aeaafc8c4763229a448)) - Ryan Chang
+- horizontal grouped timeline ([#172](https://github.com/ryancyq/stimulus-plumbers/issues/172)) - ([fe9b9ab](https://github.com/ryancyq/stimulus-plumbers/commit/fe9b9abfb8c3c211fe9a7282d2940326678328dc)) - Ryan Chang
+- checklist ([#174](https://github.com/ryancyq/stimulus-plumbers/issues/174)) - ([35dca2a](https://github.com/ryancyq/stimulus-plumbers/commit/35dca2af29955f6f2c85fffc4efc39711ed5bb99)) - Ryan Chang
+
+---
 ## [0.4.8](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.5..stimulus-plumbers-tailwind/v0.4.8) - 2026-07-03
 
 ### Bug Fixes
