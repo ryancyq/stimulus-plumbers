@@ -5,19 +5,19 @@ module StimulusPlumbers
     module Tailwind
       module List
         # ── Section ───────────────────────────────────────────────────────────
-        SECTION_TITLE_BASE = %w[
+        SECTION_TITLE = %w[
           block px-(--sp-space-2) pb-(--sp-space-1)
           text-(length:--sp-text-xs) font-semibold uppercase tracking-wider
           text-(--sp-color-muted-fg)
         ].freeze
 
-        SECTION_DESCRIPTION_BASE = %w[
+        SECTION_DESCRIPTION = %w[
           block px-(--sp-space-2) pb-(--sp-space-1)
           text-(length:--sp-text-xs) text-(--sp-color-muted-fg)
         ].freeze
 
         # ── Item ──────────────────────────────────────────────────────────────
-        ITEM_BASE = [
+        ITEM = [
           *Control::BASE,
           "flex items-center gap-(--sp-space-2) w-full",
           "px-(--sp-space-2) py-(--sp-space-1)",
@@ -29,15 +29,15 @@ module StimulusPlumbers
           "aria-[current]:bg-(--sp-color-primary)/10 aria-[current]:text-(--sp-color-primary)"
         ].freeze
 
-        ITEM_CONTENT_BASE = %w[
+        ITEM_CONTENT = %w[
           flex flex-col flex-1 min-w-0
         ].freeze
 
-        ITEM_TITLE_BASE = %w[
+        ITEM_TITLE = %w[
           text-(length:--sp-text-sm) font-medium text-(--sp-color-fg)
         ].freeze
 
-        ITEM_DESCRIPTION_BASE = %w[
+        ITEM_DESCRIPTION = %w[
           text-(length:--sp-text-xs) text-(--sp-color-muted-fg)
         ].freeze
 
@@ -52,15 +52,15 @@ module StimulusPlumbers
         end
 
         def list_section_title_classes
-          { classes: klasses(*SECTION_TITLE_BASE) }
+          { classes: klasses(*SECTION_TITLE) }
         end
 
         def list_section_description_classes
-          { classes: klasses(*SECTION_DESCRIPTION_BASE) }
+          { classes: klasses(*SECTION_DESCRIPTION) }
         end
 
         def list_item_classes
-          { classes: klasses(*ITEM_BASE) }
+          { classes: klasses(*ITEM) }
         end
 
         def list_item_icon_classes
@@ -68,15 +68,15 @@ module StimulusPlumbers
         end
 
         def list_item_content_classes
-          { classes: klasses(*ITEM_CONTENT_BASE) }
+          { classes: klasses(*ITEM_CONTENT) }
         end
 
         def list_item_title_classes
-          { classes: klasses(*ITEM_TITLE_BASE) }
+          { classes: klasses(*ITEM_TITLE) }
         end
 
         def list_item_description_classes
-          { classes: klasses(*ITEM_DESCRIPTION_BASE) }
+          { classes: klasses(*ITEM_DESCRIPTION) }
         end
       end
     end

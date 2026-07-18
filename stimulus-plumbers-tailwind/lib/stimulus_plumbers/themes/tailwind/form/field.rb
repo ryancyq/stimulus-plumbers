@@ -16,7 +16,7 @@ module StimulusPlumbers
             standard: %w[relative z-0].freeze
           }.freeze
 
-          FLOATING_LABEL_BASE = %w[
+          FLOATING_LABEL = %w[
             absolute text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
             duration-300 transform origin-[0]
           ].freeze
@@ -117,7 +117,7 @@ module StimulusPlumbers
           def form_field_label_classes(floating: nil, hidden: false, error: false, **)
             if floating
               color = error ? FLOATING_LABEL_ERROR : FLOATING_LABEL_FOCUS
-              { classes: klasses(*FLOATING_LABEL_BASE, *FLOATING_LABEL_TYPES.fetch(floating, []), *color) }
+              { classes: klasses(*FLOATING_LABEL, *FLOATING_LABEL_TYPES.fetch(floating, []), *color) }
             else
               { classes: klasses(*LABEL, hidden ? "sr-only" : nil) }
             end

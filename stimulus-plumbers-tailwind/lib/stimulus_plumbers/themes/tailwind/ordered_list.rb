@@ -5,7 +5,7 @@ module StimulusPlumbers
     module Tailwind
       module OrderedList
         # ── Item ──────────────────────────────────────────────────────────────
-        ITEM_BASE = [
+        ITEM = [
           *Control::BASE,
           "flex items-center gap-(--sp-space-2) w-full",
           "px-(--sp-space-2) py-(--sp-space-1)",
@@ -15,7 +15,7 @@ module StimulusPlumbers
           "aria-[current]:bg-(--sp-color-primary)/10 aria-[current]:text-(--sp-color-primary)"
         ].freeze
 
-        HANDLE_BASE = %w[
+        HANDLE = %w[
           flex items-center justify-center shrink-0
           stroke-current
           text-(--sp-color-muted-fg)
@@ -23,15 +23,15 @@ module StimulusPlumbers
           touch-none
         ].freeze
 
-        CONTENT_BASE = %w[
+        CONTENT = %w[
           flex flex-col flex-1 min-w-0
         ].freeze
 
-        TITLE_BASE = %w[
+        TITLE = %w[
           text-(length:--sp-text-sm) font-medium text-(--sp-color-fg)
         ].freeze
 
-        DESCRIPTION_BASE = %w[
+        DESCRIPTION = %w[
           text-(length:--sp-text-xs) text-(--sp-color-muted-fg)
         ].freeze
 
@@ -42,23 +42,23 @@ module StimulusPlumbers
         end
 
         def ordered_list_item_classes
-          { classes: klasses(*ITEM_BASE) }
+          { classes: klasses(*ITEM) }
         end
 
         def ordered_list_item_handle_classes
-          { classes: klasses(*HANDLE_BASE) }
+          { classes: klasses(*HANDLE) }
         end
 
         def ordered_list_item_content_classes
-          { classes: klasses(*CONTENT_BASE) }
+          { classes: klasses(*CONTENT) }
         end
 
         def ordered_list_item_title_classes
-          { classes: klasses(*TITLE_BASE) }
+          { classes: klasses(*TITLE) }
         end
 
         def ordered_list_item_description_classes
-          { classes: klasses(*DESCRIPTION_BASE) }
+          { classes: klasses(*DESCRIPTION) }
         end
       end
     end
