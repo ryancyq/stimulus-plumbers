@@ -23,6 +23,7 @@ export { default as CalendarMonthController } from './controllers/calendar_month
 export { default as CalendarMonthSelectorController } from './controllers/calendar_month_selector_controller.js';
 export { default as CalendarYearController } from './controllers/calendar_year_controller.js';
 export { default as CalendarYearSelectorController } from './controllers/calendar_year_selector_controller.js';
+export { default as ChecklistController } from './controllers/checklist_controller.js';
 export { default as ClipboardController } from './controllers/clipboard_controller.js';
 export { default as ComboboxDateController } from './controllers/combobox_date_controller.js';
 export { default as ComboboxDropdownController } from './controllers/combobox_dropdown_controller.js';

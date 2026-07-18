@@ -8,6 +8,7 @@ module StimulusPlumbers
     class Base
       SCHEMA = {
         **Schema::LIST,
+        **Schema::CHECKLIST,
         **Schema::ORDERED_LIST,
         **Schema::AVATAR,
         **Schema::BUTTON,

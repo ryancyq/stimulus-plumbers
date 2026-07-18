@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "tailwind/control"
+require_relative "tailwind/checklist"
 require_relative "tailwind/list"
 require_relative "tailwind/ordered_list"
 require_relative "tailwind/avatar"
@@ -22,6 +23,7 @@ require_relative "tailwind/timeline"
 module StimulusPlumbers
   module Themes
     class TailwindTheme < Base
+      include Tailwind::Checklist
       include Tailwind::List
       include Tailwind::OrderedList
       include Tailwind::Combobox

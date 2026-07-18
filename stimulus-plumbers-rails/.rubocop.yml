@@ -61,6 +61,7 @@ Metrics/ClassLength:
     - test/generators/**/*_test.rb
     - test/stimulus_plumbers/components/calendar/turbo_test.rb
     - test/stimulus_plumbers/components/calendar/turbo/*_test.rb
+    - test/stimulus_plumbers/components/checklist_test.rb
     - test/stimulus_plumbers/components/combobox/time_test.rb
     - test/stimulus_plumbers/components/link_test.rb
     - test/stimulus_plumbers/form/**/*_test.rb
