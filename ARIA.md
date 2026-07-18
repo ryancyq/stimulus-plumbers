@@ -62,6 +62,13 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Toggle button: `aria-label` describes action ("Show password" / "Hide password")
 - `aria-pressed` managed on toggle button, reflecting revealed state
 
+#### Code Input (`input_formatter_controller` + `character_cells`)
+
+- The real `<input>` is the entire accessible surface; cells are stamped `aria-hidden="true"` automatically.
+- The input requires a `<label>` (visually hidden allowed), `autocomplete="one-time-code"` for OTP (WCAG 1.3.5), `inputmode` matching the charset, and `maxlength` matching the code length.
+- Overlay the input with `opacity: 0` — never `display: none`/`visibility: hidden`, which remove it from the tab order (WCAG 2.1.1).
+- Focus visibility (WCAG 2.4.7): the caret cell (`data-caret`) appears only while the input has focus; style the wrapper with `:focus-within` plus `[data-caret]`.
+
 #### Input Clearable (`input_clearable_controller`)
 - Clear button: `hidden` attribute while the input is empty, removing it from the keyboard/AT tab order until there's something to clear
 - Escape inside the input clears it (keyboard equivalent to clicking the clear button, WCAG 2.1.1); default is prevented so it doesn't also close a parent overlay

@@ -1,0 +1,10 @@
+<h1>Credit card</h1>
+
+<section id="credit-card-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "credit_card_default", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :card_number, as: :credit_card, label: "Card number" %>
+    <% end %>
+  </div>
+</section>

@@ -6,4 +6,6 @@ scope "/form", controller: "form" do
   get :fieldset
   get :choices
   get :floating_label
+  get :code
+  get :credit_card
 end

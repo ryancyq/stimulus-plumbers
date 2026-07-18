@@ -8,7 +8,7 @@ module StimulusPlumbers
     class Field < Base
       TYPES = %i[
         text email number url tel color month week range datetime_local
-        text_area file password date time select search
+        text_area file password date time select search code credit_card
       ].freeze
       COLLECTION_TYPES = %i[radio check_box collection_select grouped_collection_select].freeze
       OPTIONS          = (Base::OPTIONS + %i[hide_label]).freeze

@@ -64,16 +64,33 @@ export function parseArray(source, name) {
   return [...m[1].matchAll(/['"]([^'"]+)['"]/g)].map((r) => r[1]);
 }
 
-export function parseValues(source) {
-  // Captures one-level-nested object: { key: Type } or { key: { type: Type, default: val } }
-  const m = source.match(/static\s+values\s*=\s*(\{(?:[^{}]|\{[^{}]*\})*\})/s);
-  if (!m) return {};
+// Finds the `static values = { ... }` block via balanced-brace scanning rather than a
+// fixed-depth regex, so defaults that are themselves object/array literals (e.g.
+// `default: {}`) don't break the match for the whole block.
+function extractValuesBlock(source) {
+  const start = source.match(/static\s+values\s*=\s*\{/);
+  if (!start) return null;
 
-  const block = m[1];
+  const openIndex = start.index + start[0].length - 1;
+  let depth = 0;
+  for (let i = openIndex; i < source.length; i++) {
+    if (source[i] === '{') depth++;
+    else if (source[i] === '}') {
+      depth--;
+      if (depth === 0) return source.slice(openIndex, i + 1);
+    }
+  }
+  return null;
+}
+
+export function parseValues(source) {
+  const block = extractValuesBlock(source);
+  if (!block) return {};
+
   const result = {};
 
   // Full form: key: { type: Type, default: val }
-  const fullRe = /(\w+)\s*:\s*\{\s*type\s*:\s*(\w+)(?:\s*,\s*default\s*:\s*([^\n,}][^\n}]*?))?\s*\}/g;
+  const fullRe = /(\w+)\s*:\s*\{\s*type\s*:\s*(\w+)(?:\s*,\s*default\s*:\s*(\{\}|\[\]|[^\n,}][^\n}]*?))?\s*\}/g;
   let match;
   while ((match = fullRe.exec(block)) !== null) {
     const entry = { type: match[2] };
@@ -81,6 +98,8 @@ export function parseValues(source) {
       const raw = match[3].trim().replace(/,$/, '');
       if (raw === 'true') entry.default = true;
       else if (raw === 'false') entry.default = false;
+      else if (raw === '{}') entry.default = {};
+      else if (raw === '[]') entry.default = [];
       else if (/^-?\d+$/.test(raw)) entry.default = parseInt(raw, 10);
       else if (/^-?\d*\.\d+$/.test(raw)) entry.default = parseFloat(raw);
       else entry.default = raw.replace(/^['"]|['"]$/g, '');
@@ -88,8 +107,10 @@ export function parseValues(source) {
     result[match[1]] = entry;
   }
 
-  // Short form: key: Type — strip nested {…} first so inner `type: Foo` isn't captured
-  const flatBlock = block.replace(/\{[^{}]*\}/g, '{}');
+  // Short form: key: Type — strip nested {…} first so inner `type: Foo` isn't captured.
+  // Collapse literal empty-object defaults first so a field wrapper containing one
+  // (e.g. `{ type: Object, default: {} }`) still reads as a single nesting level.
+  const flatBlock = block.replace(/\{\}/g, '""').replace(/\{[^{}]*\}/g, '{}');
   const shortRe = /(\w+)\s*:\s*(String|Number|Boolean|Array|Object)\s*[,\n}]/g;
   while ((match = shortRe.exec(flatBlock)) !== null) {
     if (!result[match[1]]) result[match[1]] = { type: match[2] };

@@ -1,0 +1,109 @@
+<%
+  interests  = [["Ruby", "ruby"], ["Rails", "rails"], ["JavaScript", "js"]]
+  collection = { value_method: :last, text_method: :first }
+%>
+
+<h1>Collection checkbox</h1>
+
+<section id="collection-checkbox-default-inline" class="sb-section">
+  <h2>Default — Inline</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_checkbox_default_inline", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :interests,
+        as: :check_box,
+        label:      "Interests",
+        collection: interests,
+        **collection
+      %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-checkbox-default-stacked" class="sb-section">
+  <h2>Default — Stacked</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_checkbox_default_stacked", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :interests,
+        as: :check_box,
+        label:      "Interests",
+        layout:     :stacked,
+        collection: interests,
+        **collection
+      %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-checkbox-button-inline" class="sb-section">
+  <h2>Button — Inline</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_checkbox_button_inline", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :interests,
+        as: :check_box,
+        label:      "Interests",
+        type:       :button,
+        collection: interests,
+        **collection
+      %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-checkbox-button-stacked" class="sb-section">
+  <h2>Button — Stacked</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_checkbox_button_stacked", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :interests,
+        as: :check_box,
+        label:      "Interests",
+        type:       :button,
+        layout:     :stacked,
+        collection: interests,
+        **collection
+      %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-checkbox-card-inline" class="sb-section">
+  <h2>Card — Inline</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_checkbox_card_inline", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :interests,
+        as: :check_box,
+        label:      "Interests",
+        type:       :card,
+        collection: interests,
+        **collection
+      %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-checkbox-card-stacked" class="sb-section">
+  <h2>Card — Stacked</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_checkbox_card_stacked", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :interests,
+        as: :check_box,
+        label:      "Interests",
+        type:       :card,
+        layout:     :stacked,
+        collection: interests,
+        **collection
+      %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-checkbox-error" class="sb-section">
+  <h2>Error</h2>
+  <div class="sb-col">
+    <% coll_cb_error = SignUp.new.tap { |f| f.errors.add(:interests, "must select at least one") } %>
+    <%= form_with(model: coll_cb_error, url: "/users", scope: "coll_checkbox_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :interests, as: :check_box,
+            label:      "Interests",
+            collection: interests, **collection %>
+    <% end %>
+  </div>
+</section>

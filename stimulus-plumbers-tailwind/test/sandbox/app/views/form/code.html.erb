@@ -1,0 +1,10 @@
+<h1>Code</h1>
+
+<section id="code-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "code_default", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :verification_code, as: :code, label: "Verification code", length: 6, required: true %>
+    <% end %>
+  </div>
+</section>

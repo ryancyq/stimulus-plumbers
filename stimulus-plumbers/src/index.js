@@ -15,6 +15,7 @@ export { Requestor } from './requestor.js';
 export { fuzzyMatcher, filterOptions } from './researcher.js';
 
 export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
+export { CharacterCells, attachCharacterCells } from './plumbers/character_cells.js';
 
 // Export Stimulus controllers
 export { default as CalendarDecadeController } from './controllers/calendar_decade_controller.js';

@@ -1,0 +1,40 @@
+<h1>Single checkbox</h1>
+
+<section id="single-checkbox-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "single_checkbox_default", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="single-checkbox-hint" class="sb-section">
+  <h2>With hint</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "single_checkbox_hint", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :newsletter, as: :check_box,
+            label: "Free shipping",
+            hint:  "We only send weekly product updates" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="single-checkbox-error" class="sb-section">
+  <h2>Error</h2>
+  <div class="sb-col">
+    <% single_cb_error = SignUp.new.tap { |f| f.errors.add(:newsletter, "must be accepted") } %>
+    <%= form_with(model: single_cb_error, url: "/users", scope: "single_checkbox_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="single-checkbox-required" class="sb-section">
+  <h2>Required</h2>
+  <div class="sb-col">
+    <%= form_with(model: SignUp.new, url: "/users", scope: "single_checkbox_required", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter", required: true %>
+    <% end %>
+  </div>
+</section>
