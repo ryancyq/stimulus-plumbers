@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.9](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.8..stimulus-plumbers/v0.4.9) - 2026-07-18
+
+### Dependencies
+
+- **(deps-dev)** bump vite from 8.0.4 to 8.1.4 in /stimulus-plumbers ([#169](https://github.com/ryancyq/stimulus-plumbers/issues/169)) - ([aa30fc7](https://github.com/ryancyq/stimulus-plumbers/commit/aa30fc72318b7c82392c7cd5da51fa3e21b7e551)) - dependabot[bot]
+- **(deps-dev)** bump eslint from 10.6.0 to 10.7.0 in /stimulus-plumbers ([#176](https://github.com/ryancyq/stimulus-plumbers/issues/176)) - ([63eca78](https://github.com/ryancyq/stimulus-plumbers/commit/63eca78d0dc700276d07b37e21a9ee5d7806d503)) - dependabot[bot]
+
+### Documentation
+
+- align code example/instructions in doc and remove stale reference ([#167](https://github.com/ryancyq/stimulus-plumbers/issues/167)) - ([b1ace4d](https://github.com/ryancyq/stimulus-plumbers/commit/b1ace4da5117b70f4f22403f727655c1586606e1)) - Ryan Chang
+- update component documentation ([#173](https://github.com/ryancyq/stimulus-plumbers/issues/173)) - ([27240bc](https://github.com/ryancyq/stimulus-plumbers/commit/27240bc85265b249adba5186fd34b9c26423daa3)) - Ryan Chang
+
+### Features
+
+- reorderable ([#165](https://github.com/ryancyq/stimulus-plumbers/issues/165)) - ([53277c5](https://github.com/ryancyq/stimulus-plumbers/commit/53277c584bc6f54581315028d401c64761ee8474)) - Ryan Chang
+- progress ring/bar/meter ([#170](https://github.com/ryancyq/stimulus-plumbers/issues/170)) - ([b43087c](https://github.com/ryancyq/stimulus-plumbers/commit/b43087cec2b40fd8b3dced65215afdbbdfc2c435)) - Ryan Chang
+- checklist ([#174](https://github.com/ryancyq/stimulus-plumbers/issues/174)) - ([35dca2a](https://github.com/ryancyq/stimulus-plumbers/commit/35dca2af29955f6f2c85fffc4efc39711ed5bb99)) - Ryan Chang
+
+---
 ## [0.4.6](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.5..stimulus-plumbers/v0.4.6) - 2026-07-03
 
 ### Bug Fixes
