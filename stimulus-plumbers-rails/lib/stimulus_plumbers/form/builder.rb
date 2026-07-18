@@ -11,6 +11,8 @@ require_relative "fields/renderer"
 require_relative "fields/fieldset"
 require_relative "fields/inputs/checkbox"
 require_relative "fields/inputs/combobox"
+require_relative "fields/inputs/code"
+require_relative "fields/inputs/credit_card"
 require_relative "fields/inputs/datetime"
 require_relative "fields/inputs/radio"
 require_relative "fields/inputs/file"
@@ -30,6 +32,8 @@ module StimulusPlumbers
       include Plumber::Options::Html
       include Plumber::Options::Aria
       include Fields::Inputs::Checkbox
+      include Fields::Inputs::Code
+      include Fields::Inputs::CreditCard
       include Fields::Inputs::Datetime
       include Fields::Inputs::Radio
       include Fields::Inputs::File

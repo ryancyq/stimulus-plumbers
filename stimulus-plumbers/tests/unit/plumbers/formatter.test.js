@@ -158,4 +158,16 @@ describe('Formatter', () => {
       expect(mockController.formatter.format('1234.56')).toBe('$1,234.56')
     })
   })
+
+  describe('cells hint', () => {
+    it('exposes the strategy cells hint through helpers', () => {
+      attachFormatter(mockController, { type: 'code', options: { length: 6 } })
+      expect(mockController.formatter.cells()).toEqual({ groups: [], length: 6 })
+    })
+
+    it('returns null for strategies without a cells hint', () => {
+      attachFormatter(mockController, { type: 'currency' })
+      expect(mockController.formatter.cells()).toBeNull()
+    })
+  })
 })

@@ -116,6 +116,7 @@ application.register('visibility',               VisibilityController)
 | `Requestor` | Fetch wrapper with lifecycle events | [docs/utility/requestor.md](docs/utility/requestor.md) |
 | `fuzzyMatcher`, `filterOptions` | Option filtering for comboboxes | [docs/utility/researcher.md](docs/utility/researcher.md) |
 | `Formatter`, `FORMATTER_TYPES` | Input formatter plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/formatter.md](docs/plumber/formatter.md) |
+| `CharacterCells`, `attachCharacterCells` | Character-cell display plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/character-cells.md](docs/plumber/character-cells.md) |
 
 ## Method naming convention
 

@@ -2,7 +2,7 @@
 
 require_relative "../application_accessibility_test_case"
 
-class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
+class FormAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
     visit "/form/sign_up"

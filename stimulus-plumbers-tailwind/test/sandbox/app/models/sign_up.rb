@@ -14,7 +14,9 @@ class SignUp
                 :gender,
                 :country,
                 :role,
-                :interests
+                :interests,
+                :verification_code,
+                :card_number
 
   def self.model_name
     ActiveModel::Name.new(self, nil, "SignUp")

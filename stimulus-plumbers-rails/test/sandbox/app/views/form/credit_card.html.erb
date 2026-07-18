@@ -1,0 +1,5 @@
+<section id="credit-card-default">
+  <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.field :card_number, as: :credit_card, label: "Card number", required: true %>
+  <% end %>
+</section>

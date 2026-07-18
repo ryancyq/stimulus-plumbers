@@ -18,6 +18,8 @@ module StimulusPlumbers
           text_area:      :render_text_area_input,
           file:           :render_file_input,
           password:       :render_password_input,
+          code:           :render_code_input,
+          credit_card:    :render_credit_card_input,
           date:           :render_combobox_date,
           time:           :render_combobox_time,
           select:         :render_combobox_dropdown,

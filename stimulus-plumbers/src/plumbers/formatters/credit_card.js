@@ -66,4 +66,15 @@ export const CreditCardFormatter = {
     if (typeof value !== 'string') return '';
     return value.replace(GROUP_FOUR_DIGITS, '$1 ');
   },
+
+  /**
+   * CharacterCells hint: four groups of four digits (standard 16-digit PAN). No fixed
+   * length — validate() accepts 13-19 digits, so length derives from the rendered cells
+   * (or an author-supplied `groups` override for non-16-digit PANs) rather than being
+   * capped here.
+   * @returns {{ groups: number[], length: number }}
+   */
+  cells() {
+    return { groups: [4, 4, 4, 4], length: 0 };
+  },
 };

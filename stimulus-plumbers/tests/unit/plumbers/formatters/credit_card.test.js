@@ -68,6 +68,12 @@ describe('CreditCardFormatter', () => {
     })
   })
 
+  describe('cells', () => {
+    it('hints four groups of four with no fixed length (13-19 digit range)', () => {
+      expect(CreditCardFormatter.cells()).toEqual({ groups: [4, 4, 4, 4], length: 0 })
+    })
+  })
+
   it('does not have a mask method', () => {
     expect(CreditCardFormatter.mask).toBeUndefined()
   })

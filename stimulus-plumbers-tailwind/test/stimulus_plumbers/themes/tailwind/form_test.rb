@@ -66,4 +66,38 @@ class TailwindThemeFormTest < Minitest::Test
     assert_equal stacked, stacked_error
     assert_equal inline, inline_error
   end
+
+  # :form_field_input_code / :form_field_input_credit_card
+
+  def test_character_cell_field_has_visible_focus_treatment
+    assert_includes classes_for(:form_field_input_code), "focus-within:ring"
+  end
+
+  def test_character_cell_error_focus_uses_error_color
+    assert_includes classes_for(:form_field_input_code, error: true), "--sp-color-error"
+  end
+
+  def test_character_cells_are_visually_boxed_and_show_the_caret
+    result = classes_for(:form_field_input_code_cell)
+
+    assert_includes result, "border"
+    assert_includes result, "data-[caret]:ring-1"
+  end
+
+  def test_character_cell_error_uses_error_border
+    assert_includes classes_for(:form_field_input_credit_card_cell, error: true), "border-(--sp-color-error)"
+  end
+
+  def test_character_cell_overlay_remains_present_but_visually_hidden
+    result = classes_for(:form_field_input_credit_card_overlay)
+
+    assert_includes result, "opacity-0"
+    refute_includes result, "hidden"
+  end
+
+  def test_credit_card_separator_uses_muted_not_primary_color
+    result = classes_for(:form_field_input_credit_card_separator)
+
+    assert_includes result, "--sp-color-muted-fg"
+  end
 end

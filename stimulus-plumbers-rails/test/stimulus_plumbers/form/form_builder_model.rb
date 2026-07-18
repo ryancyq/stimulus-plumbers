@@ -17,7 +17,9 @@ class FormBuilderModel
                 :meeting_time,
                 :timezone,
                 :weekday,
-                :age
+                :age,
+                :verification_code,
+                :card_number
 
   def self.model_name
     ActiveModel::Name.new(self, nil, "sign_in_form")

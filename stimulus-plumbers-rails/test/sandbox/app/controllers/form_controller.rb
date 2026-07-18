@@ -32,4 +32,12 @@ class FormController < ApplicationController
       f.errors.add(:name, "can't be blank")
     end
   end
+
+  def code
+    @form = SignUp.new
+  end
+
+  def credit_card
+    @form = SignUp.new
+  end
 end

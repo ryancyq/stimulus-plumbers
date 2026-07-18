@@ -4,6 +4,11 @@ scope "/form", controller: "form" do
   get :sign_up
   get :field_error
   get :fieldset
-  get :choices
   get :floating_label
+  get :choices
+  get :single_checkbox
+  get :collection_checkbox
+  get :collection_radio
+  get :code
+  get :credit_card
 end

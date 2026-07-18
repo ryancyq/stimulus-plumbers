@@ -1,0 +1,109 @@
+<%
+  genders    = [["Male", "male"], ["Female", "female"], ["Other", "other"]]
+  collection = { value_method: :last, text_method: :first }
+%>
+
+<h1>Collection radio</h1>
+
+<section id="collection-radio-default-inline" class="sb-section">
+  <h2>Default — Inline</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_radio_default_inline", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :gender, as: :radio,
+            label:      "Gender",
+            collection: genders, **collection %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-radio-default-stacked" class="sb-section">
+  <h2>Default — Stacked</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_radio_default_stacked", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :gender, as: :radio,
+            label:      "Gender",
+            layout:     :stacked,
+            collection: genders, **collection %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-radio-button-inline" class="sb-section">
+  <h2>Button — Inline</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_radio_button_inline", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :gender, as: :radio,
+            label:      "Gender",
+            type:       :button,
+            collection: genders, **collection %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-radio-button-stacked" class="sb-section">
+  <h2>Button — Stacked</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_radio_button_stacked", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :gender, as: :radio,
+            label:      "Gender",
+            type:       :button,
+            layout:     :stacked,
+            collection: genders, **collection %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-radio-card-inline" class="sb-section">
+  <h2>Card — Inline</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_radio_card_inline", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :gender, as: :radio,
+            label:      "Gender",
+            type:       :card,
+            collection: genders, **collection %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-radio-card-stacked" class="sb-section">
+  <h2>Card — Stacked</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "coll_radio_card_stacked", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :gender, as: :radio,
+            label:      "Gender",
+            type:       :card,
+            layout:     :stacked,
+            collection: genders, **collection %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-radio-error" class="sb-section">
+  <h2>Error</h2>
+  <div class="sb-col">
+    <% coll_radio_error = SignUp.new.tap { |f| f.errors.add(:gender, "can't be blank") } %>
+    <%= form_with(model: coll_radio_error, url: "/users", scope: "coll_radio_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.choice :gender, as: :radio,
+            label:      "Gender",
+            collection: genders, **collection %>
+    <% end %>
+  </div>
+</section>
+
+<section id="collection-radio-card-variants" class="sb-section">
+  <h2>Card variants</h2>
+  <div class="sb-row">
+    <% [:success, :warning, :destructive, :info].each do |variant| %>
+      <% vform = SignUp.new(gender: "option") %>
+      <%= form_with(model: vform, url: "/users", scope: "card_var_#{variant}", builder: StimulusPlumbers::Form::Builder) do |f| %>
+        <%= f.choice :gender, as: :radio,
+              label:        variant.to_s.capitalize,
+              type:         :card,
+              variant:      variant,
+              collection:   [["option", "Option"]],
+              value_method: :first,
+              text_method:  :last %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

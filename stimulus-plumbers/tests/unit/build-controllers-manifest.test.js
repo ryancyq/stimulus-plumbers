@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseActions, parseDispatches, withPlumberSources } from '../../scripts/build-controllers-manifest.mjs'
+import { parseActions, parseDispatches, withPlumberSources, parseValues } from '../../scripts/build-controllers-manifest.mjs'
 
 const CONTROLLERS_DIR = join(dirname(fileURLToPath(import.meta.url)), '../../src/controllers')
 
@@ -53,6 +53,41 @@ describe('parseDispatches', () => {
 
   it('returns an empty array when nothing is dispatched', () => {
     expect(parseDispatches('export default class extends Controller {}')).toEqual([])
+  })
+})
+
+describe('parseValues', () => {
+  it('parses short-form and full-form entries', () => {
+    const source = `
+export default class extends Controller {
+  static values = { url: String, count: { type: Number, default: 3 } };
+}
+`
+    expect(parseValues(source)).toEqual({
+      url: { type: 'String' },
+      count: { type: 'Number', default: 3 },
+    })
+  })
+
+  it('does not lose sibling entries when one default is itself an object/array literal', () => {
+    const source = `
+export default class extends Controller {
+  static values = {
+    format: { type: String, default: 'plain' },
+    options: { type: Object, default: {} },
+    groups: { type: Array, default: [] },
+  };
+}
+`
+    expect(parseValues(source)).toEqual({
+      format: { type: 'String', default: 'plain' },
+      options: { type: 'Object', default: {} },
+      groups: { type: 'Array', default: [] },
+    })
+  })
+
+  it('returns an empty object when there is no values block', () => {
+    expect(parseValues('export default class extends Controller {}')).toEqual({})
   })
 })
 

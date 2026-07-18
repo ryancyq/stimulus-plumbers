@@ -61,11 +61,11 @@ Special options on native helpers:
 
 Three methods render a complete, accessible field:
 
-| Method                                                                            | `as:` values                                                                                                                                                       |
-| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `f.field(attr, as:, **opts)`                                                      | `:text` `:email` `:number` `:url` `:tel` `:color` `:month` `:week` `:range` `:datetime_local` `:text_area` `:file` `:password` `:date` `:time` `:select` `:search` |
-| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | `:collection_select` `:grouped_collection_select`                                                                                                                  |
-| `f.choice(attr, as:, **opts)`                                                     | `:radio` `:check_box`                                                                                                                                              |
+| Method                                                                            | `as:` values                                                                                                                                                                              |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `f.field(attr, as:, **opts)`                                                      | `:text` `:email` `:number` `:url` `:tel` `:color` `:month` `:week` `:range` `:datetime_local` `:text_area` `:file` `:password` `:date` `:time` `:select` `:search` `:code` `:credit_card` |
+| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | `:collection_select` `:grouped_collection_select`                                                                                                                                         |
+| `f.choice(attr, as:, **opts)`                                                     | `:radio` `:check_box`                                                                                                                                                                     |
 
 ### Shared field options
 
@@ -89,6 +89,8 @@ Three methods render a complete, accessible field:
 <%= f.field :bio,      as: :text_area, hint: "Tell us about yourself." %>
 <%= f.field :avatar,   as: :file %>
 <%= f.field :password, as: :password, revealable: true %>
+<%= f.field :verification_code, as: :code, length: 6 %>
+<%= f.field :card_number, as: :credit_card %>
 <%= f.field :email,    as: :email,    floating: :filled %>
 <%= f.field :country,  as: :select,
       choices: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]],
@@ -146,6 +148,26 @@ Use `f.search_field` for a native `<input type="search">`.
 | `revealable` | Boolean | `false` | Adds a show/hide toggle button on the input |
 
 Use `f.password_field` for a plain `<input type="password">` (also accepts `revealable:`).
+
+**Code** (`as: :code`) — character-cell entry backed by `input-formatter` and the `character-cells` plumber. The native input remains the accessible control; cells are decorative.
+
+| Option         | Values                                   | Default                | Description                                 |
+| -------------- | ---------------------------------------- | ---------------------- | ------------------------------------------- |
+| `length`       | positive Integer                         | required               | Number of cells and input maximum length    |
+| `charset`      | `:digits` / `:letters` / `:alphanumeric` | `:digits`              | Allowed code characters                     |
+| `groups`       | Array of positive Integers               | `[]`                   | Visual cell groups; must add up to `length` |
+| `autocomplete` | String                                   | `"one-time-code"`      | Native autocomplete value                   |
+| `inputmode`    | String                                   | `"numeric"` for digits | Native input mode                           |
+
+**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group with a literal dash separator between cells; their sum sets `maxlength`.
+
+| Option         | Values                     | Default        | Description                                                                  |
+| -------------- | -------------------------- | -------------- | ---------------------------------------------------------------------------- |
+| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group, dash-separated; their sum sets `maxlength` |
+| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                                    |
+| `inputmode`    | String                     | `"numeric"`    | Native input mode                                                            |
+
+Character-cell fields do not support `floating:` labels.
 
 ---
 

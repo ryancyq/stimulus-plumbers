@@ -9,6 +9,18 @@ class FormController < ApplicationController
     @form = SignUp.new
   end
 
+  def single_checkbox
+    @form = SignUp.new
+  end
+
+  def collection_checkbox
+    @form = SignUp.new
+  end
+
+  def collection_radio
+    @form = SignUp.new
+  end
+
   def field_error
     @form = SignUp.new.tap do |f|
       f.errors.add(:email, "is already taken")
@@ -25,5 +37,13 @@ class FormController < ApplicationController
 
   def floating_label
     @error_form = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") }
+  end
+
+  def code
+    @form = SignUp.new
+  end
+
+  def credit_card
+    @form = SignUp.new
   end
 end
