@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { FocusTrap } from '../accessibility/focus';
-import { announce } from '../accessibility/aria';
+import { announce, setHidden } from '../accessibility/aria';
 import { attachDismisser } from '../plumbers';
 
 export default class extends Controller {
@@ -50,7 +50,7 @@ export default class extends Controller {
       this.modalTarget.showModal();
     } else {
       const targetToShow = this.hasOverlayTarget ? this.overlayTarget : this.modalTarget;
-      targetToShow.hidden = false;
+      setHidden(targetToShow, false);
 
       document.body.style.overflow = 'hidden';
 
@@ -76,7 +76,7 @@ export default class extends Controller {
       }
     } else {
       const targetToHide = this.hasOverlayTarget ? this.overlayTarget : this.modalTarget;
-      targetToHide.hidden = true;
+      setHidden(targetToHide, true);
 
       document.body.style.overflow = '';
 

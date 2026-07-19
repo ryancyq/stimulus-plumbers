@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { setHidden } from '../accessibility/aria';
 
 export default class extends Controller {
   static targets = ['input', 'clear'];
@@ -32,7 +33,7 @@ export default class extends Controller {
 
   draw() {
     if (!this.hasInputTarget || !this.hasClearTarget) return;
-    this.clearTarget.hidden = this.inputTarget.value.length === 0;
+    setHidden(this.clearTarget, this.inputTarget.value.length === 0);
   }
 
   handleEscape(event) {

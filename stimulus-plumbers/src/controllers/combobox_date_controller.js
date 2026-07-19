@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { tryParseDate } from '../plumbers/plumber/date';
+import { setHidden } from '../accessibility/aria';
 
 const VIEWS = ['month', 'year', 'decade'];
 
@@ -159,14 +160,14 @@ export default class extends Controller {
 
     if (this.hasCalendarMonthOutlet) {
       const outlet = this.calendarMonthOutlet;
-      if (outlet.hasDaysOfWeekTarget) outlet.daysOfWeekTarget.hidden = !inMonthView;
-      if (outlet.hasDaysOfMonthTarget) outlet.daysOfMonthTarget.hidden = !inMonthView;
+      if (outlet.hasDaysOfWeekTarget) setHidden(outlet.daysOfWeekTarget, !inMonthView);
+      if (outlet.hasDaysOfMonthTarget) setHidden(outlet.daysOfMonthTarget, !inMonthView);
     }
     if (this.hasCalendarYearOutlet) {
-      this.calendarYearOutletElement.hidden = !inYearView;
+      setHidden(this.calendarYearOutletElement, !inYearView);
     }
     if (this.hasCalendarDecadeOutlet) {
-      this.calendarDecadeOutletElement.hidden = !inDecadeView;
+      setHidden(this.calendarDecadeOutletElement, !inDecadeView);
     }
   }
 }

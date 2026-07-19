@@ -1,3 +1,5 @@
+import { setHidden } from './accessibility/aria';
+
 export function fuzzyMatcher(needle, haystack) {
   let ni = 0;
   for (let i = 0; i < haystack.length && ni < needle.length; i++) {
@@ -32,7 +34,7 @@ export function filterOptions(listbox, query, options = {}) {
   let visible = 0;
   listbox.querySelectorAll('[role="option"]').forEach((opt) => {
     const match = fields.some((field) => matchFn(needle, extractDOMValue(opt, field)));
-    opt.hidden = !match;
+    setHidden(opt, !match);
     if (match) visible++;
   });
   return visible;

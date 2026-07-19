@@ -132,7 +132,7 @@ export default class extends Controller {
   drawToggle() {
     if (!this.hasToggleTarget) return;
     const hasToggleBehavior = this.formatter?.maskable() || this.formatValue === 'password';
-    this.toggleTarget.hidden = !hasToggleBehavior;
+    setHidden(this.toggleTarget, !hasToggleBehavior);
     if (!hasToggleBehavior || !this.hasRevealIconTarget) return;
 
     setHidden(this.revealIconTarget, this.revealedValue);
