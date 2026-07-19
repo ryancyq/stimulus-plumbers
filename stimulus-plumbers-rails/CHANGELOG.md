@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.12](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.11..stimulus-plumbers-rails/v0.4.12) - 2026-07-19
+
+### Bug Fixes
+
+- gitignore entry should only be added if there is no existing rule on generated/builds assets ([#181](https://github.com/ryancyq/stimulus-plumbers/issues/181)) - ([bc44d68](https://github.com/ryancyq/stimulus-plumbers/commit/bc44d68068dced77930a007c097f6b27a511ab20)) - Ryan Chang
+- refactor form inputs + make code/credit card separator configurable ([#182](https://github.com/ryancyq/stimulus-plumbers/issues/182)) - ([bbc0a55](https://github.com/ryancyq/stimulus-plumbers/commit/bbc0a55d5dbcc5cee1459434ce65606cdbfdd0e8)) - Ryan Chang
+
+### Features
+
+- form submit button with icon support ([#184](https://github.com/ryancyq/stimulus-plumbers/issues/184)) - ([ac3af21](https://github.com/ryancyq/stimulus-plumbers/commit/ac3af216125eedb01bc1bc053dd890e33482cc4b)) - Ryan Chang
+
+---
 ## [0.4.11](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.10..stimulus-plumbers-rails/v0.4.11) - 2026-07-19
 
 ### Bug Fixes
