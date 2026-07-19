@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.11](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.10..stimulus-plumbers-rails/v0.4.11) - 2026-07-19
+
+### Bug Fixes
+
+- tailwind source being committed with machine path. migrate to generated source file which should be gitignored + import the generated file in css entry point file instead. ([#180](https://github.com/ryancyq/stimulus-plumbers/issues/180)) - ([347e6ed](https://github.com/ryancyq/stimulus-plumbers/commit/347e6edeee92571f4f2fe7e509b5eed8fd0f2893)) - Ryan Chang
+
+---
 ## [0.4.10](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.9..stimulus-plumbers-rails/v0.4.10) - 2026-07-19
 
 ### Bug Fixes
