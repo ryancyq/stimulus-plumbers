@@ -5,14 +5,15 @@ require "stimulus_plumbers/tailwind/generators/animations_directive"
 
 class TailwindGeneratorsAnimationsDirectiveTest < Minitest::Test
   def test_directive_builds_import_line_relative_to_the_css_file_directory
-    gem_dir  = Gem.loaded_specs["stimulus_plumbers_tailwind"].gem_dir
+    destination_root = "/app"
     css_dir  = "/app/assets/stylesheets"
-    expected = Pathname.new("#{gem_dir}/app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css")
+    expected = Pathname.new("#{destination_root}/app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css")
                        .relative_path_from(Pathname.new(css_dir))
+    expected = "./#{expected}" unless expected.to_s.start_with?(".", "/")
 
     assert_equal(
       %(@import "#{expected}";),
-      StimulusPlumbers::Tailwind::Generators::AnimationsDirective.directive(from: css_dir)
+      StimulusPlumbers::Tailwind::Generators::AnimationsDirective.directive(from: css_dir, destination_root: destination_root)
     )
   end
 

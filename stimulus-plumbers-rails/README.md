@@ -42,13 +42,13 @@ Or use the form builder globally:
 config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 ```
 
-Run the install generator once to inject the `tokens.css` import into your CSS entry file — see [docs/guide.md#css-entry-file-detection](docs/guide.md#css-entry-file-detection) for how the entry file is found/overridden:
+Run the install generator once to copy `tokens.css` to `app/assets/stylesheets/stimulus_plumbers/tokens.css` and inject its relative import into your CSS entry file — see [docs/guide.md#css-entry-file-detection](docs/guide.md#css-entry-file-detection) for how the entry file is found/overridden:
 
 ```bash
 bin/rails generate stimulus_plumbers:install
 ```
 
-The import stays current automatically after that — the engine hooks `stimulus_plumbers:install` as a prerequisite of `assets:precompile`.
+The engine re-runs the installer before `assets:precompile` to restore a missing copy and migrate legacy gem-path imports. Existing app-owned CSS is preserved, so update it intentionally when you want newer token defaults.
 
 ## Components
 

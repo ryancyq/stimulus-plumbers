@@ -5,14 +5,15 @@ require "stimulus_plumbers/generators/tokens_directive"
 
 class GeneratorsTokensDirectiveTest < Minitest::Test
   def test_directive_builds_import_line_relative_to_the_css_file_directory
-    gem_dir  = Gem.loaded_specs["stimulus_plumbers"].gem_dir
+    destination_root = "/app"
     css_dir  = "/app/assets/stylesheets"
-    expected = Pathname.new("#{gem_dir}/app/assets/stylesheets/stimulus_plumbers/tokens.css")
+    expected = Pathname.new("#{destination_root}/app/assets/stylesheets/stimulus_plumbers/tokens.css")
                        .relative_path_from(Pathname.new(css_dir))
+    expected = "./#{expected}" unless expected.to_s.start_with?(".", "/")
 
     assert_equal(
       %(@import "#{expected}";),
-      StimulusPlumbers::Generators::TokensDirective.directive(from: css_dir)
+      StimulusPlumbers::Generators::TokensDirective.directive(from: css_dir, destination_root: destination_root)
     )
   end
 

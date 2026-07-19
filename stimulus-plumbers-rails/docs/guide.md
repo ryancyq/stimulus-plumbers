@@ -37,3 +37,12 @@ generator) inject their CSS directives into the first entry file found, in order
 4. `app/javascript/entrypoints/application.css` (`jsbundling-rails` esbuild/webpack default)
 
 Override with `STIMULUS_PLUMBERS_CSS_ENTRY=/path/to/entry.css` — used by both gems' generators.
+
+## Installed CSS files
+
+The core installer copies its token defaults to
+`app/assets/stylesheets/stimulus_plumbers/tokens.css` and imports that app-local file.
+
+This file is application-owned: later generator runs create a missing file but never overwrite an
+existing one. They also replace legacy imports that pointed into an installed gem with the new
+relative app-local import.
