@@ -71,6 +71,8 @@ Metrics/ClassLength:
 
 Metrics/ModuleLength:
   Exclude:
+    - lib/stimulus_plumbers/form/fields/inputs/code.rb
+    - lib/stimulus_plumbers/form/fields/inputs/credit_card.rb
     - lib/stimulus_plumbers/generators/css_entrypoint.rb
     - lib/stimulus_plumbers/plumber/renderer.rb
     - lib/stimulus_plumbers/themes/schema.rb
@@ -98,6 +100,7 @@ Metrics/ParameterLists:
   Exclude:
     - lib/stimulus_plumbers/components/calendar/turbo.rb
     - lib/stimulus_plumbers/components/combobox/trigger.rb
+    - lib/stimulus_plumbers/form/fields/inputs/code.rb
     - lib/stimulus_plumbers/form/fields/inputs/datetime.rb
     - lib/stimulus_plumbers/form/fields/inputs/search.rb
     - lib/stimulus_plumbers/form/fields/inputs/select.rb

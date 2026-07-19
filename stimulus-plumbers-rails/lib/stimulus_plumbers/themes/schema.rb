@@ -186,6 +186,7 @@ module StimulusPlumbers
         form_field_input_code_cell:             {
           error: { default: false, validate: Ranges::BOOL }
         }.freeze,
+        form_field_input_code_separator:        {}.freeze,
         form_field_input_code_overlay:          {
           error: { default: false, validate: Ranges::BOOL }
         }.freeze,

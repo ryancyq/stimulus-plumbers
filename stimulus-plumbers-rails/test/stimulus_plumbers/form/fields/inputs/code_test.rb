@@ -20,6 +20,20 @@ class CodeTest < ActionView::TestCase
     assert_css doc, "input[type='text'][name='sign_in_form[verification_code]']"
   end
 
+  def test_label_is_associated_with_the_input
+    doc = build_field
+
+    assert_equal doc.at_css("label")["for"], doc.at_css("input[type='text']")["id"]
+  end
+
+  def test_hint_and_error_are_associated_with_the_input
+    @form.errors.add(:verification_code, "is invalid")
+    described_by = build_field(hint: "Check your email").at_css("input[type='text']")["aria-describedby"]
+
+    assert_includes described_by, "sign_in_form_verification_code_hint"
+    assert_includes described_by, "sign_in_form_verification_code_error"
+  end
+
   def test_wires_input_formatter_for_code
     doc = build_field
 
@@ -57,6 +71,32 @@ class CodeTest < ActionView::TestCase
 
   def test_groups_are_passed_to_the_controller
     assert_css build_field(groups: [3, 3]), "[data-input-formatter-groups-value='[3,3]']"
+  end
+
+  def separators_in(doc)
+    cells = doc.css("[data-input-formatter-target='cell']")
+    cells[0].parent.children.reject { |node| node["data-input-formatter-target"] == "cell" }
+  end
+
+  def test_code_renders_no_separators_by_default
+    assert_empty separators_in(build_field(groups: [3, 3]))
+  end
+
+  def test_opting_into_a_separator_marks_the_group_breaks
+    doc = build_field(groups: [3, 3], separator: "-")
+    separator = separators_in(doc).first
+
+    assert_equal 6, doc.css("[data-input-formatter-target='cell']").length
+    assert_equal "-", separator.text
+    assert_equal "true", separator["aria-hidden"]
+  end
+
+  # Rendered separators own the group breaks; leaving groups on the controller would
+  # stamp data-group-end and add the themed gap on top of the separator.
+  def test_separator_suppresses_the_controller_side_grouping
+    doc = build_field(groups: [3, 3], separator: "-")
+
+    assert_nil doc.at_css("[data-controller='input-formatter']")["data-input-formatter-groups-value"]
   end
 
   def test_alphanumeric_code_does_not_force_numeric_inputmode
