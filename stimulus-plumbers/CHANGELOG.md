@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.10](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.9..stimulus-plumbers/v0.4.10) - 2026-07-19
+
+### Features
+
+- form field, code + credit card ([#177](https://github.com/ryancyq/stimulus-plumbers/issues/177)) - ([d3adbab](https://github.com/ryancyq/stimulus-plumbers/commit/d3adbaba5ec345807162b03305d22a67ca3846dd)) - Ryan Chang
+
+---
 ## [0.4.9](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.8..stimulus-plumbers/v0.4.9) - 2026-07-18
 
 ### Dependencies
