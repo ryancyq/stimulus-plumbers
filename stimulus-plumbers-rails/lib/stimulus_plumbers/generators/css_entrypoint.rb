@@ -74,11 +74,21 @@ module StimulusPlumbers
 
         entry = "/#{relative_to_destination(path)}"
         return if File.readlines(gitignore, chomp: true).include?(entry)
+        return if git_ignores?(path)
 
         File.open(gitignore, "a") { |file| file.puts(entry) }
         say_status :append, ".gitignore", :green
       rescue Errno::EROFS, Errno::EACCES => e
         say "Could not update .gitignore: #{e.message}. Skipping.", :yellow
+      end
+
+      def git_ignores?(path)
+        Dir.chdir(destination_root) do
+          system("git", "check-ignore", "-q", relative_to_destination(path), out: File::NULL, err: File::NULL)
+        end
+      rescue StandardError => e
+        say "Could not check .gitignore coverage with git: #{e.message}. Proceeding to append.", :yellow
+        false
       end
 
       # CSS copied by an installer belongs to the application from this point on.
