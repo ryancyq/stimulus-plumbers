@@ -21,11 +21,16 @@ module StimulusPlumbers
             raise NotImplementedError, "#{name} must define .read"
           end
 
-          def static_resources = []
+          def static_resources
+            []
+          end
 
-          def dynamic_resource_templates = []
+          def dynamic_resource_templates
+            []
+          end
 
-          def register_tools(_server, _store); end
+          def register_tools(_server, _store)
+          end
 
           def not_found(message)
             NotFound.new(message)

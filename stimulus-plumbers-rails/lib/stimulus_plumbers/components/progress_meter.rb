@@ -3,7 +3,9 @@
 module StimulusPlumbers
   module Components
     class ProgressMeter < Plumber::Base
-      def render(...) = render_meter(...)
+      def render(...)
+        render_meter(...)
+      end
 
       private
 

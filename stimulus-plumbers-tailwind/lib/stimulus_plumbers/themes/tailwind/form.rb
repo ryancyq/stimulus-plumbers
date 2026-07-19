@@ -13,7 +13,9 @@ module StimulusPlumbers
           { classes: klasses(*GROUP, layout == :inline ? GROUP_INLINE : "flex-col") }
         end
 
-        def form_submit_classes(**) = {}
+        def form_submit_classes(**)
+          {}
+        end
       end
     end
   end

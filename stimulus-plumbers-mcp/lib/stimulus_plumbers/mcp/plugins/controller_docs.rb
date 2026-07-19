@@ -8,9 +8,13 @@ module StimulusPlumbers
       # narrative markdown, grouped by controller family, not individual identifier).
       class ControllerDocs < Base
         class << self
-          def loader_key = :controller_docs
+          def loader_key
+            :controller_docs
+          end
 
-          def loader = ControllerDocsLoader
+          def loader
+            ControllerDocsLoader
+          end
 
           def static_resources
             [

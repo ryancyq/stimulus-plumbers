@@ -15,7 +15,9 @@ class SignUp
                 :resume,
                 :interests
 
-  def self.model_name
-    ActiveModel::Name.new(self, nil, "SignUp")
+  class << self
+    def model_name
+      ActiveModel::Name.new(self, nil, "SignUp")
+    end
   end
 end

@@ -5,9 +5,13 @@ module StimulusPlumbers
     module Plugins
       class ComponentDocs < Base
         class << self
-          def loader_key = :component_docs
+          def loader_key
+            :component_docs
+          end
 
-          def loader = ComponentDocsLoader
+          def loader
+            ComponentDocsLoader
+          end
 
           def dynamic_resource_templates
             [

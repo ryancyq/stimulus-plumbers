@@ -4,7 +4,9 @@ require "test_helper"
 require_relative "../../form_builder_model"
 
 class CreditCardTest < ActionView::TestCase
-  def setup = @form = FormBuilderModel.new
+  def setup
+    @form = FormBuilderModel.new
+  end
 
   def build_field(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/checkout") do |f|

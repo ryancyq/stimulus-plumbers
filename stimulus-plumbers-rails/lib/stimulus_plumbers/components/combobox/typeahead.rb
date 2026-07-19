@@ -4,17 +4,30 @@ module StimulusPlumbers
   module Components
     class Combobox
       class Typeahead < Plumber::Base
-        def self.listbox_id_for(panel_id)
-          [panel_id, "listbox"].compact.join("_")
+        class << self
+          def listbox_id_for(panel_id)
+            [panel_id, "listbox"].compact.join("_")
+          end
         end
 
         module Metadata
           module_function
 
-          def haspopup = "listbox"
-          def popup_id_for(panel_id) = Typeahead.listbox_id_for(panel_id)
-          def trigger_icon = nil
-          def trigger_options = { readonly: false, aria: { autocomplete: "list" } }
+          def haspopup
+            "listbox"
+          end
+
+          def popup_id_for(panel_id)
+            Typeahead.listbox_id_for(panel_id)
+          end
+
+          def trigger_icon
+            nil
+          end
+
+          def trigger_options
+            { readonly: false, aria: { autocomplete: "list" } }
+          end
 
           def stimulus_data(panel_id, _options)
             {
@@ -24,7 +37,9 @@ module StimulusPlumbers
           end
         end
 
-        def render(...) = render_typeahead(...)
+        def render(...)
+          render_typeahead(...)
+        end
 
         private
 

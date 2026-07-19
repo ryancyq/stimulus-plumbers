@@ -45,11 +45,25 @@ module StimulusPlumbers
           { classes: klasses(*VARIANTS.fetch(variant, VARIANTS[:tertiary]), *BASE) }
         end
 
-        def card_header_classes  = { classes: klasses(*HEADER) }
-        def card_icon_classes    = { classes: klasses(*ICON) }
-        def card_title_classes   = { classes: klasses(*TITLE) }
-        def card_body_classes    = { classes: klasses(*BODY) }
-        def card_action_classes  = { classes: klasses(*ACTION) }
+        def card_header_classes
+          { classes: klasses(*HEADER) }
+        end
+
+        def card_icon_classes
+          { classes: klasses(*ICON) }
+        end
+
+        def card_title_classes
+          { classes: klasses(*TITLE) }
+        end
+
+        def card_body_classes
+          { classes: klasses(*BODY) }
+        end
+
+        def card_action_classes
+          { classes: klasses(*ACTION) }
+        end
       end
     end
   end

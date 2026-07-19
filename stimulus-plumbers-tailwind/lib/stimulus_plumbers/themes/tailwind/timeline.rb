@@ -86,16 +86,45 @@ module StimulusPlumbers
           { classes: klasses(base) }
         end
 
-        def timeline_item_title_classes       = { classes: klasses(ITEM_TITLE) }
-        def timeline_item_heading_classes     = { classes: klasses(ITEM_HEADING) }
-        def timeline_item_trigger_classes     = { classes: klasses(ITEM_TRIGGER) }
-        def timeline_item_description_classes = { classes: klasses(ITEM_DESCRIPTION) }
-        def timeline_item_detail_classes      = { classes: klasses(ITEM_DETAIL) }
-        def timeline_item_actions_classes     = { classes: klasses(ITEM_ACTIONS) }
-        def timeline_item_connector_classes       = { classes: klasses(ITEM_CONNECTOR_HORIZONTAL) }
-        def timeline_item_content_classes         = { classes: klasses(ITEM_CONTENT_HORIZONTAL) }
-        def timeline_track_line_classes                = { classes: klasses(TRACK_LINE_VERTICAL) }
-        def timeline_item_indicator_icon_slot_classes  = { classes: klasses(ITEM_INDICATOR_ICON_SLOT) }
+        def timeline_item_title_classes
+          { classes: klasses(ITEM_TITLE) }
+        end
+
+        def timeline_item_heading_classes
+          { classes: klasses(ITEM_HEADING) }
+        end
+
+        def timeline_item_trigger_classes
+          { classes: klasses(ITEM_TRIGGER) }
+        end
+
+        def timeline_item_description_classes
+          { classes: klasses(ITEM_DESCRIPTION) }
+        end
+
+        def timeline_item_detail_classes
+          { classes: klasses(ITEM_DETAIL) }
+        end
+
+        def timeline_item_actions_classes
+          { classes: klasses(ITEM_ACTIONS) }
+        end
+
+        def timeline_item_connector_classes
+          { classes: klasses(ITEM_CONNECTOR_HORIZONTAL) }
+        end
+
+        def timeline_item_content_classes
+          { classes: klasses(ITEM_CONTENT_HORIZONTAL) }
+        end
+
+        def timeline_track_line_classes
+          { classes: klasses(TRACK_LINE_VERTICAL) }
+        end
+
+        def timeline_item_indicator_icon_slot_classes
+          { classes: klasses(ITEM_INDICATOR_ICON_SLOT) }
+        end
       end
     end
   end

@@ -53,9 +53,17 @@ class IndicatorTest < ActionView::TestCase
     Class.new(StimulusPlumbers::Themes::Base) do
       private
 
-      def indicator_classes(**) = {}
-      def indicator_wrapper_classes = { classes: "wrapper-test" }
-      def indicator_pulse_classes = {}
+      def indicator_classes(**)
+        {}
+      end
+
+      def indicator_wrapper_classes
+        { classes: "wrapper-test" }
+      end
+
+      def indicator_pulse_classes
+        {}
+      end
     end.new
   end
 

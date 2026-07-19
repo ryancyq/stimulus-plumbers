@@ -7,9 +7,13 @@ module StimulusPlumbers
         GUIDE_NAMES = %w[component controller tailwind theme].freeze
 
         class << self
-          def loader_key = :guide
+          def loader_key
+            :guide
+          end
 
-          def loader = GuideLoader
+          def loader
+            GuideLoader
+          end
 
           def static_resources
             [

@@ -3,8 +3,10 @@
 module StimulusPlumbers
   module Components
     class Icon < Plumber::Base
-      def self.icon_name?(value)
-        value.is_a?(Symbol) || (value.is_a?(String) && !value.html_safe?)
+      class << self
+        def icon_name?(value)
+          value.is_a?(Symbol) || (value.is_a?(String) && !value.html_safe?)
+        end
       end
 
       def render(name:, size: :lg, **kwargs)

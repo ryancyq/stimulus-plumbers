@@ -7,11 +7,13 @@ module StimulusPlumbers
     module GemVendorPath
       GEM_NAME = "stimulus_plumbers"
 
-      def self.resolve(*relative)
-        gem_dir = Gem::Specification.find_by_name(GEM_NAME).gem_dir
-        File.join(gem_dir, "vendor", *relative)
-      rescue Gem::MissingSpecError
-        nil
+      class << self
+        def resolve(*relative)
+          gem_dir = Gem::Specification.find_by_name(GEM_NAME).gem_dir
+          File.join(gem_dir, "vendor", *relative)
+        rescue Gem::MissingSpecError
+          nil
+        end
       end
     end
   end

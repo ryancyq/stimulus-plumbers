@@ -35,10 +35,21 @@ module StimulusPlumbers
 
         private
 
-        def progress_bar_classes      = { classes: klasses(*BAR) }
-        def progress_bar_fill_classes = { classes: klasses(*BAR_FILL) }
-        def progress_ring_classes     = { classes: klasses(*RING) }
-        def progress_meter_classes    = { classes: klasses(*METER) }
+        def progress_bar_classes
+          { classes: klasses(*BAR) }
+        end
+
+        def progress_bar_fill_classes
+          { classes: klasses(*BAR_FILL) }
+        end
+
+        def progress_ring_classes
+          { classes: klasses(*RING) }
+        end
+
+        def progress_meter_classes
+          { classes: klasses(*METER) }
+        end
       end
     end
   end

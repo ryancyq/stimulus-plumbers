@@ -57,25 +57,41 @@ class BaseThemeTest < Minitest::Test
   end
 
   def test_valid_symbol_0arg_accepts_value_in_collection
-    theme = Class.new(StimulusPlumbers::Themes::Base) { def color_range = %w[red blue] }.new
+    theme = Class.new(StimulusPlumbers::Themes::Base) do
+      def color_range
+        %w[red blue]
+      end
+    end.new
 
     assert theme.send(:valid?, :color_range, "red")
   end
 
   def test_valid_symbol_0arg_rejects_value_not_in_collection
-    theme = Class.new(StimulusPlumbers::Themes::Base) { def color_range = %w[red blue] }.new
+    theme = Class.new(StimulusPlumbers::Themes::Base) do
+      def color_range
+        %w[red blue]
+      end
+    end.new
 
     refute theme.send(:valid?, :color_range, "green")
   end
 
   def test_valid_symbol_1arg_accepts_when_predicate_returns_true
-    theme = Class.new(StimulusPlumbers::Themes::Base) { def icon_valid?(name) = name.start_with?("hero-") }.new
+    theme = Class.new(StimulusPlumbers::Themes::Base) do
+      def icon_valid?(name)
+        name.start_with?("hero-")
+      end
+    end.new
 
     assert theme.send(:valid?, :icon_valid?, "hero-check")
   end
 
   def test_valid_symbol_1arg_rejects_when_predicate_returns_false
-    theme = Class.new(StimulusPlumbers::Themes::Base) { def icon_valid?(name) = name.start_with?("hero-") }.new
+    theme = Class.new(StimulusPlumbers::Themes::Base) do
+      def icon_valid?(name)
+        name.start_with?("hero-")
+      end
+    end.new
 
     refute theme.send(:valid?, :icon_valid?, "custom-check")
   end
@@ -97,13 +113,21 @@ class BaseThemeTest < Minitest::Test
   end
 
   def test_valid_proc_accepts_value_when_instance_method_collection_includes_it
-    theme = Class.new(StimulusPlumbers::Themes::Base) { def allowed = %w[red blue] }.new
+    theme = Class.new(StimulusPlumbers::Themes::Base) do
+      def allowed
+        %w[red blue]
+      end
+    end.new
 
     assert theme.send(:valid?, ->(v) { allowed.include?(v) }, "red")
   end
 
   def test_valid_proc_rejects_value_when_instance_method_collection_excludes_it
-    theme = Class.new(StimulusPlumbers::Themes::Base) { def allowed = %w[red blue] }.new
+    theme = Class.new(StimulusPlumbers::Themes::Base) do
+      def allowed
+        %w[red blue]
+      end
+    end.new
 
     refute theme.send(:valid?, ->(v) { allowed.include?(v) }, "green")
   end

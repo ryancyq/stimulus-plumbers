@@ -3,7 +3,9 @@
 module StimulusPlumbers
   module Components
     class Indicator < Plumber::Base
-      def render(...) = render_indicator(...)
+      def render(...)
+        render_indicator(...)
+      end
 
       private
 

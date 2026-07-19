@@ -6,8 +6,10 @@ module StimulusPlumbers
       class Event < Plumber::Base
         attr_reader :interactive
 
-        def self.detail_id_for(event_id)
-          [event_id, "detail"].compact.join("_")
+        class << self
+          def detail_id_for(event_id)
+            [event_id, "detail"].compact.join("_")
+          end
         end
 
         def render(datetime: nil, id: nil, interactive: false, orientation: :vertical, **kwargs, &block)
