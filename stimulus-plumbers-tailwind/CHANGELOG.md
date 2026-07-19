@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.10](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.9..stimulus-plumbers-tailwind/v0.4.10) - 2026-07-19
+
+### Bug Fixes
+
+- replace *_BASE with semantic parts ([#178](https://github.com/ryancyq/stimulus-plumbers/issues/178)) - ([9a29c0b](https://github.com/ryancyq/stimulus-plumbers/commit/9a29c0b5e804dea66d048d3058041c2cd6ccfe31)) - Ryan Chang
+- install generator will copy css file from gem dir into app assets folder ([#179](https://github.com/ryancyq/stimulus-plumbers/issues/179)) - ([2e497f2](https://github.com/ryancyq/stimulus-plumbers/commit/2e497f2119b1c9aa22115c695d48ea4cdbeff9c2)) - Ryan Chang
+
+### Features
+
+- form field, code + credit card ([#177](https://github.com/ryancyq/stimulus-plumbers/issues/177)) - ([d3adbab](https://github.com/ryancyq/stimulus-plumbers/commit/d3adbaba5ec345807162b03305d22a67ca3846dd)) - Ryan Chang
+
+---
 ## [0.4.9](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.8..stimulus-plumbers-tailwind/v0.4.9) - 2026-07-18
 
 ### Bug Fixes
