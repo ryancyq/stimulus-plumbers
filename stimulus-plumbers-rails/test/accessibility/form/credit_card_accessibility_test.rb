@@ -11,4 +11,8 @@ class CreditCardAccessibilityTest < ApplicationAccessibilityTestCase
   def test_default_passes_wcag
     assert_accessible context: "#credit-card-default"
   end
+
+  def test_separator_passes_wcag
+    assert_accessible context: "#credit-card-separator"
+  end
 end

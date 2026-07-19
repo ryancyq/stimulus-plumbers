@@ -151,21 +151,23 @@ Use `f.password_field` for a plain `<input type="password">` (also accepts `reve
 
 **Code** (`as: :code`) — character-cell entry backed by `input-formatter` and the `character-cells` plumber. The native input remains the accessible control; cells are decorative.
 
-| Option         | Values                                   | Default                | Description                                 |
-| -------------- | ---------------------------------------- | ---------------------- | ------------------------------------------- |
-| `length`       | positive Integer                         | required               | Number of cells and input maximum length    |
-| `charset`      | `:digits` / `:letters` / `:alphanumeric` | `:digits`              | Allowed code characters                     |
-| `groups`       | Array of positive Integers               | `[]`                   | Visual cell groups; must add up to `length` |
-| `autocomplete` | String                                   | `"one-time-code"`      | Native autocomplete value                   |
-| `inputmode`    | String                                   | `"numeric"` for digits | Native input mode                           |
+| Option         | Values                                   | Default                | Description                                              |
+| -------------- | ---------------------------------------- | ---------------------- | -------------------------------------------------------- |
+| `length`       | positive Integer                         | required               | Number of cells and input maximum length                 |
+| `charset`      | `:digits` / `:letters` / `:alphanumeric` | `:digits`              | Allowed code characters                                  |
+| `groups`       | Array of positive Integers               | `[]`                   | Visual cell groups; must add up to `length`              |
+| `separator`    | String / `nil`                           | `nil`                  | Character between groups; `nil` shows the break as a gap |
+| `autocomplete` | String                                   | `"one-time-code"`      | Native autocomplete value                                |
+| `inputmode`    | String                                   | `"numeric"` for digits | Native input mode                                        |
 
-**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group with a literal dash separator between cells; their sum sets `maxlength`.
+**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group; their sum sets `maxlength`.
 
-| Option         | Values                     | Default        | Description                                                                  |
-| -------------- | -------------------------- | -------------- | ---------------------------------------------------------------------------- |
-| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group, dash-separated; their sum sets `maxlength` |
-| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                                    |
-| `inputmode`    | String                     | `"numeric"`    | Native input mode                                                            |
+| Option         | Values                     | Default        | Description                                                  |
+| -------------- | -------------------------- | -------------- | ------------------------------------------------------------ |
+| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group; their sum sets `maxlength` |
+| `separator`    | String / `nil`             | `nil`          | Character between cells; `nil` renders none                  |
+| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                    |
+| `inputmode`    | String                     | `"numeric"`    | Native input mode                                            |
 
 Character-cell fields do not support `floating:` labels.
 

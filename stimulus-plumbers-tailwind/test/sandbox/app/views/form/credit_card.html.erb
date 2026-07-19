@@ -8,3 +8,12 @@
     <% end %>
   </div>
 </section>
+
+<section id="credit-card-separator" class="sb-section">
+  <h2>With separator</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "credit_card_separator", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :card_number, as: :credit_card, label: "Card number", separator: "-" %>
+    <% end %>
+  </div>
+</section>

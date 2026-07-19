@@ -5,6 +5,9 @@ module StimulusPlumbers
     module Fields
       module Inputs
         module Password
+          STIMULUS_CONTROLLER = "input-formatter"
+          STIMULUS_ACTION     = "click->#{STIMULUS_CONTROLLER}#toggle".freeze
+
           def password_field(attribute, floating: nil, revealable: false, **options)
             html_options = merge_html_options(theme.resolve(:form_field_input, floating: floating), options)
             if revealable
@@ -42,7 +45,7 @@ module StimulusPlumbers
               trailing: method(:reveal_button),
               **merge_html_options(
                 theme.resolve(:form_field_input_reveal, error: error),
-                { data: { controller: "input-formatter", input_formatter_format_value: "password" } }
+                { data: { controller: STIMULUS_CONTROLLER, input_formatter_format_value: "password" } }
               )
             ) { @template.capture(&block) }
           end
@@ -66,7 +69,7 @@ module StimulusPlumbers
                 {
                   type: "button",
                   aria: { label: I18n.t("stimulus_plumbers.form.password.show", default: "Show password"), pressed: "false" },
-                  data: { input_formatter_target: "toggle", action: "click->input-formatter#toggle" }
+                  data: { input_formatter_target: "toggle", action: STIMULUS_ACTION }
                 }
               )
             ) { @template.capture(&block) }
