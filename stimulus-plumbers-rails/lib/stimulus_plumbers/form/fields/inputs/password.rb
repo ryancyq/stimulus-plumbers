@@ -45,20 +45,37 @@ module StimulusPlumbers
               trailing: method(:reveal_button),
               **merge_html_options(
                 theme.resolve(:form_field_input_reveal, error: error),
-                { data: { controller: STIMULUS_CONTROLLER, input_formatter_format_value: "password" } }
+                data: reveal_data
               )
             ) { @template.capture(&block) }
           end
 
           def reveal_button
             build_reveal_button do
-              Components::Icon.new(@template).render(
-                name: "reveal",
-                size: :sm,
-                aria: { hidden: "true" },
-                **theme.resolve(:button_icon)
+              @template.safe_join(
+                [password_icon("reveal", "revealIcon"), password_icon("conceal", "concealIcon", hidden: true)]
               )
             end
+          end
+
+          def reveal_data
+            {
+              controller:                          STIMULUS_CONTROLLER,
+              input_formatter_format_value:        "password",
+              input_formatter_label_reveal_value:  I18n.t("stimulus_plumbers.form.password.show", default: "Show password"),
+              input_formatter_label_conceal_value: I18n.t("stimulus_plumbers.form.password.hide", default: "Hide password")
+            }
+          end
+
+          def password_icon(name, target, hidden: false)
+            Components::Icon.new(@template).render(
+              name:   name,
+              size:   :sm,
+              aria:   { hidden: "true" },
+              data:   { input_formatter_target: target },
+              hidden: hidden,
+              **theme.resolve(:button_icon)
+            )
           end
 
           def build_reveal_button(&block)
@@ -68,7 +85,7 @@ module StimulusPlumbers
                 theme.resolve(:form_field_input_button_reveal),
                 {
                   type: "button",
-                  aria: { label: I18n.t("stimulus_plumbers.form.password.show", default: "Show password"), pressed: "false" },
+                  aria: { label: I18n.t("stimulus_plumbers.form.password.show", default: "Show password") },
                   data: { input_formatter_target: "toggle", action: STIMULUS_ACTION }
                 }
               )

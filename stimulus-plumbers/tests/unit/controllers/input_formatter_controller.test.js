@@ -258,9 +258,14 @@ describe('InputFormatterController', () => {
       })
 
       document.body.innerHTML = `
-        <div data-controller="input-formatter" data-input-formatter-format-value="secret">
+        <div data-controller="input-formatter" data-input-formatter-format-value="secret"
+             data-input-formatter-label-reveal-value="Show secret"
+             data-input-formatter-label-conceal-value="Hide secret">
           <output data-input-formatter-target="input">hello</output>
-          <button data-action="input-formatter#toggle" data-input-formatter-target="toggle">Toggle</button>
+          <button aria-label="Show secret" data-action="input-formatter#toggle" data-input-formatter-target="toggle">
+            <svg data-input-formatter-target="revealIcon"></svg>
+            <svg data-input-formatter-target="concealIcon" hidden></svg>
+          </button>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
@@ -282,9 +287,35 @@ describe('InputFormatterController', () => {
       expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe('hello')
     })
 
-    it('sets aria-pressed on the toggle button', () => {
+    it('swaps the toggle button label to name the next action', async () => {
       const toggle = document.querySelector('[data-input-formatter-target="toggle"]')
-      expect(toggle.getAttribute('aria-pressed')).toBe('false')
+      expect(toggle.getAttribute('aria-label')).toBe('Show secret')
+      await getController().toggle()
+      expect(toggle.getAttribute('aria-label')).toBe('Hide secret')
+    })
+
+    it('swaps the visible icon on toggle', async () => {
+      const revealIcon = document.querySelector('[data-input-formatter-target="revealIcon"]')
+      const concealIcon = document.querySelector('[data-input-formatter-target="concealIcon"]')
+
+      expect(revealIcon.hasAttribute('hidden')).toBe(false)
+      expect(concealIcon.hasAttribute('hidden')).toBe(true)
+      await getController().toggle()
+      expect(revealIcon.hasAttribute('hidden')).toBe(true)
+      expect(concealIcon.hasAttribute('hidden')).toBe(false)
+    })
+
+    it('toggles without icon targets', async () => {
+      document.body.innerHTML = `
+        <div data-controller="input-formatter" data-input-formatter-format-value="secret">
+          <output data-input-formatter-target="input">hello</output>
+          <button data-action="input-formatter#toggle" data-input-formatter-target="toggle">Toggle</button>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+
+      expect(() => getController().toggle()).not.toThrow()
+      expect(getController().revealedValue).toBe(true)
     })
   })
 

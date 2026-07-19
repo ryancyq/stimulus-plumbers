@@ -70,15 +70,22 @@ Formatter.register('iban', {
 ### Password reveal
 
 ```html
-<div data-controller="input-formatter" data-input-formatter-format-value="password">
+<div
+  data-controller="input-formatter"
+  data-input-formatter-format-value="password"
+  data-input-formatter-label-reveal-value="Show password"
+  data-input-formatter-label-conceal-value="Hide password"
+>
   <input type="password" data-input-formatter-target="input" />
   <button
     type="button"
     aria-label="Show password"
-    aria-pressed="false"
     data-input-formatter-target="toggle"
     data-action="click->input-formatter#toggle"
-  ></button>
+  >
+    <svg data-input-formatter-target="revealIcon" aria-hidden="true"></svg>
+    <svg data-input-formatter-target="concealIcon" aria-hidden="true" hidden></svg>
+  </button>
 </div>
 ```
 
@@ -151,5 +158,5 @@ dash) are authored HTML, never inserted by the plumber — see
 ## Accessibility
 
 - Password `type` attribute switches between `"password"` (masked) and `"text"` (revealed), so screen readers announce the field type correctly.
-- See [ARIA.md's Password Reveal pattern](../../../ARIA.md) for the `toggle` button's `aria-label`/`aria-pressed` requirements.
+- See [ARIA.md's Password Reveal pattern](../../../ARIA.md) for the `toggle` button's accessible-name requirements.
 - Cell display: see [ARIA.md's Code Input pattern](../../../ARIA.md).

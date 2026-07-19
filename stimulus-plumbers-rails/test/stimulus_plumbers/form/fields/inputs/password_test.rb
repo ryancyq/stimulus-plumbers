@@ -62,8 +62,24 @@ class PasswordTest < ActionView::TestCase
     assert_css build_native(revealable: true), "button[aria-label='Show password']"
   end
 
-  def test_reveal_toggle_button_has_aria_pressed_false
-    assert_css build_native(revealable: true), "button[aria-pressed='false']"
+  def test_reveal_toggle_button_has_no_aria_pressed_attribute
+    assert_nil build_native(revealable: true).at_css("button[data-input-formatter-target='toggle']")["aria-pressed"]
+  end
+
+  def test_reveal_toggle_button_renders_reveal_and_conceal_icons
+    button = build_native(revealable: true).at_css("button[data-input-formatter-target='toggle']")
+    icon_html = parse_html(button.to_html)
+
+    assert_css icon_html, "[data-input-formatter-target='revealIcon'][aria-hidden='true']"
+    assert_css icon_html, "[data-input-formatter-target='concealIcon'][aria-hidden='true'][hidden]"
+    assert_no_css icon_html, "[data-input-formatter-target='revealIcon'][hidden]"
+  end
+
+  def test_reveal_input_group_has_toggle_label_values
+    group = build_native(revealable: true).at_css("[data-controller='input-formatter']")
+
+    assert_equal "Show password", group["data-input-formatter-label-reveal-value"]
+    assert_equal "Hide password", group["data-input-formatter-label-conceal-value"]
   end
 
   def test_reveal_toggle_button_type_is_button

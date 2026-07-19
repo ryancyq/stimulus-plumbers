@@ -1,14 +1,16 @@
 import { Controller } from '@hotwired/stimulus';
-import { setPressed } from '../accessibility/aria';
+import { setHidden } from '../accessibility/aria';
 import { attachFormatter, attachCharacterCells } from '../plumbers';
 
 export default class extends Controller {
-  static targets = ['input', 'toggle', 'cell'];
+  static targets = ['input', 'toggle', 'cell', 'revealIcon', 'concealIcon'];
   static values = {
     format: { type: String, default: 'plain' },
     options: { type: Object, default: {} },
     revealed: { type: Boolean, default: false },
     groups: { type: Array, default: [] },
+    labelReveal: { type: String, default: '' },
+    labelConceal: { type: String, default: '' },
   };
 
   connect() {
@@ -131,7 +133,12 @@ export default class extends Controller {
     if (!this.hasToggleTarget) return;
     const hasToggleBehavior = this.formatter?.maskable() || this.formatValue === 'password';
     this.toggleTarget.hidden = !hasToggleBehavior;
-    if (hasToggleBehavior) setPressed(this.toggleTarget, this.revealedValue);
+    if (!hasToggleBehavior || !this.hasRevealIconTarget) return;
+
+    setHidden(this.revealIconTarget, this.revealedValue);
+    setHidden(this.concealIconTarget, !this.revealedValue);
+    const label = this.revealedValue ? this.labelConcealValue : this.labelRevealValue;
+    if (label) this.toggleTarget.setAttribute('aria-label', label);
   }
 
   readValue() {
