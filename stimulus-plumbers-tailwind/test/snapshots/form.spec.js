@@ -43,6 +43,12 @@ test.describe("sign up form", () => {
       "sign-up-floating-password-revealed.png",
     );
   });
+
+  test("icon-only submit", async ({ page }) => {
+    await expect(page.locator("#sign-up-submit-icon-only")).toHaveScreenshot(
+      "sign-up-submit-icon-only.png",
+    );
+  });
 });
 
 // ── Field error form ─────────────────────────────────────────────────────────

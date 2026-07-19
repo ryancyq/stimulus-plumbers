@@ -57,6 +57,10 @@ class TailwindThemeFormTest < Minitest::Test
     assert_equal({}, result)
   end
 
+  def test_form_submit_label_is_visually_hidden_when_requested
+    assert_includes classes_for(:form_submit_label, hidden: true), "sr-only"
+  end
+
   def test_form_group_error_does_not_change_layout_classes
     stacked         = classes_for(:form_group, layout: :stacked)
     stacked_error   = classes_for(:form_group, layout: :stacked, error: true)

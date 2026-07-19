@@ -26,6 +26,6 @@ Validation ranges for theme schema params live under `lib/stimulus_plumbers/them
 
 `Button#build_button` and `Link#build_content` always wrap non-nil text/block content in `<span>`. When content is nil and no block is given (icon-only), no `<span>` is rendered.
 
-The active theme uses `:has(> span)` / `:not(:has(> span))` CSS to distinguish icon-only from text buttons without any Ruby flag.
+The active theme uses `:has(> span)` / `:not(:has(> span))` CSS to distinguish icon-only from text buttons without any Ruby flag. Submit buttons with visually hidden text additionally use `:has(> span[data-sp-label-hidden])` so they retain the icon-only square layout while keeping an accessible name.
 
 **Do not change this contract** without updating `stimulus-plumbers-tailwind`'s `Button::LAYOUT` and `Link::BUTTON` constants accordingly. See [tailwind architecture doc](../../stimulus-plumbers-tailwind/docs/architecture.md#icon-only-square-pattern).

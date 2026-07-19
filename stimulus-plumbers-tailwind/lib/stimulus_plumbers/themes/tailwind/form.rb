@@ -16,6 +16,10 @@ module StimulusPlumbers
         def form_submit_classes(**)
           {}
         end
+
+        def form_submit_label_classes(hidden: false, **)
+          { classes: klasses(hidden ? "sr-only" : nil) }
+        end
       end
     end
   end

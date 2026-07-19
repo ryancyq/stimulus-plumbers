@@ -17,6 +17,7 @@ module StimulusPlumbers
           "calendar"      => "calendar-days",
           "external-link" => "arrow-top-right-on-square",
           "reveal"        => "eye",
+          "save"          => "check",
           "grip-vertical" => "bars-3"
         }.freeze
 

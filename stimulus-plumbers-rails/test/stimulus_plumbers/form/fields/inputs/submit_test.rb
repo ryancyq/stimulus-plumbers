@@ -21,6 +21,63 @@ class SubmitTest < ActionView::TestCase
     assert_includes doc.at_css("button[type='submit'] > span").text, "Save"
   end
 
+  def test_submit_renders_leading_icon_before_label
+    with_icon_theme do
+      doc = build_form { |f| f.submit "Save", icon_leading: "save" }
+
+      assert_css doc, "button[type='submit'] > svg:first-child"
+      assert_css doc, "button[type='submit'] > svg + span"
+    end
+  end
+
+  def test_submit_renders_trailing_icon_after_label
+    with_icon_theme do
+      doc = build_form { |f| f.submit "Save", icon_trailing: "close" }
+
+      assert_css doc, "button[type='submit'] > span + svg:last-child"
+    end
+  end
+
+  def test_submit_renders_icons_on_both_sides_of_label
+    with_icon_theme do
+      doc = build_form { |f| f.submit "Save", icon_leading: "save", icon_trailing: "close" }
+
+      assert_css doc, "button[type='submit'] > svg:first-child + span + svg:last-child"
+    end
+  end
+
+  def test_submit_hides_label_visually_without_removing_its_text
+    with_icon_theme do
+      doc = build_form { |f| f.submit "Save", icon_leading: "save", hide_label: true }
+
+      span = doc.at_css("button[type='submit'] > span[data-sp-label-hidden]")
+
+      assert_not_nil span
+      assert_equal "Save", span.text
+    end
+  end
+
+  def test_submit_hides_label_without_icons_and_keeps_accessible_name
+    doc = build_form { |f| f.submit "Save", hide_label: true }
+
+    span = doc.at_css("button[type='submit'] > span[data-sp-label-hidden]")
+
+    assert_not_nil span
+    assert_equal "Save", span.text
+  end
+
+  def test_submit_with_blank_label_and_no_accessible_name_raises
+    error = assert_raises(ArgumentError) { build_form { |f| f.submit "" } }
+
+    assert_match "submit button has no accessible name", error.message
+  end
+
+  def test_submit_with_blank_label_and_aria_label_renders
+    doc = build_form { |f| f.submit "", aria: { label: "Save changes" } }
+
+    assert_css doc, "button[type='submit'][aria-label='Save changes']"
+  end
+
   def test_submit_uses_default_value_when_omitted
     doc = build_form(&:submit)
 

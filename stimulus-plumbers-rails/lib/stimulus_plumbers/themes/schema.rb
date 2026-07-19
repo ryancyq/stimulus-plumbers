@@ -206,6 +206,9 @@ module StimulusPlumbers
         form_submit:                            {
           type:    { default: :default, validate: Button::Ranges::TYPE },
           variant: { default: :primary, validate: Button::Ranges::VARIANT }
+        }.freeze,
+        form_submit_label:                      {
+          hidden: { default: false, validate: Ranges::BOOL }
         }.freeze
       }.freeze
 

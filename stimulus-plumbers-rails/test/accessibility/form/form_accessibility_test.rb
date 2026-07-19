@@ -17,4 +17,8 @@ class FormAccessibilityTest < ApplicationAccessibilityTestCase
 
     assert_accessible context: "#sign-up"
   end
+
+  def test_passes_wcag_with_icon_only_submit
+    assert_accessible context: "#sign-up-submit-icon-only"
+  end
 end
