@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:css": "./node_modules/.bin/tailwindcss -i test/sandbox/tailwind.css -o test/sandbox/public/tailwind.css",
+    "build:css": "./node_modules/.bin/tailwindcss -i test/sandbox/app/assets/stylesheets/application.css -o test/sandbox/public/tailwind.css",
     "clean:snapshots": "rm -rf test/snapshots/__screenshots__",
     "test:snapshots": "node --run build:css && playwright test",
     "test:snapshots:ui": "node --run build:css && playwright test --ui",

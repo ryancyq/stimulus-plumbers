@@ -50,6 +50,37 @@ module StimulusPlumbers
         say "Could not update #{relative_to_destination(css_file)}: #{e.message}. Skipping.", :yellow
       end
 
+      def remove_lines(css_file, pattern)
+        content = File.read(css_file)
+        return unless content.match?(pattern)
+
+        File.write(css_file, content.lines.grep_v(pattern).join)
+        say_status :update, relative_to_destination(css_file), :green
+      rescue Errno::EROFS, Errno::EACCES => e
+        say "Could not update #{relative_to_destination(css_file)}: #{e.message}. Skipping.", :yellow
+      end
+
+      def write_generated(path, contents)
+        FileUtils.mkdir_p(File.dirname(path))
+        File.write(path, contents)
+        say_status :create, relative_to_destination(path), :green
+      rescue Errno::EROFS, Errno::EACCES => e
+        say "Could not write #{relative_to_destination(path)}: #{e.message}. Skipping.", :yellow
+      end
+
+      def append_to_gitignore(path)
+        gitignore = File.join(destination_root, ".gitignore")
+        return unless File.exist?(gitignore)
+
+        entry = "/#{relative_to_destination(path)}"
+        return if File.readlines(gitignore, chomp: true).include?(entry)
+
+        File.open(gitignore, "a") { |file| file.puts(entry) }
+        say_status :append, ".gitignore", :green
+      rescue Errno::EROFS, Errno::EACCES => e
+        say "Could not update .gitignore: #{e.message}. Skipping.", :yellow
+      end
+
       # CSS copied by an installer belongs to the application from this point on.
       # Keep an existing file intact so a generator rerun never overwrites local
       # customizations (the same policy used by tailwindcss-rails' installer).

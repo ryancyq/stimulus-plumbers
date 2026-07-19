@@ -16,12 +16,13 @@ the `STIMULUS_PLUMBERS_CSS_ENTRY` override are shared with the core gem — see
 
 ## Installed CSS files
 
-The Tailwind installer copies these files into the application and imports them relatively:
+The Tailwind installer installs these CSS files and imports them relatively:
 
 - `app/assets/stylesheets/stimulus_plumbers/tokens.css`
 - `app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css` — registers the indeterminate progress bar slide keyframe.
+- `app/assets/builds/stimulus_plumbers/tailwind.css` — generated, git-ignored build artifact holding the gem `@source`, regenerated on every build.
 
-Both files are application-owned: later generator runs restore a missing copy but never overwrite
+The first two files are application-owned: later generator runs restore a missing copy but never overwrite
 an existing one. Legacy imports that point into gem directories are migrated to these app-local
 paths.
 
