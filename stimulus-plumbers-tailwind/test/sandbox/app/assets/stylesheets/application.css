@@ -1,8 +1,8 @@
-@import "./app/assets/stylesheets/stimulus_plumbers/tokens.css";
-@import "./app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css";
+@import "./stimulus_plumbers/tokens.css";
+@import "./stimulus_plumbers/tailwind/animations.css";
 @import "tailwindcss";
-@source "../../lib/**/*.rb";
-@source "./app/views/**/*.erb";
+@import "../builds/stimulus_plumbers/tailwind.css";
+@source "../../views/**/*.erb";
 
 @layer base {
   :root {

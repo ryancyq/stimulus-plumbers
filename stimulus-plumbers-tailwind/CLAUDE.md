@@ -57,10 +57,16 @@ stimulus-plumbers-tailwind/
 │   │           └── ...
 │   ├── snapshots/                          # Playwright visual snapshot specs
 │   ├── sandbox/                            # Minimal Rails app for snapshot tests
-│   │   ├── app/views/                      # ERB views (components + form pages)
+│   │   ├── app/
+│   │   │   ├── assets/
+│   │   │   │   ├── stylesheets/
+│   │   │   │   │   └── application.css     # Tailwind CSS v4 entry source (generator-owned imports)
+│   │   │   │   └── builds/
+│   │   │   │       └── stimulus_plumbers/
+│   │   │   │           └── tailwind.css    # Generated gem @source partial (committed fixture)
+│   │   │   └── views/                      # ERB views (components + form pages)
 │   │   ├── config/                         # Routes, application, environment
-│   │   ├── public/                         # Compiled tailwind.css output (gitignored)
-│   │   └── tailwind.css                    # Tailwind CSS v4 source with @source directives
+│   │   └── public/                         # Compiled tailwind.css output (gitignored)
 │   ├── support/
 │   │   └── html_assertions.rb
 │   └── test_helper.rb
@@ -97,7 +103,7 @@ Routes: `/components/{controls,display,layout,popover,calendar,showcase}/{button
 
 **Never run `node --run test:snapshots:update`** — the user does this.
 
-**`test/sandbox/tailwind.css`'s generator-owned lines (`@import tokens.css`, `@source lib/**/*.rb`) must always match `stimulus_plumbers:tailwind:install`'s output** — `test/stimulus_plumbers/tailwind/sandbox_css_test.rb` enforces this by re-running the generator against it and diffing. If it fails, regenerate with `STIMULUS_PLUMBERS_CSS_ENTRY=test/sandbox/tailwind.css bin/rails generate stimulus_plumbers:tailwind:install` and commit the diff — never hand-edit those lines.
+**`test/sandbox/app/assets/stylesheets/application.css`'s generator-owned imports (`@import tokens.css`, `@import builds/…/tailwind.css`) and the committed `test/sandbox/app/assets/builds/stimulus_plumbers/tailwind.css` partial must always match `stimulus_plumbers:tailwind:install`'s output** — `test/stimulus_plumbers/tailwind/sandbox_css_test.rb` enforces this. If it fails, regenerate with `STIMULUS_PLUMBERS_CSS_ENTRY=test/sandbox/app/assets/stylesheets/application.css bin/rails generate stimulus_plumbers:tailwind:install` and commit the diff — never hand-edit them.
 
 ## Sandbox View Convention
 

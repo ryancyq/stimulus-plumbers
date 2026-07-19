@@ -66,12 +66,19 @@ module StimulusPlumbers
         end
 
         def apply_sources_directive(css_file)
+          dir     = File.dirname(css_file)
+          sources = File.join(destination_root, SourcesDirective::SOURCES_CSS_PATH)
+
+          # Remove legacy @source first so the import lands at the anchor, not in its place.
+          remove_lines(css_file, SourcesDirective.removal_pattern(from: dir))
           apply_edit(
             css_file,
-            SourcesDirective.directive(from: File.dirname(css_file)),
+            SourcesDirective.import_directive(from: dir, destination_root: destination_root),
             anchor_pattern: SourcesDirective.anchor_pattern,
             stale_pattern:  SourcesDirective.stale_pattern
           )
+          write_generated(sources, SourcesDirective.file_contents(from: File.dirname(sources)))
+          append_to_gitignore(sources)
         end
       end
     end
