@@ -33,13 +33,13 @@ StimulusPlumbers.configure do |config|
 end
 ```
 
-Run the install generator once to inject the required `@source` directive (and the `stimulus_plumbers` tokens.css + `animations.css` imports) into your Tailwind CSS entry file — see [docs/guide.md](docs/guide.md) for file-detection/override details:
+Run the install generator once to copy `stimulus_plumbers/tokens.css` and `stimulus_plumbers/tailwind/animations.css` into your app, then inject their relative imports and the required `@source` directive into your Tailwind CSS entry file — see [docs/guide.md](docs/guide.md) for file-detection/override details:
 
 ```bash
 bin/rails generate stimulus_plumbers:tailwind:install
 ```
 
-After that, the `@source` path is kept current automatically — no manual re-run needed after `bundle update`. The engine hooks `stimulus_plumbers:tailwind:install` as a prerequisite of:
+After that, the `@source` path is kept current automatically — no manual re-run needed after `bundle update`. The copied CSS remains application-owned and is never overwritten; update it intentionally when adopting new defaults. The engine hooks `stimulus_plumbers:tailwind:install` as a prerequisite of:
 
 - `assets:precompile` (Sprockets and Propshaft both define this task)
 - `tailwindcss:build` (when `tailwindcss-rails` is present)

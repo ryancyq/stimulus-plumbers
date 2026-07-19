@@ -6,14 +6,14 @@ module StimulusPlumbers
   module Tailwind
     module Generators
       module AnimationsDirective
-        GEM_ROOT                = File.expand_path("../../../..", __dir__)
-        ANIMATIONS_CSS_REL_PATH = "app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css"
+        ANIMATIONS_CSS_PATH = "app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css"
 
         module_function
 
-        def directive(from:)
-          path = Pathname.new(GEM_ROOT).join(ANIMATIONS_CSS_REL_PATH)
+        def directive(from:, destination_root:)
+          path = Pathname.new(destination_root).join(ANIMATIONS_CSS_PATH)
           rel  = path.relative_path_from(Pathname.new(from))
+          rel  = "./#{rel}" unless rel.to_s.start_with?(".", "/")
           %(@import "#{rel}";)
         end
 
@@ -24,7 +24,7 @@ module StimulusPlumbers
         end
 
         def stale_pattern
-          %r{@import "[^"]*#{Regexp.escape(ANIMATIONS_CSS_REL_PATH)}";}
+          %r{@import "[^"]*#{Regexp.escape(ANIMATIONS_CSS_PATH)}";}
         end
       end
     end

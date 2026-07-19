@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "fileutils"
+
 module StimulusPlumbers
   module Generators
     module CssEntrypoint
@@ -46,6 +48,26 @@ module StimulusPlumbers
         end
       rescue Errno::EROFS, Errno::EACCES => e
         say "Could not update #{relative_to_destination(css_file)}: #{e.message}. Skipping.", :yellow
+      end
+
+      # CSS copied by an installer belongs to the application from this point on.
+      # Keep an existing file intact so a generator rerun never overwrites local
+      # customizations (the same policy used by tailwindcss-rails' installer).
+      def copy_asset(source, destination)
+        path = File.join(destination_root, destination)
+
+        if File.exist?(path)
+          say_status :identical, destination
+          return true
+        end
+
+        FileUtils.mkdir_p(File.dirname(path))
+        FileUtils.cp(source, path)
+        say_status :create, destination, :green
+        true
+      rescue Errno::EROFS, Errno::EACCES => e
+        say "Could not copy #{destination}: #{e.message}. Skipping.", :yellow
+        false
       end
 
       # `stale_pattern:` is required — every call site needs stale-import detection,

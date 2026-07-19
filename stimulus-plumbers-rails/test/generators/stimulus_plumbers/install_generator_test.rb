@@ -10,7 +10,6 @@ module StimulusPlumbers
     destination File.join(Dir.tmpdir, "stimulus_plumbers_generator_test")
     setup :prepare_destination
 
-    GEM_NAME        = "stimulus_plumbers"
     TOKENS_CSS_PATH = "app/assets/stylesheets/stimulus_plumbers/tokens.css"
 
     # ── happy path ────────────────────────────────────────────────────────────
@@ -23,6 +22,7 @@ module StimulusPlumbers
       assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
         assert_equal "#{tokens_line_for("app/assets/stylesheets/application.tailwind.css")}\n@import \"tailwindcss\";\n", css
       end
+      assert_file TOKENS_CSS_PATH, File.read(StimulusPlumbers::Generators::InstallGenerator::TOKENS_CSS_SOURCE)
     end
 
     test "prepends tokens import even when no @import tailwindcss line exists" do
@@ -46,6 +46,25 @@ module StimulusPlumbers
       assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
         assert_equal 1, css.scan("stimulus_plumbers/tokens.css").length
       end
+    end
+
+    test "preserves an existing app-owned tokens file on rerun" do
+      write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+      write_entry_css(TOKENS_CSS_PATH, "/* local customization */\n")
+
+      run_generator
+
+      assert_file TOKENS_CSS_PATH, "/* local customization */\n"
+    end
+
+    test "restores a missing tokens file on rerun" do
+      write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+
+      run_generator
+      File.delete(File.join(destination_root, TOKENS_CSS_PATH))
+      run_generator
+
+      assert_file TOKENS_CSS_PATH, File.read(StimulusPlumbers::Generators::InstallGenerator::TOKENS_CSS_SOURCE)
     end
 
     test "updates stale tokens import when gem path has changed" do
@@ -142,6 +161,7 @@ module StimulusPlumbers
       StimulusPlumbers::Generators::CssEntrypoint::ENTRY_CANDIDATES.each do |candidate|
         assert_no_file candidate
       end
+      assert_no_file TOKENS_CSS_PATH
     end
 
     test "warns with all tried paths when no entry file found" do
@@ -171,9 +191,9 @@ module StimulusPlumbers
     private
 
     def tokens_line_for(css_relative_path)
-      gem_dir = Gem.loaded_specs[GEM_NAME].gem_dir
       css_dir = File.join(destination_root, File.dirname(css_relative_path))
-      rel     = Pathname.new(File.join(gem_dir, TOKENS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
+      rel     = Pathname.new(File.join(destination_root, TOKENS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
+      rel     = "./#{rel}" unless rel.to_s.start_with?(".", "/")
       %(@import "#{rel}";)
     end
 

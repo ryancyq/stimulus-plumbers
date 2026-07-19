@@ -60,6 +60,8 @@ module StimulusPlumbers
 
           assert_equal "#{tokens_line}\n#{animations_line}\n@import \"tailwindcss\";\n#{source_line}\n", css
         end
+        assert_file TOKENS_CSS_PATH, File.read(StimulusPlumbers::Tailwind::Generators::InstallGenerator::TOKENS_CSS_SOURCE)
+        assert_file ANIMATIONS_CSS_PATH, File.read(StimulusPlumbers::Tailwind::Generators::InstallGenerator::ANIMATIONS_CSS_SOURCE)
       end
 
       test "inserts the animations.css import right after the tokens.css import" do
@@ -103,6 +105,29 @@ module StimulusPlumbers
           assert_equal 1, css.scan("stimulus_plumbers/tailwind/animations.css").length
           assert_equal 1, css.scan(source_line_for("app/assets/stylesheets/application.tailwind.css")).length
         end
+      end
+
+      test "preserves existing app-owned CSS files on rerun" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+        write_entry_css(TOKENS_CSS_PATH, "/* local tokens */\n")
+        write_entry_css(ANIMATIONS_CSS_PATH, "/* local animations */\n")
+
+        run_generator
+
+        assert_file TOKENS_CSS_PATH, "/* local tokens */\n"
+        assert_file ANIMATIONS_CSS_PATH, "/* local animations */\n"
+      end
+
+      test "restores missing app-owned CSS files on rerun" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+
+        run_generator
+        File.delete(File.join(destination_root, TOKENS_CSS_PATH))
+        File.delete(File.join(destination_root, ANIMATIONS_CSS_PATH))
+        run_generator
+
+        assert_file TOKENS_CSS_PATH, File.read(StimulusPlumbers::Tailwind::Generators::InstallGenerator::TOKENS_CSS_SOURCE)
+        assert_file ANIMATIONS_CSS_PATH, File.read(StimulusPlumbers::Tailwind::Generators::InstallGenerator::ANIMATIONS_CSS_SOURCE)
       end
 
       # ── idempotency ───────────────────────────────────────────────────────────
@@ -214,6 +239,8 @@ module StimulusPlumbers
         StimulusPlumbers::Generators::CssEntrypoint::ENTRY_CANDIDATES.each do |candidate|
           assert_no_file candidate
         end
+        assert_no_file TOKENS_CSS_PATH
+        assert_no_file ANIMATIONS_CSS_PATH
       end
 
       test "warns with all tried paths when no entry file found" do
@@ -234,16 +261,16 @@ module StimulusPlumbers
       end
 
       def tokens_line_for(css_relative_path)
-        gem_dir = Gem.loaded_specs["stimulus_plumbers"].gem_dir
         css_dir = File.join(destination_root, File.dirname(css_relative_path))
-        rel     = Pathname.new(File.join(gem_dir, TOKENS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
+        rel     = Pathname.new(File.join(destination_root, TOKENS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
+        rel     = "./#{rel}" unless rel.to_s.start_with?(".", "/")
         %(@import "#{rel}";)
       end
 
       def animations_line_for(css_relative_path)
-        gem_dir = Gem.loaded_specs["stimulus_plumbers_tailwind"].gem_dir
         css_dir = File.join(destination_root, File.dirname(css_relative_path))
-        rel     = Pathname.new(File.join(gem_dir, ANIMATIONS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
+        rel     = Pathname.new(File.join(destination_root, ANIMATIONS_CSS_PATH)).relative_path_from(Pathname.new(css_dir))
+        rel     = "./#{rel}" unless rel.to_s.start_with?(".", "/")
         %(@import "#{rel}";)
       end
 

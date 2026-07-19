@@ -1,0 +1,135 @@
+/*
+ * Stimulus Plumbers – Design Tokens
+ *
+ * CSS custom properties for all presentational values.
+ * Structural layout utilities stay in component templates.
+ * Override any token in your own :root block to retheme the library.
+ */
+
+:root {
+  /* ── Semantic colors ─────────────────────────────────────────────────── */
+  --sp-color-primary:        oklch(50% 0.11 140);
+  --sp-color-primary-fg:     oklch(98% 0.01 140);
+  --sp-color-primary-border: oklch(60% 0.11 140);
+  --sp-color-primary-ring:   oklch(58% 0.15 140);
+
+  --sp-color-secondary:        oklch(50% 0.03 140);
+  --sp-color-secondary-fg:     oklch(98% 0.01 140);
+  --sp-color-secondary-border: oklch(60% 0.03 140);
+  --sp-color-secondary-ring:   oklch(70% 0.02 140);
+
+  --sp-color-destructive:        oklch(55% 0.13 30);
+  --sp-color-destructive-fg:     oklch(98% 0.01 30);
+  --sp-color-destructive-border: oklch(65% 0.13 30);
+  --sp-color-destructive-ring:   oklch(76% 0.09 30);
+
+  --sp-color-success:        oklch(46% 0.13 165);
+  --sp-color-success-fg:     oklch(98% 0.01 165);
+  --sp-color-success-border: oklch(56% 0.13 165);
+  --sp-color-success-ring:   oklch(66% 0.09 165);
+
+  --sp-color-warning:        oklch(68% 0.11 85);
+  --sp-color-warning-fg:     oklch(20% 0.02 85);
+  --sp-color-warning-border: oklch(78% 0.11 85);
+  --sp-color-warning-ring:   oklch(88% 0.07 85);
+
+  --sp-color-info:        oklch(55% 0.10 210);
+  --sp-color-info-fg:     oklch(98% 0.01 210);
+  --sp-color-info-border: oklch(65% 0.10 210);
+  --sp-color-info-ring:   oklch(75% 0.07 210);
+
+  --sp-color-error:          oklch(38% 0.16 25);
+
+  --sp-color-muted:        oklch(95% 0.018 68);
+  --sp-color-muted-fg:     oklch(45% 0.05 68);
+  --sp-color-muted-border: oklch(88% 0.015 68);
+  --sp-color-muted-ring:   oklch(82% 0.015 68);
+
+  --sp-color-border:         oklch(88% 0.012 68);
+  --sp-color-border-strong:  oklch(75% 0.02 68);
+  --sp-color-bg:             oklch(99% 0.005 68);
+  --sp-color-bg-muted:       oklch(95% 0.015 68);
+  --sp-color-fg:             oklch(22% 0.02 68);
+
+
+  /* ── Component tokens ───────────────────────────────────────────────── */
+  --sp-color-indicator: oklch(78% 0.015 68); /* timeline dot fill */
+
+
+  /* ── Focus ring ──────────────────────────────────────────────────────── */
+  --sp-focus-ring-color:  var(--sp-color-primary);
+  --sp-focus-ring-width:  2px;
+  --sp-focus-ring-offset: 2px;
+
+
+  /* ── Avatar palette (10 slots, index chosen by name hash) ────────────── */
+  --sp-avatar-color-1:  oklch(55% 0.13 40);
+  --sp-avatar-color-2:  oklch(58% 0.12 85);
+  --sp-avatar-color-3:  oklch(52% 0.10 125);
+  --sp-avatar-color-4:  oklch(55% 0.08 150);
+  --sp-avatar-color-5:  oklch(52% 0.09 195);
+  --sp-avatar-color-6:  oklch(50% 0.08 230);
+  --sp-avatar-color-7:  oklch(48% 0.09 320);
+  --sp-avatar-color-8:  oklch(38% 0.15 8);
+  --sp-avatar-color-9:  oklch(45% 0.09 55);
+  --sp-avatar-color-10: oklch(58% 0.10 10);
+  --sp-avatar-fg:       oklch(100% 0 0);
+
+
+  /* ── Spacing ─────────────────────────────────────────────────────────── */
+  --sp-space-0-5: 0.125rem; /*  2px */
+  --sp-space-1:   0.25rem;  /*  4px */
+  --sp-space-2:   0.5rem;   /*  8px */
+  --sp-space-2-5: 0.625rem; /* 10px */
+  --sp-space-3:   0.75rem;  /* 12px */
+  --sp-space-4:   1rem;     /* 16px */
+  --sp-space-5:   1.25rem;  /* 20px */
+  --sp-space-6:   1.5rem;   /* 24px */
+
+
+  /* ── Border radius ───────────────────────────────────────────────────── */
+  --sp-radius-xs:   0.125rem;
+  --sp-radius-sm:   0.25rem;
+  --sp-radius-md:   0.375rem;
+  --sp-radius-lg:   0.5rem;
+  --sp-radius-full: 9999px;
+
+
+  /* ── Shadow ──────────────────────────────────────────────────────────── */
+  --sp-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --sp-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1),
+                  0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --sp-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+                  0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --sp-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+                  0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --sp-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+                  0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --sp-text-xs:   0.75rem;
+  --sp-text-sm:   0.875rem;
+  --sp-text-base: 1rem;
+  --sp-text-lg:   1.125rem;
+
+
+  /* ── Sizing ──────────────────────────────────────────────────────────── */
+  --sp-avatar-size-sm:    1.25rem; /* 20px */
+  --sp-avatar-size-md:    2rem;    /* 32px */
+  --sp-avatar-size-lg:    3rem;    /* 48px */
+  --sp-icon-size-sm:      1rem;    /* 16px */
+  --sp-icon-size-md:      1.25rem; /* 20px — icon slot within other components */
+  --sp-icon-size-lg:      1.5rem;  /* 24px — standalone icon */
+  --sp-control-size:      1rem;    /* 16px — checkbox, radio */
+  --sp-calendar-day-size: 2rem;    /* 32px */
+
+
+  /* ── Z-index ─────────────────────────────────────────────────────────── */
+  --sp-z-popover: 50;
+}
+
+/* Smooth width changes on the progress bar fill — renders with or without a theme. */
+[data-progress-target="fill"] {
+  transition: width 0.3s ease;
+}

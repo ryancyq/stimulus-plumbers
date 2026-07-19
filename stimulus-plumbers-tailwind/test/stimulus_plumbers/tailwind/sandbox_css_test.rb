@@ -8,6 +8,7 @@ require "stimulus_plumbers/tailwind/generators/sources_directive"
 class TailwindSandboxCssTest < Minitest::Test
   SANDBOX_CSS = File.expand_path("../../sandbox/tailwind.css", __dir__)
   SANDBOX_CSS_DIR = File.dirname(SANDBOX_CSS)
+  SANDBOX_ROOT = File.expand_path("../../sandbox", __dir__)
 
   # Guards against hand-edited drift: the sandbox entry's @import/@source lines
   # must always be exactly what the install generator would produce for this
@@ -17,7 +18,9 @@ class TailwindSandboxCssTest < Minitest::Test
   # Purely read-only — no generator invocation, no writes, real or otherwise.
   def test_sandbox_tailwind_css_has_the_generator_computed_tokens_import
     content = File.read(SANDBOX_CSS)
-    directive = StimulusPlumbers::Generators::TokensDirective.directive(from: SANDBOX_CSS_DIR)
+    directive = StimulusPlumbers::Generators::TokensDirective.directive(
+      from: SANDBOX_CSS_DIR, destination_root: SANDBOX_ROOT
+    )
 
     assert_equal 1, content.scan(directive).length, <<~MSG
       test/sandbox/tailwind.css's @import for tokens.css doesn't match what the install
@@ -29,7 +32,9 @@ class TailwindSandboxCssTest < Minitest::Test
 
   def test_sandbox_tailwind_css_has_the_generator_computed_animations_import
     content = File.read(SANDBOX_CSS)
-    directive = StimulusPlumbers::Tailwind::Generators::AnimationsDirective.directive(from: SANDBOX_CSS_DIR)
+    directive = StimulusPlumbers::Tailwind::Generators::AnimationsDirective.directive(
+      from: SANDBOX_CSS_DIR, destination_root: SANDBOX_ROOT
+    )
 
     assert_equal 1, content.scan(directive).length, <<~MSG
       test/sandbox/tailwind.css's @import for animations.css doesn't match what the install
