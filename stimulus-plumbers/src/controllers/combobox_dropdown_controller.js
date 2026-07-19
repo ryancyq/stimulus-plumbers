@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { Requestor } from '../requestor';
 import { filterOptions } from '../researcher';
 import { ListboxNavigation } from '../accessibility/keyboard';
-import { isAriaDisabled, setSelected } from '../accessibility/aria';
+import { isAriaDisabled, setSelected, setHidden } from '../accessibility/aria';
 
 export default class extends Controller {
   static targets = ['listbox', 'loading', 'empty'];
@@ -71,15 +71,15 @@ export default class extends Controller {
   }
 
   showAll() {
-    this.listboxTarget.querySelectorAll('[role="option"]').forEach((o) => (o.hidden = false));
+    this.listboxTarget.querySelectorAll('[role="option"]').forEach((o) => setHidden(o, false));
     this.setEmpty(false);
   }
 
   setLoading(on) {
-    if (this.hasLoadingTarget) this.loadingTarget.hidden = !on;
+    if (this.hasLoadingTarget) setHidden(this.loadingTarget, !on);
   }
 
   setEmpty(on) {
-    if (this.hasEmptyTarget) this.emptyTarget.hidden = !on;
+    if (this.hasEmptyTarget) setHidden(this.emptyTarget, !on);
   }
 }

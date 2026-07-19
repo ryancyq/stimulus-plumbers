@@ -95,7 +95,7 @@ setExpanded(trigger, true);
 trigger.setAttribute('aria-expanded', 'true');
 ```
 
-### Always use `setHidden` — never `removeAttribute`/`setAttribute('hidden', ...)`
+### Always use `setHidden` — never the `.hidden` property or `removeAttribute`/`setAttribute('hidden', ...)`
 
 ```js
 // correct
@@ -104,6 +104,7 @@ setHidden(panel, false); // show
 setHidden(panel, true); // hide
 
 // wrong
+panel.hidden = true;
 panel.removeAttribute('hidden');
 panel.setAttribute('hidden', '');
 ```
