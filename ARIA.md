@@ -60,7 +60,8 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 
 #### Password Reveal (`input-formatter_controller`, `"password"` formatter)
 - Toggle button: `aria-label` describes action ("Show password" / "Hide password")
-- `aria-pressed` managed on toggle button, reflecting revealed state
+- One toggle button swaps visible eye/eye-slash icons and its accessible name; it has no `aria-pressed` because its name describes the next action rather than a persistent state.
+- A live announcement was rejected: changing the input between `password` and `text` provides an independent cue when returning focus to the field, without adding chatty feedback.
 
 #### Code Input (`input_formatter_controller` + `character_cells`)
 
