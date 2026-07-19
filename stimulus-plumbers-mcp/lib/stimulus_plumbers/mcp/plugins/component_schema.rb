@@ -5,9 +5,13 @@ module StimulusPlumbers
     module Plugins
       class ComponentSchema < Base
         class << self
-          def loader_key = :component_schema
+          def loader_key
+            :component_schema
+          end
 
-          def loader = ComponentSchemaLoader
+          def loader
+            ComponentSchemaLoader
+          end
 
           def static_resources
             [

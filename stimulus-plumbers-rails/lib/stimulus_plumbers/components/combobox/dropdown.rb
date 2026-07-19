@@ -15,14 +15,30 @@ module StimulusPlumbers
         module Metadata
           module_function
 
-          def haspopup = "listbox"
-          def popup_id_for(panel_id) = panel_id
-          def trigger_icon = "chevron-down"
-          def trigger_options = {}
-          def stimulus_data(_panel_id, _options) = {}
+          def haspopup
+            "listbox"
+          end
+
+          def popup_id_for(panel_id)
+            panel_id
+          end
+
+          def trigger_icon
+            "chevron-down"
+          end
+
+          def trigger_options
+            {}
+          end
+
+          def stimulus_data(_panel_id, _options)
+            {}
+          end
         end
 
-        def render(...) = render_dropdown(...)
+        def render(...)
+          render_dropdown(...)
+        end
 
         private
 

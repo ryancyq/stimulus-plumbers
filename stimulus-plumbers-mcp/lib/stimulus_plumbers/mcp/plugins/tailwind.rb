@@ -5,9 +5,13 @@ module StimulusPlumbers
     module Plugins
       class Tailwind < Base
         class << self
-          def loader_key = :tailwind
+          def loader_key
+            :tailwind
+          end
 
-          def loader = TailwindLoader
+          def loader
+            TailwindLoader
+          end
 
           def static_resources
             [

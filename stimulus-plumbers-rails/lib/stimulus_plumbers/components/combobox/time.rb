@@ -13,10 +13,21 @@ module StimulusPlumbers
         module Metadata
           module_function
 
-          def haspopup = "dialog"
-          def popup_id_for(panel_id) = panel_id
-          def trigger_icon = "clock"
-          def trigger_options = {}
+          def haspopup
+            "dialog"
+          end
+
+          def popup_id_for(panel_id)
+            panel_id
+          end
+
+          def trigger_icon
+            "clock"
+          end
+
+          def trigger_options
+            {}
+          end
 
           def stimulus_data(_panel_id, options)
             {
@@ -26,7 +37,9 @@ module StimulusPlumbers
           end
         end
 
-        def render(...) = render_time(...)
+        def render(...)
+          render_time(...)
+        end
 
         private
 

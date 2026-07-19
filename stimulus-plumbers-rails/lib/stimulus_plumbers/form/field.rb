@@ -15,8 +15,10 @@ module StimulusPlumbers
 
       attr_reader :hide_label
 
-      def self.label_id(input_id)
-        [input_id, "label"].compact.join("_")
+      class << self
+        def label_id(input_id)
+          [input_id, "label"].compact.join("_")
+        end
       end
 
       def initialize(template, hide_label: false, **kwargs)

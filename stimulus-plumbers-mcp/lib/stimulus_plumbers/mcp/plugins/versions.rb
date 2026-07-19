@@ -5,9 +5,13 @@ module StimulusPlumbers
     module Plugins
       class Versions < Base
         class << self
-          def loader_key = :versions
+          def loader_key
+            :versions
+          end
 
-          def loader = VersionsLoader
+          def loader
+            VersionsLoader
+          end
 
           def static_resources
             [

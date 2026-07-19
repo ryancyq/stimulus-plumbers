@@ -5,11 +5,15 @@ module StimulusPlumbers
     class Popover < Plumber::Base
       STIMULUS_CONTROLLER = "popover"
 
-      def self.panel_id_for(trigger_id)
-        [trigger_id, "popover"].compact.join("_")
+      class << self
+        def panel_id_for(trigger_id)
+          [trigger_id, "popover"].compact.join("_")
+        end
       end
 
-      def render(...) = render_popover(...)
+      def render(...)
+        render_popover(...)
+      end
 
       def build(panel_id: nil, &block)
         @panel_id     = panel_id || self.class.panel_id_for(template.sp_dom_id)

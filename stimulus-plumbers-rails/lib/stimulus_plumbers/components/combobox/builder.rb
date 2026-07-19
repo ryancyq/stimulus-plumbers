@@ -6,15 +6,37 @@ module StimulusPlumbers
       # Yielded to `Combobox#render`: selects a variant renderer, then exposes its
       # `metadata` (trigger/wrapper wiring) and renders its panel body.
       class Builder < Plumber::Slots
-        def dropdown(**options)  = select(Dropdown, options)
-        def typeahead(**options) = select(Typeahead, options)
-        def date(**options)      = select(Date, options)
-        def time(**options)      = select(Time, options)
+        def dropdown(**options)
+          select(Dropdown, options)
+        end
 
-        def selected? = @slots.key?(:variant)
-        def renderer  = selection&.fetch(:renderer)
-        def options   = selection ? selection[:options] : {}
-        def metadata  = renderer ? renderer::Metadata : DefaultMetadata
+        def typeahead(**options)
+          select(Typeahead, options)
+        end
+
+        def date(**options)
+          select(Date, options)
+        end
+
+        def time(**options)
+          select(Time, options)
+        end
+
+        def selected?
+          @slots.key?(:variant)
+        end
+
+        def renderer
+          selection&.fetch(:renderer)
+        end
+
+        def options
+          selection ? selection[:options] : {}
+        end
+
+        def metadata
+          renderer ? renderer::Metadata : DefaultMetadata
+        end
 
         def render_panel(template, panel_attrs:)
           renderer&.new(template)&.render(panel_attrs: panel_attrs, **options)
@@ -24,11 +46,25 @@ module StimulusPlumbers
         module DefaultMetadata
           module_function
 
-          def haspopup = "dialog"
-          def popup_id_for(panel_id) = panel_id
-          def trigger_icon = nil
-          def trigger_options = {}
-          def stimulus_data(_panel_id, _options) = {}
+          def haspopup
+            "dialog"
+          end
+
+          def popup_id_for(panel_id)
+            panel_id
+          end
+
+          def trigger_icon
+            nil
+          end
+
+          def trigger_options
+            {}
+          end
+
+          def stimulus_data(_panel_id, _options)
+            {}
+          end
         end
 
         private
@@ -38,7 +74,9 @@ module StimulusPlumbers
           nil
         end
 
-        def selection = resolve(:variant)
+        def selection
+          resolve(:variant)
+        end
       end
     end
   end

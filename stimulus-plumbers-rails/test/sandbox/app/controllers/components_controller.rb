@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class ComponentsController < ApplicationController
-  def profile; end
+  def profile
+  end
 
   def calendar_stimulus
     year               = params[:year]&.to_i
@@ -22,33 +23,47 @@ class ComponentsController < ApplicationController
     @till              = parse_date(:till)
   end
 
-  def combobox; end
+  def combobox
+  end
 
-  def search; end
+  def search
+  end
 
-  def button; end
+  def button
+  end
 
-  def list; end
+  def list
+  end
 
-  def ordered_list; end
+  def ordered_list
+  end
 
-  def card; end
+  def card
+  end
 
-  def popover; end
+  def popover
+  end
 
-  def avatar; end
+  def avatar
+  end
 
-  def divider; end
+  def divider
+  end
 
-  def icon; end
+  def icon
+  end
 
-  def button_group; end
+  def button_group
+  end
 
-  def timeline; end
+  def timeline
+  end
 
-  def progress; end
+  def progress
+  end
 
-  def indicator; end
+  def indicator
+  end
 
   private
 

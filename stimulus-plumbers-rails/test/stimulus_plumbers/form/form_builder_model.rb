@@ -21,7 +21,9 @@ class FormBuilderModel
                 :verification_code,
                 :card_number
 
-  def self.model_name
-    ActiveModel::Name.new(self, nil, "sign_in_form")
+  class << self
+    def model_name
+      ActiveModel::Name.new(self, nil, "sign_in_form")
+    end
   end
 end

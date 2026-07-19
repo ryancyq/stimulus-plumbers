@@ -8,7 +8,9 @@ class IconsExternalTest < Minitest::Test
   class TestSource
     include StimulusPlumbers::Themes::Icons::External
 
-    def svg_path(_key) = ""
+    def svg_path(_key)
+      ""
+    end
   end
 
   def source

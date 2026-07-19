@@ -3,7 +3,9 @@
 module StimulusPlumbers
   module Components
     class ProgressRing < Plumber::Base
-      def render(...) = render_ring(...)
+      def render(...)
+        render_ring(...)
+      end
 
       private
 

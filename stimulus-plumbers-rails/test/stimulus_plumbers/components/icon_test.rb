@@ -19,7 +19,9 @@ class IconComponentTest < ActionView::TestCase
 
       private
 
-      def icon_classes(**) = { classes: "size-6" }
+      def icon_classes(**)
+        { classes: "size-6" }
+      end
     end.new
   end
 

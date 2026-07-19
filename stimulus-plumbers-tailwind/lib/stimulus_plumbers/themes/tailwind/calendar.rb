@@ -95,9 +95,13 @@ module StimulusPlumbers
           { classes: klasses(*DAY, *extra) }
         end
 
-        def calendar_month_classes(**) = { classes: klasses(*MONTH) }
+        def calendar_month_classes(**)
+          { classes: klasses(*MONTH) }
+        end
 
-        def calendar_year_classes(**)  = { classes: klasses(*YEAR) }
+        def calendar_year_classes(**)
+          { classes: klasses(*YEAR) }
+        end
 
         def calendar_quarter_grid_classes
           { classes: klasses(*QUARTER_GRID) }

@@ -184,8 +184,10 @@ class FormBuilderTest < ActionView::TestCase
       [self]
     end
 
-    def self.human_attribute_name(attr, _opts = {})
-      attr.to_s.humanize
+    class << self
+      def human_attribute_name(attr, _opts = {})
+        attr.to_s.humanize
+      end
     end
   end
 

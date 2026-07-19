@@ -133,8 +133,13 @@ module StimulusPlumbers
             raise ArgumentError, "groups must add up to length" unless groups.sum == length
           end
 
-          def valid_groups?(groups) = groups.is_a?(Array) && groups.all? { |group| positive_integer?(group) }
-          def positive_integer?(value) = value.is_a?(Integer) && value.positive?
+          def valid_groups?(groups)
+            groups.is_a?(Array) && groups.all? { |group| positive_integer?(group) }
+          end
+
+          def positive_integer?(value)
+            value.is_a?(Integer) && value.positive?
+          end
         end
       end
     end

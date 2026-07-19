@@ -5,9 +5,13 @@ module StimulusPlumbers
     module Plugins
       class Icons < Base
         class << self
-          def loader_key = :icons
+          def loader_key
+            :icons
+          end
 
-          def loader = IconsLoader
+          def loader
+            IconsLoader
+          end
 
           def static_resources
             [

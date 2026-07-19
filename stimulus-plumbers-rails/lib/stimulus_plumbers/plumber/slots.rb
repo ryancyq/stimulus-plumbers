@@ -3,14 +3,6 @@
 module StimulusPlumbers
   module Plumber
     class Slots
-      def self.slot(*names, by: nil)
-        names.each do |name|
-          by ? define_by_slot(name, by) : define_flat_slot(name)
-          define_reader(name)
-          define_predicate(name)
-        end
-      end
-
       def initialize(template = nil)
         @slots = {}
         @template = template
@@ -50,6 +42,14 @@ module StimulusPlumbers
       end
 
       class << self
+        def slot(*names, by: nil)
+          names.each do |name|
+            by ? define_by_slot(name, by) : define_flat_slot(name)
+            define_reader(name)
+            define_predicate(name)
+          end
+        end
+
         private
 
         def define_flat_slot(name)

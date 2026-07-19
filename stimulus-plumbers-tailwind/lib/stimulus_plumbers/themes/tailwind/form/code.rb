@@ -31,14 +31,21 @@ module StimulusPlumbers
             { classes: klasses(*CODE_FIELD, *(error ? CODE_FIELD_ERROR : [])) }
           end
 
-          def form_field_input_code_cells_classes(**) = { classes: klasses(*CODE_CELLS) }
+          def form_field_input_code_cells_classes(**)
+            { classes: klasses(*CODE_CELLS) }
+          end
 
           def form_field_input_code_cell_classes(error: false, **)
             { classes: klasses(*CODE_CELL, *(error ? CODE_CELL_ERROR : [])) }
           end
 
-          def form_field_input_code_separator_classes(**) = { classes: klasses(*CODE_SEPARATOR) }
-          def form_field_input_code_overlay_classes(**) = { classes: klasses(*CODE_OVERLAY) }
+          def form_field_input_code_separator_classes(**)
+            { classes: klasses(*CODE_SEPARATOR) }
+          end
+
+          def form_field_input_code_overlay_classes(**)
+            { classes: klasses(*CODE_OVERLAY) }
+          end
         end
       end
     end

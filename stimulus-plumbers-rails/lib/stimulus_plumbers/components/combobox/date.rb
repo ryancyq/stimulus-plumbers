@@ -16,21 +16,47 @@ module StimulusPlumbers
           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
         ].join(" ").freeze
 
-        def self.month_id_for(panel_id)   = [panel_id, "calendar_month"].compact.join("_")
-        def self.year_id_for(panel_id)    = [panel_id, "calendar_year"].compact.join("_")
-        def self.decade_id_for(panel_id)  = [panel_id, "calendar_decade"].compact.join("_")
+        class << self
+          def month_id_for(panel_id)
+            [panel_id, "calendar_month"].compact.join("_")
+          end
+
+          def year_id_for(panel_id)
+            [panel_id, "calendar_year"].compact.join("_")
+          end
+
+          def decade_id_for(panel_id)
+            [panel_id, "calendar_decade"].compact.join("_")
+          end
+        end
 
         module Metadata
           module_function
 
-          def haspopup = "dialog"
-          def popup_id_for(panel_id) = panel_id
-          def trigger_icon = "calendar"
-          def trigger_options = {}
-          def stimulus_data(_panel_id, _options) = { input_formatter_format_value: "date" }
+          def haspopup
+            "dialog"
+          end
+
+          def popup_id_for(panel_id)
+            panel_id
+          end
+
+          def trigger_icon
+            "calendar"
+          end
+
+          def trigger_options
+            {}
+          end
+
+          def stimulus_data(_panel_id, _options)
+            { input_formatter_format_value: "date" }
+          end
         end
 
-        def render(...) = render_date(...)
+        def render(...)
+          render_date(...)
+        end
 
         private
 

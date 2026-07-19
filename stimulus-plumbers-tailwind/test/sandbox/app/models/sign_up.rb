@@ -18,7 +18,9 @@ class SignUp
                 :verification_code,
                 :card_number
 
-  def self.model_name
-    ActiveModel::Name.new(self, nil, "SignUp")
+  class << self
+    def model_name
+      ActiveModel::Name.new(self, nil, "SignUp")
+    end
   end
 end

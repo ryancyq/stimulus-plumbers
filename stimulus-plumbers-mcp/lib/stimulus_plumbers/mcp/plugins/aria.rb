@@ -5,9 +5,13 @@ module StimulusPlumbers
     module Plugins
       class Aria < Base
         class << self
-          def loader_key = :aria
+          def loader_key
+            :aria
+          end
 
-          def loader = AriaLoader
+          def loader
+            AriaLoader
+          end
 
           def static_resources
             [
