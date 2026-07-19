@@ -221,6 +221,17 @@ module StimulusPlumbers
         assert_file ".gitignore", "log/\n/#{SOURCES_CSS_PATH}\n"
       end
 
+      test "does not add sources.css when an existing gitignore pattern covers it" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+        write_entry_css(".gitignore", "app/assets/builds/*\n")
+
+        assert system("git", "init", "-q", destination_root)
+
+        run_generator
+
+        assert_file ".gitignore", "app/assets/builds/*\n"
+      end
+
       test "does not create a gitignore when one is absent" do
         write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
 
