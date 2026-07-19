@@ -55,6 +55,25 @@ Special options on native helpers:
 | `password_field` | `revealable: true` | Wraps input in an `input-formatter` reveal controller              |
 | `search_field`   | `clearable: true`  | Wraps input in an `input-clearable` controller with a clear button |
 
+### f.submit
+
+`f.submit` renders a themed `<button type="submit">` without a field wrapper.
+
+```erb
+<%= f.submit "Save" %>
+<%= f.submit "Save", icon_leading: "save" %>
+<%= f.submit "Continue", icon_trailing: "arrow-right" %>
+<%= f.submit "Save", icon_leading: "save", hide_label: true %>
+```
+
+| Option                             | Description                                                                                                                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type:` / `variant:`               | Button theme type and variant.                                                                                                                                                   |
+| `icon_leading:` / `icon_trailing:` | Decorative icon name placed before or after the submit text.                                                                                                                     |
+| `hide_label: true`                 | Visually hides the button's own text span while keeping it available to screen readers. This differs from `Form::Field#hide_label`, which hides an associated `<label>` element. |
+
+Submit buttons need an accessible name: pass non-blank text, or an `aria` label such as `aria: { label: "Save changes" }`.
+
 ---
 
 ## Level 2 — Full-field helpers

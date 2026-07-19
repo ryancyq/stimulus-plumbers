@@ -38,6 +38,10 @@ class TailwindThemeIconTest < ActionView::TestCase
     assert @theme.icons.key?("external-link")
   end
 
+  def test_theme_provides_alias_save_icon
+    assert @theme.icons.key?("save")
+  end
+
   def test_theme_provides_custom_spinner_icon
     assert @theme.icons.key?("spinner")
   end

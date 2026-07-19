@@ -11,6 +11,7 @@ stimulus-plumbers-rails/
 │       │   ├── button.rb                 # sp_button renderer
 │       │   ├── button/
 │       │   │   ├── group.rb
+│       │   │   ├── icon_layout.rb        # Shared leading/trailing icon layout — included by Button and Form::Fields::Inputs::Submit
 │       │   │   └── slots.rb
 │       │   ├── calendar.rb               # sp_calendar_month renderer
 │       │   ├── calendar/turbo.rb         # Turbo-compatible calendar grid

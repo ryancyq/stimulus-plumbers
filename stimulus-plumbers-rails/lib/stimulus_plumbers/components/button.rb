@@ -3,6 +3,8 @@
 module StimulusPlumbers
   module Components
     class Button < Plumber::Base
+      include IconLayout
+
       def render(content = nil, icon_leading: nil, icon_trailing: nil, **kwargs, &block)
         slots = Button::Slots.new(template)
         slots.with_icon_leading(icon_leading) if icon_leading
@@ -32,29 +34,6 @@ module StimulusPlumbers
           template.content_tag(:span, template.capture(&block))
         elsif content
           template.content_tag(:span, content)
-        end
-      end
-
-      def build_layout(slots, &block)
-        template.safe_join(
-          [
-            render_icon_slot(slots, :icon_leading),
-            template.capture(&block),
-            render_icon_slot(slots, :icon_trailing)
-          ]
-        )
-      end
-
-      def render_icon_slot(slots, name)
-        slots.resolve(name) do |value|
-          next value unless Components::Icon.icon_name?(value)
-
-          Components::Icon.new(template).render(
-            name:    value,
-            size:    :sm,
-            classes: theme.resolve(:button_icon).fetch(:classes, ""),
-            aria:    { hidden: "true" }
-          )
         end
       end
     end

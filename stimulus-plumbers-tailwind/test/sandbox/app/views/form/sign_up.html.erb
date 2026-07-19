@@ -29,3 +29,13 @@
     <% end %>
   </div>
 </section>
+
+<section id="sign-up-submit-icon-only" class="sb-section">
+  <h2>Icon-only submit</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "sign_up_submit_icon_only", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field  :email, as: :email, label: "Email address", required: true %>
+      <%= f.submit "Create account", icon_leading: "save", hide_label: true %>
+    <% end %>
+  </div>
+</section>

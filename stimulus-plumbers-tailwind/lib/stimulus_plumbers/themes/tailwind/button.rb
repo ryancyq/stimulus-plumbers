@@ -15,6 +15,8 @@ module StimulusPlumbers
           inline-flex items-center justify-center gap-(--sp-space-2)
           [&:not(:has(>span))]:aspect-square
           [&:not(:has(>span))]:px-0
+          [&:has(>span[data-sp-label-hidden])]:aspect-square
+          [&:has(>span[data-sp-label-hidden])]:px-0
         ].freeze
 
         CARD = %w[

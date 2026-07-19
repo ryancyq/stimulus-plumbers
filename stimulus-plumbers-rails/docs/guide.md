@@ -12,7 +12,8 @@ Use `StimulusPlumbers::Form::Builder` (set `config.action_view.default_form_buil
 - **Level 1.** Native helper overrides (`f.text_field`, `f.select`, `f.check_box`, ...) render
   only the themed input element — use when you control the surrounding markup.
 
-Submit with `f.submit` (themed button).
+Submit with `f.submit` (themed button; supports `icon_leading:`/`icon_trailing:` and
+`hide_label:` for an icon-only button — see [docs/component/form.md](component/form.md)).
 
 ## Building views
 
