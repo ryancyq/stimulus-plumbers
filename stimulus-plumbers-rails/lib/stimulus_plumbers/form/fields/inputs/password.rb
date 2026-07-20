@@ -69,7 +69,7 @@ module StimulusPlumbers
 
           def password_icon(name, target, hidden: false)
             Components::Icon.new(@template).render(
-              name:   name,
+              name,
               size:   :sm,
               aria:   { hidden: "true" },
               data:   { input_formatter_target: target },

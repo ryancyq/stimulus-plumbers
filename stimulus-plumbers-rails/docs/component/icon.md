@@ -7,17 +7,17 @@ Rails helper for rendering a named icon from the active theme's icon registry.
 ### `sp_icon`
 
 ```erb
-<%= sp_icon name: "check" %>
-<%= sp_icon name: "spinner", aria: { label: "Loading" }, role: "img" %>
-<%= sp_icon name: "unknown-icon" %>
-<%= sp_icon name: "check", size: :sm %>
+<%= sp_icon "check" %>
+<%= sp_icon "spinner", aria: { label: "Loading" }, role: "img" %>
+<%= sp_icon "unknown-icon" %>
+<%= sp_icon "check", size: :sm %>
 ```
 
-| Option           | Default    | Description                                         |
-| ---------------- | ---------- | --------------------------------------------------- |
-| `name`           | (required) | Icon name — looked up in the theme registry         |
-| `size`           | `:lg`      | `:sm` \| `:md` \| `:lg` — theme-resolved size class |
-| `**html_options` | —          | Forwarded to the root element                       |
+| Option           | Default    | Description                                                            |
+| ---------------- | ---------- | ---------------------------------------------------------------------- |
+| `name`           | (required) | Positional (1st argument). Icon name — looked up in the theme registry |
+| `size`           | `:lg`      | `:sm` \| `:md` \| `:lg` — theme-resolved size class                    |
+| `**html_options` | —          | Forwarded to the root element                                          |
 
 ---
 

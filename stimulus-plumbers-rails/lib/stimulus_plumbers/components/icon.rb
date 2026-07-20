@@ -9,7 +9,7 @@ module StimulusPlumbers
         end
       end
 
-      def render(name:, size: :lg, **kwargs)
+      def render(name, size: :lg, **kwargs)
         html_options = merge_html_options(
           theme.resolve(:icon, size: size),
           kwargs

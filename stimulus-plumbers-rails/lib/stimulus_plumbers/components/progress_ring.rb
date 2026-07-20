@@ -16,7 +16,7 @@ module StimulusPlumbers
           stimulus_data(value: value, min: min, max: max, indeterminate: indeterminate),
           { role: "progressbar", aria: progress_aria(value: value, min: min, max: max, indeterminate: indeterminate) }
         )
-        Components::Icon.new(template).render(name: "progress-ring", **icon_options)
+        Components::Icon.new(template).render("progress-ring", **icon_options)
       end
 
       def progress_aria(value:, min:, max:, indeterminate:)

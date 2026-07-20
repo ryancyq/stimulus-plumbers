@@ -43,7 +43,7 @@ module StimulusPlumbers
             next value unless Components::Icon.icon_name?(value)
 
             Components::Icon.new(template).render(
-              name:    value,
+              value,
               classes: theme.resolve(:list_item_icon).fetch(:classes, ""),
               aria:    { hidden: "true" }
             )
