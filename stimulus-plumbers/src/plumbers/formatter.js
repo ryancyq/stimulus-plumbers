@@ -52,8 +52,6 @@ export class Formatter extends Plumber {
       normalize: (raw) => formatter.normalize?.(raw, context.options) ?? (typeof raw === 'string' ? raw : ''),
       validate: (value) => formatter.validate?.(value, context.options) ?? true,
       format: (value) => formatter.format?.(value, context.options) ?? (typeof value === 'string' ? value : ''),
-      mask: (value) => formatter.mask?.(value, context.options) ?? null,
-      maskable: () => typeof formatter.mask === 'function',
       cells: () => (typeof formatter.cells === 'function' ? formatter.cells(context.options) : null),
     };
 

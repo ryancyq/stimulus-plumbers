@@ -59,42 +59,6 @@ describe('Formatter', () => {
       expect(typeof mockController.formatter.format).toBe('function')
     })
 
-    it('exposes mask helper', () => {
-      attachFormatter(mockController)
-      expect(typeof mockController.formatter.mask).toBe('function')
-    })
-
-    it('exposes maskable helper', () => {
-      attachFormatter(mockController)
-      expect(typeof mockController.formatter.maskable).toBe('function')
-    })
-  })
-
-  describe('maskable', () => {
-    it('returns false for plain', () => {
-      attachFormatter(mockController, { type: 'plain' })
-      expect(mockController.formatter.maskable()).toBe(false)
-    })
-
-    it('returns false for creditCard', () => {
-      attachFormatter(mockController, { type: 'creditCard' })
-      expect(mockController.formatter.maskable()).toBe(false)
-    })
-
-    it('returns false for phone', () => {
-      attachFormatter(mockController, { type: 'phone' })
-      expect(mockController.formatter.maskable()).toBe(false)
-    })
-
-    it('returns false for currency', () => {
-      attachFormatter(mockController, { type: 'currency' })
-      expect(mockController.formatter.maskable()).toBe(false)
-    })
-
-    it('returns false for date', () => {
-      attachFormatter(mockController, { type: 'date' })
-      expect(mockController.formatter.maskable()).toBe(false)
-    })
   })
 
   describe('delegation to formatters', () => {
@@ -129,15 +93,12 @@ describe('Formatter', () => {
         normalize: (raw) => raw.toUpperCase(),
         validate: () => true,
         format: (value) => `[${value}]`,
-        mask: (value) => `***${value.slice(-2)}`,
       }
       Formatter.register('custom-test', CustomFormatter)
       attachFormatter(mockController, { type: 'custom-test' })
 
       expect(mockController.formatter.normalize('hello')).toBe('HELLO')
       expect(mockController.formatter.format('HELLO')).toBe('[HELLO]')
-      expect(mockController.formatter.mask('HELLO')).toBe('***LO')
-      expect(mockController.formatter.maskable()).toBe(true)
     })
   })
 

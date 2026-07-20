@@ -58,7 +58,7 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Invalid fields: `aria-invalid="true"` + `aria-describedby` pointing to error message
 - Error message element: `role="alert"` or `aria-live="polite"` so it's announced
 
-#### Password Reveal (`input-formatter_controller`, `"password"` formatter)
+#### Password Reveal (`input_revealable_controller`)
 - Toggle button: `aria-label` describes action ("Show password" / "Hide password")
 - One toggle button swaps visible eye/eye-slash icons and its accessible name; it has no `aria-pressed` because its name describes the next action rather than a persistent state.
 - A live announcement was rejected: changing the input between `password` and `text` provides an independent cue when returning focus to the field, without adding chatty feedback.

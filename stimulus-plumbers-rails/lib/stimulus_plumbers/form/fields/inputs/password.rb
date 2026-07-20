@@ -5,14 +5,19 @@ module StimulusPlumbers
     module Fields
       module Inputs
         module Password
-          STIMULUS_CONTROLLER = "input-formatter"
+          STIMULUS_CONTROLLER = "input-revealable"
           STIMULUS_ACTION     = "click->#{STIMULUS_CONTROLLER}#toggle".freeze
+          DEFAULT_AUTOCOMPLETE = "current-password"
 
           def password_field(attribute, floating: nil, revealable: false, **options)
-            html_options = merge_html_options(theme.resolve(:form_field_input, floating: floating), options)
+            html_options = merge_html_options(
+              theme.resolve(:form_field_input, floating: floating),
+              options,
+              { autocomplete: options.delete(:autocomplete) || DEFAULT_AUTOCOMPLETE }
+            )
             if revealable
               render_revealable_password(false) do
-                super(attribute, merge_html_options(html_options, { data: { input_formatter_target: "input" } }))
+                super(attribute, merge_html_options(html_options, { data: { input_revealable_target: "input" } }))
               end
             else
               super(attribute, html_options)
@@ -26,11 +31,12 @@ module StimulusPlumbers
               theme.resolve(:form_field_input, floating: floating, error: error),
               opts,
               html_opts,
-              kwargs
+              kwargs,
+              { autocomplete: kwargs.delete(:autocomplete) || DEFAULT_AUTOCOMPLETE }
             )
             if revealable
               render_revealable_password(error, floating: floating) do
-                revealable_html_options = merge_html_options(html_options, { data: { input_formatter_target: "input" } })
+                revealable_html_options = merge_html_options(html_options, { data: { input_revealable_target: "input" } })
                 @template.password_field(@object_name, attribute, objectify_options(revealable_html_options))
               end
             else
@@ -60,10 +66,9 @@ module StimulusPlumbers
 
           def reveal_data
             {
-              controller:                          STIMULUS_CONTROLLER,
-              input_formatter_format_value:        "password",
-              input_formatter_label_reveal_value:  I18n.t("stimulus_plumbers.form.password.show", default: "Show password"),
-              input_formatter_label_conceal_value: I18n.t("stimulus_plumbers.form.password.hide", default: "Hide password")
+              controller:                           STIMULUS_CONTROLLER,
+              input_revealable_reveal_label_value:  I18n.t("stimulus_plumbers.form.password.show", default: "Show password"),
+              input_revealable_conceal_label_value: I18n.t("stimulus_plumbers.form.password.hide", default: "Hide password")
             }
           end
 
@@ -72,7 +77,7 @@ module StimulusPlumbers
               name,
               size:   :sm,
               aria:   { hidden: "true" },
-              data:   { input_formatter_target: target },
+              data:   { input_revealable_target: target },
               hidden: hidden,
               **theme.resolve(:button_icon)
             )
@@ -86,7 +91,7 @@ module StimulusPlumbers
                 {
                   type: "button",
                   aria: { label: I18n.t("stimulus_plumbers.form.password.show", default: "Show password") },
-                  data: { input_formatter_target: "toggle", action: STIMULUS_ACTION }
+                  data: { input_revealable_target: "toggle", action: STIMULUS_ACTION }
                 }
               )
             ) { @template.capture(&block) }
