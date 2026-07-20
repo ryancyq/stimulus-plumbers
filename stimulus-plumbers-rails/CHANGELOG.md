@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.14](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.13..stimulus-plumbers-rails/v0.4.14) - 2026-07-20
+
+### Bug Fixes
+
+- icon schema now returns aria/data attributes from svg files ([#189](https://github.com/ryancyq/stimulus-plumbers/issues/189)) - ([ea9d079](https://github.com/ryancyq/stimulus-plumbers/commit/ea9d079d10b3f802284f9fd963fda8e9cec5f02d)) - Ryan Chang
+
+---
 ## [0.4.13](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.12..stimulus-plumbers-rails/v0.4.13) - 2026-07-20
 
 ### Bug Fixes
