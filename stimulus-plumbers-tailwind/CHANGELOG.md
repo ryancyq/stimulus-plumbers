@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.13](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.12..stimulus-plumbers-tailwind/v0.4.13) - 2026-07-20
+
+### Bug Fixes
+
+- input reveal + conceal ([#185](https://github.com/ryancyq/stimulus-plumbers/issues/185)) - ([3391853](https://github.com/ryancyq/stimulus-plumbers/commit/3391853ff5739a77ab5ab8207dc020aee6c6228a)) - Ryan Chang
+- icon accept name as positional required arg ([#187](https://github.com/ryancyq/stimulus-plumbers/issues/187)) - ([5466dee](https://github.com/ryancyq/stimulus-plumbers/commit/5466dee603c534e992f12b823774e90dc4e3c3d7)) - Ryan Chang
+
+### Features
+
+- input revealable ([#188](https://github.com/ryancyq/stimulus-plumbers/issues/188)) - ([7aab4f3](https://github.com/ryancyq/stimulus-plumbers/commit/7aab4f369e7e69eddb6b20a6b68327199f87c1e7)) - Ryan Chang
+
+---
 ## [0.4.12](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.11..stimulus-plumbers-tailwind/v0.4.12) - 2026-07-19
 
 ### Bug Fixes
