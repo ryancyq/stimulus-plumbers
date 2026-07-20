@@ -34,6 +34,7 @@ export { default as FlipperController } from './controllers/flipper_controller.j
 export { default as InputComboboxController } from './controllers/input_combobox_controller.js';
 export { default as InputFormatterController } from './controllers/input_formatter_controller.js';
 export { default as InputClearableController } from './controllers/input_clearable_controller.js';
+export { default as InputRevealableController } from './controllers/input_revealable_controller.js';
 export { default as ModalController } from './controllers/modal_controller.js';
 export { default as PannerController } from './controllers/panner_controller.js';
 export { default as PopoverController } from './controllers/popover_controller.js';

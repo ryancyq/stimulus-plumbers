@@ -1,5 +1,19 @@
 import { test, expect } from "@playwright/test";
 
+// A broken toggle still renders unchanged pixels, so assert reveal state directly.
+const expectRevealed = async (section) => {
+  await expect(
+    section.locator("input[data-input-revealable-target='input']"),
+  ).toHaveAttribute("type", "text");
+  await expect(section.getByLabel("Hide password")).toBeVisible();
+  await expect(
+    section.locator("[data-input-revealable-target='revealIcon']"),
+  ).toBeHidden();
+  await expect(
+    section.locator("[data-input-revealable-target='concealIcon']"),
+  ).toBeVisible();
+};
+
 // ── Sign up form ─────────────────────────────────────────────────────────────
 
 test.describe("sign up form", () => {
@@ -15,10 +29,10 @@ test.describe("sign up form", () => {
   });
 
   test("password revealed", async ({ page }) => {
-    await page.locator("#sign-up").getByLabel("Show password").click();
-    await expect(page.locator("#sign-up")).toHaveScreenshot(
-      "sign-up-password-revealed.png",
-    );
+    const section = page.locator("#sign-up");
+    await section.getByLabel("Show password").click();
+    await expectRevealed(section);
+    await expect(section).toHaveScreenshot("sign-up-password-revealed.png");
   });
 
   test("floating labels", async ({ page }) => {
@@ -39,6 +53,7 @@ test.describe("sign up form", () => {
     const section = page.locator("#sign-up-floating");
     await section.locator("input[type='password']").fill("secret123");
     await section.getByLabel("Show password").click();
+    await expectRevealed(section);
     await expect(section).toHaveScreenshot(
       "sign-up-floating-password-revealed.png",
     );
@@ -187,13 +202,12 @@ test.describe("floating label form", () => {
     });
 
     test("revealed", async ({ page }) => {
-      await page
-        .locator("#floating-outlined-revealable")
-        .getByLabel("Show password")
-        .click();
-      await expect(
-        page.locator("#floating-outlined-revealable"),
-      ).toHaveScreenshot("floating-outlined-revealable-revealed.png");
+      const section = page.locator("#floating-outlined-revealable");
+      await section.getByLabel("Show password").click();
+      await expectRevealed(section);
+      await expect(section).toHaveScreenshot(
+        "floating-outlined-revealable-revealed.png",
+      );
     });
   });
 
@@ -205,13 +219,12 @@ test.describe("floating label form", () => {
     });
 
     test("revealed", async ({ page }) => {
-      await page
-        .locator("#floating-filled-revealable")
-        .getByLabel("Show password")
-        .click();
-      await expect(
-        page.locator("#floating-filled-revealable"),
-      ).toHaveScreenshot("floating-filled-revealable-revealed.png");
+      const section = page.locator("#floating-filled-revealable");
+      await section.getByLabel("Show password").click();
+      await expectRevealed(section);
+      await expect(section).toHaveScreenshot(
+        "floating-filled-revealable-revealed.png",
+      );
     });
   });
 });

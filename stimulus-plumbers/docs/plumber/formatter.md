@@ -1,6 +1,6 @@
 # Formatter
 
-Attaches a formatter to a controller, exposing `this.formatter` with `normalize`, `validate`, `format`, and `mask` helpers. Used by `input-formatter`.
+Attaches a formatter to a controller, exposing `this.formatter` with `normalize`, `validate`, and `format` helpers. Used by `input-formatter`.
 
 ## Factory
 
@@ -20,13 +20,11 @@ Exposes `this.formatter` on the controller.
 
 ## Controller property — `this.formatter`
 
-| Helper            | Signature                | Description                                              |
-| ----------------- | ------------------------ | -------------------------------------------------------- |
-| `normalize(raw)`  | `(raw) → string`         | Strips raw input to canonical stored form                |
-| `validate(value)` | `(value) → boolean`      | Validates canonical value                                |
-| `format(value)`   | `(value) → string`       | Formats canonical value for display                      |
-| `mask(value)`     | `(value) → string\|null` | Returns masked display string, or `null` if not maskable |
-| `maskable()`      | `() → boolean`           | True if this formatter supports masking                  |
+| Helper            | Signature           | Description                               |
+| ----------------- | ------------------- | ----------------------------------------- |
+| `normalize(raw)`  | `(raw) → string`    | Strips raw input to canonical stored form |
+| `validate(value)` | `(value) → boolean` | Validates canonical value                 |
+| `format(value)`   | `(value) → string`  | Formats canonical value for display       |
 
 ## Built-in types
 
@@ -53,7 +51,7 @@ Formatter.register('iban', {
 });
 ```
 
-`normalize` and `validate` are required. `format` and `mask` are optional.
+`normalize` and `validate` are required. `format` is optional.
 
 ## Individual formatters
 

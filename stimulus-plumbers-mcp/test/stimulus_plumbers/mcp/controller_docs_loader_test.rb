@@ -18,7 +18,7 @@ class ControllerDocsLoaderTest < Minitest::Test
     expected = %i[
       calendar checklist clipboard combobox
       dismisser flipper
-      input-clearable input-formatter
+      input-clearable input-formatter input-revealable
       modal panner popover progress
       reorderable timeline visibility
     ].map(&:to_s).map(&:to_sym)

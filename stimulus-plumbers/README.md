@@ -29,6 +29,7 @@ import {
   InputComboboxController,
   InputFormatterController,
   InputClearableController,
+  InputRevealableController,
   ComboboxDateController,
   ComboboxTimeController,
   ComboboxDropdownController,
@@ -56,6 +57,7 @@ const application = Application.start()
 application.register('input-combobox',           InputComboboxController)
 application.register('input-formatter',          InputFormatterController)
 application.register('input-clearable',          InputClearableController)
+application.register('input-revealable',         InputRevealableController)
 application.register('combobox-date',            ComboboxDateController)
 application.register('combobox-time',            ComboboxTimeController)
 application.register('combobox-dropdown',        ComboboxDropdownController)
@@ -85,6 +87,7 @@ application.register('visibility',               VisibilityController)
 | `input-combobox` | Wrapper: trigger, popover, hidden value | [docs/component/combobox.md](docs/component/combobox.md#input-combobox) |
 | `input-formatter` | Formats and displays values | [docs/component/input-formatter.md](docs/component/input-formatter.md) |
 | `input-clearable` | Input with clear button | [docs/component/input-clearable.md](docs/component/input-clearable.md) |
+| `input-revealable` | Obscured input with reveal toggle | [docs/component/input-revealable.md](docs/component/input-revealable.md) |
 | `combobox-date` | Calendar grid date picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-date) |
 | `combobox-time` | Drum/scroll-wheel time picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-time) |
 | `combobox-dropdown` | Listbox with fuzzy filter or server fetch | [docs/component/combobox.md](docs/component/combobox.md#combobox-dropdown) |

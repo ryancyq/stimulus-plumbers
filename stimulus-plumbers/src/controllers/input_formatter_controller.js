@@ -1,16 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
-import { setHidden } from '../accessibility/aria';
 import { attachFormatter, attachCharacterCells } from '../plumbers';
 
 export default class extends Controller {
-  static targets = ['input', 'toggle', 'cell', 'revealIcon', 'concealIcon'];
+  static targets = ['input', 'cell'];
   static values = {
     format: { type: String, default: 'plain' },
     options: { type: Object, default: {} },
-    revealed: { type: Boolean, default: false },
     groups: { type: Array, default: [] },
-    labelReveal: { type: String, default: '' },
-    labelConceal: { type: String, default: '' },
   };
 
   connect() {
@@ -18,7 +14,6 @@ export default class extends Controller {
     this.attachCells();
     this.primeFilledState();
     this.format(this.readValue());
-    this.drawToggle();
   }
 
   formatValueChanged() {
@@ -27,7 +22,6 @@ export default class extends Controller {
     this.attachCells();
     this.primeFilledState();
     this.format(this.readValue());
-    this.drawToggle();
   }
 
   optionsValueChanged() {
@@ -36,12 +30,6 @@ export default class extends Controller {
     this.attachCells();
     this.primeFilledState();
     this.format(this.readValue());
-  }
-
-  revealedValueChanged() {
-    if (!this.formatter) return;
-    this.format(this.readValue());
-    this.drawToggle();
   }
 
   groupsValueChanged() {
@@ -60,17 +48,12 @@ export default class extends Controller {
   cellTargetConnected() {
     if (!this.formatter) return;
     this.attachCells();
-    this.drawCells(this.cellsValue(this.formatter.normalize(this.readValue())));
+    this.drawCells(this.formatter.normalize(this.readValue()));
   }
 
   format(value) {
     if (!this.formatter) return;
     this.onFormatting(value);
-  }
-
-  toggle() {
-    if (!this.formatter.maskable() && this.formatValue !== 'password') return;
-    this.revealedValue = !this.revealedValue;
   }
 
   onPaste(event) {
@@ -110,35 +93,17 @@ export default class extends Controller {
   }
 
   onFocus() {
-    this.drawCells(this.cellsValue(this.formatter?.normalize(this.readValue()) ?? ''));
+    this.drawCells(this.formatter?.normalize(this.readValue()) ?? '');
   }
 
   onBlur() {
-    this.drawCells(this.cellsValue(this.formatter?.normalize(this.readValue()) ?? ''));
-  }
-
-  /** Conceals the value for cell display when the formatter masks and reveal is off */
-  cellsValue(value) {
-    if (!this.formatter || this.revealedValue || !this.formatter.maskable()) return value;
-    return this.formatter.mask(value);
+    this.drawCells(this.formatter?.normalize(this.readValue()) ?? '');
   }
 
   drawCells(value) {
     if (!this.hasCellTarget) return;
     const focused = this.hasInputTarget && document.activeElement === this.inputTarget;
     this.characterCells?.draw(value, { focused });
-  }
-
-  drawToggle() {
-    if (!this.hasToggleTarget) return;
-    const hasToggleBehavior = this.formatter?.maskable() || this.formatValue === 'password';
-    setHidden(this.toggleTarget, !hasToggleBehavior);
-    if (!hasToggleBehavior || !this.hasRevealIconTarget) return;
-
-    setHidden(this.revealIconTarget, this.revealedValue);
-    setHidden(this.concealIconTarget, !this.revealedValue);
-    const label = this.revealedValue ? this.labelConcealValue : this.labelRevealValue;
-    if (label) this.toggleTarget.setAttribute('aria-label', label);
   }
 
   readValue() {
@@ -149,14 +114,8 @@ export default class extends Controller {
   onFormatting(raw) {
     if (!this.formatter) return;
 
-    if (this.formatValue === 'password') {
-      if (this.hasInputTarget) this.inputTarget.type = this.revealedValue ? 'text' : 'password';
-      return;
-    }
-
     const value = this.formatter.normalize(raw);
-    const formatted =
-      this.revealedValue || !this.formatter.maskable() ? this.formatter.format(value) : this.formatter.mask(value);
+    const formatted = this.formatter.format(value);
 
     if (this.hasInputTarget) {
       if (this.inputTarget instanceof HTMLInputElement) {
@@ -167,7 +126,7 @@ export default class extends Controller {
     }
 
     this.dispatch('formatted', { detail: { value: formatted } });
-    this.drawCells(this.cellsValue(value));
+    this.drawCells(value);
 
     const full = this.isFull(value);
     if (full && !this.wasFull) {

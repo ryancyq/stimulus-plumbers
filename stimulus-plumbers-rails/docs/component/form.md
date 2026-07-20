@@ -52,7 +52,7 @@ Special options on native helpers:
 
 | Helper           | Option             | Effect                                                             |
 | ---------------- | ------------------ | ------------------------------------------------------------------ |
-| `password_field` | `revealable: true` | Wraps input in an `input-formatter` reveal controller              |
+| `password_field` | `revealable: true` | Wraps input in an `input-revealable` controller                    |
 | `search_field`   | `clearable: true`  | Wraps input in an `input-clearable` controller with a clear button |
 
 ### f.submit
@@ -160,11 +160,12 @@ Use `f.select` for a native `<select>`.
 
 Use `f.search_field` for a native `<input type="search">`.
 
-**Password** (`as: :password`) — reveal-toggle wrapper backed by `input-formatter`.
+**Password** (`as: :password`) — reveal-toggle wrapper backed by `input-revealable`.
 
-| Option       | Values  | Default | Description                                 |
-| ------------ | ------- | ------- | ------------------------------------------- |
-| `revealable` | Boolean | `false` | Adds a show/hide toggle button on the input |
+| Option         | Values  | Default              | Description                                 |
+| -------------- | ------- | -------------------- | ------------------------------------------- |
+| `revealable`   | Boolean | `false`              | Adds a show/hide toggle button on the input |
+| `autocomplete` | String  | `"current-password"` | Native autocomplete value                   |
 
 Use `f.password_field` for a plain `<input type="password">` (also accepts `revealable:`).
 
