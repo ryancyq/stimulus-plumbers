@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.13](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.12..stimulus-plumbers/v0.4.13) - 2026-07-20
+
+### Bug Fixes
+
+- input reveal + conceal ([#185](https://github.com/ryancyq/stimulus-plumbers/issues/185)) - ([3391853](https://github.com/ryancyq/stimulus-plumbers/commit/3391853ff5739a77ab5ab8207dc020aee6c6228a)) - Ryan Chang
+- hidden assignment should always use aria helper ([#186](https://github.com/ryancyq/stimulus-plumbers/issues/186)) - ([88c1434](https://github.com/ryancyq/stimulus-plumbers/commit/88c1434b70134516ae1d8bc0f69a4e2e678b0d1b)) - Ryan Chang
+
+### Features
+
+- input revealable ([#188](https://github.com/ryancyq/stimulus-plumbers/issues/188)) - ([7aab4f3](https://github.com/ryancyq/stimulus-plumbers/commit/7aab4f369e7e69eddb6b20a6b68327199f87c1e7)) - Ryan Chang
+
+---
 ## [0.4.10](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.9..stimulus-plumbers/v0.4.10) - 2026-07-19
 
 ### Features
