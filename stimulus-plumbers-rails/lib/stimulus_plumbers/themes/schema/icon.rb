@@ -57,10 +57,21 @@ module StimulusPlumbers
         private
 
         def resolve_svg_attrs(svg_data)
-          SVG_ATTR_DEFAULTS
-            .merge(svg_data.slice(*SVG_ATTR_DEFAULTS.keys))
-            .transform_keys { |key| SVG_ATTR_NAMES.fetch(key, key.to_s) }
-            .transform_values(&:to_s)
+          SVG_ATTR_DEFAULTS.merge(svg_data).filter_map do |key, value|
+            next unless svg_attr_allowed?(key)
+
+            [svg_attr_name(key), value.to_s]
+          end.to_h
+        end
+
+        def svg_attr_allowed?(key)
+          SVG_ATTR_DEFAULTS.key?(key) || data_or_aria_attr?(key)
+        end
+
+        def svg_attr_name(key)
+          return key.to_s.tr("_", "-") if data_or_aria_attr?(key)
+
+          SVG_ATTR_NAMES.fetch(key, key.to_s)
         end
 
         def resolve_element_attrs(element_data)

@@ -139,6 +139,18 @@ class SchemaIconTest < Minitest::Test
     assert_equal "round", result[:elements].first["stroke-linecap"]
   end
 
+  def test_resolve_passes_through_aria_attrs_on_svg_root
+    result = Icon.resolve({ aria_hidden: true, elements: [{ tag: :path, d: "M1 2" }] })
+
+    assert_equal "true", result["aria-hidden"]
+  end
+
+  def test_resolve_passes_through_data_attrs_on_svg_root
+    result = Icon.resolve({ data_slot: "icon", elements: [{ tag: :path, d: "M1 2" }] })
+
+    assert_equal "icon", result["data-slot"]
+  end
+
   def test_resolve_passes_through_linecap_and_linejoin
     result = Icon.resolve({ elements: [{ tag: :path, d: "M1 2", stroke_linecap: :round, stroke_linejoin: :round }] })
     el = result[:elements].first

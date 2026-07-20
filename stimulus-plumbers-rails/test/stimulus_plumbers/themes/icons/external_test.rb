@@ -53,6 +53,12 @@ class IconsExternalTest < Minitest::Test
     assert_equal "round", elements.first[:stroke_linecap]
   end
 
+  def test_fetch_maps_svg_root_aria_hidden_to_underscore_symbol
+    with_svg_file('<svg aria-hidden="true"><path d="M1 2"/></svg>') do |src|
+      assert_equal "true", src.fetch("icon")[:aria_hidden]
+    end
+  end
+
   def test_include_returns_false_when_file_missing
     refute_includes source, "missing"
   end
