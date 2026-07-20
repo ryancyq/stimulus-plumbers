@@ -1,6 +1,6 @@
 {
   "name": "@stimulus-plumbers/controllers",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "description": "Stimulus controllers following WCAG standards",
   "type": "module",
   "main": "dist/index.umd.js",
