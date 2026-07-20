@@ -108,7 +108,7 @@ module StimulusPlumbers
         def render_indicator_content(type:, icon_name:)
           if type == :icon && icon_name
             Components::Icon.new(template).render(
-              name:    icon_name,
+              icon_name,
               size:    :sm,
               classes: theme.resolve(:timeline_item_indicator_icon_slot).fetch(:classes, ""),
               aria:    { hidden: "true" }

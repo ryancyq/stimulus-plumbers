@@ -8,7 +8,7 @@ class IconComponentTest < ActionView::TestCase
   end
 
   def render_icon(name:, **kwargs)
-    renderer.render(name: name, **kwargs)
+    renderer.render(name, **kwargs)
   end
 
   def icon_theme

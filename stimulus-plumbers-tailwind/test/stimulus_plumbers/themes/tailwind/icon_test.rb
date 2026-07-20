@@ -17,7 +17,7 @@ class TailwindThemeIconTest < ActionView::TestCase
   end
 
   def render_icon(name:, **kwargs)
-    renderer.render(name: name, **kwargs)
+    renderer.render(name, **kwargs)
   end
 
   # ── theme icon definitions ────────────────────────────────────────────────

@@ -4,9 +4,9 @@
   <h2>Decorative (aria-hidden)</h2>
   <div class="sb-row">
     <%# ── Decorative icons hidden from AT, paired with visible text ─────── %>
-    <p><%= sp_icon(name: :check) %> Completed</p>
-    <p><%= sp_icon(name: :close) %> Removed</p>
-    <p><%= sp_icon(name: :bell) %> Notifications</p>
+    <p><%= sp_icon(:check) %> Completed</p>
+    <p><%= sp_icon(:close) %> Removed</p>
+    <p><%= sp_icon(:bell) %> Notifications</p>
   </div>
 </section>
 
@@ -14,8 +14,8 @@
   <h2>Functional (with accessible name)</h2>
   <div class="sb-row">
     <%# ── Standalone icons must expose a label via role="img" + aria-label ─ %>
-    <%= sp_icon(name: :check,    role: "img", aria: { hidden: "false", label: "Completed" }) %>
-    <%= sp_icon(name: :close, role: "img", aria: { hidden: "false", label: "Removed" }) %>
+    <%= sp_icon(:check,    role: "img", aria: { hidden: "false", label: "Completed" }) %>
+    <%= sp_icon(:close, role: "img", aria: { hidden: "false", label: "Removed" }) %>
   </div>
 </section>
 

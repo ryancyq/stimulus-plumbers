@@ -49,7 +49,7 @@ module StimulusPlumbers
         return value unless value.is_a?(Symbol) || (value.is_a?(String) && !value.html_safe?)
 
         Components::Icon.new(template).render(
-          name:    value,
+          value,
           classes: theme.resolve(:card_icon).fetch(:classes, ""),
           aria:    { hidden: "true" }
         )
