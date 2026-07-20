@@ -46,6 +46,12 @@ class TailwindIconsHeroiconTest < Minitest::Test
     assert_equal "1.5",          result[:stroke_width]
   end
 
+  def test_resolved_icon_is_hidden_from_assistive_technology
+    resolved = StimulusPlumbers::Themes::Schema::Icon.resolve(Heroicon.fetch("eye"))
+
+    assert_equal "true", resolved["aria-hidden"]
+  end
+
   def test_fetch_solid_returns_elements
     result = Heroicon.fetch("arrow-left/solid")
 

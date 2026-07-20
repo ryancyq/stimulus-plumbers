@@ -31,7 +31,7 @@ module StimulusPlumbers
 
           result = svg_defaults(key)
           root.attributes.each_attribute do |attr|
-            result[SVG_RENAME.fetch(attr.name, attr.name.to_sym)] = attr.value
+            result[SVG_RENAME.fetch(attr.name, attr.name.tr("-", "_").to_sym)] = attr.value
           end
 
           elements = parse_elements(root)
