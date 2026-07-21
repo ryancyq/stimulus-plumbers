@@ -4,6 +4,10 @@ require "test_helper"
 require_relative "form_builder_model"
 
 class FormBuilderTest < ActionView::TestCase
+  class CapturingSlots < StimulusPlumbers::Plumber::Slots
+    slot :content
+  end
+
   def setup
     @form = FormBuilderModel.new
   end
@@ -16,8 +20,11 @@ class FormBuilderTest < ActionView::TestCase
   end
 
   def build_form(&block)
-    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session", &block)
-    parse_html(html)
+    parse_html(render_form(&block))
+  end
+
+  def render_form(&block)
+    view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session", &block)
   end
 
   def test_email_field_renders_input
@@ -57,6 +64,70 @@ class FormBuilderTest < ActionView::TestCase
     assert_raises ArgumentError do
       build_field(:field, :email, as: :unknown_type)
     end
+  end
+
+  def test_field_yields_password_builder_and_forwards_collected_strength_requirements
+    builder = nil
+
+    build_form do |f|
+      builder = f
+      f.field :password, as: :password do |password|
+        password.enforce min_length: 12, max_length: 64
+      end
+    end
+
+    assert_predicate builder.password_requirements, :enforced?
+    assert_equal({ length: "At least 12 characters" }, builder.password_requirements.rules)
+  end
+
+  def test_field_without_a_block_builds_requirements_without_strength
+    builder = nil
+
+    build_form do |f|
+      builder = f
+      f.field :password, as: :password
+    end
+
+    assert_not builder.password_requirements.enforced?
+  end
+
+  def test_field_block_on_non_accepting_type_raises
+    error = assert_raises(ArgumentError) do
+      build_form { |f| f.field(:email, as: :email) { |_| nil } }
+    end
+
+    assert_equal "field type :email does not accept a block", error.message
+  end
+
+  # Only an accepting type can be compared with and without a block — a block on a
+  # non-accepting type raises, which test_field_block_on_non_accepting_type_raises covers.
+  def test_field_output_is_unchanged_by_passing_a_block
+    assert_equal(
+      render_form { |f| f.field :password, as: :password },
+      render_form { |f| f.field(:password, as: :password) { |_| nil } }
+    )
+  end
+
+  def test_slots_built_with_template_capture_erb_output
+    doc = parse_html(render(inline: <<~ERB, type: :erb))
+      <% slots = FormBuilderTest::CapturingSlots.new(self) %>
+      <% slots.with_content do %>
+        <p>Captured content</p>
+      <% end %>
+      <%= slots.resolve(:content) %>
+    ERB
+
+    assert_css doc, "p", text: "Captured content"
+  end
+
+  def test_renderer_symbol_target_still_receives_proc_slot
+    renderer_class = Class.new(StimulusPlumbers::Plumber::Base)
+    renderer_class.renders(:content, with: :build_content)
+    renderer_class.define_method(:build_content) { |&block| block.call }
+    renderer = renderer_class.new(view)
+    renderer.with_content { "slot content" }
+
+    assert_equal "slot content", renderer.render_content
   end
 
   def test_field_renders_hint

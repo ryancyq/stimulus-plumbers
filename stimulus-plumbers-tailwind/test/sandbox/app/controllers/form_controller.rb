@@ -46,4 +46,8 @@ class FormController < ApplicationController
   def credit_card
     @form = SignUp.new
   end
+
+  def password
+    @form = SignUp.new
+  end
 end

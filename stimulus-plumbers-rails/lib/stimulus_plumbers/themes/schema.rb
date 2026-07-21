@@ -159,6 +159,12 @@ module StimulusPlumbers
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
+        password_strength_wrapper:              {}.freeze,
+        password_strength_rules_heading:        {}.freeze,
+        password_strength_rules:                {}.freeze,
+        password_strength_rule:                 {}.freeze,
+        password_strength_rule_icon:            {}.freeze,
+        password_strength_level:                {}.freeze,
         form_field_input_select:                {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }

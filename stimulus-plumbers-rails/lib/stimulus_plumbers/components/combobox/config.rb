@@ -5,7 +5,7 @@ module StimulusPlumbers
     class Combobox
       # Yielded to `Combobox#render`: selects a variant renderer, then exposes its
       # `metadata` (trigger/wrapper wiring) and renders its panel body.
-      class Builder < Plumber::Slots
+      class Config < Plumber::Config
         def dropdown(**options)
           select(Dropdown, options)
         end
@@ -23,22 +23,22 @@ module StimulusPlumbers
         end
 
         def selected?
-          @slots.key?(:variant)
+          configured?(:renderer)
         end
 
         def renderer
-          selection&.fetch(:renderer)
+          config(:renderer)
         end
 
         def options
-          selection ? selection[:options] : {}
+          config(:options) || {}
         end
 
         def metadata
           renderer ? renderer::Metadata : DefaultMetadata
         end
 
-        def render_panel(template, panel_attrs:)
+        def render_panel(panel_attrs:)
           renderer&.new(template)&.render(panel_attrs: panel_attrs, **options)
         end
 
@@ -70,12 +70,8 @@ module StimulusPlumbers
         private
 
         def select(renderer, options)
-          set_slot(:variant, { renderer: renderer, options: options })
-          nil
-        end
-
-        def selection
-          resolve(:variant)
+          configure(:renderer, renderer)
+          configure(:options, options)
         end
       end
     end

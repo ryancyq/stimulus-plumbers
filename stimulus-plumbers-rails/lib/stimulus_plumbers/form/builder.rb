@@ -31,6 +31,7 @@ module StimulusPlumbers
     class Builder < ActionView::Helpers::FormBuilder
       include Plumber::Options::Html
       include Plumber::Options::Aria
+      include Plumber::Dispatcher::CallableInspector
       include Fields::Inputs::Checkbox
       include Fields::Inputs::Code
       include Fields::Inputs::CreditCard
@@ -47,10 +48,10 @@ module StimulusPlumbers
       include Fields::Inputs::Text
       include Fields::Inputs::TextArea
 
-      def field(attribute, as:, **options)
+      def field(attribute, as:, **options, &block)
         field_opts = options.slice(*Field::OPTIONS)
         input_opts = options.except(*Field::OPTIONS)
-        render_field(as, attribute, field_opts, input_opts)
+        render_field(as, attribute, field_opts, input_opts, &block)
       end
 
       def collection_field(attribute, as:, collection:, value_method:, text_method:, **options)
@@ -71,8 +72,10 @@ module StimulusPlumbers
         StimulusPlumbers.config.theme.current
       end
 
-      def render_field(as, attribute, field_opts, input_opts)
+      def render_field(as, attribute, field_opts, input_opts, &block)
         raise ArgumentError, "unknown field type: #{as.inspect}" unless Fields::Renderer::FIELD.key?(as)
+
+        validate_field_block!(as, block)
 
         field = Field.new(@template, **field_opts)
         field.render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error|
@@ -83,9 +86,17 @@ module StimulusPlumbers
             opts,
             error,
             floating: field.floating,
-            **input_opts
+            **input_opts,
+            &block
           ).call(self)
         end
+      end
+
+      def validate_field_block!(as, block)
+        return unless block
+        return if accepts_block?(method(Fields::Renderer::FIELD.fetch(as)))
+
+        raise ArgumentError, "field type #{as.inspect} does not accept a block"
       end
 
       def render_collection_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)

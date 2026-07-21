@@ -9,7 +9,6 @@ module StimulusPlumbers
 
           def with_indicator(icon: nil)
             set_slot(:indicator, icon, { type: icon ? :icon : :dot, icon: icon })
-            nil
           end
         end
       end

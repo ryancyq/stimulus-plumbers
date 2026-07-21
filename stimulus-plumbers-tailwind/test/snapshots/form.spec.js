@@ -28,13 +28,6 @@ test.describe("sign up form", () => {
     );
   });
 
-  test("password revealed", async ({ page }) => {
-    const section = page.locator("#sign-up");
-    await section.getByLabel("Show password").click();
-    await expectRevealed(section);
-    await expect(section).toHaveScreenshot("sign-up-password-revealed.png");
-  });
-
   test("floating labels", async ({ page }) => {
     await expect(page.locator("#sign-up-floating")).toHaveScreenshot(
       "sign-up-floating.png",
@@ -47,16 +40,6 @@ test.describe("sign up form", () => {
     await section.locator("input[type='email']").fill("jane@example.com");
     await section.locator("input[type='password']").fill("secret123");
     await expect(section).toHaveScreenshot("sign-up-floating-filled.png");
-  });
-
-  test("floating labels — password revealed", async ({ page }) => {
-    const section = page.locator("#sign-up-floating");
-    await section.locator("input[type='password']").fill("secret123");
-    await section.getByLabel("Show password").click();
-    await expectRevealed(section);
-    await expect(section).toHaveScreenshot(
-      "sign-up-floating-password-revealed.png",
-    );
   });
 
   test("icon-only submit", async ({ page }) => {

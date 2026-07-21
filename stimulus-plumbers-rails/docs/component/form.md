@@ -108,6 +108,9 @@ Three methods render a complete, accessible field:
 <%= f.field :bio,      as: :text_area, hint: "Tell us about yourself." %>
 <%= f.field :avatar,   as: :file %>
 <%= f.field :password, as: :password, revealable: true %>
+<%= f.field :password, as: :password do |p| %>
+  <% p.enforce min_length: 12, max_length: 64 %>
+<% end %>
 <%= f.field :verification_code, as: :code, length: 6 %>
 <%= f.field :card_number, as: :credit_card %>
 <%= f.field :email,    as: :email,    floating: :filled %>
@@ -117,6 +120,8 @@ Three methods render a complete, accessible field:
 <%= f.field :tags,     as: :search,
       choices: ["ruby", "rails", "hotwire"], clearable: true %>
 ```
+
+`f.field` can take a block when its renderer declares `&block`; that declaration opts the renderer into the block DSL. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` wrapper containing the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`.
 
 `choices:` takes the standard Rails shape — an array of `[label, value]` pairs (or a flat array of strings).
 
@@ -162,12 +167,39 @@ Use `f.search_field` for a native `<input type="search">`.
 
 **Password** (`as: :password`) — reveal-toggle wrapper backed by `input-revealable`.
 
-| Option         | Values  | Default              | Description                                 |
-| -------------- | ------- | -------------------- | ------------------------------------------- |
-| `revealable`   | Boolean | `false`              | Adds a show/hide toggle button on the input |
-| `autocomplete` | String  | `"current-password"` | Native autocomplete value                   |
+| Option         | Values                   | Default              | Description                                      |
+| -------------- | ------------------------ | -------------------- | ------------------------------------------------ |
+| `revealable`   | Boolean                  | `false`              | Adds a show/hide toggle button on the input      |
+| `autocomplete` | String                   | `"current-password"` | Native autocomplete value                        |
+| `requirements` | `Password::Requirements` | `nil`                | Prebuilt rule set that drives the strength meter |
 
 Use `f.password_field` for a plain `<input type="password">` (also accepts `revealable:`).
+
+**Strength rules.** Declare rules inline with a block, or pass a shared `requirements:` object. `enforce(min_length:, max_length:, uppercase:/lowercase:/digit:/symbol:)` enables built-ins — a character-class option takes `true` (≥1), an Integer (≥N), or a Range (`N..M` occurrences); the length rule requires **both** `min_length` and `max_length`. `rule(key, label, pattern:, min:, max:, negate:)` adds a custom rule (`negate: true` forbids matches).
+
+```erb
+<%= f.field :password, as: :password do |p| %>
+  <% p.enforce min_length: 12, max_length: 64, digit: true %>
+  <% p.rule :no_spaces, "No spaces", pattern: /\s/, negate: true %>
+<% end %>
+```
+
+**Server enforcement.** Build one `Password::Requirements` and share it between the form meter and the model validator so they cannot drift:
+
+```ruby
+PASSWORD_RULES = StimulusPlumbers::Password::Requirements.build do |r|
+  r.enforce(min_length: 12, max_length: 64, digit: true)
+end
+
+# model — PasswordStrengthValidator; valid? iff every enabled rule passes
+validates :password, password_strength: { with: PASSWORD_RULES }
+```
+
+```erb
+<%= f.field :password, as: :password, requirements: PASSWORD_RULES %>
+```
+
+The validator also accepts inline options (`password_strength: { min_length: 12, max_length: 64, digit: true }`) and a custom `message:`. For the rule-descriptor wire contract and meter behaviour, see the [JS controller doc](../../../stimulus-plumbers/docs/component/password-strength.md).
 
 **Code** (`as: :code`) — character-cell entry backed by `input-formatter` and the `character-cells` plumber. The native input remains the accessible control; cells are decorative.
 

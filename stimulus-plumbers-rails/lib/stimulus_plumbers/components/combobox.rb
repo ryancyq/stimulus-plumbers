@@ -9,42 +9,42 @@ module StimulusPlumbers
 
       def render(trigger: {}, input: {}, id: nil, label: nil, close_on_select: nil, **kwargs, &block)
         trigger_opts = trigger.dup
-        builder      = resolve_builder(&block)
+        config       = resolve_config(&block)
         trigger_id   = id || trigger_opts.delete(:id) || template.sp_dom_id
         panel_id     = Popover.panel_id_for(trigger_id)
 
-        template.content_tag(:div, **combobox_attrs(input, close_on_select, builder, panel_id, kwargs)) do
-          build_popover(trigger_opts, input, builder, trigger_id, panel_id, label)
+        template.content_tag(:div, **combobox_attrs(input, close_on_select, config, panel_id, kwargs)) do
+          build_popover(trigger_opts, input, config, trigger_id, panel_id, label)
         end
       end
 
       private
 
-      def resolve_builder
-        builder = Combobox::Builder.new(template)
-        yield builder if block_given?
-        builder
+      def resolve_config
+        config = Combobox::Config.new(template)
+        yield config if block_given?
+        config
       end
 
-      def build_popover(trigger, input, builder, trigger_id, panel_id, label)
-        metadata = builder.metadata
+      def build_popover(trigger, input, config, trigger_id, panel_id, label)
+        metadata = config.metadata
 
         Components::Popover.new(template).build(panel_id: panel_id) do |p|
           p.trigger(haspopup: metadata.haspopup, controls: metadata.popup_id_for(panel_id)) do |attrs|
             build_combobox_trigger(attrs, trigger, input, metadata, trigger_id, label)
           end
           p.build_panel(classes: theme.resolve(:combobox_popover).fetch(:classes, "")) do |panel_attrs|
-            builder.render_panel(template, panel_attrs: panel_attrs)
+            config.render_panel(panel_attrs: panel_attrs)
           end
         end
       end
 
-      def combobox_attrs(input, close_on_select, builder, panel_id, kwargs)
+      def combobox_attrs(input, close_on_select, config, panel_id, kwargs)
         merge_html_options(
           theme.resolve(:combobox),
           kwargs,
           { data: stimulus_data(input[:value], close_on_select) },
-          { data: builder.metadata.stimulus_data(panel_id, builder.options) }
+          { data: config.metadata.stimulus_data(panel_id, config.options) }
         )
       end
 
