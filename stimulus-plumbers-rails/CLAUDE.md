@@ -25,7 +25,7 @@ stimulus-plumbers-rails/
 │       │   │   └── slots.rb
 │       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-formatter; reads builder.metadata (haspopup/popup_id/trigger_options/stimulus_data) + builder.render_panel into the popover
 │       │   ├── combobox/
-│       │   │   ├── builder.rb            # DSL yielded by Combobox#render — c.dropdown/typeahead/date/time select a variant renderer (:variant slot, < Plumber::Slots); exposes #metadata (renderer::Metadata, or DefaultMetadata) + #render_panel
+│       │   │   ├── config.rb             # DSL yielded by Combobox#render — c.dropdown/typeahead/date/time configure :renderer + :options (< Plumber::Config); exposes #metadata (renderer::Metadata, or DefaultMetadata) + #render_panel
 │       │   │   ├── typeahead.rb          # combobox-dropdown body + nested Metadata (haspopup/popup_id_for/trigger_icon/trigger_options/stimulus_data) — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
 │       │   │   ├── date.rb               # combobox-date picker body + nested Metadata — panel IS the role=dialog (hosts the controller)
 │       │   │   ├── dropdown.rb           # combobox-dropdown body + nested Metadata — panel IS the <ul role=listbox>; options only
@@ -55,6 +55,7 @@ stimulus-plumbers-rails/
 │       │   │   ├── item.rb
 │       │   │   └── item/
 │       │   │       └── slots.rb
+│       │   ├── password_strength.rb     # Component: meter, level, rules checklist rendering
 │       │   ├── popover.rb                # sp_popover renderer; render (with wrapper) / build (without wrapper)
 │       │   ├── popover/
 │       │   │   ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
@@ -97,7 +98,10 @@ stimulus-plumbers-rails/
 │       │           ├── radio.rb          # radio_button, collection_radio_buttons (native); render_collection_radio_button
 │       │           ├── datetime.rb       # date_field, time_field (native); render_combobox_date, render_combobox_time
 │       │           ├── file.rb           # file_field (native); render_file_input
-│       │           ├── password.rb       # password_field + reveal: (native); render_password_input
+│       │           ├── password.rb       # password_field + reveal: (native); render_password_input — includes Revealable + Strength
+│       │           ├── password/
+│       │           │   ├── revealable.rb # Password::Revealable — reveal toggle: input group, button, icon pair
+│       │           │   └── strength.rb   # Thin strength wiring (input attrs + delegates to Components::PasswordStrength)
 │       │           ├── search.rb         # search_field + clearable: (native); render_combobox_typeahead
 │       │           ├── select.rb         # select, collection_select (native); render_combobox_dropdown, render_collection/grouped_combobox_dropdown
 │       │           ├── select/
@@ -122,7 +126,8 @@ stimulus-plumbers-rails/
 │       │   │   ├── theme.rb              # Options::Theme — extract_classes, theme key resolution
 │       │   │   └── token_list.rb         # Options::TokenList — merge_token_list
 │       │   ├── renderer.rb               # Plumber::Renderer — renders macro + renderers class attribute
-│       │   └── slots.rb                  # Plumber::Slots — slot DSL (with_*, resolve, options_for)
+│       │   ├── slots.rb                  # Plumber::Slots — content slot DSL (private set_slot; public resolve/options_for)
+│       │   └── config.rb                 # Plumber::Config — configuration DSL base; private store (configure/config/configured?), no capture, subclasses expose named readers
 │       ├── themes/
 │       │   ├── base.rb                   # Base theme (no-op default)
 │       │   ├── configuration.rb          # Theme registry
@@ -147,6 +152,9 @@ stimulus-plumbers-rails/
 │       │   └── icons/
 │       │       ├── external.rb           # SVG file parser (include into any icon source module)
 │       │       └── registry.rb           # Lazy-loading Registry < SimpleDelegator (source-injected)
+│       ├── password/
+│       │   └── requirements.rb           # Password::Requirements — rule DSL + evaluate/valid?/to_stimulus (server + client source of truth)
+│       ├── password_strength_validator.rb # Top-level PasswordStrengthValidator (ActiveModel::EachValidator)
 │       ├── configuration.rb
 │       ├── engine.rb
 │       ├── logger.rb
@@ -242,6 +250,11 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 > Key internal docs: `plumber.md` (Base / Renderer / Options::Html / Slots), `dispatcher.md` (Dispatcher strategies), `form.md` (two-level field API).
 
 > See [docs/architecture.md](docs/architecture.md) for schema ranges convention and icon-only detection contract.
+
+## Stimulus Wiring Convention
+
+- **`STIMULUS_CONTROLLER` constant:** declare one when the controller identifier is referenced more than once, or is composed by another component's wiring (e.g. `combobox` reuses `popover`). A single-use inline literal (`controller: "password-strength"`) is fine — don't manufacture a constant for one call site.
+- **Stimulus values:** pass individual typed values for a small fixed set chosen by state (e.g. reveal's `reveal_label_value` / `conceal_label_value`). Use one `Object`/JSON value only when the consumer looks it up by dynamic key (e.g. strength's `labels_value`, read as `labelsValue[level]`). Don't wrap a two-label pair in JSON.
 
 ## Doc Update Rule
 - When changing component API (targets, values, options, HTML structure, form builder keywords), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.

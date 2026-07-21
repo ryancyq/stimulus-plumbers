@@ -2,19 +2,19 @@
 
 require "test_helper"
 
-class ComboboxBuilderTest < ActiveSupport::TestCase
-  Builder  = StimulusPlumbers::Components::Combobox::Builder
+class ComboboxConfigTest < ActiveSupport::TestCase
+  Config   = StimulusPlumbers::Components::Combobox::Config
   Combobox = StimulusPlumbers::Components::Combobox
 
   def test_no_variant_by_default
-    builder = Builder.new
+    config = Config.new
 
-    assert_not builder.selected?
-    assert_nil builder.renderer
+    assert_not config.selected?
+    assert_nil config.renderer
   end
 
   def test_default_metadata_when_nothing_selected
-    metadata = Builder.new.metadata
+    metadata = Config.new.metadata
 
     assert_equal "dialog", metadata.haspopup
     assert_equal "p1", metadata.popup_id_for("p1")
@@ -24,25 +24,25 @@ class ComboboxBuilderTest < ActiveSupport::TestCase
   end
 
   def test_variant_methods_return_nil
-    builder = Builder.new
+    config = Config.new
 
-    assert_nil builder.dropdown(options: [])
+    assert_nil config.dropdown(options: [])
   end
 
   def test_dropdown_selects_dropdown_renderer
-    builder = Builder.new
-    builder.dropdown(options: [])
+    config = Config.new
+    config.dropdown(options: [])
 
-    assert_predicate builder, :selected?
-    assert_equal Combobox::Dropdown, builder.renderer
+    assert_predicate config, :selected?
+    assert_equal Combobox::Dropdown, config.renderer
   end
 
   def test_last_variant_wins
-    builder = Builder.new
-    builder.dropdown(options: [])
-    builder.date
+    config = Config.new
+    config.dropdown(options: [])
+    config.date
 
-    assert_equal Combobox::Date, builder.renderer
+    assert_equal Combobox::Date, config.renderer
   end
 
   def test_each_variant_type
@@ -51,18 +51,18 @@ class ComboboxBuilderTest < ActiveSupport::TestCase
       date:      Combobox::Date,
       time:      Combobox::Time
     }.each do |method, klass|
-      builder = Builder.new
-      builder.public_send(method)
+      config = Config.new
+      config.public_send(method)
 
-      assert_equal klass, builder.renderer
+      assert_equal klass, config.renderer
     end
   end
 
   def test_metadata_stimulus_data_uses_selected_options
-    builder = Builder.new
-    builder.time(format: :h24)
+    config = Config.new
+    config.time(format: :h24)
 
-    stimulus_data = builder.metadata.stimulus_data("p1", builder.options)
+    stimulus_data = config.metadata.stimulus_data("p1", config.options)
 
     assert_equal({ format: :h24 }.to_json, stimulus_data[:input_formatter_options_value])
   end

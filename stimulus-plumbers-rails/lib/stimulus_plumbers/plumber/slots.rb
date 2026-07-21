@@ -37,8 +37,10 @@ module StimulusPlumbers
         @template ? @template.capture(&block) : block.call
       end
 
+      # Returns nil so a subclass's `with_*` method reads as a command, not a value.
       def set_slot(name, value, options = {})
         @slots[name] = { value: value, options: options }
+        nil
       end
 
       class << self
@@ -55,7 +57,6 @@ module StimulusPlumbers
         def define_flat_slot(name)
           define_method(:"with_#{name}") do |value = nil, **opts, &block|
             set_slot(name, block || value, opts)
-            nil
           end
         end
 
@@ -64,7 +65,6 @@ module StimulusPlumbers
             sub = by.new(@template)
             block&.call(sub)
             set_slot(name, sub)
-            nil
           end
         end
 

@@ -33,6 +33,7 @@ stimulus-plumbers-tailwind/
 │               ├── form/
 │               │   ├── field.rb            # Form::Field — floating (form_field_floating*), label/hint/error/choice CSS classes
 │               │   └── input.rb            # Form::Input — input/checkbox/radio/combobox/reveal/clearable CSS classes
+│               ├── password_strength.rb    # PasswordStrength CSS classes (wrapper/rules_heading/rules/rule/level) — sibling of Form
 │               ├── icon.rb                 # Icon CSS classes + ALIASES + Registry wiring
 │               ├── icons/
 │               │   ├── heroicon.rb         # Heroicons source (bundled SVGs or heroicons gem)

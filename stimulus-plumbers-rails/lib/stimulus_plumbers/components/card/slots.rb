@@ -10,7 +10,6 @@ module StimulusPlumbers
           raise ArgumentError, "card.body requires a block" unless block
 
           set_slot(:body, block)
-          nil
         end
 
         # Defined manually (not via `slot` DSL) because it requires a named `url:` keyword with validation.
@@ -18,7 +17,6 @@ module StimulusPlumbers
           raise ArgumentError, "card.action requires content (string or block) when url: is given" if url && value.nil? && !block
 
           set_slot(:action, block || value, url ? { url: url } : {})
-          nil
         end
       end
     end

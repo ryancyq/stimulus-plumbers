@@ -11,4 +11,5 @@ scope "/form", controller: "form" do
   get :collection_radio
   get :code
   get :credit_card
+  get :password
 end

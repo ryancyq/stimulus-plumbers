@@ -13,6 +13,10 @@ module StimulusPlumbers
         def accepts_kwargs?(callable)
           callable.parameters.any? { |type, _| %i[key keyreq keyrest].include?(type) }
         end
+
+        def accepts_block?(callable)
+          callable.parameters.any? { |type, _| type == :block }
+        end
       end
     end
   end

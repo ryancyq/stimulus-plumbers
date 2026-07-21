@@ -30,3 +30,15 @@ en:
         hide: "Hide password"
       search:
         clear: "Clear search"
+    password:
+      rules_heading: "It's better to have:"
+      rules:
+        length: "At least %{count} characters"
+        uppercase: "One uppercase letter"
+        lowercase: "One lowercase letter"
+        digit: "One number"
+        symbol: "One symbol"
+      levels:
+        weak: "Weak password"
+        fine: "Fine password"
+        strong: "Strong password"

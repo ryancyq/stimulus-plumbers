@@ -8,7 +8,8 @@ See [docs/component/combobox.md](../../../stimulus-plumbers/docs/component/combo
 
 ### `sp_combobox`
 
-Single entry point. The panel type is chosen by a method call on the yielded builder
+Single entry point. The panel type is chosen by a method call on the yielded
+`Combobox::Config` ([`Plumber::Config`](plumber.md#plumberconfig))
 (`c.dropdown`, `c.typeahead`, `c.date`, `c.time`) — the panel owns its `aria-haspopup`,
 popup id, trigger icon, and wrapper data. The `sp_combobox_*` helpers below are thin
 wrappers over this.
@@ -31,7 +32,7 @@ end %>
 | `close_on_select` | `false` keeps the panel open after a selection   |
 | `**html_options`  | Forwarded to the wrapper `div`                   |
 
-Builder methods: `c.dropdown(options:, value:, label:)`, `c.typeahead(options:, value:, label:, url:)`,
+Config methods: `c.dropdown(options:, value:, label:)`, `c.typeahead(options:, value:, label:, url:)`,
 `c.date(value:)`, `c.time(format:, step:, value:)`.
 
 ---

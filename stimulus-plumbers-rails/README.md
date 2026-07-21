@@ -79,6 +79,8 @@ The engine re-runs the installer before `assets:precompile` to restore a missing
 
 `StimulusPlumbers::Form::Builder` wraps all components as model-aware form fields with automatic label, name/id, error, and ARIA wiring.
 
+Password fields support strength rules that also enforce server-side via `validates :password, password_strength:`.
+
 → [docs/component/form.md](docs/component/form.md)
 
 ## Theming

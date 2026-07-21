@@ -13,7 +13,10 @@ require_relative "stimulus_plumbers/logger"
 # -- Plumber base --
 require_relative "stimulus_plumbers/plumber/dispatcher"
 require_relative "stimulus_plumbers/plumber/slots"
+require_relative "stimulus_plumbers/plumber/config"
 require_relative "stimulus_plumbers/plumber/base"
+
+require_relative "stimulus_plumbers/password/requirements"
 
 # -- UI components --
 require_relative "stimulus_plumbers/components/icon"
@@ -49,6 +52,7 @@ require_relative "stimulus_plumbers/components/popover/panel"
 require_relative "stimulus_plumbers/components/progress_bar"
 require_relative "stimulus_plumbers/components/progress_ring"
 require_relative "stimulus_plumbers/components/progress_meter"
+require_relative "stimulus_plumbers/components/password_strength"
 
 # -- Calendar --
 require_relative "stimulus_plumbers/components/calendar"
@@ -70,7 +74,7 @@ require_relative "stimulus_plumbers/components/combobox/date/navigation"
 require_relative "stimulus_plumbers/components/combobox/dropdown"
 require_relative "stimulus_plumbers/components/combobox/typeahead"
 require_relative "stimulus_plumbers/components/combobox/time"
-require_relative "stimulus_plumbers/components/combobox/builder"
+require_relative "stimulus_plumbers/components/combobox/config"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field"
@@ -94,3 +98,4 @@ module StimulusPlumbers
 end
 
 require_relative "stimulus_plumbers/engine" if defined?(Rails::Engine)
+require_relative "stimulus_plumbers/password_strength_validator" if defined?(ActiveModel::EachValidator)

@@ -8,4 +8,5 @@ scope "/form", controller: "form" do
   get :floating_label
   get :code
   get :credit_card
+  get :password
 end

@@ -15,11 +15,106 @@ class PasswordTest < ActionView::TestCase
     parse_html(html)
   end
 
-  def build_field(**opts)
+  def build_field(**opts, &block)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
-      f.field(:password, as: :password, **opts)
+      f.field(:password, as: :password, **opts, &block)
     end
     parse_html(html)
+  end
+
+  def test_strength_block_renders_meter_level_and_rules
+    doc = build_field { |p| p.enforce(min_length: 12, max_length: 64, digit: true) }
+
+    assert_css doc, "[data-controller='password-strength']"
+    assert_css doc, "meter[data-progress-target='meter'][low='34'][high='100'][optimum='100']"
+    assert_css doc, "p[data-password-strength-target='level'][aria-live='polite']"
+    assert_css doc, "ul li[data-rule='length']"
+    assert_css doc, "ul li[data-rule='digit']", text: "One number"
+  end
+
+  # Reads a JSON data-* value attribute off the wrapper. Shared to keep each
+  # test under Metrics/AbcSize (inlining JSON.parse(at_css(...)) trips it).
+  def strength_value(doc, name)
+    JSON.parse(doc.at_css("[#{name}]")[name])
+  end
+
+  def test_outlet_selector_matches_the_meter_id
+    doc = build_field { |p| p.enforce(min_length: 8, max_length: 64) }
+    outlet = doc.at_css("[data-password-strength-progress-outlet]")["data-password-strength-progress-outlet"]
+
+    assert_css doc, "meter#{outlet}"
+  end
+
+  def test_rules_value_carries_descriptors
+    doc = build_field { |p| p.enforce(min_length: 12, max_length: 64, digit: 2) }
+    rules = strength_value(doc, "data-password-strength-rules-value")
+
+    length = rules.find { |r| r["key"] == "length" }
+    digit = rules.find { |r| r["key"] == "digit" }
+
+    assert_equal({ "key" => "length", "label" => "At least 12 characters", "min" => 12, "max" => 64 }, length)
+    assert_equal "\\d", digit["pattern"]
+    assert_equal 2, digit["min"]
+    assert_not digit.key?("max")
+  end
+
+  def test_options_value_carries_low_threshold
+    doc = build_field { |p| p.enforce(min_length: 8, max_length: 64, low: 20) }
+    options = strength_value(doc, "data-password-strength-options-value")
+
+    assert_equal({ "low" => 20 }, options)
+  end
+
+  def test_shared_requirements_object_drives_the_meter
+    rules = StimulusPlumbers::Password::Requirements.build { |r| r.enforce(min_length: 8, max_length: 64, digit: true) }
+    doc = build_field(requirements: rules)
+    descriptors = strength_value(doc, "data-password-strength-rules-value")
+
+    assert_css doc, "[data-controller='password-strength']"
+    assert(descriptors.any? { |d| d["key"] == "digit" })
+  end
+
+  def test_strength_wrapper_carries_level_labels
+    doc = build_field { |p| p.enforce(min_length: 8, max_length: 64) }
+    labels = JSON.parse(doc.at_css("[data-password-strength-labels-value]")["data-password-strength-labels-value"])
+
+    assert_equal({ "weak" => "Weak password", "fine" => "Fine password", "strong" => "Strong password" }, labels)
+  end
+
+  def test_custom_thresholds_reach_the_meter_attributes
+    doc = build_field { |p| p.enforce(min_length: 8, max_length: 64, low: 20, high: 80) }
+
+    assert_css doc, "meter[low='20'][high='80']"
+  end
+
+  def test_rules_list_id_joins_described_by_without_replacing_hint_and_error
+    doc = build_field(hint: "Use 12+ characters", error: "is too short") { |p| p.enforce(min_length: 12, max_length: 64) }
+    described = doc.at_css("input[type='password']")["aria-describedby"].split
+
+    assert_includes described, "sign_in_form_password_rules"
+    assert_includes described, "sign_in_form_password_hint"
+    assert_includes described, "sign_in_form_password_error"
+  end
+
+  def test_rule_state_is_conveyed_by_icon_and_text_not_color
+    rule = build_field { |p| p.enforce(digit: true) }.at_css("li[data-rule='digit']")
+
+    assert_equal "false", rule["data-satisfied"]
+    assert_includes rule.text, "One number"
+  end
+
+  def test_no_block_renders_no_strength_ui
+    doc = build_field
+
+    assert_no_css doc, "[data-controller='password-strength']"
+    assert_no_css doc, "meter"
+  end
+
+  def test_custom_rule_block_without_enforce_renders_meter
+    doc = build_field { |p| p.rule(:no_spaces, "No spaces", pattern: %r{\s}, negate: true) }
+
+    assert_css doc, "[data-controller='password-strength']"
+    assert_css doc, "ul li[data-rule='no_spaces']", text: "No spaces"
   end
 
   def test_renders_password_input
