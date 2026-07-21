@@ -1,11 +1,12 @@
 {
-  "enabledPlugins": {
-    "ruby-lsp@claude-plugins-official": true
-  },
   "permissions": {
     "allow": [
       "Bash(bundle install*)",
       "Bash(bundle exec rake*)"
     ]
+  },
+  "enabledPlugins": {
+    "ruby-lsp@claude-plugins-official": true,
+    "superpowers-ruby@superpowers-ruby": true
   }
 }

@@ -1,6 +1,7 @@
 {
   "enabledPlugins": {
-    "ruby-lsp@claude-plugins-official": true
+    "ruby-lsp@claude-plugins-official": true,
+    "superpowers-ruby@superpowers-ruby": true
   },
   "permissions": {
     "allow": [
