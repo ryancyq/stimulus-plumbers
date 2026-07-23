@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.15](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.14..stimulus-plumbers-tailwind/v0.4.15) - 2026-07-23
+
+### Features
+
+- password strength ([#191](https://github.com/ryancyq/stimulus-plumbers/issues/191)) - ([2f7ad55](https://github.com/ryancyq/stimulus-plumbers/commit/2f7ad550ab882225fd886956c586c0011af021fc)) - Ryan Chang
+- segmented progress bar ([#192](https://github.com/ryancyq/stimulus-plumbers/issues/192)) - ([9c43461](https://github.com/ryancyq/stimulus-plumbers/commit/9c43461a262dc19a7546aadadefaf2e4e75a4acb)) - Ryan Chang
+
+---
 ## [0.4.14](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.13..stimulus-plumbers-tailwind/v0.4.14) - 2026-07-20
 
 ### Bug Fixes
