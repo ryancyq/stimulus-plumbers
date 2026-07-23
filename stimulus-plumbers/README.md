@@ -102,7 +102,7 @@ application.register('visibility',               VisibilityController)
 | `checklist` | Master "select all" toggle for native checkbox items | [docs/component/checklist.md](docs/component/checklist.md) |
 | `modal` | Native `<dialog>` or custom overlay | [docs/component/modal.md](docs/component/modal.md) |
 | `popover` | Show/hide content with optional remote load | [docs/component/popover.md](docs/component/popover.md) |
-| `progress` | Value-driven progress bar/ring/meter | [docs/component/progress.md](docs/component/progress.md) |
+| `progress` | Value-driven progress bar/segmented/ring/meter | [docs/component/progress.md](docs/component/progress.md) |
 | `dismisser` | Click-outside dismissal | [docs/component/dismisser.md](docs/component/dismisser.md) |
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
 | `clipboard` | Copy-to-clipboard and paste interception | [docs/component/clipboard.md](docs/component/clipboard.md) |

@@ -14,10 +14,52 @@
   </div>
 </section>
 
+<section id="progress-segmented" class="sb-section">
+  <h2>Segmented</h2>
+  <div class="sb-row">
+    <%= sp_progress_segmented(value: 6, segments: 5, max: 10, aria: { label: "Onboarding steps" }) %>
+  </div>
+</section>
+
+<section id="progress-segmented-ramp" class="sb-section">
+  <h2>Segmented — strength ramp</h2>
+  <div class="sb-row">
+    <%= sp_progress_segmented(value: 4, segments: 5, max: 5, ramp: :strength, aria: { label: "Password strength" }) %>
+  </div>
+</section>
+
+<section id="progress-segmented-indeterminate-3" class="sb-section">
+  <h2>Segmented — indeterminate (3 segments)</h2>
+  <div class="sb-row">
+    <%= sp_progress_segmented(value: 0, segments: 3, max: 10, indeterminate: true, aria: { label: "Loading" }) %>
+  </div>
+</section>
+
+<section id="progress-segmented-indeterminate" class="sb-section">
+  <h2>Segmented — indeterminate (5 segments)</h2>
+  <div class="sb-row">
+    <%= sp_progress_segmented(value: 0, segments: 5, max: 10, indeterminate: true, aria: { label: "Loading" }) %>
+  </div>
+</section>
+
+<section id="progress-segmented-indeterminate-10" class="sb-section">
+  <h2>Segmented — indeterminate (10 segments)</h2>
+  <div class="sb-row">
+    <%= sp_progress_segmented(value: 0, segments: 10, max: 10, indeterminate: true, aria: { label: "Loading" }) %>
+  </div>
+</section>
+
 <section id="progress-ring" class="sb-section">
   <h2>Ring</h2>
   <div class="sb-row">
     <%= sp_progress_ring(value: 60, max: 100, aria: { label: "Storage used" }) %>
+  </div>
+</section>
+
+<section id="progress-ring-lg" class="sb-section">
+  <h2>Ring — large</h2>
+  <div class="sb-row">
+    <%= sp_progress_ring(value: 60, max: 100, size: :lg, aria: { label: "Storage used" }) %>
   </div>
 </section>
 

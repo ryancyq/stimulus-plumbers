@@ -13,6 +13,7 @@ export default class extends Controller {
     high: Number,
     indeterminate: { type: Boolean, default: false },
     indeterminateFraction: { type: Number, default: 0.25 },
+    segmentMode: { type: String, default: 'discrete' },
   };
 
   connect() {
@@ -40,11 +41,14 @@ export default class extends Controller {
         return this.renderMeter();
       case 'ring':
       case 'bar':
+      case 'segmented':
         setValueMin(this.element, this.minValue);
         setValueMax(this.element, this.maxValue);
         setValueNow(this.element, this.indeterminateValue ? null : this.currentValue);
         this.element.classList.toggle('sp-progress-indeterminate', this.indeterminateValue);
-        return this.variantValue === 'ring' ? this.renderRing() : this.renderBar();
+        if (this.variantValue === 'ring') return this.renderRing();
+        if (this.variantValue === 'segmented') return this.renderSegmented();
+        return this.renderBar();
       default:
         return;
     }
@@ -62,6 +66,28 @@ export default class extends Controller {
       return;
     }
     this.fillTarget.style.width = `${this.percent()}%`;
+  }
+
+  renderSegmented() {
+    const fills = this.fillTargets;
+    const count = fills.length;
+    if (count === 0) return;
+    if (this.indeterminateValue) {
+      // Each slot holds a chunk the theme slides; index/count stagger relays one chunk across the row.
+      fills.forEach((fill, i) => {
+        fill.style.setProperty('--sp-progress-index', i);
+        fill.style.setProperty('--sp-progress-count', count);
+        fill.style.width = `${this.indeterminateFractionValue * 100}%`;
+      });
+      return;
+    }
+    // Slot i holds the fill fraction within [i, i+1); discrete snaps the leading slot to whole.
+    const filledSegments = (this.percent() / 100) * count;
+    fills.forEach((fill, i) => {
+      let local = Math.min(1, Math.max(0, filledSegments - i));
+      if (this.segmentModeValue === 'discrete') local = local > 0 ? 1 : 0;
+      fill.style.width = `${local * 100}%`;
+    });
   }
 
   renderRing() {

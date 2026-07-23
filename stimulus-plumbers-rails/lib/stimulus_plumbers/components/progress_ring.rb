@@ -3,39 +3,24 @@
 module StimulusPlumbers
   module Components
     class ProgressRing < Plumber::Base
+      include Progress::Shared
+
       def render(...)
         render_ring(...)
       end
 
       private
 
-      def render_ring(value:, max: 100, min: 0, indeterminate: false, **kwargs)
+      def render_ring(value:, max: 100, min: 0, indeterminate: false, size: nil, **kwargs)
         icon_options = merge_html_options(
-          theme.resolve(:progress_ring),
+          theme.resolve(:progress_ring, size: size),
           kwargs,
-          stimulus_data(value: value, min: min, max: max, indeterminate: indeterminate),
+          progress_stimulus_data(
+            value: value, min: min, max: max, variant: "ring", "progress-indeterminate-value": indeterminate
+          ),
           { role: "progressbar", aria: progress_aria(value: value, min: min, max: max, indeterminate: indeterminate) }
         )
         Components::Icon.new(template).render("progress-ring", **icon_options)
-      end
-
-      def progress_aria(value:, min:, max:, indeterminate:)
-        aria = { valuemin: min, valuemax: max }
-        aria[:valuenow] = value unless indeterminate
-        aria
-      end
-
-      def stimulus_data(value:, min:, max:, indeterminate:)
-        {
-          data: {
-            controller:                     "progress",
-            "progress-variant-value":       "ring",
-            "progress-current-value":       value,
-            "progress-min-value":           min,
-            "progress-max-value":           max,
-            "progress-indeterminate-value": indeterminate
-          }
-        }
       end
     end
   end

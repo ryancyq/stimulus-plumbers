@@ -67,6 +67,12 @@ class ProgressRingTest < ActionView::TestCase
     end
   end
 
+  def test_accepts_a_size_option
+    doc = parse_html(renderer.render(value: 25, size: :lg))
+
+    assert_css doc, "[role='progressbar']"
+  end
+
   def test_renders_track_and_fill_circles_when_theme_registers_the_icon
     with_progress_ring_theme do
       doc = parse_html(renderer.render(value: 25))
