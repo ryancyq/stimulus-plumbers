@@ -256,10 +256,12 @@ module StimulusPlumbers
       }.freeze
 
       PROGRESS = {
-        progress_bar:      {}.freeze,
-        progress_bar_fill: {}.freeze,
-        progress_ring:     {}.freeze,
-        progress_meter:    {}.freeze
+        progress_bar:       {}.freeze,
+        progress_bar_fill:  {}.freeze,
+        progress_segmented: {}.freeze,
+        progress_segment:   {}.freeze,
+        progress_ring:      { size: { default: nil, validate: %i[sm md lg] } }.freeze,
+        progress_meter:     {}.freeze
       }.freeze
 
       TIMELINE = {

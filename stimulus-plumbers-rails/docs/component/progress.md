@@ -1,6 +1,6 @@
 # Progress
 
-Rails helpers for rendering the `progress` Stimulus controller's three variants. See [stimulus-plumbers's docs/component/progress.md](../../../stimulus-plumbers/docs/component/progress.md) for the controller's Values/Targets/Methods/Dispatches.
+Rails helpers for rendering the `progress` Stimulus controller's four variants. See [stimulus-plumbers's docs/component/progress.md](../../../stimulus-plumbers/docs/component/progress.md) for the controller's Values/Targets/Methods/Dispatches.
 
 ## Helpers
 
@@ -23,21 +23,41 @@ width directly — this is the same with or without a theme. A theme may
 layer motion on top (Tailwind slides it); without one, the bar renders
 as a static partial fill.
 
+### `sp_progress_segmented`
+
+```erb
+<%= sp_progress_segmented(value: 6, segments: 5, max: 10, aria: { label: "Password strength" }) %>
+```
+
+Splits the track into `segments:` equal slots and distributes the value across them (max 10 with `segments: 5` → each slot spans 2 units). Renders one `fill` target per slot; the JS controller fills them.
+
+| Option           | Default     | Description                                                                                            |
+| ---------------- | ----------- | ------------------------------------------------------------------------------------------------------ |
+| `value:`         | —           | Required. Current value                                                                                |
+| `segments:`      | —           | Required. Number of equal slots                                                                        |
+| `min:`           | `0`         | Range minimum                                                                                          |
+| `max:`           | `100`       | Range maximum                                                                                          |
+| `mode:`          | `:discrete` | `:discrete` lights a whole slot once reached; `:continuous` partially fills the boundary slot          |
+| `ramp:`          | `nil`       | `:strength` colors slots danger → warning → success by position (strength meter); `nil` = single color |
+| `indeterminate:` | `false`     | Omits `aria-valuenow`; a single chunk relays across the slots, one at a time                           |
+| `**html_options` | —           | Forwarded to the outer `<div role="progressbar">`                                                      |
+
 ### `sp_progress_ring`
 
 ```erb
 <%= sp_progress_ring(value: 60, max: 100, aria: { label: "Storage used" }) %>
 ```
 
-| Option           | Default | Description                                                |
-| ---------------- | ------- | ---------------------------------------------------------- |
-| `value:`         | —       | Required. Current value                                    |
-| `min:`           | `0`     | Range minimum                                              |
-| `max:`           | `100`   | Range maximum                                              |
-| `indeterminate:` | `false` | Omits `aria-valuenow`; adds the indeterminate hook class   |
-| `**html_options` | —       | Forwarded to the rendered icon (role, aria, classes, etc.) |
+| Option           | Default | Description                                                                                   |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------- |
+| `value:`         | —       | Required. Current value                                                                       |
+| `min:`           | `0`     | Range minimum                                                                                 |
+| `max:`           | `100`   | Range maximum                                                                                 |
+| `indeterminate:` | `false` | Omits `aria-valuenow`; adds the indeterminate hook class                                      |
+| `size:`          | `nil`   | `:sm` \| `:md` \| `:lg` size token; `nil` uses the icon's own size (override with `classes:`) |
+| `**html_options` | —       | Forwarded to the rendered icon (role, aria, classes, etc.)                                    |
 
-Renders via the theme's icon registry (icon name `"progress-ring"`), the same mechanism as `sp_icon`. Track/fill color and ring size are fixed by the icon's own SVG — resize with a `classes:`/`class:` override (e.g. `classes: "size-16"`) rather than a radius option. **Themes must register a `"progress-ring"` icon to render the ring's visual structure** — `stimulus-plumbers-tailwind` ships one; a theme without it (including the unstyled `Themes::Base`) falls back to an empty `<span role="progressbar">` with no visible ring, same as `sp_icon` for an unknown icon name.
+Renders via the theme's icon registry (icon name `"progress-ring"`), the same mechanism as `sp_icon`. Resize with the `size:` token (`:sm`/`:md`/`:lg`) or, for an exact size, a `classes:`/`class:` override (e.g. `classes: "size-16"`) — there is no radius option. **Themes must register a `"progress-ring"` icon to render the ring's visual structure** — `stimulus-plumbers-tailwind` ships one; a theme without it (including the unstyled `Themes::Base`) falls back to an empty `<span role="progressbar">` with no visible ring, same as `sp_icon` for an unknown icon name.
 
 When `indeterminate:` is true (and a theme provides the ring icon), the JS
 controller sets the fill circle's `stroke-dasharray` to a fixed 25% arc

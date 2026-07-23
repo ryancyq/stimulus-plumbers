@@ -114,6 +114,74 @@ describe('ProgressController', () => {
     })
   })
 
+  describe('segmented variant', () => {
+    const setup = async ({ value = 6, mode = null } = {}) => {
+      const modeAttr = mode ? `data-progress-segment-mode-value="${mode}"` : ''
+      document.body.innerHTML = `
+        <div role="progressbar" data-controller="progress" data-progress-variant-value="segmented"
+             data-progress-current-value="${value}" data-progress-max-value="10" ${modeAttr}>
+          <div><div data-progress-target="fill"></div></div>
+          <div><div data-progress-target="fill"></div></div>
+          <div><div data-progress-target="fill"></div></div>
+          <div><div data-progress-target="fill"></div></div>
+          <div><div data-progress-target="fill"></div></div>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+    }
+    const fillWidths = () =>
+      [...document.querySelectorAll('[data-progress-target="fill"]')].map((f) => f.style.width)
+
+    it('sets aria attrs on the container like the bar variant', async () => {
+      await setup()
+      const el = document.querySelector('[data-controller="progress"]')
+      expect(el.getAttribute('aria-valuenow')).toBe('6')
+      expect(el.getAttribute('aria-valuemax')).toBe('10')
+    })
+
+    it('discrete mode (default) lights whole segments reached by the value', async () => {
+      await setup({ value: 6 })
+      // 6/10 over 5 segments = 3 filled segments
+      expect(fillWidths()).toEqual(['100%', '100%', '100%', '0%', '0%'])
+    })
+
+    it('discrete mode lights a segment as soon as progress enters it', async () => {
+      await setup({ value: 5 })
+      // 5/10 over 5 segments = 2.5 → segment 3 is entered, so lit
+      expect(fillWidths()).toEqual(['100%', '100%', '100%', '0%', '0%'])
+    })
+
+    it('continuous mode partially fills the boundary segment', async () => {
+      await setup({ value: 5, mode: 'continuous' })
+      expect(fillWidths()).toEqual(['100%', '100%', '50%', '0%', '0%'])
+    })
+
+    it('setValue redistributes the fill across segments', async () => {
+      await setup({ value: 6 })
+      getController().setValue(2)
+      expect(fillWidths()).toEqual(['100%', '0%', '0%', '0%', '0%'])
+    })
+
+    it('indeterminate gives every segment a chunk staggered by index/count into a relay', async () => {
+      document.body.innerHTML = `
+        <div role="progressbar" data-controller="progress" data-progress-variant-value="segmented"
+             data-progress-indeterminate-value="true" data-progress-max-value="10">
+          <div><div data-progress-target="fill"></div></div>
+          <div><div data-progress-target="fill"></div></div>
+          <div><div data-progress-target="fill"></div></div>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      const el = document.querySelector('[data-controller="progress"]')
+      expect(el.hasAttribute('aria-valuenow')).toBe(false)
+      expect(el.classList.contains('sp-progress-indeterminate')).toBe(true)
+      expect(fillWidths()).toEqual(['25%', '25%', '25%'])
+      const fillEls = [...document.querySelectorAll('[data-progress-target="fill"]')]
+      expect(fillEls.map((f) => f.style.getPropertyValue('--sp-progress-index'))).toEqual(['0', '1', '2'])
+      expect(fillEls.map((f) => f.style.getPropertyValue('--sp-progress-count'))).toEqual(['3', '3', '3'])
+    })
+  })
+
   describe('meter variant', () => {
     beforeEach(async () => {
       document.body.innerHTML = `

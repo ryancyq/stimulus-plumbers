@@ -8,8 +8,24 @@
   <%= sp_progress_bar(value: 0, indeterminate: true, aria: { label: "Loading" }) %>
 </div>
 
+<div id="progress-segmented">
+  <%= sp_progress_segmented(value: 6, segments: 5, max: 10, aria: { label: "Onboarding steps" }) %>
+</div>
+
+<div id="progress-segmented-ramp">
+  <%= sp_progress_segmented(value: 4, segments: 5, max: 5, ramp: :strength, aria: { label: "Password strength" }) %>
+</div>
+
+<div id="progress-segmented-indeterminate">
+  <%= sp_progress_segmented(value: 0, segments: 5, max: 10, indeterminate: true, aria: { label: "Loading" }) %>
+</div>
+
 <div id="progress-ring">
   <%= sp_progress_ring(value: 60, max: 100, aria: { label: "Storage used" }) %>
+</div>
+
+<div id="progress-ring-lg">
+  <%= sp_progress_ring(value: 60, max: 100, size: :lg, aria: { label: "Storage used" }) %>
 </div>
 
 <div id="progress-meter">

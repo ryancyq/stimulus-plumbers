@@ -1,5 +1,6 @@
 @theme {
-  --animate-progress-slide: sp-progress-slide 1.5s ease-in-out infinite;
+  --sp-progress-slide-duration: 1.5s;
+  --animate-progress-slide: sp-progress-slide var(--sp-progress-slide-duration) ease-in-out infinite;
 }
 
 @keyframes sp-progress-slide {
@@ -7,9 +8,54 @@
   100% { transform: translateX(300%); }
 }
 
+/* Segmented indeterminate: travel spans slot + chunk so the chunk clears the slot (clipped by
+   `overflow-hidden`) instead of parking in it, then waits its turn. */
+@keyframes sp-progress-relay {
+  0%   { transform: translateX(-100%); }
+  25%  { transform: translateX(400%); }
+  100% { transform: translateX(400%); }
+}
+
+/* Last slot ends the relay: chunk stops flush with the slot's far edge and fades out.
+   Shorter travel over a shorter window, so the glide speed is unchanged. */
+@keyframes sp-progress-relay-end {
+  0%   { transform: translateX(-100%); opacity: 1; }
+  20%  { transform: translateX(300%); opacity: 1; }
+  30%  { transform: translateX(300%); opacity: 0; }
+  100% { transform: translateX(300%); opacity: 0; }
+}
+
 /* Ring-only; core's transition covers width, not stroke-dashoffset. */
 [data-progress-target="fill"] {
   transition: stroke-dashoffset 0.3s ease;
+}
+
+/* Relay one chunk left-to-right across the segments at the bar's speed: the cycle scales with segment
+   count (1/0.2 = 5 slots fit the bar's 1.5s), each slot taking its turn 1/count later. The 25% glide
+   runs longer than that handoff — the overlap is what keeps the wave whole across the gap.
+   `backwards` holds a waiting slot at the first keyframe (off-screen left) so it stays hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  .sp-progress-indeterminate [aria-hidden="true"] > [data-progress-target="fill"] {
+    animation-name: sp-progress-relay;
+    animation-duration: calc(var(--sp-progress-slide-duration) / var(--sp-progress-count, 1) / 0.2);
+    animation-delay: calc(
+      var(--sp-progress-index, 0) / var(--sp-progress-count, 1) * var(--sp-progress-slide-duration)
+    );
+    /* The per-slot windows are contiguous, so a constant-speed glide reads as one continuous
+       wave; ease-in-out would decelerate to a stop each slot and look like a pause. */
+    animation-timing-function: linear;
+    animation-fill-mode: backwards;
+  }
+
+  /* Ramp the whole relay in/out at its ends only — the first slot accelerates from rest,
+     the last decelerates to a stop and fades; every slot between stays constant speed. */
+  .sp-progress-indeterminate [aria-hidden="true"]:first-child > [data-progress-target="fill"] {
+    animation-timing-function: ease-in;
+  }
+  .sp-progress-indeterminate [aria-hidden="true"]:last-child > [data-progress-target="fill"] {
+    animation-name: sp-progress-relay-end;
+    animation-timing-function: ease-out;
+  }
 }
 
 /* Track color — kept out of the SVG so consumers can retheme it via CSS. */

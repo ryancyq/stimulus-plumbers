@@ -72,7 +72,7 @@ The engine re-runs the installer before `assets:precompile` to restore a missing
 | Modal | — (JS only) | [docs/component/modal.md](docs/component/modal.md) |
 | OrderedList | `sp_ordered_list` | [docs/component/ordered_list.md](docs/component/ordered_list.md) |
 | Popover | `sp_popover` | [docs/component/popover.md](docs/component/popover.md) |
-| Progress | `sp_progress_bar`, `sp_progress_ring`, `sp_progress_meter` | [docs/component/progress.md](docs/component/progress.md) |
+| Progress | `sp_progress_bar`, `sp_progress_segmented`, `sp_progress_ring`, `sp_progress_meter` | [docs/component/progress.md](docs/component/progress.md) |
 | Timeline | `sp_timeline`, `sp_timeline_group` | [docs/component/timeline.md](docs/component/timeline.md) |
 
 ## Form Builder
