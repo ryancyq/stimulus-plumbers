@@ -66,7 +66,7 @@ GEM
     loofah (2.25.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    mcp (0.25.0)
+    mcp (1.0.0)
       json_schemer (>= 2.4)
     minitest (5.27.0)
     nokogiri (1.19.4-aarch64-linux-gnu)
@@ -186,7 +186,7 @@ CHECKSUMS
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   loofah (2.25.2) sha256=2007f746959ac65552456e04b433e83deb22759ab38c838b4445c70e43425918
-  mcp (0.25.0) sha256=8acf3a5f3b60b6fd6e5d9b8ac5eb85ac504766976cbadaca182d2ffe7d795d98
+  mcp (1.0.0) sha256=219909a79da4c6e4b04c567dc19f3541897ed494e2c466e372551bb264f693d2
   minitest (5.27.0) sha256=2d3b17f8a36fe7801c1adcffdbc38233b938eb0b4966e97a6739055a45fa77d5
   nokogiri (1.19.4-aarch64-linux-gnu) sha256=1269fb644a6de405057a53dd5c762b1209b43ca7424f839454d3dbc677c31a8f
   nokogiri (1.19.4-aarch64-linux-musl) sha256=35c65b9ce72b3bb03207bdbe7067915019dc18c1b9b59139684bd6690fdd01af
