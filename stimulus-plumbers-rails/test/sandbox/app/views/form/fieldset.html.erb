@@ -6,7 +6,7 @@
 <section id="fieldset-radio">
   <h2>Collection radio buttons</h2>
   <div class="sb-col">
-    <% fresh = SignUp.new %>
+    <% fresh = Preferences.new %>
     <%= form_with(model: fresh, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label: "Gender", collection: genders, value_method: :first, text_method: :last %>
@@ -17,7 +17,7 @@
 <section id="fieldset-radio-error">
   <h2>Collection radio buttons — with error</h2>
   <div class="sb-col">
-    <% radio_error = SignUp.new.tap { |f| f.errors.add(:gender, "can't be blank") } %>
+    <% radio_error = Preferences.new.tap { |f| f.errors.add(:gender, "can't be blank") } %>
     <%= form_with(model: radio_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label: "Gender", collection: genders, value_method: :first, text_method: :last %>
@@ -28,7 +28,7 @@
 <section id="fieldset-radio-required">
   <h2>Collection radio buttons — required</h2>
   <div class="sb-col">
-    <% radio_required = SignUp.new %>
+    <% radio_required = Preferences.new %>
     <%= form_with(model: radio_required, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label: "Gender", collection: genders, value_method: :first, text_method: :last, required: true %>
@@ -39,7 +39,7 @@
 <section id="fieldset-radio-hint">
   <h2>Collection radio buttons — with hint</h2>
   <div class="sb-col">
-    <% radio_hint = SignUp.new %>
+    <% radio_hint = Preferences.new %>
     <%= form_with(model: radio_hint, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :gender, as: :radio,
             label: "Gender", collection: genders, value_method: :first, text_method: :last,
@@ -51,7 +51,7 @@
 <section id="fieldset-checkbox">
   <h2>Collection check boxes</h2>
   <div class="sb-col">
-    <% fresh2 = SignUp.new %>
+    <% fresh2 = Preferences.new %>
     <%= form_with(model: fresh2, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests, as: :check_box,
             label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>
@@ -62,7 +62,7 @@
 <section id="fieldset-checkbox-error">
   <h2>Collection check boxes — with error</h2>
   <div class="sb-col">
-    <% checkbox_error = SignUp.new.tap { |f| f.errors.add(:interests, "must select at least one") } %>
+    <% checkbox_error = Preferences.new.tap { |f| f.errors.add(:interests, "must select at least one") } %>
     <%= form_with(model: checkbox_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests, as: :check_box,
             label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>
@@ -73,7 +73,7 @@
 <section id="fieldset-checkbox-required">
   <h2>Collection check boxes — required</h2>
   <div class="sb-col">
-    <% checkbox_required = SignUp.new %>
+    <% checkbox_required = Preferences.new %>
     <%= form_with(model: checkbox_required, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests, as: :check_box,
             label: "Interests", collection: hobbies, value_method: :first, text_method: :last,
@@ -85,7 +85,7 @@
 <section id="fieldset-checkbox-hint">
   <h2>Collection check boxes — with hint</h2>
   <div class="sb-col">
-    <% checkbox_hint = SignUp.new %>
+    <% checkbox_hint = Preferences.new %>
     <%= form_with(model: checkbox_hint, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests, as: :check_box,
             label: "Interests", collection: hobbies, value_method: :first, text_method: :last,

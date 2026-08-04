@@ -1,11 +1,11 @@
 <section id="credit-card-default">
   <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <%= f.field :card_number, as: :credit_card, label: "Card number", required: true %>
+    <%= f.field :card_number, as: :credit_card, required: true %>
   <% end %>
 </section>
 
 <section id="credit-card-separator">
   <%= form_with(model: @form, url: "/users", scope: "credit_card_separator", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <%= f.field :card_number, as: :credit_card, label: "Card number", separator: "-", required: true %>
+    <%= f.field :card_number, as: :credit_card, separator: "-", required: true %>
   <% end %>
 </section>

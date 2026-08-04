@@ -8,9 +8,9 @@
   </section>
 
   <section id="search-error">
-    <% search_error = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") } %>
+    <% search_error = Search.new.tap { |f| f.errors.add(:query, "can't be blank") } %>
     <%= form_with(model: search_error, url: "#", builder: StimulusPlumbers::Form::Builder) do |f| %>
-      <%= f.field :name, as: :search, label: "Search" %>
+      <%= f.field :query, as: :search, label: "Search" %>
     <% end %>
   </section>
 </div>

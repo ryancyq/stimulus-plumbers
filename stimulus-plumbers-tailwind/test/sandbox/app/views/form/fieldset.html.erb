@@ -8,7 +8,7 @@
 <%# ── Collection radio buttons, no error ─────────────────────────────── %>
 <section id="fieldset-radio" class="sb-section">
   <h2>Radio — Default</h2>
-  <% fresh = SignUp.new %>
+  <% fresh = Preferences.new %>
   <%= form_with(model: fresh, url: "/demo", scope: "fieldset_radio", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :gender, as: :radio,
           label: "Gender", collection: genders, value_method: :first, text_method: :last %>
@@ -27,7 +27,7 @@
 <%# ── Collection radio buttons required ──────────────────────────────── %>
 <section id="fieldset-radio-required" class="sb-section">
   <h2>Radio — Required</h2>
-  <% required_form = SignUp.new %>
+  <% required_form = Preferences.new %>
   <%= form_with(model: required_form, url: "/demo", scope: "fieldset_radio_required", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :gender, as: :radio,
           label: "Gender", collection: genders, value_method: :first, text_method: :last, required: true %>
@@ -37,7 +37,7 @@
 <%# ── Collection check boxes, no error ────────────────────────────────── %>
 <section id="fieldset-checkbox" class="sb-section">
   <h2>Checkbox — Default</h2>
-  <% fresh2 = SignUp.new %>
+  <% fresh2 = Preferences.new %>
   <%= form_with(model: fresh2, url: "/demo", scope: "fieldset_checkbox", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :interests, as: :check_box,
           label: "Interests", collection: hobbies, value_method: :first, text_method: :last %>
@@ -56,7 +56,7 @@
 <%# ── Collection radio buttons with hint ──────────────────────────────── %>
 <section id="fieldset-radio-hint" class="sb-section">
   <h2>Radio — Hint</h2>
-  <% radio_hint = SignUp.new %>
+  <% radio_hint = Preferences.new %>
   <%= form_with(model: radio_hint, url: "/demo", scope: "fieldset_radio_hint", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :gender, as: :radio,
           label: "Gender", collection: genders, value_method: :first, text_method: :last,
@@ -67,7 +67,7 @@
 <%# ── Collection check boxes required ─────────────────────────────────── %>
 <section id="fieldset-checkbox-required" class="sb-section">
   <h2>Checkbox — Required</h2>
-  <% checkbox_required = SignUp.new %>
+  <% checkbox_required = Preferences.new %>
   <%= form_with(model: checkbox_required, url: "/demo", scope: "fieldset_checkbox_required", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :interests, as: :check_box,
           label: "Interests", collection: hobbies, value_method: :first, text_method: :last,
@@ -78,7 +78,7 @@
 <%# ── Collection check boxes with hint ────────────────────────────────── %>
 <section id="fieldset-checkbox-hint" class="sb-section">
   <h2>Checkbox — Hint</h2>
-  <% checkbox_hint = SignUp.new %>
+  <% checkbox_hint = Preferences.new %>
   <%= form_with(model: checkbox_hint, url: "/demo", scope: "fieldset_checkbox_hint", builder: StimulusPlumbers::Form::Builder) do |f| %>
     <%= f.choice :interests, as: :check_box,
           label: "Interests", collection: hobbies, value_method: :first, text_method: :last,

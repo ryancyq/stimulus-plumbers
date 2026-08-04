@@ -12,8 +12,7 @@ class SignUp
                 :newsletter,
                 :gender,
                 :country,
-                :resume,
-                :interests
+                :resume
 
   class << self
     def model_name

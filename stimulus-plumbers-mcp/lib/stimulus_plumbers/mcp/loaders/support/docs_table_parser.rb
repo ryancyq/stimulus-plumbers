@@ -25,7 +25,7 @@ module StimulusPlumbers
         def option_helpers(tables)
           tables.select { |t| t[:header].first == "Option" }
                 .filter_map do |t|
-                  options = t[:rows].map { |r| option_row(r) }
+                  options = t[:rows].map { |r| option_row(r, t[:header]) }
                   { signature: t[:heading], options: options } unless options.empty?
                 end
         end
@@ -35,8 +35,14 @@ module StimulusPlumbers
                 .flat_map { |t| t[:rows].map { |r| slot_row(r) } }
         end
 
-        def option_row(cells)
-          { option: clean(cells[0]), default: clean(cells[1]), description: cells[2].to_s }
+        # Column order varies across docs — locate by header name, not position.
+        def option_row(cells, header)
+          default_at = header.index("Default")
+          {
+            option:      clean(cells[0]),
+            default:     default_at ? clean(cells[default_at]) : "",
+            description: cells[header.index("Description") || 2].to_s
+          }
         end
 
         def slot_row(cells)

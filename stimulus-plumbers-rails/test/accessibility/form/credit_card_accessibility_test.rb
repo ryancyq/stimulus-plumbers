@@ -15,4 +15,8 @@ class CreditCardAccessibilityTest < ApplicationAccessibilityTestCase
   def test_separator_passes_wcag
     assert_accessible context: "#credit-card-separator"
   end
+
+  def test_label_comes_from_the_locale_file
+    assert_selector "#credit-card-default label", text: "Card on file"
+  end
 end

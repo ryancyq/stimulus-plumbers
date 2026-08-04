@@ -1,0 +1,7 @@
+en:
+  activemodel:
+    attributes:
+      verification:
+        verification_code: "Security code"
+      payment:
+        card_number: "Card on file"

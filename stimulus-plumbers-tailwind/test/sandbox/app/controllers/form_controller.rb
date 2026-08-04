@@ -6,19 +6,19 @@ class FormController < ApplicationController
   end
 
   def choices
-    @form = SignUp.new
+    @form = Preferences.new
   end
 
   def single_checkbox
-    @form = SignUp.new
+    @form = Preferences.new
   end
 
   def collection_checkbox
-    @form = SignUp.new
+    @form = Preferences.new
   end
 
   def collection_radio
-    @form = SignUp.new
+    @form = Preferences.new
   end
 
   def field_error
@@ -29,7 +29,7 @@ class FormController < ApplicationController
   end
 
   def fieldset
-    @form = SignUp.new.tap do |f|
+    @form = Preferences.new.tap do |f|
       f.errors.add(:gender, "can't be blank")
       f.errors.add(:interests, "must select at least one")
     end
@@ -40,14 +40,14 @@ class FormController < ApplicationController
   end
 
   def code
-    @form = SignUp.new
+    @form = Verification.new
   end
 
   def credit_card
-    @form = SignUp.new
+    @form = Payment.new
   end
 
   def password
-    @form = SignUp.new
+    @form = SignIn.new
   end
 end
