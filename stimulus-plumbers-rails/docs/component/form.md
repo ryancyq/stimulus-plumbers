@@ -88,15 +88,17 @@ Three methods render a complete, accessible field:
 
 ### Shared field options
 
-| Option       | Type                                  | Default                  | Description                                                                |
-| ------------ | ------------------------------------- | ------------------------ | -------------------------------------------------------------------------- |
-| `label`      | String                                | humanised attribute name | Override label / legend text                                               |
-| `hint`       | String                                | `nil`                    | Hint text rendered below the field                                         |
-| `error`      | String / Array                        | `nil`                    | Override error message(s); suppresses `model.errors[attribute]`            |
-| `required`   | Boolean                               | `false`                  | Adds `required` + `aria-required="true"`                                   |
-| `hide_label` | Boolean                               | `false`                  | Renders label visually hidden (screen-reader accessible)                   |
-| `layout`     | `:stacked` / `:inline`                | `:stacked`               | Label above input vs beside it                                             |
-| `floating`   | `:filled` / `:outlined` / `:standard` | `nil`                    | Floating-label style (text-like inputs only; `nil` = standard label above) |
+| Option       | Type                                  | Default                   | Description                                                                |
+| ------------ | ------------------------------------- | ------------------------- | -------------------------------------------------------------------------- |
+| `label`      | String                                | translated attribute name | Override label / legend text                                               |
+| `hint`       | String                                | `nil`                     | Hint text rendered below the field                                         |
+| `error`      | String / Array                        | `nil`                     | Override error message(s); suppresses `model.errors[attribute]`            |
+| `required`   | Boolean                               | `false`                   | Adds `required` + `aria-required="true"`                                   |
+| `hide_label` | Boolean                               | `false`                   | Renders label visually hidden (screen-reader accessible)                   |
+| `layout`     | `:stacked` / `:inline`                | `:stacked`                | Label above input vs beside it                                             |
+| `floating`   | `:filled` / `:outlined` / `:standard` | `nil`                     | Floating-label style (text-like inputs only; `nil` = standard label above) |
+
+Labels and legends default to the text `f.label` renders: `helpers.label.<object_name>.<attribute>`, then the model's `human_attribute_name` (`activerecord.attributes.*` / `activemodel.attributes.*`), then the humanized attribute name when the form has no model. In `fields_for`, the nested object supplies the name.
 
 ---
 

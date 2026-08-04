@@ -27,3 +27,15 @@ class FormBuilderModel
     end
   end
 end
+
+class FormBuilderNestedModel
+  include ActiveModel::Model
+
+  attr_accessor :name
+
+  class << self
+    def model_name
+      ActiveModel::Name.new(self, nil, "location")
+    end
+  end
+end

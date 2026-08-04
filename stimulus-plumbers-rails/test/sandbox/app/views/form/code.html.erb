@@ -1,5 +1,5 @@
 <section id="code-default">
   <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
-    <%= f.field :verification_code, as: :code, label: "Verification code", length: 6, required: true %>
+    <%= f.field :verification_code, as: :code, length: 6, required: true %>
   <% end %>
 </section>

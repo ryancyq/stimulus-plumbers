@@ -7,16 +7,10 @@ class SignUp
                 :email,
                 :password,
                 :bio,
-                :age,
                 :birth_date,
-                :newsletter,
-                :terms_of_service,
-                :gender,
                 :country,
-                :role,
-                :interests,
-                :verification_code,
-                :card_number
+                :newsletter,
+                :resume
 
   class << self
     def model_name

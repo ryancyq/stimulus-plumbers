@@ -200,7 +200,7 @@ stimulus-plumbers-rails/
 
 **Form field unit tests** cover both builder levels:
 - Native override (`email_field`, `text_area`, …) — element type and forwarded HTML attributes
-- Full-field wrapper (`f.field(as:)`) — label, hint, error message, `aria-invalid`, `aria-describedby`, `required`, `hide_label`, all floating variants (`:floating_filled`, `:floating_outlined`, `:floating_standard`), and combined hint+error `aria-describedby`
+- Full-field wrapper (`f.field(as:)`) — label (explicit **and** the `human_attribute_name` default), hint, error message, `aria-invalid`, `aria-describedby`, `required`, `hide_label`, all floating variants (`:floating_filled`, `:floating_outlined`, `:floating_standard`), and combined hint+error `aria-describedby`
 - When `error:` override is set, assert the override message appears **and** model errors are suppressed
 
 ## I18n / Locale Convention
@@ -221,6 +221,8 @@ This applies to all test types: unit tests, helper tests, and accessibility test
 ## Accessibility Test Convention
 
 **Icon naming in sandbox views:** Always use generic icon names (e.g., `close`, `download`, `book`), never heroicon/tailwind-specific compound names (e.g., `x-mark`, `arrow-down-tray`, `book-open`). The core sandbox runs without any theme, so heroicon names will not resolve. Aliases are defined in `stimulus-plumbers-tailwind/lib/stimulus_plumbers/themes/tailwind/icon.rb` (`Icon::ALIASES`).
+
+**Sandbox models:** one model per use case (`SignUp`, `SignIn`, `Preferences`, `Verification`, `Payment`, `Search`) — never one grab-bag fixture shared across unrelated pages. A view may only bind attributes its backing model declares: `form_with` defaults to `allow_method_names_outside_object: true`, so an undeclared attribute renders `nil` instead of raising, and label resolution silently diverges from a real app. The `code` and `credit_card` pages deliberately omit `label:` to exercise the `human_attribute_name` default against `test/sandbox/config/locales/en.yml` — don't reintroduce it.
 
 Always pass `context:` to `assert_accessible` to scope axe to the component, not the full page:
 

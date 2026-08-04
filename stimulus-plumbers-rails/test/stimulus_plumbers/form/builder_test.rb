@@ -157,6 +157,87 @@ class FormBuilderTest < ActionView::TestCase
     assert_css doc, "label[for='sign_in_form_email']"
   end
 
+  def with_translations(translations)
+    I18n.backend.store_translations(:en, translations)
+    yield
+  ensure
+    I18n.backend.reload!
+  end
+
+  def test_field_label_defaults_to_human_attribute_name
+    with_translations(activemodel: { attributes: { sign_in_form: { email: "Work e-mail" } } }) do
+      doc = build_field(:field, :email, as: :text)
+
+      assert_equal "Work e-mail", doc.at_css("label").text
+    end
+  end
+
+  def test_field_label_prefers_helpers_label_scope_over_human_attribute_name
+    translations = {
+      helpers:     { label: { sign_in_form: { email: "Login e-mail" } } },
+      activemodel: { attributes: { sign_in_form: { email: "Work e-mail" } } }
+    }
+    with_translations(translations) do
+      doc = build_field(:field, :email, as: :text)
+
+      assert_equal "Login e-mail", doc.at_css("label").text
+    end
+  end
+
+  def test_field_explicit_label_wins_over_human_attribute_name
+    with_translations(activemodel: { attributes: { sign_in_form: { email: "Work e-mail" } } }) do
+      doc = build_field(:field, :email, as: :text, label: "E-mail")
+
+      assert_equal "E-mail", doc.at_css("label").text
+    end
+  end
+
+  def test_field_label_falls_back_to_humanized_attribute_without_model
+    html = view.form_with(url: "/search", scope: :search, builder: StimulusPlumbers::Form::Builder) do |f|
+      f.field(:query_string, as: :text)
+    end
+
+    assert_equal "Query string", parse_html(html).at_css("label").text
+  end
+
+  def test_choice_legend_defaults_to_human_attribute_name
+    with_translations(activemodel: { attributes: { sign_in_form: { interests: "Topics" } } }) do
+      doc = build_field(
+        :choice,
+        :interests,
+        as:           :check_box,
+        collection:   [%w[ruby Ruby], %w[rails Rails]],
+        value_method: :first,
+        text_method:  :last
+      )
+
+      assert_includes doc.at_css("legend").text, "Topics"
+    end
+  end
+
+  def test_choice_check_box_label_defaults_to_human_attribute_name
+    with_translations(activemodel: { attributes: { sign_in_form: { newsletter: "Send me news" } } }) do
+      doc = build_field(:choice, :newsletter, as: :check_box)
+
+      assert_includes doc.at_css("label").text, "Send me news"
+    end
+  end
+
+  def test_collection_field_label_defaults_to_human_attribute_name
+    with_translations(activemodel: { attributes: { sign_in_form: { role: "Access level" } } }) do
+      doc = build_field(
+        :collection_field,
+        :role,
+        as:           :collection_select,
+        collection:   [%w[admin Admin], %w[user User]],
+        value_method: :first,
+        text_method:  :last
+      )
+
+      assert_includes doc.at_css("label").text, "Access level"
+    end
+  end
+
   def test_choice_check_box_renders_explicit_label_and_input
     doc = build_field(:choice, :newsletter, as: :check_box)
 
@@ -279,5 +360,15 @@ class FormBuilderTest < ActionView::TestCase
 
     assert_css doc, "input[type='text']"
     assert_no_css doc, "label"
+  end
+
+  def test_fields_for_label_resolves_against_nested_object
+    with_translations(activemodel: { attributes: { location: { name: "Pickup point" } } }) do
+      doc = build_form do |f|
+        f.fields_for(:location, FormBuilderNestedModel.new) { |lf| lf.field(:name, as: :text) }
+      end
+
+      assert_equal "Pickup point", doc.at_css("label").text
+    end
   end
 end

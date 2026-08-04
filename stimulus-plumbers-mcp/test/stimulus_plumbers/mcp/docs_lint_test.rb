@@ -33,6 +33,18 @@ class DocsLintTest < Minitest::Test
     end
   end
 
+  def test_option_tables_name_a_description_column
+    each_doc do |path, content|
+      StimulusPlumbers::MCP::DocsTableParser.tables_with_headings(content).each do |table|
+        next unless table[:header].first == "Option"
+
+        assert_includes table[:header],
+                        "Description",
+                        "#{File.basename(path)}: option table #{table[:header].inspect} has no Description column"
+      end
+    end
+  end
+
   def test_relative_markdown_links_resolve_to_real_files
     each_doc do |path, content|
       content.scan(%r{\[[^\]]*\]\(([^)]+)\)}).each do |(target)|

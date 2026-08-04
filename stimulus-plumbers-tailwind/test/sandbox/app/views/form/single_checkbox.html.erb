@@ -23,7 +23,7 @@
 <section id="single-checkbox-error" class="sb-section">
   <h2>Error</h2>
   <div class="sb-col">
-    <% single_cb_error = SignUp.new.tap { |f| f.errors.add(:newsletter, "must be accepted") } %>
+    <% single_cb_error = Preferences.new.tap { |f| f.errors.add(:newsletter, "must be accepted") } %>
     <%= form_with(model: single_cb_error, url: "/users", scope: "single_checkbox_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
     <% end %>
@@ -33,7 +33,7 @@
 <section id="single-checkbox-required" class="sb-section">
   <h2>Required</h2>
   <div class="sb-col">
-    <%= form_with(model: SignUp.new, url: "/users", scope: "single_checkbox_required", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: Preferences.new, url: "/users", scope: "single_checkbox_required", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :newsletter, as: :check_box, label: "Subscribe to newsletter", required: true %>
     <% end %>
   </div>

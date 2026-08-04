@@ -99,7 +99,7 @@
 <section id="collection-checkbox-error" class="sb-section">
   <h2>Error</h2>
   <div class="sb-col">
-    <% coll_cb_error = SignUp.new.tap { |f| f.errors.add(:interests, "must select at least one") } %>
+    <% coll_cb_error = Preferences.new.tap { |f| f.errors.add(:interests, "must select at least one") } %>
     <%= form_with(model: coll_cb_error, url: "/users", scope: "coll_checkbox_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.choice :interests, as: :check_box,
             label:      "Interests",

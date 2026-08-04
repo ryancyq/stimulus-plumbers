@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "action_view/version"
+require "action_view/helpers/tags/translator"
 
 require_relative "../plumber/options/aria"
 require_relative "../plumber/options/html"
@@ -49,24 +50,35 @@ module StimulusPlumbers
       include Fields::Inputs::TextArea
 
       def field(attribute, as:, **options, &block)
-        field_opts = options.slice(*Field::OPTIONS)
+        field_opts = field_options(attribute, options)
         input_opts = options.except(*Field::OPTIONS)
         render_field(as, attribute, field_opts, input_opts, &block)
       end
 
       def collection_field(attribute, as:, collection:, value_method:, text_method:, **options)
-        field_opts = options.slice(*Field::OPTIONS)
+        field_opts = field_options(attribute, options)
         input_opts = options.except(*Field::OPTIONS)
         render_collection_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
       end
 
       def choice(attribute, as:, collection: nil, value_method: nil, text_method: nil, **options)
-        field_opts = options.slice(*Field::OPTIONS)
+        field_opts = field_options(attribute, options)
         input_opts = options.except(*Field::OPTIONS)
         render_choice_field(as, attribute, field_opts, collection, value_method, text_method, input_opts)
       end
 
       private
+
+      def field_options(attribute, options)
+        options.slice(*Field::OPTIONS).tap { |opts| opts[:label] ||= default_label(attribute) }
+      end
+
+      # Mirrors f.label: helpers.label.* → human_attribute_name → humanize.
+      def default_label(attribute)
+        ActionView::Helpers::Tags::Translator.new(
+          object, @object_name.to_s, attribute.to_s, scope: "helpers.label"
+        ).translate.presence || attribute.to_s.humanize
+      end
 
       def theme
         StimulusPlumbers.config.theme.current
