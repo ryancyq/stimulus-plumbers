@@ -12,7 +12,7 @@ bin/rails generate stimulus_plumbers:tailwind:install
 
 It re-runs automatically on `assets:precompile`/`tailwindcss:build` after that. File detection and
 the `STIMULUS_PLUMBERS_CSS_ENTRY` override are shared with the core gem — see
-[stimulus-plumbers-rails/docs/guide.md#css-entry-file-detection](../../stimulus-plumbers-rails/docs/guide.md#css-entry-file-detection).
+`guide://component` ([CSS entry file detection](https://github.com/ryancyq/stimulus-plumbers/blob/main/stimulus-plumbers-rails/docs/guide.md#css-entry-file-detection)).
 
 ## Installed CSS files
 
@@ -27,8 +27,9 @@ an existing one. Legacy imports that point into gem directories are migrated to 
 paths.
 
 Icons: pass a kebab-case name to `sp_icon` or any `icon_leading:`/`icon_trailing:` option (append
-`/solid` for the filled variant) — see [README.md](../README.md#icons) for aliases and the
-optional `heroicons` gem.
+`/solid` for the filled variant) — names and aliases are in `component://icons` (`list_icons`), and
+the [README](https://github.com/ryancyq/stimulus-plumbers/blob/main/stimulus-plumbers-tailwind/README.md#icons)
+covers the optional `heroicons` gem.
 
-To implement a custom theme instead of/alongside Tailwind, see
-[stimulus-plumbers-rails/docs/component/theme.md](../../stimulus-plumbers-rails/docs/component/theme.md).
+To implement a custom theme instead of/alongside Tailwind, see `guide://theme`
+([theme.md](https://github.com/ryancyq/stimulus-plumbers/blob/main/stimulus-plumbers-rails/docs/component/theme.md)).

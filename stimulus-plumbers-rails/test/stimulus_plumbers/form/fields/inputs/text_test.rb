@@ -103,8 +103,13 @@ class FormFieldsTextTest < ActionView::TestCase
     assert_css build_field(as: :email, required: true), "label span[aria-hidden='true']"
   end
 
+  # hide_label is visual only: the label element and its association must survive.
   def test_hide_label_keeps_label_in_dom
-    assert_css build_field(as: :email, hide_label: true), "label[for='sign_in_form_email']"
+    doc = build_field(as: :email, hide_label: true)
+
+    assert_css doc, "label[for='sign_in_form_email']"
+    assert_includes doc.at_css("label").text, "Email"
+    assert_nil doc.at_css("input[type='email']")["aria-labelledby"]
   end
 
   def test_error_override_renders_error_message
@@ -149,13 +154,6 @@ class FormFieldsTextTest < ActionView::TestCase
     assert_equal "5", build_native(:number_field, :age, step: 5).at_css("input[type='number']")["step"]
   end
 
-  def test_range_field_forwards_min_and_max
-    input = build_native(:range_field, :age, min: 1, max: 100).at_css("input[type='range']")
-
-    assert_equal "1",   input["min"]
-    assert_equal "100", input["max"]
-  end
-
   def test_text_field_renders_text_input
     assert_css build_native(:text_field), "input[type='text']"
   end
@@ -174,10 +172,6 @@ class FormFieldsTextTest < ActionView::TestCase
 
   def test_number_field_renders_number_input
     assert_css build_native(:number_field), "input[type='number']"
-  end
-
-  def test_range_field_renders_range_input
-    assert_css build_native(:range_field), "input[type='range']"
   end
 
   def test_color_field_renders_color_input

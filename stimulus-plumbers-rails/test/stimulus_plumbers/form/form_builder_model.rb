@@ -19,7 +19,10 @@ class FormBuilderModel
                 :weekday,
                 :age,
                 :verification_code,
-                :card_number
+                :card_number,
+                :completion,
+                :profile_strength,
+                :volume
 
   class << self
     def model_name

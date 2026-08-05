@@ -5,8 +5,23 @@ module StimulusPlumbers
     module Tailwind
       module Progress
         BAR = %w[
-          relative w-full h-2 overflow-hidden rounded-full
+          relative w-full overflow-hidden rounded-full
           bg-(--sp-color-muted)
+        ].freeze
+
+        BAR_HEIGHTS = { false => "h-2", true => "h-5" }.freeze
+
+        # tabular-nums so the readout doesn't jitter as digits change under a drag.
+        VALUE_TEXT = %w[text-xs font-medium leading-none tabular-nums].freeze
+
+        # Centered over the track, sized to its text, on an opaque pill: neither fg nor primary-fg
+        # clears AA over both the muted track and the primary fill, so the readout brings its own
+        # background instead of blending with whatever sits under it.
+        BAR_VALUE = [
+          *VALUE_TEXT,
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+          "px-(--sp-space-1) rounded-full",
+          "bg-(--sp-color-bg) text-(--sp-color-fg)"
         ].freeze
 
         # `data-intent` (set per-segment by a ramp) overrides the default primary fill color.
@@ -49,8 +64,12 @@ module StimulusPlumbers
 
         private
 
-        def progress_bar_classes
-          { classes: klasses(*BAR) }
+        def progress_bar_classes(labelled: false)
+          { classes: klasses(*BAR, BAR_HEIGHTS.fetch(labelled)) }
+        end
+
+        def progress_bar_value_classes
+          { classes: klasses(*BAR_VALUE) }
         end
 
         def progress_bar_fill_classes

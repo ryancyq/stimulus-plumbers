@@ -33,6 +33,14 @@ class FormController < ApplicationController
     end
   end
 
+  def progress
+    @form = Onboarding.new(completion: 45, profile_strength: 4)
+  end
+
+  def range
+    @form = Preferences.new(volume: 45)
+  end
+
   def code
     @form = Verification.new
   end

@@ -124,6 +124,12 @@ export const setValueNow = (element, value) =>
   value == null ? element.removeAttribute('aria-valuenow') : setAriaState(element, 'aria-valuenow', value);
 
 /**
+ * Set aria-valuetext, or remove it when value is null/undefined (e.g. indeterminate progress)
+ */
+export const setValueText = (element, value) =>
+  value == null ? element.removeAttribute('aria-valuetext') : setAriaState(element, 'aria-valuetext', value);
+
+/**
  * Maps ARIA roles to their appropriate aria-haspopup values
  */
 export const ARIA_HASPOPUP_VALUES = {

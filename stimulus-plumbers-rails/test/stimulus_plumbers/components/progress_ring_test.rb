@@ -81,4 +81,22 @@ class ProgressRingTest < ActionView::TestCase
       assert_css doc, "circle[data-progress-target='fill']"
     end
   end
+
+  # Matches the bar and segmented variants: the value is normalized before the JS connects.
+  def test_out_of_range_value_is_clamped
+    with_progress_ring_theme do
+      doc = parse_html(renderer.render(value: 150, max: 100))
+
+      assert_css doc, "[aria-valuenow='100']"
+      assert_css doc, "[data-progress-current-value='100']"
+    end
+  end
+
+  def test_value_below_minimum_is_clamped
+    with_progress_ring_theme do
+      doc = parse_html(renderer.render(value: -10, min: 0))
+
+      assert_css doc, "[aria-valuenow='0']"
+    end
+  end
 end

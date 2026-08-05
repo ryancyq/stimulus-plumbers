@@ -5,6 +5,7 @@ module StimulusPlumbers
     module Fields
       module Inputs
         module Text
+          # `range` is not here — see inputs/range.rb; it shares none of the text input chrome.
           TEXT_FIELD_METHODS = {
             text:           :text_field,
             email:          :email_field,
@@ -14,7 +15,6 @@ module StimulusPlumbers
             color:          :color_field,
             month:          :month_field,
             week:           :week_field,
-            range:          :range_field,
             datetime_local: :datetime_local_field
           }.freeze
 

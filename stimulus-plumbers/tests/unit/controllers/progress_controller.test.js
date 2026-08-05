@@ -271,6 +271,242 @@ describe('ProgressController', () => {
     })
   })
 
+  describe('value readout', () => {
+    const setup = async ({ value = 45, min = 0, max = 100, format = 'percent', indeterminate = false } = {}) => {
+      document.body.innerHTML = `
+        <div role="progressbar" data-controller="progress"
+             data-progress-current-value="${value}" data-progress-min-value="${min}"
+             data-progress-max-value="${max}" data-progress-indeterminate-value="${indeterminate}"
+             data-progress-format-value="${format}">
+          <div data-progress-target="fill"></div>
+          <span data-progress-target="value" aria-hidden="true"></span>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+    }
+    const readout = () => document.querySelector('[data-progress-target="value"]')
+    const host = () => document.querySelector('[data-controller="progress"]')
+    const fill = () => document.querySelector('[data-progress-target="fill"]')
+
+    it('renders the percentage when format is percent', async () => {
+      await setup({ format: 'percent' })
+      expect(readout().textContent).toBe('45%')
+    })
+
+    it('renders the raw value when format is value', async () => {
+      await setup({ format: 'value' })
+      expect(readout().textContent).toBe('45')
+    })
+
+    it('renders value and max when format is value_max', async () => {
+      await setup({ format: 'value_max' })
+      expect(readout().textContent).toBe('45 / 100')
+    })
+
+    it('updates the readout when setValue is called', async () => {
+      await setup({ format: 'percent' })
+      getController().setValue(80)
+      expect(readout().textContent).toBe('80%')
+    })
+
+    it('leaves aria-valuetext unset for percent', async () => {
+      await setup({ format: 'percent' })
+      expect(host().hasAttribute('aria-valuetext')).toBe(false)
+    })
+
+    it('sets aria-valuetext for value_max', async () => {
+      await setup({ format: 'value_max' })
+      expect(host().getAttribute('aria-valuetext')).toBe('45 / 100')
+    })
+
+    it('clears the readout and aria-valuetext while indeterminate', async () => {
+      await setup({ format: 'value_max', indeterminate: true })
+      expect(readout().textContent).toBe('')
+      expect(host().hasAttribute('aria-valuetext')).toBe(false)
+    })
+
+    it('leaves author-rendered text alone for an unknown format', async () => {
+      document.body.innerHTML = `
+        <div role="progressbar" data-controller="progress" data-progress-current-value="45"
+             data-progress-max-value="100" data-progress-format-value="other">
+          <div data-progress-target="fill"></div>
+          <span data-progress-target="value">untouched</span>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(readout().textContent).toBe('untouched')
+    })
+
+    it('renders nothing extra when no value target is present', async () => {
+      document.body.innerHTML = `
+        <div role="progressbar" data-controller="progress" data-progress-current-value="45"
+             data-progress-max-value="100" data-progress-format-value="percent">
+          <div data-progress-target="fill"></div>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('45%')
+    })
+
+    it('accounts for a non-zero minimum', async () => {
+      await setup({ value: 15, min: 10, max: 20 })
+      expect(readout().textContent).toBe('50%')
+    })
+
+    it('rounds to a whole number', async () => {
+      await setup({ value: 1, max: 3 })
+      expect(readout().textContent).toBe('33%')
+    })
+
+    it('is zero percent when the range is empty', async () => {
+      await setup({ value: 5, min: 5, max: 5 })
+      expect(readout().textContent).toBe('0%')
+    })
+
+    it('is zero percent when max is below min', async () => {
+      await setup({ value: 5, min: 10, max: 0 })
+      expect(readout().textContent).toBe('0%')
+    })
+
+    // Via the initial attribute, not setValue() — setValue clamps on the way in and hides the bug.
+    it('clamps a value that arrives out of range in the markup', async () => {
+      await setup({ value: 150, max: 100 })
+      expect(readout().textContent).toBe('100%')
+      expect(fill().style.width).toBe('100%')
+      expect(host().getAttribute('aria-valuenow')).toBe('100')
+    })
+
+    it('clamps a value below the minimum', async () => {
+      await setup({ value: -10, min: 0, max: 100 })
+      expect(readout().textContent).toBe('0%')
+      expect(fill().style.width).toBe('0%')
+      expect(host().getAttribute('aria-valuenow')).toBe('0')
+    })
+
+    it('renders integral values without a decimal point', async () => {
+      await setup({ value: '45.0', max: '100.0', format: 'value_max' })
+      expect(readout().textContent).toBe('45 / 100')
+    })
+  })
+
+  describe('range variant', () => {
+    // The bare shape: no readout, so the controller sits on the input itself.
+    const setup = async (attrs = {}) => {
+      const { value = '45', min = '0', max = '100' } = attrs
+      document.body.innerHTML = `
+        <input type="range" min="${min}" max="${max}" value="${value}"
+               data-controller="progress" data-progress-variant-value="range"
+               data-progress-current-value="${value}"
+               data-progress-min-value="${min}" data-progress-max-value="${max}"
+               data-action="input->progress#refresh">
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      return document.querySelector('input[type="range"]')
+    }
+
+    it('sets the fill percentage custom property on connect', async () => {
+      const input = await setup()
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('45')
+    })
+
+    it('updates the fill percentage as the user drags', async () => {
+      const input = await setup()
+      input.value = '80'
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('80')
+    })
+
+    it('scales the fill percentage against a non-zero minimum', async () => {
+      const input = await setup({ value: '30', min: '20', max: '40' })
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('50')
+    })
+
+    it('dispatches progress:changed as the user drags, like setValue does', async () => {
+      const input = await setup()
+      const spy = vi.fn()
+      input.addEventListener('progress:changed', spy)
+      input.value = '80'
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      expect(spy).toHaveBeenCalledTimes(1)
+      expect(spy.mock.calls[0][0].detail).toEqual({ value: 80, min: 0, max: 100 })
+    })
+
+    it('setValue moves the native input, not just the fill', async () => {
+      const input = await setup()
+      getController().setValue(80)
+      expect(input.value).toBe('80')
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('80')
+    })
+
+    it('setValue writes the clamped value back to the input', async () => {
+      const input = await setup()
+      getController().setValue(150)
+      expect(input.value).toBe('100')
+    })
+
+    it('adopts the input value when no current-value attribute is given', async () => {
+      document.body.innerHTML = `
+        <input type="range" min="0" max="100" value="70"
+               data-controller="progress" data-progress-variant-value="range"
+               data-action="input->progress#refresh">
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      const input = document.querySelector('input[type="range"]')
+      expect(input.value).toBe('70')
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('70')
+    })
+
+    it('does not write aria-value attributes onto a native range', async () => {
+      const input = await setup()
+      expect(input.hasAttribute('aria-valuenow')).toBe(false)
+      expect(input.hasAttribute('aria-valuemin')).toBe(false)
+      expect(input.hasAttribute('aria-valuemax')).toBe(false)
+    })
+  })
+
+  describe('range variant with a readout', () => {
+    // With a readout the controller moves to a wrapper — a Stimulus target must be a
+    // descendant of its controller element, so a sibling span would never resolve.
+    const setup = async (format = 'percent') => {
+      document.body.innerHTML = `
+        <div data-controller="progress" data-progress-variant-value="range"
+             data-progress-current-value="45" data-progress-min-value="0" data-progress-max-value="100"
+             data-progress-format-value="${format}" data-action="input->progress#refresh">
+          <input type="range" min="0" max="100" value="45" data-progress-target="input">
+          <span data-progress-target="value" aria-hidden="true">45%</span>
+        </div>
+      `
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      return {
+        input: document.querySelector('input[type="range"]'),
+        readout: document.querySelector('[data-progress-target="value"]'),
+      }
+    }
+
+    it('updates the readout as the user drags', async () => {
+      const { input, readout } = await setup()
+      input.value = '80'
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      expect(readout.textContent).toBe('80%')
+    })
+
+    it('paints the fill on the input, not the wrapper', async () => {
+      const { input } = await setup()
+      const wrapper = document.querySelector('[data-controller="progress"]')
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('45')
+      expect(wrapper.style.getPropertyValue('--sp-progress-percent')).toBe('')
+    })
+
+    // The native input announces its own value; aria-valuetext here would duplicate it.
+    it('leaves aria-valuetext off a non-percent readout', async () => {
+      const { input, readout } = await setup('value_max')
+      const wrapper = document.querySelector('[data-controller="progress"]')
+      expect(readout.textContent).toBe('45 / 100')
+      expect(wrapper.hasAttribute('aria-valuetext')).toBe(false)
+      expect(input.hasAttribute('aria-valuetext')).toBe(false)
+    })
+  })
+
   describe('indeterminate ring', () => {
     beforeEach(async () => {
       document.body.innerHTML = `

@@ -78,6 +78,59 @@ module StimulusPlumbers
             [&>div:first-child]:focus-within:ring-0
           ].freeze
 
+          # ── Range ─────────────────────────────────────────────────────────────
+          # A slider is a track and a thumb, so it takes none of INPUT's box chrome.
+          # WebKit has no filled-track pseudo-element: the fill is a gradient stopped at
+          # --sp-progress-percent (set by the progress controller). Firefox has
+          # ::-moz-range-progress and uses that instead.
+          # Must stay on one line: Tailwind scans source text, so a class split across a string
+          # continuation never appears contiguously and is silently dropped from the build.
+          # rubocop:disable Layout/LineLength
+          RANGE_FILL = "[&::-webkit-slider-runnable-track]:bg-[linear-gradient(to_right,var(--sp-color-primary)_0_calc(var(--sp-progress-percent,0)*1%),transparent_0)]"
+          # rubocop:enable Layout/LineLength
+
+          RANGE = [
+            "w-full appearance-none bg-transparent cursor-pointer",
+            "focus:outline-none",
+            "focus-visible:outline-none",
+            "focus-visible:ring-(length:--sp-focus-ring-width)",
+            "focus-visible:ring-(--sp-focus-ring-color)",
+            "disabled:opacity-50 disabled:cursor-not-allowed",
+            # WebKit track + thumb
+            "[&::-webkit-slider-runnable-track]:h-2",
+            "[&::-webkit-slider-runnable-track]:rounded-full",
+            "[&::-webkit-slider-runnable-track]:bg-(--sp-color-muted)",
+            RANGE_FILL,
+            "[&::-webkit-slider-thumb]:appearance-none",
+            "[&::-webkit-slider-thumb]:size-4",
+            "[&::-webkit-slider-thumb]:rounded-full",
+            "[&::-webkit-slider-thumb]:bg-(--sp-color-primary)",
+            # Centers a 16px thumb on an 8px track.
+            "[&::-webkit-slider-thumb]:-mt-1",
+            # Firefox track + native fill + thumb
+            "[&::-moz-range-track]:h-2",
+            "[&::-moz-range-track]:rounded-full",
+            "[&::-moz-range-track]:bg-(--sp-color-muted)",
+            "[&::-moz-range-progress]:h-2",
+            "[&::-moz-range-progress]:rounded-full",
+            "[&::-moz-range-progress]:bg-(--sp-color-primary)",
+            "[&::-moz-range-thumb]:size-4",
+            "[&::-moz-range-thumb]:border-0",
+            "[&::-moz-range-thumb]:rounded-full",
+            "[&::-moz-range-thumb]:bg-(--sp-color-primary)"
+          ].freeze
+
+          # The readout sits outside the input, so the input's own disabled:opacity-50 never
+          # reaches it — without this a disabled slider keeps a full-strength readout.
+          RANGE_GROUP = %w[
+            flex items-center gap-(--sp-space-3)
+            [&:has(input:disabled)>span]:opacity-50
+          ].freeze
+
+          # Sits beside the track, not over it — no pill background needed.
+          # Shares Progress::VALUE_TEXT, resolved at call time since progress.rb loads later.
+          RANGE_VALUE = %w[shrink-0 text-(--sp-color-fg)].freeze
+
           # ── Choice inputs ─────────────────────────────────────────────────────
           CHECKBOX_TYPES = {
             default: [
@@ -152,6 +205,24 @@ module StimulusPlumbers
 
           def form_field_input_file_classes(floating: nil, error: false)
             form_field_input_classes(floating: floating, error: error)
+          end
+
+          # Not form_field_input_classes — a progressbar is display-only, so it takes none of the
+          # text-input chrome (border, padding, focus ring); the track styling comes from progress_bar.
+          def form_field_input_progress_classes
+            { classes: klasses("w-full") }
+          end
+
+          def form_field_input_range_classes
+            { classes: klasses(*RANGE) }
+          end
+
+          def form_field_input_range_group_classes
+            { classes: klasses(*RANGE_GROUP) }
+          end
+
+          def form_field_input_range_value_classes
+            { classes: klasses(*Progress::VALUE_TEXT, *RANGE_VALUE) }
           end
 
           def form_field_input_select_classes(floating: nil, error: false)

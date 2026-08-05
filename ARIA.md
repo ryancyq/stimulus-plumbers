@@ -97,6 +97,16 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Accepted tradeoff: because `indeterminate` has no HTML attribute, the server can only render the master's initial `checked` state for the all-true case; every other case (including mixed) renders unchecked and is corrected to `indeterminate` once the `checklist` controller connects — a brief, accepted flash for the mixed case only.
 - Disabled (readonly) items are excluded from the master's aggregate and from bulk toggling — the `checklist` controller filters them out via their own `.disabled` property, mirroring their exclusion from tab order and AT interaction.
 
+#### Progress (`progress_controller`, `sp_progress_*`)
+- `role="progressbar"` is read-only and never focusable — it reports a value, it does not accept one. An interactive equivalent is a native `<input type="range">` (or `role="slider"`), not a progressbar with `tabindex`
+- Value: `aria-valuemin`/`aria-valuemax` always; `aria-valuenow` omitted while indeterminate (an omitted `valuenow` is what signals "unknown progress" to AT)
+- `aria-valuetext` only when the readout text is not derivable from `aria-valuenow` — set for the `value`/`value_max` formats, deliberately **not** for `percent`, where AT already computes the percentage and a duplicate would be announced twice
+- On-screen readout is `aria-hidden="true"` — the value reaches AT through `aria-valuenow`/`aria-valuetext`, so exposing the span too would double-announce it
+- Name: `aria-label` standalone, or `aria-labelledby` → a visible caption. `<label for>` cannot name a progressbar — `for=` is only valid against a labelable element (`button`, `input`, `meter`, `output`, `progress`, `select`, `textarea`), so a `<div role="progressbar">` targeted by one is silently left unnamed (WCAG 4.1.2). Form fields rendering a progressbar therefore emit a `<span>` caption, not a `<label>`
+- No `aria-invalid`/`aria-required` on a progressbar — neither is supported on the role, and it submits nothing that could be invalid. Errors still attach via `aria-describedby`
+- Segment slots are decorative (`aria-hidden="true"`) — the value is announced once, by the container
+- The `range` variant drives a native `<input type="range">` and writes **no** ARIA: the native control already exposes slider role, value, and keyboard operation, and duplicating them announces worse than leaving them alone. It keeps an ordinary `<label for>` because an `input` is labelable
+
 #### Avatar / Card / Icon
 - Decorative images/icons: `aria-hidden="true"` or `alt=""`
 - Meaningful images: descriptive `alt` text

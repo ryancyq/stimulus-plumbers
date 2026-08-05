@@ -76,3 +76,31 @@
     <%= sp_progress_meter(value: 6, min: 0, max: 10, low: 3, high: 8, optimum: 9, aria: { label: "Disk usage" }) %>
   </div>
 </section>
+
+<section id="progress-bar-percent" class="sb-section">
+  <h2>Bar — percent readout</h2>
+  <div class="sb-row">
+    <%= sp_progress_bar(value: 45, format: :percent, aria: { label: "Upload progress" }) %>
+  </div>
+</section>
+
+<section id="progress-bar-value-max" class="sb-section">
+  <h2>Bar — value / max readout</h2>
+  <div class="sb-row">
+    <%= sp_progress_bar(value: 45, max: 100, format: :value_max, aria: { label: "Upload progress" }) %>
+  </div>
+</section>
+
+<section id="progress-bar-percent-low" class="sb-section">
+  <h2>Bar — percent readout at 4%</h2>
+  <div class="sb-row">
+    <%= sp_progress_bar(value: 4, format: :percent, aria: { label: "Upload progress" }) %>
+  </div>
+</section>
+
+<section id="progress-bar-percent-full" class="sb-section">
+  <h2>Bar — percent readout at 100%</h2>
+  <div class="sb-row">
+    <%= sp_progress_bar(value: 100, format: :percent, aria: { label: "Upload progress" }) %>
+  </div>
+</section>

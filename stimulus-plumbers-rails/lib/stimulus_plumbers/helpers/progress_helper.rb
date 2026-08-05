@@ -3,8 +3,10 @@
 module StimulusPlumbers
   module Helpers
     module ProgressHelper
-      def sp_progress_bar(value:, min: 0, max: 100, indeterminate: false, **kwargs)
-        Components::ProgressBar.new(self).render(value: value, min: min, max: max, indeterminate: indeterminate, **kwargs)
+      def sp_progress_bar(value:, min: 0, max: 100, indeterminate: false, format: nil, **kwargs)
+        Components::ProgressBar.new(self).render(
+          value: value, min: min, max: max, indeterminate: indeterminate, format: format, **kwargs
+        )
       end
 
       def sp_progress_segmented(value:, segments:, min: 0, max: 100, mode: :discrete, indeterminate: false, ramp: nil, **kwargs)

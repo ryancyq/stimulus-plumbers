@@ -13,26 +13,40 @@ module StimulusPlumbers
       COLLECTION_TYPES = %i[radio check_box collection_select grouped_collection_select].freeze
       OPTIONS          = (Base::OPTIONS + %i[hide_label]).freeze
 
-      attr_reader :hide_label
+      # :aria uses aria-labelledby because non-labelable components cannot use `<label for>`.
+      LABEL_MODES = %i[native aria].freeze
+
+      attr_reader :hide_label, :label_mode
 
       class << self
         def label_id(input_id)
           [input_id, "label"].compact.join("_")
         end
+
+        def validate_label_mode!(mode)
+          return mode if LABEL_MODES.include?(mode)
+
+          raise ArgumentError, "unknown label_mode: #{mode.inspect} (expected one of #{LABEL_MODES.join(", ")})"
+        end
       end
 
-      def initialize(template, hide_label: false, **kwargs)
+      def initialize(template, hide_label: false, label_mode: :native, **kwargs)
         super(template, **kwargs)
         @hide_label = hide_label
+        @label_mode = self.class.validate_label_mode!(label_mode)
       end
 
       def label_hidden?
         @hide_label
       end
 
+      def native_label?
+        @label_mode == :native
+      end
+
       def render(object, attribute, input_id:, &block)
         @label ||= attribute.to_s.humanize
-        case @floating
+        case native_label? ? @floating : nil
         when *StimulusPlumbers::Themes::Schema::Form::Floating::Ranges::TYPE
           render_floating_field(object, attribute, input_id, &block)
         else
@@ -41,6 +55,18 @@ module StimulusPlumbers
       end
 
       private
+
+      def build_aria(object, attribute, input_id)
+        return super if native_label?
+
+        { describedby: described_by(object, attribute, input_id), labelledby: self.class.label_id(input_id) }.compact
+      end
+
+      def build_html_options(input_id, aria)
+        return super if native_label?
+
+        { id: input_id, aria: aria }
+      end
 
       def render_default_field(object, attribute, input_id, &block)
         error_override = error?(object, attribute)
@@ -59,13 +85,15 @@ module StimulusPlumbers
         end
       end
 
+      # hide_label is visual only; :aria fields cannot be required.
       def field_label(input_id)
         Fields::Label.new(@template).render(
           text:     @label,
-          for_id:   input_id,
+          for_id:   (input_id if native_label?),
           id:       self.class.label_id(input_id),
-          required: @required,
-          hidden:   @hide_label
+          required: native_label? && @required,
+          hidden:   @hide_label,
+          tag:      native_label? ? :label : :span
         )
       end
 

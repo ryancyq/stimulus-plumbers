@@ -1,6 +1,6 @@
 # Progress
 
-Rails helpers for rendering the `progress` Stimulus controller's four variants. See [stimulus-plumbers's docs/component/progress.md](../../../stimulus-plumbers/docs/component/progress.md) for the controller's Values/Targets/Methods/Dispatches.
+Rails helpers for rendering the four standalone `progress` variants. The controller also has a `range` variant, which has no `sp_*` helper — it is a form control, reached through [`f.field(as: :range)`](form.md). See [stimulus-plumbers's docs/component/progress.md](../../../stimulus-plumbers/docs/component/progress.md) for the controller's Values/Targets/Methods/Dispatches.
 
 ## Helpers
 
@@ -10,13 +10,20 @@ Rails helpers for rendering the `progress` Stimulus controller's four variants. 
 <%= sp_progress_bar(value: 65, max: 100, aria: { label: "Upload progress" }) %>
 ```
 
-| Option           | Default | Description                                              |
-| ---------------- | ------- | -------------------------------------------------------- |
-| `value:`         | —       | Required. Current value                                  |
-| `min:`           | `0`     | Range minimum                                            |
-| `max:`           | `100`   | Range maximum                                            |
-| `indeterminate:` | `false` | Omits `aria-valuenow`; adds the indeterminate hook class |
-| `**html_options` | —       | Forwarded to the outer `<div role="progressbar">`        |
+| Option           | Default | Description                                                                                                                 |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `value:`         | —       | Required. Current value                                                                                                     |
+| `min:`           | `0`     | Range minimum                                                                                                               |
+| `max:`           | `100`   | Range maximum                                                                                                               |
+| `indeterminate:` | `false` | Omits `aria-valuenow`; adds the indeterminate hook class                                                                    |
+| `format:`        | `nil`   | Renders an on-screen readout over the track: `:percent` \| `:value` \| `:value_max`. Any other value raises `ArgumentError` |
+| `**html_options` | —       | Forwarded to the outer `<div role="progressbar">`                                                                           |
+
+`format:` renders the readout server-side, so it is correct before the controller connects. The text and its `aria-valuetext` behaviour are the same as the controller's — see [Readout formats](../../../stimulus-plumbers/docs/component/progress.md#readout-formats). The theme is told whether a readout is present, so it can give the track room for the text.
+
+```erb
+<%= sp_progress_bar(value: 45, format: :percent, aria: { label: "Upload progress" }) %>
+```
 
 When `indeterminate:` is true, the JS controller sets a fixed 25% fill
 width directly — this is the same with or without a theme. A theme may
@@ -29,12 +36,14 @@ as a static partial fill.
 <%= sp_progress_segmented(value: 6, segments: 5, max: 10, aria: { label: "Password strength" }) %>
 ```
 
+`format:` is not supported here (it raises `ArgumentError`) — there is no single track to center a readout over.
+
 Splits the track into `segments:` equal slots and distributes the value across them (max 10 with `segments: 5` → each slot spans 2 units). Renders one `fill` target per slot; the JS controller fills them.
 
 | Option           | Default     | Description                                                                                            |
 | ---------------- | ----------- | ------------------------------------------------------------------------------------------------------ |
 | `value:`         | —           | Required. Current value                                                                                |
-| `segments:`      | —           | Required. Number of equal slots                                                                        |
+| `segments:`      | —           | Required. Positive Integer; anything else raises `ArgumentError`                                       |
 | `min:`           | `0`         | Range minimum                                                                                          |
 | `max:`           | `100`       | Range maximum                                                                                          |
 | `mode:`          | `:discrete` | `:discrete` lights a whole slot once reached; `:continuous` partially fills the boundary slot          |

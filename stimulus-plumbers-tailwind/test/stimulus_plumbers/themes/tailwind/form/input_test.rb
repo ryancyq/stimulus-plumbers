@@ -399,4 +399,81 @@ class TailwindThemeFormInputTest < Minitest::Test
     refute_includes result, "border-(--sp-color-muted-fg)\nborder" # no INPUT_GROUP mixed in
     assert_includes result, "peer"
   end
+
+  def test_progress_in_a_form_field_spans_the_field_width
+    assert_includes classes_for(:form_field_input_progress), "w-full"
+  end
+
+  def test_progress_in_a_form_field_has_no_text_input_chrome
+    result = classes_for(:form_field_input_progress)
+
+    refute_includes result, "border"
+    refute_includes result, "focus:ring-2"
+  end
+
+  def test_range_track_uses_the_same_colors_as_the_progress_bar
+    result = classes_for(:form_field_input_range)
+
+    assert_includes result, "bg-(--sp-color-muted)"
+    assert_includes result, "--sp-color-primary"
+  end
+
+  # A slider is a track and a thumb — none of the text input's box chrome applies.
+  def test_range_does_not_inherit_text_input_chrome
+    result = classes_for(:form_field_input_range)
+
+    refute_includes result, "px-(--sp-space-3)"
+    refute_includes result, "border-(--sp-color-muted-fg)"
+  end
+
+  def test_range_fill_is_driven_by_the_progress_percentage
+    assert_includes classes_for(:form_field_input_range), "--sp-progress-percent"
+  end
+
+  # Tailwind scans source text, so a class broken across a string continuation is silently
+  # dropped from the build — the theme still returns it and every other test still passes.
+  def test_range_fill_class_appears_contiguously_in_source
+    source = File.read(
+      File.expand_path("../../../../../lib/stimulus_plumbers/themes/tailwind/form/input.rb", __dir__)
+    )
+
+    fill = StimulusPlumbers::Themes::Tailwind::Form::Input::RANGE_FILL
+
+    assert_includes source, fill, "RANGE_FILL must appear on one line or Tailwind will not generate it"
+  end
+
+  def test_range_thumb_is_visible_in_both_engines
+    result = classes_for(:form_field_input_range)
+
+    assert_includes result, "[&::-webkit-slider-thumb]"
+    assert_includes result, "[&::-moz-range-thumb]"
+  end
+
+  def test_range_keeps_a_visible_focus_indicator
+    assert_includes classes_for(:form_field_input_range), "focus-visible:ring-(--sp-focus-ring-color)"
+  end
+
+  def test_range_group_lays_the_input_and_readout_on_one_row
+    result = classes_for(:form_field_input_range_group)
+
+    assert_includes result, "flex"
+    assert_includes result, "items-center"
+  end
+
+  # The readout is outside the input, so the input's own disabled:opacity-50 never reaches it.
+  def test_range_readout_dims_with_a_disabled_control
+    assert_includes classes_for(:form_field_input_range_group), "[&:has(input:disabled)>span]:opacity-50"
+  end
+
+  # Beside the track, so it needs none of the bar readout's overlay positioning.
+  def test_range_readout_sits_beside_the_track_not_over_it
+    result = classes_for(:form_field_input_range_value)
+
+    refute_includes result, "absolute"
+    assert_includes result, "text-(--sp-color-fg)"
+  end
+
+  def test_range_readout_does_not_reflow_as_digits_change
+    assert_includes classes_for(:form_field_input_range_value), "tabular-nums"
+  end
 end

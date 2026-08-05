@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { announce, connectTriggerToTarget, disconnectTriggerFromTarget, setHidden } from '../../../src/accessibility/aria';
+import {
+  announce,
+  connectTriggerToTarget,
+  disconnectTriggerFromTarget,
+  setHidden,
+  setValueText,
+} from '../../../src/accessibility/aria';
 
 describe('ARIA utilities', () => {
   let trigger;
@@ -245,6 +251,31 @@ describe('ARIA utilities', () => {
       document.body.appendChild(el);
       setHidden(el, false);
       expect(el.hasAttribute('hidden')).toBe(false);
+    });
+  });
+
+  describe('setValueText', () => {
+    it('sets aria-valuetext', () => {
+      const el = document.createElement('div');
+      document.body.appendChild(el);
+      setValueText(el, '45 / 100');
+      expect(el.getAttribute('aria-valuetext')).toBe('45 / 100');
+    });
+
+    it('removes aria-valuetext when null', () => {
+      const el = document.createElement('div');
+      el.setAttribute('aria-valuetext', '45 / 100');
+      document.body.appendChild(el);
+      setValueText(el, null);
+      expect(el.hasAttribute('aria-valuetext')).toBe(false);
+    });
+
+    it('removes aria-valuetext when undefined', () => {
+      const el = document.createElement('div');
+      el.setAttribute('aria-valuetext', '45 / 100');
+      document.body.appendChild(el);
+      setValueText(el, undefined);
+      expect(el.hasAttribute('aria-valuetext')).toBe(false);
     });
   });
 

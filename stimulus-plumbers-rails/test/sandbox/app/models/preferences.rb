@@ -3,5 +3,5 @@
 class Preferences
   include ActiveModel::Model
 
-  attr_accessor :gender, :interests, :newsletter
+  attr_accessor :gender, :interests, :newsletter, :volume
 end

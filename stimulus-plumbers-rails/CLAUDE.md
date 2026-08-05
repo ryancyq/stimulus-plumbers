@@ -83,8 +83,9 @@ stimulus-plumbers-rails/
 │       ├── form/
 │       │   ├── builder.rb                # Form builder: f.field/collection_field/choice — dispatches via Fields::Renderer::FIELD/COLLECTION/CHOICE
 │       │   ├── base.rb                   # Form::Base — shared init, error?, described_by, render_hint/errors
-│       │   ├── field.rb                  # Form::Field < Base — label + input + hint + error; TYPES, COLLECTION_TYPES, VARIANTS, hide_label
+│       │   ├── field.rb                  # Form::Field < Base — label + input + hint + error; TYPES, COLLECTION_TYPES, hide_label, LABEL_MODES
 │       │   └── fields/
+│       │       ├── renderer.rb           # FIELD/COLLECTION/CHOICE type → render method maps + LABEL_MODE (caption association per type)
 │       │       ├── error.rb
 │       │       ├── fieldset.rb
 │       │       ├── group.rb
@@ -102,6 +103,7 @@ stimulus-plumbers-rails/
 │       │           ├── password/
 │       │           │   ├── revealable.rb # Password::Revealable — reveal toggle: input group, button, icon pair
 │       │           │   └── strength.rb   # Thin strength wiring (input attrs + delegates to Components::PasswordStrength)
+│       │           ├── range.rb          # range_field (native); render_range_input — track/thumb visuals + optional readout
 │       │           ├── search.rb         # search_field + clearable: (native); render_combobox_typeahead
 │       │           ├── select.rb         # select, collection_select (native); render_combobox_dropdown, render_collection/grouped_combobox_dropdown
 │       │           ├── select/
@@ -109,7 +111,7 @@ stimulus-plumbers-rails/
 │       │           │   ├── timezone.rb   # time_zone_select (native)
 │       │           │   └── weekday.rb    # weekday_select (native, Rails 7.1+)
 │       │           ├── submit.rb         # submit
-│       │           ├── text.rb           # text/email/url/tel/number/range/color/month/week/datetime_local_field (native + render_*_input per type)
+│       │           ├── text.rb           # text/email/url/tel/number/color/month/week/datetime_local_field (native + render_*_input per type)
 │       │           └── text_area.rb      # text_area (native); render_text_area_input
 │       ├── plumber/
 │       │   ├── base.rb                   # Plumber::Base (template accessor; includes Options::Html and Options::Aria)
@@ -242,6 +244,8 @@ Sandbox views must have matching wrapper IDs:
 ## Form Builder Convention
 
 > See [docs/component/form.md](docs/component/form.md) for the two-level builder API (Level 1 native overrides, Level 2 full-field helpers, shared field options, rendered HTML structure).
+
+- **New field type:** add it to `Fields::Renderer::FIELD` and `LABEL_MODE`. Use `:native` for labelable elements and `:aria` otherwise.
 
 ## WCAG / ARIA Reference
 See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns. Renderers in this package own the HTML structure and ARIA attributes for all components.
