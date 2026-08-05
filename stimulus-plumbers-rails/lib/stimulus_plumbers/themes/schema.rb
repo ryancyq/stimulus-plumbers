@@ -179,6 +179,10 @@ module StimulusPlumbers
           type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
+        form_field_input_progress:              {}.freeze,
+        form_field_input_range:                 {}.freeze,
+        form_field_input_range_group:           {}.freeze,
+        form_field_input_range_value:           {}.freeze,
         form_field_input_combobox:              {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
@@ -256,8 +260,9 @@ module StimulusPlumbers
       }.freeze
 
       PROGRESS = {
-        progress_bar:       {}.freeze,
+        progress_bar:       { labelled: { default: false, validate: Ranges::BOOL } }.freeze,
         progress_bar_fill:  {}.freeze,
+        progress_bar_value: {}.freeze,
         progress_segmented: {}.freeze,
         progress_segment:   {}.freeze,
         progress_ring:      { size: { default: nil, validate: %i[sm md lg] } }.freeze,

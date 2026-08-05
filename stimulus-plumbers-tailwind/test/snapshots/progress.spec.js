@@ -108,4 +108,29 @@ test.describe("progress", () => {
   test("meter", async ({ page }) => {
     await expect(page.locator("#progress-meter")).toHaveScreenshot("meter.png");
   });
+
+  test("bar percent readout", async ({ page }) => {
+    await expect(page.locator("#progress-bar-percent")).toHaveScreenshot(
+      "percent.png",
+    );
+  });
+
+  test("bar value max readout", async ({ page }) => {
+    await expect(page.locator("#progress-bar-value-max")).toHaveScreenshot(
+      "value-max.png",
+    );
+  });
+
+  // The readout pill must stay legible where the fill edge is nowhere near it.
+  test("bar percent readout at a low value", async ({ page }) => {
+    await expect(page.locator("#progress-bar-percent-low")).toHaveScreenshot(
+      "percent-low.png",
+    );
+  });
+
+  test("bar percent readout at full", async ({ page }) => {
+    await expect(page.locator("#progress-bar-percent-full")).toHaveScreenshot(
+      "percent-full.png",
+    );
+  });
 });

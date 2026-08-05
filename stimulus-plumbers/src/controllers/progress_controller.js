@@ -1,8 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
-import { setValueMin, setValueMax, setValueNow } from '../accessibility/aria';
+import { setValueMin, setValueMax, setValueNow, setValueText } from '../accessibility/aria';
+
+const FORMATS = ['percent', 'value', 'value_max'];
 
 export default class extends Controller {
-  static targets = ['fill', 'meter'];
+  static targets = ['fill', 'input', 'meter', 'value'];
   static values = {
     variant: { type: String, default: 'bar' },
     current: { type: Number, default: 0 },
@@ -14,15 +16,22 @@ export default class extends Controller {
     indeterminate: { type: Boolean, default: false },
     indeterminateFraction: { type: Number, default: 0.25 },
     segmentMode: { type: String, default: 'discrete' },
+    format: { type: String, default: '' },
   };
 
   connect() {
     if (this.variantValue === 'ring' && this.hasFillTarget) this.setCircumference(this.fillTarget);
+    // The native input is the source of truth at connect, so a range with no current-value
+    // attribute adopts what the markup already shows instead of resetting it.
+    if (this.variantValue === 'range') this.currentValue = Number(this.rangeInput.value);
     this.render();
   }
 
   setValue(value) {
     this.currentValue = this.clamp(value);
+    // Move the control too, or the thumb and the submitted value stay stale. Only here —
+    // renderRange also runs on the initial paint, before the input's value has been read.
+    if (this.variantValue === 'range') this.rangeInput.value = `${this.currentValue}`;
     this.render();
     this.dispatch('changed', { detail: { value: this.currentValue, min: this.minValue, max: this.maxValue } });
   }
@@ -39,13 +48,16 @@ export default class extends Controller {
     switch (this.variantValue) {
       case 'meter':
         return this.renderMeter();
+      case 'range':
+        return this.renderRange();
       case 'ring':
       case 'bar':
       case 'segmented':
         setValueMin(this.element, this.minValue);
         setValueMax(this.element, this.maxValue);
-        setValueNow(this.element, this.indeterminateValue ? null : this.currentValue);
+        setValueNow(this.element, this.indeterminateValue ? null : this.clamp(this.currentValue));
         this.element.classList.toggle('sp-progress-indeterminate', this.indeterminateValue);
+        this.renderValueText();
         if (this.variantValue === 'ring') return this.renderRing();
         if (this.variantValue === 'segmented') return this.renderSegmented();
         return this.renderBar();
@@ -54,9 +66,53 @@ export default class extends Controller {
     }
   }
 
+  // Clamped: currentValue can arrive out of range from the initial attribute, not just setValue().
   percent() {
     const range = this.maxValue - this.minValue;
-    return range <= 0 ? 0 : ((this.currentValue - this.minValue) / range) * 100;
+    return range <= 0 ? 0 : ((this.clamp(this.currentValue) - this.minValue) / range) * 100;
+  }
+
+  formattedValue() {
+    const n = this.clamp(this.currentValue);
+    switch (this.formatValue) {
+      case 'percent':
+        return `${Math.round(this.percent())}%`;
+      case 'value':
+        return `${n}`;
+      case 'value_max':
+        return `${n} / ${this.maxValue}`;
+      default:
+        return '';
+    }
+  }
+
+  // `percent` omits aria-valuetext — AT derives the percentage from aria-valuenow itself.
+  // Range omits it too: the native input already announces its own value.
+  renderValueText() {
+    if (!this.hasValueTarget || !FORMATS.includes(this.formatValue)) return;
+    const text = this.indeterminateValue ? '' : this.formattedValue();
+    this.valueTarget.textContent = text;
+    if (this.formatValue === 'percent' || this.variantValue === 'range') return;
+    setValueText(this.element, text || null);
+  }
+
+  // The input hosts the controller when there is no readout to contain, so it is the fallback.
+  get rangeInput() {
+    return this.hasInputTarget ? this.inputTarget : this.element;
+  }
+
+  // Action for `input->progress#refresh`. Delegates to setValue so a drag dispatches
+  // progress:changed like every other value change.
+  refresh() {
+    this.setValue(Number(this.rangeInput.value));
+  }
+
+  // Never writes aria-value* — a native range already exposes its own slider semantics.
+  // WebKit has no filled-track pseudo-element, so the fill is a gradient driven by this
+  // property; it must land on the element carrying the track background, i.e. the input.
+  renderRange() {
+    this.rangeInput.style.setProperty('--sp-progress-percent', `${this.percent()}`);
+    this.renderValueText();
   }
 
   renderBar() {

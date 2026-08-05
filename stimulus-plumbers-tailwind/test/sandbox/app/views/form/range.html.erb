@@ -1,0 +1,49 @@
+<h1>Range field</h1>
+
+<section id="range-field-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/preferences", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :volume, as: :range, label: "Volume" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="range-field-readout" class="sb-section">
+  <h2>Percent readout</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/preferences", scope: "readout", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :volume, as: :range, format: :percent, label: "Volume", hint: "Drag to adjust" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="range-field-disabled" class="sb-section">
+  <h2>Disabled</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/preferences", scope: "disabled", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :volume, as: :range, format: :percent, label: "Volume", disabled: true %>
+    <% end %>
+  </div>
+</section>
+
+<%# The gradient fill is most likely to break at the boundaries. %>
+<section id="range-field-min" class="sb-section">
+  <h2>At minimum</h2>
+  <div class="sb-col">
+    <% at_min = Preferences.new(volume: 0) %>
+    <%= form_with(model: at_min, url: "/preferences", scope: "at_min", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :volume, as: :range, format: :percent, label: "Volume" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="range-field-max" class="sb-section">
+  <h2>At maximum</h2>
+  <div class="sb-col">
+    <% at_max = Preferences.new(volume: 100) %>
+    <%= form_with(model: at_max, url: "/preferences", scope: "at_max", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :volume, as: :range, format: :percent, label: "Volume" %>
+    <% end %>
+  </div>
+</section>

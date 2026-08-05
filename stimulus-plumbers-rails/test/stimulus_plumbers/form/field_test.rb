@@ -136,4 +136,44 @@ class FormFieldTest < Minitest::Test
   def test_floating_when_set
     assert_equal :filled, component(floating: :filled).floating
   end
+
+  def test_label_mode_defaults_to_native
+    assert_equal :native, component.label_mode
+    assert_predicate component, :native_label?
+  end
+
+  def test_label_mode_can_be_aria
+    c = component(label_mode: :aria)
+
+    assert_equal :aria, c.label_mode
+    refute_predicate c, :native_label?
+  end
+
+  def test_unknown_label_mode_raises
+    error = assert_raises(ArgumentError) { component(label_mode: :none) }
+
+    assert_match(%r{unknown label_mode}, error.message)
+    assert_match(%r{native, aria}, error.message)
+  end
+
+  def test_label_mode_rejects_a_string
+    assert_raises(ArgumentError) { component(label_mode: "native") }
+  end
+
+  # Every registered field type must declare a mode, so a new display-only type cannot
+  # silently inherit a <label for> that names nothing.
+  def test_every_field_type_declares_a_label_mode
+    field_types = StimulusPlumbers::Form::Fields::Renderer::FIELD.keys
+    declared    = StimulusPlumbers::Form::Fields::Renderer::LABEL_MODE.keys
+
+    assert_equal field_types.sort, declared.sort
+  end
+
+  def test_progress_is_registered_as_aria_labelled
+    assert_equal :aria, StimulusPlumbers::Form::Fields::Renderer.label_mode(:progress)
+  end
+
+  def test_range_is_registered_as_natively_labelled
+    assert_equal :native, StimulusPlumbers::Form::Fields::Renderer.label_mode(:range)
+  end
 end

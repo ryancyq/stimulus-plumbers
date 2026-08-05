@@ -32,6 +32,18 @@ class ProgressAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#progress-ring"
   end
 
+  def test_bar_with_percent_readout_passes_wcag
+    assert_accessible context: "#progress-bar-percent"
+  end
+
+  def test_bar_with_value_max_readout_passes_wcag
+    assert_accessible context: "#progress-bar-value-max"
+  end
+
+  def test_bar_with_readout_at_a_low_value_passes_wcag
+    assert_accessible context: "#progress-bar-percent-low"
+  end
+
   def test_meter_passes_wcag
     assert_accessible context: "#progress-meter"
   end

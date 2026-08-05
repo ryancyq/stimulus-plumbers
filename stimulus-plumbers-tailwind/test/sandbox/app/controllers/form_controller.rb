@@ -39,6 +39,14 @@ class FormController < ApplicationController
     @error_form = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") }
   end
 
+  def progress
+    @form = Onboarding.new(completion: 45, profile_strength: 4)
+  end
+
+  def range
+    @form = Preferences.new(volume: 45)
+  end
+
   def code
     @form = Verification.new
   end

@@ -1,0 +1,7 @@
+<div id="form-progress">
+  <%= form_with(model: @form, url: "/onboardings", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= f.field :completion, as: :progress, format: :percent, label: "Upload progress" %>
+    <%= f.field :completion, as: :progress, format: :percent, label: "Sync progress", hint: "Since last sync" %>
+    <%= f.field :profile_strength, as: :progress, segments: 5, max: 5, label: "Profile strength" %>
+  <% end %>
+</div>

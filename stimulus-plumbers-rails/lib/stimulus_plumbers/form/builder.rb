@@ -18,6 +18,8 @@ require_relative "fields/inputs/datetime"
 require_relative "fields/inputs/radio"
 require_relative "fields/inputs/file"
 require_relative "fields/inputs/password"
+require_relative "fields/inputs/progress"
+require_relative "fields/inputs/range"
 require_relative "fields/inputs/search"
 require_relative "fields/inputs/select"
 require_relative "fields/inputs/select/grouped"
@@ -40,6 +42,8 @@ module StimulusPlumbers
       include Fields::Inputs::Radio
       include Fields::Inputs::File
       include Fields::Inputs::Password
+      include Fields::Inputs::Progress
+      include Fields::Inputs::Range
       include Fields::Inputs::Search
       include Fields::Inputs::Select
       include Fields::Inputs::Select::Grouped
@@ -89,7 +93,7 @@ module StimulusPlumbers
 
         validate_field_block!(as, block)
 
-        field = Field.new(@template, **field_opts)
+        field = Field.new(@template, label_mode: Fields::Renderer.label_mode(as), **field_opts)
         field.render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error|
           Plumber::Dispatcher.build(
             Fields::Renderer::FIELD.fetch(as),

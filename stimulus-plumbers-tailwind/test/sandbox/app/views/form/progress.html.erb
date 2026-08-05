@@ -1,0 +1,28 @@
+<h1>Progress field</h1>
+
+<section id="progress-field-percent" class="sb-section">
+  <h2>Percent readout</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/onboardings", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :completion, as: :progress, format: :percent, label: "Upload progress" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="progress-field-hint" class="sb-section">
+  <h2>Percent readout with hint</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/onboardings", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :completion, as: :progress, format: :percent, label: "Sync progress", hint: "Since last sync" %>
+    <% end %>
+  </div>
+</section>
+
+<section id="progress-field-segmented" class="sb-section">
+  <h2>Segmented</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/onboardings", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :profile_strength, as: :progress, segments: 5, max: 5, label: "Profile strength" %>
+    <% end %>
+  </div>
+</section>

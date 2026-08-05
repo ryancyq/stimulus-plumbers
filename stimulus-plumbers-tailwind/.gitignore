@@ -23,3 +23,7 @@
 # Playwright
 /playwright-report/
 /test-results/
+
+# Snapshot baselines are Linux-only (CI); a local macOS run writes -darwin
+# variants that must never be committed.
+/test/snapshots/__screenshots__/**/*-darwin.png

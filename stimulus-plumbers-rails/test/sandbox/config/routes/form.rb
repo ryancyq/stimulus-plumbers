@@ -9,4 +9,6 @@ scope "/form", controller: "form" do
   get :code
   get :credit_card
   get :password
+  get :progress
+  get :range
 end

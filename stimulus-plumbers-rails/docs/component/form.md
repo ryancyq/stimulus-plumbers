@@ -44,6 +44,7 @@ Standard Rails helpers are overridden to apply theme CSS classes. All native HTM
 <%= f.time_zone_select  :timezone %>
 <%= f.weekday_select    :weekday %>
 <%= f.search_field   :query %>
+<%= f.range_field    :volume %>
 <%= f.check_box      :agree %>
 <%= f.radio_button   :plan, "basic" %>
 ```
@@ -54,6 +55,7 @@ Special options on native helpers:
 | ---------------- | ------------------ | ------------------------------------------------------------------ |
 | `password_field` | `revealable: true` | Wraps input in an `input-revealable` controller                    |
 | `search_field`   | `clearable: true`  | Wraps input in an `input-clearable` controller with a clear button |
+| `range_field`    | —                  | Themed track and thumb; no controller wiring, readout, or fill     |
 
 ### f.submit
 
@@ -80,11 +82,11 @@ Submit buttons need an accessible name: pass non-blank text, or an `aria` label 
 
 Three methods render a complete, accessible field:
 
-| Method                                                                            | `as:` values                                                                                                                                                                              |
-| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `f.field(attr, as:, **opts)`                                                      | `:text` `:email` `:number` `:url` `:tel` `:color` `:month` `:week` `:range` `:datetime_local` `:text_area` `:file` `:password` `:date` `:time` `:select` `:search` `:code` `:credit_card` |
-| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | `:collection_select` `:grouped_collection_select`                                                                                                                                         |
-| `f.choice(attr, as:, **opts)`                                                     | `:radio` `:check_box`                                                                                                                                                                     |
+| Method                                                                            | `as:` values                                                                                                                                                                                          |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `f.field(attr, as:, **opts)`                                                      | `:text` `:email` `:number` `:url` `:tel` `:color` `:month` `:week` `:range` `:datetime_local` `:text_area` `:file` `:password` `:date` `:time` `:select` `:search` `:code` `:credit_card` `:progress` |
+| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | `:collection_select` `:grouped_collection_select`                                                                                                                                                     |
+| `f.choice(attr, as:, **opts)`                                                     | `:radio` `:check_box`                                                                                                                                                                                 |
 
 ### Shared field options
 
@@ -224,6 +226,36 @@ The validator also accepts inline options (`password_strength: { min_length: 12,
 | `inputmode`    | String                     | `"numeric"`    | Native input mode                                            |
 
 Character-cell fields do not support `floating:` labels.
+
+**Range** (`as: :range`) — native `<input type="range">` styled as a progress track with a thumb. Unlike the progress field it is a real control, so it keeps an ordinary `<label for>`.
+
+| Option          | Values                               | Default     | Description                          |
+| --------------- | ------------------------------------ | ----------- | ------------------------------------ |
+| `format:`       | `:percent` / `:value` / `:value_max` | `nil`       | Adds a live readout beside the track |
+| `min:` / `max:` | Number                               | `0` / `100` | Range bounds                         |
+
+```erb
+<%= f.field :volume, as: :range, format: :percent %>
+```
+
+The controller writes no `aria-*` — a native range already exposes its own slider semantics, and the readout is `aria-hidden` so the value isn't announced twice. The fill percentage is server-rendered onto the input, so it is correct before the controller connects.
+
+Cross-browser caveat: WebKit has no filled-track pseudo-element, so the fill is a gradient driven by `--sp-progress-percent`; Firefox uses its native `::-moz-range-progress`. Use `f.range_field` for the same themed slider without the controller wiring, readout, or server-rendered fill.
+
+**Progress** (`as: :progress`) — read-only indicator for a model attribute, rendered by [`sp_progress_bar`](progress.md#sp_progress_bar). It submits nothing and is never invalid.
+
+| Option          | Values                               | Default     | Description                                                                                         |
+| --------------- | ------------------------------------ | ----------- | --------------------------------------------------------------------------------------------------- |
+| `format:`       | `:percent` / `:value` / `:value_max` | `nil`       | On-screen readout over the track                                                                    |
+| `segments:`     | positive Integer                     | `nil`       | Renders segmented instead of a single bar; excludes `format:`. Anything else raises `ArgumentError` |
+| `min:` / `max:` | Number                               | `0` / `100` | Range bounds                                                                                        |
+
+```erb
+<%= f.field :completion, as: :progress, format: :percent %>
+<%= f.field :profile_strength, as: :progress, segments: 5, max: 5 %>
+```
+
+Its label renders as a `<span>`, not a `<label>`, and names the bar via `aria-labelledby`. `<label for>` is only valid against a labelable element (`button`, `input`, `meter`, `output`, `progress`, `select`, `textarea`), and a `div[role="progressbar"]` is none of those — a `for=` pointing at it would silently leave the bar unnamed. For the same reason it takes no `required` or `aria-invalid`; `hint:` and `error:` still describe it via `aria-describedby`.
 
 ---
 

@@ -15,8 +15,8 @@ Tools: `list_guides`, `get_guide(name:)`.
 ## Building forms and views
 Valid `as:` values: `get_field_as_values(builder_method:)`. Combobox-backed `as:` values' controller
 identifier: `get_field_as_controller(as:)` — `component://{name}/schema` keys are renderer-level, not
-`as:` values. Component helper surface: `get_component_helper(name)`; themed params:
-`get_component_schema(name)`; ERB examples: `get_component_examples(name)`. List everything with
+`as:` values. Component helper surface: `get_component_helper(name:)`; themed params:
+`get_component_schema(name:)`; ERB examples: `get_component_examples(name:)`. List everything with
 `list_components`; `list_component_docs` shows which components have full docs
 (`component://{name}/docs`) and helper signatures (`component://{name}/helper`). Icon options take a
 name from `component://icons` (or `list_icons`). All schema components are queryable via
@@ -27,8 +27,9 @@ see what's covered. Full form builder reference: `component://form/docs`.
 Most display components are pure markup; interactive ones (combobox, popover, calendar) emit their
 `data-controller` attributes automatically. Component → required controllers: `component://integration`.
 Controller identifiers and details (targets/values/outlets/classes): `controller://index`,
-`get_controller_schema(id)` / `list_controllers`.
-Narrative docs by controller family: `get_controller_docs(name)` / `controller://docs/{name}`.
+`get_controller_schema(name:)` / `list_controllers` — `name:` is the identifier (`combobox-date`).
+Narrative docs by controller family: `get_controller_docs(name:)` / `controller://docs/{name}` —
+here `name:` is the family (`combobox`); `list_controller_docs` lists them.
 
 ## How this server is organized
 - **Resources** live under entity namespaces — `component://` (Rails `sp_*` helper surface: schema,

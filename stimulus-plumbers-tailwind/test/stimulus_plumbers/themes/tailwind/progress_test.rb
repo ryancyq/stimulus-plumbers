@@ -30,6 +30,33 @@ class TailwindThemeProgressTest < Minitest::Test
     assert_includes classes_for(:progress_bar_fill), "bg-(--sp-color-primary)"
   end
 
+  def test_bar_is_taller_when_a_readout_is_present
+    assert_includes classes_for(:progress_bar, labelled: true), "h-5"
+    refute_includes classes_for(:progress_bar, labelled: false), "h-5"
+  end
+
+  def test_bar_without_a_readout_keeps_the_slim_track
+    assert_includes classes_for(:progress_bar, labelled: false), "h-2"
+    refute_includes classes_for(:progress_bar, labelled: true), "h-2"
+  end
+
+  def test_readout_sits_over_the_track_not_in_flow
+    assert_includes classes_for(:progress_bar_value), "absolute"
+  end
+
+  # Neither fg nor primary-fg clears AA over both the track and the fill, so the readout
+  # carries its own background rather than relying on what happens to be beneath it.
+  def test_readout_is_legible_over_both_track_and_fill
+    result = classes_for(:progress_bar_value)
+
+    assert_includes result, "bg-(--sp-color-bg)"
+    assert_includes result, "text-(--sp-color-fg)"
+  end
+
+  def test_readout_does_not_depend_on_blend_modes
+    refute_includes classes_for(:progress_bar_value), "mix-blend"
+  end
+
   def test_bar_fill_slides_when_indeterminate
     result = classes_for(:progress_bar_fill)
 
