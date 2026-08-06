@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.16](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.15..stimulus-plumbers-tailwind/v0.4.16) - 2026-08-06
+
+### Bug Fixes
+
+- form builder with label translation ([#200](https://github.com/ryancyq/stimulus-plumbers/issues/200)) - ([117394e](https://github.com/ryancyq/stimulus-plumbers/commit/117394e7406daf0e574df06361ae36815bf4d0b1)) - Ryan Chang
+- form input range with progress bar ([#201](https://github.com/ryancyq/stimulus-plumbers/issues/201)) - ([9102b0c](https://github.com/ryancyq/stimulus-plumbers/commit/9102b0c5135f54edbf0e1c5d49021f4b6c39f540)) - Ryan Chang
+- progress readout placement + styling ([#202](https://github.com/ryancyq/stimulus-plumbers/issues/202)) - ([51b0d09](https://github.com/ryancyq/stimulus-plumbers/commit/51b0d09fd495e31be0d73e34ac542c7ec32537db)) - Ryan Chang
+
+### Dependencies
+
+- **(deps-dev)** bump @playwright/test in /stimulus-plumbers-tailwind ([#199](https://github.com/ryancyq/stimulus-plumbers/issues/199)) - ([02a28e3](https://github.com/ryancyq/stimulus-plumbers/commit/02a28e3731c2b12b8069ffb3832a34e00511c30e)) - dependabot[bot]
+
+### Tests
+
+- reorganize spec structure ([#203](https://github.com/ryancyq/stimulus-plumbers/issues/203)) - ([8d08f39](https://github.com/ryancyq/stimulus-plumbers/commit/8d08f39476d5f8faad2db47abdab11c079b0aae9)) - Ryan Chang
+
+---
 ## [0.4.15](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-tailwind/v0.4.14..stimulus-plumbers-tailwind/v0.4.15) - 2026-07-23
 
 ### Features
