@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.16](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.15..stimulus-plumbers/v0.4.16) - 2026-08-06
+
+### Bug Fixes
+
+- form input range with progress bar ([#201](https://github.com/ryancyq/stimulus-plumbers/issues/201)) - ([9102b0c](https://github.com/ryancyq/stimulus-plumbers/commit/9102b0c5135f54edbf0e1c5d49021f4b6c39f540)) - Ryan Chang
+- progress readout placement + styling ([#202](https://github.com/ryancyq/stimulus-plumbers/issues/202)) - ([51b0d09](https://github.com/ryancyq/stimulus-plumbers/commit/51b0d09fd495e31be0d73e34ac542c7ec32537db)) - Ryan Chang
+
+### Dependencies
+
+- **(deps-dev)** bump jsdom from 29.1.1 to 30.0.0 in /stimulus-plumbers ([#195](https://github.com/ryancyq/stimulus-plumbers/issues/195)) - ([fda3374](https://github.com/ryancyq/stimulus-plumbers/commit/fda3374286ddf5894015047ff9e523d056723f26)) - dependabot[bot]
+- **(deps-dev)** bump globals in /stimulus-plumbers ([#194](https://github.com/ryancyq/stimulus-plumbers/issues/194)) - ([9fc6990](https://github.com/ryancyq/stimulus-plumbers/commit/9fc6990b3dd8811f135ce958a8cdd7bacec5536d)) - dependabot[bot]
+- **(deps-dev)** bump vite from 8.1.4 to 8.2.0 in /stimulus-plumbers ([#198](https://github.com/ryancyq/stimulus-plumbers/issues/198)) - ([8b7b11e](https://github.com/ryancyq/stimulus-plumbers/commit/8b7b11e08c1335b59e6a14e23431e099fe85c656)) - dependabot[bot]
+- **(deps-dev)** bump eslint from 10.7.0 to 10.8.0 in /stimulus-plumbers ([#196](https://github.com/ryancyq/stimulus-plumbers/issues/196)) - ([f98027c](https://github.com/ryancyq/stimulus-plumbers/commit/f98027c9f867866247319c8ded035ba6dd70e31f)) - dependabot[bot]
+
+---
 ## [0.4.15](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.14..stimulus-plumbers/v0.4.15) - 2026-07-23
 
 ### Features
