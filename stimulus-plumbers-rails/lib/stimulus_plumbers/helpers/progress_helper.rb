@@ -3,9 +3,9 @@
 module StimulusPlumbers
   module Helpers
     module ProgressHelper
-      def sp_progress_bar(value:, min: 0, max: 100, indeterminate: false, format: nil, **kwargs)
+      def sp_progress_bar(value:, min: 0, max: 100, indeterminate: false, format: nil, readout: :inside, **kwargs)
         Components::ProgressBar.new(self).render(
-          value: value, min: min, max: max, indeterminate: indeterminate, format: format, **kwargs
+          value: value, min: min, max: max, indeterminate: indeterminate, format: format, readout: readout, **kwargs
         )
       end
 

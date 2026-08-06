@@ -14,33 +14,55 @@ module StimulusPlumbers
         # tabular-nums so the readout doesn't jitter as digits change under a drag.
         VALUE_TEXT = %w[text-xs font-medium leading-none tabular-nums].freeze
 
-        # Centered over the track, sized to its text, on an opaque pill: neither fg nor primary-fg
-        # clears AA over both the muted track and the primary fill, so the readout brings its own
-        # background instead of blending with whatever sits under it.
+        # Row wrapper for an outside readout — the track shrinks to leave room for the text.
+        BAR_GROUP = %w[flex w-full items-center gap-(--sp-space-2)].freeze
+
+        # Clipped to the glyphs, this paints primary-fg up to the fill edge and fg past it, so the
+        # digits split rather than sit on a pill — neither color alone clears AA over both. The
+        # edge is --sp-progress-percent (set by the progress controller), 0 until it connects.
+        # Must stay on one line: Tailwind scans source text, so a class split across a string
+        # continuation or interpolation never appears contiguously and is silently dropped.
+        # rubocop:disable Layout/LineLength
+        BAR_VALUE_SPLIT = "bg-[linear-gradient(to_right,var(--sp-color-primary-fg)_0_calc(var(--sp-progress-percent,0)*1%),var(--sp-color-fg)_0)]"
+        # rubocop:enable Layout/LineLength
+
+        # Spans the track so the gradient's coordinates are the track's.
         BAR_VALUE = [
           *VALUE_TEXT,
-          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-          "px-(--sp-space-1) rounded-full",
-          "bg-(--sp-color-bg) text-(--sp-color-fg)"
+          "absolute inset-x-0 top-1/2 -translate-y-1/2 text-center pointer-events-none",
+          BAR_VALUE_SPLIT,
+          "bg-clip-text [-webkit-background-clip:text] text-transparent"
         ].freeze
 
+        # Beside the track it never sits over the fill, so it needs no pill.
+        BAR_VALUE_OUTSIDE = [*VALUE_TEXT, "shrink-0 text-(--sp-color-primary)"].freeze
+
         # `data-intent` (set per-segment by a ramp) overrides the default primary fill color.
-        BAR_FILL = %w[
+        FILL_BASE = %w[
           h-full rounded-full bg-(--sp-color-primary)
           [&[data-intent=danger]]:bg-(--sp-color-destructive)
           [&[data-intent=warning]]:bg-(--sp-color-warning)
           [&[data-intent=success]]:bg-(--sp-color-success)
+        ].freeze
+
+        # animations.css renames a slot fill's keyframes but reads iteration-count off this.
+        FILL_INDETERMINATE = %w[
           [.sp-progress-indeterminate_&]:animate-progress-slide
           [.sp-progress-indeterminate_&]:motion-reduce:animate-none
         ].freeze
 
-        # Row of equal-width slots; each slot is its own track with a BAR_FILL inside.
-        SEGMENTED = %w[flex w-full gap-(--sp-space-1)].freeze
+        BAR_FILL = [*FILL_BASE, *FILL_INDETERMINATE].freeze
+
+        # Row of equal-width slots; each slot is its own track with a SEGMENT_FILL inside.
+        SEGMENT_GROUP = %w[flex w-full gap-(--sp-space-1)].freeze
 
         SEGMENT = %w[
           flex-1 h-2 overflow-hidden rounded-full
           bg-(--sp-color-muted)
         ].freeze
+
+        # Separate key so a theme can restyle a slot's chunk without touching the bar's.
+        SEGMENT_FILL = [*FILL_BASE, *FILL_INDETERMINATE].freeze
 
         # Circle stroke/fill live in icons/customs/progress-ring.svg — @source never scans
         # .svg files, so Tailwind classes there are inert.
@@ -68,20 +90,32 @@ module StimulusPlumbers
           { classes: klasses(*BAR, BAR_HEIGHTS.fetch(labelled)) }
         end
 
+        def progress_bar_group_classes
+          { classes: klasses(*BAR_GROUP) }
+        end
+
         def progress_bar_value_classes
           { classes: klasses(*BAR_VALUE) }
+        end
+
+        def progress_bar_value_outside_classes
+          { classes: klasses(*BAR_VALUE_OUTSIDE) }
         end
 
         def progress_bar_fill_classes
           { classes: klasses(*BAR_FILL) }
         end
 
-        def progress_segmented_classes
-          { classes: klasses(*SEGMENTED) }
+        def progress_segment_group_classes
+          { classes: klasses(*SEGMENT_GROUP) }
         end
 
         def progress_segment_classes
           { classes: klasses(*SEGMENT) }
+        end
+
+        def progress_segment_fill_classes
+          { classes: klasses(*SEGMENT_FILL) }
         end
 
         def progress_ring_classes(size: nil)

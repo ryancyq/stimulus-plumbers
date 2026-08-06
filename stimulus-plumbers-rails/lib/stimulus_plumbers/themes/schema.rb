@@ -11,6 +11,7 @@ require_relative "schema/form/ranges"
 require_relative "schema/form/checkbox/ranges"
 require_relative "schema/form/floating/ranges"
 require_relative "schema/form/radio/ranges"
+require_relative "schema/progress/ranges"
 require_relative "schema/icon"
 
 module StimulusPlumbers
@@ -259,14 +260,19 @@ module StimulusPlumbers
         popover:           {}.freeze
       }.freeze
 
+      # The outside readout gets its own keys, not parameters on existing ones — a theme method
+      # written before them has no keyword to accept.
       PROGRESS = {
-        progress_bar:       { labelled: { default: false, validate: Ranges::BOOL } }.freeze,
-        progress_bar_fill:  {}.freeze,
-        progress_bar_value: {}.freeze,
-        progress_segmented: {}.freeze,
-        progress_segment:   {}.freeze,
-        progress_ring:      { size: { default: nil, validate: %i[sm md lg] } }.freeze,
-        progress_meter:     {}.freeze
+        progress_bar:               { labelled: { default: false, validate: Ranges::BOOL } }.freeze,
+        progress_bar_group:         {}.freeze,
+        progress_bar_fill:          {}.freeze,
+        progress_bar_value:         {}.freeze,
+        progress_bar_value_outside: {}.freeze,
+        progress_segment_group:     {}.freeze,
+        progress_segment:           {}.freeze,
+        progress_segment_fill:      {}.freeze,
+        progress_ring:              { size: { default: nil, validate: %i[sm md lg] } }.freeze,
+        progress_meter:             {}.freeze
       }.freeze
 
       TIMELINE = {

@@ -10,20 +10,26 @@ Rails helpers for rendering the four standalone `progress` variants. The control
 <%= sp_progress_bar(value: 65, max: 100, aria: { label: "Upload progress" }) %>
 ```
 
-| Option           | Default | Description                                                                                                                 |
-| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `value:`         | —       | Required. Current value                                                                                                     |
-| `min:`           | `0`     | Range minimum                                                                                                               |
-| `max:`           | `100`   | Range maximum                                                                                                               |
-| `indeterminate:` | `false` | Omits `aria-valuenow`; adds the indeterminate hook class                                                                    |
-| `format:`        | `nil`   | Renders an on-screen readout over the track: `:percent` \| `:value` \| `:value_max`. Any other value raises `ArgumentError` |
-| `**html_options` | —       | Forwarded to the outer `<div role="progressbar">`                                                                           |
+| Option           | Default   | Description                                                                                                                  |
+| ---------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `value:`         | —         | Required. Current value                                                                                                      |
+| `min:`           | `0`       | Range minimum                                                                                                                |
+| `max:`           | `100`     | Range maximum                                                                                                                |
+| `indeterminate:` | `false`   | Omits `aria-valuenow`; adds the indeterminate hook class                                                                     |
+| `format:`        | `nil`     | Renders an on-screen readout: `:percent` \| `:value` \| `:value_max`. Any other value raises `ArgumentError`                 |
+| `readout:`       | `:inside` | Where that readout sits: `:inside` (over the track) \| `:outside` (beside it). Always validated; no effect without `format:` |
+| `**html_options` | —         | Forwarded to the outer `<div role="progressbar">`                                                                            |
 
 `format:` renders the readout server-side, so it is correct before the controller connects. The text and its `aria-valuetext` behaviour are the same as the controller's — see [Readout formats](../../../stimulus-plumbers/docs/component/progress.md#readout-formats). The theme is told whether a readout is present, so it can give the track room for the text.
 
 ```erb
 <%= sp_progress_bar(value: 45, format: :percent, aria: { label: "Upload progress" }) %>
+<%= sp_progress_bar(value: 45, format: :percent, readout: :outside, aria: { label: "Upload progress" }) %>
 ```
+
+`:outside` wraps the root around a track element plus the readout, since the track clips its overflow. Role, ARIA, and `data-controller` stay on the root in both.
+
+Theme keys: `progress_bar_value` (inside), `progress_bar_value_outside` + `progress_bar_group` (outside). A theme without the latter two renders `:outside` unstyled, not broken.
 
 When `indeterminate:` is true, the JS controller sets a fixed 25% fill
 width directly — this is the same with or without a theme. A theme may

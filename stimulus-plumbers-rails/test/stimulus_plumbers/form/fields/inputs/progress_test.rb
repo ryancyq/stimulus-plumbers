@@ -90,6 +90,14 @@ class ProgressTest < ActionView::TestCase
     assert_no_css doc, "label"
   end
 
+  def test_readout_placement_reaches_the_bar_without_leaking_as_an_attribute
+    doc = build_field(format: :percent, readout: :outside)
+
+    assert_nil bar(doc)["readout"]
+    refute_equal bar(doc), doc.at_css("[data-progress-target='fill']").parent
+    assert_equal "45%", doc.at_css("[data-progress-target='value']").text
+  end
+
   def test_required_adds_no_marker_or_control_attributes
     doc = build_field(required: true)
 

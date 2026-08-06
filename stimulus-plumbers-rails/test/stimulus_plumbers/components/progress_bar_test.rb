@@ -3,8 +3,57 @@
 require "test_helper"
 
 class ProgressBarTest < ActionView::TestCase
+  # A theme predating this change: strict signatures that accept no keywords.
+  LegacyTheme = Class.new(StimulusPlumbers::Themes::Base) do
+    private
+
+    def progress_bar_classes(labelled: false)
+      { classes: labelled ? "bar tall" : "bar" }
+    end
+
+    def progress_bar_fill_classes
+      { classes: "fill" }
+    end
+
+    def progress_bar_value_classes
+      { classes: "readout" }
+    end
+
+    def progress_segment_classes
+      { classes: "slot" }
+    end
+  end
+
+  FillKeyTheme = Class.new(StimulusPlumbers::Themes::Base) do
+    private
+
+    def progress_bar_fill_classes
+      { classes: "bar-fill" }
+    end
+
+    def progress_segment_fill_classes
+      { classes: "segment-fill" }
+    end
+  end
+
   def renderer
     StimulusPlumbers::Components::ProgressBar.new(self)
+  end
+
+  def with_theme(theme)
+    original = StimulusPlumbers.config.theme.current
+    StimulusPlumbers.config.theme.use(theme)
+    yield
+  ensure
+    StimulusPlumbers.config.theme.use(original)
+  end
+
+  def with_legacy_theme(&block)
+    with_theme(LegacyTheme.new, &block)
+  end
+
+  def with_fill_key_theme(&block)
+    with_theme(FillKeyTheme.new, &block)
   end
 
   def test_renders_progressbar_role
@@ -193,5 +242,86 @@ class ProgressBarTest < ActionView::TestCase
 
   def test_segmented_rejects_a_non_integer_segment_count
     assert_raises(ArgumentError) { renderer.render_segmented(value: 1, segments: 2.5) }
+  end
+
+  def test_inside_readout_shares_the_track_element
+    doc  = parse_html(renderer.render(value: 45, format: :percent))
+    root = doc.at_css("div[role='progressbar']")
+
+    assert_equal root, readout(doc).parent
+    assert_equal root, doc.at_css("[data-progress-target='fill']").parent
+  end
+
+  def test_outside_readout_is_a_sibling_of_the_track
+    doc  = parse_html(renderer.render(value: 45, format: :percent, readout: :outside))
+    root = doc.at_css("div[role='progressbar']")
+
+    assert_equal root, readout(doc).parent
+    refute_equal root, doc.at_css("[data-progress-target='fill']").parent
+    assert_equal "45%", readout(doc).text
+  end
+
+  # Outside the controller element, the readout never updates.
+  def test_outside_readout_and_fill_stay_within_the_controller_element
+    root = parse_html(renderer.render(value: 45, format: :percent, readout: :outside)).at_css("[data-controller='progress']")
+
+    assert_css root, "[data-progress-target='value']"
+    assert_css root, "[data-progress-target='fill']"
+  end
+
+  def test_outside_readout_keeps_the_progressbar_aria_on_the_root
+    doc = parse_html(renderer.render(value: 45, format: :value_max, readout: :outside))
+
+    assert_css doc, "div[role='progressbar'][aria-valuenow='45'][aria-valuetext='45 / 100']"
+    assert_equal "true", readout(doc)["aria-hidden"]
+  end
+
+  def test_readout_placement_is_ignored_without_a_format
+    doc = parse_html(renderer.render(value: 45, readout: :outside))
+
+    assert_nil readout(doc)
+    assert_css doc, "div[role='progressbar'] > [data-progress-target='fill']"
+  end
+
+  # Regression: a keyword-less theme method must never be called with a keyword.
+  def test_a_legacy_theme_still_styles_every_bar_element
+    doc = with_legacy_theme { parse_html(renderer.render(value: 45, format: :percent)) }
+
+    assert_css doc, ".bar"
+    assert_css doc, "[data-progress-target='fill'].fill"
+    assert_css doc, "[data-progress-target='value'].readout"
+  end
+
+  def test_a_legacy_theme_still_styles_an_inside_readout
+    doc = with_legacy_theme { parse_html(renderer.render(value: 45, format: :percent, readout: :inside)) }
+
+    assert_css doc, "[data-progress-target='value'].readout"
+  end
+
+  def test_a_legacy_theme_renders_a_segmented_bar_without_raising
+    doc = with_legacy_theme { parse_html(renderer.render_segmented(value: 4, segments: 2)) }
+
+    assert_css doc, "div[role='progressbar']"
+    assert_equal 2, doc.css(".slot").length
+  end
+
+  def test_segment_fill_resolves_its_own_theme_key
+    doc = with_fill_key_theme { parse_html(renderer.render_segmented(value: 4, segments: 2)) }
+
+    assert_equal 2, doc.css("[data-progress-target='fill'].segment-fill").length
+    assert_no_css doc, ".bar-fill"
+  end
+
+  def test_bar_fill_keeps_the_bar_theme_key
+    doc = with_fill_key_theme { parse_html(renderer.render(value: 45)) }
+
+    assert_css doc, "[data-progress-target='fill'].bar-fill"
+    assert_no_css doc, ".segment-fill"
+  end
+
+  def test_unknown_readout_raises
+    error = assert_raises(ArgumentError) { renderer.render(value: 45, format: :percent, readout: :above) }
+
+    assert_match(%r{readout must be one of}, error.message)
   end
 end

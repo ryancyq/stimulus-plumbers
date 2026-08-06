@@ -122,6 +122,8 @@ export default class extends Controller {
       return;
     }
     this.fillTarget.style.width = `${this.percent()}%`;
+    // Also published on the root so a theme can split the readout's color at the fill edge.
+    this.element.style.setProperty('--sp-progress-percent', `${this.percent()}`);
   }
 
   renderSegmented() {

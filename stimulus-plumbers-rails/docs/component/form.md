@@ -246,7 +246,8 @@ Cross-browser caveat: WebKit has no filled-track pseudo-element, so the fill is 
 
 | Option          | Values                               | Default     | Description                                                                                         |
 | --------------- | ------------------------------------ | ----------- | --------------------------------------------------------------------------------------------------- |
-| `format:`       | `:percent` / `:value` / `:value_max` | `nil`       | On-screen readout over the track                                                                    |
+| `format:`       | `:percent` / `:value` / `:value_max` | `nil`       | On-screen readout of the value                                                                      |
+| `readout:`      | `:inside` / `:outside`               | `:inside`   | Readout placement — see [`sp_progress_bar`](progress.md#sp_progress_bar)                            |
 | `segments:`     | positive Integer                     | `nil`       | Renders segmented instead of a single bar; excludes `format:`. Anything else raises `ArgumentError` |
 | `min:` / `max:` | Number                               | `0` / `100` | Range bounds                                                                                        |
 

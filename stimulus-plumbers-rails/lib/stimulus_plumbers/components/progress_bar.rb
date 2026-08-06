@@ -23,7 +23,7 @@ module StimulusPlumbers
         validate_segments!(segments, format)
         current = clamp(value, min, max)
         html_options = merge_html_options(
-          theme.resolve(:progress_segmented),
+          theme.resolve(:progress_segment_group),
           kwargs,
           segmented_stimulus_data(current, min, max, mode, indeterminate),
           { role: "progressbar", aria: progress_aria(value: current, min: min, max: max, indeterminate: indeterminate) }
@@ -50,28 +50,49 @@ module StimulusPlumbers
         )
       end
 
-      def render_bar(value:, min: 0, max: 100, indeterminate: false, format: nil, **kwargs)
+      def render_bar(value:, min: 0, max: 100, indeterminate: false, format: nil, readout: :inside, **kwargs)
         validate_format!(format)
+        validate_readout!(readout)
         current      = clamp(value, min, max)
         text         = value_text(format, current, min, max) unless indeterminate
-        html_options = bar_html_options(current, min, max, indeterminate, format, text, kwargs)
-        template.content_tag(:div, bar_body(format, text), **html_options)
+        html_options = bar_html_options(current, min, max, indeterminate, format, readout, text, kwargs)
+        template.content_tag(:div, bar_body(format, readout, text), **html_options)
       end
 
-      def bar_body(format, text)
-        format.nil? ? render_fill : template.safe_join([render_fill, render_value(text)])
+      def validate_readout!(readout)
+        return if Themes::Schema::Progress::Ranges::PLACEMENT.include?(readout&.to_sym)
+
+        raise ArgumentError, "readout must be one of #{Themes::Schema::Progress::Ranges::PLACEMENT.join(", ")}"
       end
 
-      def bar_html_options(current, min, max, indeterminate, format, text, kwargs)
+      # The track clips its overflow, so an outside readout needs the root to be a wrapper.
+      def bar_body(format, readout, text)
+        return render_fill if format.nil?
+        return template.safe_join([render_fill, render_value(text, :inside)]) if readout.to_sym == :inside
+
+        template.safe_join([render_track, render_value(text, :outside)])
+      end
+
+      def render_track
+        template.content_tag(:div, render_fill, **merge_html_options(theme.resolve(:progress_bar, labelled: false)))
+      end
+
+      def bar_html_options(current, min, max, indeterminate, format, readout, text, kwargs)
         # `percent` omits aria-valuetext — AT derives the percentage from aria-valuenow itself.
         valuetext = text unless format&.to_sym == :percent
         aria      = progress_aria(value: current, min: min, max: max, indeterminate: indeterminate, valuetext: valuetext)
         merge_html_options(
-          theme.resolve(:progress_bar, labelled: !format.nil?),
+          bar_root_theme(format, readout),
           kwargs,
           bar_stimulus_data(current, min, max, indeterminate, format),
           { role: "progressbar", aria: aria }
         )
+      end
+
+      def bar_root_theme(format, readout)
+        return theme.resolve(:progress_bar_group) if format && readout.to_sym == :outside
+
+        theme.resolve(:progress_bar, labelled: !format.nil?)
       end
 
       def bar_stimulus_data(current, min, max, indeterminate, format)
@@ -86,29 +107,30 @@ module StimulusPlumbers
       end
 
       # aria-hidden: the value reaches AT via aria-valuenow/aria-valuetext, not this span.
-      def render_value(text)
+      def render_value(text, placement)
+        key = placement == :outside ? :progress_bar_value_outside : :progress_bar_value
         template.content_tag(
           :span,
           text,
           **merge_html_options(
-            theme.resolve(:progress_bar_value),
+            theme.resolve(key),
             { data: { "progress-target": "value" }, aria: { hidden: true } }
           )
         )
       end
 
       # `data-intent` is a theme-independent styling hook the theme colors via attribute variants.
-      def render_fill(intent: nil)
+      def render_fill(intent: nil, key: :progress_bar_fill)
         data = { "progress-target": "fill" }
         data[:intent] = intent if intent
-        template.content_tag(:div, nil, **merge_html_options(theme.resolve(:progress_bar_fill), { data: data }))
+        template.content_tag(:div, nil, **merge_html_options(theme.resolve(key), { data: data }))
       end
 
       # Slots are aria-hidden — the container owns the progressbar ARIA.
       def render_segment(intent: nil)
         template.content_tag(
           :div,
-          render_fill(intent: intent),
+          render_fill(intent: intent, key: :progress_segment_fill),
           **merge_html_options(theme.resolve(:progress_segment), { aria: { hidden: true } })
         )
       end
