@@ -5,7 +5,8 @@ const PORT = process.env.PORT || 4001;
 export default defineConfig({
   testDir: "test/snapshots",
   snapshotDir: "test/snapshots/__screenshots__",
-  snapshotPathTemplate: "{snapshotDir}/{testFileName}/{arg}-{projectName}-{platform}{ext}",
+  // {testFilePath}, not {testFileName} — same-named specs in different dirs would collide.
+  snapshotPathTemplate: "{snapshotDir}/{testFilePath}/{arg}-{projectName}-{platform}{ext}",
 
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,

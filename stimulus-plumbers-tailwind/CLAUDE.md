@@ -56,7 +56,8 @@ stimulus-plumbers-tailwind/
 │   │       └── tailwind/                   # Per-module unit tests
 │   │           ├── icons/                  # Unit tests for icon sources + registry
 │   │           └── ...
-│   ├── snapshots/                          # Playwright visual snapshot specs
+│   ├── snapshots/                          # Playwright specs, nested by route category
+│   │   └── __screenshots__/                # Baselines, mirroring the spec tree
 │   ├── sandbox/                            # Minimal Rails app for snapshot tests
 │   │   ├── app/
 │   │   │   ├── assets/
@@ -120,6 +121,8 @@ Four rules for sandbox views and their matching snapshot specs:
 4. **Screenshot filenames** — `{usecase}-{state}.png`, where `{usecase}` matches the section ID suffix. Example: `stimulus-month.png`, `date-error-open.png`. Bare `{state}.png` (e.g. `default.png`) is acceptable when the spec file already scopes to a single component with no ambiguity.
 
 ## Snapshot Test Convention
+
+**File placement:** one spec per route, path mirroring the URL — `/components/display/avatar` → `snapshots/components/display/avatar.spec.js`. Never cover two routes from one spec. Sandbox views stay flat (`sandbox/app/views/components/avatar.html.erb`).
 
 **Selector scoping:** Always scope element queries to a named container `#id` — use `page.locator("#container-id").getByRole(...)` not `page.getByRole(...)`. Sandbox views must give each component instance a unique `id`. This prevents ambiguity when multiple instances of the same component appear on a page.
 

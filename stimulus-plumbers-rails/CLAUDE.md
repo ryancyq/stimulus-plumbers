@@ -169,7 +169,7 @@ stimulus-plumbers-rails/
 │   │   ├── plumber/                      # Plumber base class tests
 │   │   └── themes/                       # Theme schema + base tests
 │   ├── accessibility/                    # Accessibility tests (axe-core via Capybara)
-│   │   ├── components/
+│   │   ├── components/                   # Nested by route category
 │   │   └── form/
 │   ├── sandbox/                          # Minimal Rails app used by a11y tests
 │   ├── support/                          # Shared test helpers (HtmlAssertions, StubTheme)
@@ -221,6 +221,8 @@ assert_css doc, "button[aria-label='#{I18n.t("stimulus_plumbers.combobox.date.pr
 This applies to all test types: unit tests, helper tests, and accessibility tests.
 
 ## Accessibility Test Convention
+
+**File placement:** test path mirrors the URL it visits — `/components/display/avatar` → `accessibility/components/display/avatar_accessibility_test.rb`. Class names stay flat (`AvatarAccessibilityTest`). Sandbox views stay flat (`sandbox/app/views/components/avatar.html.erb`); only routes and tests carry the category.
 
 **Icon naming in sandbox views:** Always use generic icon names (e.g., `close`, `download`, `book`), never heroicon/tailwind-specific compound names (e.g., `x-mark`, `arrow-down-tray`, `book-open`). The core sandbox runs without any theme, so heroicon names will not resolve. Aliases are defined in `stimulus-plumbers-tailwind/lib/stimulus_plumbers/themes/tailwind/icon.rb` (`Icon::ALIASES`).
 

@@ -28,6 +28,7 @@ stimulus-plumbers-mcp/     # Ruby gem: stimulus_plumbers_mcp — MCP server expo
 ## Doc Update Rule
 - When changing component API (targets, values, options, HTML structure), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.
 - Keep docs concise — one-line bullets, minimal prose. If a sentence restates what the code makes obvious, cut it.
+- **`docs/*` never mentions tests** — no test file names, paths, or coverage notes. Docs describe the API for consumers; test info belongs in CLAUDE.md. State a requirement as a rule ("must be paired with an accessible name"), not as "enforced by X test".
 - **No cross-doc duplication.** Each fact lives in exactly one place; other docs link to it instead of repeating it.
   - JS controller API (targets, values, actions, events) → `stimulus-plumbers/docs/component/<name>.md` only. Rails and Tailwind docs link there.
   - Rails helper options → `stimulus-plumbers-rails/docs/component/<name>.md` only.

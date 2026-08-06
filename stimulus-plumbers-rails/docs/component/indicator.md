@@ -35,7 +35,7 @@ Presentational status marker — a colored dot, an animated "pulse" ring, or a n
 
 When `pulse: true`, the dot is wrapped in an extra `<span>` (`indicator_wrapper` theme key) that positions the ring behind the dot — no margin offsets involved.
 
-**Every indicator must be paired with an accessible name** — a visible label or `aria-label`/adjacent `sr-only` text. The component itself renders no text and cannot know the right label; this is enforced by an accessibility test (see `test/accessibility/components/indicator_accessibility_test.rb`), not by the component.
+**Every indicator must be paired with an accessible name** — a visible label or `aria-label`/adjacent `sr-only` text. The component renders no text and cannot infer the right label, so the caller must supply one.
 
 ## Legend pattern
 
