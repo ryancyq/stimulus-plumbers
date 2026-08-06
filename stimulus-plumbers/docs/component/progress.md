@@ -43,6 +43,8 @@ Value-driven progress indicator supporting five render variants: a linear bar, a
 
 The `range` variant writes no `aria-value*` at all — a native `<input type="range">` already exposes its own slider semantics — and sets `--sp-progress-percent` on the input so a theme can paint the filled portion of the track.
 
+The `bar` variant sets `--sp-progress-percent` too, on the controller element, alongside the fill target's width. A theme can use it to split the readout's color at the fill edge. It is unset until the controller connects, so read it as `var(--sp-progress-percent, 0)` to match the server-rendered (empty) fill.
+
 The rendered number is the value clamped to `[min, max]`, so an out-of-range `current` reads as the nearest bound rather than an impossible percentage. An empty or inverted range (`max <= min`) renders `0%`. While `indeterminate`, the readout is blank and `aria-valuetext` is removed.
 
 ## Methods

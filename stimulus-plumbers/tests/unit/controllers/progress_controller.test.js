@@ -44,6 +44,13 @@ describe('ProgressController', () => {
       expect(fill.style.width).toBe('30%')
     })
 
+    it('publishes the percent on the root so a theme can split the readout at the fill edge', () => {
+      const el = document.querySelector('[data-controller="progress"]')
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('30')
+      getController().setValue(80)
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('80')
+    })
+
     it('setValue(value) clamps to max and updates the fill', () => {
       getController().setValue(150)
       const el = document.querySelector('[data-controller="progress"]')

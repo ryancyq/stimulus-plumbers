@@ -104,3 +104,20 @@
     <%= sp_progress_bar(value: 100, format: :percent, aria: { label: "Upload progress" }) %>
   </div>
 </section>
+
+<section id="progress-bar-percent-crossing" class="sb-section">
+  <h2>Bar — percent readout with the fill crossing it</h2>
+  <div class="sb-row">
+    <%= sp_progress_bar(value: 50, format: :percent, aria: { label: "Upload progress" }) %>
+  </div>
+</section>
+
+<section id="progress-bar-readout-outside" class="sb-section">
+  <h2>Bar — readout beside the track</h2>
+  <div class="sb-col">
+    <%= sp_progress_bar(value: 4, format: :percent, readout: :outside, aria: { label: "Upload progress" }) %>
+    <%= sp_progress_bar(value: 45, format: :percent, readout: :outside, aria: { label: "Upload progress" }) %>
+    <%= sp_progress_bar(value: 100, format: :percent, readout: :outside, aria: { label: "Upload progress" }) %>
+    <%= sp_progress_bar(value: 45, max: 100, format: :value_max, readout: :outside, aria: { label: "Upload progress" }) %>
+  </div>
+</section>

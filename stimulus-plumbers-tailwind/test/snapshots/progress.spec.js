@@ -121,16 +121,41 @@ test.describe("progress", () => {
     );
   });
 
-  // The readout pill must stay legible where the fill edge is nowhere near it.
-  test("bar percent readout at a low value", async ({ page }) => {
+  // No pill, so the readout takes its color from what it sits on: these three cover it clear
+  // of the fill, fully over the fill, and split mid-glyph by the fill edge.
+  test("bar percent readout clear of the fill", async ({ page }) => {
     await expect(page.locator("#progress-bar-percent-low")).toHaveScreenshot(
       "percent-low.png",
     );
   });
 
-  test("bar percent readout at full", async ({ page }) => {
+  test("bar percent readout over the fill", async ({ page }) => {
     await expect(page.locator("#progress-bar-percent-full")).toHaveScreenshot(
       "percent-full.png",
     );
+  });
+
+  test("bar percent readout split by the fill edge", async ({ page }) => {
+    await expect(
+      page.locator("#progress-bar-percent-crossing"),
+    ).toHaveScreenshot("percent-crossing.png");
+  });
+
+  // The split is one Tailwind class; drop it from the build and the readout goes invisible
+  // rather than wrong, which a missing baseline would happily bake in as correct.
+  test("bar readout gradient survives the Tailwind build", async ({ page }) => {
+    const image = await page
+      .locator('#progress-bar-percent-crossing [data-progress-target="value"]')
+      .evaluate((el) => getComputedStyle(el).backgroundImage);
+
+    expect(image).toContain("linear-gradient");
+    expect(image).toContain("50%"); // boundary sits at the fill edge
+  });
+
+  // Beside the track the readout never meets the fill, so it holds contrast at every value.
+  test("bar readout beside the track", async ({ page }) => {
+    await expect(
+      page.locator("#progress-bar-readout-outside"),
+    ).toHaveScreenshot("readout-outside.png");
   });
 });
