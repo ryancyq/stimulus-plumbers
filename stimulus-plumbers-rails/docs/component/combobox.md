@@ -152,7 +152,7 @@ owns value/selection/filtering; `input-formatter` formats the displayed value.
 ```html
 <div
   data-controller="popover input-combobox input-formatter"
-  data-action="input-combobox:changed->input-formatter#format"
+  data-action="input-combobox:changed->input-formatter#onChange"
   data-input-combobox-value-value="[initial-value]"
 >
   <input
@@ -212,7 +212,7 @@ nested `<ul role="listbox">` for typeahead.
   aria-label="[label]"
   data-popover-target="panel"
   data-controller="combobox-dropdown"
-  data-action="click->combobox-dropdown#select keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect combobox-dropdown:selected->popover#closeOnSelect"
+  data-action="click->combobox-dropdown#onSelect keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect combobox-dropdown:selected->popover#closeOnSelect"
   data-combobox-dropdown-target="listbox"
 >
   <li role="option" data-value="us" aria-selected="false">United States</li>
@@ -231,7 +231,7 @@ non-focusable (the popover focuses the first focusable element in the panel on o
   hidden
   data-popover-target="panel"
   data-controller="combobox-dropdown"
-  data-action="click->combobox-dropdown#select keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect combobox-dropdown:selected->popover#closeOnSelect"
+  data-action="click->combobox-dropdown#onSelect keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect combobox-dropdown:selected->popover#closeOnSelect"
   data-combobox-dropdown-url-value="[url]"
 >
   <ul

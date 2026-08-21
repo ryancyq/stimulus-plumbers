@@ -5,7 +5,7 @@ module StimulusPlumbers
     class Combobox < Plumber::Base
       STIMULUS_CONTROLLER = "input-combobox"
       FORMAT_CONTROLLER   = "input-formatter"
-      FORMAT_ACTION       = "input-combobox:changed->input-formatter#format"
+      FORMAT_ACTION       = "input-combobox:changed->input-formatter#onChange"
 
       def render(trigger: {}, input: {}, id: nil, label: nil, close_on_select: nil, **kwargs, &block)
         trigger_opts = trigger.dup

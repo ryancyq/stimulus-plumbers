@@ -28,7 +28,7 @@ class ComboboxTest < ActionView::TestCase
   def test_wrapper_includes_format_action
     doc = parse_html(render_combobox)
 
-    assert_css doc, "[data-action~='input-combobox:changed->input-formatter#format']"
+    assert_css doc, "[data-action~='input-combobox:changed->input-formatter#onChange']"
   end
 
   def test_value_data_attribute_set_when_input_value_present
