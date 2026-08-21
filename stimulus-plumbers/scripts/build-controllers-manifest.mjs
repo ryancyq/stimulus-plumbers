@@ -15,17 +15,41 @@ function toIdentifier(filename) {
 const LIFECYCLE_METHODS = new Set(['initialize', 'connect', 'disconnect']);
 const LIFECYCLE_SUFFIX_RE = /(TargetConnected|TargetDisconnected|ValueChanged|ClassesChanged)$/;
 
-export function parseActions(source) {
-  const names = new Set();
-  const re = /^\s{2}(?:async\s+)?([a-zA-Z_$][\w$]*)\s*\(/gm;
+// Top-level commas only, so a destructured param (`{ a = 1 } = {}`) stays one entry.
+function splitParams(raw) {
+  const params = [];
+  let depth = 0;
+  let current = '';
+  for (const char of raw) {
+    if (char === ',' && depth === 0) {
+      params.push(current.trim());
+      current = '';
+      continue;
+    }
+    if ('{[('.includes(char)) depth++;
+    else if ('}])'.includes(char)) depth--;
+    current += char;
+  }
+  if (current.trim()) params.push(current.trim());
+  return params;
+}
+
+// First parameter name separates an adapter, `onSelect(event)`, from an API, `select(value)`.
+export function parseActionParams(source) {
+  const signatures = new Map();
+  const re = /^\s{2}(?:async\s+)?([a-zA-Z_$][\w$]*)\s*\(([^)]*)\)/gm;
   let match;
   while ((match = re.exec(source)) !== null) {
     const name = match[1];
     if (LIFECYCLE_METHODS.has(name)) continue;
     if (LIFECYCLE_SUFFIX_RE.test(name)) continue;
-    names.add(name);
+    if (!signatures.has(name)) signatures.set(name, splitParams(match[2]));
   }
-  return [...names].sort();
+  return Object.fromEntries([...signatures.keys()].sort().map((name) => [name, signatures.get(name)]));
+}
+
+export function parseActions(source) {
+  return Object.keys(parseActionParams(source));
 }
 
 export function parseDispatches(source) {
@@ -135,6 +159,7 @@ for (const file of files) {
     outlets: parseArray(source, 'outlets'),
     classes: parseArray(source, 'classes'),
     actions: parseActions(extendedSource),
+    actionParams: parseActionParams(extendedSource),
     dispatches: parseDispatches(extendedSource),
   };
 }

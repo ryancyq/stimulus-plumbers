@@ -62,3 +62,5 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 ## Controller / Plumber Design Principles
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
+
+- **`onX(event)` adapts, `x(value)` computes** — only `onX` is safe in a `data-action`. Name the first parameter `event`; the Rails contract test rejects wiring to a method taking a value.

@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseActions, parseDispatches, withPlumberSources, parseValues } from '../../scripts/build-controllers-manifest.mjs'
+import {
+  parseActions,
+  parseActionParams,
+  parseDispatches,
+  withPlumberSources,
+  parseValues,
+} from '../../scripts/build-controllers-manifest.mjs'
 
 const CONTROLLERS_DIR = join(dirname(fileURLToPath(import.meta.url)), '../../src/controllers')
 
@@ -43,6 +49,46 @@ describe('parseActions', () => {
 
   it('excludes private (#-prefixed) methods', () => {
     expect(parseActions(POPOVER_SOURCE)).not.toContain('privateHelper')
+  })
+})
+
+describe('parseActionParams', () => {
+  const SOURCE = `
+export default class extends Controller {
+  connect() {}
+
+  onSelect(event) {}
+
+  select(value) {}
+
+  async close() {}
+
+  step(drum, delta) {}
+
+  createDayElement(day, { selectable = false, disabled = false } = {}) {}
+}
+`
+
+  it('distinguishes event adapters from programmatic APIs by first parameter', () => {
+    const params = parseActionParams(SOURCE)
+    expect(params.onSelect).toEqual(['event'])
+    expect(params.select).toEqual(['value'])
+  })
+
+  it('records an empty list for methods that take no arguments', () => {
+    expect(parseActionParams(SOURCE).close).toEqual([])
+  })
+
+  it('splits on top-level commas only, keeping destructured params intact', () => {
+    expect(parseActionParams(SOURCE).step).toEqual(['drum', 'delta'])
+    expect(parseActionParams(SOURCE).createDayElement).toEqual([
+      'day',
+      '{ selectable = false, disabled = false } = {}',
+    ])
+  })
+
+  it('covers exactly the methods listed as actions', () => {
+    expect(Object.keys(parseActionParams(POPOVER_SOURCE))).toEqual(parseActions(POPOVER_SOURCE))
   })
 })
 
