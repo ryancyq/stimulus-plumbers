@@ -263,6 +263,7 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 
 - **`STIMULUS_CONTROLLER` constant:** declare one when the controller identifier is referenced more than once, or is composed by another component's wiring (e.g. `combobox` reuses `popover`). A single-use inline literal (`controller: "password-strength"`) is fine — don't manufacture a constant for one call site.
 - **Stimulus values:** pass individual typed values for a small fixed set chosen by state (e.g. reveal's `reveal_label_value` / `conceal_label_value`). Use one `Object`/JSON value only when the consumer looks it up by dynamic key (e.g. strength's `labels_value`, read as `labelsValue[level]`). Don't wrap a two-label pair in JSON.
+- **`data-action` targets adapters only:** wire `onX(event)`, never a programmatic API like `select(value)` — Stimulus passes the Event as arg 1. `stimulus_contract_test.rb` diffs every wired action against the JS manifest.
 
 ## Doc Update Rule
 - When changing component API (targets, values, options, HTML structure, form builder keywords), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.

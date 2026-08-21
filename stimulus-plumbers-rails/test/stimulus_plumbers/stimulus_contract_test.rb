@@ -18,6 +18,10 @@ class StimulusContractTest < Minitest::Test
 
     @component  = JSON.parse(File.read(COMPONENT_MANIFEST_PATH))
     @controller = JSON.parse(File.read(CONTROLLER_MANIFEST_PATH))
+
+    return if @controller.each_value.all? { |data| data.key?("actionParams") }
+
+    raise "controller manifest predates actionParams — re-run `npm run build` in stimulus-plumbers/"
   end
 
   def test_every_referenced_identifier_exists_in_js
@@ -32,6 +36,22 @@ class StimulusContractTest < Minitest::Test
         assert_includes @controller[id]["actions"],
                         method,
                         "Ruby wires `#{id}##{method}` but the JS controller has no such method"
+      end
+    end
+  end
+
+  # Stimulus passes the Event as arg 1, so a data-action may only name an onX(event)
+  # adapter or a method that ignores its arguments — never `select(value)`.
+  def test_every_ruby_action_is_an_event_adapter
+    @component.each do |id, wiring|
+      wiring["actions"].each do |method|
+        params = @controller[id]["actionParams"][method]
+        next if params.nil? || params.empty?
+
+        assert_equal "event",
+                     params.first,
+                     "Ruby wires `#{id}##{method}` but it takes `#{params.first}`, not an event — " \
+                     "wire an onX(event) adapter instead of calling the programmatic API directly"
       end
     end
   end

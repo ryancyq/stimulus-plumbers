@@ -109,11 +109,9 @@ module StimulusPlumbers
         target = resolve(token[:target], const_table, nesting)
         return if target.nil? || !manifest.key?(target)
 
-        if token[:src]
-          extract_listen_token(token, nesting, const_table, manifest)
-        else
-          manifest[target]["actions"] << token[:method]
-        end
+        # `src:event->target#method` is a listen on src *and* an action on target.
+        extract_listen_token(token, nesting, const_table, manifest) if token[:src]
+        manifest[target]["actions"] << token[:method]
       end
 
       def extract_listen_token(token, nesting, const_table, manifest)

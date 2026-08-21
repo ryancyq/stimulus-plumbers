@@ -37,6 +37,11 @@ class ComponentManifestTest < Minitest::Test
     assert_includes @result["calendar-month"]["listens"], "selected"
   end
 
+  # "calendar-month:selected->combobox-date#onDaySelect" — both halves must be recorded.
+  def test_extracts_actions_wired_from_a_custom_event
+    assert_includes @result["combobox-date"]["actions"], "onDaySelect"
+  end
+
   def test_extracts_targets
     assert_includes @result["reorderable"]["targets"], "item"
     assert_includes @result["reorderable"]["targets"], "handle"
