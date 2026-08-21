@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.17](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.16..stimulus-plumbers-rails/v0.4.17) - 2026-08-21
+
+### Bug Fixes
+
+- combobox action wiring targets event adapters ([#207](https://github.com/ryancyq/stimulus-plumbers/issues/207)) - ([bc515a9](https://github.com/ryancyq/stimulus-plumbers/commit/bc515a979a84fb5fb6a4642b40243ce02c49fcd2)) - Ryan Chang
+
+### Tests
+
+- close gaps in the JS/Rails stimulus contract ([#208](https://github.com/ryancyq/stimulus-plumbers/issues/208)) - ([8d2f1c4](https://github.com/ryancyq/stimulus-plumbers/commit/8d2f1c4bb84a5aad1d20396499bbf17ca618e338)) - Ryan Chang
+
+---
 ## [0.4.16](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers-rails/v0.4.15..stimulus-plumbers-rails/v0.4.16) - 2026-08-06
 
 ### Bug Fixes
