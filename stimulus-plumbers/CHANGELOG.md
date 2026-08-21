@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 ---
+## [0.4.17](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.16..stimulus-plumbers/v0.4.17) - 2026-08-21
+
+### Dependencies
+
+- **(deps-dev)** bump axe-core in /stimulus-plumbers ([#205](https://github.com/ryancyq/stimulus-plumbers/issues/205)) - ([8880786](https://github.com/ryancyq/stimulus-plumbers/commit/8880786aa9ef424ba2d3e7a60d7255e4719be01c)) - dependabot[bot]
+- **(deps-dev)** bump globals in /stimulus-plumbers ([#206](https://github.com/ryancyq/stimulus-plumbers/issues/206)) - ([13105a1](https://github.com/ryancyq/stimulus-plumbers/commit/13105a1e2146df4ffdb52854bb571f33d22508db)) - dependabot[bot]
+
+### Tests
+
+- close gaps in the JS/Rails stimulus contract ([#208](https://github.com/ryancyq/stimulus-plumbers/issues/208)) - ([8d2f1c4](https://github.com/ryancyq/stimulus-plumbers/commit/8d2f1c4bb84a5aad1d20396499bbf17ca618e338)) - Ryan Chang
+
+---
 ## [0.4.16](https://github.com/ryancyq/stimulus-plumbers/compare/stimulus-plumbers/v0.4.15..stimulus-plumbers/v0.4.16) - 2026-08-06
 
 ### Bug Fixes
