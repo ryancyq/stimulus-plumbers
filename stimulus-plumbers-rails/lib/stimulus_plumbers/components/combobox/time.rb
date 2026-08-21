@@ -114,7 +114,7 @@ module StimulusPlumbers
               aria:     { label: label },
               data:     { "#{STIMULUS_CONTROLLER}_target": target }
             },
-            { data: { action: "click->#{STIMULUS_CONTROLLER}#select keydown->#{STIMULUS_CONTROLLER}#onNavigate" } }
+            { data: { action: "click->#{STIMULUS_CONTROLLER}#onSelect keydown->#{STIMULUS_CONTROLLER}#onNavigate" } }
           )
           template.content_tag(:ul, **attrs) do
             template.safe_join(

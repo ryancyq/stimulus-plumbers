@@ -52,7 +52,7 @@ class ComboboxTimeTest < ActionView::TestCase
   end
 
   def test_drums_have_click_action
-    assert_includes render_time, "click-&gt;combobox-time#select"
+    assert_includes render_time, "click-&gt;combobox-time#onSelect"
   end
 
   def test_drums_have_keydown_navigate_action

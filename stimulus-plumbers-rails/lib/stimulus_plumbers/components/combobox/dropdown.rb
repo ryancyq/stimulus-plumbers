@@ -6,7 +6,7 @@ module StimulusPlumbers
       class Dropdown < Plumber::Base
         STIMULUS_CONTROLLER = "combobox-dropdown"
         STIMULUS_ACTION     = [
-          "click->#{STIMULUS_CONTROLLER}#select",
+          "click->#{STIMULUS_CONTROLLER}#onSelect",
           "keydown->#{STIMULUS_CONTROLLER}#onNavigate",
           "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
           "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"

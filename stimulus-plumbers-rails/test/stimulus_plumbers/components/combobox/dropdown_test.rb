@@ -34,6 +34,12 @@ class ComboboxDropdownTest < ActionView::TestCase
     assert_css doc, "ul#p1[role='listbox'][data-combobox-dropdown-target='listbox']"
   end
 
+  def test_listbox_has_select_click_action
+    doc = parse_html(render_dropdown)
+
+    assert_css doc, "ul[role='listbox'][data-action~='click->combobox-dropdown#onSelect']"
+  end
+
   def test_variant_metadata
     meta = StimulusPlumbers::Components::Combobox::Dropdown::Metadata
 
