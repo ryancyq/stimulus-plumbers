@@ -85,9 +85,8 @@ module StimulusPlumbers
           # ::-moz-range-progress and uses that instead.
           # Must stay on one line: Tailwind scans source text, so a class split across a string
           # continuation never appears contiguously and is silently dropped from the build.
-          # rubocop:disable Layout/LineLength
+          # rubocop:disable-next Layout/LineLength
           RANGE_FILL = "[&::-webkit-slider-runnable-track]:bg-[linear-gradient(to_right,var(--sp-color-primary)_0_calc(var(--sp-progress-percent,0)*1%),transparent_0)]"
-          # rubocop:enable Layout/LineLength
 
           RANGE = [
             "w-full appearance-none bg-transparent cursor-pointer",

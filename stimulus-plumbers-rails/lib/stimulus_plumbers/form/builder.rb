@@ -153,7 +153,7 @@ module StimulusPlumbers
         )
       end
 
-      # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+      # rubocop:disable-next Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       if ActionView.version < Gem::Version.new("7.0")
         # field_id was added in Rails 7.0, backports it to Rails 6.1.
         # https://github.com/rails/rails/blob/2d670320f7b02ae879545d5202f0633841b8f196/actionview/lib/action_view/helpers/form_helper.rb#L1777
@@ -190,7 +190,6 @@ module StimulusPlumbers
           end
         end
       end
-      # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     end
   end
 end

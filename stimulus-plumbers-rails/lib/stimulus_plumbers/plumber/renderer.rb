@@ -57,7 +57,7 @@ module StimulusPlumbers
 
         private
 
-        # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # rubocop:disable-next Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         def validate!(method_name, with, slots, by, has_block)
           raise ArgumentError, "method_name must be a Symbol" unless method_name.is_a?(Symbol)
           raise ArgumentError, "provide either with: or a block, not both" if with && has_block
@@ -70,7 +70,6 @@ module StimulusPlumbers
           with_klazz = with.is_a?(Module) || with.is_a?(String)
           raise ArgumentError, "with: must be a Symbol/Proc/Class" unless with_proc_or_symbol || with_klazz || has_block
         end
-        # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
         def generated_renderer_methods
           @generated_renderer_methods ||= Module.new.tap { |mod| prepend mod }

@@ -22,9 +22,8 @@ module StimulusPlumbers
         # edge is --sp-progress-percent (set by the progress controller), 0 until it connects.
         # Must stay on one line: Tailwind scans source text, so a class split across a string
         # continuation or interpolation never appears contiguously and is silently dropped.
-        # rubocop:disable Layout/LineLength
+        # rubocop:disable-next Layout/LineLength
         BAR_VALUE_SPLIT = "bg-[linear-gradient(to_right,var(--sp-color-primary-fg)_0_calc(var(--sp-progress-percent,0)*1%),var(--sp-color-fg)_0)]"
-        # rubocop:enable Layout/LineLength
 
         # Spans the track so the gradient's coordinates are the track's.
         BAR_VALUE = [
