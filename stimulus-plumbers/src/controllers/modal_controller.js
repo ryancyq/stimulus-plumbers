@@ -1,103 +1,72 @@
 import { Controller } from '@hotwired/stimulus';
-import { FocusTrap } from '../accessibility/focus';
-import { announce, setHidden } from '../accessibility/aria';
-import { attachDismisser } from '../plumbers';
+import { attachDialog } from '../plumbers/dialog';
 
 export default class extends Controller {
-  static targets = ['modal', 'overlay'];
+  static targets = ['dialog'];
 
-  initialize() {
-    this.onCancel = this.close.bind(this);
-  }
+  #dialog;
+  #dialogElement;
+  #onBeforeCache;
 
   connect() {
-    if (!this.hasModalTarget) {
-      console.error('ModalController requires a modal target. Add data-modal-target="modal" to your element.');
+    this.#onBeforeCache = this.#closeForCache.bind(this);
+    document.addEventListener('turbo:before-cache', this.#onBeforeCache);
+
+    if (!this.hasDialogTarget) {
+      console.error('ModalController requires a dialog target. Add data-modal-target="dialog" to your element.');
     }
   }
 
-  modalTargetConnected(modal) {
-    this.isNativeDialog = modal instanceof HTMLDialogElement;
-    if (this.isNativeDialog) {
-      modal.addEventListener('cancel', this.onCancel);
-      modal.addEventListener('click', this.onBackdropClick);
-    } else {
-      this.focusTrap = new FocusTrap(modal, {
-        escapeDeactivates: true,
-        onDeactivate: () => this.close(),
-      });
-      attachDismisser(this, { element: modal });
-    }
+  disconnect() {
+    document.removeEventListener('turbo:before-cache', this.#onBeforeCache);
+    this.#dialog?.disconnect();
+    this.#dialog = null;
+    this.#dialogElement = null;
   }
 
-  modalTargetDisconnected(modal) {
-    if (this.isNativeDialog) {
-      modal.removeEventListener('cancel', this.onCancel);
-      modal.removeEventListener('click', this.onBackdropClick);
+  dialogTargetConnected(dialog) {
+    if (!(typeof HTMLDialogElement !== 'undefined' && dialog instanceof HTMLDialogElement)) {
+      console.error('ModalController requires data-modal-target="dialog" to be a native <dialog> element.');
+      return;
     }
+
+    this.#dialog?.disconnect();
+    this.#dialog = attachDialog(this, { element: dialog });
+    this.#dialogElement = dialog;
   }
 
-  dismissed = () => {
-    this.close();
-  };
+  dialogTargetDisconnected(dialog) {
+    if (!this.#dialog || this.#dialogElement !== dialog) return;
+    this.#dialog.disconnect();
+    this.#dialog = null;
+    this.#dialogElement = null;
+  }
 
   open(event) {
-    if (event) event.preventDefault();
-    if (!this.hasModalTarget) return;
-
-    if (this.isNativeDialog) {
-      this.previouslyFocused = document.activeElement;
-      this.modalTarget.showModal();
-    } else {
-      const targetToShow = this.hasOverlayTarget ? this.overlayTarget : this.modalTarget;
-      setHidden(targetToShow, false);
-
-      document.body.style.overflow = 'hidden';
-
-      if (this.focusTrap) {
-        this.focusTrap.activate();
-      }
-    }
-
-    announce('Modal opened');
+    event?.preventDefault?.();
+    this.#dialog?.show(event?.currentTarget);
   }
 
-  close(event) {
-    if (event) event.preventDefault();
-    if (!this.hasModalTarget) return;
-
-    if (this.isNativeDialog) {
-      this.modalTarget.close();
-
-      if (this.previouslyFocused && this.previouslyFocused.isConnected) {
-        setTimeout(() => {
-          this.previouslyFocused.focus();
-        }, 0);
-      }
-    } else {
-      const targetToHide = this.hasOverlayTarget ? this.overlayTarget : this.modalTarget;
-      setHidden(targetToHide, true);
-
-      document.body.style.overflow = '';
-
-      if (this.focusTrap) {
-        this.focusTrap.deactivate();
-      }
-    }
-
-    announce('Modal closed');
+  dismiss(eventOrResult) {
+    const result = this.#resultFrom(eventOrResult);
+    this.#dialog?.dismiss(result);
   }
 
-  onBackdropClick = (event) => {
-    const rect = this.modalTarget.getBoundingClientRect();
-    const isOutsideDialog =
-      event.clientY < rect.top ||
-      event.clientY > rect.bottom ||
-      event.clientX < rect.left ||
-      event.clientX > rect.right;
+  close(eventOrResult) {
+    const result = this.#resultFrom(eventOrResult);
+    this.#dialog?.close(result);
+  }
 
-    if (isOutsideDialog) {
-      this.close();
+  #closeForCache() {
+    if (this.#dialog?.open) this.#dialog.close();
+  }
+
+  #resultFrom(eventOrResult) {
+    if (eventOrResult && typeof eventOrResult.preventDefault === 'function') {
+      eventOrResult.preventDefault();
+      return eventOrResult.params?.result;
     }
-  };
+
+    return eventOrResult;
+  }
 }

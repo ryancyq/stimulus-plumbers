@@ -62,3 +62,62 @@
 svg[role="progressbar"] .track {
   stroke: var(--sp-color-muted);
 }
+
+html:has(dialog.sp-modal) {
+  scrollbar-gutter: stable;
+}
+
+html:has(dialog.sp-modal[open]) {
+  overflow: hidden;
+}
+
+dialog.sp-modal {
+  overscroll-behavior: contain;
+  transition:
+    display var(--sp-modal-transition-duration) ease,
+    overlay var(--sp-modal-transition-duration) ease,
+    opacity var(--sp-modal-transition-duration) ease,
+    transform var(--sp-modal-transition-duration) ease;
+  transition-behavior: allow-discrete;
+}
+
+dialog.sp-modal:not([open]) {
+  opacity: 0;
+  transform: translateY(var(--sp-modal-enter-offset));
+}
+
+dialog.sp-modal[open] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+dialog.sp-modal::backdrop {
+  opacity: 0;
+  transition:
+    display var(--sp-modal-transition-duration) ease,
+    overlay var(--sp-modal-transition-duration) ease,
+    opacity var(--sp-modal-transition-duration) ease;
+  transition-behavior: allow-discrete;
+}
+
+dialog.sp-modal[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  dialog.sp-modal[open] {
+    opacity: 0;
+    transform: translateY(var(--sp-modal-enter-offset));
+  }
+
+  dialog.sp-modal[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.sp-modal,
+  dialog.sp-modal::backdrop {
+    transition: none;
+  }
+}

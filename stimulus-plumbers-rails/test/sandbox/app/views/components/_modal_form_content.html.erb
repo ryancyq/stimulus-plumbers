@@ -1,0 +1,38 @@
+<% if @modal_form_frame %>
+  <header>
+    <h2 id="modal-title">Edit profile</h2>
+  </header>
+  <div>
+    <% 64.times do |index| %>
+      <p>Profile detail <%= index + 1 %>.</p>
+    <% end %>
+<% end %>
+
+<% if @modal_form_saved %>
+  <p id="modal-form-saved">Profile saved.</p>
+<% else %>
+  <%= form_with url: "/components/modal/form/submit", method: :post, id: "modal-form-fields" do |form| %>
+    <%= form.label :name, "Name", for: "modal-form-name" %>
+    <%= form.text_field :name,
+                        id: "modal-form-name",
+                        value: params[:name],
+                        autofocus: @modal_form_error.present?,
+                        aria: (@modal_form_error.present? ? { invalid: "true", describedby: "modal-form-error" } : {}) %>
+    <% if @modal_form_error %>
+      <p id="modal-form-error" role="alert"><%= @modal_form_error %></p>
+    <% end %>
+    <% unless @modal_form_frame %>
+      <%= form.submit "Save" %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if @modal_form_frame %>
+  </div>
+  <% unless @modal_form_saved %>
+    <footer>
+      <%= link_to "Cancel", "/components/modal", data: { turbo_frame: "_top" } %>
+      <%= submit_tag "Save", form: "modal-form-fields" %>
+    </footer>
+  <% end %>
+<% end %>

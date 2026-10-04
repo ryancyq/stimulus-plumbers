@@ -10,6 +10,7 @@ export {
 } from './calendar-selector';
 export { attachCharacterCells } from './character_cells';
 export { attachContentLoader } from './content_loader';
+export { Dialog, attachDialog } from './dialog';
 export { attachDismisser } from './dismisser';
 export { attachFlipper } from './flipper';
 export { attachFormatter } from './formatter';

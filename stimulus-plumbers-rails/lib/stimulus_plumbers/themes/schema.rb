@@ -13,6 +13,7 @@ require_relative "schema/form/floating/ranges"
 require_relative "schema/form/radio/ranges"
 require_relative "schema/progress/ranges"
 require_relative "schema/icon"
+require_relative "schema/modal/ranges"
 
 module StimulusPlumbers
   module Themes
@@ -249,6 +250,17 @@ module StimulusPlumbers
           variant: { default: :default, validate: Link::Ranges::VARIANT }
         }.freeze,
         link_icon: {}.freeze
+      }.freeze
+
+      MODAL = {
+        modal_wrapper:  {}.freeze,
+        modal:          { size: { default: :md, validate: Modal::Ranges::SIZE } }.freeze,
+        modal_backdrop: {}.freeze,
+        modal_header:   {}.freeze,
+        modal_title:    {}.freeze,
+        modal_body:     {}.freeze,
+        modal_footer:   {}.freeze,
+        modal_turbo:    {}.freeze
       }.freeze
 
       LAYOUT = {

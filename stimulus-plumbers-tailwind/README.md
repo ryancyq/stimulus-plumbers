@@ -61,6 +61,7 @@ bin/rails stimulus_plumbers:tailwind:install
 | `Tailwind::Calendar` | Calendar grid, date picker |
 | `Tailwind::Card` | Card |
 | `Tailwind::Combobox` | Combobox (date, time, dropdown, typeahead) |
+| `Tailwind::Modal` | Native dialog modal and Turbo modal |
 | `Tailwind::Form` | Form fields, labels, errors |
 | `Tailwind::Icon` | Icon (SVG rendering, icon registry) |
 | `Tailwind::Indicator` | Indicator (dot, pulse, badge) |

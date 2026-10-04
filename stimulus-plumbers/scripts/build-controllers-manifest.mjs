@@ -54,7 +54,7 @@ export function parseActions(source) {
 
 export function parseDispatches(source) {
   const names = new Set();
-  const re = /\.dispatch\(\s*['"]([^'"]+)['"]/g;
+  const re = /\.#?dispatch\(\s*['"]([^'"]+)['"]/g;
   let match;
   while ((match = re.exec(source)) !== null) names.add(match[1]);
   return [...names].sort();
@@ -158,8 +158,8 @@ for (const file of files) {
     values: parseValues(source),
     outlets: parseArray(source, 'outlets'),
     classes: parseArray(source, 'classes'),
-    actions: parseActions(extendedSource),
-    actionParams: parseActionParams(extendedSource),
+    actions: parseActions(source),
+    actionParams: parseActionParams(source),
     dispatches: parseDispatches(extendedSource),
   };
 }

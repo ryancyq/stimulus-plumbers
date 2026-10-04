@@ -10,7 +10,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
     combobox-date combobox-time combobox-dropdown
     input-clearable input-combobox input-formatter input-revealable
     checklist clipboard reorderable progress timeline dismisser flipper
-    modal panner password-strength popover visibility
+    modal modal-turbo panner password-strength popover visibility
   ].freeze
 
   def setup
@@ -28,10 +28,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
   end
 
   def test_modal_targets
-    modal = @controllers["modal"]
-
-    assert_includes modal["targets"], "modal"
-    assert_includes modal["targets"], "overlay"
+    assert_equal ["dialog"], @controllers["modal"]["targets"]
   end
 
   def test_modal_has_no_values

@@ -1,0 +1,47 @@
+<h1>Modal components</h1>
+
+<div id="modal">
+  <h2>Confirmation</h2>
+  <%= sp_modal id: "modal-confirmation", title: "Delete project?", closed_by: :closerequest do |modal| %>
+    <% modal.trigger { "Delete project" } %>
+    <% modal.body do %>
+      <p>This action cannot be undone.</p>
+    <% end %>
+    <% modal.footer do %>
+      <%= modal.dismiss_button "Cancel", autofocus: true %>
+      <%= modal.close_button "Delete", result: "delete", variant: :destructive %>
+    <% end %>
+  <% end %>
+
+  <section id="modal-aria-label">
+    <h2>Titleless body and footer</h2>
+    <div>
+      <%= sp_modal id: "modal-aria-label-dialog", aria_label: "Project details" do |modal| %>
+        <% modal.trigger { "Open project details" } %>
+        <% modal.body do %>
+          <% 64.times do |index| %>
+            <p>Project detail <%= index + 1 %>.</p>
+          <% end %>
+        <% end %>
+        <% modal.footer do %>
+          <%= modal.close_button "Done", result: "done" %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <section id="modal-body-only">
+    <h2>Body-only modal</h2>
+    <div>
+      <%= sp_modal id: "modal-body-only-dialog", aria_label: "Project details" do |modal| %>
+        <% modal.trigger { "Open body-only modal" } %>
+        <% modal.body do %>
+          <% 64.times do |index| %>
+            <p>Body detail <%= index + 1 %>.</p>
+          <% end %>
+          <%= modal.close_button "Close" %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+</div>

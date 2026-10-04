@@ -27,10 +27,14 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 ## Component-Specific Patterns (APG)
 
 #### Modal (`modal_controller`)
-- `role="dialog"`, `aria-modal="true"`, `aria-labelledby` pointing to heading
-- Focus moves into dialog on open; returns to trigger on close
-- Focus trapped inside — Tab/Shift+Tab cycle within; Escape closes
-- Status announcements ("Modal opened"/"Modal closed") via `aria-live` on open/close (WCAG 4.1.3)
+- Use a native `<dialog>` opened with `showModal()`; it supplies modal semantics and background inertness
+- Every dialog has an accessible name through `aria-labelledby` or `aria-label`; do not add redundant `aria-modal="true"`
+- Initial focus is native; use `autofocus` when intentional placement is required. Focus restoration is native-first, with a narrow adapter fallback only when an engine leaves focus on the document or closed dialog
+- Escape and backdrop are dismissal requests governed by `closedby`; explicit completion uses `close()` or `method="dialog"`
+- Every modal contains a visible close, cancel, or completion control; this is especially important when `closedby="none"` disables implicit dismissal
+- Dismissal and explicit completion have different semantics; `modal:before-dismiss` is cancellable and `modal:closed` reports the result
+- Do not add generic open/close live announcements; status and validation messages belong in a live region inside the dialog
+- Ordinary modal triggers do not use `aria-expanded`
 
 #### Popover (`popover_controller`)
 - `role="dialog"` or `role="tooltip"` depending on interactivity

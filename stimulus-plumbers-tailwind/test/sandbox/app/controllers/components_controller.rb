@@ -57,6 +57,28 @@ class ComponentsController < ApplicationController
   def popover
   end
 
+  def modal
+  end
+
+  def modal_turbo
+  end
+
+  def modal_form
+    @modal_form_frame = request.headers["Turbo-Frame"] == "modal"
+    @modal_form_saved = params[:saved] == "true"
+    render :modal_form, layout: false if @modal_form_frame
+  end
+
+  def modal_form_submit
+    @modal_form_frame = request.headers["Turbo-Frame"] == "modal"
+    if params[:name].blank?
+      @modal_form_error = "Name is required"
+      render :modal_form, layout: !@modal_form_frame, status: :unprocessable_entity
+    else
+      redirect_to "/components/modal/form?saved=true", status: :see_other
+    end
+  end
+
   def progress
   end
 

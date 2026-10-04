@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
@@ -10,6 +11,7 @@ import {
 } from '../../scripts/build-controllers-manifest.mjs'
 
 const CONTROLLERS_DIR = join(dirname(fileURLToPath(import.meta.url)), '../../src/controllers')
+const MANIFEST_PATH = join(CONTROLLERS_DIR, '../../dist/controllers.manifest.json')
 
 const POPOVER_SOURCE = `
 export default class extends Controller {
@@ -49,6 +51,29 @@ describe('parseActions', () => {
 
   it('excludes private (#-prefixed) methods', () => {
     expect(parseActions(POPOVER_SOURCE)).not.toContain('privateHelper')
+  })
+
+  it('keeps the documented modal action surfaces exact', () => {
+    const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'))
+
+    expect(manifest.modal.actions).toEqual(['close', 'dismiss', 'open'])
+    expect(manifest['modal-turbo'].actions).toEqual([
+      'onBeforeFetchRequest',
+      'onClosed',
+      'onFrameRender',
+      'onSubmitEnd',
+    ])
+    expect(manifest.modal.actionParams).toEqual({
+      close: ['eventOrResult'],
+      dismiss: ['eventOrResult'],
+      open: ['event'],
+    })
+    expect(manifest['modal-turbo'].actionParams).toEqual({
+      onBeforeFetchRequest: ['event'],
+      onClosed: ['event'],
+      onFrameRender: ['event'],
+      onSubmitEnd: ['event'],
+    })
   })
 })
 
@@ -97,6 +122,10 @@ describe('parseDispatches', () => {
     expect(parseDispatches(POPOVER_SOURCE)).toEqual(['hidden', 'shown'])
   })
 
+  it('collects event names dispatched through a private helper', () => {
+    expect(parseDispatches("this.#dispatch('opened')")).toEqual(['opened'])
+  })
+
   it('returns an empty array when nothing is dispatched', () => {
     expect(parseDispatches('export default class extends Controller {}')).toEqual([])
   })
@@ -142,6 +171,15 @@ describe('withPlumberSources', () => {
     const source = `import { attachCalendarYearSelector } from '../plumbers/calendar-selector';`
     const combined = withPlumberSources(source, CONTROLLERS_DIR)
     expect(parseDispatches(combined)).toContain('selected')
+  })
+
+  it('retains dispatches from an imported plumber without treating them as controller methods', () => {
+    const source = readFileSync(join(CONTROLLERS_DIR, 'modal_controller.js'), 'utf8')
+    const combined = withPlumberSources(source, CONTROLLERS_DIR)
+
+    expect(parseActions(source)).toEqual(['close', 'dismiss', 'open'])
+    expect(parseDispatches(source)).toEqual([])
+    expect(parseDispatches(combined)).toEqual(['before-dismiss', 'before-open', 'closed', 'opened'])
   })
 
   it('returns just the source when there are no plumber imports', () => {

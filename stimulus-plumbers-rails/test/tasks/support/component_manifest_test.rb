@@ -11,8 +11,8 @@ class ComponentManifestTest < Minitest::Test
   # MONTH_STIMULUS_CONTROLLER); combobox-date must also be known for the
   # "calendar-month:selected->combobox-date#onDaySelect" binding to register
   # (the listen source only registers once its target resolves); modal is
-  # never referenced by any Ruby helper.
-  KNOWN_IDS = %w[popover reorderable calendar-month combobox-date modal].freeze
+  # wired by the modal helper's generated action.
+  KNOWN_IDS = %w[popover reorderable calendar-month combobox-date modal modal-turbo].freeze
 
   def setup
     @result = StimulusPlumbers::ComponentManifest.call(known_identifiers: KNOWN_IDS)
@@ -56,7 +56,21 @@ class ComponentManifestTest < Minitest::Test
     assert_includes @result["calendar-month"]["targets"], "daysOfWeek"
   end
 
-  def test_returns_entry_for_every_known_identifier_even_if_unused
-    assert_equal({ "actions" => [], "listens" => [], "targets" => [], "values" => [] }, @result["modal"])
+  def test_extracts_modal_open_action
+    assert_equal ["open"], @result["modal"]["actions"]
+    assert_equal ["closed"], @result["modal"]["listens"]
+    assert_equal ["dialog"], @result["modal"]["targets"]
+    assert_equal [], @result["modal"]["values"]
+  end
+
+  def test_extracts_modal_turbo_wiring
+    expected = {
+      "actions" => %w[onBeforeFetchRequest onClosed onFrameRender onSubmitEnd],
+      "listens" => [],
+      "targets" => ["frame"],
+      "values"  => ["closeOnSuccess"]
+    }
+
+    assert_equal expected, @result["modal-turbo"]
   end
 end
