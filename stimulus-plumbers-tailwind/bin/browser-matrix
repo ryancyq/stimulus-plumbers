@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+// Prints the CI matrix: one job per browser engine, running every project on that engine.
+import base from "../playwright.base.js";
+
+const byBrowser = Object.groupBy(
+  base.projects,
+  (p) => p.use.browserName ?? p.use.defaultBrowserType ?? "chromium",
+);
+const include = Object.entries(byBrowser).map(([browser, projects]) => ({
+  browser,
+  projects: projects.map((p) => `--project=${p.name}`).join(" "),
+}));
+
+console.log(JSON.stringify({ include }));

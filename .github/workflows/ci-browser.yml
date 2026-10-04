@@ -1,4 +1,4 @@
-name: CI (snapshots)
+name: CI (browser)
 
 on:
   push:
@@ -7,12 +7,6 @@ on:
     branches: [main]
   schedule:
     - cron: '0 12 * * 5'
-  workflow_dispatch:
-    inputs:
-      update_snapshots:
-        description: Regenerate and update baseline screenshots
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -42,8 +36,8 @@ jobs:
           matrix=$(bin/browser-matrix)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
-  test-snapshots-tailwind:
-    name: "Snapshot tests / ${{ matrix.browser }}"
+  test-browser-tailwind:
+    name: "Browser tests / ${{ matrix.browser }}"
     needs: [matrix-browser]
     runs-on: ubuntu-latest
     defaults:
@@ -91,58 +85,14 @@ jobs:
 
       - run: npx playwright install "$DRIVER" --with-deps
 
-      - run: npm run build:css
+      - run: npm run test:browser -- $PROJECTS
 
-      - name: Run snapshots (compare)
-        if: ${{ !inputs.update_snapshots }}
-        run: npm run test:snapshots -- $PROJECTS
-
-      - name: Regenerate baselines
-        if: ${{ inputs.update_snapshots }}
-        run: npm run clean:snapshots && npm run test:snapshots:update -- $PROJECTS
-
-      - name: Upload regenerated baselines
-        if: ${{ inputs.update_snapshots }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: snapshots-tailwind-${{ matrix.browser }}
-          path: stimulus-plumbers-tailwind/test/snapshots/__snapshots__/
-          retention-days: 1
-
-      - name: Upload Playwright report and snapshot diffs
+      - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report-snapshots-${{ matrix.browser }}
+          name: playwright-report-browser-${{ matrix.browser }}
           path: |
             stimulus-plumbers-tailwind/playwright-report/
             stimulus-plumbers-tailwind/test-results/
           retention-days: 7
-
-  # One commit from all engines; parallel jobs would race pushing to the branch.
-  commit-snapshots-tailwind:
-    name: Commit snapshot baselines
-    if: ${{ inputs.update_snapshots }}
-    needs: [test-snapshots-tailwind]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    timeout-minutes: 5
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - run: rm -rf stimulus-plumbers-tailwind/test/snapshots/__snapshots__
-
-      - uses: actions/download-artifact@v8
-        with:
-          pattern: snapshots-tailwind-*
-          merge-multiple: true
-          path: stimulus-plumbers-tailwind/test/snapshots/__snapshots__
-
-      - uses: ryancyq/github-signed-commit@v1
-        env:
-          GH_TOKEN: ${{ github.token }}
-        with:
-          files: stimulus-plumbers-tailwind/test/snapshots/__snapshots__
-          commit-message: "chore: update snapshot baselines [skip ci]"

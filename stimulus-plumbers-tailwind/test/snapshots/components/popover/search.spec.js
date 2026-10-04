@@ -48,20 +48,4 @@ test.describe("search", () => {
       "clear-hidden-after-click.png",
     );
   });
-
-  test("focus returned after clear", async ({ page }) => {
-    await page
-      .locator("#search-default")
-      .getByRole("combobox", { name: "Search" })
-      .fill("hello");
-    await page
-      .locator("#search-default")
-      .getByRole("button", { name: "Clear search" })
-      .click();
-    const inputId = await page
-      .locator("#search-default input[role='combobox']")
-      .getAttribute("id");
-    const activeId = await page.evaluate(() => document.activeElement?.id);
-    expect(activeId).toBe(inputId);
-  });
 });

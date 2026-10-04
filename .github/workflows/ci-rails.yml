@@ -32,6 +32,7 @@ jobs:
     env:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-rails/gemfiles/rails_${{ matrix.rails-version }}.gemfile"
       COV_DIR: "coverage-rails-${{ matrix.rails-version }}"
+      RAILS_VERSION: ${{ matrix.rails-version }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.matrix-rails-ruby.outputs.matrix) }}
@@ -55,7 +56,7 @@ jobs:
         with:
           node-version: lts/*
 
-      - run: "bundle exec appraisal rails-${{ matrix.rails-version }} rake coverage:run"
+      - run: bundle exec appraisal "rails-$RAILS_VERSION" rake coverage:run
 
       - uses: actions/upload-artifact@v7
         with:

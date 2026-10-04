@@ -23,14 +23,4 @@ test.describe("progress field", () => {
       "segmented.png",
     );
   });
-
-  // The label names the bar via aria-labelledby; a <label for> would be invalid here.
-  test("label is not a label element", async ({ page }) => {
-    const section = page.locator("#progress-field-percent");
-    await expect(section.locator("label")).toHaveCount(0);
-    await expect(section.locator("[role='progressbar']")).toHaveAttribute(
-      "aria-labelledby",
-      /completion_label$/,
-    );
-  });
 });

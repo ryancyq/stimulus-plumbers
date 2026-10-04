@@ -26,6 +26,14 @@ class RangeFieldAccessibilityTest < ApplicationAccessibilityTestCase
     assert_selector "#range-readout [data-progress-target='value'][aria-hidden='true']"
   end
 
+  def test_readout_tracks_the_value_as_the_slider_moves
+    input = find("#range-readout input[type='range']")
+    input.set(80)
+
+    assert_selector "#range-readout [data-progress-target='value']", text: "80%"
+    assert_match(%r{--sp-progress-percent:\s*80}, input[:style])
+  end
+
   def test_controller_does_not_write_aria_value_attributes
     assert_no_selector "#form-range input[type='range'][aria-valuenow]"
     assert_no_selector "#form-range input[type='range'][aria-valuetext]"

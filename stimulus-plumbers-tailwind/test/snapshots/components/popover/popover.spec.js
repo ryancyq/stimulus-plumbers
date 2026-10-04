@@ -13,7 +13,9 @@ test.describe("popover", () => {
   });
 
   test("open", async ({ page }) => {
-    const btn = page.getByRole("button", { name: "Open menu" });
+    const btn = page
+      .locator("#popover-default")
+      .getByRole("button", { name: "Open menu" });
     await btn.click();
     await expect(btn).toHaveAttribute("aria-expanded", "true");
     await expect(page.locator("#popover-default")).toHaveScreenshot("open.png");
