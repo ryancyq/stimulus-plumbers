@@ -13,8 +13,9 @@ class ProgressFieldAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_progressbar_is_named_by_its_visible_label
-    assert_selector "#form-progress span", text: "Upload progress"
-    assert_selector "#form-progress [role='progressbar'][aria-labelledby]"
+    labelledby = first("#form-progress [role='progressbar']")[:"aria-labelledby"]
+
+    assert_selector "#form-progress span##{labelledby}", text: "Upload progress"
   end
 
   def test_no_label_element_points_at_a_non_labelable_element
