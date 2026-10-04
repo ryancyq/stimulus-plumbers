@@ -102,8 +102,8 @@ npm install
 
 bundle exec rake test:unit    # unit tests
 node --run test:snapshots         # visual snapshot tests (Playwright)
-node --run test:snapshots:update  # regenerate baseline screenshots
-node --run test:browser           # native browser behavior tests (Chromium, Firefox, WebKit)
+node --run test:snapshots:update  # regenerate local baselines (gitignored; CI regenerates committed Linux ones)
+node --run test:browser           # engine-native behavior tests (desktop + mobile devices)
 bundle exec rake rubocop       # lint
 bundle exec rake coverage      # run tests with coverage + collate report
 ```
@@ -111,7 +111,7 @@ bundle exec rake coverage      # run tests with coverage + collate report
 The sandbox Rails app lives in `test/sandbox/`. Run it with:
 
 ```bash
-bundle exec puma test/sandbox/config.ru
+RAILS_ENV=test bundle exec puma test/sandbox/config.ru --bind tcp://127.0.0.1:4001
 ```
 
 ## License

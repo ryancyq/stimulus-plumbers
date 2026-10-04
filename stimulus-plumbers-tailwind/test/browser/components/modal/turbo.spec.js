@@ -59,13 +59,11 @@ test.describe("turbo modal", () => {
   test.describe("with animations", () => {
     test.use({ animations: "allow" });
 
-    test("keeps frame content during the exit animation", async ({
-      page,
-    }, testInfo) => {
-      test.skip(
-        testInfo.project.name !== "desktop",
-        "Discrete modal transitions are covered in desktop Chromium.",
+    test("keeps frame content during the exit animation", async ({ page }) => {
+      const supported = await page.evaluate(() =>
+        CSS.supports("overlay", "auto"),
       );
+      test.skip(!supported, "Exit transitions need CSS overlay support.");
 
       const root = page.locator("#modal-turbo");
       const dialog = root.locator("dialog");

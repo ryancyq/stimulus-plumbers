@@ -19,7 +19,7 @@ test.describe("modal", () => {
     await section.getByRole("button", { name: "Delete project" }).click();
 
     await expect(dialog).toHaveAttribute("open", "");
-    await expect(page.getByRole("button", { name: "Cancel" })).toBeFocused();
+    await expect(section.getByRole("button", { name: "Cancel" })).toBeFocused();
     await expect(page).toHaveScreenshot("open.png");
   });
 });

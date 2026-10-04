@@ -22,6 +22,9 @@ stimulus-plumbers-mcp/     # Ruby gem: stimulus_plumbers_mcp — MCP server expo
 - `bin/release <version> --only npm|rails|tailwind|mcp` — release a single package
 - CI (`release.yml`) calls `bin/release <version> --no-git --only <pkg>` per package
 
+## CI
+- Never put `${{ … }}` inside a workflow `run:`; pass it through `env:` and reference the shell variable (`"$VAR"`)
+
 ## Docs
 - `npm run format:docs` / `format:docs:check` — prettier over all `*/docs/**/*.md`
 

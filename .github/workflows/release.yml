@@ -46,7 +46,7 @@ jobs:
       - run: npm ci
 
       - name: Build + Publish
-        run: bin/release ${{ env.VERSION }} --only npm --no-git
+        run: bin/release "$VERSION" --only npm --no-git
         working-directory: ${{ github.workspace }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -122,7 +122,7 @@ jobs:
       - uses: rubygems/configure-rubygems-credentials@v2.1.0
 
       - name: Build + Publish
-        run: bin/release ${{ env.VERSION }} --only rails --no-git
+        run: bin/release "$VERSION" --only rails --no-git
         working-directory: ${{ github.workspace }}
 
       - uses: orhun/git-cliff-action@v4
@@ -180,7 +180,7 @@ jobs:
       - uses: rubygems/configure-rubygems-credentials@v2.1.0
 
       - name: Build + Publish
-        run: bin/release ${{ env.VERSION }} --only tailwind --no-git
+        run: bin/release "$VERSION" --only tailwind --no-git
         working-directory: ${{ github.workspace }}
 
       - uses: orhun/git-cliff-action@v4
@@ -234,7 +234,7 @@ jobs:
       - uses: rubygems/configure-rubygems-credentials@v2.1.0
 
       - name: Build + Publish
-        run: bin/release ${{ env.VERSION }} --only mcp --no-git
+        run: bin/release "$VERSION" --only mcp --no-git
         working-directory: ${{ github.workspace }}
 
       - uses: ryancyq/github-signed-commit@v1

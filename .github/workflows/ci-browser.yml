@@ -12,19 +12,44 @@ permissions:
   contents: read
 
 jobs:
+  matrix-browser:
+    name: Read browser matrix
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stimulus-plumbers-tailwind
+    outputs:
+      matrix: ${{ steps.read-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: stimulus-plumbers-tailwind/package-lock.json
+
+      - run: npm ci
+
+      - id: read-matrix
+        run: |
+          matrix=$(bin/browser-matrix)
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
   test-browser-tailwind:
-    name: "Browser tests / Ruby ${{ matrix.ruby-version }}"
+    name: "Browser tests / ${{ matrix.browser }}"
+    needs: [matrix-browser]
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: stimulus-plumbers-tailwind
     env:
       BUNDLE_GEMFILE: "${{ github.workspace }}/stimulus-plumbers-tailwind/Gemfile"
+      DRIVER: ${{ matrix.browser }}
+      PROJECTS: ${{ matrix.projects }}
     strategy:
       fail-fast: false
-      matrix:
-        ruby-version:
-          - "3.4"
+      matrix: ${{ fromJson(needs.matrix-browser.outputs.matrix) }}
     timeout-minutes: 15
 
     steps:
@@ -46,7 +71,7 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby-version }}
+          ruby-version: "3.4"
           bundler: latest
           bundler-cache: true
 
@@ -58,15 +83,15 @@ jobs:
 
       - run: npm ci
 
-      - run: npx playwright install chromium firefox webkit --with-deps
+      - run: npx playwright install "$DRIVER" --with-deps
 
-      - run: npm run test:browser
+      - run: npm run test:browser -- $PROJECTS
 
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report-browser
+          name: playwright-report-browser-${{ matrix.browser }}
           path: |
             stimulus-plumbers-tailwind/playwright-report/
             stimulus-plumbers-tailwind/test-results/

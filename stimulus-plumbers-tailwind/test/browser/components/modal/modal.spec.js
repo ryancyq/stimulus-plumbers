@@ -9,7 +9,9 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("modal", () => {
   test("Escape dismisses and restores trigger focus", async ({ page }) => {
-    const trigger = page.getByRole("button", { name: "Delete project" });
+    const trigger = page
+      .locator("#modal-confirmation")
+      .getByRole("button", { name: "Delete project" });
     const dialog = page.locator("#modal-confirmation-dialog");
     await trigger.click();
     await page.keyboard.press("Escape");
@@ -28,16 +30,6 @@ test.describe("modal", () => {
   test("native dialog commands work without Stimulus actions", async ({
     page,
   }) => {
-    const supported = await page.evaluate(
-      () =>
-        "command" in HTMLButtonElement.prototype &&
-        "commandForElement" in HTMLButtonElement.prototype,
-    );
-    test.skip(
-      !supported,
-      "native dialog commands are not supported by this browser",
-    );
-
     const section = page.locator("#modal-confirmation");
     const dialog = page.locator("#modal-confirmation-dialog");
     await section.locator("[data-action]").evaluateAll((elements) => {
@@ -90,57 +82,75 @@ test.describe("modal", () => {
     expect(returnValue).toBe("method-result");
   });
 
-  test("closedby any allows Escape and backdrop dismissal", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-
+  test("closedby any closes on Escape", async ({ page }) => {
     const section = page.locator("#modal-closedby-any");
     const dialog = section.locator("#modal-closedby-any-dialog");
     await section.getByRole("button", { name: "Open any dismissal" }).click();
     await page.keyboard.press("Escape");
-    await expect(dialog).not.toHaveAttribute("open", "");
-
-    await section.getByRole("button", { name: "Open any dismissal" }).click();
-    await page.mouse.click(1, 1);
 
     await expect(dialog).not.toHaveAttribute("open", "");
   });
 
-  test("closedby closerequest allows Escape but ignores backdrop", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-
+  test("closedby closerequest closes on Escape", async ({ page }) => {
     const section = page.locator("#modal-closedby-closerequest");
     const dialog = section.locator("#modal-closedby-closerequest-dialog");
     await section
       .getByRole("button", { name: "Open close request dismissal" })
       .click();
     await page.keyboard.press("Escape");
-    await expect(dialog).not.toHaveAttribute("open", "");
 
-    await section
-      .getByRole("button", { name: "Open close request dismissal" })
-      .click();
-    await page.mouse.click(1, 1);
-    await expect(dialog).toHaveAttribute("open", "");
-    await section.getByRole("button", { name: "Complete" }).click();
     await expect(dialog).not.toHaveAttribute("open", "");
   });
 
-  test("closedby none ignores Escape and backdrop", async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-
+  test("closedby none ignores Escape", async ({ page }) => {
     const section = page.locator("#modal-closedby-none");
     const dialog = section.locator("#modal-closedby-none-dialog");
     await section.getByRole("button", { name: "Open no dismissal" }).click();
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveAttribute("open", "");
-    await page.mouse.click(1, 1);
-    await expect(dialog).toHaveAttribute("open", "");
+
     await section.getByRole("button", { name: "Complete" }).click();
     await expect(dialog).not.toHaveAttribute("open", "");
+  });
+
+  test.describe("backdrop", () => {
+    test.skip(
+      ({ isMobile }) => isMobile,
+      "Mobile modals are full-screen, so there is no backdrop.",
+    );
+
+    test("closedby any closes on backdrop click", async ({ page }) => {
+      const section = page.locator("#modal-closedby-any");
+      const dialog = section.locator("#modal-closedby-any-dialog");
+      await section.getByRole("button", { name: "Open any dismissal" }).click();
+      await page.mouse.click(1, 1);
+
+      await expect(dialog).not.toHaveAttribute("open", "");
+    });
+
+    test("closedby closerequest ignores backdrop click", async ({ page }) => {
+      const section = page.locator("#modal-closedby-closerequest");
+      const dialog = section.locator("#modal-closedby-closerequest-dialog");
+      await section
+        .getByRole("button", { name: "Open close request dismissal" })
+        .click();
+      await page.mouse.click(1, 1);
+      await expect(dialog).toHaveAttribute("open", "");
+
+      await section.getByRole("button", { name: "Complete" }).click();
+      await expect(dialog).not.toHaveAttribute("open", "");
+    });
+
+    test("closedby none ignores backdrop click", async ({ page }) => {
+      const section = page.locator("#modal-closedby-none");
+      const dialog = section.locator("#modal-closedby-none-dialog");
+      await section.getByRole("button", { name: "Open no dismissal" }).click();
+      await page.mouse.click(1, 1);
+      await expect(dialog).toHaveAttribute("open", "");
+
+      await section.getByRole("button", { name: "Complete" }).click();
+      await expect(dialog).not.toHaveAttribute("open", "");
+    });
   });
 
   test("external close reports its return value", async ({ page }) => {
@@ -170,7 +180,9 @@ test.describe("modal", () => {
   }) => {
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
-    const trigger = page.getByRole("button", { name: "Delete project" });
+    const trigger = page
+      .locator("#modal-confirmation")
+      .getByRole("button", { name: "Delete project" });
     const dialog = page.locator("#modal-confirmation-dialog");
 
     await dialog.evaluate((element) => element.show());
@@ -180,10 +192,16 @@ test.describe("modal", () => {
     await dialog.evaluate((element) => element.close());
 
     await trigger.click();
-    await page.getByRole("button", { name: "Cancel" }).click();
+    await page
+      .locator("#modal-confirmation")
+      .getByRole("button", { name: "Cancel" })
+      .click();
     await trigger.click();
     await expect(dialog).toHaveAttribute("open", "");
-    await page.getByRole("button", { name: "Cancel" }).click();
+    await page
+      .locator("#modal-confirmation")
+      .getByRole("button", { name: "Cancel" })
+      .click();
 
     expect(errors).toEqual([]);
   });
@@ -247,60 +265,97 @@ test.describe("modal", () => {
     expect(closedResult).toBe("delete");
   });
 
-  test("keeps long content scrollable and actions visible", async ({
-    page,
-  }, testInfo) => {
-    const section = page.locator("#modal-aria-label");
-    const dialog = page.locator("#modal-aria-label-dialog");
-    const body = dialog.locator(":scope > div");
-    const footer = dialog.locator(":scope > footer");
-    const { gutter, cssPixel } = await page.evaluate(() => ({
-      gutter: Math.max(0, window.innerWidth - document.body.clientWidth),
-      cssPixel: 1 / window.devicePixelRatio,
-    }));
-    await section.getByRole("button", { name: "Open project details" }).click();
+  test.describe("long content", () => {
+    const open = async (page) => {
+      const dialog = page.locator("#modal-aria-label-dialog");
+      await page
+        .locator("#modal-aria-label")
+        .getByRole("button", { name: "Open project details" })
+        .click();
+      await expect(dialog).toHaveAttribute("open", "");
+      return { dialog, body: dialog.locator(":scope > div") };
+    };
+    const tolerance = (page) =>
+      page.evaluate(() => Math.max(1 / window.devicePixelRatio, 0.5));
 
-    await expect
-      .poll(() =>
-        body.evaluate((element) => element.scrollHeight > element.clientHeight),
-      )
-      .toBe(true);
-    await expect(footer).toBeInViewport();
-    await expect
-      .poll(() =>
-        page
-          .locator("html")
-          .evaluate((element) => getComputedStyle(element).overflow),
-      )
-      .toBe("hidden");
+    test("keeps long content scrollable and actions visible", async ({
+      page,
+    }) => {
+      const { dialog, body } = await open(page);
 
-    const box = await dialog.boundingBox();
-    const viewport = page.viewportSize();
-    const tolerance = Math.max(cssPixel, 0.5);
-    if (testInfo.project.name === "mobile") {
-      expect(Math.abs(box.width - viewport.width)).toBeLessThanOrEqual(
-        tolerance,
-      );
-      expect(Math.abs(box.height - viewport.height)).toBeLessThanOrEqual(
-        tolerance,
-      );
-    } else {
-      expect(box.width).toBeLessThanOrEqual(512);
-      const expectedX = (viewport.width - gutter - box.width) / 2;
-      expect(Math.abs(box.x - expectedX)).toBeLessThanOrEqual(tolerance);
-    }
-
-    await body.evaluate((element) => {
-      element.scrollTop = element.scrollHeight;
+      await expect
+        .poll(() =>
+          body.evaluate(
+            (element) => element.scrollHeight > element.clientHeight,
+          ),
+        )
+        .toBe(true);
+      await expect(dialog.locator(":scope > footer")).toBeInViewport();
+      await expect
+        .poll(() =>
+          page
+            .locator("html")
+            .evaluate((element) => getComputedStyle(element).overflow),
+        )
+        .toBe("hidden");
     });
-    const bodyBox = await body.boundingBox();
-    await page.mouse.move(
-      bodyBox.x + bodyBox.width / 2,
-      bodyBox.y + bodyBox.height / 2,
-    );
-    await page.mouse.wheel(0, 1200);
 
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+    test.describe("desktop", () => {
+      test.skip(({ isMobile }) => isMobile, "Desktop layout only.");
+
+      test("centers a width-constrained dialog", async ({ page }) => {
+        const gutter = await page.evaluate(() =>
+          Math.max(0, window.innerWidth - document.body.clientWidth),
+        );
+        const { dialog } = await open(page);
+        const box = await dialog.boundingBox();
+        const viewport = page.viewportSize();
+
+        expect(box.width).toBeLessThanOrEqual(512);
+        const expectedX = (viewport.width - gutter - box.width) / 2;
+        expect(Math.abs(box.x - expectedX)).toBeLessThanOrEqual(
+          await tolerance(page),
+        );
+      });
+    });
+
+    test.describe("mobile", () => {
+      test.skip(({ isMobile }) => !isMobile, "Mobile layout only.");
+
+      test("fills the viewport", async ({ page }) => {
+        const { dialog } = await open(page);
+        const box = await dialog.boundingBox();
+        const viewport = page.viewportSize();
+        const pixel = await tolerance(page);
+
+        expect(Math.abs(box.width - viewport.width)).toBeLessThanOrEqual(pixel);
+        expect(Math.abs(box.height - viewport.height)).toBeLessThanOrEqual(
+          pixel,
+        );
+      });
+    });
+
+    test.describe("scroll chaining", () => {
+      test.skip(
+        ({ browserName, isMobile }) => browserName === "webkit" && isMobile,
+        "Playwright can't dispatch wheel events in mobile WebKit.",
+      );
+
+      test("does not scroll the page past the modal body", async ({ page }) => {
+        const { body } = await open(page);
+        await body.evaluate((element) => {
+          element.scrollTop = element.scrollHeight;
+        });
+        const bodyBox = await body.boundingBox();
+        await page.mouse.move(
+          bodyBox.x + bodyBox.width / 2,
+          bodyBox.y + bodyBox.height / 2,
+        );
+        await page.mouse.wheel(0, 1200);
+
+        await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+      });
+    });
   });
 
   test("keeps root locking and content usable at 320px (400% reflow equivalent)", async ({
@@ -350,7 +405,10 @@ test.describe("modal", () => {
     page,
   }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.getByRole("button", { name: "Delete project" }).click();
+    await page
+      .locator("#modal-confirmation")
+      .getByRole("button", { name: "Delete project" })
+      .click();
     const styles = await page
       .locator("#modal-confirmation-dialog")
       .evaluate((element) => ({

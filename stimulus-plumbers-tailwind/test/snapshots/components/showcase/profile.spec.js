@@ -16,7 +16,9 @@ test.describe("profile", () => {
   });
 
   test("popover — open", async ({ page }) => {
-    const btn = page.getByRole("button", { name: "More options" });
+    const btn = page
+      .locator("#profile-default")
+      .getByRole("button", { name: "More options" });
     await btn.click();
     await expect(btn).toHaveAttribute("aria-expanded", "true");
     await expect(page.locator("#profile-default")).toHaveScreenshot(
@@ -26,7 +28,9 @@ test.describe("profile", () => {
 
   test.describe("date picker", () => {
     test("open", async ({ page }) => {
-      const datePicker = page.getByRole("combobox", { name: "Date" });
+      const datePicker = page
+        .locator("#profile-default")
+        .getByRole("combobox", { name: "Date" });
       await datePicker.click();
       await expect(datePicker).toHaveAttribute("aria-expanded", "true");
       await expect(page.locator("#profile-default")).toHaveScreenshot(
@@ -35,20 +39,30 @@ test.describe("profile", () => {
     });
 
     test("previous month", async ({ page }) => {
-      const datePicker = page.getByRole("combobox", { name: "Date" });
+      const datePicker = page
+        .locator("#profile-default")
+        .getByRole("combobox", { name: "Date" });
       await datePicker.click();
       await expect(datePicker).toHaveAttribute("aria-expanded", "true");
-      await page.getByRole("button", { name: "Previous Month" }).click();
+      await page
+        .locator("#profile-default")
+        .getByRole("button", { name: "Previous Month" })
+        .click();
       await expect(page.locator("#profile-default")).toHaveScreenshot(
         "datepicker-prev-month.png",
       );
     });
 
     test("next month", async ({ page }) => {
-      const datePicker = page.getByRole("combobox", { name: "Date" });
+      const datePicker = page
+        .locator("#profile-default")
+        .getByRole("combobox", { name: "Date" });
       await datePicker.click();
       await expect(datePicker).toHaveAttribute("aria-expanded", "true");
-      await page.getByRole("button", { name: "Next Month" }).click();
+      await page
+        .locator("#profile-default")
+        .getByRole("button", { name: "Next Month" })
+        .click();
       await expect(page.locator("#profile-default")).toHaveScreenshot(
         "datepicker-next-month.png",
       );
