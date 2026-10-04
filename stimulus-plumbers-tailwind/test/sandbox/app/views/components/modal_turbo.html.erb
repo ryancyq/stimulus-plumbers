@@ -1,0 +1,9 @@
+<section id="modal-turbo" class="sb-section">
+  <h2>Turbo modal navigation</h2>
+  <div class="sb-col">
+    <p id="modal-turbo-status">A route-level form progressively enhances into a Turbo modal.</p>
+
+    <%= sp_modal_turbo id: "modal", aria_label: "Edit profile" %>
+    <%= sp_modal_link_to "Edit profile", url: "/components/modal/form", modal_id: "modal" %>
+  </div>
+</section>

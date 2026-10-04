@@ -17,6 +17,7 @@ export { fuzzyMatcher, filterOptions } from './researcher.js';
 export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
 export { CharacterCells, attachCharacterCells } from './plumbers/character_cells.js';
 export { PasswordStrength, attachPasswordStrength, STRENGTH_TYPES } from './plumbers/password_strength.js';
+export { Dialog, attachDialog } from './plumbers/dialog.js';
 
 // Export Stimulus controllers
 export { default as CalendarDecadeController } from './controllers/calendar_decade_controller.js';
@@ -37,6 +38,7 @@ export { default as InputFormatterController } from './controllers/input_formatt
 export { default as InputClearableController } from './controllers/input_clearable_controller.js';
 export { default as InputRevealableController } from './controllers/input_revealable_controller.js';
 export { default as ModalController } from './controllers/modal_controller.js';
+export { default as ModalTurboController } from './controllers/modal_turbo_controller.js';
 export { default as PannerController } from './controllers/panner_controller.js';
 export { default as PasswordStrengthController } from './controllers/password_strength_controller.js';
 export { default as PopoverController } from './controllers/popover_controller.js';

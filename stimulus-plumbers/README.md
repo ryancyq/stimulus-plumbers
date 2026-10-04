@@ -41,6 +41,7 @@ import {
   CalendarDecadeSelectorController,
   ChecklistController,
   ModalController,
+  ModalTurboController,
   PopoverController,
   ProgressController,
   DismisserController,
@@ -70,6 +71,7 @@ application.register('calendar-decade',           CalendarDecadeController)
 application.register('calendar-decade-selector',  CalendarDecadeSelectorController)
 application.register('checklist',                ChecklistController)
 application.register('modal',                    ModalController)
+application.register('modal-turbo',               ModalTurboController)
 application.register('popover',                  PopoverController)
 application.register('progress',                 ProgressController)
 application.register('dismisser',                DismisserController)
@@ -100,7 +102,8 @@ application.register('visibility',               VisibilityController)
 | `calendar-decade` | Calendar decade grid — renders year buttons, dispatches selection events | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade) |
 | `calendar-decade-selector` | SSR/Turbo thin selector for server-rendered decade grids | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade-selector) |
 | `checklist` | Master "select all" toggle for native checkbox items | [docs/component/checklist.md](docs/component/checklist.md) |
-| `modal` | Native `<dialog>` or custom overlay | [docs/component/modal.md](docs/component/modal.md) |
+| `modal` | Native `<dialog>` lifecycle adapter | [docs/component/modal.md](docs/component/modal.md) |
+| `modal-turbo` | Turbo Frame adapter for `modal` | [docs/component/modal.md](docs/component/modal.md#modal-turbo) |
 | `popover` | Show/hide content with optional remote load | [docs/component/popover.md](docs/component/popover.md) |
 | `progress` | Value-driven progress bar/segmented/ring/meter | [docs/component/progress.md](docs/component/progress.md) |
 | `dismisser` | Click-outside dismissal | [docs/component/dismisser.md](docs/component/dismisser.md) |
@@ -124,6 +127,7 @@ application.register('visibility',               VisibilityController)
 | `Formatter`, `FORMATTER_TYPES` | Input formatter plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/formatter.md](docs/plumber/formatter.md) |
 | `CharacterCells`, `attachCharacterCells` | Character-cell display plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/character-cells.md](docs/plumber/character-cells.md) |
 | `PasswordStrength`, `attachPasswordStrength`, `STRENGTH_TYPES` | Password strength scoring plumber | [docs/plumber/password_strength.md](docs/plumber/password_strength.md) |
+| `Dialog`, `attachDialog` | Native `<dialog>` lifecycle plumber | [docs/plumber/dialog.md](docs/plumber/dialog.md) |
 
 ## Method naming convention
 

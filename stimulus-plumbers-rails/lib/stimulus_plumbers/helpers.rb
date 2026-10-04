@@ -15,6 +15,7 @@ require_relative "helpers/combobox_helper"
 require_relative "helpers/divider_helper"
 require_relative "helpers/link_helper"
 require_relative "helpers/popover_helper"
+require_relative "helpers/modal_helper"
 require_relative "helpers/progress_helper"
 require_relative "helpers/timeline_helper"
 
@@ -35,6 +36,7 @@ module StimulusPlumbers
     include DividerHelper
     include LinkHelper
     include PopoverHelper
+    include ModalHelper
     include ProgressHelper
     include TimelineHelper
   end

@@ -1,0 +1,112 @@
+<h1>Modal components</h1>
+
+<section id="modal-confirmation" class="sb-section">
+  <h2>Confirmation</h2>
+  <div class="sb-row">
+    <%= sp_modal id: "modal-confirmation-dialog", title: "Delete project?", closed_by: :closerequest do |modal| %>
+      <% modal.trigger { "Delete project" } %>
+      <% modal.body do %>
+        <p>This action cannot be undone.</p>
+      <% end %>
+      <% modal.footer do %>
+        <%= modal.dismiss_button "Cancel", autofocus: true %>
+        <%= modal.close_button "Delete", result: "delete", variant: :destructive %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="modal-no-autofocus" class="sb-section">
+  <h2>No autofocus</h2>
+  <div class="sb-row">
+    <%= sp_modal id: "modal-no-autofocus-dialog", aria_label: "Project name" do |modal| %>
+      <% modal.trigger { "Open project name" } %>
+      <% modal.body do %>
+        <label for="modal-no-autofocus-field">Project name</label>
+        <input id="modal-no-autofocus-field" type="text" />
+      <% end %>
+      <% modal.footer do %>
+        <%= modal.close_button "Close" %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="modal-method-dialog" class="sb-section">
+  <h2>Method dialog</h2>
+  <div class="sb-row">
+    <%= sp_modal id: "modal-method-dialog-dialog", aria_label: "Method dialog" do |modal| %>
+      <% modal.trigger { "Open method dialog" } %>
+      <% modal.body do %>
+        <form method="dialog">
+          <button type="submit" value="method-result">Complete</button>
+        </form>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="modal-closedby-any" class="sb-section">
+  <h2>Any dismissal</h2>
+  <div class="sb-row">
+    <%= sp_modal id: "modal-closedby-any-dialog", title: "Any dismissal", closed_by: :any do |modal| %>
+      <% modal.trigger { "Open any dismissal" } %>
+      <% modal.body { "Escape and backdrop dismissal are allowed." } %>
+      <% modal.footer { modal.close_button "Complete" } %>
+    <% end %>
+  </div>
+</section>
+
+<section id="modal-closedby-closerequest" class="sb-section">
+  <h2>Close request dismissal</h2>
+  <div class="sb-row">
+    <%= sp_modal id: "modal-closedby-closerequest-dialog", title: "Close request dismissal", closed_by: :closerequest do |modal| %>
+      <% modal.trigger { "Open close request dismissal" } %>
+      <% modal.body { "Backdrop dismissal is ignored." } %>
+      <% modal.footer { modal.close_button "Complete" } %>
+    <% end %>
+  </div>
+</section>
+
+<section id="modal-closedby-none" class="sb-section">
+  <h2>No dismissal</h2>
+  <div class="sb-row">
+    <%= sp_modal id: "modal-closedby-none-dialog", title: "No dismissal", closed_by: :none do |modal| %>
+      <% modal.trigger { "Open no dismissal" } %>
+      <% modal.body { "Escape and backdrop dismissal are ignored." } %>
+      <% modal.footer { modal.close_button "Complete" } %>
+    <% end %>
+  </div>
+</section>
+
+<section id="modal-aria-label" class="sb-section">
+  <h2>Titleless body and footer</h2>
+  <div class="sb-row">
+    <%= sp_modal id: "modal-aria-label-dialog", aria_label: "Project details" do |modal| %>
+      <% modal.trigger { "Open project details" } %>
+      <% modal.body do %>
+        <% 64.times do |index| %>
+          <p>Project detail <%= index + 1 %>.</p>
+        <% end %>
+      <% end %>
+      <% modal.footer do %>
+        <%= modal.close_button "Done", result: "done" %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="modal-body-only" class="sb-section">
+  <h2>Body-only modal</h2>
+  <div class="sb-row">
+    <%= sp_modal id: "modal-body-only-dialog", aria_label: "Project details" do |modal| %>
+      <% modal.trigger { "Open body-only modal" } %>
+      <% modal.body do %>
+        <% 64.times do |index| %>
+          <p>Body detail <%= index + 1 %>.</p>
+        <% end %>
+        <%= modal.close_button "Close" %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

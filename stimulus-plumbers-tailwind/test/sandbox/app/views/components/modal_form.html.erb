@@ -1,0 +1,10 @@
+<% if @modal_form_frame %>
+  <turbo-frame id="modal">
+    <%= render "modal_form_content" %>
+  </turbo-frame>
+<% else %>
+  <div id="modal-form">
+    <h1>Edit profile</h1>
+    <%= render "modal_form_content" %>
+  </div>
+<% end %>

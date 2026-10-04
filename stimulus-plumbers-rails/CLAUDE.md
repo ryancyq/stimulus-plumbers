@@ -60,6 +60,11 @@ stimulus-plumbers-rails/
 │       │   ├── popover/
 │       │   │   ├── trigger.rb            # Renders wired <button> (popover trigger primitive)
 │       │   │   └── panel.rb              # Hidden panel element — #render (wired element) / #build (yields panel_attrs for caller to wire)
+│       │   ├── modal.rb                  # sp_modal renderer; trigger and native dialog slots
+│       │   ├── modal/
+│       │   │   ├── turbo.rb               # sp_modal_turbo renderer; Turbo Frame adapter for modal
+│       │   │   ├── slots.rb              # Modal builder slots and action buttons
+│       │   │   └── trigger.rb            # Packaged/custom modal trigger rendering
 │       │   ├── timeline.rb               # sp_timeline renderer
 │       │   └── timeline/
 │       │       ├── event.rb              # Timeline::Event — renders <li> with indicator, time, heading, description, detail, actions
@@ -79,6 +84,7 @@ stimulus-plumbers-rails/
 │       │   ├── ordered_list_helper.rb    # sp_ordered_list
 │       │   ├── plumber_helper.rb         # sp_dom_id
 │       │   ├── popover_helper.rb         # sp_popover
+│       │   ├── modal_helper.rb           # sp_modal, sp_modal_turbo, sp_modal_link_to
 │       │   └── timeline_helper.rb        # sp_timeline
 │       ├── form/
 │       │   ├── builder.rb                # Form builder: f.field/collection_field/choice — dispatches via Fields::Renderer::FIELD/COLLECTION/CHOICE

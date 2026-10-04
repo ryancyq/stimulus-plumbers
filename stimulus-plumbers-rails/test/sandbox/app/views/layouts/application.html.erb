@@ -6,7 +6,12 @@
     <title>Stimulus Plumbers Sandbox</title>
     <script src="/node_modules/axe-core/axe.min.js"></script>
     <script type="importmap">
-      { "imports": { "@hotwired/stimulus": "/node_modules/@hotwired/stimulus/dist/stimulus.js" } }
+      {
+        "imports": {
+          "@hotwired/stimulus": "/node_modules/@hotwired/stimulus/dist/stimulus.js",
+          "@hotwired/turbo": "/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js"
+        }
+      }
     </script>
   </head>
   <body class="text-gray-900 bg-white">
@@ -14,6 +19,7 @@
       <%= yield %>
     </main>
     <script type="module">
+      import "@hotwired/turbo";
       import { Application } from "@hotwired/stimulus";
       import * as StimulusPlumbers from "/dist/index.es.js";
 

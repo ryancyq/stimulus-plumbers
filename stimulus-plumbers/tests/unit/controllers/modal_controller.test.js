@@ -1,319 +1,200 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-import { visibilityConfig } from '../../../src/plumbers/plumber/config'  
 import ModalController from '../../../src/controllers/modal_controller';
 
 describe('ModalController', () => {
   let application;
-  let isVisibleOnlySpy;
   let consoleErrorSpy;
 
   beforeEach(() => {
     application = Application.start();
     application.register('modal', ModalController);
-    isVisibleOnlySpy = vi.spyOn(visibilityConfig, 'visibleOnly', 'get').mockReturnValue(false);
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
     application.stop();
     document.body.innerHTML = '';
-    document.body.style.overflow = '';
     consoleErrorSpy.mockRestore();
-    isVisibleOnlySpy.mockRestore();
   });
 
-  describe('guardrails', () => {
-    it('logs error when modal target is missing', async () => {
-      document.body.innerHTML = '<div data-controller="modal"></div>';
-      await new Promise(resolve => setTimeout(resolve, 10));
+  const render = async ({ attributes = '', methods = true } = {}) => {
+    document.body.innerHTML = `
+      <div data-controller="modal">
+        <button id="open" data-action="modal#open">Open</button>
+        <dialog data-modal-target="dialog" ${attributes}>
+          <button id="dismiss" data-action="modal#dismiss">Cancel</button>
+          <button id="close" data-action="modal#close" data-modal-result-param="confirm">Confirm</button>
+        </dialog>
+      </div>
+    `;
 
+    const dialog = document.querySelector('dialog');
+    if (methods) {
+      dialog.showModal = vi.fn(() => {
+        dialog.open = true;
+      });
+      dialog.close = vi.fn((result = '') => {
+        dialog.returnValue = result;
+        dialog.open = false;
+        dialog.dispatchEvent(new Event('close'));
+      });
+    }
+    const root = document.querySelector('[data-controller="modal"]');
+    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'modal'));
+    return dialog;
+  };
+
+  it('requires a dialog target', async () => {
+    document.body.innerHTML = '<div data-controller="modal"></div>';
+    await vi.waitFor(() =>
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'ModalController requires a modal target. Add data-modal-target="modal" to your element.'
-      );
-    });
+        'ModalController requires a dialog target. Add data-modal-target="dialog" to your element.'
+      )
+    );
+  });
 
-    it('does not open when modal target is missing', () => {
-      document.body.innerHTML = `
-        <div data-controller="modal">
-          <button data-action="modal#open">Open</button>
-        </div>
-      `;
+  it('rejects a non-dialog target without throwing', async () => {
+    document.body.innerHTML = '<div data-controller="modal"><div data-modal-target="dialog"></div></div>';
+    await vi.waitFor(() =>
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'ModalController requires data-modal-target="dialog" to be a native <dialog> element.'
+      )
+    );
+  });
 
-      document.querySelector('button').click();
-      expect(document.body.style.overflow).toBe('');
-    });
+  it('opens through showModal and resets returnValue', async () => {
+    const dialog = await render();
+    dialog.returnValue = 'old';
 
-    it('does not close when modal target is missing', async () => {
-      document.body.innerHTML = `
-        <div data-controller="modal">
-          <button data-action="modal#close">Close</button>
-        </div>
-      `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+    document.querySelector('#open').click();
 
-      expect(() => document.querySelector('button').click()).not.toThrow();
+    expect(dialog.returnValue).toBe('');
+    expect(dialog.showModal).toHaveBeenCalledOnce();
+  });
+
+  it('restores focus to the action invoker after closing', async () => {
+    const dialog = await render();
+    const open = document.querySelector('#open');
+
+    open.click();
+    dialog.close();
+    await Promise.resolve();
+
+    expect(document.activeElement).toBe(open);
+  });
+
+  it('ignores repeated open calls while the dialog is open', async () => {
+    const dialog = await render();
+
+    document.querySelector('#open').click();
+    document.querySelector('#open').click();
+
+    expect(dialog.showModal).toHaveBeenCalledOnce();
+  });
+
+  it('uses close for explicit completion and normalizes the action result', async () => {
+    const dialog = await render();
+    document.querySelector('#open').click();
+    document.querySelector('#close').click();
+
+    expect(dialog.close).toHaveBeenCalledWith('confirm');
+  });
+
+  it('normalizes programmatic results', async () => {
+    const dialog = await render();
+    const root = document.querySelector('[data-controller="modal"]');
+    const controller = application.getControllerForElementAndIdentifier(root, 'modal');
+    controller.open();
+    controller.close(42);
+
+    expect(dialog.close).toHaveBeenCalledWith('42');
+  });
+
+  it('dispatches opened and closed lifecycle events from native signals', async () => {
+    const dialog = await render();
+    const opened = vi.fn();
+    const closed = vi.fn();
+    dialog.addEventListener('modal:opened', opened);
+    dialog.addEventListener('modal:closed', closed);
+
+    document.querySelector('#open').click();
+    dialog.dispatchEvent(new Event('toggle'));
+    dialog.dispatchEvent(new Event('close'));
+
+    expect(opened).toHaveBeenCalledOnce();
+    expect(closed).toHaveBeenCalledOnce();
+    expect(closed.mock.calls[0][0].detail).toEqual({ result: '' });
+  });
+
+  it('cancels open from modal:before-open', async () => {
+    const dialog = await render();
+    dialog.addEventListener('modal:before-open', (event) => event.preventDefault());
+
+    document.querySelector('#open').click();
+
+    expect(dialog.showModal).not.toHaveBeenCalled();
+  });
+
+  it('cancels request dismissal from modal:before-dismiss', async () => {
+    const dialog = await render({ attributes: 'closedby="any"' });
+    dialog.addEventListener('modal:before-dismiss', (event) => event.preventDefault());
+    document.querySelector('#open').click();
+
+    const cancel = new Event('cancel', { cancelable: true });
+    dialog.dispatchEvent(cancel);
+
+    expect(cancel.defaultPrevented).toBe(true);
+    expect(dialog.close).not.toHaveBeenCalled();
+  });
+
+  it('removes adapter listeners when the target disconnects', async () => {
+    const dialog = await render();
+    const remove = vi.spyOn(dialog, 'removeEventListener');
+    dialog.remove();
+
+    await vi.waitFor(() => {
+      expect(remove).toHaveBeenCalledWith('beforetoggle', expect.any(Function));
+      expect(remove).toHaveBeenCalledWith('toggle', expect.any(Function));
+      expect(remove).toHaveBeenCalledWith('cancel', expect.any(Function));
+      expect(remove).toHaveBeenCalledWith('close', expect.any(Function));
     });
   });
 
-  describe('native dialog element', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="modal">
-          <button data-action="modal#open">Open</button>
-          <dialog data-modal-target="modal">
-            <button data-action="modal#close">Close</button>
-          </dialog>
-        </div>
-      `;
+  it('disconnects the old plumber when Turbo replaces the dialog target', async () => {
+    const oldDialog = await render();
+    const oldRemove = vi.spyOn(oldDialog, 'removeEventListener');
 
-      const dialog = document.querySelector('dialog');
-      dialog.showModal = vi.fn();
-      dialog.close = vi.fn();
-      await new Promise(resolve => setTimeout(resolve, 10));
+    const root = document.querySelector('[data-controller="modal"]');
+    const newDialog = document.createElement('dialog');
+    newDialog.dataset.modalTarget = 'dialog';
+    newDialog.showModal = vi.fn(() => {
+      newDialog.open = true;
     });
+    newDialog.close = vi.fn();
+    oldDialog.replaceWith(newDialog);
 
-    it('uses showModal() to open', () => {
-      const dialog = document.querySelector('dialog');
-      document.querySelector('[data-action="modal#open"]').click();
-
-      expect(dialog.showModal).toHaveBeenCalled();
-    });
-
-    it('uses close() to close', () => {
-      const dialog = document.querySelector('dialog');
-      document.querySelector('[data-action="modal#open"]').click();
-      document.querySelector('[data-action="modal#close"]').click();
-
-      expect(dialog.close).toHaveBeenCalled();
-    });
-
-    it('restores focus after closing', async () => {
-      const openButton = document.querySelector('[data-action="modal#open"]');
-      openButton.focus();
-      openButton.click();
-
-      await new Promise(resolve => setTimeout(resolve, 10));
-      document.querySelector('[data-action="modal#close"]').click();
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-      expect(document.activeElement).toBe(openButton);
-    });
-
-    it('closes on backdrop click', () => {
-      const dialog = document.querySelector('dialog');
-      dialog.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 100, bottom: 300, right: 300
-      }));
-
-      document.querySelector('[data-action="modal#open"]').click();
-      dialog.dispatchEvent(new MouseEvent('click', {
-        bubbles: true, clientX: 0, clientY: 0
-      }));
-
-      expect(dialog.close).toHaveBeenCalled();
-    });
-
-    it('does not close on content click', () => {
-      const dialog = document.querySelector('dialog');
-      dialog.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 100, bottom: 300, right: 300
-      }));
-
-      document.querySelector('[data-action="modal#open"]').click();
-      dialog.close.mockClear();
-
-      dialog.dispatchEvent(new MouseEvent('click', {
-        bubbles: true, clientX: 200, clientY: 200
-      }));
-
-      expect(dialog.close).not.toHaveBeenCalled();
-    });
-
-    it('skips focus restore when previously focused element is removed before closing', async () => {
-      const openButton = document.querySelector('[data-action="modal#open"]');
-      openButton.focus();
-      openButton.click();
-      openButton.remove();
-
-      document.querySelector('[data-action="modal#close"]').click();
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-      expect(document.activeElement).not.toBe(openButton);
-    });
-
-    it('opens and closes when called programmatically without an event', () => {
-      const element = document.querySelector('[data-controller="modal"]');
-      const controller = application.getControllerForElementAndIdentifier(element, 'modal');
-      const dialog = document.querySelector('dialog');
-
-      controller.open();
-      expect(dialog.showModal).toHaveBeenCalled();
-
-      controller.close();
-      expect(dialog.close).toHaveBeenCalled();
-    });
-
-    it('removes cancel and click listeners when modal target disconnects', async () => {
-      const dialog = document.querySelector('dialog');
-      const spy = vi.spyOn(dialog, 'removeEventListener');
-
-      dialog.remove();
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-      expect(spy).toHaveBeenCalledWith('cancel', expect.any(Function));
-      expect(spy).toHaveBeenCalledWith('click', expect.any(Function));
-    });
+    await vi.waitFor(() => expect(oldRemove).toHaveBeenCalledWith('close', expect.any(Function)));
+    await vi.waitUntil(() => root.querySelector('dialog') === newDialog);
+    document.querySelector('#open').click();
+    expect(newDialog.showModal).toHaveBeenCalledOnce();
   });
 
-  describe('custom implementation', () => {
-    beforeEach(() => {
-      document.body.innerHTML = `
-        <div data-controller="modal">
-          <button data-action="modal#open">Open</button>
-          <div data-modal-target="overlay" hidden>
-            <div data-modal-target="modal" role="dialog" aria-modal="true">
-              <button data-action="modal#close">Close</button>
-            </div>
-          </div>
-        </div>
-      `;
-    });
+  it('closes an open dialog before Turbo caches the page', async () => {
+    const dialog = await render();
+    document.querySelector('#open').click();
 
-    it('shows and hides overlay', () => {
-      const overlay = document.querySelector('[data-modal-target="overlay"]');
-      const openButton = document.querySelector('[data-action="modal#open"]');
-      const closeButton = document.querySelector('[data-action="modal#close"]');
+    document.dispatchEvent(new Event('turbo:before-cache'));
 
-      expect(overlay.hidden).toBe(true);
-      openButton.click();
-      expect(overlay.hidden).toBe(false);
-      closeButton.click();
-      expect(overlay.hidden).toBe(true);
-    });
-
-    it('prevents and restores body scroll', () => {
-      const openButton = document.querySelector('[data-action="modal#open"]');
-      const closeButton = document.querySelector('[data-action="modal#close"]');
-
-      expect(document.body.style.overflow).toBe('');
-      openButton.click();
-      expect(document.body.style.overflow).toBe('hidden');
-      closeButton.click();
-      expect(document.body.style.overflow).toBe('');
-    });
-
-    it('closes on overlay click, not on content click', () => {
-      const overlay = document.querySelector('[data-modal-target="overlay"]');
-      const modal = document.querySelector('[data-modal-target="modal"]');
-      const openButton = document.querySelector('[data-action="modal#open"]');
-
-      openButton.click();
-      modal.click();
-      expect(overlay.hidden).toBe(false);
-
-      overlay.click();
-      expect(overlay.hidden).toBe(true);
-    });
-
-    it('restores focus after closing', async () => {
-      const openButton = document.querySelector('[data-action="modal#open"]');
-      openButton.focus();
-      openButton.click();
-
-      await new Promise(resolve => setTimeout(resolve, 10));
-      document.querySelector('[data-action="modal#close"]').click();
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-      expect(document.activeElement).toBe(openButton);
-    });
-
-    it('does not throw when custom modal target disconnects', async () => {
-      const modal = document.querySelector('[data-modal-target="modal"]');
-      await expect(async () => {
-        modal.remove();
-        await new Promise(resolve => setTimeout(resolve, 10));
-      }).not.toThrow();
-    });
-
-    it('Escape key closes non-native modal and hides overlay', async () => {
-      // setup: non-native modal with overlay
-      document.body.innerHTML = `
-        <div data-controller="modal">
-          <button data-action="modal#open" id="opener">Open</button>
-          <div data-modal-target="overlay" hidden>
-            <div data-modal-target="modal" role="dialog">
-              <button data-action="modal#close">Close</button>
-            </div>
-          </div>
-        </div>
-      `;
-      await new Promise((r) => setTimeout(r, 10));
-
-      document.getElementById('opener').click();
-      await new Promise((r) => setTimeout(r, 10));
-
-      const overlay = document.querySelector('[data-modal-target="overlay"]');
-      expect(overlay.hasAttribute('hidden')).toBe(false); // modal is open
-
-      const modal = document.querySelector('[data-modal-target="modal"]');
-      modal.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-      await new Promise((r) => setTimeout(r, 10));
-
-      expect(overlay.hasAttribute('hidden')).toBe(true); // modal closed
-    });
+    expect(dialog.close).toHaveBeenCalledWith('');
   });
 
-  describe('custom implementation without overlay', () => {
-    beforeEach(() => {
-      document.body.innerHTML = `
-        <div data-controller="modal">
-          <button data-action="modal#open">Open</button>
-          <div data-modal-target="modal" role="dialog" aria-modal="true" hidden>
-            <button data-action="modal#close">Close</button>
-          </div>
-        </div>
-      `;
-    });
+  it('removes the Turbo cache listener on controller disconnect', async () => {
+    const dialog = await render();
+    application.stop();
 
-    it('shows and hides modal directly when no overlay', () => {
-      const modal = document.querySelector('[data-modal-target="modal"]');
-      const openButton = document.querySelector('[data-action="modal#open"]');
-      const closeButton = document.querySelector('[data-action="modal#close"]');
+    document.dispatchEvent(new Event('turbo:before-cache'));
 
-      expect(modal.hidden).toBe(true);
-      openButton.click();
-      expect(modal.hidden).toBe(false);
-      closeButton.click();
-      expect(modal.hidden).toBe(true);
-    });
-  });
-
-  describe('accessibility', () => {
-    beforeEach(() => {
-      document.body.innerHTML = `
-        <div data-controller="modal">
-          <button data-action="modal#open">Open</button>
-          <div data-modal-target="overlay" hidden>
-            <div data-modal-target="modal" role="dialog" aria-modal="true">
-              <button data-action="modal#close">Close</button>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-
-    it('announces open and close to screen readers', async () => {
-      document.querySelector('[data-action="modal#open"]').click();
-      await new Promise(resolve => setTimeout(resolve, 150));
-
-      let liveRegion = document.querySelector('[data-live-region="polite"]');
-      expect(liveRegion.textContent).toBe('Modal opened');
-
-      document.querySelector('[data-action="modal#close"]').click();
-      await new Promise(resolve => setTimeout(resolve, 150));
-
-      expect(liveRegion.textContent).toBe('Modal closed');
-    });
+    expect(dialog.close).not.toHaveBeenCalled();
   });
 });

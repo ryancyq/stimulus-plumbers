@@ -30,6 +30,7 @@ Include the helpers in your `ApplicationHelper`:
 ```ruby
 module ApplicationHelper
   include StimulusPlumbers::Helpers::ComboboxHelper
+  include StimulusPlumbers::Helpers::ModalHelper
   include StimulusPlumbers::Helpers::PopoverHelper
   include StimulusPlumbers::Helpers::CalendarHelper
 end
@@ -69,7 +70,7 @@ The engine re-runs the installer before `assets:precompile` to restore a missing
 | Indicator | `sp_indicator` | [docs/component/indicator.md](docs/component/indicator.md) |
 | Link | `sp_link` | [docs/component/link.md](docs/component/link.md) |
 | List | `sp_list` | [docs/component/list.md](docs/component/list.md) |
-| Modal | — (JS only) | [docs/component/modal.md](docs/component/modal.md) |
+| Modal | `sp_modal`, `sp_modal_turbo`, `sp_modal_link_to` | [docs/component/modal.md](docs/component/modal.md) |
 | OrderedList | `sp_ordered_list` | [docs/component/ordered_list.md](docs/component/ordered_list.md) |
 | Popover | `sp_popover` | [docs/component/popover.md](docs/component/popover.md) |
 | Progress | `sp_progress_bar`, `sp_progress_segmented`, `sp_progress_ring`, `sp_progress_meter` | [docs/component/progress.md](docs/component/progress.md) |

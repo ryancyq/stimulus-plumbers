@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     draw :display
     draw :layout
     draw :popover
+    draw :modal
     draw :calendar
     draw :showcase
   end

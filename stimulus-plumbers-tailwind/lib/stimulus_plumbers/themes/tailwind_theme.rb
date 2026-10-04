@@ -10,6 +10,7 @@ require_relative "tailwind/button/group"
 require_relative "tailwind/calendar"
 require_relative "tailwind/card"
 require_relative "tailwind/combobox"
+require_relative "tailwind/modal"
 require_relative "tailwind/form"
 require_relative "tailwind/form/field"
 require_relative "tailwind/form/code"
@@ -30,6 +31,7 @@ module StimulusPlumbers
       include Tailwind::List
       include Tailwind::OrderedList
       include Tailwind::Combobox
+      include Tailwind::Modal
       include Tailwind::Avatar
       include Tailwind::Button
       include Tailwind::Button::Group
