@@ -1,4 +1,4 @@
-name: CI (snapshots)
+name: CI (browser)
 
 on:
   push:
@@ -7,23 +7,14 @@ on:
     branches: [main]
   schedule:
     - cron: '0 12 * * 5'
-  workflow_dispatch:
-    inputs:
-      update_snapshots:
-        description: Regenerate and update baseline screenshots
-        type: boolean
-        default: false
 
 permissions:
   contents: read
 
 jobs:
-  test-snapshots-tailwind:
-    name: "Snapshot tests / Ruby ${{ matrix.ruby-version }}"
+  test-browser-tailwind:
+    name: "Browser tests / Ruby ${{ matrix.ruby-version }}"
     runs-on: ubuntu-latest
-    permissions:
-      # write only when regenerating baselines via workflow_dispatch
-      contents: write
     defaults:
       run:
         working-directory: stimulus-plumbers-tailwind
@@ -38,8 +29,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v7
         with:
@@ -69,31 +58,15 @@ jobs:
 
       - run: npm ci
 
-      - run: npx playwright install chromium --with-deps
+      - run: npx playwright install chromium firefox webkit --with-deps
 
-      - run: npm run build:css
+      - run: npm run test:browser
 
-      - name: Run snapshots (compare)
-        if: ${{ !inputs.update_snapshots }}
-        run: npm run test:snapshots
-
-      - name: Regenerate baselines
-        if: ${{ inputs.update_snapshots }}
-        run: npm run clean:snapshots && npm run test:snapshots:update
-
-      - uses: ryancyq/github-signed-commit@v1
-        if: ${{ inputs.update_snapshots }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        with:
-          files: stimulus-plumbers-tailwind/test/snapshots/__screenshots__
-          commit-message: "chore: update snapshot baselines [skip ci]"
-
-      - name: Upload Playwright report and snapshot diffs
+      - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
+          name: playwright-report-browser
           path: |
             stimulus-plumbers-tailwind/playwright-report/
             stimulus-plumbers-tailwind/test-results/

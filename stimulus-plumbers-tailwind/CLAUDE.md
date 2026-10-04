@@ -58,6 +58,7 @@ stimulus-plumbers-tailwind/
 │   │           └── ...
 │   ├── snapshots/                          # Playwright specs, nested by route category
 │   │   └── __screenshots__/                # Baselines, mirroring the spec tree
+│   ├── browser/                            # Playwright engine-native behavior specs (playwright.browser.config.js)
 │   ├── sandbox/                            # Minimal Rails app for snapshot tests
 │   │   ├── app/
 │   │   │   ├── assets/
@@ -89,7 +90,8 @@ stimulus-plumbers-tailwind/
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`) — covers theme modules and generators
-- **Snapshot tests** using Playwright (`node --run test:snapshots`)
+- **Snapshot tests** using Playwright (`node --run test:snapshots`) — screenshots, plus computed-style assertions on CSS the Tailwind theme produces (e.g. keyframe timing, compiled gradients). Other assertions only as readiness waits before a screenshot — no DOM, ARIA, or interaction tests. Chromium desktop/mobile
+- **Browser tests** using Playwright (`node --run test:browser`) — no screenshots; only behavior the engine owns (native `<dialog>`, Popover API, CSS anchor positioning) across Chromium desktop/mobile, Firefox, and WebKit. Controller logic belongs in the JS vitest suite; WCAG in `stimulus-plumbers-rails` a11y tests
 - **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
 - **Snapshot tests must be a superset of `stimulus-plumbers-rails` a11y tests** — every page + interactive state covered by an a11y test must also have a corresponding snapshot test. When adding a11y tests in the core gem, add matching snapshot coverage here.
 

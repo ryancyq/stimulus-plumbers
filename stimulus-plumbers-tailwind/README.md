@@ -103,6 +103,7 @@ npm install
 bundle exec rake test:unit    # unit tests
 node --run test:snapshots         # visual snapshot tests (Playwright)
 node --run test:snapshots:update  # regenerate baseline screenshots
+node --run test:browser           # native browser behavior tests (Chromium, Firefox, WebKit)
 bundle exec rake rubocop       # lint
 bundle exec rake coverage      # run tests with coverage + collate report
 ```

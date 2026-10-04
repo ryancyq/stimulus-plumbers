@@ -20,18 +20,6 @@ export default defineConfig({
   projects: [
     { name: "desktop", use: { channel: "chromium", viewport: { width: 1280, height: 800 } } },
     { name: "mobile",  use: { ...devices["Pixel 7"], channel: "chromium" } },
-    {
-      name: "firefox",
-      testMatch: /components\/modal\/(?:modal|turbo|form)\.spec\.js$/,
-      ignoreSnapshots: true,
-      use: { ...devices["Desktop Firefox"] },
-    },
-    {
-      name: "webkit",
-      testMatch: /components\/modal\/(?:modal|turbo|form)\.spec\.js$/,
-      ignoreSnapshots: true,
-      use: { ...devices["Desktop Safari"] },
-    },
   ],
 
   webServer: {
