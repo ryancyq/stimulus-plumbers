@@ -22,6 +22,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
+          node-version: lts/*
           cache: npm
           cache-dependency-path: stimulus-plumbers/package-lock.json
 
