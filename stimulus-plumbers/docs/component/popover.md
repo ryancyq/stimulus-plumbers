@@ -1,111 +1,68 @@
 # popover
 
-Shows and hides a panel with optional remote loading. Owns visibility, `aria-expanded`, outside-click dismissal, and focus management. Backed by the `Visibility`, `Dismisser`, and `ContentLoader` plumbers.
+Adapts a native `popover` element to the popover lifecycle through the [popover plumber](../plumber/popover.md).
+The browser owns the top layer, light dismissal, and Escape for `popover="auto"`; the consuming component owns
+role, keyboard behavior, focus, and selection.
 
-This controller is also the visibility/dismissal layer for the combobox family — `input-combobox` runs alongside it and delegates open/close to `popover` (see [combobox docs](./combobox.md)).
+## Migration from legacy popover markup
 
-## Targets
+The legacy controller toggled a `hidden` panel and could fetch its content:
 
-| Target     | Description                                                                |
-| ---------- | -------------------------------------------------------------------------- |
-| `trigger`  | The activator element — opens/toggles the panel and tracks `aria-expanded` |
-| `panel`    | The element to show/hide (and load remote content into)                    |
-| `template` | Optional `<template>` or element whose HTML is used as initial content     |
-| `loader`   | Optional element shown during remote load                                  |
+```html
+<div data-controller="popover" data-popover-url-value="/menu">
+  <button data-popover-target="trigger" data-action="popover#toggle">Account</button>
+  <div data-popover-target="panel" hidden></div>
+</div>
+```
 
-## Values
-
-| Value           | Type    | Default          | Description                                          |
-| --------------- | ------- | ---------------- | ---------------------------------------------------- |
-| `url`           | String  | —                | Remote URL to fetch content from                     |
-| `reload`        | String  | `"never"`        | When to reload: `"never"` \| `"always"` \| `"stale"` |
-| `staleAfter`    | Number  | `3600`           | Seconds after which content is considered stale      |
-| `loadedAt`      | String  | —                | ISO timestamp of last load (set automatically)       |
-| `closeOnSelect` | Boolean | `true`           | Whether a `#closeOnSelect` call dismisses the panel  |
-| `announceOpen`  | String  | `"Panel opened"` | Screen-reader announcement on panel show             |
-| `announceClose` | String  | `"Panel closed"` | Screen-reader announcement on panel hide             |
-
-## Methods
-
-| Method                       | Wired via             | Description                                                                                                 |
-| ---------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `open()`                     | `data-action`         | Action — shows the panel                                                                                    |
-| `close()`                    | `data-action`         | Action — hides the panel (used by Esc, close buttons, outside-click)                                        |
-| `toggle()`                   | `data-action`         | Action — shows when hidden, hides when visible                                                              |
-| `closeOnSelect()`            | `data-action`         | Action — hides the panel only when `closeOnSelect` value is `true`; used by selection events                |
-| `shown()`                    | Visibility plumber    | Plumber callback — triggers `load()`, then moves focus into the panel                                       |
-| `hidden()`                   | Visibility plumber    | Plumber callback — returns focus to the `trigger`                                                           |
-| `dismissed()`                | Dismisser plumber     | Plumber callback — closes the panel on outside click                                                        |
-| `canLoad()`                  | ContentLoader plumber | Plumber callback (gate) — returns `false` for `<turbo-frame>` panels (sets `src` instead); `true` otherwise |
-| `contentLoading()`           | ContentLoader plumber | Plumber callback — shows the `loader` target while fetching                                                 |
-| `contentLoaded({ content })` | ContentLoader plumber | Plumber callback — inserts fetched content into the `panel` target, hides `loader`                          |
-| `contentLoader()`            | ContentLoader plumber | Plumber callback — returns static content from `template` target (if no URL)                                |
-
-## Examples
-
-### Static popover
+Use a native popover panel; put remote content in a Turbo Frame inside it:
 
 ```html
 <div data-controller="popover">
-  <button
-    data-action="click->popover#toggle keydown.esc->popover#close"
-    data-popover-target="trigger"
-    aria-haspopup="dialog"
-    aria-expanded="false"
-    aria-controls="opts"
-  >
-    Open
-  </button>
-
-  <div id="opts" data-popover-target="panel" hidden role="dialog" aria-label="Options">
-    <p>Popover content</p>
-    <button data-action="click->popover#close">Close</button>
+  <button data-popover-target="trigger" popovertarget="account-actions">Account</button>
+  <div id="account-actions" data-popover-target="panel" popover="auto" role="region" aria-label="Account actions">
+    <turbo-frame id="account_actions" src="/menu" loading="lazy"></turbo-frame>
   </div>
 </div>
 ```
 
-### Remote content (fetch on show)
+Remove the `url`, `loadedAt`, `reload`, `staleAfter`, `closeOnSelect`, `announceOpen`, and `announceClose`
+values and any `controller.visibility`, `shift()`, or `flip()` dependencies. Combobox close-on-select moved to
+[`input-combobox`](combobox.md#input-combobox).
 
-```html
-<div
-  data-controller="popover"
-  data-popover-url-value="/help/tooltip"
-  data-popover-reload-value="stale"
-  data-popover-stale-after-value="300"
->
-  <button data-action="click->popover#toggle" data-popover-target="trigger">Help</button>
+## Targets
 
-  <div data-popover-target="panel" hidden>
-    <div data-popover-target="loader" hidden>Loading…</div>
-    <div data-popover-target="template"></div>
-  </div>
-</div>
-```
+| Target    | Required | Description                                                     |
+| --------- | -------- | --------------------------------------------------------------- |
+| `trigger` | no       | Default source for programmatic opens                           |
+| `panel`   | yes      | Native popover element (`popover="auto"` or `popover="manual"`) |
 
-### Turbo Frame (lazy load)
+## Methods
 
-When the `panel` target is a `<turbo-frame>`, `canLoad()` sets its `src` attribute on show rather than fetching HTML directly.
+| Method           | Description                                                       |
+| ---------------- | ----------------------------------------------------------------- |
+| `open(event?)`   | Opens the panel; an action event's current target is the source   |
+| `close(event?)`  | Closes the panel                                                  |
+| `toggle(event?)` | Toggles the panel; an action event's current target is the source |
 
-```html
-<div data-controller="popover" data-popover-url-value="/preview/123">
-  <button data-action="click->popover#toggle" data-popover-target="trigger">Preview</button>
-  <turbo-frame data-popover-target="panel" hidden></turbo-frame>
-</div>
-```
+The packaged button opens declaratively with `popovertarget` and needs no action. A custom source wires its own,
+e.g. `click->popover#open` on an input. Light dismissal treats a custom source as outside the panel, so with
+`popover="auto"` it can open the panel but not toggle it closed. Direct calls use the `trigger` target as the
+source. A missing or non-popover panel logs one configuration error and leaves the methods inert.
 
-### Keep panel open on select
+## Events
 
-Selection events (from combobox sub-controllers, menu items, etc.) can be wired to `closeOnSelect`. Set `data-popover-close-on-select-value="false"` to keep the panel open after a selection — useful for multi-step pickers (date ranges, multi-select).
+Events are dispatched from the panel:
 
-```html
-<div data-controller="popover" data-popover-close-on-select-value="false">
-  ...
-  <ul data-action="my-list:selected->popover#closeOnSelect">
-    …
-  </ul>
-</div>
-```
+| Event                 | Cancellable | Detail       |
+| --------------------- | ----------- | ------------ |
+| `popover:before-open` | yes         | `{ source }` |
+| `popover:opened`      | no          | `{ source }` |
+| `popover:closed`      | no          | `{ source }` |
+
+`source` is the native invoker, or `null` for an external `showPopover()` call. `popover="manual"` panels get
+no light dismissal; the consuming component provides every close path.
 
 ## Accessibility
 
-See [ARIA.md's Popover pattern](../../../ARIA.md) for role, `aria-haspopup`/`aria-expanded`, and focus-return requirements.
+- See [ARIA.md's Popover pattern](../../../ARIA.md) for the accessibility contract.

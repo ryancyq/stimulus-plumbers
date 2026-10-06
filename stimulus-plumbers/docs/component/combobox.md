@@ -14,7 +14,7 @@ input-combobox + input-formatter   ← wrapper
 
 ## input-combobox
 
-Owns the trigger input, popover visibility, and hidden value. Always co-located with `input-formatter`.
+Owns the trigger input, hidden value, and close-on-select. Always co-located with `input-formatter`.
 
 **Targets**
 
@@ -22,13 +22,15 @@ Owns the trigger input, popover visibility, and hidden value. Always co-located 
 | --------- | -------------------- | ----------------------------------------------- |
 | `trigger` | `input[type=text]`   | The combobox input (display + focus management) |
 | `input`   | `input[type=hidden]` | Holds the submitted value                       |
+| `panel`   | `[popover]`          | Popover panel closed after a selection          |
 
 **Values**
 
-| Value       | Type   | Default | Description                                                            |
-| ----------- | ------ | ------- | ---------------------------------------------------------------------- |
-| `value`     | String | `""`    | Current selected value; setting it triggers `valueValueChanged`        |
-| `minLength` | Number | `1`     | Min query length before typeahead relays to `combobox-dropdown` outlet |
+| Value           | Type    | Default | Description                                                            |
+| --------------- | ------- | ------- | ---------------------------------------------------------------------- |
+| `value`         | String  | `""`    | Current selected value; setting it triggers `valueValueChanged`        |
+| `minLength`     | Number  | `1`     | Min query length before typeahead relays to `combobox-dropdown` outlet |
+| `closeOnSelect` | Boolean | `true`  | Hides the `panel` after a selection                                    |
 
 **Outlets**
 
@@ -38,10 +40,10 @@ Owns the trigger input, popover visibility, and hidden value. Always co-located 
 
 **Methods**
 
-| Method            | Wired via             | Description                                                                        |
-| ----------------- | --------------------- | ---------------------------------------------------------------------------------- |
-| `onSelect(event)` | `combobox-*:selected` | Event adapter — writes `event.detail.value` to `valueValue`; popover handles close |
-| `onInput(event)`  | `input` on trigger    | Event adapter — extracts query, relays to `comboboxDropdownOutlet.filter(query)`   |
+| Method            | Wired via             | Description                                                                                          |
+| ----------------- | --------------------- | ---------------------------------------------------------------------------------------------------- |
+| `onSelect(event)` | `combobox-*:selected` | Event adapter — writes `event.detail.value` to `valueValue`, then hides `panel` when `closeOnSelect` |
+| `onInput(event)`  | `input` on trigger    | Event adapter — extracts query, relays to `comboboxDropdownOutlet.filter(query)`                     |
 
 **Dispatches**
 
@@ -189,6 +191,7 @@ Listbox with client-side fuzzy filter or server-side fetch. Used by both dropdow
 user picks value
   └─ combobox-*:selected { value }
        └─ input-combobox#onSelect       ← event adapter
+            ├─ panelTarget.hidePopover() (when closeOnSelect)
             └─ valueValue = value        → valueValueChanged
                  ├─ inputTarget.value = value
                  └─ dispatch input-combobox:changed { value }
@@ -197,8 +200,6 @@ user picks value
                                 ├─ formats value
                                 ├─ writes to inputTarget
                                 └─ dispatch input-formatter:formatted { value }
-
-(popover closes separately via popover#closeOnSelect)
 ```
 
 ---

@@ -13,6 +13,10 @@ class ComboboxTest < ActionView::TestCase
     end
   end
 
+  def render_time_combobox(**kwargs)
+    StimulusPlumbers::Components::Combobox.new(self).render(**kwargs, &:time)
+  end
+
   def test_wrapper_includes_input_combobox_controller
     doc = parse_html(render_combobox)
 
@@ -81,6 +85,36 @@ class ComboboxTest < ActionView::TestCase
     doc = parse_html(render_combobox(class: "my-combobox"))
 
     assert_css doc, "div.my-combobox[data-controller~='input-combobox']"
+  end
+
+  def test_panel_is_an_input_combobox_target
+    doc = parse_html(render_combobox)
+
+    assert_css doc, "[popover][data-input-combobox-target='panel'][data-popover-target='panel']"
+  end
+
+  def test_close_on_select_value_set_when_given
+    doc = parse_html(render_combobox(close_on_select: false))
+
+    assert_css doc, "[data-input-combobox-close-on-select-value='false']"
+  end
+
+  def test_close_on_select_value_absent_by_default
+    doc = parse_html(render_combobox)
+
+    assert_no_css doc, "[data-input-combobox-close-on-select-value]"
+  end
+
+  def test_time_variant_keeps_panel_open_on_select_by_default
+    doc = parse_html(render_time_combobox)
+
+    assert_css doc, "[data-input-combobox-close-on-select-value='false']"
+  end
+
+  def test_close_on_select_overrides_variant_default
+    doc = parse_html(render_time_combobox(close_on_select: true))
+
+    assert_css doc, "[data-input-combobox-close-on-select-value='true']"
   end
 
   def test_extra_data_attrs_merged_with_stimulus_data

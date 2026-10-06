@@ -569,6 +569,159 @@ describe('Dialog', () => {
     expect(dismiss).not.toHaveBeenCalled();
   });
 
+  describe('Escape with an open popover', () => {
+    const popoverIn = (parent, mode = 'auto') => {
+      const popover = document.createElement('div');
+      popover.setAttribute('popover', mode);
+      // jsdom has no popover API or ToggleEvent.
+      popover.popover = mode;
+      let open = false;
+      popover.matches = vi.fn((selector) => selector === ':popover-open' && open);
+      popover.showPopover = () => {
+        popover.dispatchEvent(Object.assign(new Event('beforetoggle'), { newState: 'open' }));
+        open = true;
+      };
+      popover.hidePopover = vi.fn(() => {
+        popover.dispatchEvent(Object.assign(new Event('beforetoggle'), { newState: 'closed' }));
+        open = false;
+      });
+      parent.appendChild(popover);
+      return popover;
+    };
+
+    const escape = (target, init = {}) => {
+      const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true, ...init });
+      target.dispatchEvent(event);
+      return event;
+    };
+
+    let dialogs;
+    const attach = () => {
+      const dialog = new Dialog(controller, { element });
+      dialogs.push(dialog);
+      return dialog;
+    };
+
+    beforeEach(() => {
+      dialogs = [];
+      element.open = true;
+    });
+
+    afterEach(() => {
+      dialogs.forEach((dialog) => dialog.disconnect());
+    });
+
+    it('closes only the most recently opened popover', () => {
+      attach();
+      const outer = popoverIn(element);
+      const inner = popoverIn(element);
+      inner.showPopover();
+      outer.showPopover();
+
+      const event = escape(element);
+
+      expect(event.defaultPrevented).toBe(true);
+      expect(outer.hidePopover).toHaveBeenCalledOnce();
+      expect(inner.hidePopover).not.toHaveBeenCalled();
+    });
+
+    it('closes a reopened popover before one opened after it first', () => {
+      attach();
+      const first = popoverIn(element);
+      const second = popoverIn(element);
+      first.showPopover();
+      second.showPopover();
+      first.hidePopover();
+      first.hidePopover.mockClear();
+      first.showPopover();
+
+      escape(element);
+
+      expect(first.hidePopover).toHaveBeenCalledOnce();
+      expect(second.hidePopover).not.toHaveBeenCalled();
+    });
+
+    it('closes a popover that was already open when the dialog attached', () => {
+      const popover = popoverIn(element);
+      popover.showPopover();
+      attach();
+
+      expect(escape(element).defaultPrevented).toBe(true);
+      expect(popover.hidePopover).toHaveBeenCalledOnce();
+    });
+
+    it('leaves Escape to a nested open dialog', () => {
+      attach();
+      const popover = popoverIn(element);
+      popover.showPopover();
+      const nested = document.createElement('dialog');
+      popover.appendChild(nested);
+      nested.dispatchEvent(Object.assign(new Event('beforetoggle'), { newState: 'open' }));
+      nested.setAttribute('open', '');
+
+      expect(escape(nested).defaultPrevented).toBe(false);
+      expect(popover.hidePopover).not.toHaveBeenCalled();
+    });
+
+    it('handles Escape when focus is stranded on the body', () => {
+      attach();
+      const popover = popoverIn(element);
+      popover.showPopover();
+
+      expect(escape(document.body).defaultPrevented).toBe(true);
+      expect(popover.hidePopover).toHaveBeenCalledOnce();
+    });
+
+    it('leaves the native cancel path when no auto popover is open', () => {
+      attach();
+      const manual = popoverIn(element, 'manual');
+      manual.showPopover();
+      popoverIn(element);
+
+      expect(escape(element).defaultPrevented).toBe(false);
+      expect(manual.hidePopover).not.toHaveBeenCalled();
+    });
+
+    it('ignores handled, composing, and non-Escape keys', () => {
+      attach();
+      const popover = popoverIn(element);
+      popover.showPopover();
+      element.addEventListener('keydown', (event) => event.target.id === 'handled' && event.preventDefault());
+      const handled = document.createElement('input');
+      handled.id = 'handled';
+      element.appendChild(handled);
+
+      escape(handled);
+      escape(element, { isComposing: true });
+      escape(element, { key: 'Enter' });
+
+      expect(popover.hidePopover).not.toHaveBeenCalled();
+    });
+
+    it('ignores Escape from outside the dialog or while it is closed', () => {
+      attach();
+      const popover = popoverIn(element);
+      popover.showPopover();
+      const outside = invoker();
+
+      escape(outside);
+      element.open = false;
+      escape(element);
+
+      expect(popover.hidePopover).not.toHaveBeenCalled();
+    });
+
+    it('stops handling Escape after disconnect', () => {
+      const dialog = attach();
+      const popover = popoverIn(element);
+      popover.showPopover();
+      dialog.disconnect();
+
+      expect(escape(element).defaultPrevented).toBe(false);
+      expect(popover.hidePopover).not.toHaveBeenCalled();
+    });
+  });
+
   it('cleans every listener on disconnect', () => {
     const dialog = new Dialog(controller, { element });
     const remove = vi.spyOn(element, 'removeEventListener');

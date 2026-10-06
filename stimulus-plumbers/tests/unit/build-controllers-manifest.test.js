@@ -14,20 +14,19 @@ const CONTROLLERS_DIR = join(dirname(fileURLToPath(import.meta.url)), '../../src
 const MANIFEST_PATH = join(CONTROLLERS_DIR, '../../dist/controllers.manifest.json')
 
 const POPOVER_SOURCE = `
+import { attachPopover } from '../plumbers/popover';
+
 export default class extends Controller {
   static targets = ['trigger', 'panel'];
-  static values = { url: String };
 
   connect() {}
   disconnect() {}
 
-  async open() {
-    this.dispatch('shown', { detail: {} });
-  }
+  open(event) {}
 
-  async close() {
-    this.dispatch('hidden');
-  }
+  close(event) {}
+
+  toggle(event) {}
 
   urlValueChanged() {}
   panelTargetConnected() {}
@@ -75,6 +74,20 @@ describe('parseActions', () => {
       onSubmitEnd: ['event'],
     })
   })
+
+  it('keeps the documented popover action surface exact', () => {
+    const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'))
+
+    expect(manifest.popover.targets).toEqual(['trigger', 'panel'])
+    expect(manifest.popover.values).toEqual({})
+    expect(manifest.popover.actions).toEqual(['close', 'open', 'toggle'])
+    expect(manifest.popover.actionParams).toEqual({
+      close: ['event'],
+      open: ['event'],
+      toggle: ['event'],
+    })
+    expect(manifest.popover.dispatches).toEqual(['before-open', 'closed', 'opened'])
+  })
 })
 
 describe('parseActionParams', () => {
@@ -119,7 +132,9 @@ export default class extends Controller {
 
 describe('parseDispatches', () => {
   it('collects unique dispatched event names', () => {
-    expect(parseDispatches(POPOVER_SOURCE)).toEqual(['hidden', 'shown'])
+    const source = `this.dispatch('shown'); this.dispatch('hidden'); this.dispatch('shown');`
+
+    expect(parseDispatches(source)).toEqual(['hidden', 'shown'])
   })
 
   it('collects event names dispatched through a private helper', () => {
@@ -180,6 +195,13 @@ describe('withPlumberSources', () => {
     expect(parseActions(source)).toEqual(['close', 'dismiss', 'open'])
     expect(parseDispatches(source)).toEqual([])
     expect(parseDispatches(combined)).toEqual(['before-dismiss', 'before-open', 'closed', 'opened'])
+  })
+
+  it('includes every native popover lifecycle dispatch from its imported plumber', () => {
+    const combined = withPlumberSources(POPOVER_SOURCE, CONTROLLERS_DIR)
+
+    expect(parseDispatches(POPOVER_SOURCE)).toEqual([])
+    expect(parseDispatches(combined)).toEqual(['before-open', 'closed', 'opened'])
   })
 
   it('returns just the source when there are no plumber imports', () => {

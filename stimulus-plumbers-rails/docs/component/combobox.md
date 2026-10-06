@@ -24,13 +24,13 @@ end %>
 end %>
 ```
 
-| Option            | Description                                      |
-| ----------------- | ------------------------------------------------ |
-| `value`           | Initial value (hidden input + trigger)           |
-| `label`           | `aria-label` on the trigger input                |
-| `id`              | Trigger id (defaults to a generated `sp_dom_id`) |
-| `close_on_select` | `false` keeps the panel open after a selection   |
-| `**html_options`  | Forwarded to the wrapper `div`                   |
+| Option            | Description                                                               |
+| ----------------- | ------------------------------------------------------------------------- |
+| `value`           | Initial value (hidden input + trigger)                                    |
+| `label`           | `aria-label` on the trigger input                                         |
+| `id`              | Trigger id (defaults to a generated `sp_dom_id`)                          |
+| `close_on_select` | `false` keeps the panel open after a selection (time defaults to `false`) |
+| `**html_options`  | Forwarded to the wrapper `div`                                            |
 
 Config methods: `c.dropdown(options:, value:, label:)`, `c.typeahead(options:, value:, label:, url:)`,
 `c.date(value:)`, `c.time(format:, step:, value:)`.
@@ -145,9 +145,9 @@ All form field methods accept `label:`, `hint:`, `error:`, `required:`, and `hid
 
 ## Rendered HTML Structure
 
-All variants share the same wrapper pattern. The `popover` controller owns panel
-visibility, `aria-expanded`, outside-click dismissal, and focus; `input-combobox`
-owns value/selection/filtering; `input-formatter` formats the displayed value.
+All variants share the same wrapper pattern. The `popover` controller opens and closes
+the native panel and syncs `aria-expanded`; `input-combobox` owns value, selection,
+filtering, and close-on-select; `input-formatter` formats the displayed value.
 
 ```html
 <div
@@ -177,11 +177,12 @@ owns value/selection/filtering; `input-formatter` formats the displayed value.
 `[popup-id]` is `[id]_popover` for dropdown/date/time and `[id]_popover_listbox` for typeahead.
 
 Pass `close_on_select: false` to any `sp_combobox_*` helper to keep the panel open
-after a selection (renders `data-popover-close-on-select-value="false"` on the wrapper).
+after a selection (renders `data-input-combobox-close-on-select-value="false"` on the wrapper). Time
+defaults to `false` because each drum step is a selection.
 
 ### Popover body by variant
 
-Each variant builds its own panel root via `Popover::Builder#build_panel` (see
+Each variant builds its own panel root via `Popover#build_panel` (see
 [popover.md](popover.md)), adding its controller and role to the panel wiring. The
 trigger's `aria-controls` points at the popup — the panel for dropdown/date/time, the
 nested `<ul role="listbox">` for typeahead.
@@ -193,10 +194,11 @@ nested `<ul role="listbox">` for typeahead.
   id="[id]_popover"
   role="dialog"
   aria-label="[label]"
-  hidden
+  popover="auto"
   data-popover-target="panel"
+  data-input-combobox-target="panel"
   data-controller="combobox-date"
-  data-action="combobox-date:selected->input-combobox#onSelect combobox-date:selected->popover#closeOnSelect ..."
+  data-action="combobox-date:selected->input-combobox#onSelect ..."
 >
   <!-- calendar grid (date) or drum columns (time) -->
 </div>
@@ -207,12 +209,13 @@ nested `<ul role="listbox">` for typeahead.
 ```html
 <ul
   id="[id]_popover"
-  hidden
+  popover="auto"
   role="listbox"
   aria-label="[label]"
   data-popover-target="panel"
+  data-input-combobox-target="panel"
   data-controller="combobox-dropdown"
-  data-action="click->combobox-dropdown#onSelect keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect combobox-dropdown:selected->popover#closeOnSelect"
+  data-action="click->combobox-dropdown#onSelect keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect"
   data-combobox-dropdown-target="listbox"
 >
   <li role="option" data-value="us" aria-selected="false">United States</li>
@@ -223,15 +226,16 @@ nested `<ul role="listbox">` for typeahead.
 **typeahead** — the panel is a wrapper holding the controller. The `<ul role="listbox">`
 holds only options; the `loading`/`empty` status regions are siblings beside it, since
 `role="listbox"` permits only `option`/`group` children. Status regions stay
-non-focusable (the popover focuses the first focusable element in the panel on open).
+non-focusable.
 
 ```html
 <div
   id="[id]_popover"
-  hidden
+  popover="auto"
   data-popover-target="panel"
+  data-input-combobox-target="panel"
   data-controller="combobox-dropdown"
-  data-action="click->combobox-dropdown#onSelect keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect combobox-dropdown:selected->popover#closeOnSelect"
+  data-action="click->combobox-dropdown#onSelect keydown->combobox-dropdown#onNavigate combobox-dropdown:selected->input-combobox#onSelect"
   data-combobox-dropdown-url-value="[url]"
 >
   <ul

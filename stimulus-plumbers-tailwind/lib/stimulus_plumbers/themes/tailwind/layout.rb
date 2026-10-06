@@ -21,9 +21,23 @@ module StimulusPlumbers
           "h-9 px-(--sp-space-4) py-(--sp-space-2) text-(length:--sp-text-sm)"
         ].freeze
         POPOVER = %w[
+          sp-popover
           rounded-(--sp-radius-md) border border-(--sp-color-border)
           bg-(--sp-color-bg) shadow-(--sp-shadow-md) z-(--sp-z-popover)
+          [position:fixed] [position-anchor:auto] [inset:auto] m-0
+          [max-inline-size:min(90vi,32rem)] [max-block-size:min(80vb,32rem)] overflow-auto
         ].freeze
+
+        POPOVER_PLACEMENTS = {
+          block_end_start:   %w[[position-area:block-end_span-inline-end] [position-try-fallbacks:flip-block,flip-inline]],
+          block_end:         %w[[position-area:block-end] [position-try-fallbacks:flip-block]],
+          block_end_end:     %w[[position-area:block-end_span-inline-start] [position-try-fallbacks:flip-block,flip-inline]],
+          block_start_start: %w[[position-area:block-start_span-inline-end] [position-try-fallbacks:flip-block,flip-inline]],
+          block_start:       %w[[position-area:block-start] [position-try-fallbacks:flip-block]],
+          block_start_end:   %w[[position-area:block-start_span-inline-start] [position-try-fallbacks:flip-block,flip-inline]],
+          inline_start:      %w[[position-area:inline-start] [position-try-fallbacks:flip-inline]],
+          inline_end:        %w[[position-area:inline-end] [position-try-fallbacks:flip-inline]]
+        }.freeze
 
         private
 
@@ -47,8 +61,8 @@ module StimulusPlumbers
           { classes: klasses(*POPOVER_TRIGGER) }
         end
 
-        def popover_classes
-          { classes: klasses(*POPOVER) }
+        def popover_classes(placement: :block_end_start)
+          { classes: klasses(*POPOVER, *POPOVER_PLACEMENTS.fetch(placement, POPOVER_PLACEMENTS[:block_end_start])) }
         end
       end
     end

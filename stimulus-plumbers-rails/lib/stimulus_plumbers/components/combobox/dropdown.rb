@@ -8,8 +8,7 @@ module StimulusPlumbers
         STIMULUS_ACTION     = [
           "click->#{STIMULUS_CONTROLLER}#onSelect",
           "keydown->#{STIMULUS_CONTROLLER}#onNavigate",
-          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
-          "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
+          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
         ].join(" ").freeze
 
         module Metadata

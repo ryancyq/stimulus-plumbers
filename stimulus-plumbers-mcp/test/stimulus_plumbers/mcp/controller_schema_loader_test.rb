@@ -40,6 +40,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
 
     assert_includes ctrl["targets"], "trigger"
     assert_includes ctrl["targets"], "input"
+    assert_includes ctrl["targets"], "panel"
   end
 
   def test_input_combobox_values
@@ -50,18 +51,12 @@ class ControllerSchemaLoaderTest < Minitest::Test
     assert values.key?("minLength"), "Missing value key 'minLength'"
     assert_equal "Number", values["minLength"]["type"]
     assert_equal 1, values["minLength"]["default"]
+    assert_equal "Boolean", values["closeOnSelect"]["type"]
+    assert values["closeOnSelect"]["default"]
   end
 
   def test_input_combobox_outlets
     assert_includes @controllers["input-combobox"]["outlets"], "combobox-dropdown"
-  end
-
-  def test_popover_values_include_defaults
-    values = @controllers["popover"]["values"]
-
-    assert_equal "never", values["reload"]["default"]
-    assert_equal 3600, values["staleAfter"]["default"]
-    assert values["closeOnSelect"]["default"]
   end
 
   def test_combobox_date_outlets

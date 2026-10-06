@@ -1,6 +1,8 @@
 @theme {
   --sp-progress-slide-duration: 1.5s;
   --animate-progress-slide: sp-progress-slide var(--sp-progress-slide-duration) ease-in-out infinite;
+  --sp-popover-transition-duration: 150ms;
+  --sp-popover-enter-offset: var(--sp-space-2);
 }
 
 @keyframes sp-progress-slide {
@@ -102,6 +104,47 @@ dialog.sp-modal::backdrop {
 
 dialog.sp-modal[open]::backdrop {
   opacity: 1;
+}
+
+.sp-popover[popover] {
+  transition:
+    display var(--sp-popover-transition-duration) ease,
+    overlay var(--sp-popover-transition-duration) ease,
+    opacity var(--sp-popover-transition-duration) ease,
+    transform var(--sp-popover-transition-duration) ease;
+  transition-behavior: allow-discrete;
+}
+
+/* Theme display utilities (e.g. flex) would otherwise override the UA's closed-popover display: none. */
+.sp-popover[popover]:not(:popover-open) {
+  display: none;
+  opacity: 0;
+  transform: translateY(var(--sp-popover-enter-offset));
+}
+
+.sp-popover[popover]:popover-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@starting-style {
+  .sp-popover[popover]:popover-open {
+    opacity: 0;
+    transform: translateY(var(--sp-popover-enter-offset));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-popover[popover] {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .sp-popover[popover] {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
 }
 
 @starting-style {

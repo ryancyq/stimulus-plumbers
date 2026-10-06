@@ -33,11 +33,11 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css parse_html(sp_combobox_date), "[role='dialog']"
     end
 
-    def test_popover_is_hidden_by_default
+    def test_panel_is_a_native_auto_popover
       popover = parse_html(sp_combobox_date).at_css("[role='dialog']")
 
       assert_not_nil popover
-      assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
+      assert_equal "auto", popover["popover"]
     end
 
     def test_popover_has_accessible_label
@@ -153,11 +153,11 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css parse_html(sp_combobox_dropdown), "ul[role='listbox']"
     end
 
-    def test_popover_is_hidden_by_default
+    def test_panel_is_a_native_auto_popover
       popover = parse_html(sp_combobox_dropdown).at_css("[data-popover-target='panel']")
 
       assert_not_nil popover
-      assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
+      assert_equal "auto", popover["popover"]
     end
 
     def test_trigger_aria_expanded_false
@@ -305,11 +305,11 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css parse_html(sp_combobox_typeahead), "ul[role='listbox']"
     end
 
-    def test_popover_is_hidden_by_default
+    def test_panel_is_a_native_auto_popover
       popover = parse_html(sp_combobox_typeahead).at_css("[data-popover-target='panel']")
 
       assert_not_nil popover
-      assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
+      assert_equal "auto", popover["popover"]
     end
 
     def test_popover_has_no_options_by_default
@@ -399,11 +399,11 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css parse_html(sp_combobox_time), "[role='dialog']"
     end
 
-    def test_popover_is_hidden_by_default
+    def test_panel_is_a_native_auto_popover
       popover = parse_html(sp_combobox_time).at_css("[role='dialog']")
 
       assert_not_nil popover
-      assert popover.key?("hidden"), "Expected popover to have the hidden attribute"
+      assert_equal "auto", popover["popover"]
     end
 
     def test_trigger_aria_expanded_false

@@ -22,6 +22,7 @@ module StimulusPlumbers
         **Schema::LAYOUT,
         **Schema::LINK,
         **Schema::MODAL,
+        **Schema::POPOVER,
         **Schema::PROGRESS,
         **Schema::TIMELINE
       }.freeze

@@ -33,7 +33,10 @@ module StimulusPlumbers
           p.trigger(haspopup: metadata.haspopup, controls: metadata.popup_id_for(panel_id)) do |attrs|
             build_combobox_trigger(attrs, trigger, input, metadata, trigger_id, label)
           end
-          p.build_panel(classes: theme.resolve(:combobox_popover).fetch(:classes, "")) do |panel_attrs|
+          p.build_panel(
+            classes: theme.resolve(:combobox_popover).fetch(:classes, ""),
+            data:    { "#{STIMULUS_CONTROLLER}_target": "panel" }
+          ) do |panel_attrs|
             config.render_panel(panel_attrs: panel_attrs)
           end
         end
@@ -43,8 +46,9 @@ module StimulusPlumbers
         merge_html_options(
           theme.resolve(:combobox),
           kwargs,
-          { data: stimulus_data(input[:value], close_on_select) },
-          { data: config.metadata.stimulus_data(panel_id, config.options) }
+          { data: stimulus_data(input[:value]) },
+          { data: config.metadata.stimulus_data(panel_id, config.options) },
+          { data: { input_combobox_close_on_select_value: close_on_select }.compact }
         )
       end
 
@@ -71,13 +75,12 @@ module StimulusPlumbers
         defaults.deep_merge(trigger)
       end
 
-      def stimulus_data(initial_value, close_on_select)
+      def stimulus_data(initial_value)
         data = {
           controller: "#{Popover::STIMULUS_CONTROLLER} #{STIMULUS_CONTROLLER} #{FORMAT_CONTROLLER}",
           action:     FORMAT_ACTION
         }
-        data[:input_combobox_value_value]    = initial_value if initial_value.present?
-        data[:popover_close_on_select_value] = close_on_select unless close_on_select.nil?
+        data[:input_combobox_value_value] = initial_value if initial_value.present?
         data
       end
 

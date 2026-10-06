@@ -28,11 +28,6 @@ class ComponentManifestTest < Minitest::Test
     assert_empty missing, "KNOWN_IDS references controllers no longer in controllers.manifest.json: #{missing}"
   end
 
-  def test_extracts_method_actions
-    assert_includes @result["popover"]["actions"], "open"
-    assert_includes @result["popover"]["actions"], "toggle"
-  end
-
   def test_extracts_dispatch_listens
     assert_includes @result["calendar-month"]["listens"], "selected"
   end

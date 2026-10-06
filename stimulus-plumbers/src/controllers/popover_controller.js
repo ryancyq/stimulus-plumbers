@@ -1,102 +1,131 @@
 import { Controller } from '@hotwired/stimulus';
-import { focusFirst } from '../accessibility/focus';
-import { announce } from '../accessibility/aria';
-import { attachContentLoader, attachDismisser, attachVisibility } from '../plumbers';
+import { attachPopover } from '../plumbers/popover';
+
+const isNativePopover = (element) =>
+  typeof HTMLElement !== 'undefined' &&
+  element instanceof HTMLElement &&
+  element.hasAttribute('popover') &&
+  typeof element.showPopover === 'function' &&
+  typeof element.hidePopover === 'function' &&
+  typeof element.togglePopover === 'function';
 
 export default class extends Controller {
-  static targets = ['trigger', 'panel', 'template', 'loader'];
-  static values = {
-    url: String,
-    loadedAt: String,
-    reload: { type: String, default: 'never' },
-    staleAfter: { type: Number, default: 3600 },
-    closeOnSelect: { type: Boolean, default: true },
-    announceOpen: { type: String, default: 'Panel opened' },
-    announceClose: { type: String, default: 'Panel closed' },
-  };
+  static targets = ['trigger', 'panel'];
+
+  #popover;
+  #panelElement;
+  #onBeforeCache;
+  #onOpened;
+  #onClosed;
+  #reportedInvalidConfiguration;
 
   connect() {
-    attachContentLoader(this, {
-      element: this.hasPanelTarget ? this.panelTarget : null,
-      url: this.hasUrlValue ? this.urlValue : null,
-    });
+    if (this.#onBeforeCache) document.removeEventListener('turbo:before-cache', this.#onBeforeCache);
+    this.#onBeforeCache = this.#closeForCache.bind(this);
+    document.addEventListener('turbo:before-cache', this.#onBeforeCache);
 
-    if (this.hasPanelTarget) {
-      attachVisibility(this, {
-        element: this.panelTarget,
-        activator: this.hasTriggerTarget ? this.triggerTarget : null,
-      });
-      attachDismisser(this);
+    if (!this.hasPanelTarget) this.#reportInvalidConfiguration('missing');
+  }
+
+  disconnect() {
+    if (this.#onBeforeCache) {
+      document.removeEventListener('turbo:before-cache', this.#onBeforeCache);
+      this.#onBeforeCache = null;
     }
-    if (this.hasLoaderTarget)
-      attachVisibility(this, { element: this.loaderTarget, visibility: 'contentLoaderVisibility' });
+
+    this.#disposePopover();
   }
 
-  async dismissed() {
-    await this.close();
-  }
+  panelTargetConnected(panel) {
+    this.#disposePopover();
 
-  async open() {
-    if (!this.hasPanelTarget) return;
-    await this.visibility.show();
-  }
-
-  async close() {
-    if (!this.hasPanelTarget) return;
-    await this.visibility.hide();
-  }
-
-  async toggle() {
-    this.visibility?.visible ? await this.close() : await this.open();
-  }
-
-  async closeOnSelect() {
-    if (this.closeOnSelectValue) await this.close();
-  }
-
-  async shown() {
-    await this.load();
-    if (this.hasPanelTarget) focusFirst(this.panelTarget);
-    announce(this.announceOpenValue);
-  }
-
-  async hidden() {
-    if (this.hasTriggerTarget) this.triggerTarget.focus();
-    announce(this.announceCloseValue);
-  }
-
-  canLoad() {
-    if (this.hasPanelTarget && this.panelTarget.tagName.toLowerCase() === 'turbo-frame') {
-      if (this.hasUrlValue) this.panelTarget.setAttribute('src', this.urlValue);
-      return false;
+    if (!isNativePopover(panel)) {
+      this.#reportInvalidConfiguration(panel);
+      return;
     }
-    return true;
+
+    this.#reportedInvalidConfiguration = null;
+    this.#popover = attachPopover(this, { element: panel });
+    this.#panelElement = panel;
+    this.#onOpened = this.#syncOpened.bind(this);
+    this.#onClosed = this.#syncClosed.bind(this);
+    panel.addEventListener('popover:opened', this.#onOpened);
+    panel.addEventListener('popover:closed', this.#onClosed);
+    this.#syncTrigger();
   }
 
-  async contentLoading() {
-    if (this.hasLoaderTarget) await this.contentLoaderVisibility.show();
+  panelTargetDisconnected(panel) {
+    if (this.#panelElement !== panel) return;
+
+    this.#disposePopover();
   }
 
-  async contentLoaded({ content }) {
-    if (this.hasPanelTarget) {
-      this.panelTarget.replaceChildren(this.getContentNode(content));
+  triggerTargetConnected() {
+    this.#syncTrigger();
+  }
+
+  open(event) {
+    this.#preventDefault(event);
+    this.#popover?.show(this.#sourceFor(event));
+  }
+
+  close(event) {
+    this.#preventDefault(event);
+    this.#popover?.hide();
+  }
+
+  toggle(event) {
+    this.#preventDefault(event);
+    this.#popover?.toggle(this.#sourceFor(event));
+  }
+
+  #closeForCache() {
+    if (this.#popover?.open) this.#popover.hide();
+  }
+
+  #disposePopover() {
+    if (this.#panelElement && this.#onOpened) this.#panelElement.removeEventListener('popover:opened', this.#onOpened);
+    if (this.#panelElement && this.#onClosed) this.#panelElement.removeEventListener('popover:closed', this.#onClosed);
+    this.#popover?.disconnect();
+    this.#popover = null;
+    this.#panelElement = null;
+    this.#onOpened = null;
+    this.#onClosed = null;
+  }
+
+  #preventDefault(event) {
+    if (event && typeof event.preventDefault === 'function') event.preventDefault();
+  }
+
+  #sourceFor(event) {
+    if (event && typeof event.preventDefault === 'function' && event.currentTarget) return event.currentTarget;
+    return this.hasTriggerTarget ? this.triggerTarget : undefined;
+  }
+
+  #syncOpened(event) {
+    if (event.target !== this.#panelElement) return;
+    this.#syncTrigger(true);
+  }
+
+  #syncClosed(event) {
+    if (event.target !== this.#panelElement) return;
+    this.#syncTrigger(false);
+  }
+
+  #syncTrigger(open = this.#popover?.open === true) {
+    if (!this.hasTriggerTarget || !this.triggerTarget.hasAttribute('aria-expanded')) return;
+
+    this.triggerTarget.setAttribute('aria-expanded', String(open));
+  }
+
+  #reportInvalidConfiguration(configuration) {
+    if (this.#reportedInvalidConfiguration === configuration) return;
+
+    this.#reportedInvalidConfiguration = configuration;
+    if (configuration === 'missing') {
+      console.error('PopoverController requires a panel target. Add data-popover-target="panel" to your element.');
+    } else {
+      console.error('PopoverController requires data-popover-target="panel" to be a native popover element.');
     }
-    if (this.hasLoaderTarget) await this.contentLoaderVisibility.hide();
-  }
-
-  getContentNode(content) {
-    if (typeof content === 'string') {
-      const template = document.createElement('template');
-      template.innerHTML = content;
-      return document.importNode(template.content, true);
-    }
-    return document.importNode(content, true);
-  }
-
-  contentLoader() {
-    if (!this.hasTemplateTarget) return;
-    if (this.templateTarget instanceof HTMLTemplateElement) return this.templateTarget.content;
-
-    return this.templateTarget.innerHTML;
   }
 }

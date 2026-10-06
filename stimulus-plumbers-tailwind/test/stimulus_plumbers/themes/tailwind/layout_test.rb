@@ -37,6 +37,37 @@ class TailwindThemeLayoutTest < Minitest::Test
     assert_includes result, "bg-(--sp-color-bg)"
     assert_includes result, "shadow-(--sp-shadow-md)"
     assert_includes result, "z-(--sp-z-popover)"
+    assert_includes result, "sp-popover"
+  end
+
+  def test_popover_uses_native_anchor_and_reachable_overflow
+    result = classes_for(:popover)
+
+    assert_includes result, "[position:fixed]"
+    assert_includes result, "[position-anchor:auto]"
+    assert_includes result, "[max-inline-size:min(90vi,32rem)]"
+    assert_includes result, "[max-block-size:min(80vb,32rem)]"
+    assert_includes result, "overflow-auto"
+  end
+
+  def test_popover_maps_every_semantic_placement_to_logical_css
+    expected = {
+      block_end_start:   %w[block-end_span-inline-end flip-block,flip-inline],
+      block_end:         %w[block-end flip-block],
+      block_end_end:     %w[block-end_span-inline-start flip-block,flip-inline],
+      block_start_start: %w[block-start_span-inline-end flip-block,flip-inline],
+      block_start:       %w[block-start flip-block],
+      block_start_end:   %w[block-start_span-inline-start flip-block,flip-inline],
+      inline_start:      %w[inline-start flip-inline],
+      inline_end:        %w[inline-end flip-inline]
+    }
+
+    expected.each do |placement, (area, fallbacks)|
+      result = classes_for(:popover, placement: placement)
+
+      assert_includes result, "[position-area:#{area}]"
+      assert_includes result, "[position-try-fallbacks:#{fallbacks}]"
+    end
   end
 
   def test_divider_returns_a_classes_string

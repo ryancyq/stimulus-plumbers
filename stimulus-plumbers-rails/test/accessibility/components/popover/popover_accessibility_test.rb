@@ -12,8 +12,20 @@ class PopoverAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#popover"
   end
 
-  def test_passes_wcag_with_popover_open
+  def test_passes_wcag_with_named_region_open
     click_button "Open menu"
+
+    assert_accessible context: "#popover"
+  end
+
+  def test_passes_wcag_with_unnamed_structural_content_open
+    click_button "Open details"
+
+    assert_accessible context: "#popover"
+  end
+
+  def test_passes_wcag_with_named_help_open
+    click_button "Open help"
 
     assert_accessible context: "#popover"
   end
