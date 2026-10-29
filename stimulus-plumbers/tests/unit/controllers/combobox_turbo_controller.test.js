@@ -1,12 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ComboboxController from '../../../src/controllers/combobox_controller';
 import ComboboxTurboController from '../../../src/controllers/combobox_turbo_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ComboboxTurboController', () => {
-  let application;
-
   const render = async () => {
     document.body.innerHTML = `
       <div id="container" data-controller="combobox combobox-turbo"
@@ -26,7 +24,7 @@ describe('ComboboxTurboController', () => {
       </div>`;
     installNativePopover(document.querySelector('#panel'));
     const container = document.querySelector('#container');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'combobox-turbo'));
+    await flush();
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     return { container, frame: document.querySelector('#frame'), control: document.querySelector('#trigger') };
   };
@@ -42,14 +40,11 @@ describe('ComboboxTurboController', () => {
     target.dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true }));
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('combobox', ComboboxController);
-    application.register('combobox-turbo', ComboboxTurboController);
+    startApplication({ combobox: ComboboxController, 'combobox-turbo': ComboboxTurboController });
   });
 
   afterEach(() => {
     vi.useRealTimers();
-    application.stop();
     document.body.innerHTML = '';
   });
 

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Dialog, attachDialog } from '../../../src/plumbers/dialog';
+import { autoDisconnect } from '../../support/stimulus';
 
 describe('Dialog', () => {
   let controller;
@@ -34,6 +35,8 @@ describe('Dialog', () => {
     vi.useRealTimers();
   });
 
+  const createDialog = (options) => autoDisconnect(new Dialog(controller, options));
+
   it('exposes only the documented public API', () => {
     expect(Object.getOwnPropertyNames(Dialog.prototype)).toEqual([
       'constructor',
@@ -66,7 +69,7 @@ describe('Dialog', () => {
     target.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX, clientY, pointerId }));
 
   it('attaches through the factory and reflects native open state', () => {
-    const dialog = attachDialog(controller, { element });
+    const dialog = autoDisconnect(attachDialog(controller, { element }));
 
     expect(dialog).toBeInstanceOf(Dialog);
     expect(dialog.open).toBe(false);
@@ -76,7 +79,7 @@ describe('Dialog', () => {
 
   it('remains inert for an invalid element', () => {
     const invalid = document.createElement('div');
-    const dialog = new Dialog(controller, { element: invalid });
+    const dialog = createDialog({ element: invalid });
 
     expect(dialog.open).toBe(false);
     expect(() => dialog.show()).not.toThrow();
@@ -85,13 +88,13 @@ describe('Dialog', () => {
   });
 
   it('authors the default closedby policy', () => {
-    new Dialog(controller, { element });
+    createDialog({ element });
 
     expect(element.getAttribute('closedby')).toBe('closerequest');
   });
 
   it('uses native showModal and close methods', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     dialog.show();
     dialog.close('confirm');
 
@@ -102,7 +105,7 @@ describe('Dialog', () => {
   it('does not override native focus restoration', async () => {
     const button = invoker();
     const focus = vi.spyOn(button, 'focus');
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
 
     dialog.show();
     button.focus();
@@ -116,7 +119,7 @@ describe('Dialog', () => {
 
   it('restores the invoker when closing leaves focus on the document body', async () => {
     const button = invoker();
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     document.body.tabIndex = -1;
 
     dialog.show();
@@ -130,7 +133,7 @@ describe('Dialog', () => {
   it('restores an unfocused event invoker when activeElement is the body', async () => {
     const button = document.createElement('button');
     document.body.appendChild(button);
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     document.body.tabIndex = -1;
 
     document.body.focus();
@@ -144,7 +147,7 @@ describe('Dialog', () => {
   it('does not restore a removed invoker', async () => {
     const button = invoker();
     const focus = vi.spyOn(button, 'focus');
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     document.body.tabIndex = -1;
 
     dialog.show();
@@ -161,7 +164,7 @@ describe('Dialog', () => {
   it('ignores invalid and disconnected invoker candidates', async () => {
     const disconnected = document.createElement('button');
     const focus = vi.spyOn(disconnected, 'focus');
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     document.body.tabIndex = -1;
 
     document.body.focus();
@@ -183,7 +186,7 @@ describe('Dialog', () => {
     const button = invoker();
     const other = invoker('Other control');
     const focus = vi.spyOn(button, 'focus');
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.addEventListener('modal:closed', () => other.focus());
 
     dialog.show();
@@ -196,7 +199,7 @@ describe('Dialog', () => {
 
   it('clears focus restoration after canceled and failed opens', async () => {
     const button = invoker();
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     const cancelOpen = vi.fn((event) => event.preventDefault());
     element.addEventListener('modal:before-open', cancelOpen);
 
@@ -231,7 +234,7 @@ describe('Dialog', () => {
 
   it('captures an invoker for an external native beforetoggle open', async () => {
     const button = invoker();
-    new Dialog(controller, { element });
+    createDialog({ element });
     document.body.tabIndex = -1;
 
     element.dispatchEvent(new Event('beforetoggle'));
@@ -248,7 +251,7 @@ describe('Dialog', () => {
   it('prefers a native beforetoggle source over activeElement', async () => {
     const button = document.createElement('button');
     document.body.appendChild(button);
-    new Dialog(controller, { element });
+    createDialog({ element });
     document.body.tabIndex = -1;
     const beforetoggle = new Event('beforetoggle');
     Object.defineProperty(beforetoggle, 'source', { value: button });
@@ -265,7 +268,7 @@ describe('Dialog', () => {
   });
 
   it('cleans cycle state when showModal throws so a later open can retry', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.showModal = vi
       .fn()
       .mockImplementationOnce(() => {
@@ -281,7 +284,7 @@ describe('Dialog', () => {
   });
 
   it('dispatches before-open once and opened on toggle', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     const beforeOpen = vi.fn();
     const opened = vi.fn();
     element.addEventListener('modal:before-open', beforeOpen);
@@ -296,7 +299,7 @@ describe('Dialog', () => {
   });
 
   it('resets lifecycle guards for two external open cycles', () => {
-    new Dialog(controller, { element });
+    createDialog({ element });
     const beforeOpen = vi.fn();
     const opened = vi.fn();
     const closed = vi.fn();
@@ -323,7 +326,7 @@ describe('Dialog', () => {
 
   it('delivers opened when showModal succeeds without a toggle event', () => {
     vi.useFakeTimers();
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     const opened = vi.fn();
     element.addEventListener('modal:opened', opened);
 
@@ -336,7 +339,7 @@ describe('Dialog', () => {
 
   it('delivers opened for an external beforetoggle without toggle support', () => {
     vi.useFakeTimers();
-    new Dialog(controller, { element });
+    createDialog({ element });
     const opened = vi.fn();
     element.addEventListener('modal:opened', opened);
 
@@ -350,7 +353,7 @@ describe('Dialog', () => {
 
   it('starts a new external cycle after native beforetoggle is canceled later', () => {
     vi.useFakeTimers();
-    new Dialog(controller, { element });
+    createDialog({ element });
     const beforeOpen = vi.fn();
     const cancelNativeOpen = vi.fn((event) => event.preventDefault());
     element.addEventListener('modal:before-open', beforeOpen);
@@ -369,7 +372,7 @@ describe('Dialog', () => {
   });
 
   it('reports external close exactly once with a normalized result', () => {
-    new Dialog(controller, { element });
+    createDialog({ element });
     const closed = vi.fn();
     element.addEventListener('modal:closed', closed);
     element.open = true;
@@ -386,7 +389,7 @@ describe('Dialog', () => {
     const button = invoker();
     const inside = document.createElement('input');
     element.appendChild(inside);
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.close = vi.fn(() => {
       element.open = false;
     });
@@ -409,7 +412,7 @@ describe('Dialog', () => {
   });
 
   it('uses requestClose when available and exposes a cancellable dismissal', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.open = true;
     element.requestClose = vi.fn((result) => {
       const cancel = new Event('cancel', { cancelable: true });
@@ -429,7 +432,7 @@ describe('Dialog', () => {
   });
 
   it('uses cancellable cancel fallback when requestClose is unavailable', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.open = true;
     const beforeDismiss = vi.fn((event) => event.preventDefault());
     element.addEventListener('modal:before-dismiss', beforeDismiss);
@@ -441,7 +444,7 @@ describe('Dialog', () => {
   });
 
   it('cleans cancellation state so a later dismissal can proceed', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.open = true;
     const beforeDismiss = vi.fn((event) => event.preventDefault());
     element.addEventListener('modal:before-dismiss', beforeDismiss);
@@ -454,7 +457,7 @@ describe('Dialog', () => {
   });
 
   it('cleans state when a later cancel listener prevents requestClose', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.open = true;
     element.returnValue = 'existing';
     element.requestClose = vi.fn((result) => {
@@ -473,7 +476,7 @@ describe('Dialog', () => {
   });
 
   it('cleans state when a later cancel listener prevents the fallback', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.open = true;
     element.addEventListener('cancel', (event) => event.preventDefault());
 
@@ -487,7 +490,7 @@ describe('Dialog', () => {
     ['closerequest', false],
     ['none', true],
   ])('applies the %s dismissal policy to cancel requests', (policy, prevented) => {
-    new Dialog(controller, { element });
+    createDialog({ element });
     element.setAttribute('closedby', policy);
     element.open = true;
 
@@ -498,7 +501,7 @@ describe('Dialog', () => {
   });
 
   it('explicit close bypasses before-dismiss', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     const beforeDismiss = vi.fn();
     element.addEventListener('modal:before-dismiss', beforeDismiss);
     element.open = true;
@@ -510,7 +513,7 @@ describe('Dialog', () => {
   });
 
   it('does not change returnValue when native close throws', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.open = true;
     element.returnValue = 'existing';
     element.close = vi.fn(() => {
@@ -522,7 +525,7 @@ describe('Dialog', () => {
   });
 
   it('requires a matching backdrop pointer pair for closedby any', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.setAttribute('closedby', 'any');
     element.open = true;
     setRect();
@@ -537,7 +540,7 @@ describe('Dialog', () => {
   it('does not dismiss for interior, mixed, or mismatched backdrop pointers', () => {
     const child = document.createElement('span');
     element.appendChild(child);
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.setAttribute('closedby', 'any');
     element.open = true;
     setRect();
@@ -554,7 +557,7 @@ describe('Dialog', () => {
   });
 
   it('does not dismiss after pointer cancellation or with a different pointer', () => {
-    const dialog = new Dialog(controller, { element });
+    const dialog = createDialog({ element });
     element.setAttribute('closedby', 'any');
     element.open = true;
     setRect();
@@ -595,20 +598,10 @@ describe('Dialog', () => {
       return event;
     };
 
-    let dialogs;
-    const attach = () => {
-      const dialog = new Dialog(controller, { element });
-      dialogs.push(dialog);
-      return dialog;
-    };
+    const attach = () => createDialog({ element });
 
     beforeEach(() => {
-      dialogs = [];
       element.open = true;
-    });
-
-    afterEach(() => {
-      dialogs.forEach((dialog) => dialog.disconnect());
     });
 
     it('closes only the most recently opened popover', () => {
@@ -722,17 +715,19 @@ describe('Dialog', () => {
     });
   });
 
-  it('cleans every listener on disconnect', () => {
-    const dialog = new Dialog(controller, { element });
-    const remove = vi.spyOn(element, 'removeEventListener');
+  it('stops reacting to dialog and pointer events after disconnect', () => {
+    const dialog = createDialog({ element });
     dialog.disconnect();
 
-    expect(remove).toHaveBeenCalledWith('beforetoggle', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('toggle', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('cancel', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('close', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('pointerdown', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('pointerup', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('pointercancel', expect.any(Function));
+    const cancel = new Event('cancel', { cancelable: true });
+    for (const event of [new Event('beforetoggle'), new Event('toggle'), cancel, new Event('close')]) {
+      element.dispatchEvent(event);
+    }
+    for (const type of ['pointerdown', 'pointerup', 'pointercancel']) {
+      element.dispatchEvent(new Event(type, { bubbles: true }));
+    }
+
+    expect(controller.dispatch).not.toHaveBeenCalled();
+    expect(cancel.defaultPrevented).toBe(false);
   });
 });

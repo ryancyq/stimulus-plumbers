@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Reorderable, attachReorderable } from '../../../src/plumbers/reorderable';
+import { advance, autoDisconnect } from '../../support/stimulus';
 
 // A real element, so the plumber can listen for pointercancel/lostpointercapture on it.
 const makeHandle = () =>
@@ -12,6 +13,7 @@ const makeHandle = () =>
 describe('Reorderable', () => {
   let mockController;
   let items;
+  const createReorderable = (options) => autoDisconnect(new Reorderable(mockController, options));
 
   beforeEach(() => {
     document.body.innerHTML = `
@@ -32,51 +34,52 @@ describe('Reorderable', () => {
       get itemTargets() {
         return Array.from(document.querySelectorAll('#list li'));
       },
-      dispatch: vi.fn((name, options) => true),
+      dispatch: vi.fn(() => true),
       moved: vi.fn(),
     };
   });
 
   describe('constructor', () => {
     it('defaults moveKey to Alt', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       expect(reorderable.moveKey).toBe('Alt');
     });
 
     it('falls back to Alt for an unrecognized moveKey', () => {
-      const reorderable = new Reorderable(mockController, { moveKey: 'Nonsense' });
+      const reorderable = createReorderable({ moveKey: 'Nonsense' });
       expect(reorderable.moveKey).toBe('Alt');
     });
 
     it('accepts Control/Shift/Meta as moveKey', () => {
-      const reorderable = new Reorderable(mockController, { moveKey: 'Control' });
+      const reorderable = createReorderable({ moveKey: 'Control' });
       expect(reorderable.moveKey).toBe('Control');
     });
   });
 
   describe('items', () => {
     it('reads the current itemTargets from the controller', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       expect(reorderable.items).toEqual(items);
     });
   });
 
   describe('orderedIds', () => {
     it('returns ids in DOM order', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       expect(reorderable.orderedIds()).toEqual(['row-a', 'row-b', 'row-c']);
     });
 
     it('excludes items without an id', () => {
       items[1].removeAttribute('id');
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       expect(reorderable.orderedIds()).toEqual(['row-a', 'row-c']);
     });
   });
 
   describe('keyboard move via attachItem', () => {
     it('swaps the item down on Alt+ArrowDown, dispatches, and announces', async () => {
-      const reorderable = new Reorderable(mockController, { onMoved: 'moved' });
+      vi.useFakeTimers();
+      const reorderable = createReorderable({ onMoved: 'moved' });
       items.forEach((item) => reorderable.attachItem(item));
 
       items[0].dispatchEvent(
@@ -95,12 +98,12 @@ describe('Reorderable', () => {
 
       const liveRegion = document.querySelector('[aria-live]');
       // aria.js announce() uses setTimeout(100) to set textContent
-      await new Promise((r) => setTimeout(r, 150));
+      await advance(150);
       expect(liveRegion?.textContent).toBe('Moved to position 2 of 3');
     });
 
     it('does not move past the first item', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       items.forEach((item) => reorderable.attachItem(item));
 
       items[0].dispatchEvent(
@@ -112,7 +115,7 @@ describe('Reorderable', () => {
     });
 
     it('ignores plain ArrowDown without the modifier', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       items.forEach((item) => reorderable.attachItem(item));
 
       items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
@@ -123,7 +126,7 @@ describe('Reorderable', () => {
 
     it('does nothing when controller.editingValue is false', () => {
       mockController.editingValue = false;
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       items.forEach((item) => reorderable.attachItem(item));
 
       items[0].dispatchEvent(
@@ -135,7 +138,7 @@ describe('Reorderable', () => {
     });
 
     it('ignores a repeated keydown (OS key-repeat) — no move, no dispatch, no announce', () => {
-      const reorderable = new Reorderable(mockController, { onMoved: 'moved' });
+      const reorderable = createReorderable({ onMoved: 'moved' });
       items.forEach((item) => reorderable.attachItem(item));
 
       items[0].dispatchEvent(
@@ -150,7 +153,7 @@ describe('Reorderable', () => {
 
   describe('detachItem', () => {
     it('stops handling keydown after detaching', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       reorderable.attachItem(items[0]);
       reorderable.detachItem(items[0]);
 
@@ -164,7 +167,7 @@ describe('Reorderable', () => {
 
   describe('attachItems / detachItems', () => {
     it('attaches keydown handling to every item in one call', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       reorderable.attachItems(items);
 
       items[0].dispatchEvent(
@@ -175,7 +178,7 @@ describe('Reorderable', () => {
     });
 
     it('detaches keydown handling from every item in one call', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       reorderable.attachItems(items);
       reorderable.detachItems(items);
 
@@ -190,7 +193,7 @@ describe('Reorderable', () => {
 
   describe('disconnect', () => {
     it('stops keyboard moves and forgets an active drag, and is idempotent', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       const handle = makeHandle();
       reorderable.attachItems(items);
       reorderable.startDrag(items[0], handle, 1);
@@ -208,7 +211,7 @@ describe('Reorderable', () => {
 
   describe('attachReorderable', () => {
     it('returns a Reorderable instance', () => {
-      expect(attachReorderable(mockController)).toBeInstanceOf(Reorderable);
+      expect(autoDisconnect(attachReorderable(mockController))).toBeInstanceOf(Reorderable);
     });
   });
 
@@ -223,7 +226,7 @@ describe('Reorderable', () => {
 
     it('does nothing before startDrag is called', () => {
       stubRects();
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
 
       reorderable.drag({ clientY: 61 });
 
@@ -232,7 +235,7 @@ describe('Reorderable', () => {
 
     it('swaps the dragging item past a neighbor once the pointer crosses its midpoint', () => {
       stubRects();
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       const handle = makeHandle();
 
       reorderable.startDrag(items[0], handle, 1);
@@ -245,7 +248,7 @@ describe('Reorderable', () => {
 
     it('dispatches reorderable:reordered on endDrag', () => {
       stubRects();
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       const handle = makeHandle();
 
       reorderable.startDrag(items[0], handle, 1);
@@ -261,7 +264,7 @@ describe('Reorderable', () => {
     });
 
     it('endDrag is a no-op without a preceding startDrag', () => {
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       const handle = makeHandle();
 
       const moved = reorderable.endDrag(handle, 1);
@@ -278,7 +281,7 @@ describe('Reorderable', () => {
         'restores the starting order without dispatching on %s',
         (type) => {
           stubRects();
-          const reorderable = new Reorderable(mockController);
+          const reorderable = createReorderable();
           const handle = makeHandle();
 
           reorderable.startDrag(items[0], handle, 1);
@@ -292,7 +295,7 @@ describe('Reorderable', () => {
 
       it('stops reordering on later pointer moves once cancelled', () => {
         stubRects();
-        const reorderable = new Reorderable(mockController);
+        const reorderable = createReorderable();
         const handle = makeHandle();
 
         reorderable.startDrag(items[0], handle, 1);
@@ -304,7 +307,7 @@ describe('Reorderable', () => {
 
       it('restores an item dragged back past several neighbors', () => {
         stubRects();
-        const reorderable = new Reorderable(mockController);
+        const reorderable = createReorderable();
         const handle = makeHandle();
 
         reorderable.startDrag(items[2], handle, 1);
@@ -317,7 +320,7 @@ describe('Reorderable', () => {
       });
 
       it('releases capture on cancel', () => {
-        const reorderable = new Reorderable(mockController);
+        const reorderable = createReorderable();
         const handle = makeHandle();
 
         reorderable.startDrag(items[0], handle, 1);
@@ -328,7 +331,7 @@ describe('Reorderable', () => {
 
       it('ignores the lostpointercapture that follows a completed drag', () => {
         stubRects();
-        const reorderable = new Reorderable(mockController);
+        const reorderable = createReorderable();
         const handle = makeHandle();
 
         reorderable.startDrag(items[0], handle, 1);
@@ -342,7 +345,7 @@ describe('Reorderable', () => {
 
       it('keeps the dragging item in the DOM while neighbors move past it', () => {
         stubRects();
-        const reorderable = new Reorderable(mockController);
+        const reorderable = createReorderable();
         const handle = makeHandle();
         const observer = new MutationObserver(() => {});
         observer.observe(document.getElementById('list'), { childList: true });
@@ -357,7 +360,7 @@ describe('Reorderable', () => {
 
       it('disconnect forgets the drag without moving items back', () => {
         stubRects();
-        const reorderable = new Reorderable(mockController);
+        const reorderable = createReorderable();
         const handle = makeHandle();
 
         reorderable.startDrag(items[0], handle, 1);
@@ -371,15 +374,16 @@ describe('Reorderable', () => {
     });
 
     it('does not announce on drag (mouse users should not have focus stolen)', async () => {
+      vi.useFakeTimers();
       stubRects();
-      const reorderable = new Reorderable(mockController);
+      const reorderable = createReorderable();
       const handle = makeHandle();
 
       reorderable.startDrag(items[0], handle, 1);
       reorderable.drag({ clientY: 61 });
       reorderable.endDrag(handle, 1);
 
-      await new Promise((r) => setTimeout(r, 150));
+      await advance(150);
       const liveRegion = document.querySelector('[aria-live]');
       expect(liveRegion?.textContent).toBeFalsy();
     });
@@ -395,7 +399,7 @@ describe('Reorderable', () => {
     };
 
     it('moves the item forward on Alt+ArrowRight (LTR)', () => {
-      const reorderable = new Reorderable(mockController, { orientation: 'horizontal' });
+      const reorderable = createReorderable({ orientation: 'horizontal' });
       items.forEach((item) => reorderable.attachItem(item));
 
       items[0].dispatchEvent(
@@ -406,7 +410,7 @@ describe('Reorderable', () => {
     });
 
     it('ignores Alt+ArrowUp/ArrowDown when orientation is horizontal', () => {
-      const reorderable = new Reorderable(mockController, { orientation: 'horizontal' });
+      const reorderable = createReorderable({ orientation: 'horizontal' });
       items.forEach((item) => reorderable.attachItem(item));
 
       items[0].dispatchEvent(
@@ -418,7 +422,7 @@ describe('Reorderable', () => {
 
     it('flips ArrowLeft/ArrowRight meaning under dir="rtl"', () => {
       items.forEach((item) => item.setAttribute('dir', 'rtl'));
-      const reorderable = new Reorderable(mockController, { orientation: 'horizontal' });
+      const reorderable = createReorderable({ orientation: 'horizontal' });
       items.forEach((item) => reorderable.attachItem(item));
 
       items[0].dispatchEvent(
@@ -437,7 +441,7 @@ describe('Reorderable', () => {
 
     it('reorders via x-midpoint comparison while dragging', () => {
       stubRects();
-      const reorderable = new Reorderable(mockController, { orientation: 'horizontal' });
+      const reorderable = createReorderable({ orientation: 'horizontal' });
       const handle = makeHandle();
 
       reorderable.startDrag(items[0], handle, 1);

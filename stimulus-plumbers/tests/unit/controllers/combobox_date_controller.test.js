@@ -1,7 +1,8 @@
+import { Controller } from '@hotwired/stimulus';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application, Controller } from '@hotwired/stimulus';
 import ComboboxDateController from '../../../src/controllers/combobox_date_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ComboboxDateController', () => {
   // Stands in for the calendar outlet.
@@ -10,8 +11,6 @@ describe('ComboboxDateController', () => {
       this.element.querySelector('[tabindex="0"]').focus();
     }
   }
-
-  let application;
 
   const render = async () => {
     document.body.innerHTML = `
@@ -39,7 +38,7 @@ describe('ComboboxDateController', () => {
     const container = document.querySelector('#container');
     const panel = document.querySelector('#panel');
     installNativePopover(panel);
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'combobox-date'));
+    await flush();
     return {
       container,
       panel,
@@ -57,13 +56,10 @@ describe('ComboboxDateController', () => {
     );
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('calendar', Calendar);
-    application.register('combobox-date', ComboboxDateController);
+    startApplication({ calendar: Calendar, 'combobox-date': ComboboxDateController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -163,8 +159,9 @@ describe('ComboboxDateController', () => {
     input.value = '2026-09-14';
 
     document.querySelector('#form').reset();
+    await flush();
 
-    await vi.waitFor(() => expect(formatted).toHaveBeenCalledWith('2026-09-15'));
+    expect(formatted).toHaveBeenCalledWith('2026-09-15');
   });
 
   it('ignores a nested combobox date', async () => {

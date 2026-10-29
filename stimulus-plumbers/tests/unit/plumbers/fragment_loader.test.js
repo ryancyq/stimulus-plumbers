@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { attachFragmentLoader } from '../../../src/plumbers/fragment_loader';
+import { autoDisconnect, flush } from '../../support/stimulus';
 
 describe('FragmentLoader', () => {
   let requests;
@@ -21,7 +22,7 @@ describe('FragmentLoader', () => {
   };
   const respond = async (index, body, ok = true) => {
     requests[index].resolve({ ok, status: ok ? 200 : 500, text: async () => body });
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
   };
   const region = (text) => `<div id="region"><p>${text}</p></div>`;
 
@@ -36,7 +37,8 @@ describe('FragmentLoader', () => {
     vi.unstubAllGlobals();
   });
 
-  const attach = (element = document.querySelector('#region')) => attachFragmentLoader(controller, { element });
+  const attach = (element = document.querySelector('#region')) =>
+    autoDisconnect(attachFragmentLoader(controller, { element }));
 
   it('swaps in the response element with the same id', async () => {
     const loader = attach();

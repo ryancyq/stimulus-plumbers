@@ -1,17 +1,15 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import TimelineController from '../../../src/controllers/timeline_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('TimelineController', () => {
   let application;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('timeline', TimelineController);
+    application = startApplication({ timeline: TimelineController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -48,7 +46,7 @@ describe('TimelineController', () => {
 
   const setup = async (html) => {
     document.body.innerHTML = html;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
   };
 
   describe('toggle', () => {
@@ -346,7 +344,7 @@ describe('TimelineController', () => {
     it('updates roving tabindex when a trigger disconnects', async () => {
       const triggers = document.querySelectorAll('[data-timeline-target="trigger"]');
       triggers[0].remove();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       // Only one trigger remains; it should have tabIndex=0
       const remaining = document.querySelector('[data-timeline-target="trigger"]');
       expect(remaining.tabIndex).toBe(0);
@@ -368,7 +366,7 @@ describe('TimelineController', () => {
       time.setAttribute('data-timeline-target', 'time');
       ol.appendChild(time);
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(time.textContent.trim()).not.toBe('');
     });
@@ -386,7 +384,7 @@ describe('TimelineController', () => {
       time.textContent = 'June 2024';
       ol.appendChild(time);
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(time.textContent.trim()).toBe('June 2024');
     });

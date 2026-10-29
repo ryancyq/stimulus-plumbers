@@ -1,18 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { morphElements } from '@hotwired/turbo';
-import { Application } from '@hotwired/stimulus';
 import ReorderableController from '../../../src/controllers/reorderable_controller';
+import { autoDisconnect, flush, startApplication } from '../../support/stimulus';
 
 describe('ReorderableController', () => {
   let application;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('reorderable', ReorderableController);
+    application = startApplication({ reorderable: ReorderableController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -35,7 +33,7 @@ describe('ReorderableController', () => {
 
   const setup = async (html = buildHTML()) => {
     document.body.innerHTML = html;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
     return document.querySelector('[data-controller="reorderable"]');
   };
 
@@ -85,9 +83,9 @@ describe('ReorderableController', () => {
     it('moves the item one position after the list reconnects', async () => {
       const element = await setup();
       element.remove();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       document.body.appendChild(element);
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       const items = () => element.querySelectorAll('[data-reorderable-target="item"]');
       items()[0].focus();
 
@@ -108,7 +106,9 @@ describe('ReorderableController', () => {
       const { attachReorderable } = await import('../../../src/plumbers/reorderable');
       const rti = new RovingTabIndex(Array.from(items()), { orientation: 'vertical' });
       rti.activate();
-      const reorderable = attachReorderable({ itemTargets: Array.from(items()), dispatch: () => true }, {});
+      const reorderable = autoDisconnect(
+        attachReorderable({ itemTargets: Array.from(items()), dispatch: () => true }, {})
+      );
       items().forEach((item) => reorderable.attachItem(item));
 
       items()[0].dispatchEvent(
@@ -165,7 +165,7 @@ describe('ReorderableController', () => {
       handle.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, bubbles: true }));
       handle.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientY: 61, bubbles: true }));
       element.setAttribute('data-reorderable-editing-value', 'false');
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flush();
 
       const order = Array.from(element.querySelectorAll('[data-reorderable-target="item"]')).map((i) => i.id);
       expect(order).toEqual(['row-a', 'row-b', 'row-c']);
@@ -295,7 +295,7 @@ describe('ReorderableController', () => {
       expect(triggers()[0].getAttribute('aria-disabled')).toBe('false');
 
       controller.toggleEditing();
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flush();
 
       expect(triggers()[0].getAttribute('aria-disabled')).toBe('true');
       expect(triggers()[0].tabIndex).toBe(-1);
@@ -325,7 +325,7 @@ describe('ReorderableController', () => {
         'beforeend',
         `<li id="row-c" data-reorderable-target="item"><a href="/c" data-reorderable-target="trigger">C</a></li>`
       );
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flush();
 
       const trigger = element.querySelector('#row-c [data-reorderable-target="trigger"]');
       expect(trigger.getAttribute('aria-disabled')).toBe('true');
@@ -338,7 +338,7 @@ describe('ReorderableController', () => {
       next.innerHTML = buildEditingHTML(false);
 
       morphElements(element, next.firstElementChild);
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flush();
 
       element.querySelectorAll('[data-reorderable-target="trigger"]').forEach((trigger) => {
         expect(trigger.getAttribute('aria-disabled')).toBe('false');

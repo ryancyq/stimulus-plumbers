@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import PopoverController from '../../../src/controllers/popover_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('PopoverController', () => {
   let application;
@@ -25,18 +25,16 @@ describe('PopoverController', () => {
     if (panelElement) installNativePopover(panelElement);
 
     const root = document.querySelector('[data-controller="popover"]');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'popover'));
+    await flush();
     return { controller: controllerFor(), panel: panelElement, trigger: document.querySelector('#trigger'), root };
   };
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('popover', PopoverController);
+    application = startApplication({ popover: PopoverController });
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     consoleErrorSpy.mockRestore();
   });
@@ -49,7 +47,8 @@ describe('PopoverController', () => {
   it('reports a missing panel once and leaves actions inert', async () => {
     document.body.innerHTML = '<div data-controller="popover"></div>';
     const root = document.querySelector('[data-controller="popover"]');
-    await vi.waitFor(() => expect(consoleErrorSpy).toHaveBeenCalledOnce());
+    await flush();
+    expect(consoleErrorSpy).toHaveBeenCalledOnce();
 
     const controller = application.getControllerForElementAndIdentifier(root, 'popover');
     expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -62,7 +61,8 @@ describe('PopoverController', () => {
 
   it('reports a non-popover panel once and leaves actions inert', async () => {
     document.body.innerHTML = '<div data-controller="popover"><div data-popover-target="panel">Content</div></div>';
-    await vi.waitFor(() => expect(consoleErrorSpy).toHaveBeenCalledOnce());
+    await flush();
+    expect(consoleErrorSpy).toHaveBeenCalledOnce();
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'PopoverController requires data-popover-target="panel" to be a native popover element.'
@@ -79,12 +79,12 @@ describe('PopoverController', () => {
     document.querySelector('[data-controller="popover"]').append(panel);
     panel.dataset.popoverTarget = 'panel';
 
-    await vi.waitFor(() => expect(consoleErrorSpy).toHaveBeenCalledOnce());
+    await flush();
+    expect(consoleErrorSpy).toHaveBeenCalledOnce();
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'PopoverController requires data-popover-target="panel" to be a native popover element.'
     );
-    expect(controllerFor().open).toBeTypeOf('function');
   });
 
   it('uses the action currentTarget as the native source and prevents default', async () => {
@@ -142,9 +142,11 @@ describe('PopoverController', () => {
   it('synchronizes aria-expanded only when the trigger authored it', async () => {
     const authored = await render();
     authored.controller.open();
-    await vi.waitFor(() => expect(authored.trigger.getAttribute('aria-expanded')).toBe('true'));
+    await flush();
+    expect(authored.trigger.getAttribute('aria-expanded')).toBe('true');
     authored.controller.close();
-    await vi.waitFor(() => expect(authored.trigger.getAttribute('aria-expanded')).toBe('false'));
+    await flush();
+    expect(authored.trigger.getAttribute('aria-expanded')).toBe('false');
 
     document.body.innerHTML = '';
     const absent = await render({ authoredExpanded: false });
@@ -158,14 +160,17 @@ describe('PopoverController', () => {
     const { panel, trigger } = await render();
 
     panel.showPopover();
-    await vi.waitFor(() => expect(trigger.getAttribute('aria-expanded')).toBe('true'));
+    await flush();
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
     panel.hidePopover();
-    await vi.waitFor(() => expect(trigger.getAttribute('aria-expanded')).toBe('false'));
+    await flush();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
   });
 
   it('disposes the old adapter when the panel target is replaced', async () => {
-    const { controller, panel: oldPanel, root } = await render();
-    const oldRemove = vi.spyOn(oldPanel, 'removeEventListener');
+    const { controller, panel: oldPanel } = await render();
+    const oldOpened = vi.fn();
+    oldPanel.addEventListener('popover:opened', oldOpened);
     const newPanel = document.createElement('div');
     newPanel.id = 'panel';
     newPanel.setAttribute('popover', 'auto');
@@ -173,10 +178,10 @@ describe('PopoverController', () => {
     installNativePopover(newPanel);
     oldPanel.replaceWith(newPanel);
 
-    await vi.waitFor(() => expect(oldRemove).toHaveBeenCalledWith('beforetoggle', expect.any(Function)));
-    expect(root.querySelector('#panel')).toBe(newPanel);
-    expect(oldRemove).toHaveBeenCalledWith('beforetoggle', expect.any(Function));
-    expect(oldRemove).toHaveBeenCalledWith('toggle', expect.any(Function));
+    await flush();
+    oldPanel.showPopover();
+    await flush();
+    expect(oldOpened).not.toHaveBeenCalled();
 
     controller.open();
     expect(newPanel.showPopover).toHaveBeenCalledOnce();
@@ -186,9 +191,10 @@ describe('PopoverController', () => {
     const { controller, panel, root } = await render();
 
     root.remove();
-    await vi.waitUntil(() => !controllerFor());
+    await flush();
     document.body.appendChild(root);
-    await vi.waitUntil(() => controllerFor() === controller);
+    await flush();
+    expect(controllerFor()).toBe(controller);
 
     controller.open();
     document.dispatchEvent(new Event('turbo:before-cache'));
@@ -244,7 +250,7 @@ describe('PopoverController', () => {
       dialog.matches = (selector) => selector === ':modal';
       root.replaceWith(dialog);
       dialog.append(root);
-      await vi.waitUntil(() => controllerFor());
+      await flush();
       document.dispatchEvent(new Event('pointerdown'));
 
       focus(controllerFor(), trigger);
@@ -258,9 +264,9 @@ describe('PopoverController', () => {
     const { panel, root, trigger } = await render();
 
     root.remove();
-    await vi.waitUntil(() => !controllerFor());
+    await flush();
     panel.showPopover();
-    await Promise.resolve();
+    await flush();
     document.dispatchEvent(new Event('turbo:before-cache'));
 
     expect(trigger.getAttribute('aria-expanded')).toBe('false');

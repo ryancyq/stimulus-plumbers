@@ -1,17 +1,15 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import InputRevealableController from '../../../src/controllers/input_revealable_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('InputRevealableController', () => {
   let application;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('input-revealable', InputRevealableController);
+    application = startApplication({ 'input-revealable': InputRevealableController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -36,7 +34,7 @@ describe('InputRevealableController', () => {
           </button>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('swaps the visible SVG icon on toggle', async () => {
@@ -48,7 +46,7 @@ describe('InputRevealableController', () => {
       expect(revealIcon.hidden).toBeUndefined();
 
       getController().toggle();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(revealIcon.hasAttribute('hidden')).toBe(true);
       expect(concealIcon.hasAttribute('hidden')).toBe(false);
@@ -59,7 +57,7 @@ describe('InputRevealableController', () => {
 
       expect(toggle.getAttribute('aria-label')).toBe('Show secret');
       getController().toggle();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(toggle.getAttribute('aria-label')).toBe('Hide secret');
     });
 
@@ -68,10 +66,10 @@ describe('InputRevealableController', () => {
 
       expect(input.type).toBe('password');
       getController().toggle();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(input.type).toBe('text');
       getController().toggle();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(input.type).toBe('password');
     });
 
@@ -79,7 +77,7 @@ describe('InputRevealableController', () => {
       const input = document.querySelector('[data-input-revealable-target="input"]');
 
       getController().toggle();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       document.dispatchEvent(new Event('turbo:before-cache'));
 
       expect(input.type).toBe('password');
@@ -90,7 +88,7 @@ describe('InputRevealableController', () => {
       const input = document.querySelector('[data-input-revealable-target="input"]');
 
       getController().toggle();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       window.dispatchEvent(new Event('pagehide'));
 
       expect(input.type).toBe('password');
@@ -104,7 +102,7 @@ describe('InputRevealableController', () => {
         <button data-action="input-revealable#toggle" data-input-revealable-target="toggle">Toggle</button>
       </div>
     `;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     expect(() => getController().toggle()).not.toThrow();
     expect(getController().revealedValue).toBe(true);
@@ -119,10 +117,10 @@ describe('InputRevealableController', () => {
         </button>
       </div>
     `;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     getController().toggle();
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     const toggle = document.querySelector('[data-input-revealable-target="toggle"]');
     expect(document.querySelector('[data-input-revealable-target="revealIcon"]').hasAttribute('hidden')).toBe(false);
@@ -138,10 +136,10 @@ describe('InputRevealableController', () => {
         </button>
       </div>
     `;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     getController().toggle();
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     const toggle = document.querySelector('[data-input-revealable-target="toggle"]');
     expect(document.querySelector('[data-input-revealable-target="concealIcon"]').hasAttribute('hidden')).toBe(false);
@@ -154,10 +152,10 @@ describe('InputRevealableController', () => {
         <input type="password" readonly value="recovery-code" data-input-revealable-target="input">
       </div>
     `;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     getController().toggle();
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     const input = document.querySelector('[data-input-revealable-target="input"]');
     expect(input.type).toBe('text');
@@ -170,7 +168,7 @@ describe('InputRevealableController', () => {
         <input type="password" data-input-revealable-target="input">
       </div>
     `;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     expect(document.querySelector('[data-input-revealable-target="input"]').type).toBe('password');
   });
@@ -181,7 +179,7 @@ describe('InputRevealableController', () => {
         <input type="password" data-input-revealable-target="input">
       </div>
     `;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
 
     expect(document.querySelector('[data-input-revealable-target="input"]').type).toBe('text');
   });

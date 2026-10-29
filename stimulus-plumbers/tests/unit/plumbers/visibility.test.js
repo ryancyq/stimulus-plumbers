@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Visibility, attachVisibility } from '../../../src/plumbers/visibility';
 import { visibilityConfig } from '../../../src/plumbers/plumber/config';
+import { flush } from '../../support/stimulus';
 
 describe('Visibility', () => {
   let mockController;
@@ -13,7 +14,7 @@ describe('Visibility', () => {
     mockController = {
       identifier: 'visibility',
       element: element,
-      dispatch: vi.fn((name, options) => true),
+      dispatch: vi.fn(() => true),
     };
 
     // Reset visibility config
@@ -28,41 +29,31 @@ describe('Visibility', () => {
     });
   });
 
-  describe('constructor', () => {
-    it('defaults namespace to "visibility", resolver to "isVisible", callbacks to shown/hidden', () => {
-      const visibility = new Visibility(mockController);
-
-      expect(visibility.controller).toBe(mockController);
-      expect(visibility.visibility).toBe('visibility');
-      expect(visibility.visibilityResolver).toBe('isVisible');
-      expect(visibility.onShown).toBe('shown');
-      expect(visibility.onHidden).toBe('hidden');
-    });
-
-    it('accepts custom visibility namespace', () => {
-      const visibility = new Visibility(mockController, {
-        visibility: 'customNamespace',
-      });
-
-      expect(visibility.visibility).toBe('customNamespace');
-    });
-
-    it('accepts custom callbacks', () => {
-      const visibility = new Visibility(mockController, {
-        onShown: 'customShown',
-        onHidden: 'customHidden',
-      });
-
-      expect(visibility.onShown).toBe('customShown');
-      expect(visibility.onHidden).toBe('customHidden');
-    });
-
-    it('attaches show and hide helpers to controller', () => {
+  describe('callbacks', () => {
+    it('calls the controller shown and hidden methods by default', async () => {
+      element.classList.add('hidden');
+      mockController.shown = vi.fn();
+      mockController.hidden = vi.fn();
       new Visibility(mockController);
 
-      expect(mockController.visibility).toBeDefined();
-      expect(mockController.visibility.show).toBeTypeOf('function');
-      expect(mockController.visibility.hide).toBeTypeOf('function');
+      await mockController.visibility.show();
+      await mockController.visibility.hide();
+
+      expect(mockController.shown).toHaveBeenCalledOnce();
+      expect(mockController.hidden).toHaveBeenCalledOnce();
+    });
+
+    it('calls the onShown and onHidden methods it is given', async () => {
+      element.classList.add('hidden');
+      mockController.customShown = vi.fn();
+      mockController.customHidden = vi.fn();
+      new Visibility(mockController, { onShown: 'customShown', onHidden: 'customHidden' });
+
+      await mockController.visibility.show();
+      await mockController.visibility.hide();
+
+      expect(mockController.customShown).toHaveBeenCalledOnce();
+      expect(mockController.customHidden).toHaveBeenCalledOnce();
     });
   });
 
@@ -140,7 +131,7 @@ describe('Visibility', () => {
 
     it('awaits async onShown callback', async () => {
       element.classList.add('hidden');
-      const onShown = vi.fn(() => new Promise((resolve) => setTimeout(resolve, 10)));
+      const onShown = vi.fn(() => flush());
       const visibility = new Visibility(mockController, { onShown: 'shown' });
       visibility.shown = onShown;
 
@@ -189,7 +180,7 @@ describe('Visibility', () => {
     });
 
     it('awaits async onHidden callback', async () => {
-      const onHidden = vi.fn(() => new Promise((resolve) => setTimeout(resolve, 10)));
+      const onHidden = vi.fn(() => flush());
       const visibility = new Visibility(mockController, { onHidden: 'hidden' });
       visibility.hidden = onHidden;
 
@@ -209,13 +200,6 @@ describe('Visibility', () => {
   });
 
   describe('enhance', () => {
-    it('adds show and hide methods to controller', () => {
-      new Visibility(mockController);
-
-      expect(mockController.visibility.show).toBeTypeOf('function');
-      expect(mockController.visibility.hide).toBeTypeOf('function');
-    });
-
     it('adds visible getter to controller', () => {
       new Visibility(mockController);
 
@@ -228,19 +212,18 @@ describe('Visibility', () => {
     it('adds isVisible resolver to controller', () => {
       new Visibility(mockController);
 
-      expect(mockController.visibility.isVisible).toBeTypeOf('function');
       expect(mockController.visibility.isVisible(element)).toBe(true);
 
       element.classList.add('hidden');
       expect(mockController.visibility.isVisible(element)).toBe(false);
     });
 
-    it('uses custom namespace', () => {
+    it('uses custom namespace', async () => {
       new Visibility(mockController, { visibility: 'customVis' });
 
-      expect(mockController.customVis).toBeDefined();
-      expect(mockController.customVis.show).toBeTypeOf('function');
-      expect(mockController.customVis.hide).toBeTypeOf('function');
+      await mockController.customVis.hide();
+
+      expect(element.classList.contains('hidden')).toBe(true);
     });
 
     it('re-attaching points the helpers at the new element', () => {

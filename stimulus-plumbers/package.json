@@ -23,7 +23,7 @@
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "lint": "eslint src",
+    "lint": "eslint src tests",
     "format:write": "prettier --write \"{src,tests}/**/*.js\"",
     "format:check": "prettier --check \"{src,tests}/**/*.js\""
   },
