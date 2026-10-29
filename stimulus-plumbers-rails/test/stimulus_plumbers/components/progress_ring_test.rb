@@ -47,6 +47,12 @@ class ProgressRingTest < ActionView::TestCase
     assert_css doc, "[aria-valuenow='25']"
   end
 
+  def test_renders_the_percent_for_the_dash
+    doc = parse_html(renderer.render(value: 30, min: 20, max: 60))
+
+    assert_css doc, "[role='progressbar'][style='--sp-progress-percent: 25']"
+  end
+
   def test_omits_aria_valuenow_when_indeterminate
     doc = parse_html(renderer.render(value: 0, indeterminate: true))
 

@@ -39,24 +39,25 @@ describe('ProgressController', () => {
       expect(el.getAttribute('aria-valuemax')).toBe('100')
     })
 
-    it('sets the fill target width to match the percent', () => {
-      const fill = document.querySelector('[data-progress-target="fill"]')
-      expect(fill.style.width).toBe('30%')
-    })
-
-    it('publishes the percent on the root so a theme can split the readout at the fill edge', () => {
+    it('publishes the percent on the root for the geometry', () => {
       const el = document.querySelector('[data-controller="progress"]')
       expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('30')
       getController().setValue(80)
       expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('80')
     })
 
-    it('setValue(value) clamps to max and updates the fill', () => {
+    it('writes the percent with two decimals, as the server renders it', async () => {
+      const el = document.querySelector('[data-controller="progress"]')
+      el.setAttribute('data-progress-max-value', '90')
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('33.33')
+    })
+
+    it('setValue(value) clamps to max', () => {
       getController().setValue(150)
       const el = document.querySelector('[data-controller="progress"]')
-      const fill = document.querySelector('[data-progress-target="fill"]')
       expect(el.getAttribute('aria-valuenow')).toBe('100')
-      expect(fill.style.width).toBe('100%')
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('100')
     })
 
     it('setValue(value) clamps to min', () => {
@@ -73,11 +74,22 @@ describe('ProgressController', () => {
       expect(spy.mock.calls[0][0].detail).toEqual({ value: 75, min: 0, max: 100 })
     })
 
-    it('direct attribute edits recalculate fill via currentValueChanged', async () => {
+    it('setValue(value) dispatches nothing when the value is unchanged', () => {
       const el = document.querySelector('[data-controller="progress"]')
+      const spy = vi.fn()
+      el.addEventListener('progress:changed', spy)
+      getController().setValue(30)
+      expect(spy).not.toHaveBeenCalled()
+    })
+
+    it('direct attribute edits re-render via currentValueChanged without dispatching', async () => {
+      const el = document.querySelector('[data-controller="progress"]')
+      const spy = vi.fn()
+      el.addEventListener('progress:changed', spy)
       el.setAttribute('data-progress-current-value', '60')
       await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('60%')
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('60')
+      expect(spy).not.toHaveBeenCalled()
     })
   })
 
@@ -92,25 +104,11 @@ describe('ProgressController', () => {
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
-    it('computes stroke-dasharray from the circle r attribute at connect', () => {
-      const fill = document.querySelector('[data-progress-target="fill"]')
-      const expected = 2 * Math.PI * 40
-      expect(parseFloat(fill.style.strokeDasharray)).toBeCloseTo(expected, 2)
-    })
-
-    it('computes stroke-dashoffset for the given percent', () => {
-      const fill = document.querySelector('[data-progress-target="fill"]')
-      const circumference = 2 * Math.PI * 40
-      const expected = circumference * (1 - 0.25)
-      expect(parseFloat(fill.style.strokeDashoffset)).toBeCloseTo(expected, 2)
-    })
-
-    it('recalculates stroke-dashoffset on setValue', () => {
+    it('publishes the percent on the root for the dash', () => {
+      const el = document.querySelector('[data-controller="progress"]')
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('25')
       getController().setValue(50)
-      const fill = document.querySelector('[data-progress-target="fill"]')
-      const circumference = 2 * Math.PI * 40
-      const expected = circumference * (1 - 0.5)
-      expect(parseFloat(fill.style.strokeDashoffset)).toBeCloseTo(expected, 2)
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('50')
     })
 
     it('still sets aria-valuenow/valuemin/valuemax like the bar variant', () => {
@@ -136,9 +134,6 @@ describe('ProgressController', () => {
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
     }
-    const fillWidths = () =>
-      [...document.querySelectorAll('[data-progress-target="fill"]')].map((f) => f.style.width)
-
     it('sets aria attrs on the container like the bar variant', async () => {
       await setup()
       const el = document.querySelector('[data-controller="progress"]')
@@ -146,46 +141,23 @@ describe('ProgressController', () => {
       expect(el.getAttribute('aria-valuemax')).toBe('10')
     })
 
-    it('discrete mode (default) lights whole segments reached by the value', async () => {
+    it('publishes the percent on the container for the slots', async () => {
       await setup({ value: 6 })
-      // 6/10 over 5 segments = 3 filled segments
-      expect(fillWidths()).toEqual(['100%', '100%', '100%', '0%', '0%'])
-    })
-
-    it('discrete mode lights a segment as soon as progress enters it', async () => {
-      await setup({ value: 5 })
-      // 5/10 over 5 segments = 2.5 → segment 3 is entered, so lit
-      expect(fillWidths()).toEqual(['100%', '100%', '100%', '0%', '0%'])
-    })
-
-    it('continuous mode partially fills the boundary segment', async () => {
-      await setup({ value: 5, mode: 'continuous' })
-      expect(fillWidths()).toEqual(['100%', '100%', '50%', '0%', '0%'])
-    })
-
-    it('setValue redistributes the fill across segments', async () => {
-      await setup({ value: 6 })
+      const el = document.querySelector('[data-controller="progress"]')
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('60')
       getController().setValue(2)
-      expect(fillWidths()).toEqual(['100%', '0%', '0%', '0%', '0%'])
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('20')
     })
 
-    it('indeterminate gives every segment a chunk staggered by index/count into a relay', async () => {
+    it('omits aria-valuenow while indeterminate', async () => {
       document.body.innerHTML = `
         <div role="progressbar" data-controller="progress" data-progress-variant-value="segmented"
              data-progress-indeterminate-value="true" data-progress-max-value="10">
           <div><div data-progress-target="fill"></div></div>
-          <div><div data-progress-target="fill"></div></div>
-          <div><div data-progress-target="fill"></div></div>
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
-      const el = document.querySelector('[data-controller="progress"]')
-      expect(el.hasAttribute('aria-valuenow')).toBe(false)
-      expect(el.classList.contains('sp-progress-indeterminate')).toBe(true)
-      expect(fillWidths()).toEqual(['25%', '25%', '25%'])
-      const fillEls = [...document.querySelectorAll('[data-progress-target="fill"]')]
-      expect(fillEls.map((f) => f.style.getPropertyValue('--sp-progress-index'))).toEqual(['0', '1', '2'])
-      expect(fillEls.map((f) => f.style.getPropertyValue('--sp-progress-count'))).toEqual(['3', '3', '3'])
+      expect(document.querySelector('[data-controller="progress"]').hasAttribute('aria-valuenow')).toBe(false)
     })
   })
 
@@ -250,32 +222,6 @@ describe('ProgressController', () => {
     it('omits aria-valuenow', () => {
       expect(document.querySelector('[data-controller="progress"]').hasAttribute('aria-valuenow')).toBe(false)
     })
-
-    it('adds the indeterminate animation class', () => {
-      expect(
-        document.querySelector('[data-controller="progress"]').classList.contains('sp-progress-indeterminate')
-      ).toBe(true)
-    })
-
-    it('sets a fixed inline fill width as the static indeterminate baseline', () => {
-      expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('25%')
-    })
-  })
-
-  describe('indeterminate bar with a custom fraction', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div role="progressbar" data-controller="progress" data-progress-indeterminate-value="true"
-             data-progress-indeterminate-fraction-value="0.4">
-          <div data-progress-target="fill"></div>
-        </div>
-      `
-      await new Promise((resolve) => setTimeout(resolve, 10))
-    })
-
-    it('sets the fill width to the overridden fraction', () => {
-      expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('40%')
-    })
   })
 
   describe('value readout', () => {
@@ -293,7 +239,6 @@ describe('ProgressController', () => {
     }
     const readout = () => document.querySelector('[data-progress-target="value"]')
     const host = () => document.querySelector('[data-controller="progress"]')
-    const fill = () => document.querySelector('[data-progress-target="fill"]')
 
     it('renders the percentage when format is percent', async () => {
       await setup({ format: 'percent' })
@@ -352,7 +297,7 @@ describe('ProgressController', () => {
         </div>
       `
       await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('45%')
+      expect(host().style.getPropertyValue('--sp-progress-percent')).toBe('45')
     })
 
     it('accounts for a non-zero minimum', async () => {
@@ -379,14 +324,14 @@ describe('ProgressController', () => {
     it('clamps a value that arrives out of range in the markup', async () => {
       await setup({ value: 150, max: 100 })
       expect(readout().textContent).toBe('100%')
-      expect(fill().style.width).toBe('100%')
+      expect(host().style.getPropertyValue('--sp-progress-percent')).toBe('100')
       expect(host().getAttribute('aria-valuenow')).toBe('100')
     })
 
     it('clamps a value below the minimum', async () => {
       await setup({ value: -10, min: 0, max: 100 })
       expect(readout().textContent).toBe('0%')
-      expect(fill().style.width).toBe('0%')
+      expect(host().style.getPropertyValue('--sp-progress-percent')).toBe('0')
       expect(host().getAttribute('aria-valuenow')).toBe('0')
     })
 
@@ -514,23 +459,64 @@ describe('ProgressController', () => {
     })
   })
 
-  describe('indeterminate ring', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <svg role="progressbar" data-controller="progress" data-progress-variant-value="ring"
-             data-progress-indeterminate-value="true">
-          <circle data-progress-target="fill" r="40"></circle>
-        </svg>
-      `
-      await new Promise((resolve) => setTimeout(resolve, 10))
+  describe('dynamic values', () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 10))
+    const markup = (attrs = '') => `
+      <div role="progressbar" data-controller="progress"
+           data-progress-current-value="30" data-progress-min-value="0" data-progress-max-value="100" ${attrs}>
+        <div data-progress-target="fill"></div>
+      </div>
+    `
+
+    it('restores aria-valuenow when indeterminate turns off', async () => {
+      document.body.innerHTML = markup('data-progress-indeterminate-value="true"')
+      await tick()
+      const el = document.querySelector('[data-controller="progress"]')
+      expect(el.hasAttribute('aria-valuenow')).toBe(false)
+
+      el.setAttribute('data-progress-indeterminate-value', 'false')
+      await tick()
+
+      expect(el.getAttribute('aria-valuenow')).toBe('30')
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('30')
     })
 
-    it('sets stroke-dasharray to a fixed fraction of the circumference as the static indeterminate baseline', () => {
-      const fill = document.querySelector('[data-progress-target="fill"]')
-      const circumference = 2 * Math.PI * 40
-      const [arc, gap] = fill.style.strokeDasharray.split(' ').map(parseFloat)
-      expect(arc).toBeCloseTo(circumference * 0.25, 2)
-      expect(gap).toBeCloseTo(circumference * 0.75, 2)
+    it('re-renders the percent when max changes', async () => {
+      document.body.innerHTML = markup()
+      await tick()
+      const el = document.querySelector('[data-controller="progress"]')
+
+      el.setAttribute('data-progress-max-value', '60')
+      await tick()
+
+      expect(el.getAttribute('aria-valuemax')).toBe('60')
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('50')
+    })
+
+    it('moves the range thumb when the current value attribute changes', async () => {
+      document.body.innerHTML = `
+        <input type="range" min="0" max="100" value="45"
+               data-controller="progress" data-progress-variant-value="range"
+               data-progress-current-value="45">
+      `
+      await tick()
+      const input = document.querySelector('input[type="range"]')
+
+      input.setAttribute('data-progress-current-value', '70')
+      await tick()
+
+      expect(input.value).toBe('70')
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('70')
+    })
+
+    it('keeps the native range value on connect', async () => {
+      document.body.innerHTML = `
+        <input type="range" min="0" max="100" value="45"
+               data-controller="progress" data-progress-variant-value="range">
+      `
+      await tick()
+
+      expect(document.querySelector('input[type="range"]').value).toBe('45')
     })
   })
 })

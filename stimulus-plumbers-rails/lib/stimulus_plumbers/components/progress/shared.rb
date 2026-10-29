@@ -30,6 +30,12 @@ module StimulusPlumbers
           aria
         end
 
+        # --sp-progress-percent drives the geometry CSS; the caller's own style follows it.
+        def progress_style(current, min, max, caller_style = nil, **properties)
+          declarations = { "--sp-progress-percent" => integral(percent(current, min, max).round(2)), **properties }
+          [*declarations.map { |name, value| "#{name}: #{value}" }, caller_style.presence].compact.join("; ")
+        end
+
         def validate_format!(format)
           return if format.nil? || (format.respond_to?(:to_sym) && FORMATS.include?(format.to_sym))
 

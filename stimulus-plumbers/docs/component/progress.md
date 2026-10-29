@@ -8,28 +8,27 @@ Value-driven progress indicator supporting five render variants: a linear bar, a
 
 ## Targets
 
-| Name    | Element                           | Purpose                                                                                                                                                                             |
-| ------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fill`  | `<div>` (bar) / `<circle>` (ring) | Element whose `width` (bar) or `stroke-dasharray`/`stroke-dashoffset` (ring) is set. Segmented renders **one `fill` per segment**; the controller distributes the value across them |
-| `meter` | `<meter>`                         | Present only for `variant: "meter"` — native element, attributes synced directly                                                                                                    |
-| `value` | `<span>`                          | Optional on-screen readout; its `textContent` is set from `format`. Bar and range variants                                                                                          |
-| `input` | `<input type="range">`            | Range-only, and only when a readout is present — the controller then sits on a wrapper containing both                                                                              |
+| Name    | Element                                                          | Purpose                                                                                                                               |
+| ------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `fill`  | `<div>` (bar, segment slot) / `<circle pathLength="100">` (ring) | Element the geometry CSS sizes from `--sp-progress-percent` (see [Geometry](#geometry)). Segmented renders **one `fill` per segment** |
+| `meter` | `<meter>`                                                        | Present only for `variant: "meter"` — native element, attributes synced directly                                                      |
+| `value` | `<span>`                                                         | Optional on-screen readout; its `textContent` is set from `format`. Bar and range variants                                            |
+| `input` | `<input type="range">`                                           | Range-only, and only when a readout is present — the controller then sits on a wrapper containing both                                |
 
 ## Values
 
-| Name                    | Type    | Default      | Purpose                                                                                                                                |
-| ----------------------- | ------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `variant`               | String  | `"bar"`      | `"bar"` \| `"segmented"` \| `"ring"` \| `"meter"` \| `"range"`                                                                         |
-| `current`               | Number  | `0`          | Current value                                                                                                                          |
-| `min`                   | Number  | `0`          | Range minimum                                                                                                                          |
-| `max`                   | Number  | `100`        | Range maximum                                                                                                                          |
-| `optimum`               | Number  | —            | Meter-only; maps to native `<meter optimum>`                                                                                           |
-| `low`                   | Number  | —            | Meter-only; maps to native `<meter low>`                                                                                               |
-| `high`                  | Number  | —            | Meter-only; maps to native `<meter high>`                                                                                              |
-| `indeterminate`         | Boolean | `false`      | Suppresses `aria-valuenow`; toggles the `sp-progress-indeterminate` class                                                              |
-| `indeterminateFraction` | Number  | `0.25`       | Bar width / ring arc / segment chunk-width fraction rendered while indeterminate                                                       |
-| `segmentMode`           | String  | `"discrete"` | Segmented-only. `"discrete"` lights a whole segment once progress reaches into it; `"continuous"` partially fills the boundary segment |
-| `format`                | String  | `""`         | Readout text for the `value` target: `"percent"` \| `"value"` \| `"value_max"`. Empty or unrecognized renders nothing                  |
+| Name            | Type    | Default      | Purpose                                                                                                                                |
+| --------------- | ------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`       | String  | `"bar"`      | `"bar"` \| `"segmented"` \| `"ring"` \| `"meter"` \| `"range"`                                                                         |
+| `current`       | Number  | `0`          | Current value                                                                                                                          |
+| `min`           | Number  | `0`          | Range minimum                                                                                                                          |
+| `max`           | Number  | `100`        | Range maximum                                                                                                                          |
+| `optimum`       | Number  | —            | Meter-only; maps to native `<meter optimum>`                                                                                           |
+| `low`           | Number  | —            | Meter-only; maps to native `<meter low>`                                                                                               |
+| `high`          | Number  | —            | Meter-only; maps to native `<meter high>`                                                                                              |
+| `indeterminate` | Boolean | `false`      | Suppresses `aria-valuenow`; the geometry CSS and the theme's animation key off this attribute                                          |
+| `segmentMode`   | String  | `"discrete"` | Segmented-only. `"discrete"` lights a whole segment once progress reaches into it; `"continuous"` partially fills the boundary segment |
+| `format`        | String  | `""`         | Readout text for the `value` target: `"percent"` \| `"value"` \| `"value_max"`. Empty or unrecognized renders nothing                  |
 
 ### Readout formats
 
@@ -43,23 +42,36 @@ Value-driven progress indicator supporting five render variants: a linear bar, a
 
 The `range` variant writes no `aria-value*` at all — a native `<input type="range">` already exposes its own slider semantics — and sets `--sp-progress-percent` on the input so a theme can paint the filled portion of the track.
 
-The `bar` variant sets `--sp-progress-percent` too, on the controller element, alongside the fill target's width. A theme can use it to split the readout's color at the fill edge. It is unset until the controller connects, so read it as `var(--sp-progress-percent, 0)` to match the server-rendered (empty) fill.
-
 The rendered number is the value clamped to `[min, max]`, so an out-of-range `current` reads as the nearest bound rather than an impossible percentage. An empty or inverted range (`max <= min`) renders `0%`. While `indeterminate`, the readout is blank and `aria-valuetext` is removed.
+
+## Geometry
+
+The controller writes `--sp-progress-percent` (0–100, two decimals) on the controller element; CSS derives the shape from it. The markup must already carry the same values, so the first paint matches and a Turbo morph with unchanged values changes nothing. The Rails gem's `tokens.css` ships these rules.
+
+| Variant         | Markup carries                                                                               | CSS derives                                                                                  |
+| --------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `bar`           | Root `--sp-progress-percent`                                                                 | Fill `width: calc(var(--sp-progress-percent) * 1%)`                                          |
+| `segmented`     | Root `--sp-progress-percent` and `--sp-progress-count`; each fill `--sp-progress-index` (0…) | Each fill's share of `[index, index + 1)`; `discrete` rounds a started slot up to whole      |
+| `ring`          | Root `--sp-progress-percent`; fill `<circle pathLength="100">`                               | `stroke-dasharray: 100; stroke-dashoffset: calc(100 - var(--sp-progress-percent))`           |
+| `indeterminate` | `data-progress-indeterminate-value="true"`                                                   | Fill (bar width, ring arc, segment chunk) at `--sp-progress-indeterminate-fraction` (`0.25`) |
+
+A theme can also read the root's `--sp-progress-percent`, for example to split the readout's color at the fill edge.
 
 ## Methods
 
-| Method                       | Wired via                 | Purpose                                                                                                   |
-| ---------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `setValue(value)`            | —                         | Programmatic API — clamps to `[min, max]`, updates `currentValue`, dispatches `progress:changed`          |
-| `currentValueChanged(value)` | Stimulus value callback   | Recalculates fill/meter attrs whenever `current` changes (covers `setValue()` and direct attribute edits) |
-| `refresh()`                  | `input->progress#refresh` | Range-only. Reads the native input's value and passes it to `setValue()`                                  |
+| Method                       | Wired via                 | Purpose                                                                                                                    |
+| ---------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `setValue(value)`            | —                         | Programmatic API — clamps to `[min, max]`, updates `currentValue`, dispatches `progress:changed` when the value changes    |
+| `currentValueChanged(value)` | Stimulus value callback   | Re-renders whenever `current` changes (covers `setValue()`, attribute edits, and Turbo morphs); range also moves its thumb |
+| `refresh()`                  | `input->progress#refresh` | Range-only. Reads the native input's value and passes it to `setValue()`                                                   |
+
+Changing any other value (`min`, `max`, `indeterminate`, `format`, …) re-renders too.
 
 ## Dispatches
 
-| Event              | Detail                | When                                                                                   |
-| ------------------ | --------------------- | -------------------------------------------------------------------------------------- |
-| `progress:changed` | `{ value, min, max }` | After `setValue()` updates the value — including a range drag, which routes through it |
+| Event              | Detail                | When                                                                                                                     |
+| ------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `progress:changed` | `{ value, min, max }` | After `setValue()` changes the value — including a range drag, which routes through it; attribute changes never dispatch |
 
 ## Example HTML
 
@@ -67,6 +79,11 @@ The rendered number is the value clamped to `[min, max]`, so an out-of-range `cu
 <!-- Bar -->
 <div
   role="progressbar"
+  data-controller="progress"
+  aria-valuenow="30"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  style="--sp-progress-percent: 30"
   data-controller="progress"
   data-progress-current-value="30"
   data-progress-min-value="0"
@@ -79,6 +96,7 @@ The rendered number is the value clamped to `[min, max]`, so an out-of-range `cu
 <div
   role="progressbar"
   data-controller="progress"
+  style="--sp-progress-percent: 45"
   data-progress-current-value="45"
   data-progress-max-value="100"
   data-progress-format-value="percent"
@@ -91,27 +109,29 @@ The rendered number is the value clamped to `[min, max]`, so an out-of-range `cu
 <div
   role="progressbar"
   data-controller="progress"
+  style="--sp-progress-percent: 60; --sp-progress-count: 5"
   data-progress-variant-value="segmented"
   data-progress-current-value="6"
   data-progress-max-value="10"
 >
   <!-- ×5 slots → segment size 2 -->
-  <div aria-hidden="true"><div data-progress-target="fill"></div></div>
-  <div aria-hidden="true"><div data-progress-target="fill"></div></div>
-  <div aria-hidden="true"><div data-progress-target="fill"></div></div>
-  <div aria-hidden="true"><div data-progress-target="fill"></div></div>
-  <div aria-hidden="true"><div data-progress-target="fill"></div></div>
+  <div aria-hidden="true"><div style="--sp-progress-index: 0" data-progress-target="fill"></div></div>
+  <div aria-hidden="true"><div style="--sp-progress-index: 1" data-progress-target="fill"></div></div>
+  <div aria-hidden="true"><div style="--sp-progress-index: 2" data-progress-target="fill"></div></div>
+  <div aria-hidden="true"><div style="--sp-progress-index: 3" data-progress-target="fill"></div></div>
+  <div aria-hidden="true"><div style="--sp-progress-index: 4" data-progress-target="fill"></div></div>
 </div>
 
 <!-- Ring -->
 <svg
   role="progressbar"
   data-controller="progress"
+  style="--sp-progress-percent: 25"
   data-progress-variant-value="ring"
   data-progress-current-value="25"
   data-progress-max-value="100"
 >
-  <circle data-progress-target="fill" r="40"></circle>
+  <circle data-progress-target="fill" r="40" pathLength="100"></circle>
 </svg>
 
 <!-- Meter -->

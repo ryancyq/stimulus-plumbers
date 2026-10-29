@@ -15,7 +15,7 @@ Rails helpers for rendering the four standalone `progress` variants. The control
 | `value:`         | —         | Required. Current value                                                                                                      |
 | `min:`           | `0`       | Range minimum                                                                                                                |
 | `max:`           | `100`     | Range maximum                                                                                                                |
-| `indeterminate:` | `false`   | Omits `aria-valuenow`; adds the indeterminate hook class                                                                     |
+| `indeterminate:` | `false`   | Omits `aria-valuenow`; the indeterminate value drives the fixed fill                                                         |
 | `format:`        | `nil`     | Renders an on-screen readout: `:percent` \| `:value` \| `:value_max`. Any other value raises `ArgumentError`                 |
 | `readout:`       | `:inside` | Where that readout sits: `:inside` (over the track) \| `:outside` (beside it). Always validated; no effect without `format:` |
 | `**html_options` | —         | Forwarded to the outer `<div role="progressbar">`                                                                            |
@@ -31,10 +31,10 @@ Rails helpers for rendering the four standalone `progress` variants. The control
 
 Theme keys: `progress_bar_value` (inside), `progress_bar_value_outside` + `progress_bar_group` (outside). A theme without the latter two renders `:outside` unstyled, not broken.
 
-When `indeterminate:` is true, the JS controller sets a fixed 25% fill
-width directly — this is the same with or without a theme. A theme may
-layer motion on top (Tailwind slides it); without one, the bar renders
-as a static partial fill.
+The fill's geometry comes from the rendered `--sp-progress-percent`
+([JS](../../../stimulus-plumbers/docs/component/progress.md#geometry)), so it paints
+before the controller connects, with or without a theme. While `indeterminate:`,
+a theme may layer motion on the fixed fill (Tailwind slides it).
 
 ### `sp_progress_segmented`
 
@@ -44,7 +44,7 @@ as a static partial fill.
 
 `format:` is not supported here (it raises `ArgumentError`) — there is no single track to center a readout over.
 
-Splits the track into `segments:` equal slots and distributes the value across them (max 10 with `segments: 5` → each slot spans 2 units). Renders one `fill` target per slot; the JS controller fills them.
+Splits the track into `segments:` equal slots and distributes the value across them (max 10 with `segments: 5` → each slot spans 2 units). Renders one `fill` target per slot, each with its `--sp-progress-index`.
 
 | Option           | Default     | Description                                                                                            |
 | ---------------- | ----------- | ------------------------------------------------------------------------------------------------------ |
@@ -68,16 +68,15 @@ Splits the track into `segments:` equal slots and distributes the value across t
 | `value:`         | —       | Required. Current value                                                                       |
 | `min:`           | `0`     | Range minimum                                                                                 |
 | `max:`           | `100`   | Range maximum                                                                                 |
-| `indeterminate:` | `false` | Omits `aria-valuenow`; adds the indeterminate hook class                                      |
+| `indeterminate:` | `false` | Omits `aria-valuenow`; the indeterminate value drives the fixed fill                          |
 | `size:`          | `nil`   | `:sm` \| `:md` \| `:lg` size token; `nil` uses the icon's own size (override with `classes:`) |
 | `**html_options` | —       | Forwarded to the rendered icon (role, aria, classes, etc.)                                    |
 
 Renders via the theme's icon registry (icon name `"progress-ring"`), the same mechanism as `sp_icon`. Resize with the `size:` token (`:sm`/`:md`/`:lg`) or, for an exact size, a `classes:`/`class:` override (e.g. `classes: "size-16"`) — there is no radius option. **Themes must register a `"progress-ring"` icon to render the ring's visual structure** — `stimulus-plumbers-tailwind` ships one; a theme without it (including the unstyled `Themes::Base`) falls back to an empty `<span role="progressbar">` with no visible ring, same as `sp_icon` for an unknown icon name.
 
-When `indeterminate:` is true (and a theme provides the ring icon), the JS
-controller sets the fill circle's `stroke-dasharray` to a fixed 25% arc
-directly, same as the bar. A theme may spin it (Tailwind's `animate-spin`);
-without one, the arc renders static.
+The theme's fill circle must carry `pathLength="100"`, so its dash follows the
+rendered `--sp-progress-percent`. While `indeterminate:`, the arc is fixed; a theme
+may spin it (Tailwind's `animate-spin`).
 
 ### `sp_progress_meter`
 

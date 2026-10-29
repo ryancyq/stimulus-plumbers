@@ -35,7 +35,7 @@
    runs longer than that handoff — the overlap is what keeps the wave whole across the gap.
    `backwards` holds a waiting slot at the first keyframe (off-screen left) so it stays hidden. */
 @media (prefers-reduced-motion: no-preference) {
-  .sp-progress-indeterminate [aria-hidden="true"] > [data-progress-target="fill"] {
+  [data-progress-indeterminate-value="true"] [aria-hidden="true"] > [data-progress-target="fill"] {
     animation-name: sp-progress-relay;
     animation-duration: calc(var(--sp-progress-slide-duration) / var(--sp-progress-count, 1) / 0.2);
     animation-delay: calc(
@@ -49,10 +49,10 @@
 
   /* Ramp the whole relay in/out at its ends only — the first slot accelerates from rest,
      the last decelerates to a stop and fades; every slot between stays constant speed. */
-  .sp-progress-indeterminate [aria-hidden="true"]:first-child > [data-progress-target="fill"] {
+  [data-progress-indeterminate-value="true"] [aria-hidden="true"]:first-child > [data-progress-target="fill"] {
     animation-timing-function: ease-in;
   }
-  .sp-progress-indeterminate [aria-hidden="true"]:last-child > [data-progress-target="fill"] {
+  [data-progress-indeterminate-value="true"] [aria-hidden="true"]:last-child > [data-progress-target="fill"] {
     animation-name: sp-progress-relay-end;
     animation-timing-function: ease-out;
   }

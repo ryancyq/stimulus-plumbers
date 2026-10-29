@@ -46,6 +46,7 @@ doc:
 ```html
 <div
   role="progressbar"
+  style="--sp-progress-percent: 30"
   data-controller="progress"
   data-progress-current-value="30"
   data-progress-min-value="0"
