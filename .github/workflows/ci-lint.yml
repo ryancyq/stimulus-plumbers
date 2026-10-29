@@ -9,6 +9,14 @@ permissions:
   contents: read
 
 jobs:
+  lint-test-boundaries:
+    name: "test boundaries"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+      - run: bin/test-boundaries
+
   lint-md-docs:
     name: "markdown (docs)"
     runs-on: ubuntu-latest
