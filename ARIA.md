@@ -43,6 +43,7 @@
 - The consuming component chooses the panel role and accessible name (e.g. `role="region"` + `aria-label`, `role="dialog"`); the helper infers neither
 - Author `aria-haspopup`, `aria-expanded`, and `aria-controls` only when the consumer owns that popup relationship; the controller updates an authored `aria-expanded` to the settled state
 - The controller does not move focus or announce open/close
+- `popover-fetch` marks the loading region `aria-busy="true"`, writes loading and error text to a `role="status"` outside the region, and, when the swap drops focus, moves it to the first focusable element in the new region, else to the panel, which needs `tabindex="-1"`
 
 #### Combobox (`combobox_controller`)
 

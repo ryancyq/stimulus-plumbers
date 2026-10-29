@@ -169,8 +169,8 @@ the frame while loading.
 
 ### combobox-fetch
 
-Fetches `src` with `Accept: text/html` and replaces the listbox with the element of the same `id` in
-the response. No Turbo dependency. The listbox carries `aria-busy="true"` while loading.
+Loads the listbox through the [fragment loader](../plumber/fragment_loader.md): it replaces the listbox
+with the response element of the same `id`. No Turbo dependency.
 
 ```html
 <div

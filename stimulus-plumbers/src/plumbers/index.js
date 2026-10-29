@@ -7,6 +7,7 @@ export { Dialog, attachDialog } from './dialog';
 export { attachDismisser } from './dismisser';
 export { attachFlipper } from './flipper';
 export { attachFormatter } from './formatter';
+export { FragmentLoader, attachFragmentLoader } from './fragment_loader';
 export { Popover, attachPopover } from './popover';
 export { attachReorderable } from './reorderable';
 export { attachShifter } from './shifter';

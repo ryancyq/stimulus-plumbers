@@ -8,7 +8,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
     combobox combobox-turbo combobox-fetch combobox-date combobox-time
     input-clearable input-formatter input-revealable
     checklist clipboard reorderable progress timeline dismisser flipper
-    modal modal-turbo panner password-strength popover visibility
+    modal modal-turbo panner password-strength popover popover-fetch visibility
   ].freeze
 
   def setup

@@ -47,6 +47,53 @@ Events are dispatched from the panel:
 `source` is the native invoker, or `null` for an external `showPopover()` call. `popover="manual"` panels get
 no light dismissal; the consuming component provides every close path.
 
+## popover-fetch
+
+Loads a region inside the panel through the [fragment loader](../plumber/fragment_loader.md) when the
+panel opens. No Turbo dependency; Turbo apps put a lazy Turbo Frame in the panel instead.
+
+```html
+<div
+  data-controller="popover popover-fetch"
+  data-popover-fetch-src-value="/menu"
+  data-action="popover:opened->popover-fetch#onOpened popover:closed->popover-fetch#onClosed"
+>
+  <button data-popover-target="trigger" popovertarget="account-actions">Account</button>
+  <div
+    id="account-actions"
+    data-popover-target="panel"
+    popover="auto"
+    role="region"
+    aria-label="Account actions"
+    tabindex="-1"
+  >
+    <div id="account_menu" data-popover-fetch-target="region"></div>
+    <div role="status" data-popover-fetch-target="status"></div>
+  </div>
+</div>
+```
+
+The endpoint responds with an element of the region's `id`.
+
+| Target   | Description                                                  |
+| -------- | ------------------------------------------------------------ |
+| `region` | Element replaced by the response; inside the panel, not it   |
+| `status` | Optional; shows the loading and error text, outside `region` |
+
+| Value         | Type    | Default                       | Description                                       |
+| ------------- | ------- | ----------------------------- | ------------------------------------------------- |
+| `src`         | String  | —                             | Region URL                                        |
+| `reload`      | Boolean | `false`                       | Loads on every open instead of the first          |
+| `loadingText` | String  | `Loading…`                    | Status while loading                              |
+| `errorText`   | String  | `Content could not be loaded` | Status after a failed load; the next open retries |
+
+| Action            | Wired on                 | Description                                                                   |
+| ----------------- | ------------------------ | ----------------------------------------------------------------------------- |
+| `onOpened(event)` | `popover:opened` on root | Loads the region; restores focus the swap drops ([ARIA.md](../../../ARIA.md)) |
+| `onClosed(event)` | `popover:closed` on root | Cancels a load in flight                                                      |
+
+Events from popovers inside the region are ignored.
+
 ## Accessibility
 
 - See [ARIA.md's Popover pattern](../../../ARIA.md) for the accessibility contract.

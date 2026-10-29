@@ -19,6 +19,7 @@ export { CharacterCells, attachCharacterCells } from './plumbers/character_cells
 export { PasswordStrength, attachPasswordStrength, STRENGTH_TYPES } from './plumbers/password_strength.js';
 export { Dialog, attachDialog } from './plumbers/dialog.js';
 export { Popover, attachPopover } from './plumbers/popover.js';
+export { FragmentLoader, attachFragmentLoader } from './plumbers/fragment_loader.js';
 
 // Export Stimulus controllers
 export { default as CalendarController } from './controllers/calendar_controller.js';
@@ -40,6 +41,7 @@ export { default as ModalTurboController } from './controllers/modal_turbo_contr
 export { default as PannerController } from './controllers/panner_controller.js';
 export { default as PasswordStrengthController } from './controllers/password_strength_controller.js';
 export { default as PopoverController } from './controllers/popover_controller.js';
+export { default as PopoverFetchController } from './controllers/popover_fetch_controller.js';
 export { default as ProgressController } from './controllers/progress_controller.js';
 export { default as ReorderableController } from './controllers/reorderable_controller.js';
 export { default as TimelineController } from './controllers/timeline_controller.js';

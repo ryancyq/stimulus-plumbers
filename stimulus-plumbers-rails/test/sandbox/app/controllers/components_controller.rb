@@ -35,6 +35,15 @@ class ComponentsController < ApplicationController
   def popover
   end
 
+  def popover_fetch
+  end
+
+  def popover_menu
+    return head(:internal_server_error) if params[:fail]
+
+    render layout: false
+  end
+
   def modal
   end
 
