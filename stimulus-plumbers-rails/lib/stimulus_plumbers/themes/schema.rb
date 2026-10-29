@@ -105,15 +105,12 @@ module StimulusPlumbers
         combobox_trigger:                   {}.freeze,
         combobox_trigger_icon:              {}.freeze,
         combobox_trigger_group:             {}.freeze,
-        combobox_option:                    {
-          selected: { default: false, validate: Ranges::BOOL },
-          disabled: { default: false, validate: Ranges::BOOL }
-        }.freeze,
+        combobox_option:                    { disabled: { default: false, validate: Ranges::BOOL } }.freeze,
+        combobox_option_description:        {}.freeze,
         combobox_option_group:              {}.freeze,
+        combobox_option_group_label:        {}.freeze,
         combobox_listbox:                   {}.freeze,
-        combobox_typeahead_loading:         {}.freeze,
-        combobox_typeahead_loading_icon:    {}.freeze,
-        combobox_typeahead_empty:           {}.freeze,
+        combobox_status:                    {}.freeze,
         combobox_time:                      {}.freeze,
         combobox_time_drum:                 { type: { default: :unit, validate: %i[unit period] } }.freeze,
         combobox_date_navigation:           {}.freeze,
@@ -267,15 +264,10 @@ module StimulusPlumbers
       LAYOUT = {
         divider:           {}.freeze,
         divider_separator: {}.freeze,
-        divider_label:     {}.freeze
-      }.freeze
-
-      POPOVER = {
-        popover_wrapper: {},
-        popover_trigger: {},
-        popover:         {
-          placement: { default: :block_end_start, validate: Popover::Ranges::PLACEMENT }
-        }.freeze
+        divider_label:     {}.freeze,
+        popover_wrapper:   {}.freeze,
+        popover_trigger:   {}.freeze,
+        popover:           { placement: { default: :block_end_start, validate: Popover::Ranges::PLACEMENT } }.freeze
       }.freeze
 
       # The outside readout gets its own keys, not parameters on existing ones — a theme method

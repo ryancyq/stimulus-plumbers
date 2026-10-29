@@ -3,108 +3,73 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      class Typeahead < Plumber::Base
-        class << self
-          def listbox_id_for(panel_id)
-            [panel_id, "listbox"].compact.join("_")
-          end
-        end
+      # Editable combobox: a text input that filters its options, or loads them from `source:` through Turbo.
+      class Typeahead < Combobox
+        MODE           = "editable"
+        VALUE_POLICIES = %i[restricted freeform].freeze
+        MATCHES        = %i[prefix contains fuzzy].freeze
+        OPTIONS        = %i[value_policy match min_length source param].freeze
 
-        module Metadata
-          module_function
-
-          def haspopup
-            "listbox"
-          end
-
-          def popup_id_for(panel_id)
-            Typeahead.listbox_id_for(panel_id)
-          end
-
-          def trigger_icon
-            nil
-          end
-
-          def trigger_options
-            { readonly: false, aria: { autocomplete: "list" } }
-          end
-
-          def stimulus_data(panel_id, _options)
-            {
-              input_combobox_combobox_dropdown_outlet: "##{panel_id}",
-              action:                                  "input->#{Combobox::STIMULUS_CONTROLLER}#onInput"
-            }
-          end
-        end
-
-        def render(...)
-          render_typeahead(...)
+        def render(value_policy: nil, match: nil, min_length: nil, source: nil, param: nil, id: nil, **kwargs)
+          @value_policy = value_policy && validate_choice!(value_policy, VALUE_POLICIES, :value_policy)
+          @match        = match && validate_choice!(match, MATCHES, :match)
+          @min_length   = min_length
+          @turbo        = turbo(source, param, id)
+          super(id: id, **kwargs)
         end
 
         private
 
-        def render_typeahead(panel_attrs: {}, options: [], value: nil, labelledby: nil, label: nil, url: nil)
-          template.content_tag(
-            :div,
-            template.safe_join([render_listbox(panel_attrs[:id], options, value, labelledby, label), loading, empty]),
-            **wrapper_attrs(panel_attrs: panel_attrs, url: url)
-          )
+        def turbo(source, param, id)
+          raise ArgumentError, "param: needs source:" if param && source.nil?
+          return if source.nil?
+
+          raise ArgumentError, "source: needs a nonblank stable id:" if id.to_s.blank?
+          raise ArgumentError, "match: filters local options, not source: results" if @match
+
+          Turbo.new(template, source, param)
         end
 
-        def wrapper_attrs(panel_attrs: {}, url: nil)
-          merge_html_options(
-            panel_attrs,
-            {
-              data: {
-                controller:                  Dropdown::STIMULUS_CONTROLLER,
-                action:                      Dropdown::STIMULUS_ACTION,
-                combobox_dropdown_url_value: url
-              }.compact
-            }
-          )
+        def trigger_actions
+          ["input->#{STIMULUS_CONTROLLER}#onInput"]
         end
 
-        def render_listbox(panel_id, options, value, labelledby, label)
-          template.content_tag(
-            :ul,
-            Options.new(template).render(options, value: value),
-            **merge_html_options(
-              theme.resolve(:combobox_listbox),
-              {
-                id:   self.class.listbox_id_for(panel_id),
-                role: "listbox",
-                aria: labelled_aria(label, labelledby: labelledby),
-                data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "listbox" }
-              }
-            )
-          )
+        def trigger_aria
+          { autocomplete: "list" }
         end
 
-        def loading
-          template.content_tag(
-            :div,
-            **merge_html_options(
-              theme.resolve(:combobox_typeahead_loading),
-              { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "loading" } }
-            )
-          ) do
-            Components::Icon.new(template).render(
-              "spinner",
-              size:    :md,
-              classes: theme.resolve(:combobox_typeahead_loading_icon).fetch(:classes, ""),
-              aria:    { hidden: "true" }
-            )
-          end
+        def render_host(attrs)
+          template.tag.input(type: "text", value: display_label, autocomplete: "off", **attrs)
         end
 
-        def empty
-          template.content_tag(
-            :div,
-            **merge_html_options(
-              theme.resolve(:combobox_typeahead_empty),
-              { hidden: "", role: "status", data: { "#{Dropdown::STIMULUS_CONTROLLER}_target": "empty" } }
-            )
-          ) { I18n.t("stimulus_plumbers.combobox.typeahead.empty", default: "No results") }
+        # Freeform text has no option.
+        def display_label
+          label = Options.new(template).label_for(@options, @value)
+          label ||= @value if @value_policy == :freeform
+          label.to_s
+        end
+
+        def editable_data
+          {
+            "combobox-value-policy-value" => @value_policy&.to_s,
+            "combobox-match-value"        => (@turbo ? "none" : @match&.to_s),
+            "combobox-min-length-value"   => @min_length&.to_s,
+            "combobox-empty-text-value"   => I18n.t("stimulus_plumbers.combobox.typeahead.empty")
+          }.compact
+        end
+
+        def root_options
+          [{ data: editable_data }, ({ data: @turbo.root_data } if @turbo)].compact
+        end
+
+        def panel_content(listbox)
+          template.safe_join([@turbo ? @turbo.render(@ids[:panel], listbox) : listbox, status])
+        end
+
+        def status
+          data = { "#{STIMULUS_CONTROLLER}-target" => "status" }
+          data.merge!(@turbo.status_data) if @turbo
+          template.content_tag(:div, "", **merge_html_options(theme.resolve(:combobox_status), { role: "status", data: data }))
         end
       end
     end

@@ -23,18 +23,24 @@ stimulus-plumbers-rails/
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
 │       │   │   └── slots.rb
-│       │   ├── combobox.rb               # Shared wrapper: input-combobox + input-formatter; reads builder.metadata (haspopup/popup_id/trigger_options/stimulus_data) + builder.render_panel into the popover
+│       │   ├── combobox.rb               # `combobox` controller markup: root + Trigger + hidden input + Panel; Dropdown and Typeahead subclass it
 │       │   ├── combobox/
-│       │   │   ├── config.rb             # DSL yielded by Combobox#render — c.dropdown/typeahead/date/time configure :renderer + :options (< Plumber::Config); exposes #metadata (renderer::Metadata, or DefaultMetadata) + #render_panel
-│       │   │   ├── typeahead.rb          # combobox-dropdown body + nested Metadata (haspopup/popup_id_for/trigger_icon/trigger_options/stimulus_data) — panel is a wrapper; <ul role=listbox> of options + loading/empty status siblings beside it
+│       │   │   ├── trigger.rb            # Trigger (the role=combobox element) inside its InputGroup; the block renders the <button> or <input>
+│       │   │   ├── listbox.rb            # Popup <ul role=listbox>; option and group ids derive from its id
+│       │   │   ├── panel.rb              # Manual popover panel; the block renders its content
+│       │   │   ├── dropdown.rb           # Select-only component behind sp_combobox_dropdown — Combobox subclass with a <button>
+│       │   │   ├── typeahead.rb          # Editable component behind sp_combobox_typeahead — Combobox subclass with an <input> and status (value_policy, match, min_length, source, param)
+│       │   │   ├── turbo.rb              # Combobox::Turbo — source: listbox in a Turbo Frame that combobox-turbo reloads
+│       │   │   ├── legacy.rb             # Legacy date/time composition: input-combobox + input-formatter; reads config.metadata into the popover
+│       │   │   ├── legacy/
+│       │   │   │   └── trigger.rb        # Legacy combobox trigger input (<input role="combobox">)
+│       │   │   ├── config.rb             # DSL yielded by Legacy#render — c.date/c.time configure :renderer + :options (< Plumber::Config); exposes #metadata (renderer::Metadata, or DefaultMetadata) + #render_panel
 │       │   │   ├── date.rb               # combobox-date picker body + nested Metadata — panel IS the role=dialog (hosts the controller)
-│       │   │   ├── dropdown.rb           # combobox-dropdown body + nested Metadata — panel IS the <ul role=listbox>; options only
-│       │   │   ├── options.rb            # Option list renderer
+│       │   │   ├── options.rb            # Option list renderer — option/group IDs from id_prefix; #label_for finds a value's label
 │       │   │   ├── options/
 │       │   │   │   ├── option.rb
 │       │   │   │   └── option_group.rb
 │       │   │   ├── time.rb               # combobox-time drum picker body + nested Metadata — panel IS the role=dialog (hosts the controller); drum columns rendered inline
-│       │   │   ├── trigger.rb            # Combobox trigger input (<input role="combobox">)
 │       │   │   ├── date/
 │       │   │   │   ├── navigation.rb     # Date picker navigation bar (prev/next + view-title buttons)
 │       │   │   │   └── navigator.rb      # Individual nav button (wraps Button with ghost variant)
@@ -76,7 +82,7 @@ stimulus-plumbers-rails/
 │       │   ├── calendar_helper.rb        # sp_calendar_month
 │       │   ├── calendar_turbo_helper.rb  # sp_calendar_turbo, sp_calendar_turbo_month/year/decade
 │       │   ├── card_helper.rb            # sp_card
-│       │   ├── combobox_helper.rb        # sp_combobox (single entry, builder block) + sp_combobox_date/time/dropdown/typeahead thin wrappers
+│       │   ├── combobox_helper.rb        # sp_combobox_dropdown / sp_combobox_typeahead → Combobox::Dropdown / Typeahead; legacy sp_combobox block form + sp_combobox_date/time
 │       │   ├── divider_helper.rb         # sp_divider
 │       │   ├── icon_helper.rb            # sp_icon
 │       │   ├── link_helper.rb            # sp_link
@@ -101,9 +107,9 @@ stimulus-plumbers-rails/
 │       │       │   └── floating.rb       # Fields::Label::Floating — wrapper div + block-captured input before label; used by render_floating_field
 │       │       └── inputs/
 │       │           ├── checkbox.rb       # check_box, collection_check_boxes (native); render_check_box, render_collection_check_box
-│       │           ├── combobox.rb       # Shared render_combobox — composes input/trigger opts + theme, yields the Builder block to Components::Combobox
+│       │           ├── combobox.rb       # Shared render_combobox — field name, label id, trigger aria + theme into Combobox::Dropdown or Typeahead
 │       │           ├── radio.rb          # radio_button, collection_radio_buttons (native); render_collection_radio_button
-│       │           ├── datetime.rb       # date_field, time_field (native); render_combobox_date, render_combobox_time
+│       │           ├── datetime.rb       # date_field, time_field (native); render_combobox_date, render_combobox_time via Combobox::Legacy
 │       │           ├── file.rb           # file_field (native); render_file_input
 │       │           ├── password.rb       # password_field + reveal: (native); render_password_input — includes Revealable + Strength
 │       │           ├── password/
@@ -129,6 +135,7 @@ stimulus-plumbers-rails/
 │       │   │   └── method_call.rb
 │       │   ├── options/
 │       │   │   ├── aria.rb               # Options::Aria — labelled_aria helper (label vs labelledby)
+│       │   │   ├── choice.rb             # Options::Choice — validate_choice! for one-of options
 │       │   │   ├── html.rb               # Options::Html — merge_html_options (composes Theme + Stimulus)
 │       │   │   ├── stimulus.rb           # Options::Stimulus — merge_stimulus_data (space-joins controller/action)
 │       │   │   ├── theme.rb              # Options::Theme — extract_classes, theme key resolution
@@ -267,7 +274,7 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 
 ## Stimulus Wiring Convention
 
-- **`STIMULUS_CONTROLLER` constant:** declare one when the controller identifier is referenced more than once, or is composed by another component's wiring (e.g. `combobox` reuses `popover`). A single-use inline literal (`controller: "password-strength"`) is fine — don't manufacture a constant for one call site.
+- **`STIMULUS_CONTROLLER` constant:** declare one when the controller identifier is referenced more than once, or is composed by another component's wiring (e.g. `Combobox::Legacy` reuses `popover`). A single-use inline literal (`controller: "password-strength"`) is fine — don't manufacture a constant for one call site.
 - **Stimulus values:** pass individual typed values for a small fixed set chosen by state (e.g. reveal's `reveal_label_value` / `conceal_label_value`). Use one `Object`/JSON value only when the consumer looks it up by dynamic key (e.g. strength's `labels_value`, read as `labelsValue[level]`). Don't wrap a two-label pair in JSON.
 - **`data-action` targets adapters only:** wire `onX(event)`, never a programmatic API like `select(value)` — Stimulus passes the Event as arg 1. `stimulus_contract_test.rb` diffs every wired action against the JS manifest.
 

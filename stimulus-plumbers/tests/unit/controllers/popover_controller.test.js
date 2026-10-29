@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
 import PopoverController from '../../../src/controllers/popover_controller';
+import { installNativePopover } from '../../support/native_popover';
 
 describe('PopoverController', () => {
   let application;
@@ -9,41 +10,6 @@ describe('PopoverController', () => {
   const controllerFor = () => {
     const root = document.querySelector('[data-controller="popover"]');
     return application.getControllerForElementAndIdentifier(root, 'popover');
-  };
-
-  const nativeEvent = (type, newState, source = null, oldState = newState === 'open' ? 'closed' : 'open') => {
-    const event = new Event(type, { cancelable: type === 'beforetoggle' });
-    Object.defineProperty(event, 'oldState', { value: oldState });
-    Object.defineProperty(event, 'newState', { value: newState });
-    Object.defineProperty(event, 'source', { value: source });
-    return event;
-  };
-
-  const installNativeMethods = (panel) => {
-    let openState = false;
-    panel.matches = vi.fn((selector) => selector === ':popover-open' && openState);
-    panel.showPopover = vi.fn((options) => {
-      const beforetoggle = nativeEvent('beforetoggle', 'open', options?.source ?? null);
-      if (!panel.dispatchEvent(beforetoggle)) return;
-
-      openState = true;
-      panel.dispatchEvent(nativeEvent('toggle', 'open', options?.source ?? null));
-    });
-    panel.hidePopover = vi.fn(() => {
-      if (!openState) return;
-
-      panel.dispatchEvent(nativeEvent('beforetoggle', 'closed'));
-      openState = false;
-      panel.dispatchEvent(nativeEvent('toggle', 'closed'));
-    });
-    panel.togglePopover = vi.fn((options) => {
-      if (openState) {
-        panel.hidePopover();
-        return;
-      }
-
-      panel.showPopover(options);
-    });
   };
 
   const render = async ({ trigger = true, authoredExpanded = true, panel = true } = {}) => {
@@ -56,7 +22,7 @@ describe('PopoverController', () => {
     document.body.innerHTML = '<div data-controller="popover">' + triggerMarkup + panelMarkup + '</div>';
 
     const panelElement = document.querySelector('#panel');
-    if (panelElement) installNativeMethods(panelElement);
+    if (panelElement) installNativePopover(panelElement);
 
     const root = document.querySelector('[data-controller="popover"]');
     await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'popover'));
@@ -163,14 +129,15 @@ describe('PopoverController', () => {
   it('synchronizes aria-expanded only when the trigger authored it', async () => {
     const authored = await render();
     authored.controller.open();
-    expect(authored.trigger.getAttribute('aria-expanded')).toBe('true');
+    await vi.waitFor(() => expect(authored.trigger.getAttribute('aria-expanded')).toBe('true'));
     authored.controller.close();
-    expect(authored.trigger.getAttribute('aria-expanded')).toBe('false');
+    await vi.waitFor(() => expect(authored.trigger.getAttribute('aria-expanded')).toBe('false'));
 
     document.body.innerHTML = '';
     const absent = await render({ authoredExpanded: false });
     absent.controller.open();
     absent.controller.close();
+    await Promise.resolve();
     expect(absent.trigger.hasAttribute('aria-expanded')).toBe(false);
   });
 
@@ -178,9 +145,9 @@ describe('PopoverController', () => {
     const { panel, trigger } = await render();
 
     panel.showPopover();
-    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    await vi.waitFor(() => expect(trigger.getAttribute('aria-expanded')).toBe('true'));
     panel.hidePopover();
-    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    await vi.waitFor(() => expect(trigger.getAttribute('aria-expanded')).toBe('false'));
   });
 
   it('disposes the old adapter when the panel target is replaced', async () => {
@@ -190,7 +157,7 @@ describe('PopoverController', () => {
     newPanel.id = 'panel';
     newPanel.setAttribute('popover', 'auto');
     newPanel.dataset.popoverTarget = 'panel';
-    installNativeMethods(newPanel);
+    installNativePopover(newPanel);
     oldPanel.replaceWith(newPanel);
 
     await vi.waitFor(() => expect(oldRemove).toHaveBeenCalledWith('beforetoggle', expect.any(Function)));
@@ -234,6 +201,7 @@ describe('PopoverController', () => {
     root.remove();
     await vi.waitUntil(() => !controllerFor());
     panel.showPopover();
+    await Promise.resolve();
     document.dispatchEvent(new Event('turbo:before-cache'));
 
     expect(trigger.getAttribute('aria-expanded')).toBe('false');

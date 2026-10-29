@@ -7,6 +7,13 @@
     <% end %>
   </section>
 
+  <section id="search-suggestions">
+    <%= form_with model: Search.new, url: "#", scope: :search_suggestions, builder: StimulusPlumbers::Form::Builder do |f| %>
+      <%= f.field :query, as: :search, label: "City", clearable: true,
+            choices: [["Singapore", "sg"], ["Seoul", "se"], ["Sydney", "sy"]] %>
+    <% end %>
+  </section>
+
   <section id="search-error">
     <% search_error = Search.new.tap { |f| f.errors.add(:query, "can't be blank") } %>
     <%= form_with(model: search_error, url: "#", builder: StimulusPlumbers::Form::Builder) do |f| %>

@@ -26,20 +26,20 @@ class ComboboxConfigTest < ActiveSupport::TestCase
   def test_variant_methods_return_nil
     config = Config.new
 
-    assert_nil config.dropdown(options: [])
+    assert_nil config.date
   end
 
-  def test_dropdown_selects_dropdown_renderer
+  def test_date_selects_date_renderer
     config = Config.new
-    config.dropdown(options: [])
+    config.date
 
     assert_predicate config, :selected?
-    assert_equal Combobox::Dropdown, config.renderer
+    assert_equal Combobox::Date, config.renderer
   end
 
   def test_last_variant_wins
     config = Config.new
-    config.dropdown(options: [])
+    config.time
     config.date
 
     assert_equal Combobox::Date, config.renderer
@@ -47,9 +47,8 @@ class ComboboxConfigTest < ActiveSupport::TestCase
 
   def test_each_variant_type
     {
-      typeahead: Combobox::Typeahead,
-      date:      Combobox::Date,
-      time:      Combobox::Time
+      date: Combobox::Date,
+      time: Combobox::Time
     }.each do |method, klass|
       config = Config.new
       config.public_send(method)

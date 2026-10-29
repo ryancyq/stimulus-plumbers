@@ -3,8 +3,8 @@
 require "test_helper"
 
 class ComboboxOptionsTest < ActionView::TestCase
-  def render_options(items = [], value: nil, &block)
-    StimulusPlumbers::Components::Combobox::Options.new(self).render(items, value: value, &block)
+  def render_options(items = [], value: nil, id_prefix: nil, &block)
+    StimulusPlumbers::Components::Combobox::Options.new(self).render(items, value: value, id_prefix: id_prefix, &block)
   end
 
   def test_renders_option_from_array_tuple
@@ -37,16 +37,16 @@ class ComboboxOptionsTest < ActionView::TestCase
     items = [{ label: "Americas", options: [["United States", "us"]] }]
     doc   = parse_html(render_options(items))
 
-    assert_css doc, "li[role='group'][aria-label='Americas']"
-    assert_css doc, "li[role='group'] li[role='option'][data-value='us']"
+    assert_css doc, "ul[role='group']"
+    assert_css doc, "ul[role='group'] li[role='option'][data-value='us']"
   end
 
   def test_optgroup_nested_options_inherit_selected_value
     items = [{ label: "Americas", options: [["Canada", "ca"], ["United States", "us"]] }]
     doc   = parse_html(render_options(items, value: "ca"))
 
-    assert_css doc, "li[role='group'] li[data-value='ca'][aria-selected='true']"
-    assert_css doc, "li[role='group'] li[data-value='us'][aria-selected='false']"
+    assert_css doc, "ul[role='group'] li[data-value='ca'][aria-selected='true']"
+    assert_css doc, "ul[role='group'] li[data-value='us'][aria-selected='false']"
   end
 
   def test_marks_matching_option_as_selected
@@ -94,5 +94,23 @@ class ComboboxOptionsTest < ActionView::TestCase
 
     assert_includes doc.to_html, "<g>Americas</g>"
     assert_no_css doc, "li[role='group']"
+  end
+
+  def test_numbers_option_and_group_ids_across_groups
+    items = [%w[Mexico mx], { label: "Americas", options: [%w[Canada ca]] }]
+    doc   = parse_html(render_options(items, id_prefix: "lb"))
+
+    assert_css doc, "li#lb_option_1[data-value='mx']"
+    assert_css doc, "li#lb_group_1[role='none']"
+    assert_css doc, "li#lb_option_2[data-value='ca']"
+  end
+
+  def test_label_for_finds_the_label_inside_groups
+    items = [%w[Mexico mx], { label: "Americas", options: [%w[Canada ca]] }]
+    options = StimulusPlumbers::Components::Combobox::Options.new(self)
+
+    assert_equal "Canada", options.label_for(items, "ca")
+    assert_nil options.label_for(items, "zz")
+    assert_nil options.label_for(items, nil)
   end
 end

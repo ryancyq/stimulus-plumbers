@@ -75,16 +75,17 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Combobox
 
-| Key                                  | Component                                                                        | Variants                           |
-| ------------------------------------ | -------------------------------------------------------------------------------- | ---------------------------------- |
-| `combobox_listbox`                   | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time::Drum` (the `<ul>`) | —                                  |
-| `combobox_option`                    | `Combobox::Options::Option`                                                      | `selected: bool`, `disabled: bool` |
-| `combobox_option_group`              | `Combobox::Options::OptionGroup`                                                 | —                                  |
-| `combobox_typeahead_loading`         | `Combobox::Typeahead` (loading indicator)                                        | —                                  |
-| `combobox_typeahead_empty`           | `Combobox::Typeahead` (no-results message)                                       | —                                  |
-| `combobox_time`                      | `Combobox::Time` (drum wrapper)                                                  | —                                  |
-| `combobox_date_navigation`           | `Combobox::Date::Navigation` (nav bar)                                           | —                                  |
-| `combobox_date_navigation_navigator` | `Combobox::Date::Navigator` (each prev/next/title button)                        | —                                  |
+| Key                                  | Component                                                                        | Variants         |
+| ------------------------------------ | -------------------------------------------------------------------------------- | ---------------- |
+| `combobox_listbox`                   | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time::Drum` (the `<ul>`) | —                |
+| `combobox_option`                    | `Combobox::Options::Option`                                                      | `disabled: bool` |
+| `combobox_option_description`        | `Combobox::Options::Option` (description)                                        | —                |
+| `combobox_option_group`              | `Combobox::Options::OptionGroup`                                                 | —                |
+| `combobox_option_group_label`        | `Combobox::Options::OptionGroup` (label)                                         | —                |
+| `combobox_status`                    | `Combobox::Typeahead` (empty, loading, and error status)                         | —                |
+| `combobox_time`                      | `Combobox::Time` (drum wrapper)                                                  | —                |
+| `combobox_date_navigation`           | `Combobox::Date::Navigation` (nav bar)                                           | —                |
+| `combobox_date_navigation_navigator` | `Combobox::Date::Navigator` (each prev/next/title button)                        | —                |
 
 ### Other components
 
@@ -112,7 +113,7 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 | `card_body`                | Card body `<div>`                                               | —                                                                                                                                                                                            |
 | `card_action`              | Card action `<div>`                                             | —                                                                                                                                                                                            |
 | `icon`                     | `Icon`                                                          | —                                                                                                                                                                                            |
-| `popover`                  | `Popover`                                                       | —                                                                                                                                                                                            |
+| `popover`                  | `Popover` panel                                                 | `placement: :block_end_start\|:block_end\|:block_start\|:inline_end\|…`                                                                                                                      |
 
 ## Custom theme
 
@@ -199,3 +200,9 @@ When defining a custom schema (advanced), the `validate:` key accepts:
 | Symbol        | Method called on the theme; return must respond to `include?` or be truthy/falsy |
 | Proc          | Called via `instance_exec`; same return conventions                              |
 | `nil`         | No validation — any value accepted                                               |
+
+## Migration from removed theme keys
+
+| Removed                                                                                     | Use               |
+| ------------------------------------------------------------------------------------------- | ----------------- |
+| `combobox_typeahead_empty`, `combobox_typeahead_loading`, `combobox_typeahead_loading_icon` | `combobox_status` |

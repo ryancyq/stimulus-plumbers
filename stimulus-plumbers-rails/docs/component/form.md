@@ -148,25 +148,26 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
 
 Use `f.time_field` for a plain `<input type="time">`.
 
-**Select** (`as: :select`) — read-only listbox backed by `combobox-dropdown`.
+**Select** (`as: :select`) — select-only combobox ([`sp_combobox_dropdown`](combobox.md#sp_combobox_dropdown)) backed by `combobox`.
 
 | Option          | Values         | Default | Description                                                   |
 | --------------- | -------------- | ------- | ------------------------------------------------------------- |
-| `choices`       | Array          | `[]`    | `[label, value]` pairs, or a flat array of strings            |
+| `choices`       | Array          | `[]`    | `[label, value]` pairs                                        |
 | `include_blank` | Boolean/String | `nil`   | Prepends a blank option; String overrides its label           |
 | `prompt`        | Boolean/String | `nil`   | Prepends a disabled placeholder option                        |
 | `selected`      | Value          | `nil`   | Pre-selected value; defaults to the attribute's current value |
 
 Use `f.select` for a native `<select>`.
 
-**Search** (`as: :search`) — editable typeahead backed by `combobox-dropdown`.
+**Search** (`as: :search`) — editable combobox ([`sp_combobox_typeahead`](combobox.md#sp_combobox_typeahead)) backed by `combobox`.
 
-| Option      | Values  | Default | Description                                                                         |
-| ----------- | ------- | ------- | ----------------------------------------------------------------------------------- |
-| `choices`   | Array   | `[]`    | Client-side options to filter; omit when using `url:`                               |
-| `url`       | String  | `nil`   | Server-side endpoint, receives `?q=<query>`, returns `<li role="option">` fragments |
-| `clearable` | Boolean | `false` | Adds a clear button that resets the input                                           |
+| Option         | Values                       | Default     | Description                               |
+| -------------- | ---------------------------- | ----------- | ----------------------------------------- |
+| `choices`      | Array                        | `[]`        | Options to choose from                    |
+| `value_policy` | `:freeform` \| `:restricted` | `:freeform` | `:freeform` submits the typed text        |
+| `clearable`    | Boolean                      | `false`     | Adds a clear button that resets the input |
 
+`match:`, `min_length:`, `source:`, and `param:` pass through to [`sp_combobox_typeahead`](combobox.md#sp_combobox_typeahead).
 Use `f.search_field` for a native `<input type="search">`.
 
 **Password** (`as: :password`) — reveal-toggle wrapper backed by `input-revealable`.
@@ -274,7 +275,7 @@ Its label renders as a `<span>`, not a `<label>`, and names the bar via `aria-la
       group_label_method: :name %>
 ```
 
-Groups render with `role="group"` and `aria-label` on each group. Use native `f.collection_select` / `f.grouped_collection_select` to skip the field wrapper.
+Groups render as `role="group"` labelled by their heading through `aria-labelledby`. Use native `f.collection_select` / `f.grouped_collection_select` to skip the field wrapper.
 
 ---
 

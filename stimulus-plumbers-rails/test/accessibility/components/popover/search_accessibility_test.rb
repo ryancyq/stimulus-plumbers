@@ -22,6 +22,26 @@ class SearchAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#search-error"
   end
 
+  def test_passes_wcag_with_suggestions_open
+    find("#search-suggestions [role='combobox']").send_keys("S")
+
+    assert_selector "#search-suggestions [role='combobox'][aria-expanded='true']"
+    assert_accessible context: "#search-suggestions"
+  end
+
+  def test_escape_closes_suggestions_without_clearing
+    find("#search-suggestions [role='combobox']").send_keys("Se", :escape)
+
+    assert_selector "#search-suggestions [role='combobox'][aria-expanded='false']"
+    assert_field "City", with: "Se"
+  end
+
+  def test_a_second_escape_clears_the_search
+    find("#search-suggestions [role='combobox']").send_keys("Se", :escape, :escape)
+
+    assert_field "City", with: ""
+  end
+
   def test_clear_button_hidden_when_input_is_empty
     within("#search-default") do
       assert_selector "button[aria-label='Clear search']", visible: :hidden

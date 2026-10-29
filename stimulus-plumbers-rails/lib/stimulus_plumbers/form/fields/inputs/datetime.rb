@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "combobox"
-
 module StimulusPlumbers
   module Form
     module Fields
       module Inputs
         module Datetime
-          include Combobox
-
           def date_field(attribute, options = {})
             html_options = merge_html_options(theme.resolve(:form_field_input), options)
             super(attribute, html_options)
@@ -38,7 +34,7 @@ module StimulusPlumbers
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
               **opts
             }
-            render_combobox(
+            render_legacy_combobox(
               attribute,
               input_id: html_opts[:id],
               opts:     combobox_opts,
@@ -48,6 +44,15 @@ module StimulusPlumbers
             ) do |c|
               c.date(value: current_value, labelledby: labelledby)
             end
+          end
+
+          def render_legacy_combobox(attribute, input_id:, opts:, error:, floating: nil, **kwargs, &block)
+            Components::Combobox::Legacy.new(@template).render(
+              id: input_id,
+              **opts.deep_merge(input: { name: field_name(attribute) }),
+              **merge_html_options(theme.resolve(:form_field_input_combobox, floating: floating, error: error), kwargs),
+              &block
+            )
           end
 
           def render_combobox_time(
@@ -69,7 +74,7 @@ module StimulusPlumbers
               trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
               **opts
             }
-            render_combobox(
+            render_legacy_combobox(
               attribute,
               input_id: html_opts[:id],
               opts:     combobox_opts,

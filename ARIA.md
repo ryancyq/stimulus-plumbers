@@ -2,31 +2,32 @@
 
 ## Core Criteria (all components)
 
-| Criterion | Level | Rule |
-|-----------|-------|------|
-| 1.3.1 Info & Relationships | A | Convey structure via semantic HTML or ARIA roles, not visual styling alone |
-| 1.4.1 Use of Color | A | Never use color as the only means to convey information |
-| 1.4.3 Contrast (text) | AA | 4.5:1 normal text, 3:1 large text (18pt / 14pt bold) |
-| 1.4.11 Non-text Contrast | AA | 3:1 for UI component boundaries and state indicators |
-| 2.1.1 Keyboard | A | All functionality operable via keyboard; no mouse-only interactions |
-| 2.1.2 No Keyboard Trap | A | Focus must be escapable from any component (Escape or documented key) |
-| 2.4.3 Focus Order | A | Focus sequence must be logical and predictable |
-| 2.4.7 Focus Visible | AA | Keyboard focus indicator must be visible |
-| 4.1.2 Name, Role, Value | A | All UI components must have accessible name, role, and state via ARIA or native semantics; state must stay in sync dynamically (e.g. `aria-expanded`, `aria-selected`, `aria-checked`) |
-| 4.1.3 Status Messages | AA | Status/error messages announced via `role="status"` or `aria-live` without focus move |
+| Criterion                  | Level | Rule                                                                                                                                                                                   |
+| -------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.3.1 Info & Relationships | A     | Convey structure via semantic HTML or ARIA roles, not visual styling alone                                                                                                             |
+| 1.4.1 Use of Color         | A     | Never use color as the only means to convey information                                                                                                                                |
+| 1.4.3 Contrast (text)      | AA    | 4.5:1 normal text, 3:1 large text (18pt / 14pt bold)                                                                                                                                   |
+| 1.4.11 Non-text Contrast   | AA    | 3:1 for UI component boundaries and state indicators                                                                                                                                   |
+| 2.1.1 Keyboard             | A     | All functionality operable via keyboard; no mouse-only interactions                                                                                                                    |
+| 2.1.2 No Keyboard Trap     | A     | Focus must be escapable from any component (Escape or documented key)                                                                                                                  |
+| 2.4.3 Focus Order          | A     | Focus sequence must be logical and predictable                                                                                                                                         |
+| 2.4.7 Focus Visible        | AA    | Keyboard focus indicator must be visible                                                                                                                                               |
+| 4.1.2 Name, Role, Value    | A     | All UI components must have accessible name, role, and state via ARIA or native semantics; state must stay in sync dynamically (e.g. `aria-expanded`, `aria-selected`, `aria-checked`) |
+| 4.1.3 Status Messages      | AA    | Status/error messages announced via `role="status"` or `aria-live` without focus move                                                                                                  |
 
 ## JS Keyboard Navigation Patterns
 
 Two helper classes handle keyboard navigation in controllers — see [`stimulus-plumbers/docs/accessibility/design.md`](stimulus-plumbers/docs/accessibility/design.md) for full API.
 
-| Pattern | Class | When to use |
-| --- | --- | --- |
-| Roving tabindex | `RovingTabIndex` | Disclosure widgets, trees, toolbars — focus moves between items |
-| Managed focus / listbox | `ListboxNavigation` | Combobox listbox, `role="listbox"` — input keeps focus, `aria-selected` moves |
+| Pattern                 | Class               | When to use                                                                          |
+| ----------------------- | ------------------- | ------------------------------------------------------------------------------------ |
+| Roving tabindex         | `RovingTabIndex`    | Disclosure widgets, trees, toolbars — focus moves between items                      |
+| Managed focus / listbox | `ListboxNavigation` | Legacy combobox listbox, `role="listbox"` — input keeps focus, `aria-selected` moves |
 
 ## Component-Specific Patterns (APG)
 
 #### Modal (`modal_controller`)
+
 - Use a native `<dialog>` opened with `showModal()`; it supplies modal semantics and background inertness
 - Every dialog has an accessible name through `aria-labelledby` or `aria-label`; do not add redundant `aria-modal="true"`
 - Initial focus is native; use `autofocus` when intentional placement is required. Focus restoration is native-first, with a narrow adapter fallback only when an engine leaves focus on the document or closed dialog
@@ -38,17 +39,33 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Ordinary modal triggers do not use `aria-expanded`
 
 #### Popover (`popover_controller`)
+
 - Native `popover="auto"` supplies the top layer, Escape, and light dismissal
 - The consuming component chooses the panel role and accessible name (e.g. `role="region"` + `aria-label`, `role="dialog"`); the helper infers neither
 - Author `aria-haspopup`, `aria-expanded`, and `aria-controls` only when the consumer owns that popup relationship; the controller updates an authored `aria-expanded` to the settled state
 - The controller does not move focus or announce open/close
 
-#### Combobox (`input_combobox_controller`, `combobox/`)
-- Trigger: `<input role="combobox">` with `aria-haspopup` (`listbox`/`dialog`) and `aria-controls` referencing the **popup element** (the `role="listbox"`/`role="dialog"`)
-- `role="listbox"` permits only `option`/`group` children (`aria-required-children`, WCAG 1.3.1). Status messages (loading, "No results") must be `role="status"`/`aria-live` **siblings of the listbox, never children of it** — for typeahead the listbox is nested in a wrapper panel so the status regions can sit beside it
-- Status/loading regions inside the popover panel must stay **non-focusable**
+#### Combobox (`combobox_controller`)
+
+- Trigger: `<button type="button" role="combobox">` (select-only) or `<input role="combobox" aria-autocomplete="list">` (editable) with `aria-expanded` and `aria-controls` referencing the `role="listbox"`
+- The trigger and the listbox each have an accessible name (`label:` or `labelledby:`)
+- DOM focus stays on the trigger; `aria-activedescendant` references the active option and is absent when none is active
+- `aria-selected` follows the active option (APG single-select); the committed value is the hidden input and the trigger's label
+- Arrow Down/Up open and move through enabled, visible options; select-only Home/End jump to the ends; editable Space/Home/End stay native
+- Enter (and select-only Space) commits the active option; Tab commits it and moves focus natively; Escape closes without committing; Enter and Escape are ignored while composing
+- Typing never activates an option; disabled options use `aria-disabled="true"` and are skipped
+- The panel is `popover="manual"`; the combobox closes it on commit, Escape, Tab, and a click or focus outside
+- Options carry instance-unique IDs. `role="listbox"` permits only `option`/`group` children (`aria-required-children`, WCAG 1.3.1), so a group is `li[role="none"] > ul[role="group"]` labelled through `aria-labelledby` by a `li[role="none"]` heading
+- An option's description is linked with `aria-describedby`, never part of its name (`aria-labelledby` on the label span)
+- Status messages (loading, "No results") are non-focusable `role="status"` **siblings of the listbox, never children of it**
+- Remote results replace the listbox with one of the same ID and accessible name; the loading frame or listbox carries `aria-busy="true"`
+
+#### Date and time comboboxes, legacy (`input_combobox_controller`, `combobox/`)
+
+- Trigger: `<input role="combobox">` with `aria-haspopup="dialog"` and `aria-controls` referencing the `role="dialog"` panel
 
 #### Calendar / Date Picker (`calendar-month`, `combobox-date`)
+
 - Grid: `role="grid"`, `role="row"`, `role="gridcell"`
 - Navigation buttons: `aria-label="Previous Month"` / `"Next Month"` (via `Combobox::Date::Navigation`)
 - Selected date: `aria-selected="true"`; today: `aria-current="date"`
@@ -57,12 +74,14 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Arrow keys navigate cells; Enter/Space select; Escape closes picker
 
 #### Form Fields (`form/`, `form-field_controller`)
+
 - Every input must have a visible `<label>` via `for`/`id` or `aria-labelledby`
 - Required fields: `required` attribute + `aria-required="true"`
 - Invalid fields: `aria-invalid="true"` + `aria-describedby` pointing to error message
 - Error message element: `role="alert"` or `aria-live="polite"` so it's announced
 
 #### Password Reveal (`input_revealable_controller`)
+
 - Toggle button: `aria-label` describes action ("Show password" / "Hide password")
 - One toggle button swaps visible eye/eye-slash icons and its accessible name; it has no `aria-pressed` because its name describes the next action rather than a persistent state.
 - A live announcement was rejected: changing the input between `password` and `text` provides an independent cue when returning focus to the field, without adding chatty feedback.
@@ -75,26 +94,31 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Focus visibility (WCAG 2.4.7): the caret cell (`data-caret`) appears only while the input has focus; style the wrapper with `:focus-within` plus `[data-caret]`.
 
 #### Input Clearable (`input_clearable_controller`)
+
 - Clear button: `hidden` attribute while the input is empty, removing it from the keyboard/AT tab order until there's something to clear
-- Escape inside the input clears it (keyboard equivalent to clicking the clear button, WCAG 2.1.1); default is prevented so it doesn't also close a parent overlay
+- Escape inside the input clears it (keyboard equivalent to clicking the clear button, WCAG 2.1.1), except while the input is an expanded combobox or another handler took the Escape; default is prevented so it doesn't also close a parent overlay
 - Focus returns to the input after clearing (WCAG 2.4.3 Focus Order)
 - No `aria-live` announcement — clearing is user-initiated and the button's disappearance is self-explanatory
 
 #### Flipper / Visibility / Dismisser
+
 - Trigger: `aria-expanded="true/false"` when toggling a region
 - Controlled region: `aria-hidden="true"` when collapsed (or removed from DOM)
 - `aria-controls` links trigger to region id
 
 #### Button (`button/renderer`)
+
 - Use `<button>` (not `<div>` / `<a>`) for actions
 - Icon-only buttons must have `aria-label` or visually-hidden text
 - Disabled: `disabled` attribute (not `aria-disabled` alone) unless intentionally focusable
 
 #### List (`sp_list`, `sp_list_item`)
+
 - Static list: `role="list"` + `role="listitem"` (explicitly set to preserve semantics when CSS resets strip list role)
 - Active item: `aria-current="page"` on `<a>` links; `aria-current="true"` on `<button>` items — the value differs by element type per the ARIA spec
 
 #### Checklist (`checklist_controller`, `sp_checklist`)
+
 - Each item: native `<input type="checkbox">` inside a `<label>` — role, keyboard activation (Space), focus, and checked-state announcement are all handled by the browser. The component sets no ARIA attributes on items.
 - Read-only item (`readonly: true`): native `disabled` attribute — removes the control from the tab order and announces it as unavailable to assistive tech. No `aria-readonly`/`tabindex` hack.
 - Master "select all" toggle (`select_all:`): same `<input type="checkbox">` shape as an item. Its `indeterminate` property (JS-only, no HTML attribute) is set client-side by the `checklist` controller when some but not all enabled items are checked — modern browsers map `indeterminate` to the accessibility tree's `mixed` checked state automatically, satisfying WCAG 4.1.2 with no manual ARIA.
@@ -102,6 +126,7 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Disabled (readonly) items are excluded from the master's aggregate and from bulk toggling — the `checklist` controller filters them out via their own `.disabled` property, mirroring their exclusion from tab order and AT interaction.
 
 #### Progress (`progress_controller`, `sp_progress_*`)
+
 - `role="progressbar"` is read-only and never focusable — it reports a value, it does not accept one. An interactive equivalent is a native `<input type="range">` (or `role="slider"`), not a progressbar with `tabindex`
 - Value: `aria-valuemin`/`aria-valuemax` always; `aria-valuenow` omitted while indeterminate (an omitted `valuenow` is what signals "unknown progress" to AT)
 - `aria-valuetext` only when the readout text is not derivable from `aria-valuenow` — set for the `value`/`value_max` formats, deliberately **not** for `percent`, where AT already computes the percentage and a duplicate would be announced twice
@@ -112,10 +137,12 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - The `range` variant drives a native `<input type="range">` and writes **no** ARIA: the native control already exposes slider role, value, and keyboard operation, and duplicating them announces worse than leaving them alone. It keeps an ordinary `<label for>` because an `input` is labelable
 
 #### Avatar / Card / Icon
+
 - Decorative images/icons: `aria-hidden="true"` or `alt=""`
 - Meaningful images: descriptive `alt` text
 
 #### Timeline (`timeline_controller`)
+
 - List: `<ol>` (ordered) for chronological events; static timelines need no ARIA additions beyond semantic HTML
 - Each item: `<li>`; timestamp displayed via `<time datetime="YYYY-MM-DD">`
 - Indicators (dots, icons, avatars): decorative — always `aria-hidden="true"`
@@ -124,6 +151,7 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Keyboard (interactive): Up/Down arrows move focus between item triggers; Home/End jump to first/last trigger; Enter/Space toggle expansion (native button behaviour)
 
 #### Reorderable (`reorderable_controller`)
+
 - Roving tabindex on `item` targets (`RovingTabIndex`) — plain Arrow/Home/End move focus only, unaffected by editing state
 - Keyboard move (`Alt+Arrow` on the axis matching `orientation`, default `ArrowUp`/`ArrowDown`; configurable modifier via `moveKey`; horizontal move-key meaning flips under `dir="rtl"`): moves the focused item, keeps focus on it, announces the new position via `role="status"`/`aria-live` (WCAG 4.1.3) — satisfies the keyboard-equivalent requirement (WCAG 2.1.1) for pointer drag
 - Pointer drag: does not move focus or announce — avoids stealing focus from a mouse user who never asked for it

@@ -4,6 +4,7 @@ import { test, expect } from "@playwright/test";
 async function screenshotWithPanel(page, sectionLocator, filename) {
   const panel = sectionLocator.locator("[data-popover-target='panel']");
   await panel.waitFor({ state: "visible" });
+  await expect(panel).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
   const sBox = await sectionLocator.boundingBox();
   const pBox = await panel.boundingBox();
   const x = Math.min(sBox.x, pBox.x);
@@ -31,6 +32,16 @@ test.describe("popover", () => {
     const section = page.locator("#popover-default");
     await section.getByRole("button", { name: "Open menu" }).click();
     await screenshotWithPanel(page, section, "open.png");
+  });
+
+  test("reduced motion — open without a panel transition", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const section = page.locator("#popover-default");
+    await section.getByRole("button", { name: "Open menu" }).click();
+    await expect(section.locator("[data-popover-target='panel']")).toHaveCSS(
+      "transition-duration",
+      "0s",
+    );
   });
 
   test("details — open", async ({ page }) => {

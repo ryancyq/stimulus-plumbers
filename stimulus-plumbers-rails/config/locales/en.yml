@@ -8,6 +8,8 @@ en:
     combobox:
       typeahead:
         empty: "No results"
+        loading: "Loading…"
+        error: "Results could not be loaded"
       time:
         dialog_label: "Picker"
         hour_label: "Hour"

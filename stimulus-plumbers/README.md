@@ -26,6 +26,9 @@ Register the controllers you need with your Stimulus application:
 ```javascript
 import { Application } from '@hotwired/stimulus'
 import {
+  ComboboxController,
+  ComboboxTurboController,
+  ComboboxFetchController,
   InputComboboxController,
   InputFormatterController,
   InputClearableController,
@@ -56,6 +59,9 @@ import {
 
 const application = Application.start()
 
+application.register('combobox',                 ComboboxController)
+application.register('combobox-turbo',           ComboboxTurboController)
+application.register('combobox-fetch',           ComboboxFetchController)
 application.register('input-combobox',           InputComboboxController)
 application.register('input-formatter',          InputFormatterController)
 application.register('input-clearable',          InputClearableController)
@@ -88,6 +94,9 @@ application.register('visibility',               VisibilityController)
 
 | Controller | Description | Docs |
 |-----------|-------------|------|
+| `combobox` | Listbox combobox: keyboard, active option, commit, and dismissal on a manual popover | [docs/component/combobox.md](docs/component/combobox.md#combobox) |
+| `combobox-turbo` | Remote results for `combobox` through a Turbo Frame | [docs/component/combobox.md](docs/component/combobox.md#combobox-turbo) |
+| `combobox-fetch` | Remote results for `combobox` through `fetch`, without Turbo | [docs/component/combobox.md](docs/component/combobox.md#combobox-fetch) |
 | `input-combobox` | Wrapper: trigger, popover, hidden value | [docs/component/combobox.md](docs/component/combobox.md#input-combobox) |
 | `input-formatter` | Formats and displays values | [docs/component/input-formatter.md](docs/component/input-formatter.md) |
 | `input-clearable` | Input with clear button | [docs/component/input-clearable.md](docs/component/input-clearable.md) |
