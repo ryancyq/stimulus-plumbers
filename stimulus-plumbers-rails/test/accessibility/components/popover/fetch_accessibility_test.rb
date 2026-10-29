@@ -8,8 +8,12 @@ class PopoverFetchAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/popover/fetch"
   end
 
-  def test_passes_wcag_closed
-    assert_accessible context: "#popover-fetch-page"
+  def test_fetch_passes_wcag_closed
+    assert_accessible context: "#popover-fetch"
+  end
+
+  def test_fetch_error_passes_wcag_closed
+    assert_accessible context: "#popover-fetch-error"
   end
 
   def test_loads_the_region_when_the_panel_opens

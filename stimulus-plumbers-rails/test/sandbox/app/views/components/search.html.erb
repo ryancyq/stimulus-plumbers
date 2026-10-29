@@ -1,23 +1,30 @@
 <h1>Search field</h1>
 
-<div id="search">
-  <section id="search-default">
+<section id="search-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col">
     <%= form_with url: "#", scope: :search, builder: StimulusPlumbers::Form::Builder do |f| %>
       <%= f.field :query, as: :search, label: "Search", clearable: true %>
     <% end %>
-  </section>
+  </div>
+</section>
 
-  <section id="search-suggestions">
+<section id="search-suggestions" class="sb-section">
+  <h2>Suggestions</h2>
+  <div class="sb-col">
     <%= form_with model: Search.new, url: "#", scope: :search_suggestions, builder: StimulusPlumbers::Form::Builder do |f| %>
       <%= f.field :query, as: :search, label: "City", clearable: true,
             choices: [["Singapore", "sg"], ["Seoul", "se"], ["Sydney", "sy"]] %>
     <% end %>
-  </section>
+  </div>
+</section>
 
-  <section id="search-error">
+<section id="search-error" class="sb-section">
+  <h2>Error</h2>
+  <div class="sb-col">
     <% search_error = Search.new.tap { |f| f.errors.add(:query, "can't be blank") } %>
-    <%= form_with(model: search_error, url: "#", builder: StimulusPlumbers::Form::Builder) do |f| %>
+    <%= form_with(model: search_error, url: "#", scope: "search_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :query, as: :search, label: "Search" %>
     <% end %>
-  </section>
-</div>
+  </div>
+</section>

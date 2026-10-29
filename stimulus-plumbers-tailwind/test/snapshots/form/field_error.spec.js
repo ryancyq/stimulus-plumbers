@@ -6,9 +6,33 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("field error form", () => {
-  test("error state", async ({ page }) => {
-    await expect(page.locator("#field-error")).toHaveScreenshot(
-      "field-error.png",
+  test("required", async ({ page }) => {
+    await expect(page.locator("#field-error-required")).toHaveScreenshot(
+      "field-error-required.png",
+    );
+  });
+
+  test("hint", async ({ page }) => {
+    await expect(page.locator("#field-error-hint")).toHaveScreenshot(
+      "field-error-hint.png",
+    );
+  });
+
+  test("model error", async ({ page }) => {
+    await expect(page.locator("#field-error-model")).toHaveScreenshot(
+      "field-error-model.png",
+    );
+  });
+
+  test("error override", async ({ page }) => {
+    await expect(page.locator("#field-error-override")).toHaveScreenshot(
+      "field-error-override.png",
+    );
+  });
+
+  test("hidden label", async ({ page }) => {
+    await expect(page.locator("#field-error-hidden-label")).toHaveScreenshot(
+      "field-error-hidden-label.png",
     );
   });
 

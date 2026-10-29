@@ -3,6 +3,8 @@
 @import "tailwindcss";
 @import "../builds/stimulus_plumbers/tailwind.css";
 @source "../../views/**/*.erb";
+/* The sandbox pages live in the core gem's sandbox; this app only adds the layout. */
+@source "../../../../../../stimulus-plumbers-rails/test/sandbox/app/views/**/*.erb";
 
 @layer base {
   :root {

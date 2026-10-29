@@ -19,4 +19,12 @@ class AvatarAccessibilityTest < ApplicationAccessibilityTestCase
   def test_fallback_passes_wcag
     assert_accessible context: "#avatar-fallback"
   end
+
+  def test_sizes_passes_wcag
+    assert_accessible context: "#avatar-sizes"
+  end
+
+  def test_explicit_variants_passes_wcag
+    assert_accessible context: "#avatar-variants"
+  end
 end

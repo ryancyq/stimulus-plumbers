@@ -1,33 +1,44 @@
-<%# stimulus-plumbers-rails/test/sandbox/app/views/components/checklist.html.erb %>
 <h1>Checklist components</h1>
 
-<div id="checklist-default">
-  <%= sp_checklist(label: "Groceries") do |checklist| %>
-    <%= checklist.item("Buy milk", checked: true) %>
-    <%= checklist.item("Walk the dog", checked: false) %>
-  <% end %>
-</div>
-
-<div id="checklist-with-description">
-  <%= sp_checklist(label: "Onboarding") do |checklist| %>
-    <%= checklist.item("Verify email", checked: true) do |item| %>
-      <% item.with_description("Sent to you at signup") %>
+<section id="checklist-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col">
+    <%= sp_checklist(label: "Groceries") do |checklist| %>
+      <%= checklist.item("Buy milk", checked: true) %>
+      <%= checklist.item("Walk the dog", checked: false) %>
     <% end %>
-    <%= checklist.item("Add payment method", checked: false) %>
-  <% end %>
-</div>
+  </div>
+</section>
 
-<div id="checklist-read-only">
-  <%= sp_checklist(label: "Completed steps") do |checklist| %>
-    <%= checklist.item("Account created", checked: true, readonly: true) %>
-    <%= checklist.item("Profile complete", checked: false, readonly: true) %>
-  <% end %>
-</div>
+<section id="checklist-with-description" class="sb-section">
+  <h2>With description</h2>
+  <div class="sb-col">
+    <%= sp_checklist(label: "Onboarding") do |checklist| %>
+      <%= checklist.item("Verify email", checked: true) do |item| %>
+        <% item.with_description("Sent to you at signup") %>
+      <% end %>
+      <%= checklist.item("Add payment method", checked: false) %>
+    <% end %>
+  </div>
+</section>
 
-<div id="checklist-select-all">
-  <%= sp_checklist(label: "Packing list", select_all: true) do |checklist| %>
-    <%= checklist.item("Buy milk", checked: true) %>
-    <%= checklist.item("Walk the dog", checked: false) %>
-    <%= checklist.item("Archived (read-only)", checked: false, readonly: true) %>
-  <% end %>
-</div>
+<section id="checklist-read-only" class="sb-section">
+  <h2>Read-only</h2>
+  <div class="sb-col">
+    <%= sp_checklist(label: "Completed steps") do |checklist| %>
+      <%= checklist.item("Account created", checked: true, readonly: true) %>
+      <%= checklist.item("Profile complete", checked: false, readonly: true) %>
+    <% end %>
+  </div>
+</section>
+
+<section id="checklist-select-all" class="sb-section">
+  <h2>Select all</h2>
+  <div class="sb-col">
+    <%= sp_checklist(label: "Packing list", select_all: true) do |checklist| %>
+      <%= checklist.item("Buy milk", checked: true) %>
+      <%= checklist.item("Walk the dog", checked: false) %>
+      <%= checklist.item("Archived (read-only)", checked: false, readonly: true) %>
+    <% end %>
+  </div>
+</section>

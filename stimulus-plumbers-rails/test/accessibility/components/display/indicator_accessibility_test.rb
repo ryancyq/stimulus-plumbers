@@ -8,19 +8,21 @@ class IndicatorAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/display/indicator"
   end
 
-  def test_indicator_paired_with_a_label_passes_wcag
-    assert_accessible context: "#indicator-paired"
+  def test_labeled_dot_passes_wcag
+    assert_accessible context: "#indicator-dot"
+  end
+
+  def test_labeled_pulse_passes_wcag
+    assert_accessible context: "#indicator-pulse"
+  end
+
+  def test_labeled_badge_passes_wcag
+    assert_accessible context: "#indicator-badge"
   end
 
   def test_indicator_without_a_label_fails_wcag
-    violations = page.evaluate_async_script(<<~JS, "#indicator-unpaired")
-      var context = arguments[0];
-      var done = arguments[arguments.length - 1];
-      axe.run(context, function(err, results) {
-        done(err ? [] : results.violations);
-      });
-    JS
+    violations = axe_violations("#indicator-unpaired")
 
-    assert_predicate violations, :any?, "expected an axe violation for an unlabeled indicator"
+    assert_equal ["role-img-alt"], violations.pluck("id")
   end
 end

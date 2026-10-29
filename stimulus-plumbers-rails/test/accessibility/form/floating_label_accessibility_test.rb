@@ -8,29 +8,50 @@ class FloatingLabelAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/form/floating_label"
   end
 
-  def test_filled_passes_wcag
-    assert_accessible context: "#floating-label-filled"
-  end
-
   def test_filled_optional_passes_wcag
-    assert_accessible context: "#floating-label-filled-optional"
+    assert_accessible context: "#floating-filled-optional"
   end
 
-  def test_filled_with_hint_passes_wcag
-    assert_accessible context: "#floating-label-filled-hint"
+  def test_filled_hint_passes_wcag
+    assert_accessible context: "#floating-filled-hint"
   end
 
-  def test_filled_with_error_passes_wcag
-    assert_accessible context: "#floating-label-filled-error"
+  def test_filled_passes_wcag
+    assert_accessible context: "#floating-filled"
+  end
+
+  def test_filled_error_passes_wcag
+    assert_accessible context: "#floating-filled-error"
+  end
+
+  def test_outlined_passes_wcag
+    assert_accessible context: "#floating-outlined"
+  end
+
+  def test_outlined_error_passes_wcag
+    assert_accessible context: "#floating-outlined-error"
+  end
+
+  def test_outlined_revealable_passes_wcag
+    assert_accessible context: "#floating-outlined-revealable"
   end
 
   def test_filled_revealable_passes_wcag
-    assert_accessible context: "#floating-label-filled-revealable"
+    assert_accessible context: "#floating-filled-revealable"
+  end
+
+  def test_standard_passes_wcag
+    assert_accessible context: "#floating-standard"
+  end
+
+  def test_standard_error_passes_wcag
+    assert_accessible context: "#floating-standard-error"
   end
 
   def test_filled_revealable_revealed_passes_wcag
-    find("#floating-label-filled-revealable button[aria-label='Show password']").click
+    find("#floating-filled-revealable button[aria-label='Show password']").click
 
-    assert_accessible context: "#floating-label-filled-revealable"
+    assert_selector "#floating-filled-revealable input[type='text']"
+    assert_accessible context: "#floating-filled-revealable"
   end
 end

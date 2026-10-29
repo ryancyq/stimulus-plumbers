@@ -2,7 +2,7 @@
 
 require_relative "../application_accessibility_test_case"
 
-class FormAccessibilityTest < ApplicationAccessibilityTestCase
+class SignUpAccessibilityTest < ApplicationAccessibilityTestCase
   def setup
     super
     visit "/form/sign_up"
@@ -10,6 +10,10 @@ class FormAccessibilityTest < ApplicationAccessibilityTestCase
 
   def test_passes_wcag
     assert_accessible context: "#sign-up"
+  end
+
+  def test_passes_wcag_with_floating_labels
+    assert_accessible context: "#sign-up-floating"
   end
 
   def test_passes_wcag_with_icon_only_submit
