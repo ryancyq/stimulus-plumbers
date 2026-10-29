@@ -6,6 +6,9 @@ const defaultOptions = {
   length: 0,
 };
 
+/** Controllers already warned about too few cells */
+const warned = new WeakSet();
+
 /** Cumulative end indexes for group widths, e.g. [4, 4, 4] → [4, 8, 12] */
 const groupBounds = (groups) => {
   const bounds = [];
@@ -62,7 +65,8 @@ export class CharacterCells extends Plumber {
   /** Stamps aria-hidden, group attributes, and data-inactive on adopted cells */
   adopt() {
     const expected = this.expected();
-    if (this.cells.length < expected) {
+    if (!this.grouped && this.cells.length < expected && !warned.has(this.controller)) {
+      warned.add(this.controller);
       console.warn(`[CharacterCells] expected ${expected} cells, found ${this.cells.length}`);
     }
 

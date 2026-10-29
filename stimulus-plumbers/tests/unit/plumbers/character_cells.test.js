@@ -42,6 +42,22 @@ describe('CharacterCells', () => {
       warn.mockRestore()
     })
 
+    it('warns only once per controller across re-adoption', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const controller = buildController(buildCells(4))
+      attachCharacterCells(controller, { length: 6 })
+      attachCharacterCells(controller, { length: 8 })
+      expect(warn).toHaveBeenCalledTimes(1)
+      warn.mockRestore()
+    })
+
+    it('does not warn in grouped mode, where one cell holds each group', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      attachCharacterCells(buildController(buildCells(4)), { groups: [4, 4, 4, 4] })
+      expect(warn).not.toHaveBeenCalled()
+      warn.mockRestore()
+    })
+
     it('stamps group attributes when groups are configured', () => {
       const cells = buildCells(8)
       attachCharacterCells(buildController(cells), { groups: [4, 4] })
