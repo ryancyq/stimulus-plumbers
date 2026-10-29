@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { RovingTabIndex } from '../../../src/accessibility/keyboard';
+import { ActiveDescendant, RovingTabIndex } from '../../../src/accessibility/keyboard';
 
 function makeButtons(labels) {
   return labels.map((l) => {
@@ -258,5 +258,110 @@ describe('RovingTabIndex', () => {
       a.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', shiftKey: true, bubbles: true }));
       expect(document.activeElement).toBe(b); // Shift no longer ignored
     });
+  });
+});
+
+describe('ActiveDescendant', () => {
+  let owner;
+  let listbox;
+  let descendant;
+
+  const option = (label) => listbox.querySelector(`[data-label="${label}"]`);
+
+  beforeEach(() => {
+    document.body.innerHTML = `
+      <input id="owner">
+      <ul role="listbox">
+        <li role="option" data-label="a">A</li>
+        <li role="option" data-label="b" aria-disabled="true">B</li>
+        <li role="option" data-label="c">C</li>
+        <li role="option" data-label="d">D</li>
+      </ul>`;
+    owner = document.querySelector('#owner');
+    listbox = document.querySelector('[role="listbox"]');
+    Element.prototype.scrollIntoView = vi.fn();
+    descendant = new ActiveDescendant(owner, {
+      options: () => [...listbox.querySelectorAll('[role="option"]')],
+      enabled: (item) => item.getAttribute('aria-disabled') !== 'true',
+      idPrefix: 'test-option',
+    });
+  });
+
+  afterEach(() => {
+    document.body.innerHTML = '';
+    delete Element.prototype.scrollIntoView;
+  });
+
+  it('activates an option: selected, referenced by the owner, and scrolled into view', () => {
+    descendant.activate(option('c'));
+
+    expect(option('c').getAttribute('aria-selected')).toBe('true');
+    expect(option('a').getAttribute('aria-selected')).toBe('false');
+    expect(owner.getAttribute('aria-activedescendant')).toBe(option('c').id);
+    expect(option('c').id).toMatch(/^test-option/);
+    expect(option('c').scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' });
+    expect(descendant.active).toBe(option('c'));
+  });
+
+  it('moves over disabled options and stops at the ends', () => {
+    descendant.first();
+    descendant.move(1);
+    expect(descendant.active).toBe(option('c'));
+
+    descendant.move(5);
+    expect(descendant.active).toBe(option('d'));
+
+    descendant.move(-5);
+    expect(descendant.active).toBe(option('a'));
+  });
+
+  it('starts from the first or last option when none is active', () => {
+    descendant.move(1);
+    expect(descendant.active).toBe(option('a'));
+
+    descendant.clear();
+    descendant.move(-1);
+    expect(descendant.active).toBe(option('d'));
+  });
+
+  it('first and last skip disabled options', () => {
+    option('a').setAttribute('aria-disabled', 'true');
+
+    descendant.first();
+    expect(descendant.active).toBe(option('c'));
+
+    descendant.last();
+    expect(descendant.active).toBe(option('d'));
+  });
+
+  it('clears the active option', () => {
+    descendant.activate(option('a'));
+
+    descendant.clear();
+
+    expect(descendant.active).toBeNull();
+    expect(owner.hasAttribute('aria-activedescendant')).toBe(false);
+    expect(option('a').getAttribute('aria-selected')).toBe('false');
+  });
+
+  it('resolves an owner given as a function on every change', () => {
+    const replacement = document.createElement('input');
+    let current = owner;
+    descendant = new ActiveDescendant(() => current, {
+      options: () => [...listbox.querySelectorAll('[role="option"]')],
+    });
+    current = replacement;
+
+    descendant.activate(option('a'));
+
+    expect(replacement.getAttribute('aria-activedescendant')).toBe(option('a').id);
+    expect(owner.hasAttribute('aria-activedescendant')).toBe(false);
+  });
+
+  it('reports no active option once it is removed or disabled', () => {
+    descendant.activate(option('c'));
+    option('c').setAttribute('aria-disabled', 'true');
+
+    expect(descendant.active).toBeNull();
   });
 });

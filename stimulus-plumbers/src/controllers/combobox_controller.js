@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { attachPopover, isPopoverElement } from '../plumbers/popover';
 import { ensureId, isAriaDisabled, setExpanded, setHidden, setSelected } from '../accessibility/aria';
+import { ActiveDescendant } from '../accessibility/keyboard';
 import { fuzzyMatcher, matchContains, matchPrefix } from '../researcher';
 
 const OPTION_SELECTOR = '[role="option"]';
@@ -31,7 +32,11 @@ export default class extends Controller {
     this.sequence = 0;
     this.query = '';
     this.filtered = [];
-    this.activated = null;
+    this.activeDescendant = new ActiveDescendant(() => this.triggerTarget, {
+      options: () => this._allOptions(),
+      enabled: (option) => this._selectable(option),
+      idPrefix: 'combobox-option',
+    });
   }
 
   connect() {
@@ -103,9 +108,9 @@ export default class extends Controller {
     this.filtered = this.filtered.filter((element) => element.isConnected);
     this._allOptions().forEach((option) => ensureId(option, 'combobox-option'));
     if (this.expanded && this._editable()) this._filter(this.query);
-    const active = this._activeOption();
+    const active = this.activeDescendant.active;
     if (!active) this.triggerTarget.removeAttribute('aria-activedescendant');
-    if (this.expanded && !active) this._clearActive();
+    if (this.expanded && !active) this.activeDescendant.clear();
     else this._syncSelection(active);
   }
 
@@ -117,7 +122,7 @@ export default class extends Controller {
       case 'ArrowDown':
       case 'ArrowUp':
         event.preventDefault();
-        if (this.expanded) this._step(event.key === 'ArrowDown' ? 1 : -1);
+        if (this.expanded) this.activeDescendant.move(event.key === 'ArrowDown' ? 1 : -1);
         else this._openPanel(event.key === 'ArrowDown' ? 'first' : 'last');
         break;
       case 'Home':
@@ -126,17 +131,18 @@ export default class extends Controller {
         event.preventDefault();
         if (!this.expanded) this._openPanel();
         if (!this.expanded) return;
-        this._activate(event.key === 'Home' ? this._enabledOptions()[0] : this._enabledOptions().at(-1));
+        if (event.key === 'Home') this.activeDescendant.first();
+        else this.activeDescendant.last();
         break;
       case 'Enter':
-        if (event.isComposing || !this.expanded || !this._activeOption()) return;
+        if (event.isComposing || !this.expanded || !this.activeDescendant.active) return;
         event.preventDefault();
-        this.commit(this._activeOption());
+        this.commit(this.activeDescendant.active);
         break;
       case ' ':
-        if (editable || !this.expanded || !this._activeOption()) return;
+        if (editable || !this.expanded || !this.activeDescendant.active) return;
         event.preventDefault();
-        this.commit(this._activeOption());
+        this.commit(this.activeDescendant.active);
         break;
       case 'Escape':
         if (event.isComposing || !this.expanded) return;
@@ -145,7 +151,7 @@ export default class extends Controller {
         break;
       case 'Tab': {
         if (!this.expanded) return;
-        const active = this._activeOption();
+        const active = this.activeDescendant.active;
         if (active && this._optionValue(active) !== this.committed.value) this.commit(active);
         this._closePanel();
         break;
@@ -157,7 +163,7 @@ export default class extends Controller {
     if (!this._editable()) return;
 
     const text = this.triggerTarget.value;
-    this._clearActive();
+    this.activeDescendant.clear();
     if (this.valuePolicyValue === 'freeform') {
       this.inputTarget.value = text;
       this.committed = { value: text, label: text };
@@ -191,7 +197,7 @@ export default class extends Controller {
         }
       });
     }
-    if (!this._activeOption()) this._clearActive();
+    if (!this.activeDescendant.active) this.activeDescendant.clear();
 
     const count = this._allOptions().filter((option) => !option.closest('[hidden]')).length;
     if (this.hasStatusTarget) this.statusTarget.textContent = count === 0 && query ? this.emptyTextValue : '';
@@ -248,7 +254,7 @@ export default class extends Controller {
     this._setDisplayLabel(label);
     this.committed = { value, label };
     this.edited = false;
-    if (this.expanded) this._activate(option);
+    if (this.expanded) this.activeDescendant.activate(option);
     else this._syncSelection();
     this.dispatch('changed', { detail });
     if (this.closeOnCommitValue) this._closePanel();
@@ -274,9 +280,9 @@ export default class extends Controller {
     setExpanded(this.triggerTarget, true);
 
     const committed = initial === 'none' ? null : this._committedOption();
-    if (committed) this._activate(committed);
-    else if (initial === 'first') this._activate(this._enabledOptions()[0]);
-    else if (initial === 'last') this._activate(this._enabledOptions().at(-1));
+    if (committed) this.activeDescendant.activate(committed);
+    else if (initial === 'first') this.activeDescendant.first();
+    else if (initial === 'last') this.activeDescendant.last();
 
     this.openListeners?.abort();
     this.openListeners = new AbortController();
@@ -308,31 +314,9 @@ export default class extends Controller {
       this._setDisplayLabel(this.committed.label);
       this.edited = false;
     }
-    this._clearActive();
+    this.activeDescendant.clear();
     this._resetFilter();
     this._syncSelection();
-  }
-
-  _step(delta) {
-    const options = this._enabledOptions();
-    const index = options.indexOf(this._activeOption());
-    if (index === -1) this._activate(delta > 0 ? options[0] : options.at(-1));
-    else this._activate(options[Math.min(Math.max(index + delta, 0), options.length - 1)]);
-  }
-
-  _activate(option) {
-    if (!option) return;
-
-    this.activated = option;
-    this._allOptions().forEach((other) => setSelected(other, other === option));
-    this.triggerTarget.setAttribute('aria-activedescendant', ensureId(option, 'combobox-option'));
-    option.scrollIntoView?.({ block: 'nearest' });
-  }
-
-  _clearActive() {
-    this.activated = null;
-    this.triggerTarget.removeAttribute('aria-activedescendant');
-    this._allOptions().forEach((option) => setSelected(option, false));
   }
 
   _syncSelection(active = null) {
@@ -350,11 +334,6 @@ export default class extends Controller {
     this._syncSelection();
   }
 
-  // By element: replacement options can reuse an id.
-  _activeOption() {
-    return this.activated && this._enabledOptions().includes(this.activated) ? this.activated : null;
-  }
-
   _committedOption() {
     const value = this.committed.value;
     if (value === '') return null;
@@ -368,10 +347,6 @@ export default class extends Controller {
 
   _allOptions() {
     return this.hasListboxTarget ? [...this.listboxTarget.querySelectorAll(OPTION_SELECTOR)] : [];
-  }
-
-  _enabledOptions() {
-    return this._allOptions().filter((option) => this._selectable(option));
   }
 
   _selectable(option) {

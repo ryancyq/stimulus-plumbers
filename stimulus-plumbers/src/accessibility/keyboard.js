@@ -2,6 +2,8 @@
  * Keyboard interaction utilities
  */
 
+import { ensureId, setSelected } from './aria';
+
 /**
  * Check if a key matches the expected key
  */
@@ -127,5 +129,76 @@ export class RovingTabIndex {
         break;
     }
     this.setCurrentIndex(newIndex);
+  }
+}
+
+/**
+ * Tracks the active option of a listbox whose DOM focus stays on an owner element.
+ * The active option is `aria-selected` and the owner's `aria-activedescendant`.
+ * Passive: the controller maps keys to moves.
+ */
+export class ActiveDescendant {
+  #owner;
+  #options;
+  #enabled;
+  #idPrefix;
+  #active = null;
+
+  /**
+   * @param {HTMLElement|() => HTMLElement} owner - Element that keeps focus and carries aria-activedescendant, or a function returning it
+   * @param {Object} options
+   * @param {() => HTMLElement[]} options.options - All options, in order
+   * @param {(option: HTMLElement) => boolean} [options.enabled] - Whether an option can become active
+   * @param {string} [options.idPrefix='option'] - Prefix for generated option ids
+   */
+  constructor(owner, { options, enabled = () => true, idPrefix = 'option' }) {
+    this.#owner = owner;
+    this.#options = options;
+    this.#enabled = enabled;
+    this.#idPrefix = idPrefix;
+  }
+
+  /** The active option, or null when none is active or it can no longer be. */
+  get active() {
+    return this.#active && this.#enabledOptions().includes(this.#active) ? this.#active : null;
+  }
+
+  activate(option) {
+    if (!option) return;
+
+    this.#active = option;
+    this.#options().forEach((other) => setSelected(other, other === option));
+    this.#ownerElement().setAttribute('aria-activedescendant', ensureId(option, this.#idPrefix));
+    option.scrollIntoView?.({ block: 'nearest' });
+  }
+
+  /** Moves by delta and stops at the ends; with no active option, starts at the first or last. */
+  move(delta) {
+    const options = this.#enabledOptions();
+    const index = options.indexOf(this.active);
+    if (index === -1) this.activate(delta > 0 ? options[0] : options.at(-1));
+    else this.activate(options[Math.min(Math.max(index + delta, 0), options.length - 1)]);
+  }
+
+  first() {
+    this.activate(this.#enabledOptions()[0]);
+  }
+
+  last() {
+    this.activate(this.#enabledOptions().at(-1));
+  }
+
+  clear() {
+    this.#active = null;
+    this.#ownerElement().removeAttribute('aria-activedescendant');
+    this.#options().forEach((option) => setSelected(option, false));
+  }
+
+  #ownerElement() {
+    return typeof this.#owner === 'function' ? this.#owner() : this.#owner;
+  }
+
+  #enabledOptions() {
+    return this.#options().filter((option) => this.#enabled(option));
   }
 }

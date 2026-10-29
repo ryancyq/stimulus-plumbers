@@ -115,7 +115,7 @@ application.register('visibility',               VisibilityController)
 |--------|-------------|------|
 | `setExpanded`, `setHidden`, `announce`, `generateId`, `ensureId`, `connectTriggerToTarget` | ARIA state helpers | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
 | `FocusTrap`, `getFocusableElements`, `focusFirst` | Focus management | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
-| `RovingTabIndex`, `isActivationKey`, `isArrowKey` | Keyboard interaction | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
+| `RovingTabIndex`, `ActiveDescendant`, `isActivationKey`, `isArrowKey` | Keyboard interaction | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
 | `Requestor` | Fetch wrapper with lifecycle events | [docs/utility/requestor.md](docs/utility/requestor.md) |
 | `fuzzyMatcher` | Fuzzy subsequence matching | [docs/utility/researcher.md](docs/utility/researcher.md) |
 | `Formatter`, `FORMATTER_TYPES` | Input formatter plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/formatter.md](docs/plumber/formatter.md) |
