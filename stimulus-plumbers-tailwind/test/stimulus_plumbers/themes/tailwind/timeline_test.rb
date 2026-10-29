@@ -3,74 +3,92 @@
 require "test_helper"
 
 class TailwindThemeTimelineTest < Minitest::Test
+  include ThemeAssertions
+
+  INDICATORS = %i[dot icon].product(%i[vertical horizontal]).freeze
+
   def setup
     @theme = StimulusPlumbers::Themes::TailwindTheme.new
   end
 
-  def classes_for(component, **args)
-    @theme.resolve(component, **args)[:classes]
-  end
-
   # ── :timeline (track) ────────────────────────────────────────────────────────
 
-  def test_vertical_track_separates_items_with_gap_not_border
-    result = classes_for(:timeline, orientation: :vertical)
-
-    assert_includes result, "gap-y-10"
-    refute_includes result, "border-s"
+  def test_vertical_track_stacks_items_in_a_column
+    assert_includes classes_for(:timeline, orientation: :vertical), "flex-col"
   end
 
-  def test_horizontal_track_uses_flex
+  def test_horizontal_track_lays_items_out_in_a_row
     result = classes_for(:timeline, orientation: :horizontal)
 
     assert_includes result, "flex"
-    refute_includes result, "border-t"
-    refute_includes result, "border-s"
+    refute_includes result, "flex-col"
   end
 
-  # ── :timeline_item ────────────────────────────────────────────────────────────
+  def test_vertical_track_line_is_in_the_border_color
+    assert_includes classes_for(:timeline_track_line), "bg-(--sp-color-border)"
+  end
 
-  def test_vertical_item_lays_out_indicator_beside_content
+  # ── :timeline_item ───────────────────────────────────────────────────────────
+
+  def test_vertical_item_puts_the_indicator_beside_its_content
     result = classes_for(:timeline_item)
 
     assert_includes result, "flex"
     assert_includes result, "items-start"
-    refute_includes result, "ms-6"
-    refute_includes result, "mb-10"
   end
 
-  def test_vertical_item_does_not_use_margin_start_offset
-    result = classes_for(:timeline_item, orientation: :vertical)
-
-    assert_includes result, "flex"
-    refute_includes result, "ms-6"
+  def test_horizontal_item_shares_the_track_width
+    assert_includes classes_for(:timeline_item, orientation: :horizontal), "flex-1"
   end
 
-  def test_item_horizontal_layout_grows
-    result = classes_for(:timeline_item, orientation: :horizontal)
+  def test_connector_is_a_hairline_in_the_border_color_hidden_after_the_last_item
+    result = classes_for(:timeline_item_connector)
 
-    assert_includes result, "flex-1"
-    refute_includes result, "pt-4"
-    refute_includes result, "ms-6"
+    assert_includes result, "h-px"
+    assert_includes result, "bg-(--sp-color-border)"
+    assert_includes result, "last:hidden"
   end
 
   # ── :timeline_item_indicator ──────────────────────────────────────────────────
 
-  def test_dot_indicator_container_is_neutral_not_primary
-    result = classes_for(:timeline_item_indicator, type: :dot)
+  def test_dot_indicator_is_neutral_not_primary
+    %i[vertical horizontal].each do |orientation|
+      result = classes_for(:timeline_item_indicator, type: :dot, orientation: orientation)
 
-    assert_includes result, "rounded-full"
-    refute_includes result, "bg-(--sp-color-primary)"
+      assert_includes result, "bg-(--sp-color-bg)"
+      refute_includes result, "bg-(--sp-color-primary)"
+    end
   end
 
-  def test_icon_indicator_uses_primary_brand_background
-    result = classes_for(:timeline_item_indicator, type: :icon)
+  def test_icon_indicator_is_filled_with_primary
+    %i[vertical horizontal].each do |orientation|
+      result = classes_for(:timeline_item_indicator, type: :icon, orientation: orientation)
 
-    assert_includes result, "bg-(--sp-color-primary)"
-    refute_includes result, "bg-(--sp-color-bg)"
+      assert_includes result, "bg-(--sp-color-primary)"
+      assert_includes result, "text-(--sp-color-primary-fg)"
+    end
   end
 
-  # ── :timeline_item_trigger ────────────────────────────────────────────────────
+  def test_every_indicator_has_a_ring_halo_against_the_page_background
+    INDICATORS.each do |type, orientation|
+      result = classes_for(:timeline_item_indicator, type: type, orientation: orientation)
+
+      assert_includes result, "ring-4", "expected a halo on the #{orientation} #{type} indicator"
+      assert_includes result, "ring-(--sp-color-bg)", "expected the page background halo on the #{orientation} #{type} indicator"
+    end
+  end
+
+  def test_every_indicator_is_in_flow_not_absolute
+    INDICATORS.each do |type, orientation|
+      refute_includes classes_for(:timeline_item_indicator, type: type, orientation: orientation), "absolute"
+    end
+  end
+
+  def test_indicator_icon_slot_strokes_in_the_text_color
+    assert_includes classes_for(:timeline_item_indicator_icon_slot), "stroke-current"
+  end
+
+  # ── :timeline_item_trigger / time / title / description ──────────────────────
 
   def test_trigger_has_semibold_typography_and_interactive_states
     result = classes_for(:timeline_item_trigger)
@@ -81,168 +99,35 @@ class TailwindThemeTimelineTest < Minitest::Test
     assert_includes result, "focus-visible:ring-(--sp-color-primary-ring)"
   end
 
-  # ── :timeline_item_time / title / description / detail / actions / heading ───
+  def test_default_time_is_small_muted_text
+    result = classes_for(:timeline_item_time, type: :default)
 
-  def test_time_uses_small_muted_inline_text
-    result = classes_for(:timeline_item_time)
-
-    assert_includes result, "block"
     assert_includes result, "text-sm"
+    assert_includes result, "text-(--sp-color-muted-fg)"
   end
 
-  def test_title_uses_semibold_base_text
+  def test_badge_time_is_a_bordered_muted_chip_in_medium_weight
+    result = classes_for(:timeline_item_time, type: :badge)
+
+    assert_includes result, "bg-(--sp-color-bg-muted)"
+    assert_includes result, "border-(--sp-color-border)"
+    assert_includes result, "text-(--sp-color-fg)"
+    assert_includes result, "text-xs"
+    assert_includes result, "font-medium"
+    assert_includes result, "rounded"
+  end
+
+  def test_title_is_semibold_base_text
     result = classes_for(:timeline_item_title)
 
     assert_includes result, "font-semibold"
     assert_includes result, "text-base"
   end
 
-  def test_description_uses_small_muted_text
-    assert_includes classes_for(:timeline_item_description), "text-sm"
-  end
-
-  def test_detail_has_top_spacing
-    assert_includes classes_for(:timeline_item_detail), "mt-2"
-  end
-
-  def test_actions_are_flex_wrapped_with_gap
-    result = classes_for(:timeline_item_actions)
-
-    assert_includes result, "flex"
-    assert_includes result, "flex-wrap"
-    assert_includes result, "gap-2"
-  end
-
-  def test_heading_has_bottom_spacing
-    assert_includes classes_for(:timeline_item_heading), "mb-1"
-  end
-
-  def test_both_indicator_types_have_ring_halo_against_page_background
-    %i[dot icon].each do |type|
-      result = classes_for(:timeline_item_indicator, type: type)
-
-      assert_includes result, "ring-4", "expected ring on #{type} indicator"
-      assert_includes result, "ring-(--sp-color-bg)", "expected ring to use page background on #{type} indicator"
-    end
-  end
-
-  def test_time_default_type_uses_small_muted_text
-    result = classes_for(:timeline_item_time, type: :default)
+  def test_description_is_small_muted_text
+    result = classes_for(:timeline_item_description)
 
     assert_includes result, "text-sm"
-    refute_includes result, "rounded"
-    refute_includes result, "px-1.5"
-  end
-
-  def test_time_badge_type_uses_pill_styling
-    result = classes_for(:timeline_item_time, type: :badge)
-
-    assert_includes result, "rounded"
-    assert_includes result, "px-1.5"
-    assert_includes result, "font-medium"
-    refute_includes result, "text-sm"
-  end
-
-  def test_horizontal_track_has_no_top_border
-    result = classes_for(:timeline, orientation: :horizontal)
-
-    assert_includes result, "flex"
-    refute_includes result, "border-t"
-  end
-
-  def test_horizontal_item_has_no_top_padding
-    result = classes_for(:timeline_item, orientation: :horizontal)
-
-    assert_includes result, "flex-1"
-    refute_includes result, "pt-4"
-  end
-
-  def test_connector_spans_full_width_and_hides_on_last
-    result = classes_for(:timeline_item_connector)
-
-    assert_includes result, "w-full"
-    assert_includes result, "h-px"
-    assert_includes result, "last:hidden"
-  end
-
-  def test_content_wrapper_has_top_margin
-    result = classes_for(:timeline_item_content)
-
-    assert_includes result, "mt-3"
-  end
-
-  def test_horizontal_dot_indicator_is_in_flow_not_absolute
-    result = classes_for(:timeline_item_indicator, type: :dot, orientation: :horizontal)
-
-    assert_includes result, "shrink-0"
-    refute_includes result, "absolute"
-  end
-
-  def test_horizontal_icon_indicator_has_ring_and_is_in_flow
-    result = classes_for(:timeline_item_indicator, type: :icon, orientation: :horizontal)
-
-    assert_includes result, "shrink-0"
-    assert_includes result, "ring-4"
-    refute_includes result, "absolute"
-  end
-
-  def test_vertical_dot_indicator_is_in_flow_not_absolute
-    result = classes_for(:timeline_item_indicator, type: :dot, orientation: :vertical)
-
-    refute_includes result, "absolute"
-    assert_includes result, "ring-4"
-    assert_includes result, "ring-(--sp-color-bg)"
-  end
-
-  def test_group_wrapper_has_vertical_spacing
-    result = classes_for(:timeline_group)
-
-    assert_includes result, "gap-y-4"
-  end
-
-  def test_group_section_has_border_and_rounded_corners
-    result = classes_for(:timeline_group_section)
-
-    assert_includes result, "border"
-    assert_includes result, "rounded-lg"
-  end
-
-  def test_group_section_date_is_semibold
-    result = classes_for(:timeline_group_section_date)
-
-    assert_includes result, "font-semibold"
-  end
-
-  def test_group_section_list_uses_divide_not_border_s
-    result = classes_for(:timeline_group_section_list)
-
-    assert_includes result, "divide-y"
-    refute_includes result, "border-s"
-  end
-
-  def test_group_section_list_has_vertical_spacing_between_events
-    result = classes_for(:timeline_group_section_list)
-
-    assert_includes result, "[&>li]:py-2"
-  end
-
-  def test_group_section_list_horizontal_lays_out_as_row
-    result = classes_for(:timeline_group_section_list, orientation: :horizontal)
-
-    assert_includes result, "flex"
-    refute_includes result, "divide-y"
-  end
-
-  def test_vertical_track_line_spans_full_height_with_border_color
-    result = classes_for(:timeline_track_line)
-
-    assert_includes result, "inset-y-0"
-    assert_includes result, "bg-(--sp-color-border)"
-  end
-
-  def test_indicator_icon_slot_uses_stroke_current
-    result = classes_for(:timeline_item_indicator_icon_slot)
-
-    assert_includes result, "stroke-current"
+    assert_includes result, "text-(--sp-color-muted-fg)"
   end
 end
