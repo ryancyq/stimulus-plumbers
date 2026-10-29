@@ -8,7 +8,6 @@ For full API, design decisions, and usage contracts see [`docs/accessibility/des
 
 - **`RovingTabIndex`** — self-managing roving tabindex for disclosure widgets, trees, toolbars
 - **`ActiveDescendant`** — passive active-option tracking through `aria-activedescendant` for listboxes whose owner keeps focus
-- **`FocusTrap`** — focus trap with optional `onDeactivate` callback
 - **`getFocusableElements(container)`** — returns focusable descendants in DOM order
 - **`setExpanded(el, value)`** — sets/clears `aria-expanded`
 - **`setHidden(el, value)`** — sets/clears `hidden`

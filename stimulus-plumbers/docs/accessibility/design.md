@@ -2,7 +2,7 @@
 
 Three JS modules under `src/accessibility/` provide the accessibility primitives for all controllers. This doc explains **which helper to use for which ARIA interaction pattern** and the **usage contract** every controller must follow.
 
-## Three Patterns
+## Two Patterns
 
 `calendar_controller` handles its own grid keys, which move focus by date and may load another period.
 
@@ -57,29 +57,6 @@ this.activeDescendant = new ActiveDescendant(() => this.triggerTarget, {
 if (event.key === 'ArrowDown') this.activeDescendant.move(1);
 ```
 
-### 3. Focus Trap — `FocusTrap` (`focus.js`)
-
-Use when: focus must stay within a bounded region until explicitly dismissed (modal dialogs, drawer panels).
-
-- Tab/Shift+Tab cycles within the container.
-- `escapeDeactivates: true` enables Escape key to close.
-- `onDeactivate` callback fires whenever the trap deactivates — use it to hide the panel.
-
-```js
-this.focusTrap = new FocusTrap(container, {
-  escapeDeactivates: true,
-  onDeactivate: () => this.close(),
-});
-
-// open
-this.focusTrap.activate();
-
-// close
-this.focusTrap.deactivate(); // also called automatically on Escape
-```
-
-Optional options: `initialFocus` (element to focus on activate; default: first focusable), `returnFocus` (element to restore on deactivate; default: `activeElement` at activate time).
-
 ## Usage Contract
 
 Every controller in this library must follow these rules. They exist to ensure consistency for screen reader users across all components.
@@ -124,7 +101,7 @@ Use once at connect time to wire a trigger to its popup or tooltip. It never set
 
 ### `getFocusableElements(container)`
 
-Returns an array of focusable descendants in DOM order. Used internally by `FocusTrap`. Call directly when you need to enumerate tabbable elements outside a trap context.
+Returns an array of focusable descendants in DOM order. Call it when you need to enumerate tabbable elements, e.g. to move focus into a replaced region.
 
 ## Full API Reference
 
@@ -188,7 +165,7 @@ Key predicates. `isActivationKey` matches Enter or Space; `isArrowKey` matches a
 - **`ActiveDescendant` is passive** — listbox owners map keys differently (an editable combobox leaves Home, End, and Space to text editing; a time column closes on Enter), so the controller keeps the key mapping.
 - **`RovingTabIndex` ignores all modifier keys by default, not just `Alt`** — the guard must be correct for any `moveKey` a co-located plumber might use (`Reorderable`'s `moveKey` is configurable to `Control`/`Shift`/`Meta`), and for any future `RovingTabIndex` consumer, without that consumer needing to know about a specific plumber. `ignoreModifierKeys` is a list, not a boolean, precisely so a future consumer that wants a modified combination (e.g. `Shift+Arrow` range-select) to still move focus can narrow it.
 - **Prefer a reserved-key guard over attach order for two listeners sharing one item** — if a future plumber needs to attach its own raw `keydown` listener to items also managed by `RovingTabIndex`, extend `ignoreModifierKeys` (or add an equivalent reserved-key convention) rather than relying on which `addEventListener` call runs first plus `stopImmediatePropagation()`. The latter is an implicit ordering that silently breaks if reordered; the former partitions the keyspace structurally.
-- **`FocusRestoration` was removed** — it was a thin wrapper around `save()/restore()` with no behaviour beyond `FocusTrap`'s built-in `returnFocus` option. `FocusTrap` handles the common case; callers that need manual save/restore can use `document.activeElement` directly.
+- **Containment and focus return** — use native `<dialog>` (`showModal()` makes the rest of the page inert and restores focus on close) or the popover API; for a manual save and restore, keep `document.activeElement`.
 
 ## Reference
 
