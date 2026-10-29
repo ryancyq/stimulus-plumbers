@@ -1,10 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
+import { ActiveDescendant } from '../accessibility/keyboard';
 
-const STEPS = {
-  ArrowDown: (index, last) => Math.min(index + 1, last),
-  ArrowUp: (index, last) => (index < 0 ? last : Math.max(index - 1, 0)),
-  Home: () => 0,
-  End: (index, last) => last,
+const MOVES = {
+  ArrowDown: (descendant) => descendant.move(1),
+  ArrowUp: (descendant) => descendant.move(-1),
+  Home: (descendant) => descendant.first(),
+  End: (descendant) => descendant.last(),
 };
 
 export default class extends Controller {
@@ -26,6 +27,7 @@ export default class extends Controller {
   disconnect() {
     this.connection?.abort();
     this.connection = null;
+    this.descendants = null;
   }
 
   // ArrowDown opens the panel and focuses the hour column; Tab closes the panel.
@@ -65,18 +67,20 @@ export default class extends Controller {
       this._cancel(event);
       return;
     }
-    const step = STEPS[event.key];
-    if (!step) return;
+    const move = MOVES[event.key];
+    if (!move) return;
 
     event.preventDefault();
-    const column = event.currentTarget;
-    const options = this._options(column);
-    this._choose(column, options[step(options.indexOf(this._selectedOption(column)), options.length - 1)]);
+    move(this._activeDescendant(event.currentTarget));
+    this._selectionChanged();
   }
 
   onSelect(event) {
     const option = event.target.closest('[role="option"]');
-    if (option) this._choose(event.currentTarget, option);
+    if (!option) return;
+
+    this._activeDescendant(event.currentTarget).activate(option);
+    this._selectionChanged();
   }
 
   // Clicks on the icons and padding open the panel from the trigger.
@@ -116,9 +120,7 @@ export default class extends Controller {
     this.triggerTarget.focus();
   }
 
-  _choose(column, option) {
-    this._selectOption(column, option);
-    option.scrollIntoView({ block: 'nearest' });
+  _selectionChanged() {
     const value = this._selectedValue();
     if (value) this._setValue(value);
   }
@@ -152,17 +154,25 @@ export default class extends Controller {
   }
 
   _selectOption(column, option) {
-    this._options(column).forEach((other) => other.setAttribute('aria-selected', String(other === option)));
-    if (option) column.setAttribute('aria-activedescendant', option.id);
-    else column.removeAttribute('aria-activedescendant');
-  }
-
-  _options(column) {
-    return [...column.querySelectorAll('[role="option"]')];
+    if (option) this._activeDescendant(column).activate(option);
+    else this._activeDescendant(column).clear();
   }
 
   _selectedOption(column) {
-    return column.querySelector('[role="option"][aria-selected="true"]');
+    return this._activeDescendant(column).active;
+  }
+
+  // Starts from the server-rendered selection.
+  _activeDescendant(column) {
+    this.descendants ??= new Map();
+    if (!this.descendants.has(column)) {
+      const descendant = new ActiveDescendant(column, {
+        options: () => [...column.querySelectorAll('[role="option"]')],
+      });
+      descendant.activate(column.querySelector('[role="option"][aria-selected="true"]'));
+      this.descendants.set(column, descendant);
+    }
+    return this.descendants.get(column);
   }
 
   // Whether the target is in the input group holding the trigger, other than the trigger.

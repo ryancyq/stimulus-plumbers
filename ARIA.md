@@ -17,11 +17,12 @@
 
 ## JS Keyboard Navigation Patterns
 
-`RovingTabIndex` handles keyboard navigation in controllers — see [`stimulus-plumbers/docs/accessibility/design.md`](stimulus-plumbers/docs/accessibility/design.md) for full API.
+`RovingTabIndex` and `ActiveDescendant` handle keyboard navigation in controllers — see [`stimulus-plumbers/docs/accessibility/design.md`](stimulus-plumbers/docs/accessibility/design.md) for full API.
 
-| Pattern         | Class            | When to use                                                     |
-| --------------- | ---------------- | --------------------------------------------------------------- |
-| Roving tabindex | `RovingTabIndex` | Disclosure widgets, trees, toolbars — focus moves between items |
+| Pattern           | Class              | When to use                                                                                              |
+| ----------------- | ------------------ | -------------------------------------------------------------------------------------------------------- |
+| Roving tabindex   | `RovingTabIndex`   | Disclosure widgets, trees, toolbars — focus moves between items                                          |
+| Active descendant | `ActiveDescendant` | Listboxes whose owner keeps focus — `aria-activedescendant` and `aria-selected` follow the active option |
 
 ## Component-Specific Patterns (APG)
 
