@@ -49,11 +49,13 @@ The rendered number is the value clamped to `[min, max]`, so an out-of-range `cu
 
 ## Methods
 
-| Method                       | Wired via                 | Purpose                                                                                                   |
-| ---------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `setValue(value)`            | —                         | Programmatic API — clamps to `[min, max]`, updates `currentValue`, dispatches `progress:changed`          |
-| `currentValueChanged(value)` | Stimulus value callback   | Recalculates fill/meter attrs whenever `current` changes (covers `setValue()` and direct attribute edits) |
-| `refresh()`                  | `input->progress#refresh` | Range-only. Reads the native input's value and passes it to `setValue()`                                  |
+| Method                       | Wired via                 | Purpose                                                                                                                               |
+| ---------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `setValue(value)`            | —                         | Programmatic API — clamps to `[min, max]`, updates `currentValue`, dispatches `progress:changed`                                      |
+| `currentValueChanged(value)` | Stimulus value callback   | Recalculates fill/meter attrs whenever `current` changes (covers `setValue()` and direct attribute edits); range also moves its thumb |
+| `refresh()`                  | `input->progress#refresh` | Range-only. Reads the native input's value and passes it to `setValue()`                                                              |
+
+Changing any other value (`min`, `max`, `indeterminate`, `format`, …) re-renders too, as does a Turbo morph that leaves the values unchanged.
 
 ## Dispatches
 

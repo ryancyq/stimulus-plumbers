@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { setValueMin, setValueMax, setValueNow, setValueText } from '../accessibility/aria';
+import { onMorph } from '../plumbers/plumber/morph';
 
 const FORMATS = ['percent', 'value', 'value_max'];
 
@@ -24,20 +25,70 @@ export default class extends Controller {
     // The native input is the source of truth at connect, so a range with no current-value
     // attribute adopts what the markup already shows instead of resetting it.
     if (this.variantValue === 'range') this.currentValue = Number(this.rangeInput.value);
+    // Restores the JS-written fill styles and classes after a morph.
+    this.connection = new AbortController();
+    onMorph(this.element, () => this.render(), { signal: this.connection.signal });
     this.render();
+  }
+
+  disconnect() {
+    this.connection?.abort();
+    this.connection = null;
   }
 
   setValue(value) {
     this.currentValue = this.clamp(value);
-    // Move the control too, or the thumb and the submitted value stay stale. Only here —
-    // renderRange also runs on the initial paint, before the input's value has been read.
+    // Writes the input now; currentValueChanged runs after the attribute changes.
     if (this.variantValue === 'range') this.rangeInput.value = `${this.currentValue}`;
     this.render();
     this.dispatch('changed', { detail: { value: this.currentValue, min: this.minValue, max: this.maxValue } });
   }
 
   currentValueChanged() {
+    // Skipped before connect(), which reads the range input first.
+    if (this.connection && this.variantValue === 'range') this.rangeInput.value = `${this.clamp(this.currentValue)}`;
     this.render();
+  }
+
+  // Every other value that shapes the output re-renders too; connect() covers the initial paint.
+  minValueChanged() {
+    this._rerender();
+  }
+
+  maxValueChanged() {
+    this._rerender();
+  }
+
+  optimumValueChanged() {
+    this._rerender();
+  }
+
+  lowValueChanged() {
+    this._rerender();
+  }
+
+  highValueChanged() {
+    this._rerender();
+  }
+
+  indeterminateValueChanged() {
+    this._rerender();
+  }
+
+  indeterminateFractionValueChanged() {
+    this._rerender();
+  }
+
+  segmentModeValueChanged() {
+    this._rerender();
+  }
+
+  formatValueChanged() {
+    this._rerender();
+  }
+
+  _rerender() {
+    if (this.connection) this.render();
   }
 
   clamp(value) {

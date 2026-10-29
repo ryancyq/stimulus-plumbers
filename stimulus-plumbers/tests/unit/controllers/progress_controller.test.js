@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Application } from '@hotwired/stimulus'
+import { morphElements } from '@hotwired/turbo'
 import ProgressController from '../../../src/controllers/progress_controller'
 
 describe('ProgressController', () => {
@@ -531,6 +532,95 @@ describe('ProgressController', () => {
       const [arc, gap] = fill.style.strokeDasharray.split(' ').map(parseFloat)
       expect(arc).toBeCloseTo(circumference * 0.25, 2)
       expect(gap).toBeCloseTo(circumference * 0.75, 2)
+    })
+  })
+
+  describe('dynamic values', () => {
+    const tick = () => new Promise((resolve) => setTimeout(resolve, 10))
+    const markup = (attrs = '') => `
+      <div role="progressbar" data-controller="progress"
+           data-progress-current-value="30" data-progress-min-value="0" data-progress-max-value="100" ${attrs}>
+        <div data-progress-target="fill"></div>
+      </div>
+    `
+
+    it('restores aria-valuenow and drops the animation when indeterminate turns off', async () => {
+      document.body.innerHTML = markup('data-progress-indeterminate-value="true"')
+      await tick()
+      const el = document.querySelector('[data-controller="progress"]')
+      expect(el.hasAttribute('aria-valuenow')).toBe(false)
+
+      el.setAttribute('data-progress-indeterminate-value', 'false')
+      await tick()
+
+      expect(el.getAttribute('aria-valuenow')).toBe('30')
+      expect(el.classList.contains('sp-progress-indeterminate')).toBe(false)
+      expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('30%')
+    })
+
+    it('re-renders the fill when max changes', async () => {
+      document.body.innerHTML = markup()
+      await tick()
+      const el = document.querySelector('[data-controller="progress"]')
+
+      el.setAttribute('data-progress-max-value', '60')
+      await tick()
+
+      expect(el.getAttribute('aria-valuemax')).toBe('60')
+      expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('50%')
+    })
+
+    it('restores the fill after a morph that keeps the same values', async () => {
+      document.body.innerHTML = markup()
+      await tick()
+      const el = document.querySelector('[data-controller="progress"]')
+      const next = document.createElement('div')
+      next.innerHTML = markup()
+
+      morphElements(el, next.firstElementChild)
+      await tick()
+
+      expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('30%')
+      expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('30')
+    })
+
+    it('restores the indeterminate animation after a morph', async () => {
+      document.body.innerHTML = markup('data-progress-indeterminate-value="true"')
+      await tick()
+      const el = document.querySelector('[data-controller="progress"]')
+      const next = document.createElement('div')
+      next.innerHTML = markup('data-progress-indeterminate-value="true"')
+
+      morphElements(el, next.firstElementChild)
+      await tick()
+
+      expect(el.classList.contains('sp-progress-indeterminate')).toBe(true)
+    })
+
+    it('moves the range thumb when the current value attribute changes', async () => {
+      document.body.innerHTML = `
+        <input type="range" min="0" max="100" value="45"
+               data-controller="progress" data-progress-variant-value="range"
+               data-progress-current-value="45">
+      `
+      await tick()
+      const input = document.querySelector('input[type="range"]')
+
+      input.setAttribute('data-progress-current-value', '70')
+      await tick()
+
+      expect(input.value).toBe('70')
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('70')
+    })
+
+    it('keeps the native range value on connect', async () => {
+      document.body.innerHTML = `
+        <input type="range" min="0" max="100" value="45"
+               data-controller="progress" data-progress-variant-value="range">
+      `
+      await tick()
+
+      expect(document.querySelector('input[type="range"]').value).toBe('45')
     })
   })
 })
