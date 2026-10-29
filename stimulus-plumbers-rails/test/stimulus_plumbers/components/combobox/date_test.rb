@@ -72,7 +72,7 @@ class ComboboxDateTest < ActionView::TestCase
     actions = render_date.at_css("input#birthday")["data-action"].split
 
     assert_includes actions, "focus->popover#onFocus"
-    assert_includes actions, "click->popover#open"
+    assert_includes actions, "click->popover#onOpen"
     assert_includes actions, "keydown->combobox-date#onKeydown"
   end
 
@@ -80,7 +80,7 @@ class ComboboxDateTest < ActionView::TestCase
     actions = render_date(open_on_focus: false).at_css("input#birthday")["data-action"].split
 
     assert_not_includes actions, "focus->popover#onFocus"
-    assert_includes actions, "click->popover#open"
+    assert_includes actions, "click->popover#onOpen"
   end
 
   def test_format_is_passed_to_the_formatter_with_the_current_locale_unless_given

@@ -21,16 +21,16 @@ The legacy controller supported a custom overlay with `modal` and `overlay` targ
 </div>
 ```
 
-Use a native dialog target instead. Wire `modal#dismiss` for cancellation and `modal#close` for
+Use a native dialog target instead. Wire `modal#onDismiss` for cancellation and `modal#onClose` for
 completion:
 
 ```html
 <div data-controller="modal">
-  <button data-action="modal#open">Open</button>
+  <button data-action="modal#onOpen">Open</button>
   <dialog data-modal-target="dialog" closedby="closerequest" aria-labelledby="modal-title">
     <h2 id="modal-title">Confirm action</h2>
-    <button data-action="modal#dismiss">Cancel</button>
-    <button data-action="modal#close">Confirm</button>
+    <button data-action="modal#onDismiss">Cancel</button>
+    <button data-action="modal#onClose">Confirm</button>
   </dialog>
 </div>
 ```
@@ -46,11 +46,14 @@ announcements. The current controller has no compatibility alias for the legacy 
 
 ## Methods
 
-| Method                    | Description                                             |
-| ------------------------- | ------------------------------------------------------- |
-| `open(event?)`            | Opens the dialog; repeated calls while open are ignored |
-| `dismiss(eventOrResult?)` | Requests a cancellable dismissal                        |
-| `close(eventOrResult?)`   | Explicitly completes and closes the dialog              |
+| Method             | Description                                                          |
+| ------------------ | -------------------------------------------------------------------- |
+| `onOpen(event)`    | Event adapter — opens with the event's current target as the invoker |
+| `onDismiss(event)` | Event adapter — dismisses with the `result` param                    |
+| `onClose(event)`   | Event adapter — closes with the `result` param                       |
+| `open(source?)`    | Opens the dialog; repeated calls while open are ignored              |
+| `dismiss(result?)` | Requests a cancellable dismissal                                     |
+| `close(result?)`   | Explicitly completes and closes the dialog                           |
 
 The dialog must have an accessible name through `aria-labelledby` or `aria-label`.
 The controller passes the action invoker to the dialog adapter so focus restoration remains
@@ -61,13 +64,13 @@ Action parameters use `result`, for example:
 
 ```html
 <div data-controller="modal">
-  <button data-action="modal#open">Open</button>
+  <button data-action="modal#onOpen">Open</button>
 
   <dialog data-modal-target="dialog" aria-labelledby="modal-title">
     <h2 id="modal-title">Confirm action</h2>
     <p>Are you sure?</p>
-    <button data-action="modal#dismiss">Cancel</button>
-    <button data-action="modal#close" data-modal-result-param="confirm">Confirm</button>
+    <button data-action="modal#onDismiss">Cancel</button>
+    <button data-action="modal#onClose" data-modal-result-param="confirm">Confirm</button>
   </dialog>
 </div>
 ```
@@ -96,8 +99,8 @@ Author the native `closedby` attribute directly:
 ```html
 <dialog data-modal-target="dialog" closedby="closerequest" aria-labelledby="modal-title">
   <h2 id="modal-title">Confirm action</h2>
-  <button data-action="modal#dismiss">Cancel</button>
-  <button data-action="modal#close" data-modal-result-param="confirm">Confirm</button>
+  <button data-action="modal#onDismiss">Cancel</button>
+  <button data-action="modal#onClose" data-modal-result-param="confirm">Confirm</button>
 </dialog>
 ```
 

@@ -39,17 +39,20 @@ values and any `controller.visibility`, `shift()`, or `flip()` dependencies. Com
 
 ## Methods
 
-| Method           | Description                                                                                                                                     |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `open(event?)`   | Opens the panel; an action event's current target is the source                                                                                 |
-| `close(event?)`  | Closes the panel                                                                                                                                |
-| `toggle(event?)` | Toggles the panel; an action event's current target is the source                                                                               |
-| `onFocus(event)` | `focus->popover#onFocus` opens on focus, except before any user input since connect, when focus returns from the panel, or inside an open modal |
+| Method            | Description                                                                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `onOpen(event)`   | Event adapter — opens with the event's current target as the source                                                                             |
+| `onClose(event)`  | Event adapter — closes                                                                                                                          |
+| `onToggle(event)` | Event adapter — toggles with the event's current target as the source                                                                           |
+| `onFocus(event)`  | `focus->popover#onFocus` opens on focus, except before any user input since connect, when focus returns from the panel, or inside an open modal |
+| `open(source?)`   | Opens the panel; the source defaults to the `trigger` target                                                                                    |
+| `close()`         | Closes the panel                                                                                                                                |
+| `toggle(source?)` | Toggles the panel; the source defaults to the `trigger` target                                                                                  |
 
 The packaged button opens declaratively with `popovertarget` and needs no action. A custom source wires its own,
-e.g. `click->popover#open` on an input. Light dismissal treats a custom source as outside the panel, so with
-`popover="auto"` it can open the panel but not toggle it closed. Direct calls use the `trigger` target as the
-source. A missing or non-popover panel logs one configuration error and leaves the methods inert.
+e.g. `click->popover#onOpen` on an input. Light dismissal treats a custom source as outside the panel, so with
+`popover="auto"` it can open the panel but not toggle it closed. Direct calls without a source use the `trigger`
+target. A missing or non-popover panel logs one configuration error and leaves the methods inert.
 
 ## Events
 

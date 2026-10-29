@@ -58,7 +58,7 @@ Rails helper for rendering a themed timeline as an ordered list with optional in
 | `e.with_detail { text }`         | Collapsible `<div hidden>` — requires `e.with_trigger`; id linked to trigger's `aria-controls`          |
 | `e.with_actions { content }`     | Actions wrapper `<div>` — suppressed when block yields nil/empty                                        |
 
-**Constraints:**
+**Slot rules:**
 
 - `e.with_title` and `e.with_trigger` are mutually exclusive — raises `ArgumentError` if both set.
 - `e.with_detail` requires `e.with_trigger` — raises `ArgumentError` otherwise.
@@ -128,7 +128,7 @@ Each `g.section` block yields a `t` scoped to that section (same `t.event` API a
         aria-expanded="false"
         aria-controls="event-1_detail"
         data-timeline-target="trigger"
-        data-action="timeline#toggle"
+        data-action="timeline#onToggle"
       >
         Event title
       </button>

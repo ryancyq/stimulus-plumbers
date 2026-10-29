@@ -24,7 +24,7 @@ rules live in [ARIA.md](../../../ARIA.md).
 | `placement:`     | `:block_end_start`                | Logical, writing-mode aware — `:block_end_start`, `:block_end`, `:block_end_end`, `:block_start_start`, `:block_start`, `:block_start_end`, `:inline_start`, `:inline_end` |
 | `**html_options` | —                                 | Forwarded to the outer `<div>`                                                                                                                                             |
 
-Migration: `close_on_select:` was removed; wire `popover#close` on the element that selects.
+Migration: `close_on_select:` was removed; wire `popover#onClose` on the element that selects.
 
 ### Slot methods (yielded as `popover`)
 
@@ -40,7 +40,7 @@ the trigger gets none of them. A caller-rendered source adds its own activation 
 ```erb
 <% popover.trigger(haspopup: :dialog) do |attrs| %>
   <%= tag.button "Note", type: "button", aria: attrs[:aria],
-                 data: attrs[:data].merge(action: "click->popover#open") %>
+                 data: attrs[:data].merge(action: "click->popover#onOpen") %>
 <% end %>
 ```
 

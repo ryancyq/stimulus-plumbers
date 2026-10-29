@@ -41,17 +41,20 @@ class StimulusContractTest < Minitest::Test
   end
 
   # Stimulus passes the Event as arg 1, so a data-action may only name an onX(event)
-  # adapter or a method that ignores its arguments — never `select(value)`.
-  def test_every_ruby_action_is_an_event_adapter
+  # adapter or a method that takes no arguments — never the programmatic API.
+  def test_every_ruby_action_is_an_event_adapter_or_takes_no_arguments
     @component.each do |id, wiring|
       wiring["actions"].each do |method|
-        params = @controller[id]["actionParams"][method]
-        next if params.nil? || params.empty?
+        params = @controller[id]["actionParams"][method] || []
+        next if params.empty?
 
+        assert_match %r{\Aon[A-Z]},
+                     method,
+                     "Ruby wires `#{id}##{method}(#{params.join(", ")})` — " \
+                     "wire an onX(event) adapter instead of the programmatic API"
         assert_equal "event",
                      params.first,
-                     "Ruby wires `#{id}##{method}` but it takes `#{params.first}`, not an event — " \
-                     "wire an onX(event) adapter instead of calling the programmatic API directly"
+                     "Ruby wires `#{id}##{method}` but its first parameter is `#{params.first}`, not `event`"
       end
     end
   end

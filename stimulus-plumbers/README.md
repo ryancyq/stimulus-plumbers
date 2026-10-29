@@ -135,7 +135,7 @@ Controllers follow a consistent naming pattern:
 | `onX(event)` | DOM event | Event adapter — extracts payload, calls programmatic API | `onSelect(event)`, `onChange(event)`, `onPaste(event)`, `onInput(event)` |
 | `past()` | — | Plumber callback — called by plumber after async operation completes | `shown()`, `dismissed()`, `flipped()` |
 
-Wire event adapters via `data-action`; call programmatic APIs directly from other controllers or outlets.
+Wire event adapters, or methods that take no arguments, via `data-action`; call programmatic APIs directly from other controllers or outlets.
 
 ## Extending controllers
 
