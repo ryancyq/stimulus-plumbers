@@ -440,6 +440,23 @@ describe('InputFormatterController', () => {
       expect(cells()[3].getAttribute('data-group-index')).toBe('1')
       expect(getController().characterCells.active()).toBe(15)
     })
+
+    it('spaces the input value at the override group breaks', () => {
+      const input = document.querySelector('input')
+      input.value = '378282246310005'
+      input.dispatchEvent(new Event('input'))
+      expect(input.value).toBe('3782 822463 10005')
+    })
+
+    it('re-spaces the input value when groupsValue changes', async () => {
+      const el = document.querySelector('[data-controller="input-formatter"]')
+      const input = document.querySelector('input')
+      input.value = '378282246310005'
+      input.dispatchEvent(new Event('input'))
+      el.setAttribute('data-input-formatter-groups-value', '[3,3,3,3,3]')
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(input.value).toBe('378 282 246 310 005')
+    })
   })
 
   describe('cells appended after connect (e.g. Turbo Stream/morph)', () => {

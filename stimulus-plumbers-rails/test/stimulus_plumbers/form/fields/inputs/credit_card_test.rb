@@ -63,14 +63,14 @@ class CreditCardTest < ActionView::TestCase
 
     assert_equal "cc-number", input["autocomplete"]
     assert_equal "numeric", input["inputmode"]
-    assert_equal "16", input["maxlength"]
+    assert_equal "19", input["maxlength"]
   end
 
   def test_supports_nonstandard_card_grouping
     doc = build_field(groups: [4, 4, 4, 4, 3])
 
     assert_equal 5, doc.css("[data-input-formatter-target='cell']").length
-    assert_equal "19", doc.at_css("input[type='text']")["maxlength"]
+    assert_equal "23", doc.at_css("input[type='text']")["maxlength"]
     assert_css doc, "[data-input-formatter-groups-value='[4,4,4,4,3]']"
   end
 
