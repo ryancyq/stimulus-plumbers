@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { settled } from "../../../support/playwright.js";
 
 const FIXED_DATE = new Date("2024-02-29T12:00:00Z");
 
@@ -20,7 +21,11 @@ test.describe("profile", () => {
       .locator("#profile-default")
       .getByRole("button", { name: "More options" });
     await btn.click();
-    await expect(btn).toHaveAttribute("aria-expanded", "true");
+    await expect(
+      page
+        .locator("#profile-default")
+        .getByRole("dialog", { name: "More options" }),
+    ).toBeVisible();
     await expect(page.locator("#profile-default")).toHaveScreenshot(
       "popover-open.png",
     );
@@ -33,12 +38,9 @@ test.describe("profile", () => {
         .locator("#profile-default")
         .getByRole("combobox", { name: "Date" });
       await input.click();
-      await expect(input).toHaveAttribute("aria-expanded", "true");
-      await page.evaluate(() =>
-        Promise.all(
-          document.getAnimations().map((animation) => animation.finished),
-        ),
-      );
+      const panel = page.locator("#profile-default :popover-open");
+      await expect(panel).toBeVisible();
+      await settled(panel);
     };
 
     test("open", async ({ page }) => {

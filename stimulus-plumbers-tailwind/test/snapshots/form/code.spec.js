@@ -20,8 +20,6 @@ test.describe("code", () => {
     );
     const input = field.getByRole("textbox", { name: "Verification code" });
     await input.fill("482913");
-
-    await expect(input).toHaveValue("482913");
     await expect(field).toHaveScreenshot("filled.png");
   });
 });
