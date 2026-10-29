@@ -67,13 +67,22 @@ describe('Dismisser', () => {
   })
 
   describe('dismiss', () => {
-    it('does nothing when target is not an HTMLElement', async () => {
+    it('does nothing when target is not an Element', async () => {
       const dismisser = new Dismisser(mockController)
       const event = { target: null }
 
       await dismisser.dismiss(event)
 
       expect(mockController.dispatch).not.toHaveBeenCalled()
+    })
+
+    it('dispatches dismiss for a click on an SVG element outside', async () => {
+      document.body.insertAdjacentHTML('beforeend', '<svg id="icon"><path></path></svg>')
+      const dismisser = new Dismisser(mockController)
+
+      await dismisser.dismiss({ target: document.querySelector('#icon path') })
+
+      expect(mockController.dispatch).toHaveBeenCalledWith('dismiss', expect.any(Object))
     })
 
     it('does nothing when target is inside element', async () => {
