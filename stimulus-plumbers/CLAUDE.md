@@ -60,7 +60,7 @@ stimulus-plumbers/
 - import statements should not end with .js
 - **Unit tests** using Vitest (`npm test`)
 - **Lint tests** (`npm run lint`, `npm run format:check`) — run synchronously from this package's directory; never background or tail
-- **Accessibility helpers** — use `RovingTabIndex.activate()` / `ActiveDescendant` / `FocusTrap` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract and the calendar exception.
+- **Accessibility helpers** — use `RovingTabIndex.activate()` / `ActiveDescendant` / `focusFirst` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract and the calendar exception.
 
 ## WCAG / ARIA Reference
 See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns. Controllers in this package are responsible for keyboard navigation, focus management, and dynamic ARIA state.
