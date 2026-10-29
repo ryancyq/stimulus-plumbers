@@ -101,7 +101,7 @@ bundle install
 npm install
 
 bundle exec rake test:unit    # unit tests
-node --run test:snapshots         # visual snapshot tests (Playwright)
+node --run test:snapshots         # visual snapshot tests (Playwright; off Linux, pixels compare only with SNAPSHOTS=compare)
 node --run test:snapshots:update  # regenerate local baselines (gitignored; CI regenerates committed Linux ones)
 node --run test:browser           # engine-native behavior tests (desktop + mobile devices)
 bundle exec rake rubocop       # lint
