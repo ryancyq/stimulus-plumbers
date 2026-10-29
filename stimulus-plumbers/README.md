@@ -40,6 +40,7 @@ import {
   ModalController,
   ModalTurboController,
   PopoverController,
+  PopoverFetchController,
   ProgressController,
   DismisserController,
   FlipperController,
@@ -67,6 +68,7 @@ application.register('checklist',                ChecklistController)
 application.register('modal',                    ModalController)
 application.register('modal-turbo',               ModalTurboController)
 application.register('popover',                  PopoverController)
+application.register('popover-fetch',            PopoverFetchController)
 application.register('progress',                 ProgressController)
 application.register('dismisser',                DismisserController)
 application.register('flipper',                  FlipperController)
@@ -96,6 +98,7 @@ application.register('visibility',               VisibilityController)
 | `modal` | Native `<dialog>` lifecycle adapter | [docs/component/modal.md](docs/component/modal.md) |
 | `modal-turbo` | Turbo Frame adapter for `modal` | [docs/component/modal.md](docs/component/modal.md#modal-turbo) |
 | `popover` | Native HTML Popover lifecycle adapter | [docs/component/popover.md](docs/component/popover.md) |
+| `popover-fetch` | Loads a popover region through `fetch` when the panel opens, without Turbo | [docs/component/popover.md](docs/component/popover.md#popover-fetch) |
 | `progress` | Value-driven progress bar/segmented/ring/meter | [docs/component/progress.md](docs/component/progress.md) |
 | `dismisser` | Click-outside dismissal | [docs/component/dismisser.md](docs/component/dismisser.md) |
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
@@ -120,6 +123,7 @@ application.register('visibility',               VisibilityController)
 | `PasswordStrength`, `attachPasswordStrength`, `STRENGTH_TYPES` | Password strength scoring plumber | [docs/plumber/password_strength.md](docs/plumber/password_strength.md) |
 | `Dialog`, `attachDialog` | Native `<dialog>` lifecycle plumber | [docs/plumber/dialog.md](docs/plumber/dialog.md) |
 | `Popover`, `attachPopover` | Native popover lifecycle plumber | [docs/plumber/popover.md](docs/plumber/popover.md) |
+| `FragmentLoader`, `attachFragmentLoader` | Fetches HTML and swaps in the element with the target's id | [docs/plumber/fragment_loader.md](docs/plumber/fragment_loader.md) |
 
 ## Method naming convention
 
