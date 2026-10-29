@@ -8,7 +8,6 @@ For full API, design decisions, and usage contracts see [`docs/accessibility/des
 
 - **`RovingTabIndex`** — self-managing roving tabindex for disclosure widgets, trees, toolbars
 - **`ActiveDescendant`** — passive active-option tracking through `aria-activedescendant` for listboxes whose owner keeps focus
-- **`FocusTrap`** — focus trap with optional `onDeactivate` callback
 - **`getFocusableElements(container)`** — returns focusable descendants in DOM order
 - **`setExpanded(el, value)`** — sets/clears `aria-expanded`
 - **`setHidden(el, value)`** — sets/clears `hidden`
@@ -16,3 +15,4 @@ For full API, design decisions, and usage contracts see [`docs/accessibility/des
 - **`connectTriggerToTarget({ trigger, target, role?, override? })`** — wires `aria-controls` and `role`/other ARIA relationships
 
 Migration: `ListboxNavigation` was removed; use `ActiveDescendant`.
+Migration: `FocusTrap` was removed; use a modal `<dialog>` or a popover.
