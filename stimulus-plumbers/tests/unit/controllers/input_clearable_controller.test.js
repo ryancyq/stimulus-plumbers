@@ -170,6 +170,22 @@ describe('InputClearableController', () => {
       input.dispatchEvent(event)
       expect(input.value).toBe('hello')
     })
+
+    it('leaves Escape to an expanded combobox', () => {
+      const input = document.querySelector('[data-input-clearable-target="input"]')
+      input.setAttribute('aria-expanded', 'true')
+      const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+      input.dispatchEvent(event)
+      expect(input.value).toBe('hello')
+      expect(event.defaultPrevented).toBe(false)
+    })
+
+    it('leaves an Escape that a combobox already handled', () => {
+      const input = document.querySelector('[data-input-clearable-target="input"]')
+      input.addEventListener('keydown', (event) => event.preventDefault(), { capture: true })
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+      expect(input.value).toBe('hello')
+    })
   })
 
   describe('missing targets', () => {

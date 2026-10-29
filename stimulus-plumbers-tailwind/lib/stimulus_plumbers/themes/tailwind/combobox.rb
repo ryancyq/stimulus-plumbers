@@ -5,60 +5,68 @@ module StimulusPlumbers
     module Tailwind
       module Combobox
         # ── Container / popover ───────────────────────────────────────────────
-        CONTAINER = %w[relative].freeze
-        POPOVER   = %w[absolute top-full left-0 min-w-full].freeze
+        # The panel anchors to the field group; the scope keeps each instance's name unique.
+        CONTAINER = %w[relative [anchor-scope:--sp-field]].freeze
+        POPOVER   = %w[[&[popover]]:[position-anchor:--sp-field] [min-inline-size:anchor-size(inline)]].freeze
 
         # ── Trigger ───────────────────────────────────────────────────────────
         TRIGGER = %w[
-          w-full rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
+          w-full flex-1 min-w-(--sp-combobox-min-size)
+          rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) hover:border-(--sp-color-fg)
           px-(--sp-space-3) py-(--sp-space-2)
-          text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
+          min-h-[1lh] text-start text-(length:--sp-text-sm) text-(--sp-color-fg) bg-(--sp-color-bg)
           focus:outline-none focus:ring-2 focus:ring-(--sp-focus-ring-color)
         ].freeze
 
         TRIGGER_GROUP = %w[
-          flex items-center gap-(--sp-space-2) overflow-hidden
+          flex items-center gap-(--sp-space-2) overflow-hidden [anchor-name:--sp-field]
           rounded-(--sp-radius-md) border border-(--sp-color-muted-fg) hover:border-(--sp-color-fg) bg-(--sp-color-bg)
           px-(--sp-space-3) py-(--sp-space-2)
           focus-within:outline-none focus-within:ring-2 focus-within:ring-(--sp-focus-ring-color)
-          [&>input]:border-0 [&>input]:rounded-none
-          [&>input]:px-0 [&>input]:py-0
-          [&>input]:bg-transparent [&>input]:shadow-none
-          [&>input]:focus:ring-0
+          [&>[role=combobox]]:border-0 [&>[role=combobox]]:rounded-none
+          [&>[role=combobox]]:px-0 [&>[role=combobox]]:py-0
+          [&>[role=combobox]]:bg-transparent [&>[role=combobox]]:shadow-none
+          [&>[role=combobox]]:focus:ring-0
         ].freeze
 
         # ── Listbox / options ─────────────────────────────────────────────────
         LISTBOX = %w[
           py-(--sp-space-1) overflow-y-auto max-h-60 min-h-(--sp-space-6)
+          not-has-[[role=option]:not([hidden])]:hidden
         ].freeze
 
         OPTION = %w[
-          flex items-center gap-(--sp-space-2) w-full
+          flex flex-wrap items-center gap-x-(--sp-space-2) w-full
           px-(--sp-space-2) py-(--sp-space-1)
           rounded-(--sp-radius-sm) text-(length:--sp-text-sm)
           cursor-pointer select-none outline-none
           hover:bg-(--sp-color-muted) focus:bg-(--sp-color-muted)
         ].freeze
 
+        # The outline marks the active option beyond color and survives forced colors.
         OPTION_SELECTED = %w[
-          bg-(--sp-color-primary)/10 text-(--sp-color-primary)
+          aria-selected:bg-(--sp-color-primary)/10 aria-selected:text-(--sp-color-primary)
+          aria-selected:outline-solid aria-selected:outline-2 aria-selected:-outline-offset-2
+          aria-selected:outline-(--sp-color-primary)
         ].freeze
 
         OPTION_DISABLED = %w[
           opacity-50 cursor-not-allowed pointer-events-none
         ].freeze
 
+        OPTION_DESCRIPTION = %w[basis-full text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
+
         OPTION_GROUP = %w[py-(--sp-space-1)].freeze
 
-        # ── Typeahead states ──────────────────────────────────────────────────
-        TYPEAHEAD_LOADING = %w[
-          flex items-center justify-center
-          py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
+        OPTION_GROUP_LABEL = %w[
+          px-(--sp-space-2) py-(--sp-space-1)
+          text-(length:--sp-text-xs) font-semibold text-(--sp-color-muted-fg)
         ].freeze
 
-        TYPEAHEAD_EMPTY = %w[
-          flex items-center justify-center
-          py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
+        # ── Status ────────────────────────────────────────────────────────────
+        STATUS = %w[
+          flex empty:hidden items-center justify-center
+          px-(--sp-space-2) py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
         # ── Time picker ───────────────────────────────────────────────────────
@@ -93,30 +101,30 @@ module StimulusPlumbers
           { classes: klasses(*LISTBOX) }
         end
 
-        def combobox_option_classes(selected: false, disabled: false)
+        def combobox_option_classes(disabled: false)
           {
             classes: klasses(
               *OPTION,
-              *(selected ? OPTION_SELECTED : []),
+              *OPTION_SELECTED,
               *(disabled ? OPTION_DISABLED : [])
             )
           }
+        end
+
+        def combobox_option_description_classes
+          { classes: klasses(*OPTION_DESCRIPTION) }
         end
 
         def combobox_option_group_classes
           { classes: klasses(*OPTION_GROUP) }
         end
 
-        def combobox_typeahead_loading_classes
-          { classes: klasses(*TYPEAHEAD_LOADING) }
+        def combobox_option_group_label_classes
+          { classes: klasses(*OPTION_GROUP_LABEL) }
         end
 
-        def combobox_typeahead_loading_icon_classes
-          { classes: klasses("animate-spin") }
-        end
-
-        def combobox_typeahead_empty_classes
-          { classes: klasses(*TYPEAHEAD_EMPTY) }
+        def combobox_status_classes
+          { classes: klasses(*STATUS) }
         end
 
         def combobox_time_classes

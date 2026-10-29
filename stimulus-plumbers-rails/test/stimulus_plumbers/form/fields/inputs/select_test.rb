@@ -95,13 +95,9 @@ class SelectTest < ActionView::TestCase
     assert_css build_combobox_select(:country), "input[type='hidden'][name='sign_in_form[country]']"
   end
 
-  def test_select_renders_combobox_trigger
-    assert_css build_combobox_select(:country), "input[role='combobox'][aria-haspopup='listbox']"
-  end
-
-  def test_select_trigger_is_readonly
-    assert build_combobox_select(:country).at_css("input[role='combobox']").key?("readonly"),
-           "Expected trigger to be readonly"
+  def test_select_renders_a_select_only_combobox_button_labelled_by_the_field_label
+    assert_css build_combobox_select(:country),
+               "[data-combobox-mode-value='select_only'] button#sign_in_form_country[role='combobox']"
   end
 
   def test_select_renders_listbox_popover
@@ -129,6 +125,24 @@ class SelectTest < ActionView::TestCase
 
   def test_select_renders_details_hint
     assert_css build_combobox_select(:country, [], hint: "Select your country"), "#sign_in_form_country_hint"
+  end
+
+  def test_select_forwards_class_and_data_to_the_container
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.field(:country, as: :select, choices: SIMPLE_OPTIONS, class: "custom", data: { testid: "country" })
+    end
+    container = parse_html(html).at_css("[data-controller~='combobox']")
+
+    assert_includes container["class"].to_s, "custom"
+    assert_equal "country", container["data-testid"]
+  end
+
+  def test_select_marks_the_control_invalid_and_described_by_the_error
+    @form.errors.add(:country, "is invalid")
+    control = build_combobox_select(:country).at_css("button[role='combobox']")
+
+    assert_equal "true", control["aria-invalid"]
+    assert_includes control["aria-describedby"], "sign_in_form_country"
   end
 
   def test_select_renders_error_message
@@ -228,7 +242,7 @@ class SelectTest < ActionView::TestCase
   end
 
   def test_grouped_collection_select_renders_combobox_trigger
-    assert_css build_grouped_combobox(:country, CONTINENTS), "input[role='combobox'][aria-haspopup='listbox']"
+    assert_css build_grouped_combobox(:country, CONTINENTS), "button[role='combobox']"
   end
 
   def test_grouped_collection_select_renders_listbox
@@ -238,17 +252,18 @@ class SelectTest < ActionView::TestCase
   def test_grouped_collection_select_renders_option_groups
     doc = build_grouped_combobox(:country, CONTINENTS)
 
-    assert_css doc, "li[role='group'][aria-label='Europe']"
-    assert_css doc, "li[role='group'][aria-label='Americas']"
+    labels = doc.css("ul[role='group']").map { |group| doc.at_css("##{group["aria-labelledby"]}").text }
+
+    assert_equal %w[Europe Americas], labels
   end
 
   def test_grouped_collection_select_renders_options_within_groups
     doc = build_grouped_combobox(:country, CONTINENTS)
 
-    assert_css doc, "li[role='group'][aria-label='Europe'] li[role='option'][data-value='fr']"
-    assert_css doc, "li[role='group'][aria-label='Europe'] li[role='option'][data-value='de']"
-    assert_css doc, "li[role='group'][aria-label='Americas'] li[role='option'][data-value='us']"
-    assert_css doc, "li[role='group'][aria-label='Americas'] li[role='option'][data-value='ca']"
+    europe, americas = doc.css("ul[role='group']")
+
+    assert_equal(%w[fr de], europe.css("li[role='option']").map { |option| option["data-value"] })
+    assert_equal(%w[us ca], americas.css("li[role='option']").map { |option| option["data-value"] })
   end
 
   def test_grouped_collection_select_pre_selects_from_model_value

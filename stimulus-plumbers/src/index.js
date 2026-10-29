@@ -29,9 +29,12 @@ export { default as CalendarYearController } from './controllers/calendar_year_c
 export { default as CalendarYearSelectorController } from './controllers/calendar_year_selector_controller.js';
 export { default as ChecklistController } from './controllers/checklist_controller.js';
 export { default as ClipboardController } from './controllers/clipboard_controller.js';
+export { default as ComboboxController } from './controllers/combobox_controller.js';
 export { default as ComboboxDateController } from './controllers/combobox_date_controller.js';
 export { default as ComboboxDropdownController } from './controllers/combobox_dropdown_controller.js';
+export { default as ComboboxFetchController } from './controllers/combobox_fetch_controller.js';
 export { default as ComboboxTimeController } from './controllers/combobox_time_controller.js';
+export { default as ComboboxTurboController } from './controllers/combobox_turbo_controller.js';
 export { default as DismisserController } from './controllers/dismisser_controller.js';
 export { default as FlipperController } from './controllers/flipper_controller.js';
 export { default as InputComboboxController } from './controllers/input_combobox_controller.js';

@@ -7,7 +7,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
     calendar-decade calendar-decade-selector
     calendar-month calendar-month-selector
     calendar-year calendar-year-selector
-    combobox-date combobox-time combobox-dropdown
+    combobox combobox-turbo combobox-fetch combobox-date combobox-time combobox-dropdown
     input-clearable input-combobox input-formatter input-revealable
     checklist clipboard reorderable progress timeline dismisser flipper
     modal modal-turbo panner password-strength popover visibility

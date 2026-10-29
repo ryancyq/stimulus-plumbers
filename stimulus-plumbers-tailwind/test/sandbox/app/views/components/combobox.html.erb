@@ -31,7 +31,10 @@
 <section id="combobox-typeahead" class="sb-section">
   <h2>Typeahead</h2>
   <div class="sb-col">
-    <%= sp_combobox_typeahead(label: "City") %>
+    <%= sp_combobox_typeahead(
+          label:   "City",
+          options: [["Singapore", "sg"], ["Seoul", "se"], ["Sydney", "sy"]]
+        ) %>
   </div>
 </section>
 
@@ -43,6 +46,20 @@
           label:   "Country",
           options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]],
           value:   "ca"
+        ) %>
+  </div>
+</section>
+
+<%# ── Grouped ────────────────────────────────────────────────────────────── %>
+<section id="combobox-dropdown-grouped" class="sb-section">
+  <h2>Grouped, with descriptions</h2>
+  <div class="sb-col">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          options: [
+            { label: "Americas", options: [["Canada", "ca", { description: "North America" }], ["Chile", "cl"]] },
+            { label: "Oceania",  options: [["Australia", "au", { description: "Oceania" }]] }
+          ]
         ) %>
   </div>
 </section>
@@ -96,13 +113,38 @@
   </div>
 </section>
 
+<%# ── Typeahead (remote) ─────────────────────────────────────────────── %>
+<section id="combobox-typeahead-remote" class="sb-section">
+  <h2>Typeahead (remote)</h2>
+  <div class="sb-col">
+    <%= sp_combobox_typeahead(id: "remote-city", label: "Remote city", source: "/components/popover/combobox/cities") %>
+  </div>
+</section>
+
 <%# ── Typeahead (with error) ─────────────────────────────────────────────── %>
 <section id="combobox-typeahead-error" class="sb-section">
   <h2>Typeahead — Error</h2>
   <div class="sb-col">
     <% typeahead_error = SignUp.new.tap { |f| f.errors.add(:name, "is invalid") } %>
     <%= form_with(model: typeahead_error, url: "/demo", scope: "combobox_typeahead_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
-      <%= f.field :name, as: :search, label: "City" %>
+      <%= f.field :name, as: :search, label: "City", choices: [["Singapore", "sg"], ["Seoul", "se"]] %>
+    <% end %>
+  </div>
+</section>
+
+<%# ── In a modal ────────────────────────────────────────────────────────── %>
+<section id="combobox-modal" class="sb-section">
+  <h2>In a modal</h2>
+  <div class="sb-col">
+    <%= sp_modal id: "combobox-dialog", aria_label: "Shipping" do |modal| %>
+      <% modal.trigger { "Choose shipping country" } %>
+      <% modal.body do %>
+        <%= sp_combobox_dropdown(
+              label:   "Shipping country",
+              options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
+            ) %>
+      <% end %>
+      <% modal.footer { modal.close_button "Done" } %>
     <% end %>
   </div>
 </section>

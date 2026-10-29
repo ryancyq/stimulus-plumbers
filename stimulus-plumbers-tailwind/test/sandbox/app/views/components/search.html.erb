@@ -9,6 +9,16 @@
   </div>
 </section>
 
+<section id="search-suggestions" class="sb-section">
+  <h2>Suggestions</h2>
+  <div class="sb-col">
+    <%= form_with model: Search.new, url: "#", scope: :search_suggestions, builder: StimulusPlumbers::Form::Builder do |f| %>
+      <%= f.field :query, as: :search, label: "City", clearable: true,
+            choices: [["Singapore", "sg"], ["Seoul", "se"], ["Sydney", "sy"]] %>
+    <% end %>
+  </div>
+</section>
+
 <section id="search-error" class="sb-section">
   <h2>Error</h2>
   <div class="sb-col">

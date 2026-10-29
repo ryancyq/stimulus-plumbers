@@ -31,51 +31,24 @@ module StimulusPlumbers
             opts,
             error,
             floating: nil,
-            url: nil,
             clearable: false,
             choices: [],
+            value_policy: :freeform,
             **kwargs
           )
-            current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
-            input_id      = html_opts[:id]
-            labelledby    = Field.label_id(input_id)
-            combobox_opts = {
-              input:   { value: current_value },
-              trigger: {
-                data: clearable ? { input_clearable_target: "input" } : {},
-                aria: html_opts[:aria]
-              },
-              **opts
-            }
-
-            render_input_group(
-              trailing: clearable ? method(:clear_button) : nil,
-              error:    error,
-              floating: floating,
-              **merge_html_options(theme.resolve(:form_field_input_clearable), { data: { controller: "input-clearable" } })
-            ) do
-              build_combobox_typeahead(
-                attribute,
-                combobox_opts,
-                input_id: input_id,
-                floating: floating,
-                error:    error,
-                **kwargs
-              ) do |c|
-                c.typeahead(options: choices, value: current_value, labelledby: labelledby, url: url)
-              end
-            end
-          end
-
-          def build_combobox_typeahead(attribute, opts, input_id:, floating:, error:, **kwargs, &block)
             render_combobox(
               attribute,
-              input_id: input_id,
-              opts:     opts,
-              error:    error,
-              floating: floating,
-              **kwargs,
-              &block
+              component:    Components::Combobox::Typeahead,
+              html_opts:    html_opts,
+              opts:         clearable ? merge_html_options(opts, { data: { controller: "input-clearable" } }) : opts,
+              error:        error,
+              floating:     floating,
+              trigger:      clearable ? { data: { input_clearable_target: "input" } } : {},
+              trailing:     clearable ? method(:clear_button) : nil,
+              options:      choices,
+              value:        object.respond_to?(attribute) ? object.public_send(attribute) : nil,
+              value_policy: value_policy,
+              **kwargs
             )
           end
 

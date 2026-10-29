@@ -38,6 +38,8 @@ export default class extends Controller {
 
   _handleEscape(event) {
     if (event.key !== 'Escape') return;
+    // An open combobox owns Escape.
+    if (event.defaultPrevented || this.inputTarget.getAttribute('aria-expanded') === 'true') return;
     if (this.inputTarget.value === '') return;
     event.preventDefault();
     this.clear();

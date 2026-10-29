@@ -6,7 +6,7 @@ module StimulusPlumbers
       class Time < Plumber::Base
         STIMULUS_CONTROLLER = "combobox-time"
         STIMULUS_ACTION     = [
-          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
+          "#{STIMULUS_CONTROLLER}:selected->#{Legacy::STIMULUS_CONTROLLER}#onSelect"
         ].join(" ").freeze
 
         module Metadata

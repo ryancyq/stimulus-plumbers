@@ -1,6 +1,6 @@
 # Combobox Controllers
 
-The combobox family uses a layered design. `input-combobox` and `input-formatter` live on the wrapper; a picker sub-controller lives inside the popover.
+`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. The legacy family below uses a layered design: `input-combobox` and `input-formatter` live on the wrapper; a date or time sub-controller lives inside the popover.
 
 ```
 input-combobox + input-formatter   ← wrapper
@@ -9,6 +9,197 @@ input-combobox + input-formatter   ← wrapper
       └── combobox-time         ← time picker (drum/scroll-wheel)
       └── combobox-dropdown     ← listbox (dropdown & typeahead)
 ```
+
+---
+
+## combobox
+
+One controller for a listbox combobox: keyboard, active option, selection, hidden value, and every close
+path. The panel is a `popover="manual"` element opened through the
+[popover plumber](../plumber/popover.md) with the control as source. Replaces the `input-combobox`,
+`combobox-dropdown`, and `popover` composition below.
+
+```html
+<div
+  data-controller="combobox"
+  data-combobox-mode-value="editable"
+  data-action="mousedown->combobox#onMousedown click->combobox#onClick"
+>
+  <input
+    role="combobox"
+    aria-autocomplete="list"
+    aria-expanded="false"
+    aria-controls="city_listbox"
+    data-combobox-target="trigger"
+    data-action="input->combobox#onInput keydown->combobox#onKeydown"
+  />
+  <input type="hidden" name="city_id" data-combobox-target="input" />
+  <div popover="manual" data-combobox-target="panel">
+    <ul id="city_listbox" role="listbox" data-combobox-target="listbox">
+      <li id="city_sg" role="option" data-value="sg">Singapore</li>
+    </ul>
+    <div role="status" data-combobox-target="status"></div>
+  </div>
+</div>
+```
+
+Select-only uses a button trigger with no `input` action:
+
+```html
+<button
+  type="button"
+  role="combobox"
+  aria-expanded="false"
+  aria-controls="country_listbox"
+  data-combobox-target="trigger"
+  data-action="keydown->combobox#onKeydown"
+>
+  Singapore
+</button>
+```
+
+**Targets**
+
+| Target    | Element                                             | Description                               |
+| --------- | --------------------------------------------------- | ----------------------------------------- |
+| `trigger` | `<button type="button">` (select-only) or `<input>` | Keeps DOM focus; shows the selected label |
+| `input`   | `input[type=hidden]`                                | Submitted value                           |
+| `panel`   | `[popover="manual"]`                                | Popup; contains the listbox               |
+| `listbox` | `[role=listbox]`                                    | Options with `role="option"`              |
+| `status`  | `[role=status]` after the listbox                   | Required when editable; shows `emptyText` |
+
+Options read `data-value` (falls back to the label) and `data-label` (falls back to text). Options
+without an `id` get one.
+
+**Values**
+
+| Value           | Type    | Default       | Description                                                                                                                          |
+| --------------- | ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `mode`          | String  | `select_only` | `select_only` or `editable`                                                                                                          |
+| `valuePolicy`   | String  | `restricted`  | Editable only: `restricted` empties the hidden value while editing and reverts unselected text on close; `freeform` submits the text |
+| `closeOnSelect` | Boolean | `true`        | Closes the panel after a selection                                                                                                   |
+| `match`         | String  | `prefix`      | Editable only: `prefix`, `contains`, `fuzzy` (characters in order), or `none` (server-filtered results)                              |
+| `minLength`     | Number  | `1`           | Editable only: a shorter query counts as empty and shows every option                                                                |
+| `emptyText`     | String  | `No results`  | Status text when a query matches no option                                                                                           |
+
+**Methods**
+
+| Method               | Wired via                      | Description                                                                                                        |
+| -------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `onKeydown(event)`   | `keydown` on the trigger       | Keyboard contract                                                                                                  |
+| `onInput()`          | `input` on an editable trigger | Clears the active option, filters, dispatches `query` when the query changes, opens                                |
+| `onClick(event)`     | `click` on the container       | Selects a clicked option; elsewhere outside the panel and other controls, toggles (select-only) or opens the panel |
+| `onMousedown(event)` | `mousedown` on the container   | Keeps focus on the trigger outside the trigger itself                                                              |
+| `select(option)`     | —                              | Selects an enabled, visible option; returns `false` if refused                                                     |
+
+**Dispatches**
+
+| Event                    | Cancellable | Detail                     |
+| ------------------------ | ----------- | -------------------------- |
+| `combobox:query`         | no          | `{ query, sequence }`      |
+| `combobox:results`       | no          | `{ query, count }`         |
+| `combobox:before-change` | yes         | `{ value, label, option }` |
+| `combobox:changed`       | no          | `{ value, label, option }` |
+| `combobox:before-open`   | yes         | `{ source }`               |
+| `combobox:opened`        | no          | `{ source }`               |
+| `combobox:closed`        | no          | `{ source }`               |
+
+Filtering matches each option label against the query by `match`, ignoring case and accents, and
+hides non-matching options and empty groups. `results` dispatches after the listbox and status are
+updated. Closing clears the filter. The panel opens only with a visible option or status text.
+
+Popup events dispatch from the panel. The panel also closes on `turbo:before-cache`. A form reset
+restores the server-rendered value. See
+[ARIA.md's Combobox pattern](../../../ARIA.md#combobox-combobox_controller) for keyboard, ARIA,
+and the other close paths.
+
+---
+
+## Remote results
+
+`combobox` never fetches. A remote adapter sits beside it on the container, listens for
+`combobox:query`, and replaces the listbox with one that keeps the same `id` and
+`data-combobox-target="listbox"`. The combobox adopts the replacement and writes the empty status;
+the adapter writes loading and error text to the shared `status` element. Set `match` to `none`
+so the server's results are not filtered again.
+
+Both adapters share these values and actions:
+
+| Value         | Type   | Default                       | Description                                               |
+| ------------- | ------ | ----------------------------- | --------------------------------------------------------- |
+| `src`         | String | —                             | Results URL; the query is added as `param`                |
+| `param`       | String | `q`                           | Query parameter name; an empty query requests `src` as is |
+| `delay`       | Number | `300`                         | Debounce in ms; an empty query loads at once              |
+| `loadingText` | String | `Loading…`                    | Status while a query is pending                           |
+| `errorText`   | String | `Results could not be loaded` | Status after a failed request; the next query retries     |
+
+| Method            | Wired via                          | Description                                                         |
+| ----------------- | ---------------------------------- | ------------------------------------------------------------------- |
+| `onQuery(event)`  | `combobox:query` on the container  | Cancels the pending and in-flight request, then debounces a new one |
+| `onClosed(event)` | `combobox:closed` on the container | Cancels the pending and in-flight request                           |
+
+### combobox-turbo
+
+Navigates a Turbo Frame around the listbox. The endpoint responds with a page containing the same
+frame `id` and listbox. Removing the frame `src` cancels Turbo's request; Turbo sets `aria-busy` on
+the frame while loading.
+
+```html
+<div
+  data-controller="combobox combobox-turbo"
+  data-combobox-mode-value="editable"
+  data-combobox-match-value="none"
+  data-combobox-turbo-src-value="/cities"
+  data-action="mousedown->combobox#onMousedown click->combobox#onClick combobox:query->combobox-turbo#onQuery combobox:closed->combobox-turbo#onClosed"
+>
+  <!-- trigger and hidden input as above -->
+  <div popover="manual" data-combobox-target="panel">
+    <turbo-frame
+      id="city_results"
+      data-combobox-turbo-target="frame"
+      data-action="turbo:before-fetch-response->combobox-turbo#onResponse turbo:frame-missing->combobox-turbo#onError turbo:fetch-request-error->combobox-turbo#onError"
+    >
+      <ul id="city_listbox" role="listbox" data-combobox-target="listbox"></ul>
+    </turbo-frame>
+    <div role="status" data-combobox-target="status" data-combobox-turbo-target="status"></div>
+  </div>
+</div>
+```
+
+| Target   | Description                          |
+| -------- | ------------------------------------ |
+| `frame`  | `<turbo-frame>` wrapping the listbox |
+| `status` | The combobox's `status` element      |
+
+| Method              | Wired via                                          | Description                                                     |
+| ------------------- | -------------------------------------------------- | --------------------------------------------------------------- |
+| `onResponse(event)` | `turbo:before-fetch-response` on the frame         | Shows `errorText` for a failed or non-HTML response             |
+| `onError(event)`    | `turbo:frame-missing`, `turbo:fetch-request-error` | Shows `errorText`; prevents only Turbo's missing-frame handling |
+
+### combobox-fetch
+
+Fetches `src` with `Accept: text/html` and replaces the listbox with the element of the same `id` in
+the response. No Turbo dependency. The listbox carries `aria-busy="true"` while loading.
+
+```html
+<div
+  data-controller="combobox combobox-fetch"
+  data-combobox-mode-value="editable"
+  data-combobox-match-value="none"
+  data-combobox-fetch-src-value="/cities"
+  data-action="mousedown->combobox#onMousedown click->combobox#onClick combobox:query->combobox-fetch#onQuery combobox:closed->combobox-fetch#onClosed"
+>
+  <!-- trigger and hidden input as above -->
+  <div popover="manual" data-combobox-target="panel">
+    <ul id="city_listbox" role="listbox" data-combobox-target="listbox"></ul>
+    <div role="status" data-combobox-target="status" data-combobox-fetch-target="status"></div>
+  </div>
+</div>
+```
+
+| Target   | Description                     |
+| -------- | ------------------------------- |
+| `status` | The combobox's `status` element |
 
 ---
 

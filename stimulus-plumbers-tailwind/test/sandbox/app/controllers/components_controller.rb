@@ -27,6 +27,13 @@ class ComponentsController < ApplicationController
   def combobox
   end
 
+  CITIES = [%w[Seoul se], %w[Seville sv], %w[Singapore sg], %w[Stockholm st], %w[Sydney sy]].freeze
+
+  def combobox_cities
+    query   = params[:q].to_s.downcase
+    @cities = CITIES.select { |label, _| label.downcase.start_with?(query) }
+  end
+
   def search
   end
 

@@ -3,76 +3,29 @@
 require "test_helper"
 
 class ComboboxTypeaheadTest < ActionView::TestCase
-  def render_typeahead(**opts)
-    StimulusPlumbers::Components::Combobox::Typeahead.new(self).render(**opts)
+  def render_typeahead(**kwargs)
+    parse_html(StimulusPlumbers::Components::Combobox::Typeahead.new(self).render(options: [%w[Canada ca]], **kwargs))
   end
 
-  def test_panel_wraps_a_listbox
-    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }))
+  def test_renders_an_editable_combobox_with_a_text_input_control
+    doc = render_typeahead(name: "city", value: "ca")
 
-    assert_css doc, "div[data-controller~='combobox-dropdown'] > ul[role='listbox']"
+    assert_css doc, "[data-controller='combobox'][data-combobox-mode-value='editable']"
+    assert_css doc, "input[type='text'][role='combobox'][value='Canada']"
+    assert_css doc, "input[type='hidden'][name='city'][value='ca']"
   end
 
-  def test_listbox_id_is_derived_from_panel_id
-    listbox = parse_html(render_typeahead(panel_attrs: { id: "p1" })).at_css("ul[role='listbox']")
-
-    assert_equal "p1_listbox", listbox["id"]
-    assert_equal "listbox",    listbox["data-combobox-dropdown-target"]
+  def test_value_policy
+    assert_css render_typeahead(value_policy: :freeform), "[data-combobox-value-policy-value='freeform']"
   end
 
-  def test_options_are_the_only_listbox_children
-    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }, options: [%w[London lon]]))
-
-    assert_css doc, "ul[role='listbox'] > li[role='option'][data-value='lon']"
-    assert_no_css doc, "ul[role='listbox'] [role='status']"
-    assert_no_css doc, "ul[role='listbox'] [aria-live]"
+  def test_source_and_param
+    assert_css render_typeahead(id: "city", source: "/cities", param: :term),
+               "[data-combobox-turbo-src-value='/cities'][data-combobox-turbo-param-value='term']"
   end
 
-  def test_loading_is_a_sibling_status_region_hidden_by_default
-    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }))
-
-    assert_css doc, "div[role='status'][hidden][data-combobox-dropdown-target='loading']"
-    assert_no_css doc, "ul[role='listbox'] [data-combobox-dropdown-target='loading']"
-  end
-
-  def test_empty_is_a_sibling_status_region_hidden_by_default
-    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }))
-
-    assert_css doc, "div[role='status'][hidden][data-combobox-dropdown-target='empty']"
-    assert_no_css doc, "ul[role='listbox'] [data-combobox-dropdown-target='empty']"
-  end
-
-  def test_empty_state_has_no_results_text
-    assert_includes parse_html(render_typeahead).text, "No results"
-  end
-
-  def test_renders_options
-    doc = parse_html(render_typeahead(options: [%w[London lon], %w[Paris par]]))
-
-    assert_css doc, "li[data-value='lon']"
-    assert_css doc, "li[data-value='par']"
-  end
-
-  def test_url_sets_combobox_dropdown_url_value_on_panel
-    doc = parse_html(render_typeahead(panel_attrs: { id: "p1" }, url: "/search"))
-
-    assert_css doc, "div[data-controller~='combobox-dropdown'][data-combobox-dropdown-url-value='/search']"
-  end
-
-  def test_variant_metadata
-    meta = StimulusPlumbers::Components::Combobox::Typeahead::Metadata
-
-    assert_equal "listbox", meta.haspopup
-    assert_nil meta.trigger_icon
-    assert_equal "p1_listbox", meta.popup_id_for("p1")
-    refute meta.trigger_options[:readonly]
-    assert_equal "list", meta.trigger_options.dig(:aria, :autocomplete)
-  end
-
-  def test_variant_stimulus_data_wires_outlet
-    data = StimulusPlumbers::Components::Combobox::Typeahead::Metadata.stimulus_data("p1_popover", {})
-
-    assert_equal "#p1_popover", data[:input_combobox_combobox_dropdown_outlet]
-    assert_equal "input->input-combobox#onInput", data[:action]
+  def test_match_and_min_length
+    assert_css render_typeahead(match: :fuzzy, min_length: 3),
+               "[data-combobox-match-value='fuzzy'][data-combobox-min-length-value='3']"
   end
 end

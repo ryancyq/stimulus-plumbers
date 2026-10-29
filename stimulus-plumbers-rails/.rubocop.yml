@@ -69,16 +69,19 @@ Metrics/ClassLength:
   Exclude:
     - lib/stimulus_plumbers/components/calendar/turbo.rb
     - lib/stimulus_plumbers/components/calendar/turbo/*.rb
+    - lib/stimulus_plumbers/components/combobox.rb
     - lib/stimulus_plumbers/components/progress_bar.rb
     - lib/stimulus_plumbers/components/timeline/event.rb
     - lib/stimulus_plumbers/form/builder.rb
     - lib/stimulus_plumbers/form/field.rb
     - lib/stimulus_plumbers/password/requirements.rb
+    - test/accessibility/components/popover/combobox_accessibility_test.rb
     - test/generators/**/*_test.rb
     - test/stimulus_plumbers/components/calendar/turbo_test.rb
     - test/stimulus_plumbers/components/calendar/turbo/*_test.rb
     - test/stimulus_plumbers/components/checklist_test.rb
     - test/stimulus_plumbers/components/combobox/time_test.rb
+    - test/stimulus_plumbers/components/combobox_test.rb
     - test/stimulus_plumbers/components/link_test.rb
     - test/stimulus_plumbers/components/progress_bar_test.rb
     - test/stimulus_plumbers/form/**/*_test.rb
@@ -116,7 +119,9 @@ Metrics/ParameterLists:
   Max: 8
   Exclude:
     - lib/stimulus_plumbers/components/calendar/turbo.rb
-    - lib/stimulus_plumbers/components/combobox/trigger.rb
+    - lib/stimulus_plumbers/components/combobox.rb
+    - lib/stimulus_plumbers/components/combobox/legacy/trigger.rb
+    - lib/stimulus_plumbers/components/combobox/typeahead.rb
     - lib/stimulus_plumbers/components/progress_bar.rb
     - lib/stimulus_plumbers/form/fields/inputs/code.rb
     - lib/stimulus_plumbers/form/fields/inputs/datetime.rb

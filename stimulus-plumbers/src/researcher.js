@@ -8,11 +8,11 @@ export function fuzzyMatcher(needle, haystack) {
   return ni === needle.length;
 }
 
-function matchContains(needle, haystack) {
+export function matchContains(needle, haystack) {
   return haystack.includes(needle);
 }
 
-function matchPrefix(needle, haystack) {
+export function matchPrefix(needle, haystack) {
   return haystack.startsWith(needle);
 }
 

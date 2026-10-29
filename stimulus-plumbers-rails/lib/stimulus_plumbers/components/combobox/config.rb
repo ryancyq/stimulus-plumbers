@@ -3,17 +3,9 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      # Yielded to `Combobox#render`: selects a variant renderer, then exposes its
+      # Yielded to `Legacy#render`: selects the date or time renderer, then exposes its
       # `metadata` (trigger/wrapper wiring) and renders its panel body.
       class Config < Plumber::Config
-        def dropdown(**options)
-          select(Dropdown, options)
-        end
-
-        def typeahead(**options)
-          select(Typeahead, options)
-        end
-
         def date(**options)
           select(Date, options)
         end
