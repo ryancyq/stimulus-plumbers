@@ -12,20 +12,8 @@ class CalendarInlineAccessibilityTest < ApplicationAccessibilityTestCase
     ""
   end
 
-  def test_passes_wcag_with_a_selectable_month
-    assert_accessible context: "#calendar-month"
-  end
-
-  def test_passes_wcag_with_adjacent_month_days
-    assert_accessible context: "#calendar-other-months"
-  end
-
-  def test_passes_wcag_with_the_year_view
-    assert_accessible context: "#calendar-year"
-  end
-
-  def test_passes_wcag_with_the_decade_view
-    assert_accessible context: "#calendar-decade"
+  def test_every_section_passes_wcag
+    assert_sections_accessible
   end
 
   def test_next_month_replaces_only_that_calendar

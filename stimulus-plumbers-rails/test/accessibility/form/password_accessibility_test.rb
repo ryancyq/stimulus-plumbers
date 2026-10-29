@@ -8,32 +8,22 @@ class PasswordAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/form/password"
   end
 
-  def test_default_passes_wcag
-    assert_accessible context: "#password-default"
-  end
-
-  def test_revealable_passes_wcag
-    assert_accessible context: "#password-revealable"
+  def test_every_section_passes_wcag
+    assert_sections_accessible
   end
 
   def test_revealable_revealed_passes_wcag
     find("#password-revealable button[aria-label='Show password']").click
 
+    assert_selector "#password-revealable input[type='text']"
     assert_accessible context: "#password-revealable"
-  end
-
-  def test_strength_passes_wcag
-    assert_accessible context: "#password-strength"
   end
 
   def test_strength_populated_passes_wcag
     find("#password-strength input[type='password']").fill_in with: "Abcdef123456!"
 
+    assert_selector "#password-strength li[data-rule][data-satisfied='true']", count: 4
     assert_accessible context: "#password-strength"
-  end
-
-  def test_error_passes_wcag
-    assert_accessible context: "#password-error"
   end
 
   # WCAG 1.4.1 Use of Color is not machine-checkable, and rule state is the one place

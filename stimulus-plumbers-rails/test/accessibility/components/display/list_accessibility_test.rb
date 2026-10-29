@@ -12,8 +12,8 @@ class ListAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#list-default"
   end
 
-  def test_sections_pass_wcag
-    assert_accessible context: "#list-sections"
+  def test_list_with_links_passes_wcag
+    assert_accessible context: "#list-with-links"
   end
 
   def test_active_item_passes_wcag

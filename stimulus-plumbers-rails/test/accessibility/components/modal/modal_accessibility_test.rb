@@ -8,15 +8,15 @@ class ModalAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/modal"
   end
 
-  def test_passes_wcag_with_modal_closed
-    assert_accessible context: "#modal"
+  def test_passes_wcag_with_modals_closed
+    assert_sections_accessible
   end
 
   def test_passes_wcag_with_modal_open
     click_button "Delete project"
 
-    assert_selector "#modal-confirmation[open]"
-    assert_accessible context: "#modal"
+    assert_selector "#modal-confirmation-dialog[open]"
+    assert_accessible context: "#modal-confirmation"
   end
 
   def test_optional_regions_pass_wcag_when_open

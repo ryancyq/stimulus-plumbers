@@ -1,8 +1,8 @@
 <h1>Popover fetch</h1>
 
-<div id="popover-fetch-page">
-  <section id="popover-fetch">
-    <h2>Loaded</h2>
+<section id="popover-fetch" class="sb-section">
+  <h2>Loaded</h2>
+  <div class="sb-row">
     <%= sp_popover(data: { controller: "popover-fetch",
                             popover_fetch_src_value: "/components/popover/menu?region=account-menu",
                             action: "popover:opened->popover-fetch#onOpened popover:closed->popover-fetch#onClosed" }) do |p| %>
@@ -12,10 +12,12 @@
         <div role="status" data-popover-fetch-target="status"></div>
       <% end %>
     <% end %>
-  </section>
+  </div>
+</section>
 
-  <section id="popover-fetch-error">
-    <h2>Failed</h2>
+<section id="popover-fetch-error" class="sb-section">
+  <h2>Failed</h2>
+  <div class="sb-row">
     <%= sp_popover(data: { controller: "popover-fetch",
                             popover_fetch_src_value: "/components/popover/menu?region=billing-menu&fail=1",
                             action: "popover:opened->popover-fetch#onOpened popover:closed->popover-fetch#onClosed" }) do |p| %>
@@ -25,5 +27,5 @@
         <div role="status" data-popover-fetch-target="status"></div>
       <% end %>
     <% end %>
-  </section>
-</div>
+  </div>
+</section>

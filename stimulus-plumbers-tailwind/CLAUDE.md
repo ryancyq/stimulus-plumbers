@@ -59,7 +59,7 @@ stimulus-plumbers-tailwind/
 │   ├── snapshots/                          # Playwright snapshot specs, nested by route category
 │   │   └── __snapshots__/                  # Baselines: {form}/{device}/{os}/<spec path>/<name>.png
 │   ├── browser/                            # Playwright browser specs, nested by route category
-│   ├── sandbox/                            # Minimal Rails app for Playwright tests
+│   ├── sandbox/                            # Layout + Tailwind CSS over the core gem's sandbox app
 │   │   ├── app/
 │   │   │   ├── assets/
 │   │   │   │   ├── stylesheets/
@@ -67,8 +67,8 @@ stimulus-plumbers-tailwind/
 │   │   │   │   └── builds/
 │   │   │   │       └── stimulus_plumbers/
 │   │   │   │           └── tailwind.css    # Generated gem @source partial (committed fixture)
-│   │   │   └── views/                      # ERB views (components + form pages)
-│   │   ├── config/                         # Routes, application, environment
+│   │   │   └── views/layouts/              # Tailwind layout around the core sandbox's pages
+│   │   ├── config/                         # Application, boot, and environments; routes come from the core sandbox
 │   │   └── public/                         # Compiled tailwind.css output (gitignored)
 │   ├── support/                            # Shared Minitest and Playwright helpers
 │   └── test_helper.rb
@@ -113,20 +113,13 @@ Routes: `/components/{controls,display,layout,popover,calendar,showcase}/{button
 
 ## Sandbox View Convention
 
-**Icon naming:** Both the core and tailwind sandbox views must use generic icon names (e.g., `close`, `download`, `book`, `edit`, `email`), never heroicon-specific compound names (e.g., `x-mark`, `arrow-down-tray`, `book-open`, `pencil`, `envelope`). When a new generic name is needed, add a mapping to `Icon::ALIASES` in `lib/stimulus_plumbers/themes/tailwind/icon.rb`. Names that are already generic and need no alias: `arrow-right`, `arrow-left`, `check`, `bell`, `trash`, `plus`, `user`, `cog`, `folder`, `home`, `chevron-right`, `chart-bar`.
+`test/sandbox` holds only the layout (Tailwind CSS) and the stylesheet build; the pages, controllers, models, and routes come from the core gem's sandbox — see "Sandbox Convention" in [stimulus-plumbers-rails/CLAUDE.md](../stimulus-plumbers-rails/CLAUDE.md). Edit pages there.
 
-**Model fixtures:** same rule as the core sandbox — see "Sandbox models" in [stimulus-plumbers-rails/CLAUDE.md](../stimulus-plumbers-rails/CLAUDE.md).
-
-Four rules for sandbox views and their matching snapshot specs:
-
-1. **Section IDs** — `{component}-{usecase}`, unique across all pages. Encodes the render mode or variant directly in HTML (e.g. `calendar-stimulus`, `calendar-turbo`, `combobox-date-error`). Never reuse the same ID on different pages. Never use bare `{component}` alone (e.g. `id="card"` is wrong; `id="card-default"` is correct).
-2. **In-section `<h2>`** — every `<section>` must open with an `<h2>` that names the usecase/variant. This makes screenshots self-documenting without referencing the URL. Example: `<h2>Turbo (SSR)</h2>`, `<h2>Filled — error</h2>`.
-3. **Inner layout div** — after `<h2>`, all content must be wrapped in `<div class="sb-row">` or `<div class="sb-col">`. Never put layout classes (`sb-row`, `sb-col`) directly on `<section>`. No nested `<section>` inside another `<section>`.
-4. **Screenshot filenames** — `{usecase}-{state}.png`, where `{usecase}` matches the section ID suffix. Example: `stimulus-month.png`, `date-error-open.png`. Bare `{state}.png` (e.g. `default.png`) is acceptable when the spec file already scopes to a single component with no ambiguity.
+**Screenshot filenames** — `{usecase}-{state}.png`, where `{usecase}` matches the section ID suffix (`stimulus-month.png`, `date-error-open.png`). Bare `{state}.png` (`default.png`) is fine when the spec covers a single component.
 
 ## Snapshot Test Convention
 
-**File placement:** one spec per route, path mirroring the URL — `/components/display/avatar` → `snapshots/components/display/avatar.spec.js`. Never cover two routes from one spec. Sandbox views stay flat (`sandbox/app/views/components/avatar.html.erb`). Browser specs follow the same placement under `browser/`.
+**File placement:** one spec per route, path mirroring the URL — `/components/display/avatar` → `snapshots/components/display/avatar.spec.js`. Never cover two routes from one spec. Browser specs follow the same placement under `browser/`.
 
 **Selector scoping:** Always scope element queries to a named container `#id` (snapshot and browser specs) — use `page.locator("#container-id").getByRole(...)` not `page.getByRole(...)`. Sandbox views must give each component instance a unique `id`. This prevents ambiguity when multiple instances of the same component appear on a page.
 

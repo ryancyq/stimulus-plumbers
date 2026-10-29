@@ -8,47 +8,7 @@ class ChoicesAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/form/choices"
   end
 
-  def test_single_checkbox_passes_wcag
-    assert_accessible context: "#single-checkbox"
-  end
-
-  def test_collection_checkbox_passes_wcag
-    assert_accessible context: "#collection-checkbox"
-  end
-
-  def test_collection_radio_passes_wcag
-    assert_accessible context: "#collection-radio"
-  end
-
-  def test_single_checkbox_with_error_passes_wcag
-    assert_accessible context: "#single-checkbox-error"
-  end
-
-  def test_single_checkbox_required_passes_wcag
-    assert_accessible context: "#single-checkbox-required"
-  end
-
-  def test_collection_checkbox_with_error_passes_wcag
-    assert_accessible context: "#collection-checkbox-error"
-  end
-
-  def test_collection_radio_with_error_passes_wcag
-    assert_accessible context: "#collection-radio-error"
-  end
-
-  def test_collection_checkbox_button_type_passes_wcag
-    assert_accessible context: "#collection-checkbox-button"
-  end
-
-  def test_collection_checkbox_card_type_passes_wcag
-    assert_accessible context: "#collection-checkbox-card"
-  end
-
-  def test_collection_radio_button_type_passes_wcag
-    assert_accessible context: "#collection-radio-button"
-  end
-
-  def test_collection_radio_card_type_passes_wcag
-    assert_accessible context: "#collection-radio-card"
+  def test_choices_form_passes_wcag
+    assert_accessible context: "#choices-default"
   end
 end

@@ -9,12 +9,13 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_passes_wcag_with_all_comboboxes_closed
-    assert_accessible context: "#combobox"
+    assert_sections_accessible
   end
 
   def test_passes_wcag_with_combobox_date_open
     find("input[aria-label='Birthday']").click
 
+    assert_selector "#combobox-date [role='combobox'][aria-expanded='true']"
     assert_accessible context: "#combobox-date"
   end
 
@@ -69,6 +70,7 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag_with_combobox_date_error_open
     find("#combobox-date-error input[role='combobox']").click
 
+    assert_selector "#combobox-date-error [role='combobox'][aria-expanded='true']"
     assert_accessible context: "#combobox-date-error"
   end
 
@@ -79,6 +81,7 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
   def test_passes_wcag_with_combobox_time_error_open
     find("#combobox-time-error input[role='combobox']").click
 
+    assert_selector "#combobox-time-error [role='combobox'][aria-expanded='true']"
     assert_accessible context: "#combobox-time-error"
   end
 
@@ -103,15 +106,15 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_passes_wcag_with_dropdown_pre_selected_open
-    open_combobox "#combobox-dropdown-selected"
+    open_combobox "#combobox-preselected"
 
-    assert_accessible context: "#combobox-dropdown-selected"
+    assert_accessible context: "#combobox-preselected"
   end
 
   def test_passes_wcag_with_dropdown_disabled_option_open
-    open_combobox "#combobox-dropdown-disabled"
+    open_combobox "#combobox-disabled-option"
 
-    assert_accessible context: "#combobox-dropdown-disabled"
+    assert_accessible context: "#combobox-disabled-option"
   end
 
   def test_passes_wcag_with_grouped_dropdown_open
@@ -234,7 +237,7 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_the_selected_date_shows_in_the_given_format
-    assert_equal "September 15, 2026", find("#deadline").value
+    assert_equal "February 15, 2024", find("#deadline").value
   end
 
   def test_tab_closes_a_date_panel_and_opens_the_next_with_focus_kept
@@ -250,7 +253,7 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     find("#deadline").click
     press :down
 
-    assert_equal "2026-09-15", evaluate_script("document.activeElement.dataset.date")
+    assert_equal "2024-02-15", evaluate_script("document.activeElement.dataset.date")
   end
 
   def test_choosing_a_date_fills_the_field_and_returns_focus
@@ -258,8 +261,8 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     press :down, :right, :enter
 
     assert_selector "#deadline[aria-expanded='false']"
-    assert_equal "September 16, 2026", find("#deadline").value
-    assert_equal "2026-09-16", find("input[name='deadline']", visible: :hidden).value
+    assert_equal "February 16, 2024", find("#deadline").value
+    assert_equal "2024-02-16", find("input[name='deadline']", visible: :hidden).value
     assert_focused "#deadline"
   end
 
@@ -283,8 +286,8 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     find("#deadline").click
     press :down, :page_down
 
-    assert_selector "#deadline_popover h2", text: "October 2026"
-    assert_equal "2026-10-15", evaluate_script("document.activeElement.dataset.date")
+    assert_selector "#deadline_popover h2", text: "March 2024"
+    assert_equal "2024-03-15", evaluate_script("document.activeElement.dataset.date")
     assert_selector "#deadline[aria-expanded='true']"
   end
 
@@ -293,7 +296,7 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     press :down, :right, :escape
 
     assert_selector "#deadline[aria-expanded='false']"
-    assert_equal "2026-09-15", find("input[name='deadline']", visible: :hidden).value
+    assert_equal "2024-02-15", find("input[name='deadline']", visible: :hidden).value
     assert_focused "#deadline"
   end
 

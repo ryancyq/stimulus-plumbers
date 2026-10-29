@@ -9,7 +9,7 @@ class PopoverFetchAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_passes_wcag_closed
-    assert_accessible context: "#popover-fetch-page"
+    assert_sections_accessible
   end
 
   def test_loads_the_region_when_the_panel_opens

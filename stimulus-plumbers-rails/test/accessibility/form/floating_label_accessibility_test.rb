@@ -8,29 +8,14 @@ class FloatingLabelAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/form/floating_label"
   end
 
-  def test_filled_passes_wcag
-    assert_accessible context: "#floating-label-filled"
-  end
-
-  def test_filled_optional_passes_wcag
-    assert_accessible context: "#floating-label-filled-optional"
-  end
-
-  def test_filled_with_hint_passes_wcag
-    assert_accessible context: "#floating-label-filled-hint"
-  end
-
-  def test_filled_with_error_passes_wcag
-    assert_accessible context: "#floating-label-filled-error"
-  end
-
-  def test_filled_revealable_passes_wcag
-    assert_accessible context: "#floating-label-filled-revealable"
+  def test_every_section_passes_wcag
+    assert_sections_accessible
   end
 
   def test_filled_revealable_revealed_passes_wcag
-    find("#floating-label-filled-revealable button[aria-label='Show password']").click
+    find("#floating-filled-revealable button[aria-label='Show password']").click
 
-    assert_accessible context: "#floating-label-filled-revealable"
+    assert_selector "#floating-filled-revealable input[type='text']"
+    assert_accessible context: "#floating-filled-revealable"
   end
 end
