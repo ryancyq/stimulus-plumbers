@@ -176,6 +176,33 @@ describe('VisibilityController', () => {
       expect(dismissSpy).toHaveBeenCalledTimes(1);
       expect(dismissedSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('dispatches dismiss only while content is shown', async () => {
+      visibleOnlySpy.mockReturnValue(true);
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <div data-visibility-target="content" hidden>Content</div>
+        </div>
+        <button id="outside">Outside</button>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const element = document.querySelector('[data-controller="visibility"]');
+      element.getBoundingClientRect = vi.fn(() => ({ top: 0, left: 0, width: 100, height: 100 }));
+      const outsideButton = document.querySelector('#outside');
+      const dismissSpy = vi.fn();
+      element.addEventListener('visibility:dismiss', dismissSpy);
+
+      outsideButton.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(dismissSpy).not.toHaveBeenCalled();
+
+      const controller = application.getControllerForElementAndIdentifier(element, 'visibility');
+      await controller.toggle();
+      outsideButton.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(dismissSpy).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('content replacement', () => {
@@ -569,6 +596,45 @@ describe('VisibilityController', () => {
 
       await controller.toggle();
       expect(controller.visibility.visible).toBe(false);
+    });
+  });
+
+  describe('trigger target', () => {
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <button data-visibility-target="trigger" data-action="visibility#toggle">Toggle</button>
+          <div data-visibility-target="content" hidden>Content</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+    });
+
+    it('marks the trigger collapsed while content is hidden', () => {
+      const trigger = document.querySelector('[data-visibility-target="trigger"]');
+
+      expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('marks the trigger expanded while content is shown', async () => {
+      const trigger = document.querySelector('[data-visibility-target="trigger"]');
+
+      trigger.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+      trigger.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('marks a trigger that connects later', async () => {
+      const element = document.querySelector('[data-controller="visibility"]');
+      element.querySelector('[data-visibility-target="trigger"]').remove();
+      element.insertAdjacentHTML('afterbegin', '<button data-visibility-target="trigger">New</button>');
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(element.querySelector('[data-visibility-target="trigger"]').getAttribute('aria-expanded')).toBe('false');
     });
   });
 });
