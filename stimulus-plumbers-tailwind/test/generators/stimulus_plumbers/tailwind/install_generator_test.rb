@@ -41,7 +41,10 @@ module StimulusPlumbers
         run_generator
 
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          assert_includes css, sources_import_for("app/assets/stylesheets/application.tailwind.css")
+          source_line = sources_import_for("app/assets/stylesheets/application.tailwind.css")
+
+          assert css.end_with?(%(@source "./app/views/**/*.erb";\n#{source_line}\n)),
+                 "Expected the sources import appended after the last line:\n#{css}"
         end
       end
 
@@ -158,6 +161,21 @@ module StimulusPlumbers
         end
       end
 
+      test "keeps the app's own @source lines when migrating a legacy inline @source" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", <<~CSS)
+          @import "tailwindcss";
+          @source "./app/views/**/*.erb";
+          @source "/old/gems/stimulus_plumbers_tailwind-0.0.1/lib/**/*.rb";
+        CSS
+
+        run_generator
+
+        assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
+          assert_includes css, %(@source "./app/views/**/*.erb";\n)
+          assert_no_match %r{old/gems}, css
+        end
+      end
+
       test "migrates the current machine's legacy inline @source" do
         write_entry_css("app/assets/stylesheets/application.tailwind.css", <<~CSS)
           @import "tailwindcss";
@@ -211,7 +229,7 @@ module StimulusPlumbers
         assert_file SOURCES_CSS_PATH, sources_contents_for(SOURCES_CSS_PATH)
       end
 
-      test "adds sources.css to an existing gitignore without duplicating it" do
+      test "adds the sources partial once to an existing gitignore outside a git repository" do
         write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
         write_entry_css(".gitignore", "log/\n")
 
@@ -333,6 +351,70 @@ module StimulusPlumbers
         StimulusPlumbers::Generators::CssEntrypoint::ENTRY_CANDIDATES.each do |candidate|
           assert_includes output, File.join(destination_root, candidate)
         end
+      end
+
+      test "stops before editing the entry file when a CSS file cannot be copied" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+        locked_dir = File.join(destination_root, File.dirname(ANIMATIONS_CSS_PATH))
+        FileUtils.mkdir_p(locked_dir)
+        File.chmod(0o555, locked_dir)
+
+        output = run_generator
+
+        assert_match(%r{Could not copy #{Regexp.escape(ANIMATIONS_CSS_PATH)}}, output)
+        assert_file "app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n"
+        assert_no_file SOURCES_CSS_PATH
+      ensure
+        File.chmod(0o755, locked_dir) if locked_dir && File.exist?(locked_dir)
+      end
+
+      test "warns and leaves a legacy @source in place when the entry file cannot be written" do
+        legacy_css = <<~CSS
+          @import "tailwindcss";
+          @source "/old/gems/stimulus_plumbers_tailwind-0.0.1/lib/**/*.rb";
+        CSS
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", legacy_css)
+        css_path = File.join(destination_root, "app/assets/stylesheets/application.tailwind.css")
+        File.chmod(0o444, css_path)
+
+        output = run_generator
+
+        assert_match(%r{Could not update app/assets/stylesheets/application\.tailwind\.css}, output)
+        assert_file "app/assets/stylesheets/application.tailwind.css", legacy_css
+      ensure
+        File.chmod(0o644, css_path) if css_path && File.exist?(css_path)
+      end
+
+      test "warns and still imports the partial when the sources partial cannot be written" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+        locked_dir = File.join(destination_root, File.dirname(SOURCES_CSS_PATH))
+        FileUtils.mkdir_p(locked_dir)
+        File.chmod(0o555, locked_dir)
+
+        output = run_generator
+
+        assert_match(%r{Could not write #{Regexp.escape(SOURCES_CSS_PATH)}}, output)
+        assert_no_file SOURCES_CSS_PATH
+        assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
+          assert_includes css, sources_import_for("app/assets/stylesheets/application.tailwind.css")
+        end
+      ensure
+        File.chmod(0o755, locked_dir) if locked_dir && File.exist?(locked_dir)
+      end
+
+      test "warns and leaves the gitignore unchanged when it cannot be written" do
+        write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+        write_entry_css(".gitignore", "log/\n")
+        gitignore = File.join(destination_root, ".gitignore")
+        File.chmod(0o444, gitignore)
+
+        output = run_generator
+
+        assert_match(%r{Could not update \.gitignore}, output)
+        assert_file ".gitignore", "log/\n"
+        assert_file SOURCES_CSS_PATH, sources_contents_for(SOURCES_CSS_PATH)
+      ensure
+        File.chmod(0o644, gitignore) if gitignore && File.exist?(gitignore)
       end
 
       private

@@ -173,6 +173,29 @@ module StimulusPlumbers
       end
     end
 
+    test "lists the env var path first when it points to a missing file and no entry file found" do
+      env_var = StimulusPlumbers::Generators::CssEntrypoint::STIMULUS_PLUMBERS_CSS_ENTRY
+      output  = with_env(env_var => "/nonexistent/path/application.css") { run_generator }
+
+      first_candidate = File.join(destination_root, StimulusPlumbers::Generators::CssEntrypoint::ENTRY_CANDIDATES.first)
+
+      assert_includes output, "Tried: /nonexistent/path/application.css, #{first_candidate}"
+    end
+
+    test "stops before editing the entry file when the tokens file cannot be copied" do
+      write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
+      locked_dir = File.join(destination_root, File.dirname(TOKENS_CSS_PATH))
+      FileUtils.mkdir_p(locked_dir)
+      File.chmod(0o555, locked_dir)
+
+      output = run_generator
+
+      assert_match(%r{Could not copy #{Regexp.escape(TOKENS_CSS_PATH)}}, output)
+      assert_file "app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n"
+    ensure
+      File.chmod(0o755, locked_dir) if locked_dir && File.exist?(locked_dir)
+    end
+
     test "does not raise when the entry file cannot be written to" do
       write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
       css_path = File.join(destination_root, "app/assets/stylesheets/application.tailwind.css")
