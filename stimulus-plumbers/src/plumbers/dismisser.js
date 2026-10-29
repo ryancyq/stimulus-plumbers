@@ -20,7 +20,7 @@ export class Dismisser extends WindowObserver {
 
   dismiss = async (event) => {
     const { target } = event;
-    if (!(target instanceof HTMLElement)) return;
+    if (!(target instanceof Element)) return;
     if (this.element.contains(target)) return;
     if (!this.visible) return;
 
