@@ -109,14 +109,13 @@ panel.removeAttribute('hidden');
 panel.setAttribute('hidden', '');
 ```
 
-### Call `announce()` on meaningful state changes
+### Call `announce()` only for status messages
 
-Any state change a screen reader should know about without a focus move must call `announce()` — WCAG 4.1.3 (Status Messages). Examples: section expanded/collapsed, panel opened/closed.
+Call `announce()` for a status a screen reader would otherwise miss without a focus move — WCAG 4.1.3 (Status Messages), e.g. an item moved to a new position. Changes an ARIA state already reports are not announced; see [ARIA.md](../../../ARIA.md).
 
 ```js
 import { announce } from '../accessibility/aria';
-announce('Event title expanded');
-announce('Panel closed');
+announce('Moved to position 2 of 5');
 ```
 
 ### `connectTriggerToTarget({ trigger, target, role, override })`

@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { DateFormatter } from '../plumbers/formatters/date';
 import { RovingTabIndex } from '../accessibility/keyboard';
-import { setExpanded, isExpanded, setHidden, announce } from '../accessibility/aria';
+import { setExpanded, isExpanded, setHidden } from '../accessibility/aria';
 
 export default class extends Controller {
   static targets = ['trigger', 'detail', 'time'];
@@ -36,10 +36,7 @@ export default class extends Controller {
     const detail = this.detailTargets.find((d) => d.id === trigger.getAttribute('aria-controls')) ?? null;
     this.dispatch('expand', { detail: { trigger, detail } });
     setExpanded(trigger, true);
-    if (detail) {
-      setHidden(detail, false);
-      announce(`${trigger.textContent.trim()} expanded`);
-    }
+    if (detail) setHidden(detail, false);
     this.dispatch('expanded', { detail: { trigger, detail } });
   }
 
@@ -47,10 +44,7 @@ export default class extends Controller {
     const detail = this.detailTargets.find((d) => d.id === trigger.getAttribute('aria-controls')) ?? null;
     this.dispatch('collapse', { detail: { trigger, detail } });
     setExpanded(trigger, false);
-    if (detail) {
-      setHidden(detail, true);
-      announce(`${trigger.textContent.trim()} collapsed`);
-    }
+    if (detail) setHidden(detail, true);
     this.dispatch('collapsed', { detail: { trigger, detail } });
   }
 
