@@ -119,9 +119,9 @@ announce('Event title expanded');
 announce('Panel closed');
 ```
 
-### `connectTriggerToTarget(trigger, target)`
+### `connectTriggerToTarget({ trigger, target, role, override })`
 
-Wires `trigger.setAttribute('aria-controls', target.id)` and sets `aria-expanded` if not already present. Use once at connect time for disclosure widgets.
+Use once at connect time to wire a trigger to its popup or tooltip. It never sets `aria-expanded`; the owning controller manages that state. Attribute details are in the Full API Reference below.
 
 ### `getFocusableElements(container)`
 
@@ -157,7 +157,7 @@ Sets `aria-disabled`. Adds `tabindex="-1"` when disabled; removes it when enable
 
 #### `connectTriggerToTarget({ trigger, target, role?, override? })`
 
-Wires ARIA relationships between a trigger and target element: sets `role` on target, `aria-controls` on trigger (requires target `id`), `aria-describedby` when `role === 'tooltip'`, and `aria-haspopup` based on role. Skips attributes already present unless `override: true`.
+Wires ARIA relationships between a trigger and target element: sets `role` on target, `aria-controls` on trigger (requires target `id`), `aria-describedby` when `role === 'tooltip'`, and `aria-haspopup` only for roles in `ARIA_HASPOPUP_VALUES`. Skips attributes already present unless `override: true`.
 
 #### `disconnectTriggerFromTarget({ trigger, target, attributes? })`
 
