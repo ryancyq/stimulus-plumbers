@@ -96,7 +96,7 @@ stimulus-plumbers-tailwind/
 - **Browser tests** using Playwright (`node --run test:browser`) — engine-native behavior only (native `<dialog>`, Popover API, CSS anchor positioning); no screenshots. Logic → vitest; WCAG → Rails a11y
 - **Devices**: both Playwright suites run every project in `playwright.base.js`; device and engine conditions are describe-level preconditions (`test.skip(({ isMobile }) => …)`), never project names or in-test branches; only feature checks (`CSS.supports`) skip at runtime. CI runs one job per browser engine, derived from these projects by `bin/browser-matrix`
 - **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
-- **Snapshot tests must be a superset of `stimulus-plumbers-rails` a11y tests** — every page + interactive state covered by an a11y test must also have a corresponding snapshot test. When adding a11y tests in the core gem, add matching snapshot coverage here.
+- **Every page and interactive state a Rails a11y test visits also has a snapshot** — the a11y test owns its WCAG result and the snapshot its pixels. When adding a11y tests in the core gem, add matching snapshot coverage here.
 
 ## Visual Validation
 
