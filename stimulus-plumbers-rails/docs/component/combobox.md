@@ -127,7 +127,7 @@ A read-only date input whose popover holds [`sp_calendar`](calendar.md); `combob
       aria-haspopup="dialog"
       aria-expanded="false"
       aria-controls="[id]_popover"
-      data-action="focus->popover#onFocus click->popover#open keydown->combobox-date#onKeydown"
+      data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-date#onKeydown"
     />
     <!-- decorative calendar icon -->
   </div>
@@ -191,7 +191,7 @@ Column names come from `stimulus_plumbers.combobox.time.*_label`; AM and PM labe
       aria-haspopup="dialog"
       aria-expanded="false"
       aria-controls="[id]_popover"
-      data-action="focus->popover#onFocus click->popover#open keydown->combobox-time#onKeydown"
+      data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-time#onKeydown"
     />
     <!-- decorative clock icon -->
   </div>

@@ -19,20 +19,23 @@ export default class extends Controller {
     this.rovingTabIndex = null;
   }
 
-  toggle(event) {
-    const trigger = event.currentTarget;
-    isExpanded(trigger) ? this.collapseItem(trigger) : this.expandItem(trigger);
+  onToggle(event) {
+    this.toggle(event.currentTarget);
   }
 
-  expand(event) {
-    this.expandItem(event.currentTarget);
+  onExpand(event) {
+    this.expand(event.currentTarget);
   }
 
-  collapse(event) {
-    this.collapseItem(event.currentTarget);
+  onCollapse(event) {
+    this.collapse(event.currentTarget);
   }
 
-  expandItem(trigger) {
+  toggle(trigger) {
+    isExpanded(trigger) ? this.collapse(trigger) : this.expand(trigger);
+  }
+
+  expand(trigger) {
     const detail = this.detailTargets.find((d) => d.id === trigger.getAttribute('aria-controls')) ?? null;
     this.dispatch('expand', { detail: { trigger, detail } });
     setExpanded(trigger, true);
@@ -40,7 +43,7 @@ export default class extends Controller {
     this.dispatch('expanded', { detail: { trigger, detail } });
   }
 
-  collapseItem(trigger) {
+  collapse(trigger) {
     const detail = this.detailTargets.find((d) => d.id === trigger.getAttribute('aria-controls')) ?? null;
     this.dispatch('collapse', { detail: { trigger, detail } });
     setExpanded(trigger, false);

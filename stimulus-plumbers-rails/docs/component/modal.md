@@ -5,9 +5,6 @@ buttons under one `modal` controller. The JavaScript API is documented in the [J
 guide](../../../stimulus-plumbers/docs/component/modal.md); accessibility rules live in
 [ARIA.md](../../../ARIA.md).
 
-Migration from legacy custom-overlay markup is documented in the [JS modal migration
-guide](../../../stimulus-plumbers/docs/component/modal.md#migration-from-legacy-modal-markup).
-
 The supported contract allows one active modal at a time. Opening another modal while one is open
 is unsupported; applications should close or replace the active modal first.
 

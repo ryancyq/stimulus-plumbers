@@ -74,7 +74,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
     popover = StimulusPlumbers::MCP::ControllerSchemaLoader.call["popover"]
 
     assert popover.key?("wiring"), "expected controller schema to include a wiring key"
-    assert_includes popover["wiring"]["actions"], "open"
+    assert_includes popover["wiring"]["actions"], "onOpen"
   end
 
   def test_wiring_defaults_to_empty_when_ruby_never_references_a_controller
