@@ -32,6 +32,8 @@ Exposes `this.visibility` on the controller.
 
 `show()` and `hide()` are no-ops if the element is already in the target state.
 
+Attaching again with the same namespace replaces the helpers.
+
 ## Lifecycle — dispatches & callbacks
 
 | Moment    | Dispatch          | Callback     |

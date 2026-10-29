@@ -137,6 +137,10 @@ Controllers follow a consistent naming pattern:
 
 Wire event adapters via `data-action`; call programmatic APIs directly from other controllers or outlets.
 
+## Extending controllers
+
+A subclass that overrides `disconnect()` must call `super.disconnect()`, which disposes the controller's plumbers.
+
 ## Development
 
 ```bash

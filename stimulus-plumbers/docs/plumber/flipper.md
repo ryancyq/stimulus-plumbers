@@ -1,14 +1,15 @@
 # Flipper
 
-Positions an element relative to an anchor, flipping to the opposite direction when the preferred placement overflows the viewport. Used by `flipper` and `popover`.
+Positions an element relative to an anchor, flipping to the opposite direction when the preferred placement overflows the viewport. Used by `flipper`.
 
-Extends `WindowObserver`. Exposes `this.flip()` on the controller, registers window event listeners, and cleans up on `disconnect`.
+Extends `WindowObserver`. Exposes `this.flip()` on the controller and registers window event listeners until its `disconnect()` is called.
 
 ## Factory
 
 ```js
 import { attachFlipper } from '../plumbers';
-attachFlipper(controller, options);
+const flipper = attachFlipper(controller, options);
+flipper.disconnect(); // when the element's lifetime ends
 ```
 
 ## Options

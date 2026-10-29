@@ -2,10 +2,12 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Shifter, attachShifter } from '../../../src/plumbers/shifter'
 
 describe('Shifter', () => {
+  let observeSpy
   let mockController
   let element
 
   beforeEach(() => {
+    observeSpy = vi.spyOn(Shifter.prototype, 'observe')
     element = document.createElement('div')
     document.body.appendChild(element)
 
@@ -13,7 +15,6 @@ describe('Shifter', () => {
       identifier: 'shifter',
       element: element,
       dispatch: vi.fn((name, options) => true),
-      disconnect: vi.fn(),
     }
 
     // Mock getBoundingClientRect
@@ -30,6 +31,8 @@ describe('Shifter', () => {
   })
 
   afterEach(() => {
+    observeSpy.mock.contexts.forEach((observer) => observer.disconnect())
+    observeSpy.mockRestore()
     vi.clearAllMocks()
   })
 
@@ -401,49 +404,31 @@ describe('Shifter', () => {
   })
 
   describe('observe', () => {
-    it('adds event listeners for all configured events', () => {
-      const addEventListenerSpy = vi.spyOn(window, 'addEventListener')
-      const shifter = new Shifter(mockController, {
-        events: ['resize', 'scroll'],
-      })
+    it('shifts on every configured event', () => {
+      // jsdom reports the inline translate() instead of a matrix once the first shift writes it.
+      const getComputedStyleSpy = vi.spyOn(window, 'getComputedStyle').mockReturnValue({ transform: 'none' })
+      new Shifter(mockController, { events: ['resize', 'scroll'] })
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith('resize', shifter.shift, true)
-      expect(addEventListenerSpy).toHaveBeenCalledWith('scroll', shifter.shift, true)
+      window.dispatchEvent(new Event('resize'))
+      window.dispatchEvent(new Event('scroll'))
 
-      addEventListenerSpy.mockRestore()
+      expect(mockController.dispatch.mock.calls.filter(([name]) => name === 'shift')).toHaveLength(2)
+      getComputedStyleSpy.mockRestore()
     })
   })
 
-  describe('unobserve', () => {
-    it('removes event listeners for all configured events', () => {
-      const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener')
-      const shifter = new Shifter(mockController, {
-        events: ['resize', 'scroll'],
-      })
+  describe('disconnect', () => {
+    it('stops shifting on window resize', () => {
+      const shifter = new Shifter(mockController)
 
-      shifter.unobserve()
+      shifter.disconnect()
+      window.dispatchEvent(new Event('resize'))
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', shifter.shift, true)
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('scroll', shifter.shift, true)
-
-      removeEventListenerSpy.mockRestore()
+      expect(mockController.dispatch).not.toHaveBeenCalled()
     })
   })
 
   describe('enhance', () => {
-    it('wraps controller disconnect to call unobserve', () => {
-      const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener')
-      const originalDisconnect = mockController.disconnect
-      const shifter = new Shifter(mockController)
-
-      mockController.disconnect()
-
-      expect(removeEventListenerSpy).toHaveBeenCalled()
-      expect(originalDisconnect).toHaveBeenCalled()
-
-      removeEventListenerSpy.mockRestore()
-    })
-
     it('adds shift method to controller', () => {
       const shifter = new Shifter(mockController)
 

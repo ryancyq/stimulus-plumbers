@@ -156,7 +156,6 @@ export class Flipper extends WindowObserver {
   }
 
   enhance() {
-    super.enhance();
     this.controller.flip = this.flip;
   }
 }
