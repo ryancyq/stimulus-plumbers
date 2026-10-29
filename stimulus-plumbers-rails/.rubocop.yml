@@ -68,8 +68,6 @@ Layout/HashAlignment:
 Metrics/ClassLength:
   Exclude:
     - lib/stimulus_plumbers/components/calendar.rb
-    - lib/stimulus_plumbers/components/calendar/turbo.rb
-    - lib/stimulus_plumbers/components/calendar/turbo/*.rb
     - lib/stimulus_plumbers/components/combobox.rb
     - lib/stimulus_plumbers/components/progress_bar.rb
     - lib/stimulus_plumbers/components/timeline/event.rb
@@ -79,8 +77,6 @@ Metrics/ClassLength:
     - test/accessibility/components/popover/combobox_accessibility_test.rb
     - test/generators/**/*_test.rb
     - test/stimulus_plumbers/components/calendar_test.rb
-    - test/stimulus_plumbers/components/calendar/turbo_test.rb
-    - test/stimulus_plumbers/components/calendar/turbo/*_test.rb
     - test/stimulus_plumbers/components/checklist_test.rb
     - test/stimulus_plumbers/components/combobox/time_test.rb
     - test/stimulus_plumbers/components/combobox_test.rb
@@ -102,7 +98,6 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Max: 15
   Exclude:
-    - lib/stimulus_plumbers/components/calendar/turbo.rb
     - lib/stimulus_plumbers/components/combobox/**/*.rb
     - lib/stimulus_plumbers/form/fields/inputs/datetime.rb
     - lib/stimulus_plumbers/form/fields/inputs/search.rb
@@ -120,9 +115,7 @@ Layout/LineLength:
 Metrics/ParameterLists:
   Max: 8
   Exclude:
-    - lib/stimulus_plumbers/components/calendar/turbo.rb
     - lib/stimulus_plumbers/components/combobox.rb
-    - lib/stimulus_plumbers/components/combobox/trigger.rb
     - lib/stimulus_plumbers/components/combobox/typeahead.rb
     - lib/stimulus_plumbers/components/progress_bar.rb
     - lib/stimulus_plumbers/form/fields/inputs/code.rb
@@ -130,7 +123,6 @@ Metrics/ParameterLists:
     - lib/stimulus_plumbers/form/fields/inputs/search.rb
     - lib/stimulus_plumbers/form/fields/inputs/select.rb
     - lib/stimulus_plumbers/form/fields/inputs/select/grouped.rb
-    - lib/stimulus_plumbers/helpers/calendar_turbo_helper.rb
 
 Minitest/MultipleAssertions:
   Max: 8

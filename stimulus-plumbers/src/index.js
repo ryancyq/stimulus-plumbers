@@ -12,7 +12,7 @@ export * from './accessibility/aria.js';
 
 // Export utilities
 export { Requestor } from './requestor.js';
-export { fuzzyMatcher, filterOptions } from './researcher.js';
+export { fuzzyMatcher } from './researcher.js';
 
 export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
 export { CharacterCells, attachCharacterCells } from './plumbers/character_cells.js';
@@ -23,23 +23,15 @@ export { Popover, attachPopover } from './plumbers/popover.js';
 // Export Stimulus controllers
 export { default as CalendarController } from './controllers/calendar_controller.js';
 export { default as CalendarTurboController } from './controllers/calendar_turbo_controller.js';
-export { default as CalendarDecadeController } from './controllers/calendar_decade_controller.js';
-export { default as CalendarDecadeSelectorController } from './controllers/calendar_decade_selector_controller.js';
-export { default as CalendarMonthController } from './controllers/calendar_month_controller.js';
-export { default as CalendarMonthSelectorController } from './controllers/calendar_month_selector_controller.js';
-export { default as CalendarYearController } from './controllers/calendar_year_controller.js';
-export { default as CalendarYearSelectorController } from './controllers/calendar_year_selector_controller.js';
 export { default as ChecklistController } from './controllers/checklist_controller.js';
 export { default as ClipboardController } from './controllers/clipboard_controller.js';
 export { default as ComboboxController } from './controllers/combobox_controller.js';
 export { default as ComboboxDateController } from './controllers/combobox_date_controller.js';
-export { default as ComboboxDropdownController } from './controllers/combobox_dropdown_controller.js';
 export { default as ComboboxFetchController } from './controllers/combobox_fetch_controller.js';
 export { default as ComboboxTimeController } from './controllers/combobox_time_controller.js';
 export { default as ComboboxTurboController } from './controllers/combobox_turbo_controller.js';
 export { default as DismisserController } from './controllers/dismisser_controller.js';
 export { default as FlipperController } from './controllers/flipper_controller.js';
-export { default as InputComboboxController } from './controllers/input_combobox_controller.js';
 export { default as InputFormatterController } from './controllers/input_formatter_controller.js';
 export { default as InputClearableController } from './controllers/input_clearable_controller.js';
 export { default as InputRevealableController } from './controllers/input_revealable_controller.js';

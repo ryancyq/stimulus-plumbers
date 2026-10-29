@@ -69,11 +69,6 @@ require_relative "stimulus_plumbers/components/calendar/grid"
 require_relative "stimulus_plumbers/components/calendar/days_of_month"
 require_relative "stimulus_plumbers/components/calendar/months_of_year"
 require_relative "stimulus_plumbers/components/calendar/years_of_decade"
-require_relative "stimulus_plumbers/components/calendar/turbo"
-require_relative "stimulus_plumbers/components/calendar/turbo/days_of_week"
-require_relative "stimulus_plumbers/components/calendar/turbo/days_of_month"
-require_relative "stimulus_plumbers/components/calendar/turbo/months_of_year"
-require_relative "stimulus_plumbers/components/calendar/turbo/years_of_decade"
 
 # -- Combobox --
 require_relative "stimulus_plumbers/components/combobox"

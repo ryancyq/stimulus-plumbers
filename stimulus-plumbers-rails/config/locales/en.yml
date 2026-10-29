@@ -3,8 +3,6 @@ en:
     avatar:
       image_alt: "%{name}'s avatar"
     calendar:
-      year_view: "Year view"
-      decade_view: "Decade view"
       decade_heading: "%{first} – %{last}"
       error: "The calendar could not be loaded"
       zoom_out:

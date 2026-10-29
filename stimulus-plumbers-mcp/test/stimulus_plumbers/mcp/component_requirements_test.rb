@@ -33,12 +33,8 @@ class ComponentRequirementsTest < Minitest::Test
   def test_calendar_controllers
     controllers = @requirements[:calendar]
 
-    assert_includes controllers, "calendar-month"
-    assert_includes controllers, "calendar-year"
-    assert_includes controllers, "calendar-decade"
-    assert_includes controllers, "calendar-month-selector"
-    assert_includes controllers, "calendar-year-selector"
-    assert_includes controllers, "calendar-decade-selector"
+    assert_includes controllers, "calendar"
+    assert_includes controllers, "calendar-turbo"
   end
 
   def test_button_has_no_controllers

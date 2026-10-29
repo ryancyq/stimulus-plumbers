@@ -6,65 +6,6 @@ module StimulusPlumbers
       module Calendar
         GRID = [].freeze
 
-        DAYS_OF_WEEK = %w[
-          grid grid-cols-7 text-center text-(length:--sp-text-xs)
-          font-medium text-(--sp-color-muted-fg) mb-(--sp-space-1)
-        ].freeze
-
-        DAYS_OF_MONTH = %w[grid grid-cols-7 justify-items-center].freeze
-
-        DAY = %w[
-          size-(--sp-calendar-day-size) rounded-(--sp-radius-md)
-          flex items-center justify-center text-(length:--sp-text-sm)
-          [&:is(button)]:hover:bg-(--sp-color-muted) [&:is(button)]:cursor-pointer
-          aria-[current=date]:font-bold
-          aria-selected:bg-(--sp-color-primary)
-          aria-selected:text-(--sp-color-primary-fg)
-          aria-selected:hover:bg-(--sp-color-primary)/90
-          aria-[hidden=true]:pointer-events-none
-          aria-[disabled=true]:text-(--sp-color-muted-fg)
-          aria-[disabled=true]:opacity-40
-          aria-[disabled=true]:pointer-events-none
-          disabled:text-(--sp-color-muted-fg)
-          disabled:opacity-40
-          disabled:pointer-events-none
-        ].freeze
-
-        QUARTER_GRID = %w[grid grid-cols-4 gap-(--sp-space-1)].freeze
-
-        MONTHS_OF_YEAR = "contents"
-
-        MONTH = %w[
-          rounded-(--sp-radius-md) flex items-center justify-center
-          text-(length:--sp-text-sm) h-10 flex-1 px-(--sp-space-2)
-          hover:bg-(--sp-color-muted) cursor-pointer
-          aria-selected:bg-(--sp-color-primary)
-          aria-selected:text-(--sp-color-primary-fg)
-          aria-selected:hover:bg-(--sp-color-primary)/90
-          aria-[current=month]:font-bold
-          aria-[disabled=true]:text-(--sp-color-muted-fg)
-          aria-[disabled=true]:opacity-40
-          aria-[disabled=true]:pointer-events-none
-          aria-[disabled=true]:hover:bg-transparent
-        ].freeze
-
-        YEARS_OF_DECADE = "contents"
-
-        YEAR = %w[
-          rounded-(--sp-radius-md) flex items-center justify-center
-          text-(length:--sp-text-sm) h-10 flex-1 px-(--sp-space-2)
-          hover:bg-(--sp-color-muted) cursor-pointer
-          aria-selected:bg-(--sp-color-primary)
-          aria-selected:text-(--sp-color-primary-fg)
-          aria-selected:hover:bg-(--sp-color-primary)/90
-          aria-[current=year]:font-bold
-          aria-[disabled=true]:text-(--sp-color-muted-fg)
-          aria-[disabled=true]:opacity-40
-          aria-[disabled=true]:pointer-events-none
-          aria-[disabled=true]:hover:bg-transparent
-        ].freeze
-
-        # ── sp_calendar ──────────────────────────────────────────────────────────
         STATUS     = %w[sr-only].freeze
         HEADER     = %w[flex items-center gap-(--sp-space-1) mb-(--sp-space-2)].freeze
         HEADING    = %w[flex-1 text-center text-(length:--sp-text-sm) font-semibold text-(--sp-color-fg)].freeze
@@ -96,43 +37,6 @@ module StimulusPlumbers
 
         def calendar_classes
           { classes: klasses(*GRID) }
-        end
-
-        def calendar_days_of_week_classes
-          { classes: klasses(*DAYS_OF_WEEK) }
-        end
-
-        def calendar_days_of_month_classes
-          { classes: klasses(*DAYS_OF_MONTH) }
-        end
-
-        def calendar_months_of_year_classes
-          { classes: MONTHS_OF_YEAR }
-        end
-
-        def calendar_years_of_decade_classes
-          { classes: YEARS_OF_DECADE }
-        end
-
-        def calendar_row_classes
-          { classes: "contents" }
-        end
-
-        def calendar_day_classes(outside: false, **)
-          extra = outside ? %w[text-(--sp-color-muted-fg)] : []
-          { classes: klasses(*DAY, *extra) }
-        end
-
-        def calendar_month_classes(**)
-          { classes: klasses(*MONTH) }
-        end
-
-        def calendar_year_classes(**)
-          { classes: klasses(*YEAR) }
-        end
-
-        def calendar_quarter_grid_classes
-          { classes: klasses(*QUARTER_GRID) }
         end
 
         def calendar_status_classes

@@ -63,8 +63,8 @@ export function parseDispatches(source) {
 }
 
 // Actions/dispatches can be defined in an imported plumber file rather than the
-// controller itself (e.g. attachCalendarYearSelector dispatches 'selected' on
-// behalf of calendar_decade_controller.js) — resolve those imports so parsing
+// controller itself (e.g. attachPopover dispatches 'opened' on behalf of
+// popover_controller.js) — resolve those imports so parsing
 // isn't blind to wiring that lives one level away from the controller class.
 function resolvePlumberSource(importPath, controllersDir) {
   const plumbersDir = join(controllersDir, '..', 'plumbers');

@@ -328,6 +328,7 @@ test.describe("in a native dialog", () => {
     await source.focus();
     await page.keyboard.press("Enter");
     await expect(panel).toBeVisible();
+    await settled(dialog);
     return { dialog, source, panel };
   }
 

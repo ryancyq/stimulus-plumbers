@@ -7,12 +7,12 @@ require_relative "../../../tasks/support/component_manifest"
 class ComponentManifestTest < Minitest::Test
   JS_MANIFEST_PATH = File.expand_path("../../../../stimulus-plumbers/dist/controllers.manifest.json", __dir__)
 
-  # calendar-month covers constant-interpolated identifiers (calendar.rb's
-  # MONTH_STIMULUS_CONTROLLER); calendar and combobox-date must both be known for the
+  # calendar covers constant-interpolated identifiers (calendar/stimulus.rb's
+  # STIMULUS_CONTROLLER); calendar and combobox-date must both be known for the
   # "calendar:changed->combobox-date#onChange" binding to register (the listen source
   # only registers once its target resolves); modal is wired by the modal helper's
   # generated action.
-  KNOWN_IDS = %w[popover reorderable calendar calendar-month combobox-date modal modal-turbo].freeze
+  KNOWN_IDS = %w[popover reorderable calendar combobox-date modal modal-turbo].freeze
 
   def setup
     @result = StimulusPlumbers::ComponentManifest.call(known_identifiers: KNOWN_IDS)
@@ -48,7 +48,7 @@ class ComponentManifestTest < Minitest::Test
   end
 
   def test_resolves_constant_interpolated_identifiers
-    assert_includes @result["calendar-month"]["targets"], "daysOfWeek"
+    assert_includes @result["calendar"]["targets"], "grid"
   end
 
   # Combobox::Temporal wires "focusout->#{controller}#onFocusout" with each subclass's STIMULUS_CONTROLLER.

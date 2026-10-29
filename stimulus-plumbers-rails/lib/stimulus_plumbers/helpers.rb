@@ -9,7 +9,6 @@ require_relative "helpers/ordered_list_helper"
 require_relative "helpers/avatar_helper"
 require_relative "helpers/button_helper"
 require_relative "helpers/calendar_helper"
-require_relative "helpers/calendar_turbo_helper"
 require_relative "helpers/card_helper"
 require_relative "helpers/combobox_helper"
 require_relative "helpers/divider_helper"
@@ -30,7 +29,6 @@ module StimulusPlumbers
     include AvatarHelper
     include ButtonHelper
     include CalendarHelper
-    include CalendarTurboHelper
     include CardHelper
     include ComboboxHelper
     include DividerHelper

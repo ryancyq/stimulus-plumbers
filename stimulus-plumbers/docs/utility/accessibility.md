@@ -7,7 +7,6 @@ For full API, design decisions, and usage contracts see [`docs/accessibility/des
 ## Helpers
 
 - **`RovingTabIndex`** — self-managing roving tabindex for disclosure widgets, trees, toolbars
-- **`ListboxNavigation`** — passive managed-focus navigator for combobox listboxes
 - **`FocusTrap`** — focus trap with optional `onDeactivate` callback
 - **`getFocusableElements(container)`** — returns focusable descendants in DOM order
 - **`setExpanded(el, value)`** — sets/clears `aria-expanded`

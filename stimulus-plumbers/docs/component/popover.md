@@ -27,8 +27,8 @@ Use a native popover panel; put remote content in a Turbo Frame inside it:
 ```
 
 Remove the `url`, `loadedAt`, `reload`, `staleAfter`, `closeOnSelect`, `announceOpen`, and `announceClose`
-values and any `controller.visibility`, `shift()`, or `flip()` dependencies. Combobox close-on-select moved to
-[`input-combobox`](combobox.md#input-combobox).
+values and any `controller.visibility`, `shift()`, or `flip()` dependencies. Combobox close-on-commit is
+[`combobox`](combobox.md#combobox)'s `closeOnCommit` value.
 
 ## Targets
 
