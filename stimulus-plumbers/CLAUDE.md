@@ -57,7 +57,7 @@ stimulus-plumbers/
 ## Guidelines
 - **native HTML5 first** - only use controllers when native elements have limitations
 - import statements should not end with .js
-- **Unit tests** using Vitest (`npm test`) — helpers in `tests/support/stimulus.js`, used as root CLAUDE.md "Testing" describes; new jsdom shims go in `tests/support`.
+- **Unit tests** using Vitest (`npm test`) — plumber and controller layers in root CLAUDE.md "Testing", which also covers the `tests/support/stimulus.js` helpers; new jsdom shims go in `tests/support`.
 - **Lint tests** (`npm run lint`, `npm run format:check`) — cover `src/` and `tests/`; run synchronously from this package's directory; never background or tail
 - **Accessibility helpers** — use `RovingTabIndex.activate()` / `ActiveDescendant` / `focusFirst` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract and the calendar exception.
 

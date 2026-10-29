@@ -206,7 +206,7 @@ stimulus-plumbers-rails/
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
-- **Accessibility tests** using Capybara + axe-core (`rake test:accessibility`)
+- **Accessibility tests** using Capybara + Cuprite + axe-core (`rake test:accessibility`) — axe per page and state plus one keyboard/focus happy path per interaction; logic edge cases belong to their owning layer (root CLAUDE.md "Testing")
 - **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
 
 ## Unit Test Convention
@@ -240,7 +240,7 @@ This applies to all test types: unit tests, helper tests, and accessibility test
 
 ## Accessibility Test Convention
 
-**File placement:** test path mirrors the URL it visits — `/components/display/avatar` → `accessibility/components/display/avatar_accessibility_test.rb`. Class names stay flat (`AvatarAccessibilityTest`).
+**File placement:** at the path root CLAUDE.md "Testing" gives (`accessibility/components/display/avatar_accessibility_test.rb`). Class names stay flat (`AvatarAccessibilityTest`).
 
 Scope axe to a sandbox section or a component inside one, never the bare page: `assert_accessible context: "#combobox-date"` for a section, `context: "#calendar-month"` for a component; each section gets its own test. A context that matches nothing fails the test.
 
