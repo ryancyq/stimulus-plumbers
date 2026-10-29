@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# Fails when a test sits in the wrong layer. The layer rules live in CLAUDE.md under "Testing".
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+RAILS_A11Y=stimulus-plumbers-rails/test/accessibility
+SNAPSHOTS=stimulus-plumbers-tailwind/test/snapshots
+BROWSER=stimulus-plumbers-tailwind/test/browser
+SUPPORT=stimulus-plumbers-tailwind/test/support
+
+failures=0
+fail() {
+  echo "test-boundaries: $1" >&2
+  failures=$((failures + 1))
+}
+
+# The URL a test path visits; a file named after its directory is that directory's index page
+# (modal/modal → /components/modal).
+url_for() {
+  local path=$1
+  [ "$(basename "$path")" = "$(basename "$(dirname "$path")")" ] && path=$(dirname "$path")
+  echo "$path"
+}
+
+# Snapshot specs and their shared helpers wait only on rendered state (toBeVisible, toBeHidden, toHaveCSS,
+# a visible waitForSelector or waitFor, toHaveScreenshot); every other web-first matcher, polled assertion,
+# and DOM-state read belongs to another layer. Comment lines are ignored.
+behaviour='\.(toBeAttached|toBeChecked|toBeDisabled|toBeEditable|toBeEmpty|toBeEnabled|toBeFocused|toBeInViewport|toContainClass|toContainText|toHaveAccessibleDescription|toHaveAccessibleErrorMessage|toHaveAccessibleName|toHaveAttribute|toHaveClass|toHaveCount|toHaveId|toHaveJSProperty|toHaveRole|toHaveText|toHaveTitle|toHaveURL|toHaveValue|toHaveValues|toMatchAriaSnapshot|poll|getAttribute|inputValue|allTextContents|allInnerTexts|isChecked|isVisible|isHidden|isEnabled|isDisabled|isEditable|count|url|hasAttribute|matches|contains|waitForFunction|waitForURL)\(|[]_$)?[:alnum:]]\.(value|checked|dataset|textContent|innerText|innerHTML|outerHTML|title|open|className|hidden|disabled|role|aria[[:upper:]][[:alnum:]]*)([^[:alnum:]_]|$)|activeElement'
+while IFS= read -r match; do
+  fail "behaviour assertion in a snapshot spec or helper — $match"
+done < <(grep -rnE "$behaviour" "$SNAPSHOTS" "$SUPPORT" --include='*.js' --exclude-dir=__snapshots__ |
+  grep -vE '^[^:]+:[0-9]+:[[:space:]]*(//|\*)' || true)
+
+# A snapshot wait targets a visible element.
+while IFS= read -r match; do
+  fail "non-visible wait in a snapshot spec or helper — $match"
+done < <(grep -rnE "state: *[\"'](attached|detached)[\"']" "$SNAPSHOTS" "$SUPPORT" --include='*.js' --exclude-dir=__snapshots__ |
+  grep -vE '^[^:]+:[0-9]+:[[:space:]]*(//|\*)' || true)
+
+# Browser specs cover engine-native behaviour; pixels belong to snapshot specs.
+while IFS= read -r match; do
+  fail "screenshot in a browser spec — $match"
+done < <(grep -rnE '(\.(toHaveScreenshot|toMatchSnapshot|screenshot)|screenshotWithPanel)\(' "$BROWSER" --include='*.spec.js' || true)
+
+# Playwright specs and their shared helpers wait with auto-waiting assertions, never a fixed delay.
+while IFS= read -r match; do
+  fail "fixed delay in a Playwright spec or helper — $match"
+done < <(grep -rnE '\.waitForTimeout\(|setTimeout\(|setInterval\(' "$SNAPSHOTS" "$BROWSER" "$SUPPORT" --include='*.js' --exclude-dir=__snapshots__ || true)
+
+# Every Playwright spec visits the URL its path mirrors.
+while IFS= read -r spec; do
+  path=${spec#stimulus-plumbers-tailwind/test/*/}
+  url=$(url_for "${path%.spec.js}")
+  grep -qE "^[[:space:]]*([^/*[:space:]][^/]*)?page\.goto\([\"\`]/$url[\"\`?\$]" "$spec" ||
+    fail "$spec does not visit /$url — name it after the URL it visits"
+done < <(find "$SNAPSHOTS" "$BROWSER" -name '*.spec.js' -not -path '*/__snapshots__/*' | sort)
+
+# Every Rails a11y page has a snapshot spec at the same path, and the a11y test visits that URL.
+while IFS= read -r test_file; do
+  path=${test_file#"$RAILS_A11Y"/}
+  path=${path%_accessibility_test.rb}
+  url=$(url_for "$path")
+  [ -f "$SNAPSHOTS/$path.spec.js" ] || fail "no snapshot spec for a11y page /$url — add $SNAPSHOTS/$path.spec.js"
+  grep -qE "^[^#]*visit \"/$url(\?[^\"]*|#\{[^}]*\})?\"" "$test_file" ||
+    fail "$test_file does not visit /$url — name it after the URL it visits"
+done < <(find "$RAILS_A11Y" -name '*_accessibility_test.rb' | sort)
+
+if [ "$failures" -gt 0 ]; then
+  echo "test-boundaries: $failures violation(s)" >&2
+  exit 1
+fi
+echo "test-boundaries: ok"
