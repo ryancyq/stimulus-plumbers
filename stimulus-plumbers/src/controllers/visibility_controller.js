@@ -2,10 +2,10 @@ import { Controller } from '@hotwired/stimulus';
 import { attachDismisser, attachVisibility, attachShifter } from '../plumbers';
 
 export default class extends Controller {
-  static targets = ['content'];
+  static targets = ['content', 'trigger'];
 
   connect() {
-    this.dismisser = attachDismisser(this);
+    this.dismisser = attachDismisser(this, { visible: '_contentVisible' });
   }
 
   disconnect() {
@@ -16,7 +16,11 @@ export default class extends Controller {
   contentTargetConnected(target) {
     this._disposeShifter();
     this.shifter = attachShifter(this, { element: target });
-    attachVisibility(this, { element: target });
+    this._attachVisibility(target);
+  }
+
+  triggerTargetConnected() {
+    if (this.hasContentTarget) this._attachVisibility(this.contentTarget);
   }
 
   contentTargetDisconnected(target) {
@@ -40,8 +44,16 @@ export default class extends Controller {
     }
   }
 
+  _attachVisibility(element) {
+    attachVisibility(this, { element, activator: this.hasTriggerTarget ? this.triggerTarget : null });
+  }
+
   _disposeShifter() {
     this.shifter?.disconnect();
     this.shifter = null;
+  }
+
+  _contentVisible() {
+    return this.hasContentTarget && this.visibility.visible;
   }
 }
