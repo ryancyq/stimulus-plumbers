@@ -18,8 +18,8 @@ module StimulusPlumbers
           { classes: klasses("flex", "flex-col", "gap-(--sp-space-1)") }
         end
 
-        # State styling keys off data-satisfied (toggled client-side by the controller),
-        # not a server-computed flag — the server always renders the initial (unmet) state.
+        # State styling keys off data-satisfied, which the server renders for an empty
+        # password and the controller toggles as the user types.
         def password_strength_rule_classes
           state = [
             "text-(--sp-color-muted-fg)",

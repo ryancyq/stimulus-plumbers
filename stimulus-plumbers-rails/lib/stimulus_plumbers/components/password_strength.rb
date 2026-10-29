@@ -17,6 +17,7 @@ module StimulusPlumbers
 
       def render(input:, input_id:, config:)
         @config = config
+        @initial = config.evaluate("")
         template.content_tag(:div, **wrapper_options(config, input_id)) do
           template.safe_join([input, render_meter(input_id), render_level, render_rules_heading, render_rules(input_id)])
         end
@@ -39,13 +40,13 @@ module StimulusPlumbers
       end
 
       def render_meter(input_id)
-        ProgressMeter.new(template).render(value: 0, id: self.class.meter_id_for(input_id), **@config.thresholds)
+        ProgressMeter.new(template).render(value: @initial[:value], id: self.class.meter_id_for(input_id), **@config.thresholds)
       end
 
       def render_level
         template.content_tag(
           :p,
-          level_labels[:weak],
+          level_labels[@initial[:level].to_sym],
           **merge_html_options(
             theme.resolve(:password_strength_level),
             data: { password_strength_target: "level" },
@@ -77,15 +78,20 @@ module StimulusPlumbers
       end
 
       def render_rule(key, label)
+        satisfied = @initial[:rules][key]
         template.content_tag(
           :li,
           **merge_html_options(
             theme.resolve(:password_strength_rule),
             data: {
-              password_strength_target: "rule", rule: key, satisfied: "false"
+              password_strength_target: "rule", rule: key, satisfied: satisfied.to_s
             }
           )
-        ) { template.safe_join([rule_icon("check", "checkIcon", hidden: true), rule_icon("close", "closeIcon"), label]) }
+        ) do
+          template.safe_join(
+            [rule_icon("check", "checkIcon", hidden: !satisfied), rule_icon("close", "closeIcon", hidden: satisfied), label]
+          )
+        end
       end
 
       def rule_icon(name, target, hidden: false)
