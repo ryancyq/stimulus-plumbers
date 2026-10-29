@@ -161,9 +161,15 @@ Four rules for sandbox views and their matching snapshot specs:
 
 **Pattern:** create CSS fixtures in `destination_root` via a `write_entry_css` helper, run the generator, then `assert_file` the modified content.
 
-**Coverage rule:** every branch in `install` needs a test — in execution order: identical (no-op, already current), update (stale gem path), insert (after `@import`), append (no `@import`), and the no-entry-file fallback. Entry file detection also needs tests: first candidate, each fallback candidate, `TAILWIND_CSS_FILE` override (existing file), and `TAILWIND_CSS_FILE` pointing to a non-existent file (falls through to candidates).
-
-**Idempotency logic:** the generator uses two-stage detection — `content.include?(source_line)` for an exact match (handles re-runs on the same machine), then a `GEM_NAME` regex for stale paths from old versions. Tests for idempotency count total `@source` occurrences (`css.scan("@source").length`) rather than filtering by gem name, so they work regardless of whether the path uses underscores (installed gem) or hyphens (dev path gem).
+**Coverage rule:** every branch in `install` needs a test:
+- tokens import (core gem test): prepended; a stale path is updated in place
+- animations import: inserted after the tokens import; a stale path is updated in place
+- sources import: any existing sources import, legacy `sources.css` import, or inline `@source` for this gem is removed (the app's own `@source` lines stay), then the current import is inserted after `@import "tailwindcss"`, or appended when that line is missing
+- reruns leave one copy of each import (run the generator twice and count each directive)
+- copied CSS: created when missing, kept when the app already has it
+- sources partial: rewritten on rerun; added once to an existing `.gitignore` outside a git repository, skipped when a pattern covers it, no `.gitignore` created
+- unwritable files: a failed copy stops before the entry CSS is edited; an unwritable partial warns and skips the sources import; an unwritable entry CSS or `.gitignore` warns and is skipped
+- entry detection: each candidate in order, `STIMULUS_PLUMBERS_CSS_ENTRY` (existing file, and a missing one falling through to candidates), and no entry found (nothing written, the warning lists every tried path; core gem test: a missing env path is listed first)
 
 ## Theme Registration
 
