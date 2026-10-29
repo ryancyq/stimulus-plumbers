@@ -42,7 +42,7 @@ Formats values written to an input element. Handles structured display formattin
 | `type`         | Description                                                                                                        |
 | -------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `"plain"`      | No-op — passes the value through unchanged                                                                         |
-| `"creditCard"` | Groups digits as `#### #### #### ####`                                                                             |
+| `"creditCard"` | Spaces digits at the `groups` breaks; `#### #### #### ####` without `groups`                                       |
 | `"phone"`      | Formats as a local phone number                                                                                    |
 | `"currency"`   | Locale-aware thousands separator and decimal places                                                                |
 | `"date"`       | Locale-aware date string                                                                                           |
@@ -123,7 +123,7 @@ dash) are authored HTML, never inserted by the plumber — see
     data-input-formatter-target="input"
     autocomplete="cc-number"
     inputmode="numeric"
-    maxlength="16"
+    maxlength="19"
     data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur"
   />
 </div>

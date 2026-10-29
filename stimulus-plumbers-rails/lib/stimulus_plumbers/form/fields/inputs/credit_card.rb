@@ -35,7 +35,7 @@ module StimulusPlumbers
             config = {
               error:        error,
               groups:       normalized_groups,
-              length:       normalized_groups.sum,
+              maxlength:    normalized_groups.sum + normalized_groups.length - 1,
               separator:    separator,
               autocomplete: kwargs.delete(:autocomplete) || DEFAULT_AUTOCOMPLETE,
               inputmode:    kwargs.delete(:inputmode) || DEFAULT_INPUTMODE,
@@ -76,7 +76,7 @@ module StimulusPlumbers
               html_opts,
               config[:kwargs],
               {
-                maxlength:    config[:length],
+                maxlength:    config[:maxlength],
                 autocomplete: config[:autocomplete],
                 inputmode:    config[:inputmode],
                 data:         { input_formatter_target: "input", action: STIMULUS_ACTION }

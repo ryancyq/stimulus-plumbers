@@ -63,6 +63,18 @@ describe('CreditCardFormatter', () => {
       expect(CreditCardFormatter.format('378282246310005')).toBe('3782 8224 6310 005')
     })
 
+    it('formats at the given group breaks', () => {
+      expect(CreditCardFormatter.format('378282246310005', { groups: [4, 6, 5] })).toBe('3782 822463 10005')
+    })
+
+    it('formats a partial value at the given group breaks', () => {
+      expect(CreditCardFormatter.format('3782822', { groups: [4, 6, 5] })).toBe('3782 822')
+    })
+
+    it('keeps digits past the groups sum as a trailing group', () => {
+      expect(CreditCardFormatter.format('123456789', { groups: [4, 4] })).toBe('1234 5678 9')
+    })
+
     it('returns empty string for null', () => {
       expect(CreditCardFormatter.format(null)).toBe('')
     })
