@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import { morphElements } from '@hotwired/turbo';
 import PasswordStrengthController from '../../../src/controllers/password_strength_controller';
 import ProgressController from '../../../src/controllers/progress_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 const RULES = JSON.stringify([{ key: 'digit', pattern: '\\d', min: 1 }]);
 const OPTIONS = JSON.stringify({ low: 34 });
@@ -11,27 +11,24 @@ describe('PasswordStrengthController', () => {
   let application;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('password-strength', PasswordStrengthController);
-    application.register('progress', ProgressController);
+    application = startApplication({ 'password-strength': PasswordStrengthController, progress: ProgressController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     vi.useRealTimers();
   });
 
   const mount = async (html) => {
     document.body.innerHTML = html;
-    await new Promise((resolve) => setTimeout(resolve, 20));
+    await flush();
   };
 
   const type = async (value) => {
     const input = document.querySelector('input');
     input.value = value;
     input.dispatchEvent(new Event('input', { bubbles: true }));
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await flush();
   };
 
   const markup = ({ withMeter = true, icons = 'both' } = {}) => `
@@ -214,7 +211,7 @@ describe('PasswordStrengthController', () => {
     const rule = document.querySelector('[data-rule="digit"]');
 
     rule.closest('[data-controller]').remove();
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await flush();
     document.dispatchEvent(new Event('turbo:before-cache'));
 
     expect(rule.dataset.satisfied).toBe('true');
@@ -229,7 +226,7 @@ describe('PasswordStrengthController', () => {
       'data-password-strength-rules-value',
       JSON.stringify([{ key: 'digit', pattern: '\\d', min: 0 }])
     );
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await flush();
 
     expect(document.querySelector('[data-rule="digit"]').dataset.satisfied).toBe('true');
     expect(document.querySelector('[data-password-strength-target="level"]').textContent.trim()).toBe('Strong');
@@ -240,7 +237,7 @@ describe('PasswordStrengthController', () => {
     const element = document.querySelector('[data-controller="password-strength"]');
 
     element.setAttribute('data-password-strength-options-value', JSON.stringify({ low: 0 }));
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await flush();
 
     expect(document.querySelector('[data-password-strength-target="level"]').textContent.trim()).toBe('Fine');
   });
@@ -253,7 +250,7 @@ describe('PasswordStrengthController', () => {
       'data-password-strength-labels-value',
       JSON.stringify({ weak: 'Too weak', fine: 'Fine', strong: 'Strong' })
     );
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await flush();
 
     expect(document.querySelector('[data-password-strength-target="level"]').textContent.trim()).toBe('Too weak');
   });
@@ -269,7 +266,7 @@ describe('PasswordStrengthController', () => {
     );
 
     morphElements(element, next.querySelector('[data-controller="password-strength"]'));
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await flush();
 
     expect(document.querySelector('[data-rule="digit"]').dataset.satisfied).toBe('true');
     expect(document.querySelector('[data-password-strength-target="level"]').textContent.trim()).toBe('Strong');

@@ -12,58 +12,34 @@ describe('Plumber', () => {
     mockController = {
       identifier: 'test',
       element: element,
-      dispatch: vi.fn((name, options) => true),
+      dispatch: vi.fn(() => true),
     };
   });
 
-  describe('constructor', () => {
-    it('initializes with default options', () => {
-      const plumber = new Plumber(mockController);
-
-      expect(plumber.controller).toBe(mockController);
-      expect(plumber.element).toBe(element);
-      expect(plumber.visibleOnly).toBe(true);
-      expect(plumber.notify).toBe(true);
-      expect(plumber.prefix).toBe('test');
-    });
-
-    it('accepts custom element option', () => {
+  describe('options', () => {
+    it('dispatches from the element option with the prefix option', () => {
       const customElement = document.createElement('span');
-      const plumber = new Plumber(mockController, { element: customElement });
+      const plumber = new Plumber(mockController, { element: customElement, prefix: 'custom' });
 
-      expect(plumber.element).toBe(customElement);
+      plumber.dispatch('changed');
+
+      expect(mockController.dispatch).toHaveBeenCalledWith('changed', {
+        target: customElement,
+        prefix: 'custom',
+        detail: null,
+      });
     });
 
-    it('accepts visible as boolean', () => {
-      const plumber = new Plumber(mockController, { visible: false });
-
-      expect(plumber.visibleOnly).toBe(false);
-      expect(plumber.visibleCallback).toBe(null);
-    });
-
-    it('accepts visible as string callback name', () => {
-      const plumber = new Plumber(mockController, { visible: 'customVisible' });
-
-      expect(plumber.visibleOnly).toBe(true);
-      expect(plumber.visibleCallback).toBe('customVisible');
-    });
-
-    it('accepts dispatch option', () => {
-      const plumber = new Plumber(mockController, { dispatch: false });
-
-      expect(plumber.notify).toBe(false);
-    });
-
-    it('accepts custom prefix', () => {
-      const plumber = new Plumber(mockController, { prefix: 'custom' });
-
-      expect(plumber.prefix).toBe('custom');
-    });
-
-    it('falls back to controller identifier when prefix is empty string', () => {
+    it('falls back to the controller element and identifier', () => {
       const plumber = new Plumber(mockController, { prefix: '' });
 
-      expect(plumber.prefix).toBe('test');
+      plumber.dispatch('changed');
+
+      expect(mockController.dispatch).toHaveBeenCalledWith('changed', {
+        target: element,
+        prefix: 'test',
+        detail: null,
+      });
     });
   });
 
@@ -224,9 +200,9 @@ describe('Plumber', () => {
       const plumber = new Plumber(mockController);
       plumber.myMethod = vi.fn();
 
-      const callback = plumber.findCallback('myMethod');
+      plumber.findCallback('myMethod')('arg');
 
-      expect(callback).toBeTypeOf('function');
+      expect(plumber.myMethod).toHaveBeenCalledWith('arg');
     });
 
     it('finds method on controller using dot notation', () => {
@@ -234,9 +210,10 @@ describe('Plumber', () => {
         method: vi.fn(),
       };
       const plumber = new Plumber(mockController);
-      const callback = plumber.findCallback('nested.method');
 
-      expect(callback).toBeTypeOf('function');
+      plumber.findCallback('nested.method')('arg');
+
+      expect(mockController.nested.method).toHaveBeenCalledWith('arg');
     });
 
     it('binds callback to controller context', () => {

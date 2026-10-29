@@ -1,18 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import { morphElements } from '@hotwired/turbo';
 import ProgressController from '../../../src/controllers/progress_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ProgressController', () => {
   let application;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('progress', ProgressController);
+    application = startApplication({ progress: ProgressController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -30,7 +28,7 @@ describe('ProgressController', () => {
           <div data-progress-target="fill"></div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('sets aria-valuenow/valuemin/valuemax on connect', () => {
@@ -77,7 +75,7 @@ describe('ProgressController', () => {
     it('direct attribute edits recalculate fill via currentValueChanged', async () => {
       const el = document.querySelector('[data-controller="progress"]');
       el.setAttribute('data-progress-current-value', '60');
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('60%');
     });
   });
@@ -90,7 +88,7 @@ describe('ProgressController', () => {
           <circle data-progress-target="fill" r="40"></circle>
         </svg>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('computes stroke-dasharray from the circle r attribute at connect', () => {
@@ -135,7 +133,7 @@ describe('ProgressController', () => {
           <div><div data-progress-target="fill"></div></div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     };
     const fillWidths = () => [...document.querySelectorAll('[data-progress-target="fill"]')].map((f) => f.style.width);
 
@@ -178,7 +176,7 @@ describe('ProgressController', () => {
           <div><div data-progress-target="fill"></div></div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       const el = document.querySelector('[data-controller="progress"]');
       expect(el.hasAttribute('aria-valuenow')).toBe(false);
       expect(el.classList.contains('sp-progress-indeterminate')).toBe(true);
@@ -196,7 +194,7 @@ describe('ProgressController', () => {
                data-progress-current-value="40" data-progress-min-value="0" data-progress-max-value="100"
                data-progress-low-value="20" data-progress-high-value="80" data-progress-optimum-value="50"></meter>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('syncs value/min/max/low/high/optimum onto the native meter', () => {
@@ -228,7 +226,7 @@ describe('ProgressController', () => {
           <div data-progress-target="meter"></div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('does not throw and leaves the target untouched', () => {
@@ -244,7 +242,7 @@ describe('ProgressController', () => {
           <div data-progress-target="fill"></div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('omits aria-valuenow', () => {
@@ -270,7 +268,7 @@ describe('ProgressController', () => {
           <div data-progress-target="fill"></div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('sets the fill width to the overridden fraction', () => {
@@ -289,7 +287,7 @@ describe('ProgressController', () => {
           <span data-progress-target="value" aria-hidden="true"></span>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     };
     const readout = () => document.querySelector('[data-progress-target="value"]');
     const host = () => document.querySelector('[data-controller="progress"]');
@@ -340,7 +338,7 @@ describe('ProgressController', () => {
           <span data-progress-target="value">untouched</span>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(readout().textContent).toBe('untouched');
     });
 
@@ -351,7 +349,7 @@ describe('ProgressController', () => {
           <div data-progress-target="fill"></div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(document.querySelector('[data-progress-target="fill"]').style.width).toBe('45%');
     });
 
@@ -407,7 +405,7 @@ describe('ProgressController', () => {
                data-progress-min-value="${min}" data-progress-max-value="${max}"
                data-action="input->progress#refresh">
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       return document.querySelector('input[type="range"]');
     };
 
@@ -457,7 +455,7 @@ describe('ProgressController', () => {
                data-controller="progress" data-progress-variant-value="range"
                data-action="input->progress#refresh">
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       const input = document.querySelector('input[type="range"]');
       expect(input.value).toBe('70');
       expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('70');
@@ -483,7 +481,7 @@ describe('ProgressController', () => {
           <span data-progress-target="value" aria-hidden="true">45%</span>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       return {
         input: document.querySelector('input[type="range"]'),
         readout: document.querySelector('[data-progress-target="value"]'),
@@ -522,7 +520,7 @@ describe('ProgressController', () => {
           <circle data-progress-target="fill" r="40"></circle>
         </svg>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('sets stroke-dasharray to a fixed fraction of the circumference as the static indeterminate baseline', () => {
@@ -535,7 +533,7 @@ describe('ProgressController', () => {
   });
 
   describe('dynamic values', () => {
-    const tick = () => new Promise((resolve) => setTimeout(resolve, 10));
+    const tick = () => flush();
     const markup = (attrs = '') => `
       <div role="progressbar" data-controller="progress"
            data-progress-current-value="30" data-progress-min-value="0" data-progress-max-value="100" ${attrs}>

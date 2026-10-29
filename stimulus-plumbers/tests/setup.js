@@ -1,4 +1,14 @@
 import { beforeEach, afterEach, vi } from 'vitest';
+import WindowObserver from '../src/plumbers/plumber/window_observer';
+import { disconnectPlumbers, disposeAll, stopApplications } from './support/stimulus';
+
+// Records every window observer a test starts; the record lives outside the mock registry.
+const windowObservers = new Set();
+const observe = WindowObserver.prototype.observe;
+WindowObserver.prototype.observe = function (handler) {
+  windowObservers.add(this);
+  return observe.call(this, handler);
+};
 
 // Mock window.matchMedia
 beforeEach(() => {
@@ -43,8 +53,15 @@ beforeEach(() => {
   });
 });
 
-// Clean up after each test
+// Clean up after each test; every step runs even when an earlier one throws.
 afterEach(() => {
-  document.body.innerHTML = '';
-  vi.clearAllMocks();
+  const steps = new Set([
+    stopApplications,
+    disconnectPlumbers,
+    () => disposeAll(windowObservers, (observer) => observer.disconnect()),
+    () => (document.body.innerHTML = ''),
+    () => vi.clearAllMocks(),
+    () => vi.useRealTimers(),
+  ]);
+  disposeAll(steps, (step) => step());
 });

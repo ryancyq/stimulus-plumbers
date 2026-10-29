@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import CalendarController from '../../../src/controllers/calendar_controller';
 import CalendarTurboController from '../../../src/controllers/calendar_turbo_controller';
 import { monthGrid, parseDateKey } from '../../../src/date';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('CalendarController', () => {
   let application;
@@ -67,15 +67,12 @@ describe('CalendarController', () => {
   const tabStops = () => [...document.querySelectorAll('[tabindex="0"]')].map((element) => element.dataset.date);
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('calendar', CalendarController);
-    application.register('calendar-turbo', CalendarTurboController);
+    application = startApplication({ calendar: CalendarController, 'calendar-turbo': CalendarTurboController });
     consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     consoleError.mockRestore();
     consoleWarn.mockRestore();
@@ -275,7 +272,7 @@ describe('CalendarController', () => {
 
       day('2026-09-15').click();
       document.querySelector('#form').reset();
-      await new Promise((resolve) => setTimeout(resolve));
+      await flush();
 
       expect(day('2026-09-10').closest('td').getAttribute('aria-selected')).toBe('true');
       expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('false');
@@ -305,7 +302,7 @@ describe('CalendarController', () => {
     };
     const replace = async (frame, displayed, heading, options) => {
       frame.innerHTML = frameContent(displayed, heading, options);
-      await new Promise((resolve) => setTimeout(resolve));
+      await flush();
     };
 
     it('loads the next period into the frame from the keyboard', async () => {

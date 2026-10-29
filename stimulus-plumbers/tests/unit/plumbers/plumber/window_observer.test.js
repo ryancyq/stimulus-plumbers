@@ -5,7 +5,6 @@ import { Shifter } from '../../../../src/plumbers/shifter';
 describe('WindowObserver', () => {
   let controller;
   let element;
-  let shifter;
 
   beforeEach(() => {
     element = document.createElement('div');
@@ -15,13 +14,12 @@ describe('WindowObserver', () => {
   });
 
   afterEach(() => {
-    shifter?.disconnect();
     document.body.innerHTML = '';
   });
 
   it('leaves other observers on the same controller listening after one disconnects', () => {
     const dismisser = new Dismisser(controller);
-    shifter = new Shifter(controller);
+    new Shifter(controller);
 
     dismisser.disconnect();
     document.body.click();

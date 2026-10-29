@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ComboboxDateController from '../../../src/controllers/combobox_date_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { startApplication } from '../../support/stimulus';
 
 describe('ComboboxDateController', () => {
   let application;
@@ -50,12 +50,10 @@ describe('ComboboxDateController', () => {
     );
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('combobox-date', ComboboxDateController);
+    application = startApplication({ 'combobox-date': ComboboxDateController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 

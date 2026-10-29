@@ -1,19 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ModalController from '../../../src/controllers/modal_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ModalController', () => {
   let application;
   let consoleErrorSpy;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('modal', ModalController);
+    application = startApplication({ modal: ModalController });
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     consoleErrorSpy.mockRestore();
   });
@@ -148,22 +146,26 @@ describe('ModalController', () => {
     expect(dialog.close).not.toHaveBeenCalled();
   });
 
-  it('removes adapter listeners when the target disconnects', async () => {
+  it('stops reporting lifecycle events from a disconnected dialog', async () => {
     const dialog = await render();
-    const remove = vi.spyOn(dialog, 'removeEventListener');
+    const reported = vi.fn();
+    dialog.addEventListener('modal:closed', reported);
+    dialog.addEventListener('modal:before-dismiss', reported);
     dialog.remove();
+    await flush();
 
-    await vi.waitFor(() => {
-      expect(remove).toHaveBeenCalledWith('beforetoggle', expect.any(Function));
-      expect(remove).toHaveBeenCalledWith('toggle', expect.any(Function));
-      expect(remove).toHaveBeenCalledWith('cancel', expect.any(Function));
-      expect(remove).toHaveBeenCalledWith('close', expect.any(Function));
-    });
+    const cancel = new Event('cancel', { cancelable: true });
+    dialog.dispatchEvent(cancel);
+    dialog.dispatchEvent(new Event('close'));
+
+    expect(reported).not.toHaveBeenCalled();
+    expect(cancel.defaultPrevented).toBe(false);
   });
 
   it('disconnects the old plumber when Turbo replaces the dialog target', async () => {
     const oldDialog = await render();
-    const oldRemove = vi.spyOn(oldDialog, 'removeEventListener');
+    const oldClosed = vi.fn();
+    oldDialog.addEventListener('modal:closed', oldClosed);
 
     const root = document.querySelector('[data-controller="modal"]');
     const newDialog = document.createElement('dialog');
@@ -174,8 +176,10 @@ describe('ModalController', () => {
     newDialog.close = vi.fn();
     oldDialog.replaceWith(newDialog);
 
-    await vi.waitFor(() => expect(oldRemove).toHaveBeenCalledWith('close', expect.any(Function)));
     await vi.waitUntil(() => root.querySelector('dialog') === newDialog);
+    await flush();
+    oldDialog.dispatchEvent(new Event('close'));
+    expect(oldClosed).not.toHaveBeenCalled();
     document.querySelector('#open').click();
     expect(newDialog.showModal).toHaveBeenCalledOnce();
   });

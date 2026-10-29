@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import InputClearableController from '../../../src/controllers/input_clearable_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('InputClearableController', () => {
   let application;
@@ -13,16 +13,14 @@ describe('InputClearableController', () => {
 
   const setup = async (html) => {
     document.body.innerHTML = html;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
   };
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('input-clearable', InputClearableController);
+    application = startApplication({ 'input-clearable': InputClearableController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -79,7 +77,7 @@ describe('InputClearableController', () => {
       const input = document.querySelector('[data-input-clearable-target="input"]');
       input.value = 'hello';
       input.dispatchEvent(new Event('input', { bubbles: true }));
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(false);
     });
 
@@ -87,11 +85,11 @@ describe('InputClearableController', () => {
       const input = document.querySelector('[data-input-clearable-target="input"]');
       input.value = 'hello';
       input.dispatchEvent(new Event('input', { bubbles: true }));
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       input.value = '';
       input.dispatchEvent(new Event('input', { bubbles: true }));
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(true);
     });
   });
@@ -202,11 +200,11 @@ describe('InputClearableController', () => {
     });
   });
 
-  describe('inputTargetDisconnected', () => {
+  describe('input target replaced', () => {
     beforeEach(async () => {
       await setup(`
         <div data-controller="input-clearable">
-          <input type="search" value="" data-input-clearable-target="input">
+          <input type="search" value="old" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
                   data-input-clearable-target="clear"
                   data-action="click->input-clearable#clear">
@@ -215,15 +213,14 @@ describe('InputClearableController', () => {
       `);
     });
 
-    it('removes input and keydown listeners when input target disconnects', async () => {
-      const input = document.querySelector('[data-input-clearable-target="input"]');
-      const spy = vi.spyOn(input, 'removeEventListener');
+    it('ignores Escape on the removed input', async () => {
+      const removed = document.querySelector('[data-input-clearable-target="input"]');
+      removed.outerHTML = '<input type="search" value="rails" data-input-clearable-target="input">';
+      await flush();
 
-      input.remove();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      removed.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', cancelable: true }));
 
-      expect(spy).toHaveBeenCalledWith('input', expect.any(Function));
-      expect(spy).toHaveBeenCalledWith('keydown', expect.any(Function));
+      expect(document.querySelector('[data-input-clearable-target="input"]').value).toBe('rails');
     });
   });
 });

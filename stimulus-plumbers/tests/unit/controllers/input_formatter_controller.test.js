@@ -1,18 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import InputFormatterController from '../../../src/controllers/input_formatter_controller';
 import ClipboardController from '../../../src/controllers/clipboard_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('InputFormatterController', () => {
   let application;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('input-formatter', InputFormatterController);
+    application = startApplication({ 'input-formatter': InputFormatterController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -29,7 +27,7 @@ describe('InputFormatterController', () => {
           <output data-input-formatter-target="input">hello</output>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('attaches formatter on connect', () => {
@@ -67,7 +65,7 @@ describe('InputFormatterController', () => {
           <input type="text" value="initial" data-input-formatter-target="input">
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('reads existing .value on connect and writes it back formatted', () => {
@@ -87,7 +85,7 @@ describe('InputFormatterController', () => {
           <output data-input-formatter-target="input">4242424242424242</output>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('formats the initial value on connect', () => {
@@ -98,7 +96,7 @@ describe('InputFormatterController', () => {
   describe('sync without input target', () => {
     beforeEach(async () => {
       document.body.innerHTML = `<div data-controller="input-formatter"></div>`;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('dispatches formatted event even with no input target', () => {
@@ -121,13 +119,13 @@ describe('InputFormatterController', () => {
           <output data-input-formatter-target="input">4242424242424242</output>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('re-attaches the formatter when typeValue changes', async () => {
       const el = document.querySelector('[data-controller="input-formatter"]');
       el.setAttribute('data-input-formatter-format-value', 'creditCard');
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe('4242 4242 4242 4242');
     });
   });
@@ -140,13 +138,13 @@ describe('InputFormatterController', () => {
           <output data-input-formatter-target="input">1234.56</output>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('re-formats when optionsValue changes', async () => {
       const el = document.querySelector('[data-controller="input-formatter"]');
       el.setAttribute('data-input-formatter-options-value', JSON.stringify({ currency: 'EUR', locale: 'de-DE' }));
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       const text = document.querySelector('[data-input-formatter-target="input"]').textContent;
       expect(text).toContain('1');
       expect(text.length).toBeGreaterThan(0);
@@ -160,7 +158,7 @@ describe('InputFormatterController', () => {
           <output data-input-formatter-target="input"></output>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     const pasted = (text) => new CustomEvent('clipboard:pasted', { detail: { text }, cancelable: true });
@@ -186,7 +184,7 @@ describe('InputFormatterController', () => {
 
     it('does not throw when there is no formatter', async () => {
       document.body.innerHTML = `<div data-controller="input-formatter"></div>`;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(() => getController().onPaste(pasted('4242424242424242'))).not.toThrow();
     });
 
@@ -200,7 +198,7 @@ describe('InputFormatterController', () => {
                    data-action="paste->clipboard#onPaste clipboard:pasted->input-formatter#onPaste">
           </div>
         `;
-        await new Promise((resolve) => setTimeout(resolve, 10));
+        await flush();
       });
 
       const paste = (text) => {
@@ -236,7 +234,7 @@ describe('InputFormatterController', () => {
                  data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur" />
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
@@ -264,7 +262,7 @@ describe('InputFormatterController', () => {
       document
         .querySelector('[data-controller="input-formatter"]')
         .setAttribute('data-input-formatter-format-value', 'plain');
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(
         cells()
@@ -344,7 +342,7 @@ describe('InputFormatterController', () => {
       `;
       const spy = vi.fn();
       document.querySelector('[data-controller="input-formatter"]').addEventListener('input-formatter:filled', spy);
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy).not.toHaveBeenCalled();
     });
   });
@@ -357,7 +355,7 @@ describe('InputFormatterController', () => {
           <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     const input = () => document.querySelector('[data-input-formatter-target="input"]');
@@ -380,7 +378,7 @@ describe('InputFormatterController', () => {
           <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('derives 4-4-4-4 grouping from the formatter hint', () => {
@@ -407,7 +405,7 @@ describe('InputFormatterController', () => {
           <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
@@ -445,7 +443,7 @@ describe('InputFormatterController', () => {
           <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
@@ -469,7 +467,7 @@ describe('InputFormatterController', () => {
     it('re-derives grouping when groupsValue changes', async () => {
       const el = document.querySelector('[data-controller="input-formatter"]');
       el.setAttribute('data-input-formatter-groups-value', '[3,3,3,3,3]');
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(cells()[2].hasAttribute('data-group-end')).toBe(true);
       expect(cells()[3].getAttribute('data-group-index')).toBe('1');
       expect(getController().characterCells.active()).toBe(15);
@@ -488,7 +486,7 @@ describe('InputFormatterController', () => {
       input.value = '378282246310005';
       input.dispatchEvent(new Event('input'));
       el.setAttribute('data-input-formatter-groups-value', '[3,3,3,3,3]');
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(input.value).toBe('378 282 246 310 005');
     });
   });
@@ -506,7 +504,7 @@ describe('InputFormatterController', () => {
                  data-action="input->input-formatter#onInput" />
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
@@ -515,7 +513,7 @@ describe('InputFormatterController', () => {
       const newCell = document.createElement('div');
       newCell.setAttribute('data-input-formatter-target', 'cell');
       document.querySelector('.cells-row').appendChild(newCell);
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(newCell.getAttribute('aria-hidden')).toBe('true');
     });
@@ -528,7 +526,7 @@ describe('InputFormatterController', () => {
       b.setAttribute('data-input-formatter-target', 'cell');
       row.appendChild(a);
       row.appendChild(b);
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(cells().length).toBe(6);
       expect(getController().characterCells.active()).toBe(6);
@@ -539,7 +537,7 @@ describe('InputFormatterController', () => {
       const newCell = document.createElement('div');
       newCell.setAttribute('data-input-formatter-target', 'cell');
       row.appendChild(newCell);
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(newCell.textContent).toBe('1');
     });
@@ -553,7 +551,7 @@ describe('InputFormatterController', () => {
           <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
@@ -589,7 +587,7 @@ describe('InputFormatterController', () => {
           <input data-input-formatter-target="input" />
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('does not attach characterCells', () => {

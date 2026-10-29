@@ -60,4 +60,6 @@ Every behaviour has exactly one owning layer — the first layer below that can 
 | MCP — Minitest | `stimulus-plumbers-mcp/test/` | Loader output and the server round trip | Rendering |
 
 - **Outcomes, not implementation** — names state what the user or caller observes; assertions target observable effects and semantic tokens, never listener spies, private fields, CSS spacing, or a removed class. Bad: `test_track_uses_border_s`, `assert ms-6`. Good: `test_indicator_is_in_flow_not_absolute`, `assert bg-(--sp-color-primary)`.
+- **No real-timer sleeps** — Vitest waits with `flush()` / `advance()` and fake timers (`stimulus-plumbers/tests/support/stimulus.js`); Capybara and Playwright use their auto-waiting assertions.
+- **Every test disposes what it creates** — `stimulus-plumbers/tests/setup.js` stops each application from `startApplication()`, disconnects every window observer, and disconnects every plumber a test passes to `autoDisconnect()`; a test that constructs any plumber other than a window observer, with `disconnect()`, wraps it in `autoDisconnect()`.
 - Read the HTML output first when analysing an a11y violation.

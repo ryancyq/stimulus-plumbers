@@ -77,10 +77,9 @@ describe('Requestor', () => {
       global.fetch.mockResolvedValueOnce({ ok: true });
 
       requestor.request('/a');
-      const firstController = requestor._abortController;
       await requestor.request('/b');
 
-      expect(firstController.signal.aborted).toBe(true);
+      expect(firstAborted).toBe(true);
     });
 
     it('propagates AbortError to caller', async () => {

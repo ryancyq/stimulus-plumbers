@@ -1,20 +1,19 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Dismisser, attachDismisser } from '../../../src/plumbers/dismisser';
+import { flush } from '../../support/stimulus';
 
 describe('Dismisser', () => {
-  let observeSpy;
   let mockController;
   let element;
 
   beforeEach(() => {
-    observeSpy = vi.spyOn(Dismisser.prototype, 'observe');
     element = document.createElement('div');
     document.body.appendChild(element);
 
     mockController = {
       identifier: 'dismisser',
       element: element,
-      dispatch: vi.fn((name, options) => true),
+      dispatch: vi.fn(() => true),
     };
 
     // Mock getBoundingClientRect for visibility checks
@@ -27,42 +26,33 @@ describe('Dismisser', () => {
   });
 
   afterEach(() => {
-    observeSpy.mock.contexts.forEach((observer) => observer.disconnect());
-    observeSpy.mockRestore();
     vi.clearAllMocks();
   });
 
-  describe('constructor', () => {
-    it('initializes with default options', () => {
-      const dismisser = new Dismisser(mockController);
+  describe('callbacks', () => {
+    const clickOutside = () => {
+      const outside = document.createElement('div');
+      document.body.appendChild(outside);
+      outside.click();
+    };
 
-      expect(dismisser.controller).toBe(mockController);
-      expect(dismisser.trigger).toBe(element);
-      expect(dismisser.events).toEqual(['click']);
-      expect(dismisser.onDismissed).toBe('dismissed');
+    it('calls the controller dismissed method with the element as its target', () => {
+      mockController.dismissed = vi.fn();
+      new Dismisser(mockController);
+
+      clickOutside();
+
+      expect(mockController.dismissed).toHaveBeenCalledWith({ target: element });
     });
 
-    it('accepts custom trigger element', () => {
+    it('calls the onDismissed method it is given with the trigger as its target', () => {
       const trigger = document.createElement('button');
-      const dismisser = new Dismisser(mockController, { trigger });
+      mockController.customDismissed = vi.fn();
+      new Dismisser(mockController, { trigger, onDismissed: 'customDismissed' });
 
-      expect(dismisser.trigger).toBe(trigger);
-    });
+      clickOutside();
 
-    it('accepts custom events', () => {
-      const dismisser = new Dismisser(mockController, {
-        events: ['mousedown', 'touchstart'],
-      });
-
-      expect(dismisser.events).toEqual(['mousedown', 'touchstart']);
-    });
-
-    it('accepts custom onDismissed callback', () => {
-      const dismisser = new Dismisser(mockController, {
-        onDismissed: 'customDismissed',
-      });
-
-      expect(dismisser.onDismissed).toBe('customDismissed');
+      expect(mockController.customDismissed).toHaveBeenCalledWith({ target: trigger });
     });
   });
 
@@ -134,7 +124,7 @@ describe('Dismisser', () => {
     });
 
     it('awaits async onDismissed callback', async () => {
-      const onDismissed = vi.fn(() => new Promise((resolve) => setTimeout(resolve, 10)));
+      const onDismissed = vi.fn(() => flush());
       mockController.dismissed = onDismissed;
       const dismisser = new Dismisser(mockController, { onDismissed: 'dismissed' });
       const outsideElement = document.createElement('div');
