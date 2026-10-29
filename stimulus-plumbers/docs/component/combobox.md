@@ -1,12 +1,6 @@
 # Combobox Controllers
 
-`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date` and `combobox-time` keep a read-only input in step with their popover. The legacy family below uses a layered design: `input-combobox` and `input-formatter` live on the wrapper; `combobox-dropdown` lives inside the popover.
-
-```
-input-combobox + input-formatter   ← wrapper
-└── [popover]
-      └── combobox-dropdown     ← listbox (dropdown & typeahead)
-```
+`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date` and `combobox-time` keep a read-only input in step with their popover.
 
 ---
 
@@ -14,8 +8,7 @@ input-combobox + input-formatter   ← wrapper
 
 One controller for a listbox combobox: keyboard, active option, selection, hidden value, and every close
 path. The panel is a `popover="manual"` element opened through the
-[popover plumber](../plumber/popover.md) with the control as source. Replaces the `input-combobox`,
-`combobox-dropdown`, and `popover` composition below.
+[popover plumber](../plumber/popover.md) with the trigger as source.
 
 ```html
 <div
@@ -201,53 +194,6 @@ the response. No Turbo dependency. The listbox carries `aria-busy="true"` while 
 
 ---
 
-## input-combobox
-
-Owns the trigger input, hidden value, and close-on-select. Always co-located with `input-formatter`.
-
-**Targets**
-
-| Target    | Element              | Description                                     |
-| --------- | -------------------- | ----------------------------------------------- |
-| `trigger` | `input[type=text]`   | The combobox input (display + focus management) |
-| `input`   | `input[type=hidden]` | Holds the submitted value                       |
-| `panel`   | `[popover]`          | Popover panel closed after a selection          |
-
-**Values**
-
-| Value           | Type    | Default | Description                                                            |
-| --------------- | ------- | ------- | ---------------------------------------------------------------------- |
-| `value`         | String  | `""`    | Current selected value; setting it triggers `valueValueChanged`        |
-| `minLength`     | Number  | `1`     | Min query length before typeahead relays to `combobox-dropdown` outlet |
-| `closeOnSelect` | Boolean | `true`  | Hides the `panel` after a selection                                    |
-
-**Outlets**
-
-| Outlet              | Description                         |
-| ------------------- | ----------------------------------- |
-| `combobox-dropdown` | Optional; present in typeahead mode |
-
-**Methods**
-
-| Method            | Wired via             | Description                                                                                          |
-| ----------------- | --------------------- | ---------------------------------------------------------------------------------------------------- |
-| `onSelect(event)` | `combobox-*:selected` | Event adapter — writes `event.detail.value` to `valueValue`, then hides `panel` when `closeOnSelect` |
-| `onInput(event)`  | `input` on trigger    | Event adapter — extracts query, relays to `comboboxDropdownOutlet.filter(query)`                     |
-
-**Dispatches**
-
-| Event                    | Detail      | When                                              |
-| ------------------------ | ----------- | ------------------------------------------------- |
-| `input-combobox:changed` | `{ value }` | After `valueValue` changes (including on connect) |
-
----
-
-## input-formatter
-
-Formats and displays values. Always co-located with `input-combobox`. See [input-formatter.md](input-formatter.md) for targets, values, methods, and dispatches.
-
----
-
 ## combobox-date
 
 Keeps a read-only date input in step with the [`calendar`](calendar.md#calendar) in its popover
@@ -390,82 +336,3 @@ Selecting an option sets `aria-selected` and the column's `aria-activedescendant
 | Event                   | Detail                | When                                                              |
 | ----------------------- | --------------------- | ----------------------------------------------------------------- |
 | `combobox-time:changed` | `{ value }` (`HH:MM`) | After a selection that completes the time, Escape, and form reset |
-
----
-
-## combobox-dropdown
-
-Listbox with client-side fuzzy filter or server-side fetch. Used by both dropdown and typeahead variants.
-
-**Targets**
-
-| Target    | Description                               |
-| --------- | ----------------------------------------- |
-| `listbox` | `ul[role=listbox]` containing the options |
-| `loading` | Shown during server fetch                 |
-| `empty`   | Shown when no options match               |
-
-**Values**
-
-| Value   | Type   | Default | Description                                                 |
-| ------- | ------ | ------- | ----------------------------------------------------------- |
-| `url`   | String | `""`    | Fetch URL — empty string activates client-side fuzzy filter |
-| `field` | String | `"q"`   | Query parameter name appended to `url`                      |
-| `delay` | Number | `300`   | Debounce delay in ms before issuing a server fetch          |
-
-**Methods**
-
-| Method              | Wired via                | Description                                                                                   |
-| ------------------- | ------------------------ | --------------------------------------------------------------------------------------------- |
-| `select(value)`     | —                        | Programmatic API — sets `aria-selected` on matching option, dispatches `selected`             |
-| `onSelect(event)`   | `click` on an option     | Event adapter — extracts value from click target, calls `select(value)`                       |
-| `onNavigate(event)` | `keydown` on listbox     | Event adapter — ArrowUp/ArrowDown call `step(delta)`; Enter/Space activates current selection |
-| `step(delta)`       | —                        | Programmatic API — moves `aria-selected` by `delta` steps (+1 down, -1 up)                    |
-| `filter(query)`     | `input-combobox` outlet  | Programmatic API — routes to fuzzy filter (client) or debounced fetch (server)                |
-| `showAll()`         | `input-combobox#onInput` | Programmatic API — unhides all options when query drops below `minLength`                     |
-
-**Dispatches**
-
-| Event                        | Detail      | When                        |
-| ---------------------------- | ----------- | --------------------------- |
-| `combobox-dropdown:selected` | `{ value }` | After an option is selected |
-
-**Filter implementation**
-
-`combobox-dropdown` uses two standalone utilities internally:
-
-- **Client-side** (`url` is empty): calls `filterOptions(listboxTarget, query)` from `researcher.js` — hides non-matching `[role="option"]` elements using fuzzy matching by default. See [Researcher docs](../utility/researcher.md) for strategy and field options.
-- **Server-side** (`url` is set): debounces requests via `Requestor` from `requestor.js`, then issues `GET {url}?{field}={query}`. See [Requestor docs](../utility/requestor.md) for abort and debounce behaviour.
-
-**Server fetch contract**
-
-`GET {url}?{field}={query}` — expected response: an HTML fragment of `<li role="option" data-value="...">` elements, which replaces the inner HTML of the `listbox` target.
-
----
-
-## Event flow
-
-```
-user picks value
-  └─ combobox-*:selected { value }
-       └─ input-combobox#onSelect       ← event adapter
-            ├─ panelTarget.hidePopover() (when closeOnSelect)
-            └─ valueValue = value        → valueValueChanged
-                 ├─ inputTarget.value = value
-                 └─ dispatch input-combobox:changed { value }
-                      └─ input-formatter#onChange  ← event adapter
-                           └─ format(value)       ← programmatic API
-                                ├─ formats value
-                                ├─ writes to inputTarget
-                                └─ dispatch input-formatter:formatted { value }
-```
-
----
-
-## Naming convention
-
-| Pattern      | Wired via             | Role                                                       | Example                                                                                       |
-| ------------ | --------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `onX(event)` | DOM or Stimulus event | Event adapter — extracts payload, calls programmatic API   | `onSelect(event)`, `onChange(event)`, `onPaste(event)`, `onInput(event)`, `onNavigate(event)` |
-| `x(value)`   | — (called directly)   | Programmatic API — pure logic, no event awareness          | `select('us')`, `format('4242…')`, `step(1)`, `filter('query')`                               |
-| `past()`     | Plumber               | Plumber callback — called by plumber after async operation | `shown()`, `dismissed()`, `contentLoaded()`                                                   |

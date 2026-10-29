@@ -13,7 +13,7 @@ stimulus-plumbers-rails/
 │       │   │   ├── group.rb
 │       │   │   ├── icon_layout.rb        # Shared leading/trailing icon layout — included by Button and Form::Fields::Inputs::Submit
 │       │   │   └── slots.rb
-│       │   ├── calendar.rb               # sp_calendar renderer (#render, navigation: :stimulus | :turbo) + legacy sp_calendar_month (#month/#year/#decade)
+│       │   ├── calendar.rb               # sp_calendar renderer (#render, navigation: :stimulus | :turbo)
 │       │   ├── calendar/
 │       │   │   ├── availability.rb       # Calendar::Availability — min/max/disabled_* the calendar offers; invalid options raise
 │       │   │   ├── configuration.rb      # Calendar::Configuration — displayed/view/selected/today and display options
@@ -23,12 +23,6 @@ stimulus-plumbers-rails/
 │       │   │   ├── days_of_month.rb      # Days (buttons); weekday headers from first_day_of_week
 │       │   │   ├── months_of_year.rb     # Months (links that zoom in)
 │       │   │   └── years_of_decade.rb    # Years (links that zoom in)
-│       │   ├── calendar/turbo.rb         # Turbo-compatible calendar grid
-│       │   ├── calendar/turbo/
-│       │   │   ├── days_of_month.rb
-│       │   │   ├── days_of_week.rb
-│       │   │   ├── months_of_year.rb
-│       │   │   └── years_of_decade.rb
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
 │       │   │   └── slots.rb
@@ -85,8 +79,7 @@ stimulus-plumbers-rails/
 │       ├── helpers/
 │       │   ├── avatar_helper.rb          # sp_avatar
 │       │   ├── button_helper.rb          # sp_button, sp_button_group
-│       │   ├── calendar_helper.rb        # sp_calendar, sp_calendar_month
-│       │   ├── calendar_turbo_helper.rb  # sp_calendar_turbo, sp_calendar_turbo_month/year/decade
+│       │   ├── calendar_helper.rb        # sp_calendar
 │       │   ├── card_helper.rb            # sp_card
 │       │   ├── combobox_helper.rb        # sp_combobox_dropdown / sp_combobox_typeahead → Combobox::Dropdown / Typeahead; sp_combobox_date / sp_combobox_time → Combobox::Date / Time
 │       │   ├── divider_helper.rb         # sp_divider

@@ -195,9 +195,9 @@ export default class extends Controller {
 
 describe('withPlumberSources', () => {
   it('includes dispatch calls from an imported plumber file', () => {
-    const source = `import { attachCalendarYearSelector } from '../plumbers/calendar-selector';`
+    const source = `import { attachFlipper } from '../plumbers/flipper';`
     const combined = withPlumberSources(source, CONTROLLERS_DIR)
-    expect(parseDispatches(combined)).toContain('selected')
+    expect(parseDispatches(combined)).toContain('flipped')
   })
 
   it('retains dispatches from an imported plumber without treating them as controller methods', () => {

@@ -4,19 +4,6 @@ Adapts a native `popover` element to the popover lifecycle through the [popover 
 The browser owns the top layer, light dismissal, and Escape for `popover="auto"`; the consuming component owns
 role, keyboard behavior, focus, and selection.
 
-## Migration from legacy popover markup
-
-The legacy controller toggled a `hidden` panel and could fetch its content:
-
-```html
-<div data-controller="popover" data-popover-url-value="/menu">
-  <button data-popover-target="trigger" data-action="popover#toggle">Account</button>
-  <div data-popover-target="panel" hidden></div>
-</div>
-```
-
-Use a native popover panel; put remote content in a Turbo Frame inside it:
-
 ```html
 <div data-controller="popover">
   <button data-popover-target="trigger" popovertarget="account-actions">Account</button>
@@ -25,10 +12,6 @@ Use a native popover panel; put remote content in a Turbo Frame inside it:
   </div>
 </div>
 ```
-
-Remove the `url`, `loadedAt`, `reload`, `staleAfter`, `closeOnSelect`, `announceOpen`, and `announceClose`
-values and any `controller.visibility`, `shift()`, or `flip()` dependencies. Combobox close-on-select moved to
-[`input-combobox`](combobox.md#input-combobox).
 
 ## Targets
 

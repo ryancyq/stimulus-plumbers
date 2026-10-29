@@ -60,26 +60,17 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Calendar
 
-| Key                        | Component                                                                  | Variants        |
-| -------------------------- | -------------------------------------------------------------------------- | --------------- |
-| `calendar`                 | `sp_calendar` container `<div>`; legacy `Calendar`, `Calendar::Turbo` root | —               |
-| `calendar_days_of_week`    | `Calendar::Turbo::DaysOfWeek`                                              | —               |
-| `calendar_days_of_month`   | `Calendar::Turbo::DaysOfMonth`                                             | —               |
-| `calendar_row`             | `Calendar::Turbo::DaysOfMonth` (each week row)                             | —               |
-| `calendar_day`             | `Calendar::Turbo::DaysOfMonth` (each day cell)                             | `outside: bool` |
-| `calendar_months_of_year`  | `Calendar::Turbo::MonthsOfYear` (rowgroup wrapper)                         | —               |
-| `calendar_month`           | `Calendar::Turbo::MonthsOfYear` (each month cell)                          | —               |
-| `calendar_years_of_decade` | `Calendar::Turbo::YearsOfDecade` (rowgroup wrapper)                        | —               |
-| `calendar_year`            | `Calendar::Turbo::YearsOfDecade` (each year cell)                          | —               |
-| `calendar_quarter_grid`    | `Calendar::Turbo` year/decade grid wrapper (4-col grid)                    | —               |
-| `calendar_status`          | `sp_calendar` status region outside the frame                              | —               |
-| `calendar_header`          | `sp_calendar` previous/next, year, heading, and zoom row                   | —               |
-| `calendar_heading`         | `sp_calendar` heading that labels the grid                                 | —               |
-| `calendar_navigation`      | `sp_calendar` previous, next, year, and zoom links                         | —               |
-| `calendar_grid`            | `sp_calendar` `<table role="grid">`                                        | —               |
-| `calendar_weekday`         | `sp_calendar` weekday `<th>`                                               | —               |
-| `calendar_cell`            | `sp_calendar` `<td>`                                                       | —               |
-| `calendar_date`            | `sp_calendar` day button or month/year link                                | —               |
+| Key                   | Component                                                | Variants |
+| --------------------- | -------------------------------------------------------- | -------- |
+| `calendar`            | `sp_calendar` container `<div>`                          | —        |
+| `calendar_status`     | `sp_calendar` status region outside the frame            | —        |
+| `calendar_header`     | `sp_calendar` previous/next, year, heading, and zoom row | —        |
+| `calendar_heading`    | `sp_calendar` heading that labels the grid               | —        |
+| `calendar_navigation` | `sp_calendar` previous, next, year, and zoom links       | —        |
+| `calendar_grid`       | `sp_calendar` `<table role="grid">`                      | —        |
+| `calendar_weekday`    | `sp_calendar` weekday `<th>`                             | —        |
+| `calendar_cell`       | `sp_calendar` `<td>`                                     | —        |
+| `calendar_date`       | `sp_calendar` day button or month/year link              | —        |
 
 ### Combobox
 

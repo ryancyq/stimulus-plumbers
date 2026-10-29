@@ -2,7 +2,9 @@
 
 Three JS modules under `src/accessibility/` provide the accessibility primitives for all controllers. This doc explains **which helper to use for which ARIA interaction pattern** and the **usage contract** every controller must follow.
 
-## Three Patterns
+## Two Patterns
+
+Listbox controllers (`combobox_controller`, `combobox_time_controller`) handle their own keys to keep `aria-activedescendant` on the focused element. `calendar_controller` handles its own grid keys, which move focus by date and may load another period.
 
 ### 1. Roving Tabindex — `RovingTabIndex` (`keyboard.js`)
 
@@ -35,29 +37,7 @@ this.rovingTabIndex?.updateItems(this.triggerTargets);
 
 `activate()` attaches `keydown` and `click` listeners to every item and sets initial `tabIndex` values. `deactivate()` removes all listeners. `updateItems(newEls)` swaps the item set and re-attaches; it clamps `currentIndex` so it stays in bounds. `setCurrentIndex(n)` moves focus programmatically.
 
-### 2. Managed Focus / Listbox — `ListboxNavigation` (`keyboard.js`)
-
-Use when: focus stays on an external element (e.g. a legacy combobox input) while arrow keys move a selection cursor (`aria-selected`) through a listbox of options. `combobox_controller` does not use it: it keeps navigation private to maintain `aria-activedescendant` and leave Space/Home/End to text editing. `combobox_time_controller` does not use it either: focus enters each time column, which carries `aria-activedescendant`.
-
-- Focus **never enters** the listbox.
-- `aria-selected="true"` marks the highlighted option; the listbox item itself is never focused.
-- `ListboxNavigation` is **passive** — it attaches no listeners automatically. Wire it through a Stimulus action.
-
-```js
-// connect()
-this.listboxNav = new ListboxNavigation(this.listboxTarget);
-
-// in the Stimulus action wired to the input's keydown:
-onNavigate(event) {
-  this.listboxNav?.handleKeyDown(event);
-}
-```
-
-`handleKeyDown` handles Up/Down, Home, End, Enter, Space. It calls `event.preventDefault()` only for keys it handles. `step(1)` / `step(-1)` move selection forward/backward directly.
-
-Getters: `selectedItem` returns the currently `aria-selected` element; `currentIndex` returns its index (or `-1`).
-
-### 3. Focus Trap — `FocusTrap` (`focus.js`)
+### 2. Focus Trap — `FocusTrap` (`focus.js`)
 
 Use when: focus must stay within a bounded region until explicitly dismissed (modal dialogs, drawer panels).
 
@@ -188,7 +168,6 @@ Key predicates. `isActivationKey` matches Enter or Space; `isArrowKey` matches a
 - **`RovingTabIndex` self-manages via `activate()`** — controllers should not manually wire `keydown` handlers for roving tabindex; `activate()` encapsulates the full lifecycle so controllers only call `activate()` / `deactivate()` / `updateItems()`.
 - **`RovingTabIndex` ignores all modifier keys by default, not just `Alt`** — the guard must be correct for any `moveKey` a co-located plumber might use (`Reorderable`'s `moveKey` is configurable to `Control`/`Shift`/`Meta`), and for any future `RovingTabIndex` consumer, without that consumer needing to know about a specific plumber. `ignoreModifierKeys` is a list, not a boolean, precisely so a future consumer that wants a modified combination (e.g. `Shift+Arrow` range-select) to still move focus can narrow it.
 - **Prefer a reserved-key guard over attach order for two listeners sharing one item** — if a future plumber needs to attach its own raw `keydown` listener to items also managed by `RovingTabIndex`, extend `ignoreModifierKeys` (or add an equivalent reserved-key convention) rather than relying on which `addEventListener` call runs first plus `stopImmediatePropagation()`. The latter is an implicit ordering that silently breaks if reordered; the former partitions the keyspace structurally.
-- **`ListboxNavigation` is passive** — combobox inputs already have their own `keydown` Stimulus actions; `ListboxNavigation` is a delegate, not an event owner. Auto-attach would conflict with the controller's action descriptor system.
 - **`FocusRestoration` was removed** — it was a thin wrapper around `save()/restore()` with no behaviour beyond `FocusTrap`'s built-in `returnFocus` option. `FocusTrap` handles the common case; callers that need manual save/restore can use `document.activeElement` directly.
 
 ## Reference

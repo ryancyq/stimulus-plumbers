@@ -18,7 +18,6 @@ stimulus-plumbers/
 │   │   │   └── *.js
 │   │   ├── plumber/                 # Base plumber classes
 │   │   │   ├── config.js
-│   │   │   ├── date.js
 │   │   │   ├── geometry.js
 │   │   │   ├── index.js
 │   │   │   └── window_observer.js
@@ -60,7 +59,7 @@ stimulus-plumbers/
 - import statements should not end with .js
 - **Unit tests** using Vitest (`npm test`)
 - **Lint tests** (`npm run lint`, `npm run format:check`) — run synchronously from this package's directory; never background or tail
-- **Accessibility helpers** — use `RovingTabIndex.activate()` / `ListboxNavigation` / `FocusTrap` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract. Exceptions: `combobox_controller` and `combobox_time_controller` (see `docs/accessibility/design.md` §2).
+- **Accessibility helpers** — use `RovingTabIndex.activate()` / `FocusTrap` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract and the listbox exception.
 
 ## WCAG / ARIA Reference
 See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns. Controllers in this package are responsible for keyboard navigation, focus management, and dynamic ARIA state.

@@ -70,32 +70,15 @@ module StimulusPlumbers
       }.freeze
 
       CALENDAR = {
-        calendar:                 {}.freeze,
-        calendar_days_of_week:    {}.freeze,
-        calendar_days_of_month:   {}.freeze,
-        calendar_months_of_year:  {}.freeze,
-        calendar_years_of_decade: {}.freeze,
-        calendar_row:             {}.freeze,
-        calendar_day:             {
-          today:    { default: false, validate: Ranges::BOOL },
-          selected: { default: false, validate: Ranges::BOOL },
-          outside:  { default: false, validate: Ranges::BOOL }
-        }.freeze,
-        calendar_month:           {
-          outside: { default: false, validate: Ranges::BOOL }
-        }.freeze,
-        calendar_year:            {
-          outside: { default: false, validate: Ranges::BOOL }
-        }.freeze,
-        calendar_quarter_grid:    {}.freeze,
-        calendar_status:          {}.freeze,
-        calendar_header:          {}.freeze,
-        calendar_heading:         {}.freeze,
-        calendar_navigation:      {}.freeze,
-        calendar_grid:            {}.freeze,
-        calendar_weekday:         {}.freeze,
-        calendar_cell:            {}.freeze,
-        calendar_date:            {}.freeze
+        calendar:            {}.freeze,
+        calendar_status:     {}.freeze,
+        calendar_header:     {}.freeze,
+        calendar_heading:    {}.freeze,
+        calendar_navigation: {}.freeze,
+        calendar_grid:       {}.freeze,
+        calendar_weekday:    {}.freeze,
+        calendar_cell:       {}.freeze,
+        calendar_date:       {}.freeze
       }.freeze
 
       CARD = {

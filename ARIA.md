@@ -17,12 +17,11 @@
 
 ## JS Keyboard Navigation Patterns
 
-Two helper classes handle keyboard navigation in controllers — see [`stimulus-plumbers/docs/accessibility/design.md`](stimulus-plumbers/docs/accessibility/design.md) for full API.
+`RovingTabIndex` handles keyboard navigation in controllers — see [`stimulus-plumbers/docs/accessibility/design.md`](stimulus-plumbers/docs/accessibility/design.md) for full API.
 
-| Pattern                 | Class               | When to use                                                                          |
-| ----------------------- | ------------------- | ------------------------------------------------------------------------------------ |
-| Roving tabindex         | `RovingTabIndex`    | Disclosure widgets, trees, toolbars — focus moves between items                      |
-| Managed focus / listbox | `ListboxNavigation` | Legacy combobox listbox, `role="listbox"` — input keeps focus, `aria-selected` moves |
+| Pattern         | Class            | When to use                                                     |
+| --------------- | ---------------- | --------------------------------------------------------------- |
+| Roving tabindex | `RovingTabIndex` | Disclosure widgets, trees, toolbars — focus moves between items |
 
 ## Component-Specific Patterns (APG)
 
@@ -88,13 +87,6 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Arrow Up/Down move one option, Home/End to the ends; each selection updates the value
 - Enter closes the popover and keeps the value; Tab out of the columns, focus elsewhere, or an outside click closes and keeps it; Escape restores the value from opening, closes the popover, and keeps an enclosing modal open; Enter and Escape return focus to the input
 - Columns show a visible focus indicator (WCAG 2.4.7)
-
-#### Calendar, legacy (`calendar-month`)
-
-- Grid: `role="grid"`, `role="row"`, `role="gridcell"`
-- Selected date: `aria-selected="true"`; today: `aria-current="date"`
-- Disabled dates: `aria-disabled="true"`, `tabindex="-1"`
-- Three views: month (days grid), year (months grid), decade (years grid)
 
 #### Form Fields (`form/`, `form-field_controller`)
 
