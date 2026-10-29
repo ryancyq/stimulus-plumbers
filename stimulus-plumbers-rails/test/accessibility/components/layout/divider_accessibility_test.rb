@@ -8,7 +8,7 @@ class DividerAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/layout/divider"
   end
 
-  def test_passes_wcag
-    assert_accessible context: "#divider"
+  def test_every_section_passes_wcag
+    assert_sections_accessible
   end
 end

@@ -5,8 +5,25 @@ class FormController < ApplicationController
     @form = SignUp.new
   end
 
+  def choices
+    @form = Preferences.new
+  end
+
+  def single_checkbox
+    @form = Preferences.new
+  end
+
+  def collection_checkbox
+    @form = Preferences.new
+  end
+
+  def collection_radio
+    @form = Preferences.new
+  end
+
   def field_error
-    @form = SignUp.new.tap do |f|
+    @form = SignUp.new
+    @error_form = SignUp.new.tap do |f|
       f.errors.add(:email, "is already taken")
       f.errors.add(:name, "can't be blank")
       f.errors.add(:bio, "can't be blank")
@@ -23,14 +40,8 @@ class FormController < ApplicationController
     end
   end
 
-  def choices
-    @form = Preferences.new
-  end
-
   def floating_label
-    @form = SignUp.new.tap do |f|
-      f.errors.add(:name, "can't be blank")
-    end
+    @error_form = SignUp.new.tap { |f| f.errors.add(:name, "can't be blank") }
   end
 
   def progress
@@ -51,5 +62,6 @@ class FormController < ApplicationController
 
   def password
     @form = SignIn.new
+    @error_form = SignIn.new.tap { |f| f.errors.add(:password, "is too short") }
   end
 end

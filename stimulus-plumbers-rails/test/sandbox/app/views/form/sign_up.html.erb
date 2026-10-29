@@ -1,59 +1,41 @@
-<%
-  countries = [
-    ["Australia",     "au"],
-    ["New Zealand",   "nz"],
-    ["Singapore",     "sg"],
-    ["United States", "us"]
-  ]
-%>
-
 <h1>Create account</h1>
 
-<div id="sign-up">
-  <%= sp_card do %>
-    <%= sp_avatar(initials: "SP", name: "Stimulus Plumbers") %>
-
-    <%= form_with(model: @form, url: "/users", builder: StimulusPlumbers::Form::Builder) do |f| %>
-      <%= f.field     :name,       as: :text,     label: "Full name",     required: true %>
-      <%= f.field     :email,      as: :email,    label: "Email address", required: true,
-                                                  hint: "We'll never share your email." %>
-      <%= f.field     :password,   as: :password, label: "Password",      required: true, revealable: true %>
-      <%= f.field     :age,        as: :number,   label: "Age" %>
-      <%= f.field     :birth_date, as: :date,     label: "Date of birth" %>
-      <%= f.field     :bio,        as: :text_area, label: "Bio",
-                                                  hint: "Tell us a little about yourself." %>
-      <%= f.choice :gender, as: :radio,
-            label:        "Gender",
-            collection:   [["male", "Male"], ["female", "Female"], ["other", "Other"]],
-            value_method: :first,
-            text_method:  :last %>
-      <%= f.field     :country,    as: :select,   label: "Country",
-                                                  hint: "Select your country of residence.",
-                                                  choices: countries %>
-      <%= f.choice    :newsletter, as: :check_box, label: "Subscribe to newsletter" %>
+<section id="sign-up" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col">
+    <%= form_with(model: @form, url: "/users", scope: "sign_up_default", builder: StimulusPlumbers::Form::Builder) do |f| %>
+      <%= f.field :name,       as: :text,     label: "Full name",     required: true %>
+      <%= f.field :email,      as: :email,    label: "Email address", required: true,
+                                              hint: "We'll never share your email." %>
+      <%= f.field :password,   as: :password, label: "Password",      required: true, revealable: true %>
+      <%= f.field :birth_date, as: :date,     label: "Date of birth" %>
+      <%= f.field :bio,        as: :text_area, label: "Bio",
+                                              hint: "Tell us a little about yourself." %>
       <%= f.submit "Create account" %>
     <% end %>
 
-    <%= sp_button("Sign in", url: "#", variant: :secondary) %>
-  <% end %>
-</div>
+    <%= sp_link("Sign in", url: "#", variant: :default) %>
+  </div>
+</section>
 
-<div id="sign-up-floating">
-  <%= sp_card do %>
+<section id="sign-up-floating" class="sb-section">
+  <h2>Floating labels</h2>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", scope: "sign_up_floating", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field :name,     as: :text,     label: "Full name",     required: true, floating: :outlined %>
       <%= f.field :email,    as: :email,    label: "Email address", required: true, floating: :outlined %>
       <%= f.field :password, as: :password, label: "Password",      required: true, floating: :outlined, revealable: true %>
       <%= f.submit "Create account" %>
     <% end %>
-  <% end %>
-</div>
+  </div>
+</section>
 
-<div id="sign-up-submit-icon-only">
-  <%= sp_card do %>
+<section id="sign-up-submit-icon-only" class="sb-section">
+  <h2>Icon-only submit</h2>
+  <div class="sb-col">
     <%= form_with(model: @form, url: "/users", scope: "sign_up_submit_icon_only", builder: StimulusPlumbers::Form::Builder) do |f| %>
       <%= f.field  :email, as: :email, label: "Email address", required: true %>
       <%= f.submit "Create account", icon_leading: "save", hide_label: true %>
     <% end %>
-  <% end %>
-</div>
+  </div>
+</section>

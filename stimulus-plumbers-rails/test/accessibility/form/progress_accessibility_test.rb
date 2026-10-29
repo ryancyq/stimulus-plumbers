@@ -8,17 +8,17 @@ class ProgressFieldAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/form/progress"
   end
 
-  def test_progress_field_passes_wcag
-    assert_accessible context: "#form-progress"
+  def test_every_section_passes_wcag
+    assert_sections_accessible
   end
 
   def test_progressbar_is_named_by_its_visible_label
-    labelledby = first("#form-progress [role='progressbar']")[:"aria-labelledby"]
+    labelledby = first("#progress-field-percent [role='progressbar']")[:"aria-labelledby"]
 
-    assert_selector "#form-progress span##{labelledby}", text: "Upload progress"
+    assert_selector "#progress-field-percent span##{labelledby}", text: "Upload progress"
   end
 
   def test_no_label_element_points_at_a_non_labelable_element
-    assert_no_selector "#form-progress label"
+    assert_no_selector "[id^='progress-field'] label"
   end
 end

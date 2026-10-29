@@ -9,24 +9,27 @@ class PopoverAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_passes_wcag_with_popover_closed
-    assert_accessible context: "#popover"
+    assert_sections_accessible
   end
 
   def test_passes_wcag_with_named_region_open
     click_button "Open menu"
 
-    assert_accessible context: "#popover"
+    assert_selector "#popover-default :popover-open"
+    assert_accessible context: "#popover-default"
   end
 
   def test_passes_wcag_with_unnamed_structural_content_open
     click_button "Open details"
 
-    assert_accessible context: "#popover"
+    assert_selector "#popover-details :popover-open"
+    assert_accessible context: "#popover-details"
   end
 
   def test_passes_wcag_with_named_help_open
     click_button "Open help"
 
-    assert_accessible context: "#popover"
+    assert_selector "#popover-help :popover-open"
+    assert_accessible context: "#popover-help"
   end
 end

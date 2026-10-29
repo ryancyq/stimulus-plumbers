@@ -19,6 +19,7 @@ class TimelineAccessibilityTest < ApplicationAccessibilityTestCase
   def test_interactive_timeline_passes_wcag_in_open_state
     within("#timeline-interactive") { first("button[aria-expanded]").click }
 
+    assert_selector "#timeline-interactive button[aria-expanded='true']"
     assert_accessible context: "#timeline-interactive"
   end
 

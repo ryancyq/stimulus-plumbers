@@ -8,15 +8,7 @@ class OrderedListAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/display/ordered_list"
   end
 
-  def test_default_ordered_list_passes_wcag
-    assert_accessible context: "#ordered-list-default"
-  end
-
-  def test_ordered_list_with_links_in_editing_state_passes_wcag
-    assert_accessible context: "#ordered-list-with-links"
-  end
-
-  def test_ordered_list_custom_handle_icon_passes_wcag
-    assert_accessible context: "#ordered-list-custom-handle-icon"
+  def test_every_section_passes_wcag
+    assert_sections_accessible
   end
 end

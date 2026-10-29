@@ -8,15 +8,7 @@ class AvatarAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/display/avatar"
   end
 
-  def test_initials_passes_wcag
-    assert_accessible context: "#avatar-initials"
-  end
-
-  def test_image_passes_wcag
-    assert_accessible context: "#avatar-image"
-  end
-
-  def test_fallback_passes_wcag
-    assert_accessible context: "#avatar-fallback"
+  def test_every_section_passes_wcag
+    assert_sections_accessible
   end
 end

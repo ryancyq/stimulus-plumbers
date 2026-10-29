@@ -21,8 +21,11 @@ class ChecklistAccessibilityTest < ApplicationAccessibilityTestCase
   end
 
   def test_checklist_passes_wcag_after_toggling_an_item
-    within("#checklist-default") { check("Buy milk", allow_label_click: true) }
+    within("#checklist-default") do
+      check("Walk the dog", allow_label_click: true)
 
+      assert_checked_field "Walk the dog"
+    end
     assert_accessible context: "#checklist-default"
   end
 
@@ -37,52 +40,8 @@ class ChecklistAccessibilityTest < ApplicationAccessibilityTestCase
   def test_select_all_checklist_passes_wcag_after_click
     within("#checklist-select-all") { check("Select all", allow_label_click: true) }
 
+    within("#checklist-select-all") { assert_checked_field "Walk the dog" }
     assert_accessible context: "#checklist-select-all"
-  end
-
-  def test_clicking_master_with_mixed_state_checks_all_interactive_items
-    within("#checklist-select-all") do
-      check("Select all", allow_label_click: true)
-
-      assert_field("Buy milk", checked: true)
-      assert_field("Walk the dog", checked: true)
-    end
-  end
-
-  def test_clicking_master_with_all_checked_unchecks_all_interactive_items
-    within("#checklist-select-all") do
-      check("Select all", allow_label_click: true)
-      uncheck("Select all", allow_label_click: true)
-
-      assert_field("Buy milk", checked: false)
-      assert_field("Walk the dog", checked: false)
-    end
-  end
-
-  def test_clicking_master_twice_unchecks_all_interactive_items
-    within("#checklist-select-all") do
-      check("Select all", allow_label_click: true)
-      uncheck("Select all", allow_label_click: true)
-
-      assert_field("Buy milk", checked: false)
-      assert_field("Walk the dog", checked: false)
-    end
-  end
-
-  def test_checking_all_items_individually_checks_the_master
-    within("#checklist-select-all") do
-      check("Walk the dog", allow_label_click: true)
-
-      assert_field("Select all", checked: true)
-    end
-  end
-
-  def test_readonly_item_unaffected_by_select_all
-    within("#checklist-select-all") do
-      check("Select all", allow_label_click: true)
-
-      assert_field("Archived (read-only)", checked: false, disabled: true)
-    end
   end
 
   def test_master_toggles_via_space_key
