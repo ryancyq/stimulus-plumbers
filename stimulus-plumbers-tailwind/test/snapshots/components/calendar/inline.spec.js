@@ -14,6 +14,16 @@ const focusDay = (section, date) =>
 const navigation = (section, name) =>
   section.locator(`[data-navigation='${name}']`);
 
+// The focus ring is drawn once focus reaches the day.
+const focusRingOn = (section, date) =>
+  expect(section.locator(`[data-date='${date}']`)).toHaveCSS(
+    "outline-width",
+    "2px",
+  );
+
+const heading = (section, name) =>
+  section.getByRole("heading", { level: 2, name, exact: true });
+
 // Both modes match the same baselines.
 for (const mode of ["stimulus", "turbo"]) {
   test.describe(`${mode} mode`, () => {
@@ -32,7 +42,7 @@ for (const mode of ["stimulus", "turbo"]) {
         const section = page.locator("#calendar-inline-month");
         await focusDay(section, "2026-09-15");
         await page.keyboard.press("ArrowRight");
-        await expect(section.locator("[data-date='2026-09-16']")).toBeFocused();
+        await focusRingOn(section, "2026-09-16");
         await expect(section).toHaveScreenshot("month-focused.png");
       });
 
@@ -50,9 +60,7 @@ for (const mode of ["stimulus", "turbo"]) {
       test("next month", async ({ page }) => {
         const section = page.locator("#calendar-inline-month");
         await navigation(section, "next").click();
-        await expect(
-          section.getByRole("heading", { level: 2, name: "October 2026" }),
-        ).toBeVisible();
+        await expect(heading(section, "October 2026")).toBeVisible();
         await expect(section).toHaveScreenshot("month-next.png");
       });
 
@@ -60,7 +68,8 @@ for (const mode of ["stimulus", "turbo"]) {
         const section = page.locator("#calendar-inline-month");
         await focusDay(section, "2026-09-15");
         await page.keyboard.press("PageDown");
-        await expect(section.locator("[data-date='2026-10-15']")).toBeFocused();
+        await expect(heading(section, "October 2026")).toBeVisible();
+        await focusRingOn(section, "2026-10-15");
         await expect(section).toHaveScreenshot("month-page-down.png");
       });
 
@@ -90,9 +99,7 @@ for (const mode of ["stimulus", "turbo"]) {
       test("a month in the year view opens that month", async ({ page }) => {
         const section = page.locator("#calendar-inline-year");
         await section.locator("[aria-label='March 2026']").click();
-        await expect(
-          section.getByRole("heading", { level: 2, name: "March 2026" }),
-        ).toBeVisible();
+        await expect(heading(section, "March 2026")).toBeVisible();
         await expect(section).toHaveScreenshot("year-opened-month.png");
       });
 
@@ -106,7 +113,7 @@ for (const mode of ["stimulus", "turbo"]) {
         const section = page.locator("#calendar-inline-decade");
         await focusDay(section, "2024-01-01");
         await page.keyboard.press("Enter");
-        await expect(section.locator("[data-date='2024-01-01']")).toBeFocused();
+        await expect(heading(section, "2024")).toBeVisible();
         await expect(section).toHaveScreenshot("decade-opened-year.png");
       });
     });
@@ -125,10 +132,7 @@ test.describe("turbo mode requests", () => {
     });
     try {
       await navigation(section, "next").click();
-      await expect(section.locator("turbo-frame")).toHaveAttribute(
-        "aria-busy",
-        "true",
-      );
+      await expect(section.getByRole("grid")).toHaveCSS("opacity", "0.6");
       await expect(section).toHaveScreenshot("month-loading.png");
     } finally {
       release?.();
@@ -141,12 +145,10 @@ test.describe("turbo mode requests", () => {
       route.fulfill({ status: 500, body: "" }),
     );
     await navigation(section, "next").click();
-    await expect(section.locator("[role='status']")).toHaveText(
-      "The calendar could not be loaded",
-    );
     await expect(
-      section.getByRole("heading", { level: 2, name: "September 2026" }),
+      section.getByText("The calendar could not be loaded"),
     ).toBeVisible();
+    await expect(heading(section, "September 2026")).toBeVisible();
     await expect(section).toHaveScreenshot("month-failed.png");
   });
 });
@@ -178,6 +180,7 @@ test.describe("calendar — forced colors", () => {
     await page.emulateMedia({ forcedColors: "active" });
     await focusDay(section, "2026-09-15");
     await page.keyboard.press("ArrowRight");
+    await focusRingOn(section, "2026-09-16");
     await expect(section).toHaveScreenshot("month-forced-colors.png");
   });
 });

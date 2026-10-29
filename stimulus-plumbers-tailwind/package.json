@@ -9,8 +9,8 @@
     "test:snapshots:update": "node --run build:css && playwright test -c playwright.snapshots.config.js --update-snapshots",
     "test:browser": "node --run build:css && playwright test -c playwright.browser.config.js",
     "test:browser:ui": "node --run build:css && playwright test -c playwright.browser.config.js --ui",
-    "format:write": "prettier --write \"test/{snapshots,browser}/**/*.js\"",
-    "format:check": "prettier --check \"test/{snapshots,browser}/**/*.js\""
+    "format:write": "prettier --write \"test/{snapshots,browser,support}/**/*.js\"",
+    "format:check": "prettier --check \"test/{snapshots,browser,support}/**/*.js\""
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",

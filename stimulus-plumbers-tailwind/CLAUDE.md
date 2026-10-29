@@ -91,7 +91,7 @@ stimulus-plumbers-tailwind/
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`) — covers theme modules and generators
-- **Snapshot tests** using Playwright (`node --run test:snapshots`) — screenshots and computed-style checks on theme CSS (keyframes, compiled gradients); other assertions only as pre-screenshot waits.
+- **Snapshot tests** using Playwright (`node --run test:snapshots`) — screenshots and computed styles only. Before a screenshot, wait only on rendered state: `toBeVisible`, `toBeHidden`, `toHaveCSS`, a visible `waitForSelector()` / `waitFor()`, or `settled()` / `screenshotWithPanel()` from `test/support/playwright.js`.
 - **Browser tests** using Playwright (`node --run test:browser`) — engine-native behavior only (native `<dialog>`, Popover API, CSS anchor positioning); no screenshots. Logic → vitest; WCAG → Rails a11y
 - **Devices**: both Playwright suites run every project in `playwright.base.js`; device and engine conditions are describe-level preconditions (`test.skip(({ isMobile }) => …)`), never project names or in-test branches; only feature checks (`CSS.supports`) skip at runtime. CI runs one job per browser engine, derived from these projects by `bin/browser-matrix`
 - **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
