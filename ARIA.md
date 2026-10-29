@@ -103,6 +103,11 @@
 - One toggle button swaps visible eye/eye-slash icons and its accessible name; it has no `aria-pressed` because its name describes the next action rather than a persistent state.
 - A live announcement was rejected: changing the input between `password` and `text` provides an independent cue when returning focus to the field, without adding chatty feedback.
 
+#### Password Strength (`password_strength_controller`)
+
+- The visible strength label is plain text, not a live region, so redrawing it never speaks.
+- The level is announced through the shared polite live region after a pause in typing, and only when it differs from the level shown when typing began — never on connect, a Turbo morph, or a restored page.
+
 #### Code Input (`input_formatter_controller` + `character_cells`)
 
 - The real `<input>` is the entire accessible surface; cells are stamped `aria-hidden="true"` automatically.

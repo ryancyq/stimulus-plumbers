@@ -125,7 +125,7 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
       choices: ["ruby", "rails", "hotwire"], clearable: true %>
 ```
 
-`f.field` can take a block when its renderer declares `&block`; that declaration opts the renderer into the block DSL. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` wrapper containing the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`.
+`f.field` can take a block when its renderer declares `&block`; that declaration opts the renderer into the block DSL. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` wrapper containing the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`. The meter, level, and rule states render the empty-password result, so rules an empty password already meets (such as `negate: true`) start as met.
 
 `choices:` takes the standard Rails shape — an array of `[label, value]` pairs (or a flat array of strings).
 

@@ -1,11 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
-import { setHidden } from '../accessibility/aria';
+import { announce, setHidden } from '../accessibility/aria';
 import { attachPasswordStrength } from '../plumbers/password_strength';
 import { Requestor } from '../requestor';
 
 export default class extends Controller {
-  static targets = ['input', 'rule', 'level', 'checkIcon', 'closeIcon'];
-  static outlets = ['progress'];
+  static targets = ['input', 'meter', 'rule', 'level', 'checkIcon', 'closeIcon'];
   static values = {
     scorer: { type: String, default: 'rules' },
     rules: { type: Array, default: [] },
@@ -14,23 +13,36 @@ export default class extends Controller {
     announceDelay: { type: Number, default: 700 },
   };
 
-  connect() {
+  initialize() {
     this._requestor = new Requestor();
-    this._level = null;
     attachPasswordStrength(this, { type: this.scorerValue });
-    this.score();
   }
 
   disconnect() {
-    this._requestor?.cancel();
+    this._requestor.cancel();
+    this._announcedFrom = null;
   }
 
-  score() {
-    const { value, level, rules } = this.strength.score(this.readValue(), this.rulesValue, this.optionsValue);
+  // Value callbacks also run on every connect, so they draw the first state: nothing over
+  // server-rendered markup, the current input over a restored snapshot. Never announces.
+  rulesValueChanged() {
+    this._draw(this.readValue());
+  }
 
-    if (this.hasProgressOutlet) this.progressOutlet.setValue(value);
-    this.drawRules(rules);
-    this.announce(level);
+  optionsValueChanged() {
+    this._draw(this.readValue());
+  }
+
+  labelsValueChanged() {
+    this._draw(this.readValue());
+  }
+
+  // Draws at once; announces the level after a pause in typing, if it differs from the one
+  // shown when the typing began.
+  score() {
+    this._announcedFrom ??= this._shownLabel();
+    this._draw(this.readValue());
+    this._requestor.schedule(() => this._announce(), this.announceDelayValue);
   }
 
   readValue() {
@@ -40,7 +52,7 @@ export default class extends Controller {
   drawRules(rules) {
     this.ruleTargets.forEach((target) => {
       const satisfied = !!rules[target.dataset.rule];
-      target.dataset.satisfied = String(satisfied);
+      if (target.dataset.satisfied !== String(satisfied)) target.dataset.satisfied = String(satisfied);
       this.drawIcons(target, satisfied);
     });
   }
@@ -52,19 +64,41 @@ export default class extends Controller {
     const close = target.querySelector('[data-password-strength-target="closeIcon"]');
     if (!check || !close) return;
 
-    setHidden(check, !satisfied);
-    setHidden(close, satisfied);
+    // SVG icons have no `hidden` property, so read the attribute.
+    if (check.hasAttribute('hidden') === satisfied) setHidden(check, !satisfied);
+    if (close.hasAttribute('hidden') !== satisfied) setHidden(close, satisfied);
   }
 
-  announce(level) {
-    if (level === this._level) return;
+  // Re-scores the input as it is now, so a password cleared without typing never announces
+  // the level it had.
+  _announce() {
+    const label = this._label(this._score(this.readValue()).level);
+    if (label !== this._announcedFrom) announce(label);
+    this._announcedFrom = null;
+  }
 
-    this._level = level;
-    if (!this.hasLevelTarget) return;
+  // Writes only what differs, so redrawing an unchanged state changes nothing.
+  _draw(password) {
+    const { value, level, rules } = this._score(password);
 
-    const label = this.labelsValue[level] ?? level;
-    this._requestor.schedule(() => {
-      this.levelTarget.textContent = label;
-    }, this.announceDelayValue);
+    if (this.hasMeterTarget && this.meterTarget.dataset.progressCurrentValue !== `${value}`) {
+      this.meterTarget.dataset.progressCurrentValue = `${value}`;
+    }
+    this.drawRules(rules);
+    if (this.hasLevelTarget && this._shownLabel() !== this._label(level)) {
+      this.levelTarget.textContent = this._label(level);
+    }
+  }
+
+  _score(password) {
+    return this.strength.score(password, this.rulesValue, this.optionsValue);
+  }
+
+  _label(level) {
+    return this.labelsValue[level] ?? level;
+  }
+
+  _shownLabel() {
+    return this.hasLevelTarget ? this.levelTarget.textContent.trim() : null;
   }
 }
