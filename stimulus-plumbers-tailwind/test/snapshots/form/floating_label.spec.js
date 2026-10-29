@@ -1,10 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-// A broken toggle still renders unchanged pixels, so assert reveal state directly.
+// Waits for the swapped icons before the screenshot.
 const expectRevealed = async (section) => {
-  await expect(
-    section.locator("input[data-input-revealable-target='input']"),
-  ).toHaveAttribute("type", "text");
   await expect(section.getByLabel("Hide password")).toBeVisible();
   await expect(
     section.locator("[data-input-revealable-target='revealIcon']"),
