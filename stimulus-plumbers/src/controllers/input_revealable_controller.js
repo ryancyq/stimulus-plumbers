@@ -9,8 +9,26 @@ export default class extends Controller {
     concealLabel: { type: String, default: '' },
   };
 
+  connect() {
+    this.connection = new AbortController();
+    const { signal } = this.connection;
+    document.addEventListener('turbo:before-cache', () => this._conceal(), { signal });
+    window.addEventListener('pagehide', () => this._conceal(), { signal });
+  }
+
+  disconnect() {
+    this.connection?.abort();
+    this.connection = null;
+  }
+
   toggle() {
     this.revealedValue = !this.revealedValue;
+  }
+
+  // Draws synchronously, before the page is cached.
+  _conceal() {
+    this.revealedValue = false;
+    this.draw();
   }
 
   revealedValueChanged() {
