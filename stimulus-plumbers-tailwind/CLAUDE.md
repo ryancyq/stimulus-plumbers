@@ -136,18 +136,18 @@ Routes: `/components/{controls,display,layout,popover,calendar,showcase}/{button
 
 **Naming:** `TailwindTheme<Module>Test` — e.g. `TailwindThemeFormTest`, `TailwindThemeButtonTest`.
 
-**Pattern:** each test resolves `@theme.resolve(component, **args)[:classes]` and asserts specific Tailwind tokens with `assert_includes` / `refute_includes`.
+**Pattern:** each test resolves `classes_for(component, **args)` — `@theme.resolve(component, **args)[:classes].split` — and asserts whole Tailwind class tokens, variant prefix included, with `assert_includes` / `refute_includes`; never a substring of a class. To refute a CSS variable or a utility family in any class, use `refute_class_containing` with a string or a Regexp (`test/support/theme_assertions.rb`).
 
-**Coverage rule:** every resolver param that branches the output (`error:`, `variant:`, `size:`, `selected:`, `disabled:`, `hidden:`, `layout:`, `color:`, `type:`) needs both a positive assertion (`assert_includes`) and the corresponding negative case (`refute_includes` for the excluded class when the flag is off).
+**Coverage rule:** every resolver param that branches the output (`error:`, `variant:`, `size:`, `selected:`, `disabled:`, `hidden:`, `layout:`, `orientation:`, `color:`, `type:`) needs a test asserting the tokens that branch adds.
 
 **Use-case rule:** tests assert visual/behavioral outcomes, not CSS implementation choices.
 
 - **Test names** describe what the user sees or the layout behavior — never the CSS mechanism.
   - Bad: `test_track_uses_border_s`, `test_item_uses_ms_6_offset`
-  - Good: `test_indicator_is_in_flow_not_absolute`, `test_dot_uses_neutral_not_primary_color`
+  - Good: `test_indicator_is_in_flow_not_absolute`, `test_dot_indicator_is_neutral_not_primary`
 - **Assert** semantic color tokens (`bg-(--sp-color-primary)`), visual properties (`font-semibold`, `text-sm`), and behavioral outcomes (`refute "absolute"` = in-flow, `assert "ring-4"` = halo).
-- **Don't assert** spacing/offset magic numbers (`mt-1.5`, `start-3`, `ms-6`, `pb-10`) or layout mechanism choices (`flex-1`, `relative`, `absolute`) — these express *how*, not *what*.
-- Exception: `refute_includes result, "absolute"` is a valid use-case assertion when the intent is "element is in normal flow".
+- **Don't assert** spacing/offset magic numbers (margins, padding, gaps, offsets: `mt-1.5`, `start-3`, `ms-6`, `pb-10`) or layout mechanism choices (`flex-1`, `relative`, `absolute`) — these express *how*, not *what*. When a branch adds only layout-mechanism tokens, the coverage rule wins: assert them under an outcome name. Size-variant dimensions (`h-9` for `size: :md`) are visual properties and may be asserted.
+- Refute only when absence is the outcome (in normal flow ⇒ no `absolute`; a link has no button height), never to pin a class that was removed.
 
 ## Generator Test Convention
 

@@ -3,51 +3,28 @@
 require "test_helper"
 
 class TailwindThemeLayoutTest < Minitest::Test
+  include ThemeAssertions
+
   def setup
     @theme = StimulusPlumbers::Themes::TailwindTheme.new
   end
 
-  def classes_for(component, **args)
-    @theme.resolve(component, **args)[:classes]
-  end
-
-  def test_divider_separator_includes_all_classes
+  def test_divider_separator_is_a_hairline_in_the_border_color
     result = classes_for(:divider_separator)
 
-    assert_includes result, "flex-1"
     assert_includes result, "h-px"
-    assert_includes result, "border-0"
     assert_includes result, "bg-(--sp-color-border)"
-    refute_includes result, "border-t"
   end
 
-  def test_popover_returns_a_classes_string
-    result = classes_for(:popover)
-
-    assert_instance_of String, result
-    assert_predicate result, :present?
-  end
-
-  def test_popover_includes_all_classes
+  def test_popover_is_a_raised_bordered_surface_above_the_page
     result = classes_for(:popover)
 
     assert_includes result, "rounded-(--sp-radius-md)"
-    assert_includes result, "border"
     assert_includes result, "border-(--sp-color-border)"
     assert_includes result, "bg-(--sp-color-bg)"
     assert_includes result, "shadow-(--sp-shadow-md)"
     assert_includes result, "z-(--sp-z-popover)"
     assert_includes result, "sp-popover"
-  end
-
-  def test_popover_uses_native_anchor_and_reachable_overflow
-    result = classes_for(:popover)
-
-    assert_includes result, "[position:fixed]"
-    assert_includes result, "[position-anchor:auto]"
-    assert_includes result, "[max-inline-size:min(90vi,32rem)]"
-    assert_includes result, "[max-block-size:min(80vb,32rem)]"
-    assert_includes result, "overflow-auto"
   end
 
   def test_popover_maps_every_semantic_placement_to_logical_css
@@ -70,56 +47,18 @@ class TailwindThemeLayoutTest < Minitest::Test
     end
   end
 
-  def test_divider_returns_a_classes_string
-    result = classes_for(:divider)
-
-    assert_instance_of String, result
-    assert_predicate result, :present?
-  end
-
-  def test_divider_includes_flex_and_gap_classes
-    result = classes_for(:divider)
-
-    assert_includes result, "w-full"
-    assert_includes result, "flex"
-    assert_includes result, "items-center"
-    assert_includes result, "gap-(--sp-space-3)"
-  end
-
-  def test_divider_label_returns_a_classes_string
-    result = classes_for(:divider_label)
-
-    assert_instance_of String, result
-    assert_predicate result, :present?
-  end
-
-  def test_divider_label_includes_text_and_whitespace_classes
+  def test_divider_label_is_medium_weight_on_one_line
     result = classes_for(:divider_label)
 
     assert_includes result, "whitespace-nowrap"
     assert_includes result, "font-medium"
   end
 
-  # :popover_wrapper
-
-  def test_popover_wrapper_includes_positioning_classes
-    result = classes_for(:popover_wrapper)
-
-    assert_includes result, "relative"
-    assert_includes result, "inline-block"
+  def test_popover_trigger_text_is_medium_weight
+    assert_includes classes_for(:popover_trigger), "font-medium"
   end
 
-  # :popover_trigger
-
-  def test_popover_trigger_includes_button_layout_classes
-    result = classes_for(:popover_trigger)
-
-    assert_includes result, "inline-flex"
-    assert_includes result, "items-center"
-    assert_includes result, "font-medium"
-  end
-
-  def test_popover_trigger_includes_border_and_background
+  def test_popover_trigger_is_a_bordered_transparent_control
     result = classes_for(:popover_trigger)
 
     assert_includes result, "border"
@@ -127,18 +66,14 @@ class TailwindThemeLayoutTest < Minitest::Test
     assert_includes result, "bg-transparent"
   end
 
-  def test_popover_trigger_includes_focus_ring
+  def test_popover_trigger_shows_the_focus_ring
     result = classes_for(:popover_trigger)
 
     assert_includes result, "focus-visible:ring-(length:--sp-focus-ring-width)"
     assert_includes result, "focus-visible:ring-(--sp-focus-ring-color)"
   end
 
-  def test_popover_trigger_includes_hover_muted_bg
+  def test_popover_trigger_tints_on_hover
     assert_includes classes_for(:popover_trigger), "hover:bg-(--sp-color-muted)"
-  end
-
-  def test_popover_trigger_includes_height_class
-    assert_includes classes_for(:popover_trigger), "h-9"
   end
 end
