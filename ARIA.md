@@ -171,6 +171,7 @@
 - Expandable items: trigger `<button>` with `aria-expanded="false/true"` + `aria-controls` → detail element id; detail has `hidden` attribute toggled by controller
 - Trigger lives inside `<h3>` (`<h3><button aria-expanded>Title</button></h3>`) — WAI-ARIA Accordion pattern
 - Keyboard (interactive): Up/Down arrows move focus between item triggers; Home/End jump to first/last trigger; Enter/Space toggle expansion (native button behaviour)
+- No live announcement on expand/collapse — `aria-expanded` on the focused trigger already conveys the change
 
 #### Reorderable (`reorderable_controller`)
 
