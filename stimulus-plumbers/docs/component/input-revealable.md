@@ -27,6 +27,8 @@ Supply both icons or neither — a lone icon stays visible and only the `aria-la
 | ---------- | ------------- | --------------------- |
 | `toggle()` | `data-action` | Flips `revealedValue` |
 
+The input conceals on `turbo:before-cache` and `pagehide`, so a cached page never restores a revealed value.
+
 ## Readonly secret
 
 ```html
