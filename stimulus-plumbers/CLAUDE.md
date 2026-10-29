@@ -20,6 +20,7 @@ stimulus-plumbers/
 │   │   │   ├── config.js
 │   │   │   ├── geometry.js
 │   │   │   ├── index.js
+│   │   │   ├── morph.js
 │   │   │   └── window_observer.js
 │   │   └── *.js
 │   ├── index.js                     # Main entry point
@@ -69,5 +70,5 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
 
 - **Naming** — controller helpers are `_`-prefixed methods (the manifest skips them), not `#private` members.
-- **Listener cleanup** — group listeners that share a lifetime (connection, open state, target) under one `AbortController` and abort it when the lifetime ends; some controllers pair `addEventListener`/`removeEventListener`.
+- **Listener cleanup** — group listeners that share a lifetime (connection, open state, target) under one `AbortController` and abort it when the lifetime ends; some controllers pair `addEventListener`/`removeEventListener`. Stateless helpers (e.g. `onMorph`) take `{ signal }`.
 - **`onX(event)` adapts, `x(value)` computes** — only `onX` is safe in a `data-action`. Name the first parameter `event`; the Rails contract test rejects wiring to a method taking a value.
