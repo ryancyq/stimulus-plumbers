@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Application } from '@hotwired/stimulus'
 import InputFormatterController from '../../../src/controllers/input_formatter_controller'
+import ClipboardController from '../../../src/controllers/clipboard_controller'
 
 describe('InputFormatterController', () => {
   let application
@@ -169,8 +170,10 @@ describe('InputFormatterController', () => {
       await new Promise((resolve) => setTimeout(resolve, 10))
     })
 
+    const pasted = (text) => new CustomEvent('clipboard:pasted', { detail: { text }, cancelable: true })
+
     it('normalizes and formats a valid pasted value', () => {
-      getController().onPaste({ detail: { text: '4242424242424242' } })
+      getController().onPaste(pasted('4242424242424242'))
       expect(document.querySelector('[data-input-formatter-target="input"]').textContent).toBe(
         '4242 4242 4242 4242'
       )
@@ -179,14 +182,14 @@ describe('InputFormatterController', () => {
     it('does not write when the normalized value fails validation', () => {
       const output = document.querySelector('[data-input-formatter-target="input"]')
       output.textContent = 'original'
-      getController().onPaste({ detail: { text: 'not-a-card' } })
+      getController().onPaste(pasted('not-a-card'))
       expect(output.textContent).toBe('original')
     })
 
     it('does not write when pasted text is empty', () => {
       const output = document.querySelector('[data-input-formatter-target="input"]')
       output.textContent = 'original'
-      getController().onPaste({ detail: { text: '' } })
+      getController().onPaste(pasted(''))
       expect(output.textContent).toBe('original')
     })
 
@@ -194,8 +197,42 @@ describe('InputFormatterController', () => {
       document.body.innerHTML = `<div data-controller="input-formatter"></div>`
       await new Promise((resolve) => setTimeout(resolve, 10))
       expect(() =>
-        getController().onPaste({ detail: { text: '4242424242424242' } })
+        getController().onPaste(pasted('4242424242424242'))
       ).not.toThrow()
+    })
+
+    describe('with the clipboard controller', () => {
+      beforeEach(async () => {
+        application.register('clipboard', ClipboardController)
+        document.body.innerHTML = `
+          <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
+            <input data-input-formatter-target="input"
+                   data-controller="clipboard"
+                   data-action="paste->clipboard#onPaste clipboard:pasted->input-formatter#onPaste">
+          </div>
+        `
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      })
+
+      const paste = (text) => {
+        const event = new Event('paste', { bubbles: true, cancelable: true })
+        Object.defineProperty(event, 'clipboardData', { value: { getData: () => text, types: ['text/plain'] } })
+        document.querySelector('input').dispatchEvent(event)
+        return event
+      }
+
+      it('replaces the native paste with a formatted full card number', () => {
+        const event = paste('4242424242424242')
+
+        expect(event.defaultPrevented).toBe(true)
+        expect(document.querySelector('input').value).toBe('4242 4242 4242 4242')
+      })
+
+      it('lets a partial card number paste natively', () => {
+        const event = paste('4242 4242')
+
+        expect(event.defaultPrevented).toBe(false)
+      })
     })
   })
 

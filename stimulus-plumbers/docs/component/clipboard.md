@@ -1,6 +1,6 @@
 # clipboard
 
-Intercepts native paste events and re-dispatches them as Stimulus events. Also provides a copy action that writes text to the clipboard via the Clipboard API.
+Re-dispatches native paste events as cancelable Stimulus events. Also provides a copy action that writes text to the clipboard via the Clipboard API.
 
 ## Targets
 
@@ -16,18 +16,18 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 
 ## Methods
 
-| Method           | Wired via         | Description                                                      |
-| ---------------- | ----------------- | ---------------------------------------------------------------- |
-| `onPaste(event)` | `paste` DOM event | Event adapter — intercepts paste, dispatches `clipboard:pasted`  |
-| `copy(event)`    | `data-action`     | Action — writes text to clipboard, dispatches `clipboard:copied` |
+| Method           | Wired via         | Description                                                                                             |
+| ---------------- | ----------------- | ------------------------------------------------------------------------------------------------------- |
+| `onPaste(event)` | `paste` DOM event | Event adapter — dispatches `clipboard:pasted`; cancels the native paste only if that event is cancelled |
+| `copy(event)`    | `data-action`     | Action — writes text to clipboard, dispatches `clipboard:copied`                                        |
 
 ## Dispatches
 
-| Event                   | Detail            | When                             |
-| ----------------------- | ----------------- | -------------------------------- |
-| `clipboard:pasted`      | `{ text, types }` | On successful paste interception |
-| `clipboard:copied`      | `{ text }`        | On successful clipboard write    |
-| `clipboard:copy-failed` | `{ error }`       | On clipboard write failure       |
+| Event                   | Detail            | When                                                         |
+| ----------------------- | ----------------- | ------------------------------------------------------------ |
+| `clipboard:pasted`      | `{ text, types }` | On paste; cancelable                                         |
+| `clipboard:copied`      | `{ text }`        | On successful clipboard write                                |
+| `clipboard:copy-failed` | `{ error }`       | On clipboard write failure, or when there is nothing to copy |
 
 ## Paste example
 
@@ -57,5 +57,5 @@ Intercepts native paste events and re-dispatches them as Stimulus events. Also p
 
 ## Notes
 
-- `paste` calls `event.preventDefault()` — the original paste is suppressed
+- The native paste proceeds unless a `clipboard:pasted` listener calls `preventDefault()`
 - Use `clipboard:pasted->input-formatter#onPaste` to forward pasted content for formatting
