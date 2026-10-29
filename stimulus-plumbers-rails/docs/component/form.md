@@ -212,14 +212,14 @@ The validator also accepts inline options (`password_strength: { min_length: 12,
 | `autocomplete` | String                                   | `"one-time-code"`      | Native autocomplete value                                |
 | `inputmode`    | String                                   | `"numeric"` for digits | Native input mode                                        |
 
-**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group; their sum sets `maxlength`.
+**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group; `maxlength` is their sum plus one space per group break.
 
-| Option         | Values                     | Default        | Description                                                  |
-| -------------- | -------------------------- | -------------- | ------------------------------------------------------------ |
-| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group; their sum sets `maxlength` |
-| `separator`    | String / `nil`             | `nil`          | Character between cells; `nil` renders none                  |
-| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                    |
-| `inputmode`    | String                     | `"numeric"`    | Native input mode                                            |
+| Option         | Values                     | Default        | Description                                                                     |
+| -------------- | -------------------------- | -------------- | ------------------------------------------------------------------------------- |
+| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group; the input value is spaced at each group break |
+| `separator`    | String / `nil`             | `nil`          | Character between cells; `nil` renders none                                     |
+| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                                       |
+| `inputmode`    | String                     | `"numeric"`    | Native input mode                                                               |
 
 Character-cell fields do not support `floating:` labels.
 
