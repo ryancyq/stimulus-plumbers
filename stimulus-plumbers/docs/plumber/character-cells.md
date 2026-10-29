@@ -47,5 +47,5 @@ the original per-character behavior.
 ## Notes
 
 - Accessibility: see [ARIA.md's Code Input pattern](../../../ARIA.md).
-- The plumber never generates DOM: render exactly as many cells as the expected length (or, in grouped mode, `groups.length`), or extras become `data-inactive`; too few logs a console warning.
+- The plumber never generates DOM: render exactly as many cells as the expected length (or, in grouped mode, `groups.length`), or extras become `data-inactive`; too few logs one console warning per controller (never in grouped mode).
 - The plumber never inserts separator elements. Separators between cells/groups are authored HTML or CSS decoration — a CSS gap keyed on `[data-group-end]` in non-grouped mode, or a real authored element between cells in grouped mode (since the whole cell is already one group, `data-group-end` doesn't apply there).
