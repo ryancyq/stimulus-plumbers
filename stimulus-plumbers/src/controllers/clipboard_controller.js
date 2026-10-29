@@ -9,14 +9,19 @@ export default class extends Controller {
   onPaste(event) {
     const text = event.clipboardData?.getData(this.contentTypeValue) ?? '';
     const types = Array.from(event.clipboardData?.types ?? []);
-    event.preventDefault();
-    this.dispatch('pasted', { detail: { text, types }, bubbles: true });
+    const pasted = this.dispatch('pasted', { detail: { text, types }, bubbles: true, cancelable: true });
+    if (pasted.defaultPrevented) event.preventDefault();
   }
 
   async copy(event) {
     const text =
-      event.params?.text ??
+      event?.params?.text ??
       (this.hasSourceTarget ? (this.sourceTarget.value ?? this.sourceTarget.textContent ?? '') : '');
+    if (!text) {
+      this.dispatch('copy-failed', { detail: { error: new Error('Nothing to copy') }, bubbles: true });
+      return;
+    }
+
     try {
       await navigator.clipboard.writeText(text);
       this.dispatch('copied', { detail: { text }, bubbles: true });

@@ -62,6 +62,7 @@ export default class extends Controller {
     if (!this.formatter || !raw) return;
     const value = this.formatter.normalize(raw);
     if (!this.formatter.validate(value)) return;
+    event.preventDefault();
     this.format(value);
   }
 
