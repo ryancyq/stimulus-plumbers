@@ -18,6 +18,13 @@ test.describe("ordered list", () => {
     );
   });
 
+  test("whole-item handle blocks touch panning only while editing", async ({
+    page,
+  }) => {
+    await expect(page.locator("#editing-1")).toHaveCSS("touch-action", "none");
+    await expect(page.locator("#item-1")).toHaveCSS("touch-action", "auto");
+  });
+
   test("custom handle icon", async ({ page }) => {
     await expect(
       page.locator("#ordered-list-custom-handle-icon"),

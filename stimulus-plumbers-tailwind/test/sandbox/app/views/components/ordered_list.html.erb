@@ -11,6 +11,17 @@
   </div>
 </section>
 
+<section id="ordered-list-editing" class="sb-section">
+  <h2>Whole-item handle, editing</h2>
+  <div class="sb-col">
+    <%= sp_ordered_list(editing: true) do |list| %>
+      <%= list.item("First", id: "editing-1") %>
+      <%= list.item("Second", id: "editing-2") %>
+      <%= list.item("Third", id: "editing-3") %>
+    <% end %>
+  </div>
+</section>
+
 <section id="ordered-list-with-links" class="sb-section">
   <h2>Links + leading-icon handle, editing</h2>
   <div class="sb-col">

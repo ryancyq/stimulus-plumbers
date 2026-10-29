@@ -24,7 +24,8 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.reorderable.detachItems(this.itemTargets);
+    this.reorderable.disconnect();
+    this.reorderable = null;
     this.rovingTabIndex?.deactivate();
     this.rovingTabIndex = null;
   }
@@ -39,8 +40,17 @@ export default class extends Controller {
     this.rovingTabIndex?.updateItems(this.itemTargets);
   }
 
+  triggerTargetConnected(trigger) {
+    setDisabled(trigger, this.editingValue);
+  }
+
   editingValueChanged(value) {
-    this.triggerTargets.forEach((trigger) => setDisabled(trigger, value));
+    this._syncTriggers();
+    if (!value) this.reorderable?.cancelDrag();
+  }
+
+  _syncTriggers() {
+    this.triggerTargets.forEach((trigger) => setDisabled(trigger, this.editingValue));
   }
 
   toggleEditing() {

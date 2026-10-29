@@ -86,7 +86,15 @@ export class Reorderable extends Plumber {
   }
 
   startDrag(item, handle, pointerId) {
+    this.#clearDrag();
     this.draggingItem = item;
+    this.dragOrigin = { parent: item.parentNode, next: item.nextElementSibling };
+    this.dragHandle = handle;
+    this.dragPointerId = pointerId;
+    this.dragListeners = new AbortController();
+    const { signal } = this.dragListeners;
+    handle.addEventListener('pointercancel', () => this.cancelDrag(), { signal });
+    handle.addEventListener('lostpointercapture', () => this.cancelDrag(), { signal });
     handle.setPointerCapture(pointerId);
   }
 
@@ -97,15 +105,16 @@ export class Reorderable extends Plumber {
     const items = this.items;
     const draggingIndex = items.indexOf(this.draggingItem);
 
+    // Moves the neighbor, not the dragging item.
     const previous = items[draggingIndex - 1];
     if (previous && coord < this.midpointOf(previous)) {
-      previous.before(this.draggingItem);
+      this.draggingItem.after(previous);
       return;
     }
 
     const next = items[draggingIndex + 1];
     if (next && coord > this.midpointOf(next)) {
-      next.after(this.draggingItem);
+      this.draggingItem.before(next);
     }
   }
 
@@ -115,11 +124,38 @@ export class Reorderable extends Plumber {
   endDrag(handle, pointerId) {
     if (!this.draggingItem) return null;
 
-    handle.releasePointerCapture(pointerId);
     const item = this.draggingItem;
-    this.draggingItem = null;
+    this.#clearDrag();
+    handle.releasePointerCapture(pointerId);
     this.dispatch('reordered', { detail: { itemIds: this.orderedIds() } });
     return item;
+  }
+
+  /** Restores the dragged item to its starting position without dispatching `reordered` */
+  cancelDrag() {
+    if (!this.draggingItem) return;
+
+    const { draggingItem, dragOrigin, dragHandle, dragPointerId } = this;
+    this.#clearDrag();
+    const next = dragOrigin.next?.parentNode === dragOrigin.parent ? dragOrigin.next : null;
+    dragOrigin.parent?.insertBefore(draggingItem, next);
+    if (dragHandle.hasPointerCapture?.(dragPointerId)) dragHandle.releasePointerCapture(dragPointerId);
+  }
+
+  /** Forgets the active drag and its listeners, without touching the DOM */
+  #clearDrag() {
+    this.dragListeners?.abort();
+    this.draggingItem = null;
+    this.dragOrigin = null;
+    this.dragHandle = null;
+    this.dragPointerId = null;
+    this.dragListeners = null;
+  }
+
+  /** Forgets any active drag and detaches every item's keydown listener; safe to repeat */
+  disconnect() {
+    this.#clearDrag();
+    this.detachItems(this.items);
   }
 
   midpointOf(item) {

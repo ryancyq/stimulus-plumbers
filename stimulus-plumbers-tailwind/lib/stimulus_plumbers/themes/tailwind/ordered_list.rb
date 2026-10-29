@@ -12,7 +12,9 @@ module StimulusPlumbers
           "rounded-(--sp-radius-sm) text-(length:--sp-text-sm)",
           "text-(--sp-color-fg)",
           "focus-visible:ring-(--sp-color-primary-ring)",
-          "aria-[current]:bg-(--sp-color-primary)/10 aria-[current]:text-(--sp-color-primary)"
+          "aria-[current]:bg-(--sp-color-primary)/10 aria-[current]:text-(--sp-color-primary)",
+          # A whole-item handle blocks touch panning only while editing.
+          "[[data-reorderable-editing-value=true]_&[data-reorderable-target~=handle]]:touch-none"
         ].freeze
 
         HANDLE = %w[

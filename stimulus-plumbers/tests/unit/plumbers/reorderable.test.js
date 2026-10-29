@@ -1,6 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Reorderable, attachReorderable } from '../../../src/plumbers/reorderable';
 
+// A real element, so the plumber can listen for pointercancel/lostpointercapture on it.
+const makeHandle = () =>
+  Object.assign(document.createElement('span'), {
+    setPointerCapture: vi.fn(),
+    releasePointerCapture: vi.fn(),
+    hasPointerCapture: vi.fn(() => true),
+  });
+
 describe('Reorderable', () => {
   let mockController;
   let items;
@@ -180,6 +188,24 @@ describe('Reorderable', () => {
     });
   });
 
+  describe('disconnect', () => {
+    it('stops keyboard moves and forgets an active drag, and is idempotent', () => {
+      const reorderable = new Reorderable(mockController);
+      const handle = makeHandle();
+      reorderable.attachItems(items);
+      reorderable.startDrag(items[0], handle, 1);
+
+      reorderable.disconnect();
+      reorderable.disconnect();
+      items[0].dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true })
+      );
+
+      expect(mockController.itemTargets.map((i) => i.id)).toEqual(['row-a', 'row-b', 'row-c']);
+      expect(reorderable.endDrag(handle, 1)).toBeNull();
+    });
+  });
+
   describe('attachReorderable', () => {
     it('returns a Reorderable instance', () => {
       expect(attachReorderable(mockController)).toBeInstanceOf(Reorderable);
@@ -207,7 +233,7 @@ describe('Reorderable', () => {
     it('swaps the dragging item past a neighbor once the pointer crosses its midpoint', () => {
       stubRects();
       const reorderable = new Reorderable(mockController);
-      const handle = { setPointerCapture: vi.fn(), releasePointerCapture: vi.fn() };
+      const handle = makeHandle();
 
       reorderable.startDrag(items[0], handle, 1);
       // row-b occupies y:40-80, midpoint 60 — cross it to trigger the swap
@@ -220,7 +246,7 @@ describe('Reorderable', () => {
     it('dispatches reorderable:reordered on endDrag', () => {
       stubRects();
       const reorderable = new Reorderable(mockController);
-      const handle = { setPointerCapture: vi.fn(), releasePointerCapture: vi.fn() };
+      const handle = makeHandle();
 
       reorderable.startDrag(items[0], handle, 1);
       reorderable.drag({ clientY: 61 });
@@ -236,7 +262,7 @@ describe('Reorderable', () => {
 
     it('endDrag is a no-op without a preceding startDrag', () => {
       const reorderable = new Reorderable(mockController);
-      const handle = { setPointerCapture: vi.fn(), releasePointerCapture: vi.fn() };
+      const handle = makeHandle();
 
       const moved = reorderable.endDrag(handle, 1);
 
@@ -245,10 +271,109 @@ describe('Reorderable', () => {
       expect(mockController.dispatch).not.toHaveBeenCalled();
     });
 
+    describe('interrupted drag', () => {
+      const order = () => mockController.itemTargets.map((i) => i.id);
+
+      it.each(['pointercancel', 'lostpointercapture'])(
+        'restores the starting order without dispatching on %s',
+        (type) => {
+          stubRects();
+          const reorderable = new Reorderable(mockController);
+          const handle = makeHandle();
+
+          reorderable.startDrag(items[0], handle, 1);
+          reorderable.drag({ clientY: 61 });
+          handle.dispatchEvent(new Event(type));
+
+          expect(order()).toEqual(['row-a', 'row-b', 'row-c']);
+          expect(mockController.dispatch).not.toHaveBeenCalled();
+        }
+      );
+
+      it('stops reordering on later pointer moves once cancelled', () => {
+        stubRects();
+        const reorderable = new Reorderable(mockController);
+        const handle = makeHandle();
+
+        reorderable.startDrag(items[0], handle, 1);
+        handle.dispatchEvent(new Event('pointercancel'));
+        reorderable.drag({ clientY: 61 });
+
+        expect(order()).toEqual(['row-a', 'row-b', 'row-c']);
+      });
+
+      it('restores an item dragged back past several neighbors', () => {
+        stubRects();
+        const reorderable = new Reorderable(mockController);
+        const handle = makeHandle();
+
+        reorderable.startDrag(items[2], handle, 1);
+        reorderable.drag({ clientY: 59 });
+        reorderable.drag({ clientY: 19 });
+        expect(order()).toEqual(['row-c', 'row-a', 'row-b']);
+        reorderable.cancelDrag();
+
+        expect(order()).toEqual(['row-a', 'row-b', 'row-c']);
+      });
+
+      it('releases capture on cancel', () => {
+        const reorderable = new Reorderable(mockController);
+        const handle = makeHandle();
+
+        reorderable.startDrag(items[0], handle, 1);
+        reorderable.cancelDrag();
+
+        expect(handle.releasePointerCapture).toHaveBeenCalledWith(1);
+      });
+
+      it('ignores the lostpointercapture that follows a completed drag', () => {
+        stubRects();
+        const reorderable = new Reorderable(mockController);
+        const handle = makeHandle();
+
+        reorderable.startDrag(items[0], handle, 1);
+        reorderable.drag({ clientY: 61 });
+        reorderable.endDrag(handle, 1);
+        handle.dispatchEvent(new Event('lostpointercapture'));
+
+        expect(order()).toEqual(['row-b', 'row-a', 'row-c']);
+        expect(mockController.dispatch).toHaveBeenCalledTimes(1);
+      });
+
+      it('keeps the dragging item in the DOM while neighbors move past it', () => {
+        stubRects();
+        const reorderable = new Reorderable(mockController);
+        const handle = makeHandle();
+        const observer = new MutationObserver(() => {});
+        observer.observe(document.getElementById('list'), { childList: true });
+
+        reorderable.startDrag(items[0], handle, 1);
+        reorderable.drag({ clientY: 61 });
+        const removed = observer.takeRecords().flatMap((record) => [...record.removedNodes]);
+        observer.disconnect();
+
+        expect(removed).not.toContain(items[0]);
+      });
+
+      it('disconnect forgets the drag without moving items back', () => {
+        stubRects();
+        const reorderable = new Reorderable(mockController);
+        const handle = makeHandle();
+
+        reorderable.startDrag(items[0], handle, 1);
+        reorderable.drag({ clientY: 61 });
+        reorderable.disconnect();
+        handle.dispatchEvent(new Event('pointercancel'));
+
+        expect(order()).toEqual(['row-b', 'row-a', 'row-c']);
+        expect(reorderable.endDrag(handle, 1)).toBeNull();
+      });
+    });
+
     it('does not announce on drag (mouse users should not have focus stolen)', async () => {
       stubRects();
       const reorderable = new Reorderable(mockController);
-      const handle = { setPointerCapture: vi.fn(), releasePointerCapture: vi.fn() };
+      const handle = makeHandle();
 
       reorderable.startDrag(items[0], handle, 1);
       reorderable.drag({ clientY: 61 });
@@ -313,7 +438,7 @@ describe('Reorderable', () => {
     it('reorders via x-midpoint comparison while dragging', () => {
       stubRects();
       const reorderable = new Reorderable(mockController, { orientation: 'horizontal' });
-      const handle = { setPointerCapture: vi.fn(), releasePointerCapture: vi.fn() };
+      const handle = makeHandle();
 
       reorderable.startDrag(items[0], handle, 1);
       // row-b occupies x:100-200, midpoint 150 — cross it to trigger the swap

@@ -4,6 +4,8 @@ module StimulusPlumbers
   module Components
     class OrderedList < Plumber::Base
       def render(move_key: "Alt", editing: false, orientation: nil, role: "list", **kwargs, &block)
+        @editing    = editing
+        @item_count = 0
         stimulus = {
           data: {
             controller:                      "reorderable",
@@ -16,8 +18,11 @@ module StimulusPlumbers
         template.content_tag(:ol, template.capture(self, &block), **html_options, role: role)
       end
 
+      # The first item is the roving Tab stop, as the controller sets it on connect.
       def item(content = nil, **kwargs, &block)
-        OrderedList::Item.new(template).render(content, **kwargs, &block)
+        @item_count = @item_count.to_i + 1
+        tab_stop    = @item_count == 1
+        OrderedList::Item.new(template).render(content, state: { editing: @editing, tab_stop: tab_stop }, **kwargs, &block)
       end
     end
   end
