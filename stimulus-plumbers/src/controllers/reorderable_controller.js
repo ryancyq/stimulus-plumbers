@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { RovingTabIndex } from '../accessibility/keyboard';
 import { setDisabled } from '../accessibility/aria';
 import { attachReorderable } from '../plumbers';
+import { onMorph } from '../plumbers/plumber/morph';
 
 export default class extends Controller {
   static targets = ['item', 'handle', 'trigger'];
@@ -21,10 +22,24 @@ export default class extends Controller {
 
     this.rovingTabIndex = new RovingTabIndex(this.itemTargets, { orientation: this.orientationValue });
     this.rovingTabIndex.activate();
+
+    // Re-applies tabindex and aria-disabled after a morph.
+    this.connection = new AbortController();
+    onMorph(
+      this.element,
+      () => {
+        this._syncTriggers();
+        this.rovingTabIndex?.updateItems(this.itemTargets);
+      },
+      { signal: this.connection.signal }
+    );
   }
 
   disconnect() {
-    this.reorderable.detachItems(this.itemTargets);
+    this.connection?.abort();
+    this.connection = null;
+    this.reorderable.disconnect();
+    this.reorderable = null;
     this.rovingTabIndex?.deactivate();
     this.rovingTabIndex = null;
   }
@@ -39,8 +54,17 @@ export default class extends Controller {
     this.rovingTabIndex?.updateItems(this.itemTargets);
   }
 
+  triggerTargetConnected(trigger) {
+    setDisabled(trigger, this.editingValue);
+  }
+
   editingValueChanged(value) {
-    this.triggerTargets.forEach((trigger) => setDisabled(trigger, value));
+    this._syncTriggers();
+    if (!value) this.reorderable?.cancelDrag();
+  }
+
+  _syncTriggers() {
+    this.triggerTargets.forEach((trigger) => setDisabled(trigger, this.editingValue));
   }
 
   toggleEditing() {

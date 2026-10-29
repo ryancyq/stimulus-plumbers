@@ -8,11 +8,11 @@ Reorders a vertical or horizontal list of items via pointer drag (a dedicated ha
 
 ## Targets
 
-| Name      | Element                                     | Purpose                                                                            |
-| --------- | ------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `item`    | Each reorderable row (`<li>`, `<tr>`, etc.) | Must have a stable `id` to appear in the `reorderable:reordered` event's `itemIds` |
-| `handle`  | Drag grip within each `item`                | The only pointer-drag surface — wire `pointerdown`/`pointermove`/`pointerup` to it |
-| `trigger` | The `<a>`/`<button>` inside an item, if any | Neutralized (via `aria-disabled`/`tabindex`) while `editingValue` is `true`        |
+| Name      | Element                                     | Purpose                                                                                                                                  |
+| --------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `item`    | Each reorderable row (`<li>`, `<tr>`, etc.) | Must have a stable `id` to appear in the `reorderable:reordered` event's `itemIds`                                                       |
+| `handle`  | Drag grip within each `item`                | The only pointer-drag surface — wire `pointerdown`/`pointermove`/`pointerup` to it                                                       |
+| `trigger` | The `<a>`/`<button>` inside an item, if any | Neutralized (via `aria-disabled`/`tabindex`) while `editingValue` is `true`, including triggers added later or restored by a Turbo morph |
 
 ## Values
 
@@ -47,6 +47,8 @@ Reorders a vertical or horizontal list of items via pointer drag (a dedicated ha
 | Event                   | Detail                  | When                                                                                              |
 | ----------------------- | ----------------------- | ------------------------------------------------------------------------------------------------- |
 | `reorderable:reordered` | `{ itemIds: string[] }` | After a drag ends or a keyboard move completes. Items without an `id` are omitted from `itemIds`. |
+
+An interrupted drag (`pointercancel`, lost pointer capture, or leaving editing mode) restores the starting order and dispatches nothing. Touch drags need `touch-action: none` on the handle while editing, or the browser cancels them to scroll.
 
 ## Example HTML
 
