@@ -55,7 +55,7 @@ describe('parseActions', () => {
   it('keeps the documented modal action surfaces exact', () => {
     const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'))
 
-    expect(manifest.modal.actions).toEqual(['close', 'dismiss', 'open'])
+    expect(manifest.modal.actions).toEqual(['close', 'dismiss', 'onClose', 'onDismiss', 'onOpen', 'open'])
     expect(manifest['modal-turbo'].actions).toEqual([
       'onBeforeFetchRequest',
       'onClosed',
@@ -63,9 +63,12 @@ describe('parseActions', () => {
       'onSubmitEnd',
     ])
     expect(manifest.modal.actionParams).toEqual({
-      close: ['eventOrResult'],
-      dismiss: ['eventOrResult'],
-      open: ['event'],
+      close: ['result'],
+      dismiss: ['result'],
+      onClose: ['event'],
+      onDismiss: ['event'],
+      onOpen: ['event'],
+      open: ['source'],
     })
     expect(manifest['modal-turbo'].actionParams).toEqual({
       onBeforeFetchRequest: ['event'],
@@ -75,17 +78,31 @@ describe('parseActions', () => {
     })
   })
 
+  it('names event adapters onX(event) and never passes the event to the programmatic API', () => {
+    const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'))
+    const violations = Object.entries(manifest).flatMap(([id, { actionParams }]) =>
+      Object.entries(actionParams)
+        .filter(([method, [first]]) => (/^on[A-Z]/.test(method) ? first !== undefined && first !== 'event' : /^event/i.test(first ?? '')))
+        .map(([method, params]) => `${id}#${method}(${params.join(', ')})`)
+    )
+
+    expect(violations).toEqual([])
+  })
+
   it('keeps the documented popover action surface exact', () => {
     const manifest = JSON.parse(readFileSync(MANIFEST_PATH, 'utf8'))
 
     expect(manifest.popover.targets).toEqual(['trigger', 'panel'])
     expect(manifest.popover.values).toEqual({})
-    expect(manifest.popover.actions).toEqual(['close', 'onFocus', 'open', 'toggle'])
+    expect(manifest.popover.actions).toEqual(['close', 'onClose', 'onFocus', 'onOpen', 'onToggle', 'open', 'toggle'])
     expect(manifest.popover.actionParams).toEqual({
-      close: ['event'],
+      close: [],
+      onClose: ['event'],
       onFocus: ['event'],
-      open: ['event'],
-      toggle: ['event'],
+      onOpen: ['event'],
+      onToggle: ['event'],
+      open: ['source'],
+      toggle: ['source'],
     })
     expect(manifest.popover.dispatches).toEqual(['before-open', 'closed', 'opened'])
   })
@@ -204,7 +221,7 @@ describe('withPlumberSources', () => {
     const source = readFileSync(join(CONTROLLERS_DIR, 'modal_controller.js'), 'utf8')
     const combined = withPlumberSources(source, CONTROLLERS_DIR)
 
-    expect(parseActions(source)).toEqual(['close', 'dismiss', 'open'])
+    expect(parseActions(source)).toEqual(['close', 'dismiss', 'onClose', 'onDismiss', 'onOpen', 'open'])
     expect(parseDispatches(source)).toEqual([])
     expect(parseDispatches(combined)).toEqual(['before-dismiss', 'before-open', 'closed', 'opened'])
   })

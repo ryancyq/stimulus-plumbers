@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Components
     class Modal
       class Trigger < Plumber::Base
-        STIMULUS_ACTION = "modal#open"
+        STIMULUS_ACTION = "modal#onOpen"
 
         def render(modal_id:, type: :default, variant: :primary, size: :md, **kwargs, &block)
           button = Components::Button.new(template)

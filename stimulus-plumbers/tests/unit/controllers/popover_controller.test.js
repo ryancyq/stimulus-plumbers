@@ -87,23 +87,36 @@ describe('PopoverController', () => {
     expect(controllerFor().open).toBeTypeOf('function');
   });
 
-  it('uses action currentTarget as the native source and prevents default', async () => {
+  it('uses the action currentTarget as the native source and prevents default', async () => {
     const { controller, panel, trigger } = await render();
     const event = { currentTarget: trigger, preventDefault: vi.fn() };
 
-    controller.open(event);
+    controller.onOpen(event);
 
     expect(event.preventDefault).toHaveBeenCalledOnce();
     expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
     expect(panel.matches(':popover-open')).toBe(true);
 
-    controller.close(event);
+    controller.onClose(event);
     expect(event.preventDefault).toHaveBeenCalledTimes(2);
     expect(panel.hidePopover).toHaveBeenCalledOnce();
 
-    controller.toggle(event);
+    controller.onToggle(event);
     expect(event.preventDefault).toHaveBeenCalledTimes(3);
     expect(panel.showPopover).toHaveBeenLastCalledWith({ source: trigger });
+  });
+
+  it('uses a source passed to open and toggle', async () => {
+    const { controller, panel } = await render();
+    const source = document.createElement('input');
+    document.body.append(source);
+
+    controller.open(source);
+    controller.close();
+    controller.toggle(source);
+
+    expect(panel.showPopover).toHaveBeenNthCalledWith(1, { source });
+    expect(panel.showPopover).toHaveBeenNthCalledWith(2, { source });
   });
 
   it('uses the optional trigger target for programmatic open and toggle calls', async () => {

@@ -42,31 +42,34 @@ export default class extends Controller {
     this._dialogElement = null;
   }
 
-  open(event) {
-    event?.preventDefault?.();
-    this._dialog?.show(event?.currentTarget);
+  onOpen(event) {
+    event.preventDefault();
+    this.open(event.currentTarget);
   }
 
-  dismiss(eventOrResult) {
-    const result = this._resultFrom(eventOrResult);
+  onDismiss(event) {
+    event.preventDefault();
+    this.dismiss(event.params?.result);
+  }
+
+  onClose(event) {
+    event.preventDefault();
+    this.close(event.params?.result);
+  }
+
+  open(source) {
+    this._dialog?.show(source);
+  }
+
+  dismiss(result) {
     this._dialog?.dismiss(result);
   }
 
-  close(eventOrResult) {
-    const result = this._resultFrom(eventOrResult);
+  close(result) {
     this._dialog?.close(result);
   }
 
   _closeForCache() {
     if (this._dialog?.open) this._dialog.close();
-  }
-
-  _resultFrom(eventOrResult) {
-    if (eventOrResult && typeof eventOrResult.preventDefault === 'function') {
-      eventOrResult.preventDefault();
-      return eventOrResult.params?.result;
-    }
-
-    return eventOrResult;
   }
 }

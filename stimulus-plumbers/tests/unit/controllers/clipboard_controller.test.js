@@ -201,7 +201,7 @@ describe('ClipboardController', () => {
       })
 
       const controller = application.getControllerForElementAndIdentifier(element, 'clipboard')
-      await controller.copy({})
+      await controller.copy()
 
       expect(writeTextSpy).toHaveBeenCalledWith('copy this text')
       await new Promise((resolve) => setTimeout(resolve, 10))
@@ -209,7 +209,7 @@ describe('ClipboardController', () => {
       expect(spy.mock.calls[0][0].detail.text).toBe('copy this text')
     })
 
-    it('copies the source value when called without an event', async () => {
+    it('copies the source value when called from code', async () => {
       const writeTextSpy = vi.fn().mockResolvedValue(undefined)
       Object.defineProperty(navigator, 'clipboard', {
         value: { writeText: writeTextSpy },
@@ -235,14 +235,49 @@ describe('ClipboardController', () => {
       })
 
       const controller = application.getControllerForElementAndIdentifier(element, 'clipboard')
-      await controller.copy({})
+      await controller.copy()
 
       await new Promise((resolve) => setTimeout(resolve, 10))
       expect(spy).toHaveBeenCalledTimes(1)
       expect(spy.mock.calls[0][0].detail.error).toBe(error)
     })
 
-    it('uses text from event params when provided', async () => {
+    it('copies the text param of the onCopy action', async () => {
+      const writeTextSpy = vi.fn().mockResolvedValue(undefined)
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText: writeTextSpy },
+        configurable: true,
+      })
+
+      const element = document.querySelector('[data-controller="clipboard"]')
+      element.insertAdjacentHTML(
+        'beforeend',
+        '<button data-action="clipboard#onCopy" data-clipboard-text-param="from params">Copy</button>'
+      )
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      element.querySelector('button').click()
+      await new Promise((resolve) => setTimeout(resolve, 10))
+
+      expect(writeTextSpy).toHaveBeenCalledWith('from params')
+    })
+
+    it('copies the source value from an onCopy action without a text param', async () => {
+      const writeTextSpy = vi.fn().mockResolvedValue(undefined)
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText: writeTextSpy },
+        configurable: true,
+      })
+
+      const element = document.querySelector('[data-controller="clipboard"]')
+      element.insertAdjacentHTML('beforeend', '<button data-action="clipboard#onCopy">Copy</button>')
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      element.querySelector('button').click()
+      await new Promise((resolve) => setTimeout(resolve, 10))
+
+      expect(writeTextSpy).toHaveBeenCalledWith('copy this text')
+    })
+
+    it('copies the given text when called from code', async () => {
       const writeTextSpy = vi.fn().mockResolvedValue(undefined)
       Object.defineProperty(navigator, 'clipboard', {
         value: { writeText: writeTextSpy },
@@ -251,9 +286,9 @@ describe('ClipboardController', () => {
 
       const element = document.querySelector('[data-controller="clipboard"]')
       const controller = application.getControllerForElementAndIdentifier(element, 'clipboard')
-      await controller.copy({ params: { text: 'from params' } })
+      await controller.copy('explicit text')
 
-      expect(writeTextSpy).toHaveBeenCalledWith('from params')
+      expect(writeTextSpy).toHaveBeenCalledWith('explicit text')
     })
 
     it('uses textContent when source has no value (e.g. a span)', async () => {
@@ -277,7 +312,7 @@ describe('ClipboardController', () => {
 
       const element = document.querySelector('[data-controller="clipboard"]')
       const controller = application.getControllerForElementAndIdentifier(element, 'clipboard')
-      await controller.copy({})
+      await controller.copy()
 
       expect(writeTextSpy).toHaveBeenCalledWith('span text')
     })
@@ -301,7 +336,7 @@ describe('ClipboardController', () => {
       const failedSpy = vi.fn()
       element.addEventListener('clipboard:copy-failed', failedSpy)
       const controller = application.getControllerForElementAndIdentifier(element, 'clipboard')
-      await controller.copy({})
+      await controller.copy()
 
       expect(writeTextSpy).not.toHaveBeenCalled()
       expect(failedSpy).toHaveBeenCalledTimes(1)

@@ -38,7 +38,7 @@ the trigger gets none of them. A caller-rendered source adds its own activation 
 ```erb
 <% popover.trigger(haspopup: :dialog) do |attrs| %>
   <%= tag.button "Note", type: "button", aria: attrs[:aria],
-                 data: attrs[:data].merge(action: "click->popover#open") %>
+                 data: attrs[:data].merge(action: "click->popover#onOpen") %>
 <% end %>
 ```
 

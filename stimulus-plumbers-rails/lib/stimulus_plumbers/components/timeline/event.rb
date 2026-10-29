@@ -143,7 +143,7 @@ module StimulusPlumbers
                             merge_html_options(
                               theme.resolve(:timeline_item_trigger),
                               {
-                                data: { "timeline-target": "trigger", action: "timeline#toggle" },
+                                data: { "timeline-target": "trigger", action: "timeline#onToggle" },
                                 aria: { expanded: "false", controls: @detail_id }
                               }
                             )

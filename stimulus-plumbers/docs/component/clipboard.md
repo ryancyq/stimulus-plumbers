@@ -1,6 +1,6 @@
 # clipboard
 
-Re-dispatches native paste events as cancelable Stimulus events. Also provides a copy action that writes text to the clipboard via the Clipboard API.
+Re-dispatches native paste events as cancelable Stimulus events. Also copies text to the clipboard via the Clipboard API.
 
 ## Targets
 
@@ -16,10 +16,11 @@ Re-dispatches native paste events as cancelable Stimulus events. Also provides a
 
 ## Methods
 
-| Method           | Wired via         | Description                                                                                             |
-| ---------------- | ----------------- | ------------------------------------------------------------------------------------------------------- |
-| `onPaste(event)` | `paste` DOM event | Event adapter — dispatches `clipboard:pasted`; cancels the native paste only if that event is cancelled |
-| `copy(event)`    | `data-action`     | Action — writes text to clipboard, dispatches `clipboard:copied`                                        |
+| Method           | Wired via         | Description                                                                                                       |
+| ---------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `onPaste(event)` | `paste` DOM event | Event adapter — dispatches `clipboard:pasted`; cancels the native paste only if that event is cancelled           |
+| `onCopy(event)`  | `data-action`     | Event adapter — calls `copy()` with the `text` param, if any                                                      |
+| `copy(text?)`    | Programmatic      | Writes `text`, or the `source` target when omitted, and dispatches `clipboard:copied`, or `clipboard:copy-failed` |
 
 ## Dispatches
 
@@ -46,11 +47,15 @@ Re-dispatches native paste events as cancelable Stimulus events. Also provides a
 <%# Copy from a source target %>
 <div data-controller="clipboard">
   <input data-clipboard-target="source" value="text to copy" readonly />
-  <button data-action="click->clipboard#copy">Copy</button>
+  <button data-action="click->clipboard#onCopy">Copy</button>
 </div>
 
 <%# Copy hardcoded text via param %>
-<button data-controller="clipboard" data-action="click->clipboard#copy" data-clipboard-text-param="https://example.com">
+<button
+  data-controller="clipboard"
+  data-action="click->clipboard#onCopy"
+  data-clipboard-text-param="https://example.com"
+>
   Copy link
 </button>
 ```

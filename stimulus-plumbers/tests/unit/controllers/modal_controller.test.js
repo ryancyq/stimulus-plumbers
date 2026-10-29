@@ -21,10 +21,10 @@ describe('ModalController', () => {
   const render = async ({ attributes = '', methods = true } = {}) => {
     document.body.innerHTML = `
       <div data-controller="modal">
-        <button id="open" data-action="modal#open">Open</button>
+        <button id="open" data-action="modal#onOpen">Open</button>
         <dialog data-modal-target="dialog" ${attributes}>
-          <button id="dismiss" data-action="modal#dismiss">Cancel</button>
-          <button id="close" data-action="modal#close" data-modal-result-param="confirm">Confirm</button>
+          <button id="dismiss" data-action="modal#onDismiss">Cancel</button>
+          <button id="close" data-action="modal#onClose" data-modal-result-param="confirm">Confirm</button>
         </dialog>
       </div>
     `;

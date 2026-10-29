@@ -13,20 +13,27 @@ export default class extends Controller {
     if (pasted.defaultPrevented) event.preventDefault();
   }
 
-  async copy(event) {
-    const text =
-      event?.params?.text ??
-      (this.hasSourceTarget ? (this.sourceTarget.value ?? this.sourceTarget.textContent ?? '') : '');
-    if (!text) {
+  onCopy(event) {
+    this.copy(event.params?.text);
+  }
+
+  async copy(text) {
+    const value = text ?? this._sourceText();
+    if (!value) {
       this.dispatch('copy-failed', { detail: { error: new Error('Nothing to copy') }, bubbles: true });
       return;
     }
 
     try {
-      await navigator.clipboard.writeText(text);
-      this.dispatch('copied', { detail: { text }, bubbles: true });
+      await navigator.clipboard.writeText(value);
+      this.dispatch('copied', { detail: { text: value }, bubbles: true });
     } catch (error) {
       this.dispatch('copy-failed', { detail: { error }, bubbles: true });
     }
+  }
+
+  _sourceText() {
+    if (!this.hasSourceTarget) return '';
+    return this.sourceTarget.value ?? this.sourceTarget.textContent ?? '';
   }
 }

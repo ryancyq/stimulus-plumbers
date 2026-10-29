@@ -58,7 +58,7 @@
           type: "text",
           value: "Consumer-owned source",
           aria: attrs.fetch(:aria, {}).merge(label: "Consumer-owned source"),
-          data: attrs.fetch(:data, {}).merge(action: "click->popover#open")
+          data: attrs.fetch(:data, {}).merge(action: "click->popover#onOpen")
         ) %>
         <%= tag.input(**attrs.except(:panel_id)) %>
       <% end %>
@@ -104,7 +104,7 @@
             type: "text",
             value: "Programmatic source",
             aria: attrs.fetch(:aria, {}).merge(label: "Programmatic source"),
-            data: attrs.fetch(:data, {}).merge(action: "click->popover#open")
+            data: attrs.fetch(:data, {}).merge(action: "click->popover#onOpen")
           ) %>
           <%= tag.input(**attrs.except(:panel_id)) %>
         <% end %>

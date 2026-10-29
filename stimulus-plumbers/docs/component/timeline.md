@@ -20,13 +20,16 @@ Manages expandable/collapsible timeline event items with keyboard navigation and
 | ------------ | ------ | ------- | ------------------------------------------------------------------------------------------------------- |
 | `dateFormat` | Object | `{}`    | `Intl.DateTimeFormat` options applied to empty `<time datetime>` elements on connect. No-op when empty. |
 
-## Actions
+## Methods
 
-| Name       | Purpose                                     |
-| ---------- | ------------------------------------------- |
-| `toggle`   | Expands if collapsed, collapses if expanded |
-| `expand`   | Expands the item                            |
-| `collapse` | Collapses the item                          |
+| Method              | Description                                                       |
+| ------------------- | ----------------------------------------------------------------- |
+| `onToggle(event)`   | Event adapter — toggles the event's current target                |
+| `onExpand(event)`   | Event adapter — expands the event's current target                |
+| `onCollapse(event)` | Event adapter — collapses the event's current target              |
+| `toggle(trigger)`   | Expands the trigger's item if collapsed, collapses it if expanded |
+| `expand(trigger)`   | Expands the trigger's item                                        |
+| `collapse(trigger)` | Collapses the trigger's item                                      |
 
 ## Keyboard
 
@@ -71,7 +74,7 @@ Manages expandable/collapsible timeline event items with keyboard navigation and
     <h3>
       <button
         data-timeline-target="trigger"
-        data-action="timeline#toggle"
+        data-action="timeline#onToggle"
         aria-expanded="false"
         aria-controls="detail-1"
       >

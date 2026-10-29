@@ -55,7 +55,7 @@ class ComponentManifestTest < Minitest::Test
   end
 
   def test_extracts_modal_open_action
-    assert_equal ["open"], @result["modal"]["actions"]
+    assert_equal %w[onClose onDismiss onOpen], @result["modal"]["actions"].sort
     assert_equal ["closed"], @result["modal"]["listens"]
     assert_equal ["dialog"], @result["modal"]["targets"]
     assert_equal [], @result["modal"]["values"]

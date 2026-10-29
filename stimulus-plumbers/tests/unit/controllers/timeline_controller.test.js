@@ -20,7 +20,7 @@ describe('TimelineController', () => {
       <li>
         <h3>
           <button data-timeline-target="trigger"
-                  data-action="timeline#toggle"
+                  data-action="timeline#onToggle"
                   ${omitAriaExpanded ? '' : `aria-expanded="${expanded1}"`}
                   aria-controls="detail-1">
             Event 1
@@ -33,7 +33,7 @@ describe('TimelineController', () => {
       <li>
         <h3>
           <button data-timeline-target="trigger"
-                  data-action="timeline#toggle"
+                  data-action="timeline#onToggle"
                   ${omitAriaExpanded ? '' : `aria-expanded="${expanded2}"`}
                   aria-controls="detail-2">
             Event 2
@@ -75,6 +75,23 @@ describe('TimelineController', () => {
     });
   });
 
+  describe('programmatic API', () => {
+    it('toggles, expands, and collapses a given trigger', async () => {
+      await setup(buildHTML({ expanded1: false }));
+      const element = document.querySelector('[data-controller="timeline"]');
+      const controller = application.getControllerForElementAndIdentifier(element, 'timeline');
+      const trigger = document.querySelectorAll('[data-timeline-target="trigger"]')[0];
+      const detail = document.getElementById('detail-1');
+
+      controller.toggle(trigger);
+      expect(detail.hasAttribute('hidden')).toBe(false);
+      controller.collapse(trigger);
+      expect(trigger.getAttribute('aria-expanded')).toBe('false');
+      controller.expand(trigger);
+      expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    });
+  });
+
   describe('toggle with missing detail', () => {
     it('does not throw when aria-controls points to a nonexistent element', async () => {
       await setup(`
@@ -82,7 +99,7 @@ describe('TimelineController', () => {
           <li>
             <h3>
               <button data-timeline-target="trigger"
-                      data-action="timeline#toggle"
+                      data-action="timeline#onToggle"
                       aria-expanded="false"
                       aria-controls="nonexistent-id">
                 Event
@@ -105,7 +122,7 @@ describe('TimelineController', () => {
           <li>
             <h3>
               <button data-timeline-target="trigger"
-                      data-action="timeline#expand"
+                      data-action="timeline#onExpand"
                       aria-expanded="false"
                       aria-controls="detail-3">
                 Event
@@ -132,7 +149,7 @@ describe('TimelineController', () => {
           <li>
             <h3>
               <button data-timeline-target="trigger"
-                      data-action="timeline#collapse"
+                      data-action="timeline#onCollapse"
                       aria-expanded="true"
                       aria-controls="detail-4">
                 Event

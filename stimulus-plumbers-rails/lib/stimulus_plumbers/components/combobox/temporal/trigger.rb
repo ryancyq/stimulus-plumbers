@@ -23,7 +23,7 @@ module StimulusPlumbers
           private
 
           def input_attrs(controller, id, value, aria, open_on_focus)
-            actions = ["click->#{Popover::STIMULUS_CONTROLLER}#open", "keydown->#{controller}#onKeydown"]
+            actions = ["click->#{Popover::STIMULUS_CONTROLLER}#onOpen", "keydown->#{controller}#onKeydown"]
             actions.unshift(FOCUS_ACTION) if open_on_focus
             {
               id:           id,

@@ -6,38 +6,6 @@ does not provide a custom overlay, focus trap, announcements, or body scroll loc
 The supported contract allows one active modal at a time. Opening another modal while one is open
 is unsupported; applications should close or replace the active modal first.
 
-## Migration from legacy modal markup
-
-The legacy controller supported a custom overlay with `modal` and `overlay` targets:
-
-```html
-<div data-controller="modal">
-  <button data-action="modal#open">Open</button>
-  <div data-modal-target="overlay" hidden>
-    <div data-modal-target="modal" role="dialog" aria-modal="true">
-      <button data-action="modal#close">Cancel</button>
-    </div>
-  </div>
-</div>
-```
-
-Use a native dialog target instead. Wire `modal#dismiss` for cancellation and `modal#close` for
-completion:
-
-```html
-<div data-controller="modal">
-  <button data-action="modal#open">Open</button>
-  <dialog data-modal-target="dialog" closedby="closerequest" aria-labelledby="modal-title">
-    <h2 id="modal-title">Confirm action</h2>
-    <button data-action="modal#dismiss">Cancel</button>
-    <button data-action="modal#close">Confirm</button>
-  </dialog>
-</div>
-```
-
-Remove `dismissed()`, the custom body lock and focus trap, `aria-modal`, and global open/close
-announcements. The current controller has no compatibility alias for the legacy targets or hooks.
-
 ## Targets
 
 | Target   | Required | Description               |
@@ -46,11 +14,14 @@ announcements. The current controller has no compatibility alias for the legacy 
 
 ## Methods
 
-| Method                    | Description                                             |
-| ------------------------- | ------------------------------------------------------- |
-| `open(event?)`            | Opens the dialog; repeated calls while open are ignored |
-| `dismiss(eventOrResult?)` | Requests a cancellable dismissal                        |
-| `close(eventOrResult?)`   | Explicitly completes and closes the dialog              |
+| Method             | Description                                                          |
+| ------------------ | -------------------------------------------------------------------- |
+| `onOpen(event)`    | Event adapter — opens with the event's current target as the invoker |
+| `onDismiss(event)` | Event adapter — dismisses with the `result` param                    |
+| `onClose(event)`   | Event adapter — closes with the `result` param                       |
+| `open(source?)`    | Opens the dialog; repeated calls while open are ignored              |
+| `dismiss(result?)` | Requests a cancellable dismissal                                     |
+| `close(result?)`   | Explicitly completes and closes the dialog                           |
 
 The dialog must have an accessible name through `aria-labelledby` or `aria-label`.
 The controller passes the action invoker to the dialog adapter so focus restoration remains
@@ -61,13 +32,13 @@ Action parameters use `result`, for example:
 
 ```html
 <div data-controller="modal">
-  <button data-action="modal#open">Open</button>
+  <button data-action="modal#onOpen">Open</button>
 
   <dialog data-modal-target="dialog" aria-labelledby="modal-title">
     <h2 id="modal-title">Confirm action</h2>
     <p>Are you sure?</p>
-    <button data-action="modal#dismiss">Cancel</button>
-    <button data-action="modal#close" data-modal-result-param="confirm">Confirm</button>
+    <button data-action="modal#onDismiss">Cancel</button>
+    <button data-action="modal#onClose" data-modal-result-param="confirm">Confirm</button>
   </dialog>
 </div>
 ```
@@ -96,8 +67,8 @@ Author the native `closedby` attribute directly:
 ```html
 <dialog data-modal-target="dialog" closedby="closerequest" aria-labelledby="modal-title">
   <h2 id="modal-title">Confirm action</h2>
-  <button data-action="modal#dismiss">Cancel</button>
-  <button data-action="modal#close" data-modal-result-param="confirm">Confirm</button>
+  <button data-action="modal#onDismiss">Cancel</button>
+  <button data-action="modal#onClose" data-modal-result-param="confirm">Confirm</button>
 </dialog>
 ```
 
