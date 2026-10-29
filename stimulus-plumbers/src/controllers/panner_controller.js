@@ -5,6 +5,10 @@ export default class extends Controller {
   static targets = ['content'];
 
   connect() {
-    attachShifter(this, { element: this.hasContentTarget ? this.contentTarget : null });
+    this.shifter = attachShifter(this, { element: this.hasContentTarget ? this.contentTarget : null });
+  }
+
+  disconnect() {
+    this.shifter.disconnect();
   }
 }

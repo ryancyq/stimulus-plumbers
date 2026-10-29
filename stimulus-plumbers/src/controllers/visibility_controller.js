@@ -5,12 +5,22 @@ export default class extends Controller {
   static targets = ['content'];
 
   connect() {
-    attachDismisser(this);
+    this.dismisser = attachDismisser(this);
+  }
+
+  disconnect() {
+    this.dismisser.disconnect();
+    this._disposeShifter();
   }
 
   contentTargetConnected(target) {
-    attachShifter(this, { element: target });
+    this._disposeShifter();
+    this.shifter = attachShifter(this, { element: target });
     attachVisibility(this, { element: target });
+  }
+
+  contentTargetDisconnected(target) {
+    if (this.shifter?.element === target) this._disposeShifter();
   }
 
   async dismissed() {
@@ -28,5 +38,10 @@ export default class extends Controller {
       await this.visibility.show();
       this.shift(this.contentTarget);
     }
+  }
+
+  _disposeShifter() {
+    this.shifter?.disconnect();
+    this.shifter = null;
   }
 }

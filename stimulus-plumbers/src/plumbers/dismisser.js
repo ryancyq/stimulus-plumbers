@@ -15,7 +15,6 @@ export class Dismisser extends WindowObserver {
     this.trigger = trigger || this.element;
     this.events = events;
 
-    this.enhance();
     this.observe(this.dismiss);
   }
 

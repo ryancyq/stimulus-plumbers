@@ -2,10 +2,12 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Dismisser, attachDismisser } from '../../../src/plumbers/dismisser'
 
 describe('Dismisser', () => {
+  let observeSpy
   let mockController
   let element
 
   beforeEach(() => {
+    observeSpy = vi.spyOn(Dismisser.prototype, 'observe')
     element = document.createElement('div')
     document.body.appendChild(element)
 
@@ -13,7 +15,6 @@ describe('Dismisser', () => {
       identifier: 'dismisser',
       element: element,
       dispatch: vi.fn((name, options) => true),
-      disconnect: vi.fn(),
     }
 
     // Mock getBoundingClientRect for visibility checks
@@ -26,7 +27,8 @@ describe('Dismisser', () => {
   })
 
   afterEach(() => {
-    // Clean up any event listeners
+    observeSpy.mock.contexts.forEach((observer) => observer.disconnect())
+    observeSpy.mockRestore()
     vi.clearAllMocks()
   })
 
@@ -61,14 +63,6 @@ describe('Dismisser', () => {
       })
 
       expect(dismisser.onDismissed).toBe('customDismissed')
-    })
-
-    it('enhances controller with disconnect override', () => {
-      const originalDisconnect = mockController.disconnect
-      const dismisser = new Dismisser(mockController)
-
-      expect(mockController.disconnect).not.toBe(originalDisconnect)
-      expect(typeof mockController.disconnect).toBe('function')
     })
   })
 
@@ -146,47 +140,28 @@ describe('Dismisser', () => {
   })
 
   describe('observe', () => {
-    it('adds event listeners for all configured events', () => {
-      const addEventListenerSpy = vi.spyOn(window, 'addEventListener')
-      const dismisser = new Dismisser(mockController, {
-        events: ['click', 'mousedown'],
-      })
+    it('dismisses on every configured event', () => {
+      new Dismisser(mockController, { events: ['click', 'mousedown'] })
+      const outsideElement = document.createElement('div')
+      document.body.appendChild(outsideElement)
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith('click', dismisser.dismiss, true)
-      expect(addEventListenerSpy).toHaveBeenCalledWith('mousedown', dismisser.dismiss, true)
+      outsideElement.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+      outsideElement.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
 
-      addEventListenerSpy.mockRestore()
+      expect(mockController.dispatch.mock.calls.filter(([name]) => name === 'dismiss')).toHaveLength(2)
     })
   })
 
-  describe('unobserve', () => {
-    it('removes event listeners for all configured events', () => {
-      const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener')
-      const dismisser = new Dismisser(mockController, {
-        events: ['click', 'mousedown'],
-      })
-
-      dismisser.unobserve()
-
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('click', dismisser.dismiss, true)
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('mousedown', dismisser.dismiss, true)
-
-      removeEventListenerSpy.mockRestore()
-    })
-  })
-
-  describe('enhance', () => {
-    it('wraps controller disconnect to call unobserve', () => {
-      const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener')
-      const originalDisconnect = mockController.disconnect
+  describe('disconnect', () => {
+    it('stops dismissing on outside clicks', () => {
       const dismisser = new Dismisser(mockController)
+      const outsideElement = document.createElement('div')
+      document.body.appendChild(outsideElement)
 
-      mockController.disconnect()
+      dismisser.disconnect()
+      outsideElement.click()
 
-      expect(removeEventListenerSpy).toHaveBeenCalled()
-      expect(originalDisconnect).toHaveBeenCalled()
-
-      removeEventListenerSpy.mockRestore()
+      expect(mockController.dispatch).not.toHaveBeenCalled()
     })
   })
 

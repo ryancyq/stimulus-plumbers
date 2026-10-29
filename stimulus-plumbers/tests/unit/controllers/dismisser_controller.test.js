@@ -170,6 +170,32 @@ describe('DismisserController', () => {
   });
 
   describe('event cleanup', () => {
+    it('dismisses once per outside click across reconnects and not after removal', async () => {
+      document.body.innerHTML = `
+        <div data-controller="dismisser"></div>
+        <button id="outside">Outside</button>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+      const element = document.querySelector('[data-controller="dismisser"]');
+      const dismissSpy = vi.fn();
+      element.addEventListener('dismisser:dismiss', dismissSpy);
+
+      for (let i = 0; i < 3; i++) {
+        element.remove();
+        await new Promise(resolve => setTimeout(resolve, 10));
+        document.body.prepend(element);
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+
+      document.querySelector('#outside').click();
+      expect(dismissSpy).toHaveBeenCalledTimes(1);
+
+      element.remove();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      document.querySelector('#outside').click();
+      expect(dismissSpy).toHaveBeenCalledTimes(1);
+    });
+
     it('removes event listeners on disconnect', async () => {
       document.body.innerHTML = `
         <div data-controller="dismisser">
