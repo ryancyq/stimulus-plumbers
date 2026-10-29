@@ -188,10 +188,9 @@ export function connectTriggerToTarget({ trigger, target, role = null, override 
     }
   }
 
-  // Set aria-haspopup based on role
-  if (role && shouldSet(trigger, 'aria-haspopup', override)) {
-    const haspopup = ARIA_HASPOPUP_VALUES[role] || 'true';
-    if (haspopup) triggerAttrs['aria-haspopup'] = haspopup;
+  // Sets aria-haspopup only for roles in ARIA_HASPOPUP_VALUES
+  if (ARIA_HASPOPUP_VALUES[role] && shouldSet(trigger, 'aria-haspopup', override)) {
+    triggerAttrs['aria-haspopup'] = ARIA_HASPOPUP_VALUES[role];
   }
 
   applyAttributes(target, targetAttrs, result.target);
