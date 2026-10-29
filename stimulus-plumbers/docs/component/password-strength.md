@@ -24,6 +24,10 @@ Live password meter and requirements checklist. Scoring is provided by the [pass
 
 `score()` is wired to the input event. It updates the progress outlet immediately and debounces level-label changes.
 
+- Connect, Turbo morphs, and changes to `rules`, `options`, or `labels` draw the current state at once, without the debounce.
+- The level label is rewritten only when its text changes.
+- Before a Turbo snapshot it shows the empty-password state, matching the cleared input on restore.
+
 ## Rule descriptors
 
 The controller holds no built-in rule table — the server (or a standalone caller) supplies every rule as data via the `rules` value. Each descriptor is `{ key, label?, pattern?, min?, max? }` and passes when `min ≤ n ≤ max`, where `n` is:
@@ -33,6 +37,6 @@ The controller holds no built-in rule table — the server (or a standalone call
 
 Defaults: `min` `0`, `max` `Infinity`. So `{ pattern: "\\d", min: 2 }` requires ≥2 digits, and `{ pattern: "\\s", min: 0, max: 0 }` forbids whitespace.
 
-**Portability constraint:** patterns must be single-char-consuming character classes — no anchors (`^`/`$`), lookbehind, or unicode-property escapes — so non-overlapping counts agree across the Ruby and JS regex engines.
+**Portability:** patterns must be single-char-consuming character classes — no anchors (`^`/`$`), lookbehind, or unicode-property escapes — so non-overlapping counts agree across the Ruby and JS regex engines.
 
 The strength `level` is `strong` when every rule passes; otherwise the score (`satisfied / total × 100`) splits `weak` from `fine` at `options.low` (default `34`). `options` carries only these non-rule knobs.
