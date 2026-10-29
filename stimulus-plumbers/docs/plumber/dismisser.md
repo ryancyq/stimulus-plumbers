@@ -25,7 +25,7 @@ dismisser.disconnect(); // when the element's lifetime ends
 
 A dismiss fires only when:
 
-1. The event target is an `HTMLElement`
+1. The event target is an `Element` (HTML or SVG)
 2. The event target is **not** inside `element`
 3. The element is currently **visible** (respects `visibilityConfig.visibleOnly`)
 
