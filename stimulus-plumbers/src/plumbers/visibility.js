@@ -120,6 +120,7 @@ export class Visibility extends Plumber {
       value: context.isVisible.bind(context),
     });
     Object.defineProperty(this.controller, this.visibility, {
+      configurable: true,
       get() {
         return helpers;
       },

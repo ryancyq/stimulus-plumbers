@@ -22,12 +22,16 @@ export default class extends Controller {
       return;
     }
 
-    attachFlipper(this, {
+    this.flipper = attachFlipper(this, {
       element: this.referenceTarget,
       anchor: this.anchorTarget,
       placement: this.placementValue,
       alignment: this.alignmentValue,
       ariaRole: this.roleValue,
     });
+  }
+
+  disconnect() {
+    this.flipper?.disconnect();
   }
 }

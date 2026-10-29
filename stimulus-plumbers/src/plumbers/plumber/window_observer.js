@@ -2,21 +2,16 @@ import Plumber from './index';
 
 export default class WindowObserver extends Plumber {
   observe(handler) {
-    this._handler = handler;
-    this.events.forEach((e) => window.addEventListener(e, handler, true));
+    this.listeners = new AbortController();
+    const { signal } = this.listeners;
+    this.events.forEach((e) => window.addEventListener(e, handler, { capture: true, signal }));
   }
 
-  unobserve() {
-    if (!this._handler) return;
-    this.events.forEach((e) => window.removeEventListener(e, this._handler, true));
-  }
-
-  enhance() {
-    const context = this;
-    const superDisconnect = this.controller.disconnect?.bind(this.controller) || (() => {});
-    this.controller.disconnect = () => {
-      context.unobserve();
-      superDisconnect();
-    };
+  /**
+   * Removes the window listeners. The owning controller calls this when its lifetime ends.
+   */
+  disconnect() {
+    this.listeners?.abort();
+    this.listeners = null;
   }
 }

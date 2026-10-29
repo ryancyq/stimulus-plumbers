@@ -178,6 +178,26 @@ describe('VisibilityController', () => {
     });
   });
 
+  describe('content replacement', () => {
+    it('toggles a content target that replaced the original', async () => {
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <div data-visibility-target="content" hidden>Old</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const element = document.querySelector('[data-controller="visibility"]');
+      element.innerHTML = '<div data-visibility-target="content" hidden>New</div>';
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const controller = application.getControllerForElementAndIdentifier(element, 'visibility');
+      await controller.toggle();
+
+      expect(element.querySelector('[data-visibility-target="content"]').hidden).toBe(false);
+    });
+  });
+
   describe('without content target', () => {
     it('toggle is a no-op when content target is absent', async () => {
       document.body.innerHTML = `
@@ -392,6 +412,49 @@ describe('VisibilityController', () => {
       window.dispatchEvent(new Event('resize'));
       await new Promise(resolve => setTimeout(resolve, 10));
       expect(content.style.transform).toBeFalsy();
+    });
+
+    it('stops shifting content after the content target is removed', async () => {
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <div data-visibility-target="content" hidden>Content</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const content = document.querySelector('[data-visibility-target="content"]');
+      content.getBoundingClientRect = vi.fn(() => ({
+        top: 100, left: 900, bottom: 200, right: 1100,
+        width: 200, height: 100, x: 900, y: 100
+      }));
+
+      content.remove();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      window.dispatchEvent(new Event('resize'));
+
+      expect(content.style.transform).toBeFalsy();
+    });
+
+    it('stops shifting the old content once new content connects', async () => {
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <div id="old-content" data-visibility-target="content" hidden>Old</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const element = document.querySelector('[data-controller="visibility"]');
+      const oldContent = document.querySelector('#old-content');
+      oldContent.getBoundingClientRect = vi.fn(() => ({
+        top: 100, left: 900, bottom: 200, right: 1100,
+        width: 200, height: 100, x: 900, y: 100
+      }));
+
+      element.insertAdjacentHTML('beforeend', '<div data-visibility-target="content" hidden>New</div>');
+      await new Promise(resolve => setTimeout(resolve, 10));
+      window.dispatchEvent(new Event('resize'));
+
+      expect(oldContent.style.transform).toBeFalsy();
     });
   });
 
