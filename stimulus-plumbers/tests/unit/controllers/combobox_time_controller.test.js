@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ComboboxTimeController from '../../../src/controllers/combobox_time_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { startApplication } from '../../support/stimulus';
 
 describe('ComboboxTimeController', () => {
   let application;
@@ -70,12 +70,10 @@ describe('ComboboxTimeController', () => {
 
   beforeEach(() => {
     Element.prototype.scrollIntoView = vi.fn();
-    application = Application.start();
-    application.register('combobox-time', ComboboxTimeController);
+    application = startApplication({ 'combobox-time': ComboboxTimeController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     delete Element.prototype.scrollIntoView;
   });

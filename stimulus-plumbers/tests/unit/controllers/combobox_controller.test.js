@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ComboboxController from '../../../src/controllers/combobox_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ComboboxController', () => {
   let application;
@@ -65,17 +65,15 @@ describe('ComboboxController', () => {
   };
 
   const isOpen = (panel) => panel.matches(':popover-open');
-  const settle = () => new Promise((resolve) => setTimeout(resolve));
+  const settle = flush;
   const active = (trigger) => trigger.getAttribute('aria-activedescendant');
   const selected = () => [...document.querySelectorAll('[aria-selected="true"]')].map((option) => option.id);
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('combobox', ComboboxController);
+    application = startApplication({ combobox: ComboboxController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 

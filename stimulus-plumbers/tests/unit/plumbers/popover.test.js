@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Popover, attachPopover } from '../../../src/plumbers/popover';
+import { autoDisconnect } from '../../support/stimulus';
 
 describe('Popover', () => {
   let controller;
@@ -54,6 +55,8 @@ describe('Popover', () => {
     vi.restoreAllMocks();
   });
 
+  const createPopover = (options) => autoDisconnect(new Popover(controller, options));
+
   it('exposes only the documented public API', () => {
     expect(Object.getOwnPropertyNames(Popover.prototype)).toEqual([
       'constructor',
@@ -66,7 +69,7 @@ describe('Popover', () => {
   });
 
   it('attaches through the factory and reflects native popover state', () => {
-    const popover = attachPopover(controller, { element: panel });
+    const popover = autoDisconnect(attachPopover(controller, { element: panel }));
 
     expect(popover).toBeInstanceOf(Popover);
     expect(popover.open).toBe(false);
@@ -76,7 +79,7 @@ describe('Popover', () => {
   });
 
   it('passes source options only when a source is supplied', () => {
-    const popover = new Popover(controller, { element: panel });
+    const popover = createPopover({ element: panel });
 
     popover.show();
     popover.toggle();
@@ -90,7 +93,7 @@ describe('Popover', () => {
   });
 
   it('uses native state to guard redundant show and hide requests', () => {
-    const popover = new Popover(controller, { element: panel });
+    const popover = createPopover({ element: panel });
 
     popover.show();
     openState = true;
@@ -104,7 +107,7 @@ describe('Popover', () => {
   });
 
   it('dispatches a cancellable before-open event for an opening transition', () => {
-    const popover = new Popover(controller, { element: panel });
+    const popover = createPopover({ element: panel });
     const beforeOpen = vi.fn((event) => event.preventDefault());
     panel.addEventListener('popover:before-open', beforeOpen);
     const event = nativeEvent('beforetoggle', 'open', source);
@@ -123,7 +126,7 @@ describe('Popover', () => {
   });
 
   it('observes external native transitions and emits settled events once per state', () => {
-    const popover = new Popover(controller, { element: panel });
+    const popover = createPopover({ element: panel });
     const opened = vi.fn();
     const closed = vi.fn();
     panel.addEventListener('popover:opened', opened);
@@ -148,7 +151,7 @@ describe('Popover', () => {
   });
 
   it('does not emit a transition when a coalesced toggle settles back to its original state', () => {
-    new Popover(controller, { element: panel });
+    createPopover({ element: panel });
 
     panel.dispatchEvent(nativeEvent('toggle', 'closed', null, 'closed'));
 
@@ -156,7 +159,7 @@ describe('Popover', () => {
   });
 
   it('ignores a closing beforetoggle and preserves a missing source as null', () => {
-    new Popover(controller, { element: panel });
+    createPopover({ element: panel });
 
     panel.dispatchEvent(nativeEvent('beforetoggle', 'closed'));
     settle(true);
@@ -170,25 +173,21 @@ describe('Popover', () => {
     });
   });
 
-  it('removes exactly its listeners and tolerates repeated disposal', () => {
-    const popover = new Popover(controller, { element: panel });
-    const removeEventListener = vi.spyOn(panel, 'removeEventListener');
+  it('stops reacting to toggles and tolerates repeated disposal', () => {
+    const popover = createPopover({ element: panel });
 
     popover.disconnect();
     popover.disconnect();
     panel.dispatchEvent(nativeEvent('beforetoggle', 'open', source));
     settle(true, source);
 
-    expect(removeEventListener).toHaveBeenCalledTimes(2);
-    expect(removeEventListener).toHaveBeenNthCalledWith(1, 'beforetoggle', expect.any(Function));
-    expect(removeEventListener).toHaveBeenNthCalledWith(2, 'toggle', expect.any(Function));
     expect(controller.dispatch).not.toHaveBeenCalled();
     expect(popover.open).toBe(false);
   });
 
   it('remains inert for an invalid element', () => {
     const invalid = document.createElement('div');
-    const popover = new Popover(controller, { element: invalid });
+    const popover = createPopover({ element: invalid });
 
     expect(popover.open).toBe(false);
     expect(() => popover.show(source)).not.toThrow();
@@ -199,7 +198,7 @@ describe('Popover', () => {
 
   it('rejects an element with native methods but no popover attribute', () => {
     panel.removeAttribute('popover');
-    const popover = new Popover(controller, { element: panel });
+    const popover = createPopover({ element: panel });
 
     popover.show(source);
     popover.toggle(source);

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import PopoverFetchController from '../../../src/controllers/popover_fetch_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('PopoverFetchController', () => {
   let application;
@@ -23,7 +23,7 @@ describe('PopoverFetchController', () => {
   };
   const respond = async (index, body, ok = true) => {
     requests[index].resolve({ ok, status: ok ? 200 : 500, text: async () => body });
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
   };
   const lifecycle = (element, name) => element.dispatchEvent(new CustomEvent(`popover:${name}`, { bubbles: true }));
 
@@ -49,12 +49,10 @@ describe('PopoverFetchController', () => {
 
   beforeEach(() => {
     stubFetch();
-    application = Application.start();
-    application.register('popover-fetch', PopoverFetchController);
+    application = startApplication({ 'popover-fetch': PopoverFetchController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
@@ -102,7 +100,7 @@ describe('PopoverFetchController', () => {
     lifecycle(panel, 'opened');
 
     lifecycle(panel, 'closed');
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
 
     expect(status()).toBe('');
     expect(document.querySelector('#menu').hasAttribute('aria-busy')).toBe(false);
@@ -149,7 +147,7 @@ describe('PopoverFetchController', () => {
 
     container.remove();
     document.body.append(container);
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
     lifecycle(panel, 'opened');
     await respond(1, menu('Second'));
 
@@ -160,7 +158,7 @@ describe('PopoverFetchController', () => {
     const { panel } = await render({ regionId: null });
 
     lifecycle(panel, 'opened');
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
 
     expect(requests).toHaveLength(0);
     expect(status()).toBe('');

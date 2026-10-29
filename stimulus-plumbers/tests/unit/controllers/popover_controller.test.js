@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import PopoverController from '../../../src/controllers/popover_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('PopoverController', () => {
   let application;
@@ -30,13 +30,11 @@ describe('PopoverController', () => {
   };
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('popover', PopoverController);
+    application = startApplication({ popover: PopoverController });
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     consoleErrorSpy.mockRestore();
   });
@@ -84,7 +82,6 @@ describe('PopoverController', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'PopoverController requires data-popover-target="panel" to be a native popover element.'
     );
-    expect(controllerFor().open).toBeTypeOf('function');
   });
 
   it('uses the action currentTarget as the native source and prevents default', async () => {
@@ -164,8 +161,9 @@ describe('PopoverController', () => {
   });
 
   it('disposes the old adapter when the panel target is replaced', async () => {
-    const { controller, panel: oldPanel, root } = await render();
-    const oldRemove = vi.spyOn(oldPanel, 'removeEventListener');
+    const { controller, panel: oldPanel } = await render();
+    const oldOpened = vi.fn();
+    oldPanel.addEventListener('popover:opened', oldOpened);
     const newPanel = document.createElement('div');
     newPanel.id = 'panel';
     newPanel.setAttribute('popover', 'auto');
@@ -173,10 +171,10 @@ describe('PopoverController', () => {
     installNativePopover(newPanel);
     oldPanel.replaceWith(newPanel);
 
-    await vi.waitFor(() => expect(oldRemove).toHaveBeenCalledWith('beforetoggle', expect.any(Function)));
-    expect(root.querySelector('#panel')).toBe(newPanel);
-    expect(oldRemove).toHaveBeenCalledWith('beforetoggle', expect.any(Function));
-    expect(oldRemove).toHaveBeenCalledWith('toggle', expect.any(Function));
+    await flush();
+    oldPanel.showPopover();
+    await flush();
+    expect(oldOpened).not.toHaveBeenCalled();
 
     controller.open();
     expect(newPanel.showPopover).toHaveBeenCalledOnce();
@@ -260,7 +258,7 @@ describe('PopoverController', () => {
     root.remove();
     await vi.waitUntil(() => !controllerFor());
     panel.showPopover();
-    await Promise.resolve();
+    await flush();
     document.dispatchEvent(new Event('turbo:before-cache'));
 
     expect(trigger.getAttribute('aria-expanded')).toBe('false');

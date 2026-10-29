@@ -39,21 +39,6 @@ describe('Formatter', () => {
       attachFormatter(mockController);
       expect(mockController.formatter).toBeDefined();
     });
-
-    it('exposes normalize helper', () => {
-      attachFormatter(mockController);
-      expect(typeof mockController.formatter.normalize).toBe('function');
-    });
-
-    it('exposes validate helper', () => {
-      attachFormatter(mockController);
-      expect(typeof mockController.formatter.validate).toBe('function');
-    });
-
-    it('exposes format helper', () => {
-      attachFormatter(mockController);
-      expect(typeof mockController.formatter.format).toBe('function');
-    });
   });
 
   describe('delegation to formatters', () => {

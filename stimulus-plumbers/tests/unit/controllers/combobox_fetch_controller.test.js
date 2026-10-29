@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ComboboxController from '../../../src/controllers/combobox_controller';
 import ComboboxFetchController from '../../../src/controllers/combobox_fetch_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ComboboxFetchController', () => {
   let application;
@@ -30,7 +30,7 @@ describe('ComboboxFetchController', () => {
   const respond = async (index, body, ok = true) => {
     requests[index].resolve({ ok, status: ok ? 200 : 500, text: async () => body });
     await vi.waitUntil(() => true);
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
   };
 
   const render = async ({ delay = 0 } = {}) => {
@@ -56,22 +56,20 @@ describe('ComboboxFetchController', () => {
   const type = async (control, text) => {
     control.value = text;
     control.dispatchEvent(new Event('input', { bubbles: true }));
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
   };
   const status = () => document.querySelector('#status').textContent;
   const labels = () => [...document.querySelectorAll('[role="option"]')].map((option) => option.textContent);
 
   beforeEach(() => {
     stubFetch();
-    application = Application.start();
-    application.register('combobox', ComboboxController);
-    application.register('combobox-fetch', ComboboxFetchController);
+    application = startApplication({ combobox: ComboboxController, 'combobox-fetch': ComboboxFetchController });
   });
 
   // Clearing first lets disconnect cancel pending requests.
   afterEach(async () => {
     document.body.innerHTML = '';
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
     application.stop();
     vi.unstubAllGlobals();
   });
@@ -129,7 +127,7 @@ describe('ComboboxFetchController', () => {
 
     await type(control, 'Se');
     control.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
 
     expect(requests[0].signal.aborted).toBe(true);
     expect(status()).toBe('');
@@ -175,7 +173,7 @@ describe('ComboboxFetchController', () => {
     document
       .querySelector('#listbox')
       .dispatchEvent(new CustomEvent('combobox:query', { bubbles: true, detail: { query: 'Se' } }));
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
 
     expect(requests).toEqual([]);
   });
@@ -185,7 +183,7 @@ describe('ComboboxFetchController', () => {
 
     await type(control, 'Se');
     container.remove();
-    await new Promise((resolve) => setTimeout(resolve));
+    await flush();
 
     expect(requests[0].signal.aborted).toBe(true);
   });

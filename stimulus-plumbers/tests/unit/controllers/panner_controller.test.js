@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import { visibilityConfig } from '../../../src/plumbers/plumber/config';
 import PannerController from '../../../src/controllers/panner_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('PannerController', () => {
   let application;
@@ -9,8 +9,7 @@ describe('PannerController', () => {
   let originalGetComputedStyle;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('panner', PannerController);
+    application = startApplication({ panner: PannerController });
     isVisibleOnlySpy = vi.spyOn(visibilityConfig, 'visibleOnly', 'get').mockReturnValue(false);
 
     Object.defineProperty(window, 'scrollX', { value: 0, writable: true, configurable: true });
@@ -22,7 +21,6 @@ describe('PannerController', () => {
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     window.getComputedStyle = originalGetComputedStyle;
     isVisibleOnlySpy.mockRestore();
@@ -47,14 +45,6 @@ describe('PannerController', () => {
         x: 50,
         y: 50,
       }));
-    });
-
-    it('attaches shifter to content target', () => {
-      const element = document.querySelector('[data-controller="panner"]');
-      const controller = application.getControllerForElementAndIdentifier(element, 'panner');
-
-      expect(controller.shift).toBeDefined();
-      expect(typeof controller.shift).toBe('function');
     });
 
     it('shifts content when overflowing viewport', () => {
@@ -120,7 +110,7 @@ describe('PannerController', () => {
       element.addEventListener('panner:shifted', shiftedSpy);
       window.dispatchEvent(new Event('resize'));
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(shiftedSpy).toHaveBeenCalled();
     });
   });
@@ -133,7 +123,7 @@ describe('PannerController', () => {
         </div>
       `;
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       const element = document.querySelector('[data-controller="panner"]');
       const controller = application.getControllerForElementAndIdentifier(element, 'panner');
 

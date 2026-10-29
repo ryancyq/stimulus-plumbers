@@ -1,19 +1,17 @@
 // stimulus-plumbers/tests/unit/controllers/checklist_controller.test.js
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import { morphElements } from '@hotwired/turbo';
 import ChecklistController from '../../../src/controllers/checklist_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ChecklistController', () => {
   let application;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('checklist', ChecklistController);
+    application = startApplication({ checklist: ChecklistController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -35,7 +33,7 @@ describe('ChecklistController', () => {
         ${itemsHtml}
       </div>
     `;
-    await new Promise((r) => setTimeout(r, 10));
+    await flush();
   };
 
   const master = () => document.querySelector('[data-checklist-target="master"]');
@@ -163,7 +161,7 @@ describe('ChecklistController', () => {
   });
 
   describe('items added or removed after connect', () => {
-    const tick = () => new Promise((r) => setTimeout(r, 0));
+    const tick = () => flush();
 
     it('drops the master out of checked when an unchecked item is appended', async () => {
       await render(item(true) + item(true));
@@ -212,13 +210,13 @@ describe('ChecklistController', () => {
           </div>
         </form>
       `;
-      await new Promise((r) => setTimeout(r, 10));
+      await flush();
       items()[0].checked = true;
       change(items()[0]);
       expect(master().indeterminate).toBe(true);
 
       document.querySelector('form').reset();
-      await new Promise((r) => setTimeout(r, 0));
+      await flush();
 
       expect(master().indeterminate).toBe(false);
       expect(master().checked).toBe(false);
@@ -231,7 +229,7 @@ describe('ChecklistController', () => {
       document.body.innerHTML = `
         <div data-controller="checklist" data-action="change->checklist#onChange">${item(false)}</div>
       `;
-      await new Promise((r) => setTimeout(r, 10));
+      await flush();
       change(items()[0]);
 
       expect(error).not.toHaveBeenCalled();

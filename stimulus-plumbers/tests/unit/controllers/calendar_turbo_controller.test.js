@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import CalendarTurboController from '../../../src/controllers/calendar_turbo_controller';
+import { startApplication } from '../../support/stimulus';
 
 describe('CalendarTurboController', () => {
   let application;
@@ -19,12 +19,10 @@ describe('CalendarTurboController', () => {
   };
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('calendar-turbo', CalendarTurboController);
+    application = startApplication({ 'calendar-turbo': CalendarTurboController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 

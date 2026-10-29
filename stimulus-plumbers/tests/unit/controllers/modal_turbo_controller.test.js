@@ -1,21 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ModalController from '../../../src/controllers/modal_controller';
 import ModalTurboController from '../../../src/controllers/modal_turbo_controller';
+import { startApplication } from '../../support/stimulus';
 
 describe('ModalTurboController', () => {
   let application;
   let consoleErrorSpy;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('modal', ModalController);
-    application.register('modal-turbo', ModalTurboController);
+    application = startApplication({ modal: ModalController, 'modal-turbo': ModalTurboController });
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     vi.restoreAllMocks();
   });

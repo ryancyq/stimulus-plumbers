@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ComboboxController from '../../../src/controllers/combobox_controller';
 import ComboboxTurboController from '../../../src/controllers/combobox_turbo_controller';
 import { installNativePopover } from '../../support/native_popover';
+import { startApplication } from '../../support/stimulus';
 
 describe('ComboboxTurboController', () => {
   let application;
@@ -42,14 +42,11 @@ describe('ComboboxTurboController', () => {
     target.dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true }));
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('combobox', ComboboxController);
-    application.register('combobox-turbo', ComboboxTurboController);
+    application = startApplication({ combobox: ComboboxController, 'combobox-turbo': ComboboxTurboController });
   });
 
   afterEach(() => {
     vi.useRealTimers();
-    application.stop();
     document.body.innerHTML = '';
   });
 

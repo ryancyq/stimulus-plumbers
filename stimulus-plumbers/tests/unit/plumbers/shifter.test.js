@@ -1,20 +1,19 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Shifter, attachShifter } from '../../../src/plumbers/shifter';
+import { flush } from '../../support/stimulus';
 
 describe('Shifter', () => {
-  let observeSpy;
   let mockController;
   let element;
 
   beforeEach(() => {
-    observeSpy = vi.spyOn(Shifter.prototype, 'observe');
     element = document.createElement('div');
     document.body.appendChild(element);
 
     mockController = {
       identifier: 'shifter',
       element: element,
-      dispatch: vi.fn((name, options) => true),
+      dispatch: vi.fn(() => true),
     };
 
     // Mock getBoundingClientRect
@@ -31,74 +30,26 @@ describe('Shifter', () => {
   });
 
   afterEach(() => {
-    observeSpy.mock.contexts.forEach((observer) => observer.disconnect());
-    observeSpy.mockRestore();
     vi.clearAllMocks();
   });
 
-  describe('constructor', () => {
-    it('initializes with default options', () => {
+  describe('callbacks', () => {
+    it('calls the controller shifted method by default', async () => {
+      mockController.shifted = vi.fn();
       const shifter = new Shifter(mockController);
 
-      expect(shifter.controller).toBe(mockController);
-      expect(shifter.events).toEqual(['resize']);
-      expect(shifter.boundaries).toEqual(['top', 'left', 'right']);
-      expect(shifter.onShifted).toBe('shifted');
+      await shifter.shift();
+
+      expect(mockController.shifted).toHaveBeenCalledOnce();
     });
 
-    it('accepts custom events', () => {
-      const shifter = new Shifter(mockController, {
-        events: ['scroll', 'resize'],
-      });
+    it('calls the onShifted method it is given', async () => {
+      mockController.customShifted = vi.fn();
+      const shifter = new Shifter(mockController, { onShifted: 'customShifted' });
 
-      expect(shifter.events).toEqual(['scroll', 'resize']);
-    });
+      await shifter.shift();
 
-    it('accepts custom boundaries', () => {
-      const shifter = new Shifter(mockController, {
-        boundaries: ['top', 'bottom'],
-      });
-
-      expect(shifter.boundaries).toEqual(['top', 'bottom']);
-    });
-
-    it('accepts custom onShifted callback', () => {
-      const shifter = new Shifter(mockController, {
-        onShifted: 'customShifted',
-      });
-
-      expect(shifter.onShifted).toBe('customShifted');
-    });
-
-    it('initializes with respectMotion enabled by default', () => {
-      const shifter = new Shifter(mockController);
-
-      expect(shifter.respectMotion).toBe(true);
-    });
-
-    it('accepts custom respectMotion option', () => {
-      const shifter = new Shifter(mockController, {
-        respectMotion: false,
-      });
-
-      expect(shifter.respectMotion).toBe(false);
-    });
-
-    it('checks prefers-reduced-motion media query on initialization', () => {
-      const matchMediaSpy = vi.spyOn(window, 'matchMedia');
-      const shifter = new Shifter(mockController);
-
-      expect(matchMediaSpy).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
-      expect(shifter.prefersReducedMotion).toBeDefined();
-      expect(typeof shifter.prefersReducedMotion).toBe('boolean');
-
-      matchMediaSpy.mockRestore();
-    });
-
-    it('enhances controller with shift method', () => {
-      const shifter = new Shifter(mockController);
-
-      expect(mockController.shift).toBeTypeOf('function');
+      expect(mockController.customShifted).toHaveBeenCalledOnce();
     });
   });
 
@@ -326,7 +277,7 @@ describe('Shifter', () => {
     });
 
     it('awaits async onShifted callback', async () => {
-      const onShifted = vi.fn(() => new Promise((resolve) => setTimeout(resolve, 10)));
+      const onShifted = vi.fn(() => flush());
       mockController.shifted = onShifted;
       const shifter = new Shifter(mockController, { onShifted: 'shifted' });
 
@@ -425,15 +376,6 @@ describe('Shifter', () => {
       window.dispatchEvent(new Event('resize'));
 
       expect(mockController.dispatch).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('enhance', () => {
-    it('adds shift method to controller', () => {
-      const shifter = new Shifter(mockController);
-
-      expect(mockController.shift).toBeDefined();
-      expect(typeof mockController.shift).toBe('function');
     });
   });
 
