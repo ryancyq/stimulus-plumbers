@@ -63,7 +63,7 @@ module StimulusPlumbers
         template.content_tag(
           :p,
           I18n.t("stimulus_plumbers.password.rules_heading"),
-          **theme.resolve(:password_strength_rules_heading)
+          **merge_html_options(theme.resolve(:password_strength_rules_heading))
         )
       end
 

@@ -59,8 +59,28 @@ class PasswordStrengthTest < ActionView::TestCase
     assert_includes doc.text, "It's better to have:"
   end
 
+  def test_styles_the_rules_heading_from_the_theme
+    heading = with_theme(rules_heading_theme) { parse_html(rendered).at_css("p.sp-rules-heading") }
+
+    assert_equal "It's better to have:", heading.text
+  end
+
   def test_builds_ids_from_the_input_id
     assert_equal "x_meter", StimulusPlumbers::Components::PasswordStrength.meter_id_for("x")
     assert_equal "x_rules", StimulusPlumbers::Components::PasswordStrength.rules_id_for("x")
+  end
+
+  def rules_heading_theme
+    Class.new(StimulusPlumbers::Themes::Base) do
+      define_method(:password_strength_rules_heading_classes) { |**| { classes: "sp-rules-heading" } }
+    end.new
+  end
+
+  def with_theme(theme)
+    original = StimulusPlumbers.config.theme.current
+    StimulusPlumbers.config.theme.use(theme)
+    yield
+  ensure
+    StimulusPlumbers.config.theme.use(original)
   end
 end
