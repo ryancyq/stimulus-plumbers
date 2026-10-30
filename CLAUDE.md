@@ -11,6 +11,7 @@ stimulus-plumbers/         # npm: @stimulus-plumbers/controllers
 stimulus-plumbers-rails/   # Ruby gem: stimulus-plumbers
 stimulus-plumbers-tailwind/ # Ruby gem: stimulus_plumbers_tailwind
 stimulus-plumbers-mcp/     # Ruby gem: stimulus_plumbers_mcp — MCP server exposing API schema + docs to LLM IDEs
+bin/                       # Repo scripts
 ```
 
 ## Design Principle
@@ -31,6 +32,7 @@ stimulus-plumbers-mcp/     # Ruby gem: stimulus_plumbers_mcp — MCP server expo
 ## Doc Update Rule
 - When changing component API (targets, values, options, HTML structure), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.
 - Keep docs concise — one-line bullets, minimal prose. If a sentence restates what the code makes obvious, cut it.
+- **Folder Structure trees** in CLAUDE.md list directories with their naming rule (`<identifier>_controller.js`, `<name>.rb` + `<name>/`), plus entry points and the config files whose role the name doesn't make obvious — never per-component, per-helper, or per-test files, so adding one never stales the tree. A tree's naming rule may restate a Convention section's file naming; nothing else in a tree repeats another CLAUDE.md section. Every listed path exists in git or is commented as gitignored; when a directory is added, moved, or removed, update the tree in the same commit.
 - **`docs/*` never mentions tests** — no test file names, paths, or coverage notes. Docs describe the API for consumers; test info belongs in CLAUDE.md. State a requirement as a rule ("must be paired with an accessible name"), not as "enforced by X test".
 - **No cross-doc duplication.** Each fact lives in exactly one place; other docs link to it instead of repeating it.
   - JS controller API (targets, values, actions, events) → `stimulus-plumbers/docs/component/<name>.md` only. Rails and Tailwind docs link there.
