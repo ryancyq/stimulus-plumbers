@@ -1,127 +1,96 @@
 import { Controller } from '@hotwired/stimulus';
-import { attachPopover } from '../plumbers/popover';
-
-const isNativePopover = (element) =>
-  typeof HTMLElement !== 'undefined' &&
-  element instanceof HTMLElement &&
-  element.hasAttribute('popover') &&
-  typeof element.showPopover === 'function' &&
-  typeof element.hidePopover === 'function' &&
-  typeof element.togglePopover === 'function';
+import { attachPopover, isPopoverElement } from '../plumbers/popover';
 
 export default class extends Controller {
   static targets = ['trigger', 'panel'];
 
-  #popover;
-  #panelElement;
-  #onBeforeCache;
-  #onOpened;
-  #onClosed;
-  #reportedInvalidConfiguration;
-
   connect() {
-    if (this.#onBeforeCache) document.removeEventListener('turbo:before-cache', this.#onBeforeCache);
-    this.#onBeforeCache = this.#closeForCache.bind(this);
-    document.addEventListener('turbo:before-cache', this.#onBeforeCache);
+    this.connection = new AbortController();
+    document.addEventListener('turbo:before-cache', () => this._closeForCache(), { signal: this.connection.signal });
 
-    if (!this.hasPanelTarget) this.#reportInvalidConfiguration('missing');
+    if (!this.hasPanelTarget) this._reportInvalidConfiguration('missing');
   }
 
   disconnect() {
-    if (this.#onBeforeCache) {
-      document.removeEventListener('turbo:before-cache', this.#onBeforeCache);
-      this.#onBeforeCache = null;
-    }
-
-    this.#disposePopover();
+    this.connection?.abort();
+    this.connection = null;
+    this._disposePopover();
   }
 
   panelTargetConnected(panel) {
-    this.#disposePopover();
+    this._disposePopover();
 
-    if (!isNativePopover(panel)) {
-      this.#reportInvalidConfiguration(panel);
+    if (!isPopoverElement(panel)) {
+      this._reportInvalidConfiguration(panel);
       return;
     }
 
-    this.#reportedInvalidConfiguration = null;
-    this.#popover = attachPopover(this, { element: panel });
-    this.#panelElement = panel;
-    this.#onOpened = this.#syncOpened.bind(this);
-    this.#onClosed = this.#syncClosed.bind(this);
-    panel.addEventListener('popover:opened', this.#onOpened);
-    panel.addEventListener('popover:closed', this.#onClosed);
-    this.#syncTrigger();
+    this.reportedConfiguration = null;
+    this.popover = attachPopover(this, { element: panel });
+    this.panelElement = panel;
+    this.panelListeners = new AbortController();
+    const { signal } = this.panelListeners;
+    panel.addEventListener('popover:opened', (event) => event.target === panel && this._syncTrigger(true), { signal });
+    panel.addEventListener('popover:closed', (event) => event.target === panel && this._syncTrigger(false), { signal });
+    this._syncTrigger();
   }
 
   panelTargetDisconnected(panel) {
-    if (this.#panelElement !== panel) return;
+    if (this.panelElement !== panel) return;
 
-    this.#disposePopover();
+    this._disposePopover();
   }
 
   triggerTargetConnected() {
-    this.#syncTrigger();
+    this._syncTrigger();
   }
 
   open(event) {
-    this.#preventDefault(event);
-    this.#popover?.show(this.#sourceFor(event));
+    this._preventDefault(event);
+    this.popover?.show(this._sourceFor(event));
   }
 
   close(event) {
-    this.#preventDefault(event);
-    this.#popover?.hide();
+    this._preventDefault(event);
+    this.popover?.hide();
   }
 
   toggle(event) {
-    this.#preventDefault(event);
-    this.#popover?.toggle(this.#sourceFor(event));
+    this._preventDefault(event);
+    this.popover?.toggle(this._sourceFor(event));
   }
 
-  #closeForCache() {
-    if (this.#popover?.open) this.#popover.hide();
+  _closeForCache() {
+    if (this.popover?.open) this.popover.hide();
   }
 
-  #disposePopover() {
-    if (this.#panelElement && this.#onOpened) this.#panelElement.removeEventListener('popover:opened', this.#onOpened);
-    if (this.#panelElement && this.#onClosed) this.#panelElement.removeEventListener('popover:closed', this.#onClosed);
-    this.#popover?.disconnect();
-    this.#popover = null;
-    this.#panelElement = null;
-    this.#onOpened = null;
-    this.#onClosed = null;
+  _disposePopover() {
+    this.panelListeners?.abort();
+    this.panelListeners = null;
+    this.popover?.disconnect();
+    this.popover = null;
+    this.panelElement = null;
   }
 
-  #preventDefault(event) {
+  _preventDefault(event) {
     if (event && typeof event.preventDefault === 'function') event.preventDefault();
   }
 
-  #sourceFor(event) {
+  _sourceFor(event) {
     if (event && typeof event.preventDefault === 'function' && event.currentTarget) return event.currentTarget;
     return this.hasTriggerTarget ? this.triggerTarget : undefined;
   }
 
-  #syncOpened(event) {
-    if (event.target !== this.#panelElement) return;
-    this.#syncTrigger(true);
-  }
-
-  #syncClosed(event) {
-    if (event.target !== this.#panelElement) return;
-    this.#syncTrigger(false);
-  }
-
-  #syncTrigger(open = this.#popover?.open === true) {
+  _syncTrigger(open = this.popover?.open === true) {
     if (!this.hasTriggerTarget || !this.triggerTarget.hasAttribute('aria-expanded')) return;
 
     this.triggerTarget.setAttribute('aria-expanded', String(open));
   }
 
-  #reportInvalidConfiguration(configuration) {
-    if (this.#reportedInvalidConfiguration === configuration) return;
+  _reportInvalidConfiguration(configuration) {
+    if (this.reportedConfiguration === configuration) return;
 
-    this.#reportedInvalidConfiguration = configuration;
+    this.reportedConfiguration = configuration;
     if (configuration === 'missing') {
       console.error('PopoverController requires a panel target. Add data-popover-target="panel" to your element.');
     } else {

@@ -4,13 +4,13 @@ import { attachDialog } from '../plumbers/dialog';
 export default class extends Controller {
   static targets = ['dialog'];
 
-  #dialog;
-  #dialogElement;
-  #onBeforeCache;
+  _dialog;
+  _dialogElement;
+  _onBeforeCache;
 
   connect() {
-    this.#onBeforeCache = this.#closeForCache.bind(this);
-    document.addEventListener('turbo:before-cache', this.#onBeforeCache);
+    this._onBeforeCache = this._closeForCache.bind(this);
+    document.addEventListener('turbo:before-cache', this._onBeforeCache);
 
     if (!this.hasDialogTarget) {
       console.error('ModalController requires a dialog target. Add data-modal-target="dialog" to your element.');
@@ -18,10 +18,10 @@ export default class extends Controller {
   }
 
   disconnect() {
-    document.removeEventListener('turbo:before-cache', this.#onBeforeCache);
-    this.#dialog?.disconnect();
-    this.#dialog = null;
-    this.#dialogElement = null;
+    document.removeEventListener('turbo:before-cache', this._onBeforeCache);
+    this._dialog?.disconnect();
+    this._dialog = null;
+    this._dialogElement = null;
   }
 
   dialogTargetConnected(dialog) {
@@ -30,38 +30,38 @@ export default class extends Controller {
       return;
     }
 
-    this.#dialog?.disconnect();
-    this.#dialog = attachDialog(this, { element: dialog });
-    this.#dialogElement = dialog;
+    this._dialog?.disconnect();
+    this._dialog = attachDialog(this, { element: dialog });
+    this._dialogElement = dialog;
   }
 
   dialogTargetDisconnected(dialog) {
-    if (!this.#dialog || this.#dialogElement !== dialog) return;
-    this.#dialog.disconnect();
-    this.#dialog = null;
-    this.#dialogElement = null;
+    if (!this._dialog || this._dialogElement !== dialog) return;
+    this._dialog.disconnect();
+    this._dialog = null;
+    this._dialogElement = null;
   }
 
   open(event) {
     event?.preventDefault?.();
-    this.#dialog?.show(event?.currentTarget);
+    this._dialog?.show(event?.currentTarget);
   }
 
   dismiss(eventOrResult) {
-    const result = this.#resultFrom(eventOrResult);
-    this.#dialog?.dismiss(result);
+    const result = this._resultFrom(eventOrResult);
+    this._dialog?.dismiss(result);
   }
 
   close(eventOrResult) {
-    const result = this.#resultFrom(eventOrResult);
-    this.#dialog?.close(result);
+    const result = this._resultFrom(eventOrResult);
+    this._dialog?.close(result);
   }
 
-  #closeForCache() {
-    if (this.#dialog?.open) this.#dialog.close();
+  _closeForCache() {
+    if (this._dialog?.open) this._dialog.close();
   }
 
-  #resultFrom(eventOrResult) {
+  _resultFrom(eventOrResult) {
     if (eventOrResult && typeof eventOrResult.preventDefault === 'function') {
       eventOrResult.preventDefault();
       return eventOrResult.params?.result;

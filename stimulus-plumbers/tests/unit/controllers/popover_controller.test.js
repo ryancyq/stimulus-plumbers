@@ -204,18 +204,11 @@ describe('PopoverController', () => {
 
   it('reconnects the same controller instance without duplicating cache behavior', async () => {
     const { controller, panel, root } = await render();
-    const removePanelListener = vi.spyOn(panel, 'removeEventListener');
-    const removeDocumentListener = vi.spyOn(document, 'removeEventListener');
-    const addDocumentListener = vi.spyOn(document, 'addEventListener');
 
     root.remove();
-    await vi.waitFor(() => expect(removePanelListener).toHaveBeenCalledWith('beforetoggle', expect.any(Function)));
-    expect(removeDocumentListener).toHaveBeenCalledWith('turbo:before-cache', expect.any(Function));
+    await vi.waitUntil(() => !controllerFor());
     document.body.appendChild(root);
     await vi.waitUntil(() => controllerFor() === controller);
-    await vi.waitFor(() =>
-      expect(addDocumentListener).toHaveBeenCalledWith('turbo:before-cache', expect.any(Function))
-    );
 
     controller.open();
     document.dispatchEvent(new Event('turbo:before-cache'));
@@ -235,21 +228,15 @@ describe('PopoverController', () => {
     expect(panel.matches(':popover-open')).toBe(false);
   });
 
-  it('removes native, lifecycle, and cache listeners on disconnect', async () => {
-    const { panel, root } = await render();
-    const remove = vi.spyOn(panel, 'removeEventListener');
-    const removeDocumentListener = vi.spyOn(document, 'removeEventListener');
+  it('stops syncing the trigger and closing for the Turbo cache after disconnect', async () => {
+    const { panel, root, trigger } = await render();
 
     root.remove();
-    await vi.waitFor(() => expect(remove).toHaveBeenCalledWith('beforetoggle', expect.any(Function)));
-
+    await vi.waitUntil(() => !controllerFor());
+    panel.showPopover();
     document.dispatchEvent(new Event('turbo:before-cache'));
 
-    expect(remove).toHaveBeenCalledWith('beforetoggle', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('toggle', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('popover:opened', expect.any(Function));
-    expect(remove).toHaveBeenCalledWith('popover:closed', expect.any(Function));
-    expect(removeDocumentListener).toHaveBeenCalledWith('turbo:before-cache', expect.any(Function));
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(panel.hidePopover).not.toHaveBeenCalled();
   });
 });

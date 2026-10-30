@@ -65,8 +65,7 @@ describe('InputClearableController', () => {
   describe('input event', () => {
     beforeEach(async () => {
       await setup(`
-        <div data-controller="input-clearable"
-             data-action="input->input-clearable#draw">
+        <div data-controller="input-clearable">
           <input type="search" value="" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
                   data-input-clearable-target="clear"
@@ -179,7 +178,7 @@ describe('InputClearableController', () => {
     })
 
     it('does not throw on connect when targets are absent', () => {
-      expect(() => getController().draw()).not.toThrow()
+      expect(() => getController().connect()).not.toThrow()
     })
 
     it('does not throw when clear() is called without targets', () => {
