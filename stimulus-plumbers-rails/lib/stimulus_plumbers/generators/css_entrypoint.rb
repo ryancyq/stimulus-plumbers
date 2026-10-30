@@ -64,8 +64,10 @@ module StimulusPlumbers
         FileUtils.mkdir_p(File.dirname(path))
         File.write(path, contents)
         say_status :create, relative_to_destination(path), :green
+        true
       rescue Errno::EROFS, Errno::EACCES => e
         say "Could not write #{relative_to_destination(path)}: #{e.message}. Skipping.", :yellow
+        false
       end
 
       def append_to_gitignore(path)

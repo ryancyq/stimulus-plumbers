@@ -385,7 +385,7 @@ module StimulusPlumbers
         File.chmod(0o644, css_path) if css_path && File.exist?(css_path)
       end
 
-      test "warns and still imports the partial when the sources partial cannot be written" do
+      test "warns and skips the sources import when the sources partial cannot be written" do
         write_entry_css("app/assets/stylesheets/application.tailwind.css", "@import \"tailwindcss\";\n")
         locked_dir = File.join(destination_root, File.dirname(SOURCES_CSS_PATH))
         FileUtils.mkdir_p(locked_dir)
@@ -396,7 +396,7 @@ module StimulusPlumbers
         assert_match(%r{Could not write #{Regexp.escape(SOURCES_CSS_PATH)}}, output)
         assert_no_file SOURCES_CSS_PATH
         assert_file "app/assets/stylesheets/application.tailwind.css" do |css|
-          assert_includes css, sources_import_for("app/assets/stylesheets/application.tailwind.css")
+          refute_includes css, sources_import_for("app/assets/stylesheets/application.tailwind.css")
         end
       ensure
         File.chmod(0o755, locked_dir) if locked_dir && File.exist?(locked_dir)
