@@ -57,7 +57,7 @@ describe('Flipper', () => {
 
       expect(flipper.controller).toBe(mockController)
       expect(flipper.anchor).toBe(anchor)
-      expect(flipper.events).toEqual(['click'])
+      expect(flipper.events).toEqual(['click', 'resize', 'scroll'])
       expect(flipper.placement).toBe('bottom')
       expect(flipper.alignment).toBe('start')
       expect(flipper.onFlipped).toBe('flipped')
@@ -391,6 +391,74 @@ describe('Flipper', () => {
       window.dispatchEvent(new Event('focus'))
 
       expect(mockController.dispatch.mock.calls.filter(([name]) => name === 'flip')).toHaveLength(2)
+    })
+  })
+
+  describe('resize and scroll', () => {
+    let frames
+    let spies
+
+    beforeEach(() => {
+      frames = new Map()
+      let id = 0
+      spies = [
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+          frames.set(++id, callback)
+          return id
+        }),
+        vi.spyOn(window, 'cancelAnimationFrame').mockImplementation((frame) => frames.delete(frame)),
+      ]
+    })
+
+    afterEach(() => spies.forEach((spy) => spy.mockRestore()))
+
+    const runFrames = () => {
+      const pending = [...frames.values()]
+      frames.clear()
+      pending.forEach((callback) => callback())
+    }
+    const flips = () => mockController.dispatch.mock.calls.filter(([name]) => name === 'flip')
+
+    it('repositions once per frame for a burst of events', () => {
+      new Flipper(mockController, { anchor })
+
+      window.dispatchEvent(new Event('scroll'))
+      window.dispatchEvent(new Event('scroll'))
+      window.dispatchEvent(new Event('resize'))
+      runFrames()
+
+      expect(flips()).toHaveLength(1)
+    })
+
+    it('repositions again for a burst after the frame runs', () => {
+      new Flipper(mockController, { anchor })
+
+      window.dispatchEvent(new Event('scroll'))
+      runFrames()
+      window.dispatchEvent(new Event('scroll'))
+      runFrames()
+
+      expect(flips()).toHaveLength(2)
+    })
+
+    it('repositions on a scroll inside a container', () => {
+      new Flipper(mockController, { anchor })
+      const container = document.body.appendChild(document.createElement('div'))
+
+      container.dispatchEvent(new Event('scroll'))
+      runFrames()
+
+      expect(flips()).toHaveLength(1)
+    })
+
+    it('drops a pending repositioning on disconnect', () => {
+      const flipper = new Flipper(mockController, { anchor })
+
+      window.dispatchEvent(new Event('scroll'))
+      flipper.disconnect()
+      runFrames()
+
+      expect(flips()).toHaveLength(0)
     })
   })
 

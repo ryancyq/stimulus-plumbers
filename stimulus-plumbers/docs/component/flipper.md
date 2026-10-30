@@ -21,7 +21,7 @@ Positions a floating element (`reference`) relative to an anchor using the `Flip
 
 | Method      | Wired via                                  | Description                                                                                         |
 | ----------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| `flip()`    | Flipper plumber (enhanced onto controller) | Programmatic API — recalculates and applies position; called automatically on `click` events        |
+| `flip()`    | Flipper plumber (enhanced onto controller) | Programmatic API — recalculates and applies position                                                |
 | `flipped()` | Flipper plumber                            | Plumber callback — called after every position calculation. Override to react to placement changes. |
 
 ## Example
@@ -43,4 +43,4 @@ Positions a floating element (`reference`) relative to an anchor using the `Flip
 
 - The Flipper plumber calculates available space and flips placement to the opposite side if the preferred side is out of viewport.
 - `role` is set on the `reference` element at connect time via `aria-describedby` / `aria-controls` wiring.
-- `flip()` is triggered automatically on `click` events; call it manually after programmatically showing the `reference` element.
+- `flip()` runs on the [Flipper plumber](../plumber/flipper.md)'s `events`; call it manually after programmatically showing the `reference` element.
