@@ -18,7 +18,10 @@ describe('ChecklistController', () => {
   });
 
   const getController = () =>
-    application.getControllerForElementAndIdentifier(document.querySelector('[data-controller="checklist"]'), 'checklist');
+    application.getControllerForElementAndIdentifier(
+      document.querySelector('[data-controller="checklist"]'),
+      'checklist'
+    );
 
   const item = (checked) => `<input type="checkbox" data-checklist-target="item" ${checked ? 'checked' : ''}>`;
 

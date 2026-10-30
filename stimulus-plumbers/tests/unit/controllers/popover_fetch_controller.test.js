@@ -25,8 +25,7 @@ describe('PopoverFetchController', () => {
     requests[index].resolve({ ok, status: ok ? 200 : 500, text: async () => body });
     await new Promise((resolve) => setTimeout(resolve));
   };
-  const lifecycle = (element, name) =>
-    element.dispatchEvent(new CustomEvent(`popover:${name}`, { bubbles: true }));
+  const lifecycle = (element, name) => element.dispatchEvent(new CustomEvent(`popover:${name}`, { bubbles: true }));
 
   const render = async ({ reload = false, regionId = 'menu' } = {}) => {
     document.body.innerHTML = `

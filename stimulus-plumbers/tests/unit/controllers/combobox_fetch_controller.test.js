@@ -172,9 +172,9 @@ describe('ComboboxFetchController', () => {
   it('ignores a query from a nested combobox', async () => {
     await render();
 
-    document.querySelector('#listbox').dispatchEvent(
-      new CustomEvent('combobox:query', { bubbles: true, detail: { query: 'Se' } })
-    );
+    document
+      .querySelector('#listbox')
+      .dispatchEvent(new CustomEvent('combobox:query', { bubbles: true, detail: { query: 'Se' } }));
     await new Promise((resolve) => setTimeout(resolve));
 
     expect(requests).toEqual([]);

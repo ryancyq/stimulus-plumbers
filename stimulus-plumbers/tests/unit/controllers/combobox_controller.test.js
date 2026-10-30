@@ -13,7 +13,14 @@ describe('ComboboxController', () => {
     <li id="opt-sf" role="option" data-value="sf" hidden>San Francisco</li>
     <li id="opt-st" role="option" data-value="st">Stockholm</li>`;
 
-  const render = async ({ mode = 'select_only', value = '', label = '', attrs = '', items = options, status = mode === 'editable' } = {}) => {
+  const render = async ({
+    mode = 'select_only',
+    value = '',
+    label = '',
+    attrs = '',
+    items = options,
+    status = mode === 'editable',
+  } = {}) => {
     const control =
       mode === 'editable'
         ? `<input id="trigger" role="combobox" aria-expanded="false" value="${label}"
@@ -591,7 +598,9 @@ describe('ComboboxController', () => {
       control.dispatchEvent(new Event('input', { bubbles: true }));
     };
     const visible = () =>
-      [...document.querySelectorAll('[role="option"]')].filter((option) => !option.closest('[hidden]')).map((o) => o.id);
+      [...document.querySelectorAll('[role="option"]')]
+        .filter((option) => !option.closest('[hidden]'))
+        .map((o) => o.id);
     const status = () => document.querySelector('#status').textContent;
 
     it('shows options whose label starts with the query, ignoring case and accents', async () => {

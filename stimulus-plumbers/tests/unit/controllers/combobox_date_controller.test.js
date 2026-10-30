@@ -33,14 +33,21 @@ describe('ComboboxDateController', () => {
     const panel = document.querySelector('#panel');
     installNativePopover(panel);
     await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'combobox-date'));
-    return { root, panel, trigger: document.querySelector('#trigger'), input: document.querySelector('[type="hidden"]') };
+    return {
+      root,
+      panel,
+      trigger: document.querySelector('#trigger'),
+      input: document.querySelector('[type="hidden"]'),
+    };
   };
 
   const keydown = (element, key) =>
     element.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
 
   const change = (target, value) =>
-    target.dispatchEvent(new CustomEvent('calendar:changed', { bubbles: true, detail: { value, previousValue: null } }));
+    target.dispatchEvent(
+      new CustomEvent('calendar:changed', { bubbles: true, detail: { value, previousValue: null } })
+    );
 
   beforeEach(() => {
     application = Application.start();
@@ -156,7 +163,10 @@ describe('ComboboxDateController', () => {
     const { input } = await render();
     document
       .querySelector('#calendar')
-      .insertAdjacentHTML('beforeend', '<div data-controller="combobox-date"><input type="hidden" data-combobox-date-target="input"><span id="inner"></span></div>');
+      .insertAdjacentHTML(
+        'beforeend',
+        '<div data-controller="combobox-date"><input type="hidden" data-combobox-date-target="input"><span id="inner"></span></div>'
+      );
 
     change(document.querySelector('#inner'), '2026-09-14');
 

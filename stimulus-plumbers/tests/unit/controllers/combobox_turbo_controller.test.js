@@ -187,9 +187,9 @@ describe('ComboboxTurboController', () => {
   it('ignores a query from a nested combobox', async () => {
     const { frame } = await render();
 
-    document.querySelector('#listbox').dispatchEvent(
-      new CustomEvent('combobox:query', { bubbles: true, detail: { query: 'Se' } })
-    );
+    document
+      .querySelector('#listbox')
+      .dispatchEvent(new CustomEvent('combobox:query', { bubbles: true, detail: { query: 'Se' } }));
     vi.advanceTimersByTime(300);
 
     expect(frame.hasAttribute('src')).toBe(false);

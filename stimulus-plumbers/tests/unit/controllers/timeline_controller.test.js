@@ -202,7 +202,9 @@ describe('TimelineController', () => {
       await setup(buildHTML());
 
       let detail;
-      document.addEventListener('timeline:expanded', (e) => { detail = e.detail; });
+      document.addEventListener('timeline:expanded', (e) => {
+        detail = e.detail;
+      });
 
       const trigger = document.querySelector('[data-timeline-target="trigger"]');
       trigger.click();
@@ -215,7 +217,9 @@ describe('TimelineController', () => {
       await setup(buildHTML({ expanded1: true }));
 
       let detail;
-      document.addEventListener('timeline:collapsed', (e) => { detail = e.detail; });
+      document.addEventListener('timeline:collapsed', (e) => {
+        detail = e.detail;
+      });
 
       const trigger = document.querySelector('[data-timeline-target="trigger"]');
       trigger.click();

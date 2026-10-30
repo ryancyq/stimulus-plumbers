@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-import { visibilityConfig } from '../../../src/plumbers/plumber/config'  
+import { visibilityConfig } from '../../../src/plumbers/plumber/config';
 import DismisserController from '../../../src/controllers/dismisser_controller';
 
 describe('DismisserController', () => {
@@ -48,7 +48,7 @@ describe('DismisserController', () => {
       element.addEventListener('dismisser:dismissed', dismissedSpy);
       outsideButton.click();
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(dismissedSpy).toHaveBeenCalled();
     });
 
@@ -72,7 +72,7 @@ describe('DismisserController', () => {
       element.addEventListener('dismisser:dismissed', () => events.push('dismissed'));
 
       outsideButton.click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(events).toEqual(['dismiss', 'dismissed']);
     });
@@ -128,7 +128,9 @@ describe('DismisserController', () => {
       const dismissedSpy = vi.fn();
 
       class ExtendedDismisserController extends DismisserController {
-        dismissed() { dismissedSpy(); }
+        dismissed() {
+          dismissedSpy();
+        }
       }
       application.register('dismisser-ext', ExtendedDismisserController);
 
@@ -138,10 +140,10 @@ describe('DismisserController', () => {
         </div>
         <button id="outside">Outside</button>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       document.querySelector('#outside').click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(dismissedSpy).toHaveBeenCalledTimes(1);
     });
@@ -150,7 +152,9 @@ describe('DismisserController', () => {
       const dismissedSpy = vi.fn();
 
       class ExtendedDismisserController extends DismisserController {
-        dismissed() { dismissedSpy(); }
+        dismissed() {
+          dismissedSpy();
+        }
       }
       application.register('dismisser-ext', ExtendedDismisserController);
 
@@ -160,10 +164,10 @@ describe('DismisserController', () => {
         </div>
         <button id="outside">Outside</button>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       document.querySelector('#inside').click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(dismissedSpy).not.toHaveBeenCalled();
     });
@@ -175,23 +179,23 @@ describe('DismisserController', () => {
         <div data-controller="dismisser"></div>
         <button id="outside">Outside</button>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       const element = document.querySelector('[data-controller="dismisser"]');
       const dismissSpy = vi.fn();
       element.addEventListener('dismisser:dismiss', dismissSpy);
 
       for (let i = 0; i < 3; i++) {
         element.remove();
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
         document.body.prepend(element);
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
       }
 
       document.querySelector('#outside').click();
       expect(dismissSpy).toHaveBeenCalledTimes(1);
 
       element.remove();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       document.querySelector('#outside').click();
       expect(dismissSpy).toHaveBeenCalledTimes(1);
     });
@@ -204,7 +208,7 @@ describe('DismisserController', () => {
         <button id="outside">Outside</button>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       const element = document.querySelector('[data-controller="dismisser"]');
       const dismissSpy = vi.fn();
       element.addEventListener('dismisser:dismiss', dismissSpy);

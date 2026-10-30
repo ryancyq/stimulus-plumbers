@@ -45,7 +45,11 @@ describe('CalendarController', () => {
                    data-action="keydown->calendar#onKeydown click->calendar#onClick"><tbody>${rows.join('')}</tbody></table>`;
   };
 
-  const render = async ({ grid = monthMarkup(), attrs = 'data-calendar-selectable-value="true"', form = false } = {}) => {
+  const render = async ({
+    grid = monthMarkup(),
+    attrs = 'data-calendar-selectable-value="true"',
+    form = false,
+  } = {}) => {
     const section = `<section id="root" data-controller="calendar" data-calendar-navigation-value="turbo" ${attrs}>
         <div role="status" data-calendar-target="status"></div>${grid}</section>`;
     document.body.innerHTML = form ? `<form id="form">${section}</form>` : section;
@@ -209,7 +213,9 @@ describe('CalendarController', () => {
 
   describe('selection', () => {
     it('commits a clicked day and reports the change', async () => {
-      const { root } = await render({ attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"' });
+      const { root } = await render({
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"',
+      });
       const change = vi.fn();
       root.addEventListener('calendar:changed', (event) => change(event.detail));
 
@@ -220,7 +226,9 @@ describe('CalendarController', () => {
     });
 
     it('reports re-activating the current date so a dialog can close on it', async () => {
-      const { root } = await render({ attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-15"' });
+      const { root } = await render({
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-15"',
+      });
       const change = vi.fn();
       root.addEventListener('calendar:changed', (event) => change(event.detail));
 
@@ -230,7 +238,9 @@ describe('CalendarController', () => {
     });
 
     it('keeps the user selection when the grid is replaced', async () => {
-      const { root } = await render({ attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"' });
+      const { root } = await render({
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"',
+      });
       day('2026-09-15').click();
 
       root.querySelector('table').outerHTML = monthMarkup({ focus: '2026-09-10', selected: '2026-09-10' });
@@ -258,7 +268,10 @@ describe('CalendarController', () => {
     });
 
     it('restores the server-rendered selection on form reset', async () => {
-      await render({ form: true, attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"' });
+      await render({
+        form: true,
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"',
+      });
 
       day('2026-09-15').click();
       document.querySelector('#form').reset();
@@ -273,10 +286,9 @@ describe('CalendarController', () => {
     const link = (name, displayed, view = 'month') =>
       `<a href="?root%5Bdisplayed%5D=${displayed}&root%5Bview%5D=${view}" data-navigation="${name}">${name}</a>`;
     const frameContent = (displayed, heading, options = {}) => {
-      const grid = (options.grid ?? monthMarkup({ displayed, focus: `${displayed.slice(0, 7)}-01`, ...options })).replace(
-        'role="grid"',
-        'role="grid" aria-labelledby="root_heading"'
-      );
+      const grid = (
+        options.grid ?? monthMarkup({ displayed, focus: `${displayed.slice(0, 7)}-01`, ...options })
+      ).replace('role="grid"', 'role="grid" aria-labelledby="root_heading"');
       return `<div>${link('previous', '2026-08-01')}<h2 id="root_heading">${heading}</h2>${link('next', '2026-10-01')}</div>${grid}`;
     };
     const renderFramed = async (attrs = 'data-calendar-selectable-value="true"') => {
@@ -329,7 +341,12 @@ describe('CalendarController', () => {
       expect(document.activeElement).toBe(day('2026-10-15'));
       expect(tabStops()).toEqual(['2026-10-15']);
       expect(root.querySelector('[role="status"]').textContent).toBe('October 2026');
-      expect(navigated).toHaveBeenCalledWith({ from: '2026-09-15', to: '2026-10-15', focusDate: '2026-10-15', view: 'month' });
+      expect(navigated).toHaveBeenCalledWith({
+        from: '2026-09-15',
+        to: '2026-10-15',
+        focusDate: '2026-10-15',
+        view: 'month',
+      });
     });
 
     it('arrives when the app displays another day of the requested month', async () => {
@@ -382,7 +399,10 @@ describe('CalendarController', () => {
       key(day('2026-09-15'), 'PageDown');
 
       frame.dispatchEvent(
-        new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
+        new CustomEvent('turbo:before-fetch-response', {
+          bubbles: true,
+          detail: { fetchResponse: { succeeded: false } },
+        })
       );
 
       expect(root.querySelector('[role="status"]').textContent).toBe('Could not load');
@@ -436,7 +456,9 @@ describe('CalendarController', () => {
     it('leaves focus alone when it was outside the calendar', async () => {
       const { root, frame } = await renderFramed();
 
-      root.querySelector('[data-navigation="next"]').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      root
+        .querySelector('[data-navigation="next"]')
+        .dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
       await replace(frame, '2026-10-01', 'October 2026');
 
       expect(document.activeElement).toBe(document.body);
@@ -463,8 +485,10 @@ describe('CalendarController', () => {
       const months = Array.from({ length: 12 }, (_, index) => `2024-${String(index + 1).padStart(2, '0')}-01`);
       const yearGrid = `<table role="grid" data-calendar-target="grid" data-displayed="2024-01-01" data-view="year"
           data-action="keydown->calendar#onKeydown"><tbody><tr>${months
-            .map((month) => `<td role="gridcell"><a href="#" tabindex="${month === '2024-01-01' ? 0 : -1}"
-               data-calendar-target="period" data-date="${month}">${month}</a></td>`)
+            .map(
+              (month) => `<td role="gridcell"><a href="#" tabindex="${month === '2024-01-01' ? 0 : -1}"
+               data-calendar-target="period" data-date="${month}">${month}</a></td>`
+            )
             .join('')}</tr></tbody></table>`;
       await replace(frame, '2024-01-01', '2024', { grid: yearGrid });
 
@@ -515,9 +539,15 @@ describe('CalendarController', () => {
       const root = await renderLocal(`${values} data-calendar-min-value="2026-09-03"`);
 
       expect(root.querySelector('h2').textContent).toBe('September 2026');
-      expect([...root.querySelectorAll('th')].map((th) => th.textContent)).toEqual(
-        ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      );
+      expect([...root.querySelectorAll('th')].map((th) => th.textContent)).toEqual([
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat',
+        'Sun',
+      ]);
       expect(root.querySelector('th').abbr).toBe('Monday');
       expect(root.querySelectorAll('[data-calendar-target="day"]')).toHaveLength(30);
       expect(day('2026-09-15').getAttribute('aria-label')).toBe('September 15, 2026');

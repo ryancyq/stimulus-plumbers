@@ -31,7 +31,9 @@ describe('CalendarTurboController', () => {
   it('loads the requested period into the frame', async () => {
     const { root, frame } = await render();
 
-    root.dispatchEvent(new CustomEvent('calendar:navigate', { detail: { url: 'http://localhost/?root%5Bview%5D=year' } }));
+    root.dispatchEvent(
+      new CustomEvent('calendar:navigate', { detail: { url: 'http://localhost/?root%5Bview%5D=year' } })
+    );
 
     expect(frame.src).toBe('http://localhost/?root%5Bview%5D=year');
   });
@@ -52,11 +54,12 @@ describe('CalendarTurboController', () => {
   it('ignores responses for other frames inside the calendar', async () => {
     const { failed } = await render();
 
-    document
-      .querySelector('#other')
-      .dispatchEvent(
-        new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
-      );
+    document.querySelector('#other').dispatchEvent(
+      new CustomEvent('turbo:before-fetch-response', {
+        bubbles: true,
+        detail: { fetchResponse: { succeeded: false } },
+      })
+    );
 
     expect(failed).not.toHaveBeenCalled();
   });

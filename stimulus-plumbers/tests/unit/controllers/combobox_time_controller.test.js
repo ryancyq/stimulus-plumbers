@@ -8,7 +8,10 @@ describe('ComboboxTimeController', () => {
 
   const options = (name, values, selected) =>
     values
-      .map((value) => `<li role="option" id="t_${name}_${value}" data-value="${value}" aria-selected="${value === selected}">${value}</li>`)
+      .map(
+        (value) =>
+          `<li role="option" id="t_${name}_${value}" data-value="${value}" aria-selected="${value === selected}">${value}</li>`
+      )
       .join('');
 
   const column = (name, values, selected) => `
@@ -41,7 +44,12 @@ describe('ComboboxTimeController', () => {
     const panel = document.querySelector('#panel');
     installNativePopover(panel);
     await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'combobox-time'));
-    return { root, panel, trigger: document.querySelector('#trigger'), input: document.querySelector('[type="hidden"]') };
+    return {
+      root,
+      panel,
+      trigger: document.querySelector('#trigger'),
+      input: document.querySelector('[type="hidden"]'),
+    };
   };
 
   const keydown = (element, key) => {

@@ -1,8 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { onMorph } from '../../../../src/plumbers/plumber/morph';
 
-const morphed = (element) =>
-  element.dispatchEvent(new CustomEvent('turbo:morph-element', { bubbles: true }));
+const morphed = (element) => element.dispatchEvent(new CustomEvent('turbo:morph-element', { bubbles: true }));
 
 describe('onMorph', () => {
   let root;
