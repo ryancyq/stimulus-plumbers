@@ -87,7 +87,15 @@ module StimulusPlumbers
         calendar_year:            {
           outside: { default: false, validate: Ranges::BOOL }
         }.freeze,
-        calendar_quarter_grid:    {}.freeze
+        calendar_quarter_grid:    {}.freeze,
+        calendar_status:          {}.freeze,
+        calendar_header:          {}.freeze,
+        calendar_heading:         {}.freeze,
+        calendar_navigation:      {}.freeze,
+        calendar_grid:            {}.freeze,
+        calendar_weekday:         {}.freeze,
+        calendar_cell:            {}.freeze,
+        calendar_date:            {}.freeze
       }.freeze
 
       CARD = {
@@ -100,22 +108,22 @@ module StimulusPlumbers
       }.freeze
 
       COMBOBOX = {
-        combobox:                           {}.freeze,
-        combobox_popover:                   {}.freeze,
-        combobox_trigger:                   {}.freeze,
-        combobox_trigger_icon:              {}.freeze,
-        combobox_trigger_group:             {}.freeze,
-        combobox_option:                    { disabled: { default: false, validate: Ranges::BOOL } }.freeze,
-        combobox_option_description:        {}.freeze,
-        combobox_option_group:              {}.freeze,
-        combobox_option_group_label:        {}.freeze,
-        combobox_listbox:                   {}.freeze,
-        combobox_status:                    {}.freeze,
-        combobox_time:                      {}.freeze,
-        combobox_time_drum:                 { type: { default: :unit, validate: %i[unit period] } }.freeze,
-        combobox_date_navigation:           {}.freeze,
-        combobox_date_navigation_navigator: {}.freeze,
-        combobox_date_navigation_title:     {}.freeze
+        combobox:                    {}.freeze,
+        combobox_dropdown_popover:   {}.freeze,
+        combobox_typeahead_popover:  {}.freeze,
+        combobox_date_popover:       {}.freeze,
+        combobox_time_popover:       {}.freeze,
+        combobox_trigger:            {}.freeze,
+        combobox_trigger_icon:       {}.freeze,
+        combobox_trigger_group:      {}.freeze,
+        combobox_option:             { disabled: { default: false, validate: Ranges::BOOL } }.freeze,
+        combobox_option_description: {}.freeze,
+        combobox_option_group:       {}.freeze,
+        combobox_option_group_label: {}.freeze,
+        combobox_listbox:            {}.freeze,
+        combobox_status:             {}.freeze,
+        combobox_time:               {}.freeze,
+        combobox_time_drum:          { type: { default: :unit, validate: %i[unit meridiem] } }.freeze
       }.freeze
 
       FORM = {

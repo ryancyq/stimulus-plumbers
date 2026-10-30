@@ -5,27 +5,33 @@ en:
     calendar:
       year_view: "Year view"
       decade_view: "Decade view"
+      decade_heading: "%{first} – %{last}"
+      error: "The calendar could not be loaded"
+      zoom_out:
+        year: "Choose month"
+        decade: "Choose year"
+      previous_month: "Previous month"
+      next_month: "Next month"
+      previous_year: "Previous year"
+      next_year: "Next year"
+      previous_decade: "Previous decade"
+      next_decade: "Next decade"
     combobox:
       typeahead:
         empty: "No results"
         loading: "Loading…"
         error: "Results could not be loaded"
       time:
-        dialog_label: "Picker"
+        label: "time"
+        dialog: "Choose %{label}"
         hour_label: "Hour"
         minute_label: "Minute"
-        period_label: "Period"
+        meridiem_label: "AM/PM"
         am: "AM"
         pm: "PM"
       date:
-        dialog_label: "Picker"
-        navigation_label: "Date picker navigation"
-        previous_month: "Previous month"
-        previous_year: "Previous year"
-        previous_decade: "Previous decade"
-        next_month: "Next month"
-        next_year: "Next year"
-        next_decade: "Next decade"
+        label: "date"
+        dialog: "Choose %{label}"
     form:
       password:
         show: "Show password"

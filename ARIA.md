@@ -60,18 +60,41 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Status messages (loading, "No results") are non-focusable `role="status"` **siblings of the listbox, never children of it**
 - Remote results replace the listbox with one of the same ID and accessible name; the loading frame or listbox carries `aria-busy="true"`
 
-#### Date and time comboboxes, legacy (`input_combobox_controller`, `combobox/`)
+#### Calendar (`sp_calendar`, `calendar`)
 
-- Trigger: `<input role="combobox">` with `aria-haspopup="dialog"` and `aria-controls` referencing the `role="dialog"` panel
+- Grid: `<table role="grid">` labelled by the period heading (`aria-labelledby`); weekday `<th scope="col">` carry the full name in `abbr`
+- At most one enabled cell control has `tabindex="0"`, and none when no date is available; the rest `-1`
+- Selected date: `aria-selected="true"` on the gridcell; today: `aria-current="date"` on the control, independent of selection
+- Unavailable dates: `aria-disabled="true"`; a display-only grid is `aria-readonly="true"`; an unavailable selected date keeps `aria-selected="true"`
+- Every control has a full-date `aria-label`; the heading sits inside the replaced frame without `aria-live`, and a persistent `role="status"` outside it announces period changes
+- Previous/next, previous/next year in the month view, zoom, and month or year cells are buttons in stimulus mode; in Turbo mode they are links that work without JavaScript, and a control with no URL or an unavailable month or year cell is `role="link"` with `aria-disabled="true"` and no `href`
+- Keys on a day: Arrow Left/Right ±1 day, Arrow Up/Down ±7 days, Home/End to the first/last day shown in the week, Page Up/Down ±1 month and Shift+Page Up/Down ±1 year (both clamp the day); Enter/Space select; leaving the shown period requests navigation and focus follows the intended date, or the nearest available date in that period
+- Keys in the year and decade views: arrows move one cell or one row of four, Home/End to the row's ends; Enter or Space opens the month or year
+- A period reached with no available date sends focus to the previous or next control in the direction of travel, to zoom after opening a month or year, or else to the first shown, enabled header control
+- Focus never selects; arrows may land on unavailable days, which cannot be selected; Tab leaves the grid; Escape belongs to an enclosing dialog or popover
 
-#### Calendar / Date Picker (`calendar-month`, `combobox-date`)
+#### Date combobox (`sp_combobox_date`, `combobox-date`)
+
+- Trigger: read-only `<input role="combobox">` with `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls` referencing a non-modal popover `role="dialog"` named "Choose <label>" or by the field label; icons are `aria-hidden`
+- Focus opens the popover without moving focus, except inside an open modal (a modal moving focus on focus is a change of context); a click on the input or its icons and ArrowDown also open it
+- ArrowDown moves focus to the calendar's Tab stop or, with none, to the first shown, enabled header control
+- Selecting a date fills the input, closes the popover, and returns focus to the input without reopening it; Escape closes without changing the value; Tab closes it and moves on
+- An unavailable value shows as given; the field's error (`aria-invalid`, `aria-describedby`) reports it. Unavailable dates not visible without exploring the grid, such as disabled weekdays or dates, belong in the field's hint (WCAG 3.3.2)
+
+#### Time combobox (`sp_combobox_time`, `combobox-time`)
+
+- Trigger and opening as the date combobox; ArrowDown moves focus to the hour column
+- Columns: focusable `role="listbox"` named Hour, Minute, and AM/PM, with `aria-activedescendant` referencing the selected `role="option"` (`aria-selected="true"`); a minute off the step selects no minute option; Tab moves between columns
+- Arrow Up/Down move one option, Home/End to the ends; each selection updates the value
+- Enter closes the popover and keeps the value; Tab out of the columns, focus elsewhere, or an outside click closes and keeps it; Escape restores the value from opening, closes the popover, and keeps an enclosing modal open; Enter and Escape return focus to the input
+- Columns show a visible focus indicator (WCAG 2.4.7)
+
+#### Calendar, legacy (`calendar-month`)
 
 - Grid: `role="grid"`, `role="row"`, `role="gridcell"`
-- Navigation buttons: `aria-label="Previous Month"` / `"Next Month"` (via `Combobox::Date::Navigation`)
 - Selected date: `aria-selected="true"`; today: `aria-current="date"`
 - Disabled dates: `aria-disabled="true"`, `tabindex="-1"`
-- Three views: month (days grid), year (months grid), decade (years grid); zoom out via `combobox-date#zoomOut`
-- Arrow keys navigate cells; Enter/Space select; Escape closes picker
+- Three views: month (days grid), year (months grid), decade (years grid)
 
 #### Form Fields (`form/`, `form-field_controller`)
 

@@ -1,0 +1,301 @@
+{
+  "daysInMonth": [
+    {
+      "year": 2024,
+      "month": 2,
+      "expect": 29
+    },
+    {
+      "year": 2023,
+      "month": 2,
+      "expect": 28
+    },
+    {
+      "year": 1900,
+      "month": 2,
+      "expect": 28
+    },
+    {
+      "year": 2000,
+      "month": 2,
+      "expect": 29
+    },
+    {
+      "year": 2100,
+      "month": 2,
+      "expect": 28
+    },
+    {
+      "year": 2026,
+      "month": 4,
+      "expect": 30
+    },
+    {
+      "year": 2026,
+      "month": 9,
+      "expect": 30
+    },
+    {
+      "year": 2026,
+      "month": 12,
+      "expect": 31
+    },
+    {
+      "year": 2026,
+      "month": 1,
+      "expect": 31
+    }
+  ],
+  "parse": [
+    {
+      "value": "2024-02-29",
+      "expect": "2024-02-29"
+    },
+    {
+      "value": "2023-02-29",
+      "expect": null
+    },
+    {
+      "value": "1900-02-29",
+      "expect": null
+    },
+    {
+      "value": "2000-02-29",
+      "expect": "2000-02-29"
+    },
+    {
+      "value": "2026-13-01",
+      "expect": null
+    },
+    {
+      "value": "2026-00-10",
+      "expect": null
+    },
+    {
+      "value": "2026-09-31",
+      "expect": null
+    },
+    {
+      "value": "2026-9-1",
+      "expect": null
+    },
+    {
+      "value": "2026-09-01T00:00",
+      "expect": null
+    },
+    {
+      "value": "",
+      "expect": null
+    },
+    {
+      "value": "20260901",
+      "expect": null
+    },
+    {
+      "value": null,
+      "expect": null
+    },
+    {
+      "value": "0000-02-29",
+      "expect": null
+    },
+    {
+      "value": "9999-12-31",
+      "expect": "9999-12-31"
+    }
+  ],
+  "addDays": [
+    {
+      "from": "2024-02-28",
+      "amount": 1,
+      "expect": "2024-02-29"
+    },
+    {
+      "from": "2024-02-29",
+      "amount": 1,
+      "expect": "2024-03-01"
+    },
+    {
+      "from": "2023-02-28",
+      "amount": 1,
+      "expect": "2023-03-01"
+    },
+    {
+      "from": "2026-12-31",
+      "amount": 1,
+      "expect": "2027-01-01"
+    },
+    {
+      "from": "2026-01-01",
+      "amount": -1,
+      "expect": "2025-12-31"
+    },
+    {
+      "from": "2026-09-15",
+      "amount": -7,
+      "expect": "2026-09-08"
+    },
+    {
+      "from": "2026-09-15",
+      "amount": 7,
+      "expect": "2026-09-22"
+    },
+    {
+      "from": "2026-03-08",
+      "amount": 1,
+      "expect": "2026-03-09"
+    },
+    {
+      "from": "2026-11-01",
+      "amount": -1,
+      "expect": "2026-10-31"
+    },
+    {
+      "from": "1999-12-31",
+      "amount": 366,
+      "expect": "2000-12-31"
+    },
+    {
+      "from": "9999-12-31",
+      "amount": 1,
+      "expect": null
+    },
+    {
+      "from": "0001-01-01",
+      "amount": -1,
+      "expect": null
+    }
+  ],
+  "addMonths": [
+    {
+      "from": "2024-01-31",
+      "amount": 1,
+      "expect": "2024-02-29"
+    },
+    {
+      "from": "2023-01-31",
+      "amount": 1,
+      "expect": "2023-02-28"
+    },
+    {
+      "from": "2024-01-30",
+      "amount": 1,
+      "expect": "2024-02-29"
+    },
+    {
+      "from": "2024-01-29",
+      "amount": 1,
+      "expect": "2024-02-29"
+    },
+    {
+      "from": "2023-01-29",
+      "amount": 1,
+      "expect": "2023-02-28"
+    },
+    {
+      "from": "2024-03-31",
+      "amount": -1,
+      "expect": "2024-02-29"
+    },
+    {
+      "from": "2026-12-15",
+      "amount": 1,
+      "expect": "2027-01-15"
+    },
+    {
+      "from": "2026-01-15",
+      "amount": -1,
+      "expect": "2025-12-15"
+    },
+    {
+      "from": "2026-08-31",
+      "amount": 1,
+      "expect": "2026-09-30"
+    },
+    {
+      "from": "2024-01-31",
+      "amount": 1,
+      "overflow": "reject",
+      "expect": null
+    },
+    {
+      "from": "2024-01-15",
+      "amount": 1,
+      "overflow": "reject",
+      "expect": "2024-02-15"
+    },
+    {
+      "from": "2026-05-31",
+      "amount": 13,
+      "expect": "2027-06-30"
+    }
+  ],
+  "addYears": [
+    {
+      "from": "2024-02-29",
+      "amount": 1,
+      "expect": "2025-02-28"
+    },
+    {
+      "from": "2024-02-29",
+      "amount": 4,
+      "expect": "2028-02-29"
+    },
+    {
+      "from": "2024-02-29",
+      "amount": -4,
+      "expect": "2020-02-29"
+    },
+    {
+      "from": "2000-02-29",
+      "amount": 100,
+      "expect": "2100-02-28"
+    },
+    {
+      "from": "2024-02-29",
+      "amount": 1,
+      "overflow": "reject",
+      "expect": null
+    },
+    {
+      "from": "2026-09-15",
+      "amount": -1,
+      "expect": "2025-09-15"
+    },
+    {
+      "from": "0001-06-15",
+      "amount": -1,
+      "expect": null
+    }
+  ],
+  "weekday": [
+    {
+      "date": "1970-01-01",
+      "expect": 4
+    },
+    {
+      "date": "2026-09-15",
+      "expect": 2
+    },
+    {
+      "date": "2000-02-29",
+      "expect": 2
+    },
+    {
+      "date": "1900-03-01",
+      "expect": 4
+    },
+    {
+      "date": "2024-12-31",
+      "expect": 2
+    },
+    {
+      "date": "1600-01-01",
+      "expect": 6
+    },
+    {
+      "date": "2400-02-29",
+      "expect": 2
+    }
+  ]
+}

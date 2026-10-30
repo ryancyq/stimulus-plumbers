@@ -1,6 +1,6 @@
 # Calendar
 
-Manages calendar state: current month/year, today marker, date range constraints, and disabled date rules. Exposes navigation and query methods on the controller. Used by `calendar-month`.
+Manages calendar state: current month/year, today marker, date range availability, and disabled date rules. Exposes navigation and query methods on the controller. Used by `calendar-month`.
 
 ## Factory
 

@@ -195,6 +195,52 @@ describe('PopoverController', () => {
     expect(panel.matches(':popover-open')).toBe(false);
   });
 
+  describe('onFocus', () => {
+    const focus = (controller, trigger, relatedTarget = null) =>
+      controller.onFocus({ currentTarget: trigger, relatedTarget, preventDefault: vi.fn() });
+
+    it('opens from the trigger after user input', async () => {
+      const { controller, panel, trigger } = await render();
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+
+      focus(controller, trigger);
+
+      expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
+    });
+
+    it('stays closed for focus before any user input, such as autofocus', async () => {
+      const { controller, panel, trigger } = await render();
+
+      focus(controller, trigger);
+
+      expect(panel.showPopover).not.toHaveBeenCalled();
+    });
+
+    it('stays closed when focus returns from the panel', async () => {
+      const { controller, panel, trigger } = await render();
+      document.dispatchEvent(new Event('pointerdown'));
+
+      focus(controller, trigger, panel);
+
+      expect(panel.showPopover).not.toHaveBeenCalled();
+    });
+
+    it('stays closed inside an open modal', async () => {
+      const { controller, panel, root, trigger } = await render();
+      const dialog = document.createElement('dialog');
+      dialog.matches = (selector) => selector === ':modal';
+      root.replaceWith(dialog);
+      dialog.append(root);
+      await vi.waitUntil(() => controllerFor());
+      document.dispatchEvent(new Event('pointerdown'));
+
+      focus(controllerFor(), trigger);
+
+      expect(panel.showPopover).not.toHaveBeenCalled();
+      expect(controller).toBeDefined();
+    });
+  });
+
   it('stops syncing the trigger and closing for the Turbo cache after disconnect', async () => {
     const { panel, root, trigger } = await render();
 

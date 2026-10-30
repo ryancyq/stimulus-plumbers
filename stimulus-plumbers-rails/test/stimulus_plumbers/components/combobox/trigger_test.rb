@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ComboboxControlTest < ActionView::TestCase
+class ComboboxTriggerTest < ActionView::TestCase
   def render_trigger(**kwargs)
     parse_html(
       StimulusPlumbers::Components::Combobox::Trigger.new(self).render(
@@ -26,7 +26,7 @@ class ComboboxControlTest < ActionView::TestCase
     assert_equal "input->combobox#onInput keydown->combobox#onKeydown", trigger["data-action"]
   end
 
-  def test_names_the_trigger_and_references_the_listbox
+  def test_names_the_control_and_references_the_listbox
     trigger = render_trigger.at_css("[role='combobox']")
 
     assert_equal "City", trigger["aria-label"]

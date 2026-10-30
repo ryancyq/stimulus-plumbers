@@ -43,7 +43,7 @@ module StimulusPlumbers
             aria = { selected: selected ? "true" : "false", disabled: ("true" if disabled) }
             data = { value: value }
 
-            # Keep the description out of the name.
+            # The description is not part of the name.
             if description
               data[:label] = label
               aria.merge!(labelledby: part_id(id, "label"), describedby: part_id(id, "description")) if id

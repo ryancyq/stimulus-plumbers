@@ -1,0 +1,265 @@
+{
+  "cases": [
+    {
+      "date": "2026-09-14",
+      "availability": {
+        "min": "2026-09-15"
+      },
+      "expect": true
+    },
+    {
+      "date": "2026-09-15",
+      "availability": {
+        "min": "2026-09-15"
+      },
+      "expect": false
+    },
+    {
+      "date": "2026-09-16",
+      "availability": {
+        "max": "2026-09-15"
+      },
+      "expect": true
+    },
+    {
+      "date": "2026-09-15",
+      "availability": {
+        "max": "2026-09-15"
+      },
+      "expect": false
+    },
+    {
+      "date": "2026-09-20",
+      "availability": {
+        "disabledDates": [
+          "2026-09-20"
+        ]
+      },
+      "expect": true
+    },
+    {
+      "date": "2026-09-21",
+      "availability": {
+        "disabledDates": [
+          "2026-09-20"
+        ]
+      },
+      "expect": false
+    },
+    {
+      "date": "2026-09-20",
+      "availability": {
+        "disabledWeekdays": [
+          0,
+          6
+        ]
+      },
+      "expect": true
+    },
+    {
+      "date": "2026-09-21",
+      "availability": {
+        "disabledWeekdays": [
+          0,
+          6
+        ]
+      },
+      "expect": false
+    },
+    {
+      "date": "2026-12-01",
+      "availability": {
+        "disabledMonths": [
+          12
+        ]
+      },
+      "expect": true
+    },
+    {
+      "date": "2027-01-01",
+      "availability": {
+        "disabledYears": [
+          2027
+        ]
+      },
+      "expect": true
+    },
+    {
+      "date": "2026-09-15",
+      "availability": {},
+      "expect": false
+    }
+  ],
+  "invalid": [
+    {
+      "name": "valid range",
+      "availability": {
+        "min": "2026-09-01",
+        "max": "2026-09-30",
+        "disabledWeekdays": [
+          0,
+          6
+        ],
+        "disabledMonths": [
+          12
+        ],
+        "disabledYears": [
+          2027
+        ],
+        "disabledDates": [
+          "2026-09-15"
+        ]
+      },
+      "option": null
+    },
+    {
+      "name": "reversed range",
+      "availability": {
+        "min": "2026-09-20",
+        "max": "2026-09-01"
+      },
+      "option": "min"
+    },
+    {
+      "name": "non-canonical min",
+      "availability": {
+        "min": "2026-9-1"
+      },
+      "option": "min"
+    },
+    {
+      "name": "impossible max",
+      "availability": {
+        "max": "2026-02-30"
+      },
+      "option": "max"
+    },
+    {
+      "name": "non-key disabled date",
+      "availability": {
+        "disabledDates": [
+          "September 1"
+        ]
+      },
+      "option": "disabledDates"
+    },
+    {
+      "name": "weekday out of range",
+      "availability": {
+        "disabledWeekdays": [
+          7
+        ]
+      },
+      "option": "disabledWeekdays"
+    },
+    {
+      "name": "month out of range",
+      "availability": {
+        "disabledMonths": [
+          13
+        ]
+      },
+      "option": "disabledMonths"
+    },
+    {
+      "name": "non-integer year",
+      "availability": {
+        "disabledYears": [
+          "2027"
+        ]
+      },
+      "option": "disabledYears"
+    }
+  ],
+  "periods": [
+    {
+      "year": 2026,
+      "month": 9,
+      "availability": {},
+      "expect": false
+    },
+    {
+      "year": 2026,
+      "month": 8,
+      "availability": {
+        "min": "2026-09-03"
+      },
+      "expect": true
+    },
+    {
+      "year": 2026,
+      "month": 9,
+      "availability": {
+        "min": "2026-09-30"
+      },
+      "expect": false
+    },
+    {
+      "year": 2026,
+      "month": 10,
+      "availability": {
+        "max": "2026-09-30"
+      },
+      "expect": true
+    },
+    {
+      "year": 2026,
+      "month": 3,
+      "availability": {
+        "disabledMonths": [
+          3
+        ]
+      },
+      "expect": true
+    },
+    {
+      "year": 2027,
+      "month": 1,
+      "availability": {
+        "disabledYears": [
+          2027
+        ]
+      },
+      "expect": true
+    },
+    {
+      "year": 2025,
+      "availability": {
+        "min": "2026-01-01"
+      },
+      "expect": true
+    },
+    {
+      "year": 2026,
+      "availability": {
+        "min": "2026-12-31"
+      },
+      "expect": false
+    },
+    {
+      "year": 2027,
+      "availability": {
+        "max": "2026-12-31"
+      },
+      "expect": true
+    },
+    {
+      "year": 2030,
+      "availability": {
+        "disabledYears": [
+          2030
+        ]
+      },
+      "expect": true
+    },
+    {
+      "year": 2031,
+      "availability": {
+        "disabledMonths": [
+          1
+        ]
+      },
+      "expect": false
+    }
+  ]
+}

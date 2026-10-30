@@ -23,6 +23,9 @@ class ComponentsController < ApplicationController
     @till              = parse_date(:till)
   end
 
+  def calendar_inline
+  end
+
   def combobox
   end
 

@@ -1,12 +1,10 @@
 # Combobox Controllers
 
-`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. The legacy family below uses a layered design: `input-combobox` and `input-formatter` live on the wrapper; a date or time sub-controller lives inside the popover.
+`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date` and `combobox-time` keep a read-only input in step with their popover. The legacy family below uses a layered design: `input-combobox` and `input-formatter` live on the wrapper; `combobox-dropdown` lives inside the popover.
 
 ```
 input-combobox + input-formatter   ← wrapper
 └── [popover]
-      └── combobox-date         ← date picker (calendar grid)
-      └── combobox-time         ← time picker (drum/scroll-wheel)
       └── combobox-dropdown     ← listbox (dropdown & typeahead)
 ```
 
@@ -252,77 +250,146 @@ Formats and displays values. Always co-located with `input-combobox`. See [input
 
 ## combobox-date
 
-Navigates a calendar grid with month, year, and decade views. Requires a `calendar-month` outlet; `calendar-year` and `calendar-decade` are optional for drill-down. View switching hides/shows outlet elements directly — no named targets for view containers.
+Keeps a read-only date input in step with the [`calendar`](calendar.md#calendar) in its popover
+([Rails `sp_combobox_date`](../../../stimulus-plumbers-rails/docs/component/combobox.md#sp_combobox_date)).
+Pairs with [`popover`](popover.md), which opens the panel, and [`input-formatter`](input-formatter.md), which
+formats the input from `combobox-date:changed`.
+
+```html
+<div
+  data-controller="popover combobox-date input-formatter"
+  data-input-formatter-format-value="date"
+  data-combobox-date-calendar-outlet="#birthday_calendar"
+  data-action="calendar:changed->combobox-date#onChange focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick combobox-date:changed->input-formatter#onChange"
+>
+  <input
+    role="combobox"
+    readonly
+    value="2026-09-15"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    aria-controls="birthday_popover"
+    data-popover-target="trigger"
+    data-combobox-date-target="trigger"
+    data-input-formatter-target="input"
+    data-action="focus->popover#onFocus click->popover#open keydown->combobox-date#onKeydown"
+  />
+  <input type="hidden" name="person[birthday]" value="2026-09-15" data-combobox-date-target="input" />
+  <div id="birthday_popover" popover="auto" role="dialog" data-popover-target="panel" data-combobox-date-target="panel">
+    <!-- sp_calendar markup with id="birthday_calendar" -->
+  </div>
+</div>
+```
 
 **Targets**
 
-| Target      | Description                                                            |
-| ----------- | ---------------------------------------------------------------------- |
-| `previous`  | Button that steps backward (one month / one year / one decade by view) |
-| `next`      | Button that steps forward (one month / one year / one decade by view)  |
-| `viewTitle` | Button showing the current view label (e.g. "June 2025" / "2025")      |
-| `day`       | Rendered day label element (display only)                              |
-| `month`     | Rendered month label element (display only)                            |
-| `year`      | Rendered year label element (display only)                             |
+| Target    | Description                                      |
+| --------- | ------------------------------------------------ |
+| `trigger` | Read-only input showing the formatted date       |
+| `input`   | Hidden input that submits the `YYYY-MM-DD` value |
+| `panel`   | Popover holding the calendar                     |
 
 **Outlets**
 
-| Outlet            | Description                                                  |
-| ----------------- | ------------------------------------------------------------ |
-| `calendar-month`  | Required — provides the day grid and calendar navigation API |
-| `calendar-year`   | Optional — year view grid; shown when `view` is `"year"`     |
-| `calendar-decade` | Optional — decade view grid; shown when `view` is `"decade"` |
+| Outlet     | Description                                               |
+| ---------- | --------------------------------------------------------- |
+| `calendar` | The panel's calendar; ArrowDown has it focus its Tab stop |
 
-**Values**
+**Actions**
 
-| Value         | Type   | Default       | Description                                                 |
-| ------------- | ------ | ------------- | ----------------------------------------------------------- |
-| `date`        | String | `""`          | ISO 8601 initial date; navigates calendar on outlet connect |
-| `view`        | String | `"month"`     | Current view — `"month"` \| `"year"` \| `"decade"`          |
-| `locales`     | Array  | `["default"]` | `Intl.DateTimeFormat` locales                               |
-| `dayFormat`   | String | `"numeric"`   | Day label format                                            |
-| `monthFormat` | String | `"long"`      | Month label format                                          |
-| `yearFormat`  | String | `"numeric"`   | Year label format                                           |
-
-**Methods**
-
-| Method                 | Wired via                   | Description                                                                              |
-| ---------------------- | --------------------------- | ---------------------------------------------------------------------------------------- |
-| `previous()`           | click on `previous` target  | Steps back: one month (month view), one year (year view), one decade (decade view)       |
-| `next()`               | click on `next` target      | Steps forward: one month (month view), one year (year view), one decade (decade view)    |
-| `zoomOut()`            | click on `viewTitle` target | Zooms out: month → year → decade view                                                    |
-| `onDaySelect(event)`   | `calendar-month:selected`   | Event adapter — updates `dateValue`, redraws labels, dispatches `combobox-date:selected` |
-| `onMonthSelect(event)` | `calendar-year:selected`    | Event adapter — navigates calendar to selected month, switches to month view             |
-| `onYearSelect(event)`  | `calendar-decade:selected`  | Event adapter — navigates calendar to selected year, switches to year view               |
+| Action               | Wired on                        | Description                                                                                       |
+| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `onKeydown(event)`   | `keydown` on `trigger`          | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel  |
+| `onFocusout(event)`  | `focusout` on container         | Closes the panel when focus leaves the combobox                                                   |
+| `onClick(event)`     | `click` on container            | A click on the icons or padding focuses `trigger` and opens the panel                             |
+| `onMousedown(event)` | `mousedown` on container        | Keeps focus on `trigger` while the icons or padding are pressed                                   |
+| `onChange(event)`    | `calendar:changed` on container | Copies the value into `input`, dispatches `change` on it, closes the panel, and focuses `trigger` |
 
 **Dispatches**
 
-| Event                    | Detail                 | When                      |
-| ------------------------ | ---------------------- | ------------------------- |
-| `combobox-date:selected` | `{ value }` (ISO 8601) | After a date is confirmed |
+| Event                   | Detail                     | When                                   |
+| ----------------------- | -------------------------- | -------------------------------------- |
+| `combobox-date:changed` | `{ value }` (`YYYY-MM-DD`) | After a selection and after form reset |
+
+Events from a nested combobox date are ignored.
 
 ---
 
 ## combobox-time
 
-Drum/scroll-wheel time picker. Each drum is a `ul[role=listbox]`.
+Keeps a read-only time input in step with the hour, minute, and AM/PM columns in its popover
+([Rails `sp_combobox_time`](../../../stimulus-plumbers-rails/docs/component/combobox.md#sp_combobox_time)).
+Pairs with [`popover`](popover.md), which opens the panel, and [`input-formatter`](input-formatter.md), which
+formats the input from `combobox-time:changed`.
 
-**Targets:** `hour`, `minute`, `period` (period only present in h12 mode)
+```html
+<div
+  data-controller="popover combobox-time input-formatter"
+  data-input-formatter-format-value="time"
+  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
+>
+  <input
+    role="combobox"
+    readonly
+    value="14:30"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    aria-controls="meeting_popover"
+    data-popover-target="trigger"
+    data-combobox-time-target="trigger"
+    data-input-formatter-target="input"
+    data-action="focus->popover#onFocus click->popover#open keydown->combobox-time#onKeydown"
+  />
+  <input type="hidden" name="meeting" value="14:30" data-combobox-time-target="input" />
+  <div id="meeting_popover" popover="auto" role="dialog" data-popover-target="panel" data-combobox-time-target="panel">
+    <ul
+      role="listbox"
+      tabindex="0"
+      aria-label="Hour"
+      aria-activedescendant="meeting_hour_2"
+      data-combobox-time-target="hour"
+      data-action="keydown->combobox-time#onNavigate click->combobox-time#onSelect"
+    >
+      <li role="option" id="meeting_hour_1" data-value="1" aria-selected="false">1</li>
+      <li role="option" id="meeting_hour_2" data-value="2" aria-selected="true">2</li>
+      <!-- … -->
+    </ul>
+    <!-- minute column; meridiem column (data-value AM / PM) for a 12-hour cycle -->
+  </div>
+</div>
+```
 
-**Methods**
+**Targets**
 
-| Method              | Wired via                | Description                                                                         |
-| ------------------- | ------------------------ | ----------------------------------------------------------------------------------- |
-| `select(value)`     | —                        | Programmatic API — dispatches `combobox-time:selected` with the given 24-hour value |
-| `onSelect(event)`   | `click` on a drum option | Event adapter — marks clicked option `aria-selected="true"`, calls `select(value)`  |
-| `onNavigate(event)` | `keydown` on a drum      | Event adapter — ArrowUp/ArrowDown call `step(drum, delta)`                          |
-| `step(drum, delta)` | —                        | Programmatic API — moves selection by `delta` steps in the given drum element       |
+| Target     | Description                                                                  |
+| ---------- | ---------------------------------------------------------------------------- |
+| `trigger`  | Read-only input showing the formatted time                                   |
+| `input`    | Hidden input that submits the `HH:MM` value                                  |
+| `panel`    | Popover holding the columns                                                  |
+| `hour`     | Hour column; option values `1`–`12` with a `meridiem` column, else `00`–`23` |
+| `minute`   | Minute column; option values `00`–`59`                                       |
+| `meridiem` | Optional AM/PM column; option values `AM` and `PM`                           |
+
+**Actions**
+
+| Action               | Wired on                           | Description                                                                                                                                       |
+| -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and focuses `hour`; Tab closes the panel; Escape as in `onNavigate`                                                     |
+| `onOpening(event)`   | `popover:before-open` on container | Records the value Escape restores                                                                                                                 |
+| `onOpened(event)`    | `popover:opened` on container      | Scrolls the selected options into view                                                                                                            |
+| `onNavigate(event)`  | `keydown` on a column              | Arrows, Home, and End select an option; Enter closes the panel; Escape restores the value from opening and closes the panel; both focus `trigger` |
+| `onSelect(event)`    | `click` on a column                | Selects the clicked option                                                                                                                        |
+| `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                                                   |
+| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel                                                                             |
+| `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                                                   |
+
+Selecting an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are selected, the value goes into `input`, which dispatches `change`.
 
 **Dispatches**
 
-| Event                    | Detail                          | When                                                          |
-| ------------------------ | ------------------------------- | ------------------------------------------------------------- |
-| `combobox-time:selected` | `{ value }` (`"HH:MM"` 24-hour) | On connect (if pre-selected) and after every user interaction |
+| Event                   | Detail                | When                                                              |
+| ----------------------- | --------------------- | ----------------------------------------------------------------- |
+| `combobox-time:changed` | `{ value }` (`HH:MM`) | After a selection that completes the time, Escape, and form reset |
 
 ---
 

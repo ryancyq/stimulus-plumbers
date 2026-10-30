@@ -11,6 +11,8 @@ stimulus-plumbers/
 │   │   └── keyboard.js
 │   ├── controllers/                 # Stimulus controllers
 │   │   ├── *_controller.js
+│   ├── date/                        # Date-only core: { year, month, day }, never an instant
+│   │   └── index.js
 │   ├── plumbers/                    # Core plumber utilities
 │   │   ├── formatters/              # Input formatter strategies
 │   │   │   └── *.js
@@ -30,6 +32,8 @@ stimulus-plumbers/
 │   │   │   └── *.test.js
 │   │   ├── controllers/
 │   │   │   └── *.test.js
+│   │   ├── date/                    # Runs tests/fixtures/date/*.json across timezones
+│   │   │   └── *.test.js
 │   │   ├── plumbers/
 │   │   │   ├── formatters/
 │   │   │   │   └── *.test.js
@@ -37,6 +41,7 @@ stimulus-plumbers/
 │   │   │   │   └── *.test.js
 │   │   │   └── *.test.js
 │   │   └── *.test.js
+│   ├── fixtures/                    # JSON fixtures shared with the Rails tests
 │   ├── support/                     # Shared test helpers (native popover shim)
 │   └── setup.js
 ├── eslint.config.js
@@ -55,7 +60,7 @@ stimulus-plumbers/
 - import statements should not end with .js
 - **Unit tests** using Vitest (`npm test`)
 - **Lint tests** (`npm run lint`, `npm run format:check`) — run synchronously from this package's directory; never background or tail
-- **Accessibility helpers** — use `RovingTabIndex.activate()` / `ListboxNavigation` / `FocusTrap` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract. Exception: `combobox_controller` (see `docs/accessibility/design.md` §2).
+- **Accessibility helpers** — use `RovingTabIndex.activate()` / `ListboxNavigation` / `FocusTrap` from `src/accessibility/` instead of writing raw keyboard or focus logic in controllers. See `docs/accessibility/design.md` for the full contract. Exceptions: `combobox_controller` and `combobox_time_controller` (see `docs/accessibility/design.md` §2).
 
 ## WCAG / ARIA Reference
 See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-specific ARIA patterns. Controllers in this package are responsible for keyboard navigation, focus management, and dynamic ARIA state.

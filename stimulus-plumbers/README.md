@@ -36,6 +36,8 @@ import {
   ComboboxDateController,
   ComboboxTimeController,
   ComboboxDropdownController,
+  CalendarController,
+  CalendarTurboController,
   CalendarMonthController,
   CalendarMonthSelectorController,
   CalendarYearController,
@@ -69,6 +71,8 @@ application.register('input-revealable', InputRevealableController);
 application.register('combobox-date', ComboboxDateController);
 application.register('combobox-time', ComboboxTimeController);
 application.register('combobox-dropdown', ComboboxDropdownController);
+application.register('calendar', CalendarController);
+application.register('calendar-turbo', CalendarTurboController);
 application.register('calendar-month', CalendarMonthController);
 application.register('calendar-month-selector', CalendarMonthSelectorController);
 application.register('calendar-year', CalendarYearController);
@@ -92,37 +96,39 @@ application.register('visibility', VisibilityController);
 
 ## Controllers
 
-| Controller                 | Description                                                                             | Docs                                                                              |
-| -------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `combobox`                 | Listbox combobox: keyboard, active option, selection, and dismissal on a manual popover | [docs/component/combobox.md](docs/component/combobox.md#combobox)                 |
-| `combobox-turbo`           | Remote results for `combobox` through a Turbo Frame                                     | [docs/component/combobox.md](docs/component/combobox.md#combobox-turbo)           |
-| `combobox-fetch`           | Remote results for `combobox` through `fetch`, without Turbo                            | [docs/component/combobox.md](docs/component/combobox.md#combobox-fetch)           |
-| `input-combobox`           | Wrapper: trigger, popover, hidden value                                                 | [docs/component/combobox.md](docs/component/combobox.md#input-combobox)           |
-| `input-formatter`          | Formats and displays values                                                             | [docs/component/input-formatter.md](docs/component/input-formatter.md)            |
-| `input-clearable`          | Input with clear button                                                                 | [docs/component/input-clearable.md](docs/component/input-clearable.md)            |
-| `input-revealable`         | Obscured input with reveal toggle                                                       | [docs/component/input-revealable.md](docs/component/input-revealable.md)          |
-| `combobox-date`            | Calendar grid date picker                                                               | [docs/component/combobox.md](docs/component/combobox.md#combobox-date)            |
-| `combobox-time`            | Drum/scroll-wheel time picker                                                           | [docs/component/combobox.md](docs/component/combobox.md#combobox-time)            |
-| `combobox-dropdown`        | Listbox with fuzzy filter or server fetch                                               | [docs/component/combobox.md](docs/component/combobox.md#combobox-dropdown)        |
-| `calendar-month`           | Calendar month grid — renders days, handles clicks, dispatches selection events         | [docs/component/calendar.md](docs/component/calendar.md)                          |
-| `calendar-month-selector`  | SSR/Turbo thin selector for server-rendered month grids                                 | [docs/component/calendar.md](docs/component/calendar.md#calendar-month-selector)  |
-| `calendar-year`            | Calendar year grid — renders month buttons, dispatches selection events                 | [docs/component/calendar.md](docs/component/calendar.md#calendar-year)            |
-| `calendar-year-selector`   | SSR/Turbo thin selector for server-rendered year grids                                  | [docs/component/calendar.md](docs/component/calendar.md#calendar-year-selector)   |
-| `calendar-decade`          | Calendar decade grid — renders year buttons, dispatches selection events                | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade)          |
-| `calendar-decade-selector` | SSR/Turbo thin selector for server-rendered decade grids                                | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade-selector) |
-| `checklist`                | Master "select all" toggle for native checkbox items                                    | [docs/component/checklist.md](docs/component/checklist.md)                        |
-| `modal`                    | Native `<dialog>` lifecycle adapter                                                     | [docs/component/modal.md](docs/component/modal.md)                                |
-| `modal-turbo`              | Turbo Frame adapter for `modal`                                                         | [docs/component/modal.md](docs/component/modal.md#modal-turbo)                    |
-| `popover`                  | Native HTML Popover lifecycle adapter                                                   | [docs/component/popover.md](docs/component/popover.md)                            |
-| `progress`                 | Value-driven progress bar/segmented/ring/meter                                          | [docs/component/progress.md](docs/component/progress.md)                          |
-| `dismisser`                | Click-outside dismissal                                                                 | [docs/component/dismisser.md](docs/component/dismisser.md)                        |
-| `flipper`                  | Floating element positioning                                                            | [docs/component/flipper.md](docs/component/flipper.md)                            |
-| `clipboard`                | Copy-to-clipboard and paste interception                                                | [docs/component/clipboard.md](docs/component/clipboard.md)                        |
-| `panner`                   | Keeps content element within viewport on resize                                         | [docs/component/panner.md](docs/component/panner.md)                              |
-| `password-strength`        | Live password meter and requirements checklist                                          | [docs/component/password-strength.md](docs/component/password-strength.md)        |
-| `reorderable`              | Drag (pointer) or keyboard (`Alt+Arrow`) reordering for a vertical list                 | [docs/component/reorderable.md](docs/component/reorderable.md)                    |
-| `timeline`                 | Manages expandable timeline event items with keyboard navigation                        | [docs/component/timeline.md](docs/component/timeline.md)                          |
-| `visibility`               | Show/hide a content element, kept within viewport, with click-outside dismissal         | [docs/component/visibility.md](docs/component/visibility.md)                      |
+| Controller                 | Description                                                                                                                     | Docs                                                                              |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `combobox`                 | Listbox combobox: keyboard, active option, selection, and dismissal on a manual popover                                         | [docs/component/combobox.md](docs/component/combobox.md#combobox)                 |
+| `combobox-turbo`           | Remote results for `combobox` through a Turbo Frame                                                                             | [docs/component/combobox.md](docs/component/combobox.md#combobox-turbo)           |
+| `combobox-fetch`           | Remote results for `combobox` through `fetch`, without Turbo                                                                    | [docs/component/combobox.md](docs/component/combobox.md#combobox-fetch)           |
+| `input-combobox`           | Wrapper: trigger, popover, hidden value                                                                                         | [docs/component/combobox.md](docs/component/combobox.md#input-combobox)           |
+| `input-formatter`          | Formats and displays values                                                                                                     | [docs/component/input-formatter.md](docs/component/input-formatter.md)            |
+| `input-clearable`          | Input with clear button                                                                                                         | [docs/component/input-clearable.md](docs/component/input-clearable.md)            |
+| `input-revealable`         | Obscured input with reveal toggle                                                                                               | [docs/component/input-revealable.md](docs/component/input-revealable.md)          |
+| `combobox-date`            | Read-only date input whose popover holds a `calendar`                                                                           | [docs/component/combobox.md](docs/component/combobox.md#combobox-date)            |
+| `combobox-time`            | Read-only time input whose popover holds hour, minute, and AM/PM columns                                                        | [docs/component/combobox.md](docs/component/combobox.md#combobox-time)            |
+| `combobox-dropdown`        | Listbox with fuzzy filter or server fetch                                                                                       | [docs/component/combobox.md](docs/component/combobox.md#combobox-dropdown)        |
+| `calendar`                 | Calendar grid — draws periods with `Intl` or enhances server markup; at most one Tab stop, grid keyboard, selection, navigation | [docs/component/calendar.md](docs/component/calendar.md#calendar)                 |
+| `calendar-turbo`           | Loads `calendar` periods through a Turbo Frame                                                                                  | [docs/component/calendar.md](docs/component/calendar.md#calendar-turbo)           |
+| `calendar-month`           | Calendar month grid — renders days, handles clicks, dispatches selection events                                                 | [docs/component/calendar.md](docs/component/calendar.md)                          |
+| `calendar-month-selector`  | SSR/Turbo thin selector for server-rendered month grids                                                                         | [docs/component/calendar.md](docs/component/calendar.md#calendar-month-selector)  |
+| `calendar-year`            | Calendar year grid — renders month buttons, dispatches selection events                                                         | [docs/component/calendar.md](docs/component/calendar.md#calendar-year)            |
+| `calendar-year-selector`   | SSR/Turbo thin selector for server-rendered year grids                                                                          | [docs/component/calendar.md](docs/component/calendar.md#calendar-year-selector)   |
+| `calendar-decade`          | Calendar decade grid — renders year buttons, dispatches selection events                                                        | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade)          |
+| `calendar-decade-selector` | SSR/Turbo thin selector for server-rendered decade grids                                                                        | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade-selector) |
+| `checklist`                | Master "select all" toggle for native checkbox items                                                                            | [docs/component/checklist.md](docs/component/checklist.md)                        |
+| `modal`                    | Native `<dialog>` lifecycle adapter                                                                                             | [docs/component/modal.md](docs/component/modal.md)                                |
+| `modal-turbo`              | Turbo Frame adapter for `modal`                                                                                                 | [docs/component/modal.md](docs/component/modal.md#modal-turbo)                    |
+| `popover`                  | Native HTML Popover lifecycle adapter                                                                                           | [docs/component/popover.md](docs/component/popover.md)                            |
+| `progress`                 | Value-driven progress bar/segmented/ring/meter                                                                                  | [docs/component/progress.md](docs/component/progress.md)                          |
+| `dismisser`                | Click-outside dismissal                                                                                                         | [docs/component/dismisser.md](docs/component/dismisser.md)                        |
+| `flipper`                  | Floating element positioning                                                                                                    | [docs/component/flipper.md](docs/component/flipper.md)                            |
+| `clipboard`                | Copy-to-clipboard and paste interception                                                                                        | [docs/component/clipboard.md](docs/component/clipboard.md)                        |
+| `panner`                   | Keeps content element within viewport on resize                                                                                 | [docs/component/panner.md](docs/component/panner.md)                              |
+| `password-strength`        | Live password meter and requirements checklist                                                                                  | [docs/component/password-strength.md](docs/component/password-strength.md)        |
+| `reorderable`              | Drag (pointer) or keyboard (`Alt+Arrow`) reordering for a vertical list                                                         | [docs/component/reorderable.md](docs/component/reorderable.md)                    |
+| `timeline`                 | Manages expandable timeline event items with keyboard navigation                                                                | [docs/component/timeline.md](docs/component/timeline.md)                          |
+| `visibility`               | Show/hide a content element, kept within viewport, with click-outside dismissal                                                 | [docs/component/visibility.md](docs/component/visibility.md)                      |
 
 ## Utilities
 

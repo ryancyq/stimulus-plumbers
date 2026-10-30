@@ -13,6 +13,9 @@ class ComponentsController < ApplicationController
     @till              = parse_date(:till)
   end
 
+  def calendar_inline
+  end
+
   def calendar_turbo
     @view              = params[:view]
     @selectable        = params[:selectable] == "true"

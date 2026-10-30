@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { settled } from "../../../support/playwright.js";
 
 const FIXED_DATE = new Date("2024-02-29T12:00:00Z");
 
@@ -59,6 +60,15 @@ test.describe("combobox", () => {
     const section = page.locator("#combobox-time");
     await section.getByRole("combobox", { name: "Meeting Time" }).click();
     await screenshotWithPanel(page, section, "time-open.png");
+  });
+
+  test("time — selected, hour column focused", async ({ page }) => {
+    const section = page.locator("#combobox-time-selected");
+    const control = section.getByRole("combobox", { name: "Standup" });
+    await control.click();
+    await control.press("ArrowDown");
+    await expect(section.getByRole("listbox", { name: "Hour" })).toBeFocused();
+    await screenshotWithPanel(page, section, "time-selected-focused.png");
   });
 
   test("dropdown — open", async ({ page }) => {
@@ -139,7 +149,7 @@ test.describe("combobox", () => {
 
   test("dropdown grouped — open", async ({ page }) => {
     const section = page.locator("#combobox-dropdown-grouped");
-    // Centered, so the panel always opens below the field.
+    // Centered; the panel opens below the field.
     await section.evaluate((element) =>
       element.scrollIntoView({ block: "center" }),
     );
@@ -210,6 +220,89 @@ test.describe("combobox", () => {
     await screenshotWithPanel(page, section, "typeahead-error-open.png");
   });
 
+  test("date selected — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-date-selected")).toHaveScreenshot(
+      "date-selected-closed.png",
+    );
+  });
+
+  test("date selected — open from the icon", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    await section.locator("#deadline + [aria-hidden='true']").click();
+    await screenshotWithPanel(page, section, "date-selected-open.png");
+  });
+
+  test("date selected — calendar focused", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    await section.getByRole("combobox", { name: "Deadline" }).click();
+    await page.keyboard.press("ArrowDown");
+    await expect(section.locator("[data-date='2024-02-15']")).toBeFocused();
+    await screenshotWithPanel(
+      page,
+      section,
+      "date-selected-calendar-focused.png",
+    );
+  });
+
+  test("date selected — next month", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    await section.getByRole("combobox", { name: "Deadline" }).click();
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("PageDown");
+    await expect(section.locator("[data-date='2024-03-15']")).toBeFocused();
+    await screenshotWithPanel(page, section, "date-selected-next-month.png");
+  });
+
+  test("date selected — tabbed out", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    const input = section.getByRole("combobox", { name: "Deadline" });
+    await input.click();
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("Tab");
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(section).toHaveScreenshot("date-selected-tabbed-out.png");
+  });
+
+  test("date selected — next day selected", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    const input = section.getByRole("combobox", { name: "Deadline" });
+    await input.click();
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("Enter");
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(input).toHaveValue("February 16, 2024");
+    await expect(section).toHaveScreenshot("date-selected-next-day.png");
+  });
+
+  test("date in a modal — open", async ({ page }) => {
+    const section = page.locator("#combobox-date-modal");
+    const dialog = section.locator("dialog");
+    await section.getByRole("button", { name: "Plan a trip" }).click();
+    await expect(dialog).toHaveAttribute("open", "");
+    await settled(section);
+    const input = dialog.getByRole("combobox", { name: "Departure" });
+    await input.focus();
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await page.keyboard.press("ArrowDown");
+    await settled(section);
+    await screenshotWithPanel(page, dialog, "date-modal-open.png");
+  });
+
+  test("time in a modal — open", async ({ page }) => {
+    const section = page.locator("#combobox-time-modal");
+    const dialog = section.locator("dialog");
+    await section.getByRole("button", { name: "Book a call" }).click();
+    await expect(dialog).toHaveAttribute("open", "");
+    await settled(section);
+    const input = dialog.getByRole("combobox", { name: "Call" });
+    await input.focus();
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await page.keyboard.press("ArrowDown");
+    await settled(section);
+    await screenshotWithPanel(page, dialog, "time-modal-open.png");
+  });
+
   test("modal — closed", async ({ page }) => {
     await expect(page.locator("#combobox-modal")).toHaveScreenshot(
       "modal-closed.png",
@@ -223,8 +316,10 @@ test.describe("combobox", () => {
       .getByRole("button", { name: "Choose shipping country" })
       .click();
     await expect(dialog).toHaveAttribute("open", "");
+    await settled(section);
     await dialog.getByRole("combobox", { name: "Shipping country" }).click();
     await dialog.locator("[popover]").waitFor({ state: "visible" });
+    await settled(section);
     await expect(page).toHaveScreenshot("modal-open.png");
   });
 });

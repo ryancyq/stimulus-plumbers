@@ -4,7 +4,7 @@ require_relative "../../test_helper"
 
 class ControllerSchemaLoaderTest < Minitest::Test
   EXPECTED_IDENTIFIERS = %w[
-    calendar-decade calendar-decade-selector
+    calendar calendar-turbo calendar-decade calendar-decade-selector
     calendar-month calendar-month-selector
     calendar-year calendar-year-selector
     combobox combobox-turbo combobox-fetch combobox-date combobox-time combobox-dropdown
@@ -64,10 +64,8 @@ class ControllerSchemaLoaderTest < Minitest::Test
     assert_includes @controllers["input-combobox"]["outlets"], "combobox-dropdown"
   end
 
-  def test_combobox_date_outlets
-    assert_includes @controllers["combobox-date"]["outlets"], "calendar-month"
-    assert_includes @controllers["combobox-date"]["outlets"], "calendar-year"
-    assert_includes @controllers["combobox-date"]["outlets"], "calendar-decade"
+  def test_combobox_date_targets
+    assert_equal %w[trigger input panel], @controllers["combobox-date"]["targets"]
   end
 
   def test_each_controller_has_required_keys

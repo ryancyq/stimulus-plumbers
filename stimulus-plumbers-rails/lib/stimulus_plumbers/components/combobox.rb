@@ -2,8 +2,8 @@
 
 module StimulusPlumbers
   module Components
-    # The `combobox` controller markup: container, Trigger, hidden input, and Panel. Dropdown and Typeahead define MODE
-    # and the trigger element.
+    # The `combobox` controller markup: container, Trigger, hidden input, and Panel. Dropdown and Typeahead define MODE,
+    # the trigger element, and the popover theme key.
     class Combobox < Plumber::Base
       include Plumber::Options::Choice
 
@@ -94,7 +94,7 @@ module StimulusPlumbers
       end
 
       def render_panel(aria)
-        Panel.new(template).render(id: @ids[:panel]) do
+        Panel.new(template).render(id: @ids[:panel], theme_key: self.class::POPOVER_KEY) do
           panel_content(Listbox.new(template).render(id: @ids[:listbox], options: @options, value: @value, aria: aria))
         end
       end

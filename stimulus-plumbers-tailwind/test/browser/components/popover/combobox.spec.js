@@ -223,3 +223,23 @@ test.describe("touch scrolling", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
   });
 });
+
+test.describe("in a modal", () => {
+  test("Escape closes the time panel, not the modal", async ({ page }) => {
+    const section = page.locator("#combobox-time-modal");
+    const dialog = section.locator("dialog");
+    const input = dialog.getByRole("combobox", { name: "Call" });
+    const hour = dialog.getByRole("listbox", { name: "Hour" });
+
+    await section.getByRole("button", { name: "Book a call" }).click();
+    await input.focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(hour).toBeFocused();
+
+    await page.keyboard.press("Escape");
+
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(input).toBeFocused();
+    await expect(dialog).toHaveAttribute("open", "");
+  });
+});

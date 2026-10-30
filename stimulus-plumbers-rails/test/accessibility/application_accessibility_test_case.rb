@@ -44,6 +44,11 @@ class ApplicationAccessibilityTestCase < Minitest::Test
     assert_empty violations, axe_violation_message(violations)
   end
 
+  # Types into the focused element without clicking it.
+  def press(*keys)
+    page.driver.browser.keyboard.type(*keys)
+  end
+
   private
 
   def axe_violation_message(violations)

@@ -80,9 +80,10 @@ describe('parseActions', () => {
 
     expect(manifest.popover.targets).toEqual(['trigger', 'panel'])
     expect(manifest.popover.values).toEqual({})
-    expect(manifest.popover.actions).toEqual(['close', 'open', 'toggle'])
+    expect(manifest.popover.actions).toEqual(['close', 'onFocus', 'open', 'toggle'])
     expect(manifest.popover.actionParams).toEqual({
       close: ['event'],
+      onFocus: ['event'],
       open: ['event'],
       toggle: ['event'],
     })
