@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { settled } from "../../../support/playwright.js";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/components/popover");
@@ -6,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 async function assertInViewport(page, locator) {
-  await expect(locator).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
+  await settled(locator);
   const box = await locator.boundingBox();
   const viewport = page.viewportSize();
 
@@ -133,6 +134,7 @@ test.describe("nested", () => {
 
     await section.getByRole("button", { name: "Open outer popover" }).click();
     await expect(outer).toBeVisible();
+    await settled(outer);
     await outer.getByRole("button", { name: "Open nested popover" }).click();
     await expect(inner).toBeVisible();
 
@@ -148,6 +150,8 @@ test.describe("nested", () => {
     const inner = outer.locator("#popover-inner-panel");
 
     await section.getByRole("button", { name: "Open outer popover" }).click();
+    await expect(outer).toBeVisible();
+    await settled(outer);
     await outer.getByRole("button", { name: "Open nested popover" }).click();
     await page.keyboard.press("Escape");
     await expect(inner).not.toBeVisible();
@@ -302,6 +306,7 @@ test.describe("in a native dialog", () => {
       "WebKit offsets an anchored popover by the document scroll inside a native dialog.",
     );
     const { source, panel } = await openDialogPopover(page);
+    await assertInViewport(page, panel);
 
     const [sourceBox, panelBox] = await Promise.all([
       source.boundingBox(),
@@ -310,7 +315,6 @@ test.describe("in a native dialog", () => {
     expect(panelBox.y).toBeGreaterThanOrEqual(
       sourceBox.y + sourceBox.height - 1,
     );
-    await assertInViewport(page, panel);
     await expect
       .poll(() => topmostPopoverAt(page, panelBox))
       .toBe("popover-dialog-panel");
