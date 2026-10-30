@@ -12,6 +12,10 @@ Not every class in `loaders/` is a plugin's `.loader`: `ComponentRequirements` (
 (pure parsing/path-resolution helpers, not sources) sit outside this naming rule — they don't get a
 `Loader` suffix because they aren't one.
 
+## Plugin Naming
+
+`Component*`/`Controller*` pairs split by entity (Rails `component://` vs JS `controller://`), not by facet — `ComponentSchema`+`ComponentDocs` mirror `ControllerSchema`+`ControllerDocs`. `Icons` is a separate plugin from `ComponentSchema`; `VersionsLoader` reports its drift under the Tailwind gem's version (`icons`), not `stimulus_plumbers`' (`component_schema`).
+
 ## Store Shapes
 
 Each loader puts a typed value in `store[loader_key]`:
