@@ -209,7 +209,14 @@ describe('ReorderableController', () => {
       const items = element.querySelectorAll('[data-reorderable-target="item"]');
       items.forEach((item, i) => {
         item.getBoundingClientRect = () => ({
-          left: i * 100, right: i * 100 + 100, width: 100, top: 0, bottom: 40, height: 40, x: i * 100, y: 0,
+          left: i * 100,
+          right: i * 100 + 100,
+          width: 100,
+          top: 0,
+          bottom: 40,
+          height: 40,
+          x: i * 100,
+          y: 0,
         });
       });
       const handle = items[0].querySelector('[data-reorderable-target="handle"]');
@@ -257,7 +264,14 @@ describe('ReorderableController', () => {
       const items = element.querySelectorAll('[data-reorderable-target="item"]');
       items.forEach((item, i) => {
         item.getBoundingClientRect = () => ({
-          top: i * 40, bottom: i * 40 + 40, height: 40, left: 0, right: 100, width: 100, x: 0, y: i * 40,
+          top: i * 40,
+          bottom: i * 40 + 40,
+          height: 40,
+          left: 0,
+          right: 100,
+          width: 100,
+          x: 0,
+          y: i * 40,
         });
       });
       const handle = items[0].querySelector('[data-reorderable-target="handle"]');

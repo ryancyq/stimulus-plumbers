@@ -29,7 +29,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(target.getAttribute('role')).toBe('menu');
@@ -39,7 +39,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(trigger.getAttribute('aria-controls')).toBe('target');
@@ -49,7 +49,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(trigger.getAttribute('aria-haspopup')).toBe('menu');
@@ -59,7 +59,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'dialog'
+        role: 'dialog',
       });
 
       expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
@@ -69,7 +69,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'listbox'
+        role: 'listbox',
       });
 
       expect(trigger.getAttribute('aria-haspopup')).toBe('listbox');
@@ -79,7 +79,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'tooltip'
+        role: 'tooltip',
       });
 
       expect(trigger.getAttribute('aria-describedby')).toBe('target');
@@ -97,7 +97,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(target.getAttribute('role')).toBe('existing');
@@ -110,7 +110,7 @@ describe('ARIA utilities', () => {
         trigger,
         target,
         role: 'menu',
-        override: true
+        override: true,
       });
 
       expect(target.getAttribute('role')).toBe('menu');
@@ -122,7 +122,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(trigger.getAttribute('aria-controls')).toBe('existing');
@@ -132,17 +132,17 @@ describe('ARIA utilities', () => {
       const result = connectTriggerToTarget({
         trigger,
         target,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(result).toEqual({
         trigger: {
           'aria-controls': 'target',
-          'aria-haspopup': 'menu'
+          'aria-haspopup': 'menu',
         },
         target: {
-          role: 'menu'
-        }
+          role: 'menu',
+        },
       });
     });
 
@@ -150,7 +150,7 @@ describe('ARIA utilities', () => {
       const result = connectTriggerToTarget({
         trigger: null,
         target,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(result).toEqual({ trigger: {}, target: {} });
@@ -160,7 +160,7 @@ describe('ARIA utilities', () => {
       const result = connectTriggerToTarget({
         trigger,
         target: null,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(result).toEqual({ trigger: {}, target: {} });
@@ -172,7 +172,7 @@ describe('ARIA utilities', () => {
       connectTriggerToTarget({
         trigger,
         target,
-        role: 'menu'
+        role: 'menu',
       });
 
       expect(trigger.hasAttribute('aria-controls')).toBe(false);
@@ -181,7 +181,7 @@ describe('ARIA utilities', () => {
     it('works without specifying role', () => {
       const result = connectTriggerToTarget({
         trigger,
-        target
+        target,
       });
 
       expect(trigger.getAttribute('aria-controls')).toBe('target');
@@ -210,7 +210,7 @@ describe('ARIA utilities', () => {
       disconnectTriggerFromTarget({
         trigger,
         target,
-        attributes: ['aria-controls']
+        attributes: ['aria-controls'],
       });
 
       expect(trigger.hasAttribute('aria-controls')).toBe(false);
@@ -223,7 +223,7 @@ describe('ARIA utilities', () => {
       disconnectTriggerFromTarget({
         trigger,
         target,
-        attributes: ['role']
+        attributes: ['role'],
       });
 
       expect(target.hasAttribute('role')).toBe(false);
