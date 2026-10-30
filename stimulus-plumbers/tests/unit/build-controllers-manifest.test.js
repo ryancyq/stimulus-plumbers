@@ -125,6 +125,17 @@ export default class extends Controller {
     ])
   })
 
+  it('leaves out underscore-prefixed helpers', () => {
+    const source = `
+export default class extends Controller {
+  onSelect(event) {}
+
+  _sync(option) {}
+}
+`
+    expect(parseActionParams(source)).toEqual({ onSelect: ['event'] })
+  })
+
   it('covers exactly the methods listed as actions', () => {
     expect(Object.keys(parseActionParams(POPOVER_SOURCE))).toEqual(parseActions(POPOVER_SOURCE))
   })

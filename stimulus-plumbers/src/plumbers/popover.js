@@ -2,7 +2,7 @@ const defaultOptions = {
   prefix: 'popover',
 };
 
-const isPopoverElement = (element) => {
+export const isPopoverElement = (element) => {
   if (typeof HTMLElement === 'undefined' || !(element instanceof HTMLElement)) return false;
 
   return (

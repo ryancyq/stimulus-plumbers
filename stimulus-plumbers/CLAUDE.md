@@ -37,6 +37,7 @@ stimulus-plumbers/
 │   │   │   │   └── *.test.js
 │   │   │   └── *.test.js
 │   │   └── *.test.js
+│   ├── support/                     # Shared test helpers (native popover shim)
 │   └── setup.js
 ├── eslint.config.js
 ├── package.json
@@ -63,4 +64,6 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
 
+- **Naming** — controller helpers are `_`-prefixed methods (the manifest skips them), not `#private` members.
+- **Listener cleanup** — group listeners that share a lifetime (connection, open state, target) under one `AbortController` and abort it when the lifetime ends; older controllers pair `addEventListener`/`removeEventListener`.
 - **`onX(event)` adapts, `x(value)` computes** — only `onX` is safe in a `data-action`. Name the first parameter `event`; the Rails contract test rejects wiring to a method taking a value.

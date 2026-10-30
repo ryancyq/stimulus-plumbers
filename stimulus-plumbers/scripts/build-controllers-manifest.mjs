@@ -43,6 +43,8 @@ export function parseActionParams(source) {
     const name = match[1];
     if (LIFECYCLE_METHODS.has(name)) continue;
     if (LIFECYCLE_SUFFIX_RE.test(name)) continue;
+    // `_`-prefixed methods are helpers, not actions.
+    if (name.startsWith('_')) continue;
     if (!signatures.has(name)) signatures.set(name, splitParams(match[2]));
   }
   return Object.fromEntries([...signatures.keys()].sort().map((name) => [name, signatures.get(name)]));
