@@ -33,3 +33,8 @@ covers the optional `heroicons` gem.
 
 To implement a custom theme instead of/alongside Tailwind, see `guide://theme`
 ([theme.md](https://github.com/ryancyq/stimulus-plumbers/blob/main/stimulus-plumbers-rails/docs/component/theme.md)).
+
+## Popover placement
+
+The theme applies `sp_popover`'s `placement:` with CSS anchor positioning. Safari draws a panel whose
+trigger sits inside another open popover too high by the page's scroll distance.
