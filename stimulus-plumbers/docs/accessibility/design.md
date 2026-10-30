@@ -193,4 +193,4 @@ Key predicates. `isActivationKey` matches Enter or Space; `isArrowKey` matches a
 ## Reference
 
 - API reference: [docs/utility/accessibility.md](../utility/accessibility.md)
-- WCAG criteria and component ARIA patterns: [ARIA.md](../../ARIA.md)
+- WCAG criteria and component ARIA patterns: [ARIA.md](../../../ARIA.md)
