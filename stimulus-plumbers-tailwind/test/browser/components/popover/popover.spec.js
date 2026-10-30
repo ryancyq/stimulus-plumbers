@@ -283,6 +283,37 @@ test.describe("positioning", () => {
       await page.keyboard.press("Escape");
     }
   });
+
+  test("keeps the nested panel below its trigger on a scrolled page", async ({
+    page,
+    browserName,
+  }) => {
+    test.fail(
+      browserName === "webkit",
+      "WebKit offsets a popover anchored inside another popover by the page scroll",
+    );
+    const section = page.locator("#popover-nested");
+    const outer = section.locator("#popover-outer-panel");
+    const inner = outer.locator("#popover-inner-panel");
+    const innerTrigger = outer.getByRole("button", {
+      name: "Open nested popover",
+    });
+
+    await page.evaluate(() => window.scrollTo(0, 400));
+    await section.getByRole("button", { name: "Open outer popover" }).click();
+    await expect(outer).toBeVisible();
+    await settled(outer);
+    await innerTrigger.click();
+    await expect(inner).toBeVisible();
+    await settled(inner);
+
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    const triggerBox = await innerTrigger.boundingBox();
+    const innerBox = await inner.boundingBox();
+    expect(
+      Math.abs(innerBox.y - (triggerBox.y + triggerBox.height)),
+    ).toBeLessThanOrEqual(1);
+  });
 });
 
 test.describe("in a native dialog", () => {
