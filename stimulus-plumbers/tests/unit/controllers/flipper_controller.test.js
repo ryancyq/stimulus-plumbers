@@ -29,8 +29,12 @@ describe('FlipperController', () => {
 
       const element = document.querySelector('[data-controller="flipper"]');
       element.getBoundingClientRect = vi.fn(() => ({
-        top: 50, left: 50, bottom: 250, right: 250,
-        width: 200, height: 200
+        top: 50,
+        left: 50,
+        bottom: 250,
+        right: 250,
+        width: 200,
+        height: 200,
       }));
     });
 
@@ -39,13 +43,25 @@ describe('FlipperController', () => {
       const anchor = document.querySelector('[data-flipper-target="anchor"]');
 
       anchor.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 100, bottom: 120, right: 200,
-        width: 100, height: 20, x: 100, y: 100
+        top: 100,
+        left: 100,
+        bottom: 120,
+        right: 200,
+        width: 100,
+        height: 20,
+        x: 100,
+        y: 100,
       }));
 
       reference.getBoundingClientRect = vi.fn(() => ({
-        top: 0, left: 0, bottom: 50, right: 150,
-        width: 150, height: 50, x: 0, y: 0
+        top: 0,
+        left: 0,
+        bottom: 50,
+        right: 150,
+        width: 150,
+        height: 50,
+        x: 0,
+        y: 0,
       }));
 
       document.querySelector('button').click();
@@ -62,13 +78,25 @@ describe('FlipperController', () => {
       const flipSpy = vi.fn();
 
       anchor.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 100, bottom: 120, right: 200,
-        width: 100, height: 20, x: 100, y: 100
+        top: 100,
+        left: 100,
+        bottom: 120,
+        right: 200,
+        width: 100,
+        height: 20,
+        x: 100,
+        y: 100,
       }));
 
       reference.getBoundingClientRect = vi.fn(() => ({
-        top: 0, left: 0, bottom: 50, right: 150,
-        width: 150, height: 50, x: 0, y: 0
+        top: 0,
+        left: 0,
+        bottom: 50,
+        right: 150,
+        width: 150,
+        height: 50,
+        x: 0,
+        y: 0,
       }));
 
       element.addEventListener('flipper:flip', flipSpy);
@@ -84,19 +112,31 @@ describe('FlipperController', () => {
       const flippedSpy = vi.fn();
 
       anchor.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 100, bottom: 120, right: 200,
-        width: 100, height: 20, x: 100, y: 100
+        top: 100,
+        left: 100,
+        bottom: 120,
+        right: 200,
+        width: 100,
+        height: 20,
+        x: 100,
+        y: 100,
       }));
 
       reference.getBoundingClientRect = vi.fn(() => ({
-        top: 0, left: 0, bottom: 50, right: 150,
-        width: 150, height: 50, x: 0, y: 0
+        top: 0,
+        left: 0,
+        bottom: 50,
+        right: 150,
+        width: 150,
+        height: 50,
+        x: 0,
+        y: 0,
       }));
 
       element.addEventListener('flipper:flipped', flippedSpy);
       document.querySelector('button').click();
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(flippedSpy).toHaveBeenCalled();
     });
   });
@@ -114,13 +154,25 @@ describe('FlipperController', () => {
       const anchor = document.querySelector('[data-flipper-target="anchor"]');
 
       anchor.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 100, bottom: 120, right: 200,
-        width: 100, height: 20, x: 100, y: 100
+        top: 100,
+        left: 100,
+        bottom: 120,
+        right: 200,
+        width: 100,
+        height: 20,
+        x: 100,
+        y: 100,
       }));
 
       reference.getBoundingClientRect = vi.fn(() => ({
-        top: 0, left: 0, bottom: 50, right: 150,
-        width: 150, height: 50, x: 0, y: 0
+        top: 0,
+        left: 0,
+        bottom: 50,
+        right: 150,
+        width: 150,
+        height: 50,
+        x: 0,
+        y: 0,
       }));
 
       document.querySelector('button').click();
@@ -128,7 +180,6 @@ describe('FlipperController', () => {
       expect(reference.style.top).toBeFalsy();
     });
   });
-
 
   describe('event cleanup', () => {
     it('removes event listeners on disconnect', () => {
@@ -158,7 +209,7 @@ describe('FlipperController', () => {
           <div data-flipper-target="reference">Tooltip</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('tooltip');
     });
@@ -170,7 +221,7 @@ describe('FlipperController', () => {
           <div data-flipper-target="reference">Menu</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('menu');
     });
@@ -182,7 +233,7 @@ describe('FlipperController', () => {
           <div data-flipper-target="reference">Menu</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(document.querySelector('[data-flipper-target="anchor"]').getAttribute('aria-haspopup')).toBe('menu');
     });
@@ -194,7 +245,7 @@ describe('FlipperController', () => {
           <div role="dialog" data-flipper-target="reference">Content</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('dialog');
     });
@@ -218,7 +269,7 @@ describe('FlipperController', () => {
         </div>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'FlipperController requires a reference target. Add data-flipper-target="reference" to your element.'
@@ -232,12 +283,11 @@ describe('FlipperController', () => {
         </div>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'FlipperController requires an anchor target. Add data-flipper-target="anchor" to your element.'
       );
     });
   });
-
 });

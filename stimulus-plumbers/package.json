@@ -24,8 +24,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src",
-    "format:write": "prettier --write \"src/**/*.js\"",
-    "format:check": "prettier --check \"src/**/*.js\""
+    "format:write": "prettier --write \"{src,tests}/**/*.js\"",
+    "format:check": "prettier --check \"{src,tests}/**/*.js\""
   },
   "keywords": [
     "accessibility",

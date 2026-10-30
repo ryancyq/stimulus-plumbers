@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-import { visibilityConfig } from '../../../src/plumbers/plumber/config'
+import { visibilityConfig } from '../../../src/plumbers/plumber/config';
 import PannerController from '../../../src/controllers/panner_controller';
 
 describe('PannerController', () => {
@@ -38,8 +38,14 @@ describe('PannerController', () => {
 
       const element = document.querySelector('[data-controller="panner"]');
       element.getBoundingClientRect = vi.fn(() => ({
-        top: 50, left: 50, bottom: 250, right: 250,
-        width: 200, height: 200, x: 50, y: 50
+        top: 50,
+        left: 50,
+        bottom: 250,
+        right: 250,
+        width: 200,
+        height: 200,
+        x: 50,
+        y: 50,
       }));
     });
 
@@ -56,8 +62,14 @@ describe('PannerController', () => {
 
       // Mock content overflowing right edge of viewport
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 800, bottom: 200, right: 1000,
-        width: 200, height: 100, x: 800, y: 100
+        top: 100,
+        left: 800,
+        bottom: 200,
+        right: 1000,
+        width: 200,
+        height: 100,
+        x: 800,
+        y: 100,
       }));
 
       // Trigger resize event to cause shift
@@ -73,8 +85,14 @@ describe('PannerController', () => {
       const shiftSpy = vi.fn();
 
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 800, bottom: 200, right: 1000,
-        width: 200, height: 100, x: 800, y: 100
+        top: 100,
+        left: 800,
+        bottom: 200,
+        right: 1000,
+        width: 200,
+        height: 100,
+        x: 800,
+        y: 100,
       }));
 
       element.addEventListener('panner:shift', shiftSpy);
@@ -89,14 +107,20 @@ describe('PannerController', () => {
       const shiftedSpy = vi.fn();
 
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 800, bottom: 200, right: 1000,
-        width: 200, height: 100, x: 800, y: 100
+        top: 100,
+        left: 800,
+        bottom: 200,
+        right: 1000,
+        width: 200,
+        height: 100,
+        x: 800,
+        y: 100,
       }));
 
       element.addEventListener('panner:shifted', shiftedSpy);
       window.dispatchEvent(new Event('resize'));
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(shiftedSpy).toHaveBeenCalled();
     });
   });
@@ -109,7 +133,7 @@ describe('PannerController', () => {
         </div>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       const element = document.querySelector('[data-controller="panner"]');
       const controller = application.getControllerForElementAndIdentifier(element, 'panner');
 
@@ -136,15 +160,20 @@ describe('PannerController', () => {
 
       const content = document.querySelector('[data-panner-target="content"]');
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 800, bottom: 200, right: 1000,
-        width: 200, height: 100, x: 800, y: 100
+        top: 100,
+        left: 800,
+        bottom: 200,
+        right: 1000,
+        width: 200,
+        height: 100,
+        x: 800,
+        y: 100,
       }));
 
       window.dispatchEvent(new Event('resize'));
 
       expect(content.style.transform).toBeFalsy();
     });
-
   });
 
   describe('event cleanup', () => {
@@ -160,8 +189,14 @@ describe('PannerController', () => {
       const shiftSpy = vi.fn();
 
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 800, bottom: 200, right: 1000,
-        width: 200, height: 100, x: 800, y: 100
+        top: 100,
+        left: 800,
+        bottom: 200,
+        right: 1000,
+        width: 200,
+        height: 100,
+        x: 800,
+        y: 100,
       }));
 
       element.addEventListener('panner:shift', shiftSpy);

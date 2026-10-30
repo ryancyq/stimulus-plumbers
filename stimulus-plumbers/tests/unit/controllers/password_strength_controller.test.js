@@ -225,7 +225,10 @@ describe('PasswordStrengthController', () => {
     await type('abc');
     const element = document.querySelector('[data-controller="password-strength"]');
 
-    element.setAttribute('data-password-strength-rules-value', JSON.stringify([{ key: 'digit', pattern: '\\d', min: 0 }]));
+    element.setAttribute(
+      'data-password-strength-rules-value',
+      JSON.stringify([{ key: 'digit', pattern: '\\d', min: 0 }])
+    );
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(document.querySelector('[data-rule="digit"]').dataset.satisfied).toBe('true');
@@ -246,7 +249,10 @@ describe('PasswordStrengthController', () => {
     await mount(markup());
     const element = document.querySelector('[data-controller="password-strength"]');
 
-    element.setAttribute('data-password-strength-labels-value', JSON.stringify({ weak: 'Too weak', fine: 'Fine', strong: 'Strong' }));
+    element.setAttribute(
+      'data-password-strength-labels-value',
+      JSON.stringify({ weak: 'Too weak', fine: 'Fine', strong: 'Strong' })
+    );
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(document.querySelector('[data-password-strength-target="level"]').textContent.trim()).toBe('Too weak');
@@ -257,7 +263,10 @@ describe('PasswordStrengthController', () => {
     await type('abcd1');
     const element = document.querySelector('[data-controller="password-strength"]');
     const next = document.createElement('div');
-    next.innerHTML = markup().replace('data-action="input->password-strength#score"', 'data-action="input->password-strength#score" value="abcd1"');
+    next.innerHTML = markup().replace(
+      'data-action="input->password-strength#score"',
+      'data-action="input->password-strength#score" value="abcd1"'
+    );
 
     morphElements(element, next.querySelector('[data-controller="password-strength"]'));
     await new Promise((resolve) => setTimeout(resolve, 0));
