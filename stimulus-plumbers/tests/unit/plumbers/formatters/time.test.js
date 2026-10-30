@@ -40,16 +40,16 @@ describe('TimeFormatter', () => {
     })
 
     describe('24-hour invalid values', () => {
-      it('returns "" for hour 24', () => {
-        expect(TimeFormatter.normalize('24:00')).toBe('')
+      it('passes hour 24 through as text', () => {
+        expect(TimeFormatter.normalize('24:00')).toBe('24:00')
       })
 
-      it('returns "" for minute 60', () => {
-        expect(TimeFormatter.normalize('23:60')).toBe('')
+      it('passes minute 60 through as text', () => {
+        expect(TimeFormatter.normalize('23:60')).toBe('23:60')
       })
 
-      it('returns "" for non-time string', () => {
-        expect(TimeFormatter.normalize('abc')).toBe('')
+      it('passes other text through trimmed', () => {
+        expect(TimeFormatter.normalize(' 午後2:30 ')).toBe('午後2:30')
       })
 
       it('returns "" for empty string', () => {
@@ -113,6 +113,10 @@ describe('TimeFormatter', () => {
       expect(TimeFormatter.validate('3:45 PM')).toBe(true)
     })
 
+    it('returns false for an out-of-range time', () => {
+      expect(TimeFormatter.validate('24:00')).toBe(false)
+    })
+
     it('returns false for garbage input', () => {
       expect(TimeFormatter.validate('not-a-time')).toBe(false)
     })
@@ -127,43 +131,57 @@ describe('TimeFormatter', () => {
   })
 
   describe('format', () => {
-    describe('h12 (default)', () => {
+    describe('en-US 12-hour (default)', () => {
       it('formats midnight as 12:00 AM', () => {
-        expect(TimeFormatter.format('00:00')).toBe('12:00 AM')
+        expect(TimeFormatter.format('00:00')).toMatch(/^12:00\sAM$/)
       })
 
       it('formats noon as 12:00 PM', () => {
-        expect(TimeFormatter.format('12:00')).toBe('12:00 PM')
+        expect(TimeFormatter.format('12:00')).toMatch(/^12:00\sPM$/)
       })
 
       it('formats 1 PM hour', () => {
-        expect(TimeFormatter.format('13:30')).toBe('1:30 PM')
+        expect(TimeFormatter.format('13:30')).toMatch(/^1:30\sPM$/)
       })
 
       it('formats single-digit AM hour without leading zero', () => {
-        expect(TimeFormatter.format('09:05')).toBe('9:05 AM')
+        expect(TimeFormatter.format('09:05')).toMatch(/^9:05\sAM$/)
       })
 
       it('formats 11:59 PM correctly', () => {
-        expect(TimeFormatter.format('23:59')).toBe('11:59 PM')
+        expect(TimeFormatter.format('23:59')).toMatch(/^11:59\sPM$/)
       })
     })
 
-    describe('h24 option', () => {
+    describe('hourCycle h23', () => {
       it('formats with leading zero', () => {
-        expect(TimeFormatter.format('09:05', { format: 'h24' })).toBe('09:05')
+        expect(TimeFormatter.format('09:05', { hourCycle: 'h23' })).toBe('09:05')
       })
 
       it('formats midnight as 00:00', () => {
-        expect(TimeFormatter.format('00:00', { format: 'h24' })).toBe('00:00')
+        expect(TimeFormatter.format('00:00', { hourCycle: 'h23' })).toBe('00:00')
       })
 
       it('formats 23:59 as 23:59', () => {
-        expect(TimeFormatter.format('23:59', { format: 'h24' })).toBe('23:59')
+        expect(TimeFormatter.format('23:59', { hourCycle: 'h23' })).toBe('23:59')
+      })
+    })
+
+    describe('locale', () => {
+      it('localizes the day period', () => {
+        expect(TimeFormatter.format('14:30', { locale: 'ja', hourCycle: 'h12' })).toBe('午後2:30')
+      })
+
+      it('uses timeStyle in place of hour and minute', () => {
+        expect(TimeFormatter.format('14:30', { locale: 'en-GB', timeStyle: 'short' })).toBe('14:30')
       })
     })
 
     describe('passthrough / edge cases', () => {
+      it('returns an out-of-range time as-is', () => {
+        expect(TimeFormatter.format('24:00')).toBe('24:00')
+      })
+
       it('returns the value as-is when it does not match HH:MM', () => {
         expect(TimeFormatter.format('not-a-time')).toBe('not-a-time')
       })

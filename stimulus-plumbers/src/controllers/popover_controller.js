@@ -7,6 +7,13 @@ export default class extends Controller {
   connect() {
     this.connection = new AbortController();
     document.addEventListener('turbo:before-cache', () => this._closeForCache(), { signal: this.connection.signal });
+    this.interacted = false;
+    for (const type of ['pointerdown', 'keydown']) {
+      document.addEventListener(type, () => (this.interacted = true), {
+        capture: true,
+        signal: this.connection.signal,
+      });
+    }
 
     if (!this.hasPanelTarget) this._reportInvalidConfiguration('missing');
   }
@@ -58,6 +65,15 @@ export default class extends Controller {
   toggle(event) {
     this._preventDefault(event);
     this.popover?.toggle(this._sourceFor(event));
+  }
+
+  // Opens on focus, except before any user input since connect, when focus returns from the
+  // panel, or inside an open modal.
+  onFocus(event) {
+    if (!this.interacted || this.panelElement?.contains(event.relatedTarget)) return;
+    if (event.currentTarget.closest('dialog')?.matches(':modal')) return;
+
+    this.open(event);
   }
 
   _closeForCache() {

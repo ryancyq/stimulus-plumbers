@@ -4,153 +4,153 @@ require "test_helper"
 
 class ComboboxTimeTest < ActionView::TestCase
   def render_time(**opts)
-    StimulusPlumbers::Components::Combobox::Time.new(self).render(**opts)
+    parse_html(
+      StimulusPlumbers::Components::Combobox::Time.new(self).render(
+        id: "meeting", name: "event[meeting]", label: "Meeting", **opts
+      )
+    )
   end
 
-  def test_renders_wrapper_div
-    html = render_time
+  def test_the_input_is_a_read_only_combobox_opening_a_dialog
+    input = render_time.at_css("input#meeting")
 
-    assert_includes html, "<div"
+    assert_equal "combobox", input["role"]
+    assert input["readonly"]
+    assert_equal "Meeting", input["aria-label"]
+    assert_equal "dialog", input["aria-haspopup"]
+    assert_equal "meeting_popover", input["aria-controls"]
   end
 
-  def test_has_combobox_time_controller
-    html = render_time
+  def test_a_time_value_fills_the_input_and_the_submitted_time
+    doc = render_time(value: Time.utc(2026, 9, 15, 9, 5))
 
-    assert_includes html, "combobox-time"
+    assert_equal "09:05", doc.at_css("input#meeting")["value"]
+    assert_css doc, "input[type='hidden'][name='event[meeting]'][value='09:05']"
   end
 
-  def test_h12_renders_three_drums
-    doc = parse_html(render_time(format: :h12))
+  def test_a_value_that_is_not_a_time_shows_as_typed_and_selects_nothing
+    doc = render_time(value: "noonish")
 
-    assert_equal 3, doc.css("ul[role='listbox']").length
+    assert_equal "noonish", doc.at_css("input#meeting")["value"]
+    assert_no_css doc, "[aria-selected='true']"
   end
 
-  def test_h24_renders_two_drums
-    doc = parse_html(render_time(format: :h24))
+  def test_the_popover_is_a_dialog_named_after_the_field
+    panel = render_time.at_css("#meeting_popover")
 
-    assert_equal 2, doc.css("ul[role='listbox']").length
+    assert_equal "dialog", panel["role"]
+    assert_equal "Choose Meeting", panel["aria-label"]
+    assert_equal "Choose time", render_time(label: nil).at_css("[role='dialog']")["aria-label"]
   end
 
-  def test_drums_have_listbox_role
-    doc = parse_html(render_time)
+  def test_twelve_hour_columns_choose_the_hour_minute_and_meridiem
+    doc = render_time(value: "14:30")
 
-    assert_css doc, "ul[role='listbox']"
+    assert_equal(%w[Hour Minute AM/PM], doc.css("[role='listbox']").map { |column| column["aria-label"] })
+    assert_equal (1..12).map(&:to_s), doc.css("#meeting_popover [aria-label='Hour'] [role='option']").map(&:text)
+    assert_chosen doc, "Hour", "2"
+    assert_chosen doc, "Minute", "30"
+    assert_chosen doc, "AM/PM", "PM"
   end
 
-  def test_drums_have_tabindex_zero
-    doc = parse_html(render_time)
-    drums = doc.css("ul[role='listbox']")
+  def test_midnight_is_twelve_am
+    doc = render_time(value: "00:15")
 
-    assert(drums.all? { |ul| ul["tabindex"] == "0" })
+    assert_chosen doc, "Hour", "12"
+    assert_chosen doc, "AM/PM", "AM"
   end
 
-  def test_drums_have_stimulus_target
-    doc = parse_html(render_time)
+  def test_a_24_hour_cycle_has_no_meridiem_column
+    doc = render_time(value: "09:05", format: { hourCycle: "h23" })
 
-    assert_css doc, "ul[data-combobox-time-target='hour']"
-    assert_css doc, "ul[data-combobox-time-target='minute']"
+    assert_no_css doc, "[aria-label='AM/PM']"
+    assert_equal 24, doc.css("[aria-label='Hour'] [role='option']").size
+    assert_chosen doc, "Hour", "09"
+    assert_no_css render_time(format: { hour12: false }), "[aria-label='AM/PM']"
   end
 
-  def test_drums_have_click_action
-    assert_includes render_time, "click-&gt;combobox-time#onSelect"
+  def test_step_sets_the_minute_interval
+    doc = render_time(value: "14:45", step: 15)
+
+    assert_equal %w[00 15 30 45], doc.css("[aria-label='Minute'] [role='option']").map(&:text)
+    assert_chosen doc, "Minute", "45"
   end
 
-  def test_drums_have_keydown_navigate_action
-    assert_includes render_time, "keydown-&gt;combobox-time#onNavigate"
+  def test_a_minute_off_the_step_chooses_no_minute_and_keeps_the_value
+    doc = render_time(value: "14:58", step: 15)
+
+    assert_chosen doc, "Hour", "2"
+    assert_no_css doc, "[aria-label='Minute'][aria-activedescendant], [aria-label='Minute'] [aria-selected='true']"
+    assert_equal "14:58", doc.at_css("input[type='hidden']")["value"]
   end
 
-  def test_hour_drum_has_label
-    doc = parse_html(render_time)
+  def test_columns_are_focusable_and_wired_to_the_controller
+    column = render_time.at_css("[aria-label='Hour']")
 
-    assert_css doc, "ul[aria-label='Hour']"
+    assert_equal "0", column["tabindex"]
+    assert_equal "keydown->combobox-time#onNavigate click->combobox-time#onSelect", column["data-action"]
   end
 
-  def test_minute_drum_has_label
-    doc = parse_html(render_time)
-
-    assert_css doc, "ul[aria-label='Minute']"
+  def test_format_defaults_to_the_current_locale_and_a_12_hour_cycle
+    assert_equal({ "hourCycle" => "h12", "locale" => "en" }, format_options)
+    assert_equal({ "hourCycle" => "h23", "locale" => "ja" }, format_options(format: { hourCycle: "h23", locale: "ja" }))
   end
 
-  def test_period_drum_has_label_in_h12
-    doc = parse_html(render_time(format: :h12))
+  def test_a_format_without_to_h_passes_as_is_with_12_hour_columns
+    doc = render_time(format: :h24)
 
-    assert_css doc, "ul[aria-label='Period']"
+    assert_equal "\"h24\"", doc.at_css("[data-controller]")["data-input-formatter-options-value"]
+    assert_css doc, "[aria-label='AM/PM']"
   end
 
-  def test_period_drum_absent_in_h24
-    doc = parse_html(render_time(format: :h24))
+  def test_meridiem_labels_fall_back_to_rails_i18n
+    locales = I18n.available_locales
+    I18n.available_locales = locales + [:fr]
+    I18n.backend.store_translations(:fr, time: { am: "matin", pm: "soir" })
+    doc = I18n.with_locale(:fr) { render_time }
 
-    assert_no_css doc, "ul[aria-label='Period']"
+    assert_equal %w[matin soir], doc.css("[data-combobox-time-target='meridiem'] [role='option']").map(&:text)
+  ensure
+    I18n.available_locales = locales
   end
 
-  def test_period_drum_shows_localized_am_pm_labels
-    doc = parse_html(render_time(format: :h12))
+  def test_the_root_wires_the_columns_to_the_field_and_the_formatter
+    root = render_time.at_css("[data-controller]")
 
-    items = doc.css("ul[aria-label='Period'] li")
-
-    assert_equal "AM", items[0].text.strip
-    assert_equal "PM", items[1].text.strip
+    assert_equal "popover combobox-time input-formatter", root["data-controller"]
+    assert_equal "popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened " \
+                 "focusout->combobox-time#onFocusout " \
+                 "mousedown->combobox-time#onMousedown click->combobox-time#onClick " \
+                 "combobox-time:changed->input-formatter#onChange",
+                 root["data-action"]
+    assert_equal "time", root["data-input-formatter-format-value"]
   end
 
-  def test_period_drum_uses_canonical_am_pm_values
-    doc = parse_html(render_time(format: :h12))
+  def test_the_trailing_icon_is_a_decorative_clock
+    icons = render_time.css("[aria-hidden='true']").reject { |icon| icon.ancestors("[role='dialog']").any? }
 
-    assert_css doc, "ul[aria-label='Period'] li[data-value='AM']"
-    assert_css doc, "ul[aria-label='Period'] li[data-value='PM']"
+    assert_equal 1, icons.size
   end
 
-  def test_selects_correct_hour_from_value
-    doc = parse_html(render_time(format: :h12, value: "14:30"))
+  def test_each_part_is_styled_from_the_theme
+    parts = %i[combobox combobox_trigger combobox_time_popover combobox_time combobox_time_drum combobox_option]
+    original = StimulusPlumbers.config.theme.current
+    StimulusPlumbers.config.theme.use(key_theme(parts))
+    doc = render_time
 
-    assert_css doc, "ul[aria-label='Hour'] li[aria-selected='true']"
-    selected = doc.at_css("ul[aria-label='Hour'] li[aria-selected='true']")
-
-    assert_equal "2", selected.text.strip
+    parts.each { |key| assert doc.at_css(".sp-#{key}"), "#{key} is unstyled" }
+  ensure
+    StimulusPlumbers.config.theme.use(original)
   end
 
-  def test_selects_correct_minute_from_value
-    doc = parse_html(render_time(value: "09:45"))
+  def assert_chosen(doc, column, label)
+    chosen = doc.css("[aria-label='#{column}'] [aria-selected='true']")
 
-    selected = doc.at_css("ul[aria-label='Minute'] li[aria-selected='true']")
-
-    assert_equal "45", selected.text.strip
+    assert_equal [label], chosen.map(&:text)
+    assert_equal chosen.first["id"], doc.at_css("[aria-label='#{column}']")["aria-activedescendant"]
   end
 
-  def test_selects_correct_period_from_value
-    doc_am = parse_html(render_time(format: :h12, value: "09:00"))
-    doc_pm = parse_html(render_time(format: :h12, value: "14:00"))
-
-    assert_css doc_am, "ul[aria-label='Period'] li[data-value='AM'][aria-selected='true']"
-    assert_css doc_pm, "ul[aria-label='Period'] li[data-value='PM'][aria-selected='true']"
-  end
-
-  def test_step_reduces_minute_options
-    doc_step1  = parse_html(render_time(step: 1))
-    doc_step15 = parse_html(render_time(step: 15))
-
-    every_minute_count  = doc_step1.css("ul[aria-label='Minute'] li").length
-    every_quarter_count = doc_step15.css("ul[aria-label='Minute'] li").length
-
-    assert_operator every_quarter_count, :<, every_minute_count
-    assert_equal 4, every_quarter_count
-  end
-
-  def test_invalid_value_renders_without_selection
-    doc = parse_html(render_time(value: "not-a-time"))
-
-    assert_no_css doc, "li[aria-selected='true']"
-  end
-
-  def test_variant_metadata
-    meta = StimulusPlumbers::Components::Combobox::Time::Metadata
-
-    assert_equal "dialog", meta.haspopup
-    assert_equal "clock", meta.trigger_icon
-
-    data = meta.stimulus_data("p1", { format: :h24 })
-
-    assert_equal "time", data[:input_formatter_format_value]
-    assert_equal({ format: :h24 }.to_json, data[:input_formatter_options_value])
-    refute data.fetch(:input_combobox_close_on_select_value)
+  def format_options(**opts)
+    JSON.parse(render_time(**opts).at_css("[data-controller]")["data-input-formatter-options-value"])
   end
 end

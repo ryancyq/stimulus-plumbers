@@ -5,7 +5,8 @@ module StimulusPlumbers
     class Combobox
       # Select-only combobox: a button showing the committed label.
       class Dropdown < Combobox
-        MODE = "select_only"
+        MODE        = "select_only"
+        POPOVER_KEY = :combobox_dropdown_popover
 
         def render(**kwargs)
           editable = kwargs.compact.keys & Typeahead::OPTIONS

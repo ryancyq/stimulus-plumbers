@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ComboboxControlTest < ActionView::TestCase
+class ComboboxTriggerTest < ActionView::TestCase
   def render_trigger(**kwargs)
     parse_html(
       StimulusPlumbers::Components::Combobox::Trigger.new(self).render(
@@ -12,26 +12,26 @@ class ComboboxControlTest < ActionView::TestCase
   end
 
   def test_block_renders_the_host_with_the_combobox_attributes
-    trigger = render_trigger.at_css("[role='combobox']")
+    control = render_trigger.at_css("[role='combobox']")
 
-    assert_equal "button", trigger.name
-    assert_equal "Seoul", trigger.text
-    assert_equal "trigger", trigger["data-combobox-target"]
-    assert_equal "keydown->combobox#onKeydown", trigger["data-action"]
+    assert_equal "button", control.name
+    assert_equal "Seoul", control.text
+    assert_equal "trigger", control["data-combobox-target"]
+    assert_equal "keydown->combobox#onKeydown", control["data-action"]
   end
 
   def test_actions_run_before_keydown
-    trigger = render_trigger(actions: ["input->combobox#onInput"]).at_css("[role='combobox']")
+    control = render_trigger(actions: ["input->combobox#onInput"]).at_css("[role='combobox']")
 
-    assert_equal "input->combobox#onInput keydown->combobox#onKeydown", trigger["data-action"]
+    assert_equal "input->combobox#onInput keydown->combobox#onKeydown", control["data-action"]
   end
 
-  def test_names_the_trigger_and_references_the_listbox
-    trigger = render_trigger.at_css("[role='combobox']")
+  def test_names_the_control_and_references_the_listbox
+    control = render_trigger.at_css("[role='combobox']")
 
-    assert_equal "City", trigger["aria-label"]
-    assert_equal "city_listbox", trigger["aria-controls"]
-    assert_equal "false", trigger["aria-expanded"]
+    assert_equal "City", control["aria-label"]
+    assert_equal "city_listbox", control["aria-controls"]
+    assert_equal "false", control["aria-expanded"]
   end
 
   def test_icons_sit_beside_the_host

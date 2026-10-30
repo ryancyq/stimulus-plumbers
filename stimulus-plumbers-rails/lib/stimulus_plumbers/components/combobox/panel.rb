@@ -11,10 +11,10 @@ module StimulusPlumbers
 
         private
 
-        def render_panel(id:, &content)
+        def render_panel(id:, theme_key:, &content)
           Popover.new(template).build(panel_id: id, mode: :manual) do |popover|
             popover.build_panel(
-              classes:        theme.resolve(:combobox_popover).fetch(:classes, ""),
+              classes:        theme.resolve(theme_key).fetch(:classes, ""),
               popover_target: false,
               data:           { "#{Combobox::STIMULUS_CONTROLLER}-target" => "panel" }
             ) do |panel_attrs|

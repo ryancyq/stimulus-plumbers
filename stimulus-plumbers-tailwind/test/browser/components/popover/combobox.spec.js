@@ -50,7 +50,7 @@ test.describe("combobox anchoring", () => {
     const section = page.locator("#combobox-dropdown");
     const trigger = section.getByRole("combobox", { name: "Country" });
 
-  await trigger.click();
+    await trigger.click();
     await expectAnchoredToField(
       section.locator("[popover]"),
       trigger.locator(".."),
@@ -63,7 +63,7 @@ test.describe("combobox anchoring", () => {
     const section = page.locator("#combobox-typeahead");
     const trigger = section.getByRole("combobox", { name: "City" });
 
-  await trigger.click();
+    await trigger.click();
     await expectAnchoredToField(
       section.locator("[popover]"),
       trigger.locator(".."),
@@ -87,7 +87,7 @@ test.describe("combobox anchoring", () => {
     const trigger = section.getByRole("combobox", { name: "Country" });
     await page.evaluate(() => (document.documentElement.dir = "rtl"));
 
-  await trigger.click();
+    await trigger.click();
     await expectAnchoredToField(
       section.locator("[popover]"),
       trigger.locator(".."),
@@ -128,8 +128,8 @@ test.describe("pointer", () => {
       .locator("#combobox-dropdown")
       .getByRole("combobox", { name: "Country" });
 
-  await trigger.click();
-  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await trigger.click();
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
     await expect(trigger).toBeFocused();
   });
 
@@ -140,7 +140,7 @@ test.describe("pointer", () => {
     const trigger = section.getByRole("combobox", { name: "Country" });
 
     await trigger.locator("+ svg").click();
-  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
     await expect(trigger).toBeFocused();
   });
 
@@ -148,7 +148,7 @@ test.describe("pointer", () => {
     const section = page.locator("#combobox-dropdown");
     const trigger = section.getByRole("combobox", { name: "Country" });
 
-  await trigger.click();
+    await trigger.click();
     await section.getByRole("option", { name: "Canada" }).click();
     await expect(trigger).toBeFocused();
   });
@@ -160,7 +160,7 @@ test.describe("pointer", () => {
     );
 
     test("focus moving into an iframe closes the panel", async ({ page }) => {
-    const trigger = page
+      const trigger = page
         .locator("#combobox-dropdown")
         .getByRole("combobox", { name: "Country" });
       // Above the field, clear of the open panel.
@@ -172,12 +172,12 @@ test.describe("pointer", () => {
         element.append(frame);
       });
 
-  await trigger.click();
+      await trigger.click();
       await outside
         .frameLocator("iframe")
         .getByRole("textbox", { name: "Inside" })
         .click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
     });
   });
 });
@@ -191,7 +191,7 @@ test.describe("touch", () => {
       .getByRole("combobox", { name: "Country" });
 
     await trigger.tap();
-  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
     // The page heading is outside every combobox.
     await page.locator("h1").tap();
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -220,6 +220,24 @@ test.describe("touch scrolling", () => {
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(0);
-  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  });
+});
+
+test.describe("in a modal", () => {
+  test("Escape in a time panel closes only the panel", async ({ page }) => {
+    const section = page.locator("#combobox-time-modal");
+    const dialog = section.locator("dialog");
+    await section.getByRole("button", { name: "Book a call" }).click();
+    await expect(dialog).toHaveAttribute("open", "");
+    const input = dialog.getByRole("combobox", { name: "Call" });
+    await input.focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(dialog.getByRole("listbox", { name: "Hour" })).toBeFocused();
+
+    await page.keyboard.press("Escape");
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(dialog).toHaveAttribute("open", "");
+    await expect(input).toBeFocused();
   });
 });

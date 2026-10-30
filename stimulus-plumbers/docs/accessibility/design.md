@@ -37,7 +37,7 @@ this.rovingTabIndex?.updateItems(this.triggerTargets);
 
 ### 2. Managed Focus / Listbox — `ListboxNavigation` (`keyboard.js`)
 
-Use when: focus stays on an external element (e.g. a legacy combobox input) while arrow keys move a selection cursor (`aria-selected`) through a listbox of options. `combobox_controller` does not use it: it keeps navigation private to maintain `aria-activedescendant` and leave Space/Home/End to text editing.
+Use when: focus stays on an external element (e.g. a legacy combobox input) while arrow keys move a selection cursor (`aria-selected`) through a listbox of options. `combobox_controller` does not use it: it keeps navigation private to maintain `aria-activedescendant` and leave Space/Home/End to text editing. `combobox_time_controller` does not use it either: focus enters each time column, which carries `aria-activedescendant`.
 
 - Focus **never enters** the listbox.
 - `aria-selected="true"` marks the highlighted option; the listbox item itself is never focused.

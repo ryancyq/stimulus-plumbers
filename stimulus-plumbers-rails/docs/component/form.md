@@ -137,16 +137,11 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
 | `:outlined`       | Full border, label clips through on float |
 | `:standard`       | Bottom border only, no background         |
 
-**Date** (`as: :date`) — calendar-grid picker backed by `combobox-date`. Use `f.date_field` for a plain `<input type="date">`.
+**Date** (`as: :date`) — [`sp_combobox_date`](combobox.md#sp_combobox_date), labelled and described by the field; it takes the same options (`format:`, `open_on_focus:`, `calendar:`, `min:`, `max:`, `disabled_*:`). Use `f.date_field` for a plain `<input type="date">`.
 
-**Time** (`as: :time`) — drum/scroll-wheel picker backed by `combobox-time`.
+**Time** (`as: :time`) — [`sp_combobox_time`](combobox.md#sp_combobox_time), labelled and described by the field; it takes the same options (`format:`, `step:`, `open_on_focus:`). Use `f.time_field` for a plain `<input type="time">`.
 
-| Option   | Values          | Default | Description     |
-| -------- | --------------- | ------- | --------------- |
-| `format` | `:h12` / `:h24` | `:h12`  | Clock format    |
-| `step`   | Integer         | `1`     | Minute interval |
-
-Use `f.time_field` for a plain `<input type="time">`.
+The browser does not validate either read-only input: `required:` sets `aria-required` and a presence validator enforces it, and `min:`, `max:`, and `disabled_*:` limit the dates offered, so validate the value in the model.
 
 **Select** (`as: :select`) — select-only combobox ([`sp_combobox_dropdown`](combobox.md#sp_combobox_dropdown)) backed by `combobox`.
 

@@ -77,7 +77,7 @@ module StimulusPlumbers
             [&>div:first-child]:py-0
             [&>div:first-child]:focus-within:ring-0
           ].freeze
-          # The root is the visible field, so it takes the anchor and focus styles from the group.
+          # The root takes the group's anchor and focus styles.
           COMBOBOX_ANCHOR = %w[[anchor-name:--sp-field] [&>div:first-child]:[anchor-name:none]].freeze
           COMBOBOX_FOCUS_DEFAULT = %w[
             focus-within:ring-(length:--sp-focus-ring-width) focus-within:ring-(--sp-focus-ring-color)

@@ -19,8 +19,10 @@ class TailwindThemeComboboxTest < Minitest::Test
 
   # ── popover ───────────────────────────────────────────────────────────────
 
-  def test_combobox_popover_is_anchored_by_the_popover_not_absolutely_positioned
-    refute_includes classes_for(:combobox_popover).to_s, "absolute"
+  def test_each_combobox_popover_anchors_to_its_field
+    %i[combobox_dropdown_popover combobox_typeahead_popover combobox_date_popover combobox_time_popover].each do |key|
+      assert_includes classes_for(key), "[&[popover]]:[position-anchor:--sp-field]", key
+    end
   end
 
   # ── trigger ───────────────────────────────────────────────────────────────
@@ -191,12 +193,18 @@ class TailwindThemeComboboxTest < Minitest::Test
     refute_includes result, "shrink-0"
   end
 
-  def test_combobox_time_drum_period_includes_shrink_class
-    result = classes_for(:combobox_time_drum, type: :period)
+  def test_combobox_time_drum_meridiem_includes_shrink_class
+    result = classes_for(:combobox_time_drum, type: :meridiem)
 
     assert_includes result, "shrink-0"
     refute_includes result, "flex-1"
     refute_includes result, "min-w-0"
+  end
+
+  def test_every_time_column_shows_keyboard_focus
+    %i[unit meridiem].each do |type|
+      assert_includes classes_for(:combobox_time_drum, type: type), "focus-visible:ring-(--sp-focus-ring-color)"
+    end
   end
 
   def test_combobox_time_drum_defaults_to_unit_classes
@@ -204,26 +212,5 @@ class TailwindThemeComboboxTest < Minitest::Test
 
     assert_includes result, "flex-1"
     assert_includes result, "min-w-0"
-  end
-
-  # ── date navigation ───────────────────────────────────────────────────────
-
-  def test_combobox_date_navigation_includes_flex_classes
-    result = classes_for(:combobox_date_navigation)
-
-    assert_includes result, "flex"
-    assert_includes result, "justify-between"
-  end
-
-  def test_combobox_date_navigation_navigator_returns_empty_classes
-    refute_includes classes_for(:combobox_date_navigation_navigator), "size-(--sp-control-size)"
-  end
-
-  def test_combobox_date_navigation_title_includes_flex_grow
-    assert_includes classes_for(:combobox_date_navigation_title), "flex-1"
-  end
-
-  def test_combobox_date_navigation_title_includes_text_center
-    assert_includes classes_for(:combobox_date_navigation_title), "text-center"
   end
 end

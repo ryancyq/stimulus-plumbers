@@ -58,7 +58,7 @@ class ServerTest < Minitest::Test
     data = JSON.parse(call_tool("get_component_schema", { name: "combobox" }).dig("result", "content", 0, "text"))
 
     assert data.key?("controllers"), "expected controllers key in #{data.inspect}"
-    assert_includes data["controllers"], "input-combobox"
+    assert_includes data["controllers"], "combobox"
   end
 
   def test_versions_sources_resource_matches_get_source_versions_tool

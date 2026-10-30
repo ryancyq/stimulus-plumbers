@@ -21,6 +21,8 @@ export { Dialog, attachDialog } from './plumbers/dialog.js';
 export { Popover, attachPopover } from './plumbers/popover.js';
 
 // Export Stimulus controllers
+export { default as CalendarController } from './controllers/calendar_controller.js';
+export { default as CalendarTurboController } from './controllers/calendar_turbo_controller.js';
 export { default as CalendarDecadeController } from './controllers/calendar_decade_controller.js';
 export { default as CalendarDecadeSelectorController } from './controllers/calendar_decade_selector_controller.js';
 export { default as CalendarMonthController } from './controllers/calendar_month_controller.js';

@@ -3,6 +3,10 @@
 module StimulusPlumbers
   module Helpers
     module CalendarHelper
+      def sp_calendar(**kwargs)
+        Components::Calendar.new(self).render(**kwargs)
+      end
+
       def sp_calendar_month(**kwargs)
         date = kwargs.delete(:date)
         html_options = if date

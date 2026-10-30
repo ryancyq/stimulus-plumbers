@@ -1,18 +1,38 @@
 <h1>Combobox components</h1>
 
+<% today = Date.new(2024, 2, 29) %>
+
 <%# ── Date ──────────────────────────────────────────────────────────── %>
 <section id="combobox-date" class="sb-section">
-  <h2>Date picker</h2>
+  <h2>Date</h2>
   <div class="sb-col">
-    <%= sp_combobox_date(label: "Birthday") %>
+    <%= sp_combobox_date(id: "birthday", name: "birthday", label: "Birthday", calendar: { today: today }) %>
+  </div>
+</section>
+
+<%# ── Date (selected, with a range) ──────────────────────────────────── %>
+<section id="combobox-date-selected" class="sb-section">
+  <h2>Date — Selected, with a range</h2>
+  <div class="sb-col">
+    <%= sp_combobox_date(id: "deadline", name: "deadline", label: "Deadline", value: Date.new(2024, 2, 15),
+                         format: { month: "long", day: "numeric", year: "numeric" },
+                         min: "2024-02-03", max: "2024-12-31", calendar: { today: today }) %>
   </div>
 </section>
 
 <%# ── Time ──────────────────────────────────────────────────────────── %>
 <section id="combobox-time" class="sb-section">
-  <h2>Time picker</h2>
+  <h2>Time</h2>
   <div class="sb-col">
     <%= sp_combobox_time(label: "Meeting Time") %>
+  </div>
+</section>
+
+<%# ── Time (selected) ───────────────────────────────────────────────── %>
+<section id="combobox-time-selected" class="sb-section">
+  <h2>Time — Selected</h2>
+  <div class="sb-col">
+    <%= sp_combobox_time(id: "standup", name: "standup", label: "Standup", value: "14:30") %>
   </div>
 </section>
 
@@ -81,18 +101,18 @@
 
 <%# ── Date (with error) ──────────────────────────────────────────────────── %>
 <section id="combobox-date-error" class="sb-section">
-  <h2>Date picker — Error</h2>
+  <h2>Date — Error</h2>
   <div class="sb-col">
     <% date_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
     <%= form_with(model: date_error, url: "/demo", scope: "combobox_date_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
-      <%= f.field :birth_date, as: :date, label: "Birthday" %>
+      <%= f.field :birth_date, as: :date, label: "Birthday", calendar: { today: today } %>
     <% end %>
   </div>
 </section>
 
 <%# ── Time (with error) ──────────────────────────────────────────────────── %>
 <section id="combobox-time-error" class="sb-section">
-  <h2>Time picker — Error</h2>
+  <h2>Time — Error</h2>
   <div class="sb-col">
     <% time_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
     <%= form_with(model: time_error, url: "/demo", scope: "combobox_time_error", builder: StimulusPlumbers::Form::Builder) do |f| %>
@@ -143,6 +163,34 @@
               label:   "Shipping country",
               options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
             ) %>
+      <% end %>
+      <% modal.footer { modal.close_button "Done" } %>
+    <% end %>
+  </div>
+</section>
+
+<%# ── Date in a modal ───────────────────────────────────────────────────── %>
+<section id="combobox-date-modal" class="sb-section">
+  <h2>Date in a modal</h2>
+  <div class="sb-col">
+    <%= sp_modal id: "combobox-date-dialog", aria_label: "Trip" do |modal| %>
+      <% modal.trigger { "Plan a trip" } %>
+      <% modal.body do %>
+        <%= sp_combobox_date(id: "departure", name: "departure", label: "Departure", calendar: { today: today }) %>
+      <% end %>
+      <% modal.footer { modal.close_button "Done" } %>
+    <% end %>
+  </div>
+</section>
+
+<%# ── Time in a modal ───────────────────────────────────────────────────── %>
+<section id="combobox-time-modal" class="sb-section">
+  <h2>Time in a modal</h2>
+  <div class="sb-col">
+    <%= sp_modal id: "combobox-time-dialog", aria_label: "Call" do |modal| %>
+      <% modal.trigger { "Book a call" } %>
+      <% modal.body do %>
+        <%= sp_combobox_time(id: "call", name: "call", label: "Call", value: "09:00") %>
       <% end %>
       <% modal.footer { modal.close_button "Done" } %>
     <% end %>

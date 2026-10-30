@@ -6,6 +6,7 @@ module StimulusPlumbers
       # Editable combobox: a text input that filters its options, or loads them from `source:` through Turbo.
       class Typeahead < Combobox
         MODE           = "editable"
+        POPOVER_KEY    = :combobox_typeahead_popover
         VALUE_POLICIES = %i[restricted freeform].freeze
         MATCHES        = %i[prefix contains fuzzy].freeze
         OPTIONS        = %i[value_policy match min_length source param].freeze

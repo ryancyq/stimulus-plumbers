@@ -135,7 +135,7 @@ Four rules for sandbox views and their matching snapshot specs:
 **State coverage:** For each component variant:
 - Static states (default, error, disabled): one screenshot per variant
 - Interactive states (open/close, popover, dropdown): test both closed and open
-- Error + interactive combined: cover both closed and open (e.g. `date-picker-error-closed.png` and `date-picker-error-open.png`)
+- Error + interactive combined: cover both closed and open (e.g. `date-error-closed.png` and `date-error-open.png`)
 - Behavioral transitions (focus restoration, clear button hide/show): screenshot the end state after the interaction
 
 ## Unit Test Convention

@@ -3,7 +3,7 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      # The role=combobox element inside its InputGroup; the block renders the element from its attributes.
+      # The role=combobox element inside its TriggerGroup; the block renders the element from its attributes.
       class Trigger < Plumber::Base
         def render(...)
           render_trigger(...)
@@ -12,11 +12,9 @@ module StimulusPlumbers
         private
 
         def render_trigger(icon_leading: nil, icon_trailing: nil, trailing: nil, **kwargs, &host)
-          InputGroup.new(template).render(
-            leading:  icon_leading ? -> { render_icon(icon_leading) } : nil,
-            trailing: trailing || (icon_trailing ? -> { render_icon(icon_trailing) } : nil),
-            **theme.resolve(:combobox_trigger_group)
-          ) { host.call(host_attrs(**kwargs)) }
+          TriggerGroup.new(template).render(icon_leading: icon_leading, icon_trailing: icon_trailing, trailing: trailing) do
+            host.call(host_attrs(**kwargs))
+          end
         end
 
         def host_attrs(id:, listbox_id:, actions: [], aria: {}, data: {}, **kwargs)
@@ -31,14 +29,6 @@ module StimulusPlumbers
             { data: { action: [*actions, "keydown->#{Combobox::STIMULUS_CONTROLLER}#onKeydown"].join(" ") } },
             { data: data },
             kwargs
-          )
-        end
-
-        def render_icon(name)
-          Components::Icon.new(template).render(
-            name,
-            classes: theme.resolve(:combobox_trigger_icon).fetch(:classes, ""),
-            aria:    { hidden: "true" }
           )
         end
       end

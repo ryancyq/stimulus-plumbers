@@ -5,7 +5,7 @@ module StimulusPlumbers
     module Tailwind
       module Combobox
         # ── Container / popover ───────────────────────────────────────────────
-        # The panel anchors to the field group; the scope keeps each instance's name unique.
+        # The panel anchors to its own field group.
         CONTAINER = %w[relative [anchor-scope:--sp-field]].freeze
         POPOVER   = %w[[&[popover]]:[position-anchor:--sp-field] [min-inline-size:anchor-size(inline)]].freeze
 
@@ -43,7 +43,7 @@ module StimulusPlumbers
           hover:bg-(--sp-color-muted) focus:bg-(--sp-color-muted)
         ].freeze
 
-        # The outline marks the active option beyond color and survives forced colors.
+        # The active option has an outline as well as a tint.
         OPTION_SELECTED = %w[
           aria-selected:bg-(--sp-color-primary)/10 aria-selected:text-(--sp-color-primary)
           aria-selected:outline-solid aria-selected:outline-2 aria-selected:-outline-offset-2
@@ -69,15 +69,14 @@ module StimulusPlumbers
           px-(--sp-space-2) py-(--sp-space-2) text-(length:--sp-text-sm) text-(--sp-color-muted-fg)
         ].freeze
 
-        # ── Time picker ───────────────────────────────────────────────────────
+        # ── Time ──────────────────────────────────────────────────────────────
         TIME             = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
-        TIME_DRUM_UNIT   = %w[flex-1 min-w-0].freeze
-        TIME_DRUM_PERIOD = %w[shrink-0].freeze
-
-        # ── Date navigation ───────────────────────────────────────────────────
-        DATE_NAV       = %w[flex items-center justify-between gap-(--sp-space-1) mb-(--sp-space-2)].freeze
-        DATE_NAV_BTN   = %w[].freeze
-        DATE_NAV_TITLE = %w[flex-1 text-center].freeze
+        TIME_DRUM        = %w[
+          rounded-(--sp-radius-sm) outline-none
+          focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--sp-focus-ring-color)
+        ].freeze
+        TIME_DRUM_UNIT     = %w[flex-1 min-w-0].freeze
+        TIME_DRUM_MERIDIEM = %w[shrink-0].freeze
 
         private
 
@@ -85,7 +84,19 @@ module StimulusPlumbers
           { classes: klasses(*CONTAINER) }
         end
 
-        def combobox_popover_classes
+        def combobox_dropdown_popover_classes
+          { classes: klasses(*POPOVER) }
+        end
+
+        def combobox_typeahead_popover_classes
+          { classes: klasses(*POPOVER) }
+        end
+
+        def combobox_date_popover_classes
+          { classes: klasses(*POPOVER) }
+        end
+
+        def combobox_time_popover_classes
           { classes: klasses(*POPOVER) }
         end
 
@@ -132,19 +143,7 @@ module StimulusPlumbers
         end
 
         def combobox_time_drum_classes(type: :unit)
-          { classes: klasses(*(type == :period ? TIME_DRUM_PERIOD : TIME_DRUM_UNIT)) }
-        end
-
-        def combobox_date_navigation_classes
-          { classes: klasses(*DATE_NAV) }
-        end
-
-        def combobox_date_navigation_navigator_classes
-          { classes: klasses(*DATE_NAV_BTN) }
-        end
-
-        def combobox_date_navigation_title_classes
-          { classes: klasses(*DATE_NAV_TITLE) }
+          { classes: klasses(*TIME_DRUM, *(type == :meridiem ? TIME_DRUM_MERIDIEM : TIME_DRUM_UNIT)) }
         end
       end
     end

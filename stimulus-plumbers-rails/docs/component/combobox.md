@@ -85,38 +85,144 @@ The `source:` endpoint renders `sp_combobox_typeahead` with the same `id:`, `sou
 
 ### `sp_combobox_date`
 
-Calendar-grid date combobox on the legacy `input-combobox` composition.
+A read-only date input whose popover holds [`sp_calendar`](calendar.md); `combobox-date` and
+`input-formatter` ([JS](../../../stimulus-plumbers/docs/component/combobox.md#combobox-date)) fill it.
 
 ```erb
-<%= sp_combobox_date(value: "2024-03-15", label: "Date of birth") %>
+<%= sp_combobox_date(name: "person[birthday]", value: @person.birthday, label: "Birthday",
+                     format: { month: "long", day: "numeric", year: "numeric" },
+                     min: 120.years.ago.to_date, max: Date.current) %>
 ```
 
-| Option            | Default | Description                                    |
-| ----------------- | ------- | ---------------------------------------------- |
-| `value`           | `nil`   | ISO 8601 date — pre-fills and navigates        |
-| `label`           | `nil`   | `aria-label` on the trigger input              |
-| `close_on_select` | `nil`   | `false` keeps the panel open after a selection |
-| `**html_options`  | —       | Forwarded to the wrapper `div`                 |
+| Option                         | Default          | Description                                                                             |
+| ------------------------------ | ---------------- | --------------------------------------------------------------------------------------- |
+| `name`                         | `nil`            | Hidden input name; submits `YYYY-MM-DD`                                                 |
+| `value`                        | `nil`            | `Date`, time, or `YYYY-MM-DD`; other text shows as is and selects nothing               |
+| `label` / `labelledby`         | `nil`            | Names the input; the popover is "Choose `label`" or `labelledby`                        |
+| `id`                           | generated        | Input id; the popover is `<id>_popover`, the calendar `<id>_calendar`                   |
+| `format`                       | `{}`             | `input-formatter` options, passed as given; `locale` defaults to `I18n.locale`          |
+| `open_on_focus`                | `true`           | Wires [`popover#onFocus`](../../../stimulus-plumbers/docs/component/popover.md#methods) |
+| `icon_leading`/`icon_trailing` | `nil`/`calendar` | Decorative icons                                                                        |
+| `trigger`                      | `{}`             | Attributes for the input                                                                |
+| `calendar`                     | `{}`             | [`sp_calendar`](calendar.md) options (`displayed`, `today`, `url`, …)                   |
+| `min`, `max`, `disabled_*`     | —                | Available dates, as in [`sp_calendar`](calendar.md)                                     |
+| `**html_options`               | —                | Forwarded to the wrapper `div`                                                          |
+
+```html
+<div
+  data-controller="popover combobox-date input-formatter"
+  data-input-formatter-format-value="date"
+  data-input-formatter-options-value="{}"
+  data-action="calendar:changed->combobox-date#onChange focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick combobox-date:changed->input-formatter#onChange"
+>
+  <div class="[combobox_trigger_group theme classes]">
+    <input
+      id="[id]"
+      type="text"
+      value="2026-09-15"
+      readonly
+      inputmode="none"
+      role="combobox"
+      aria-label="[label]"
+      aria-haspopup="dialog"
+      aria-expanded="false"
+      aria-controls="[id]_popover"
+      data-action="focus->popover#onFocus click->popover#open keydown->combobox-date#onKeydown"
+    />
+    <!-- decorative calendar icon -->
+  </div>
+  <input
+    type="hidden"
+    name="[name]"
+    value="2026-09-15"
+    data-combobox-date-target="input"
+  />
+  <div
+    id="[id]_popover"
+    popover="auto"
+    role="dialog"
+    aria-label="Choose [label]"
+  >
+    <!-- sp_calendar id="[id]_calendar", selectable -->
+  </div>
+</div>
+```
 
 ---
 
 ### `sp_combobox_time`
 
-Drum/scroll-wheel time combobox on the legacy composition. The `sp_combobox` block form
-(`c.date`, `c.time`) renders the same comboboxes.
+A read-only time input whose popover holds hour, minute, and AM/PM columns; `combobox-time` and
+`input-formatter` ([JS](../../../stimulus-plumbers/docs/component/combobox.md#combobox-time)) fill it.
+It takes the `sp_combobox_date` options `name`, `label`/`labelledby`, `id`, `open_on_focus`,
+`icon_leading`/`icon_trailing` (default `nil`/`clock`), `trigger`, and `**html_options`, plus:
 
 ```erb
-<%= sp_combobox_time(format: :h24, step: 15, value: "14:30", label: "Meeting time") %>
+<%= sp_combobox_time(name: "event[starts_at]", value: @event.starts_at, label: "Starts at",
+                     format: { hourCycle: "h23" }, step: 15) %>
 ```
 
-| Option            | Default | Description                                   |
-| ----------------- | ------- | --------------------------------------------- |
-| `format`          | `:h12`  | `:h12` (1–12 + AM/PM) or `:h24` (00–23)       |
-| `step`            | `1`     | Minute increment — `15` yields 00, 15, 30, 45 |
-| `value`           | `nil`   | Pre-selected time as `"HH:MM"`                |
-| `label`           | `nil`   | `aria-label` on the trigger input             |
-| `close_on_select` | `false` | `true` closes the panel after a selection     |
-| `**html_options`  | —       | Forwarded to the wrapper `div`                |
+| Option   | Default | Description                                                                                             |
+| -------- | ------- | ------------------------------------------------------------------------------------------------------- |
+| `value`  | `nil`   | A time or `HH:MM`; submits `HH:MM`; other text shows as is and selects nothing                          |
+| `format` | `{}`    | `input-formatter` options, passed as given; `locale` defaults to `I18n.locale` and `hourCycle` to `h12` |
+| `step`   | `1`     | Minute interval; `15` lists 00, 15, 30, 45; a minute off it chooses no minute and is kept               |
+
+`hourCycle: "h11"`/`"h12"` or `hour12: true` adds the AM/PM column with hours 1–12; otherwise hours run 00–23.
+Column names come from `stimulus_plumbers.combobox.time.*_label`; AM and PM labels from
+`stimulus_plumbers.combobox.time.am`/`.pm`, then Rails' `time.am`/`time.pm`.
+
+```html
+<div
+  data-controller="popover combobox-time input-formatter"
+  data-input-formatter-format-value="time"
+  data-input-formatter-options-value='{"hourCycle":"h12","locale":"en"}'
+  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
+>
+  <div class="[combobox_trigger_group theme classes]">
+    <input
+      id="[id]"
+      type="text"
+      value="14:30"
+      readonly
+      inputmode="none"
+      role="combobox"
+      aria-label="[label]"
+      aria-haspopup="dialog"
+      aria-expanded="false"
+      aria-controls="[id]_popover"
+      data-action="focus->popover#onFocus click->popover#open keydown->combobox-time#onKeydown"
+    />
+    <!-- decorative clock icon -->
+  </div>
+  <input
+    type="hidden"
+    name="[name]"
+    value="14:30"
+    data-combobox-time-target="input"
+  />
+  <div
+    id="[id]_popover"
+    popover="auto"
+    role="dialog"
+    aria-label="Choose [label]"
+  >
+    <ul
+      role="listbox"
+      tabindex="0"
+      aria-label="Hour"
+      aria-activedescendant="[id]_hour_2"
+      data-combobox-time-target="hour"
+    >
+      <li id="[id]_hour_1" role="option" data-value="1" aria-selected="false">
+        1
+      </li>
+      <!-- … -->
+    </ul>
+    <!-- Minute column ([id]_minute_00 …); AM/PM column ([id]_meridiem_AM, [id]_meridiem_PM) -->
+  </div>
+</div>
+```
 
 ---
 
@@ -132,8 +238,8 @@ See [form.md](form.md) for the full API.
 <% end %>
 ```
 
-`as: :select` renders `sp_combobox_dropdown`; `as: :search` renders `sp_combobox_typeahead`
-(defaults in [form.md](form.md)).
+`as: :select` renders `sp_combobox_dropdown`, `as: :search` `sp_combobox_typeahead`, `as: :date`
+`sp_combobox_date`, and `as: :time` `sp_combobox_time` (defaults in [form.md](form.md)).
 
 ---
 
@@ -209,27 +315,36 @@ spans.
 
 ## Theme keys
 
-| Key                           | Element                        |
-| ----------------------------- | ------------------------------ |
-| `combobox`                    | Root `div`                     |
-| `combobox_trigger_group`      | Input group around the trigger |
-| `combobox_trigger`            | Trigger                        |
-| `combobox_trigger_icon`       | Leading/trailing icons         |
-| `combobox_popover`            | Panel                          |
-| `combobox_listbox`            | Listbox                        |
-| `combobox_option`             | Option (`disabled:`)           |
-| `combobox_option_description` | Option description             |
-| `combobox_option_group`       | Group item                     |
-| `combobox_option_group_label` | Group label                    |
-| `combobox_status`             | Editable status                |
+| Key                           | Element                                |
+| ----------------------------- | -------------------------------------- |
+| `combobox`                    | Root `div`                             |
+| `combobox_trigger_group`      | Input group around the trigger         |
+| `combobox_trigger`            | Trigger                                |
+| `combobox_trigger_icon`       | Leading/trailing icons                 |
+| `combobox_dropdown_popover`   | `sp_combobox_dropdown` panel           |
+| `combobox_typeahead_popover`  | `sp_combobox_typeahead` panel          |
+| `combobox_date_popover`       | `sp_combobox_date` panel               |
+| `combobox_time_popover`       | `sp_combobox_time` panel               |
+| `combobox_listbox`            | Listbox                                |
+| `combobox_option`             | Option (`disabled:`)                   |
+| `combobox_option_description` | Option description                     |
+| `combobox_option_group`       | Group item                             |
+| `combobox_option_group_label` | Group label                            |
+| `combobox_status`             | Editable status                        |
+| `combobox_time`               | Time panel columns row                 |
+| `combobox_time_drum`          | Time column (`type: :unit\|:meridiem`) |
 
 ## Migration from the legacy combobox
 
-| Legacy                                   | Use                                                                    |
-| ---------------------------------------- | ---------------------------------------------------------------------- |
-| `sp_combobox { \|c\| c.dropdown(...) }`  | `sp_combobox_dropdown`                                                 |
-| `sp_combobox { \|c\| c.typeahead(...) }` | `sp_combobox_typeahead`                                                |
-| `url:`                                   | `source:` on `sp_combobox_typeahead`                                   |
-| `close_on_select:`                       | `close_on_commit:`                                                     |
-| `input: { name:, value: }`               | `name:` and `value:`                                                   |
-| `trigger: { id:, ... }`                  | `id:`; `trigger:` holds HTML options for the `role="combobox"` element |
+| Legacy                                         | Use                                                                    |
+| ---------------------------------------------- | ---------------------------------------------------------------------- |
+| `sp_combobox { \|c\| c.dropdown(...) }`        | `sp_combobox_dropdown`                                                 |
+| `sp_combobox { \|c\| c.typeahead(...) }`       | `sp_combobox_typeahead`                                                |
+| `sp_combobox { \|c\| c.date(...) }`            | `sp_combobox_date`                                                     |
+| `sp_combobox { \|c\| c.time(...) }`            | `sp_combobox_time`                                                     |
+| `url:`                                         | `source:` on `sp_combobox_typeahead`                                   |
+| `close_on_select:`                             | `close_on_commit:`                                                     |
+| `input: { name:, value: }`                     | `name:` and `value:`                                                   |
+| `trigger: { id:, ... }`                        | `id:`; `trigger:` holds HTML options for the `role="combobox"` element |
+| `stimulus_plumbers.combobox.time.period_label` | `stimulus_plumbers.combobox.time.meridiem_label`                       |
+| `sp_combobox_time(format: :h12 \| :h24)`       | `format: { hourCycle: "h12" }` or `{ hourCycle: "h23" }`               |

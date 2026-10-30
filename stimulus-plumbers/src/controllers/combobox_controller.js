@@ -296,7 +296,7 @@ export default class extends Controller {
     );
   }
 
-  // Synchronous for Turbo snapshots.
+  // Runs synchronously.
   _didClose() {
     this.expanded = false;
     this.openListeners?.abort();

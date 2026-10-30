@@ -1,57 +1,172 @@
 import { Controller } from '@hotwired/stimulus';
-import { setSelected } from '../accessibility/aria';
+
+const STEPS = {
+  ArrowDown: (index, last) => Math.min(index + 1, last),
+  ArrowUp: (index, last) => (index < 0 ? last : Math.max(index - 1, 0)),
+  Home: () => 0,
+  End: (index, last) => last,
+};
 
 export default class extends Controller {
-  static targets = ['hour', 'minute', 'period'];
+  static targets = ['trigger', 'input', 'panel', 'hour', 'minute', 'meridiem'];
 
   connect() {
-    this.select(this.toH24());
+    this.connection = new AbortController();
+    // Survives reconnects.
+    this.initial ??= this._snapshot();
+    this.element
+      .closest('form')
+      ?.addEventListener(
+        'reset',
+        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._apply(this.initial)),
+        { signal: this.connection.signal }
+      );
+  }
+
+  disconnect() {
+    this.connection?.abort();
+    this.connection = null;
+  }
+
+  // ArrowDown opens the panel and focuses the hour column; Tab closes the panel.
+  onKeydown(event) {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (!this._open) this.panelTarget.showPopover({ source: this.triggerTarget });
+      this.hourTarget.focus();
+    } else if (event.key === 'Tab' && this._open) {
+      this.panelTarget.hidePopover();
+    } else if (event.key === 'Escape') {
+      this._cancel(event);
+    }
+  }
+
+  // Records the value to restore on Escape.
+  onOpening(event) {
+    if (event.target === this.panelTarget) this.opened = this._snapshot();
+  }
+
+  // Shows the chosen options.
+  onOpened(event) {
+    if (event.target !== this.panelTarget) return;
+
+    this._columns.forEach((column) => this._selected(column)?.scrollIntoView({ block: 'nearest' }));
+  }
+
+  // Arrows, Home, and End choose an option; Enter closes the panel; Escape restores the value.
+  onNavigate(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.panelTarget.hidePopover();
+      this.triggerTarget.focus();
+      return;
+    }
+    if (event.key === 'Escape') {
+      this._cancel(event);
+      return;
+    }
+    const step = STEPS[event.key];
+    if (!step) return;
+
+    event.preventDefault();
+    const column = event.currentTarget;
+    const options = this._options(column);
+    this._choose(column, options[step(options.indexOf(this._selected(column)), options.length - 1)]);
   }
 
   onSelect(event) {
-    const item = event.target.closest('[role="option"]');
-    if (!item) return;
-    const drum = item.closest('[role="listbox"]');
-    drum.querySelectorAll('[role="option"]').forEach((o) => setSelected(o, false));
-    setSelected(item, true);
-    this.select(this.toH24());
+    const option = event.target.closest('[role="option"]');
+    if (option) this._choose(event.currentTarget, option);
   }
 
-  select(value) {
-    if (value) this.dispatch('selected', { detail: { value }, bubbles: true });
+  // Clicks on the icons and padding open the panel from the trigger.
+  onClick(event) {
+    if (!this._fieldBox(event.target)) return;
+
+    this.triggerTarget.focus({ preventScroll: true });
+    if (!this._open) this.panelTarget.showPopover({ source: this.triggerTarget });
   }
 
-  onNavigate(event) {
-    if (!['ArrowUp', 'ArrowDown'].includes(event.key)) return;
+  // Keeps focus on the trigger while the icons and padding are pressed.
+  onMousedown(event) {
+    if (this._fieldBox(event.target)) event.preventDefault();
+  }
+
+  // Closes the panel when focus moves to an element outside the combobox; WebKit sends focus
+  // nowhere on a click inside the panel.
+  onFocusout(event) {
+    const target = event.relatedTarget;
+    if (this._open && target && !this.element.contains(target)) this.panelTarget.hidePopover();
+  }
+
+  get _open() {
+    return this.panelTarget.matches(':popover-open');
+  }
+
+  get _columns() {
+    return [this.hourTarget, this.minuteTarget, ...this.meridiemTargets];
+  }
+
+  _cancel(event) {
+    if (!this._open) return;
+
     event.preventDefault();
-    this.step(event.currentTarget, event.key === 'ArrowDown' ? 1 : -1);
+    this._apply(this.opened);
+    this.panelTarget.hidePopover();
+    this.triggerTarget.focus();
   }
 
-  step(drum, delta) {
-    const items = [...drum.querySelectorAll('[role="option"]')];
-    const current = drum.querySelector('[aria-selected="true"]');
-    const idx = items.indexOf(current);
-    const next = delta > 0 ? items[Math.min(idx + 1, items.length - 1)] : items[Math.max(idx - 1, 0)];
-    if (!next || next === current) return;
-    items.forEach((o) => setSelected(o, false));
-    setSelected(next, true);
-    next.scrollIntoView({ block: 'nearest' });
-    this.select(this.toH24());
+  _choose(column, option) {
+    this._mark(column, option);
+    option.scrollIntoView({ block: 'nearest' });
+    const value = this._value();
+    if (value) this._commit(value);
   }
 
-  toH24() {
-    const h = this.selectedValue(this.hourTarget);
-    const m = this.selectedValue(this.minuteTarget);
-    if (!h || !m) return null;
-    if (!this.hasPeriodTarget) return `${h}:${m}`;
-    const period = this.selectedValue(this.periodTarget);
-    let hour = parseInt(h, 10);
-    if (period === 'AM') hour = hour === 12 ? 0 : hour;
-    else hour = hour === 12 ? 12 : hour + 12;
-    return `${String(hour).padStart(2, '0')}:${m}`;
+  // HH:MM from the chosen options, or null until hour and minute are chosen.
+  _value() {
+    const [hour, minute, meridiem] = this._columns.map((column) => this._selected(column)?.dataset.value);
+    if (!hour || !minute) return null;
+    if (!this.hasMeridiemTarget) return `${hour}:${minute}`;
+    if (!meridiem) return null;
+
+    const twelve = Number(hour) % 12;
+    return `${String(meridiem === 'PM' ? twelve + 12 : twelve).padStart(2, '0')}:${minute}`;
   }
 
-  selectedValue(drum) {
-    return drum?.querySelector('[aria-selected="true"]')?.dataset.value ?? null;
+  _snapshot() {
+    return { value: this.inputTarget.value, options: this._columns.map((column) => this._selected(column)) };
+  }
+
+  _apply({ value, options }) {
+    this._columns.forEach((column, index) => this._mark(column, options[index]));
+    this._commit(value);
+  }
+
+  _commit(value) {
+    if (this.inputTarget.value !== value) {
+      this.inputTarget.value = value;
+      this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    this.dispatch('changed', { detail: { value } });
+  }
+
+  _mark(column, option) {
+    this._options(column).forEach((other) => other.setAttribute('aria-selected', String(other === option)));
+    if (option) column.setAttribute('aria-activedescendant', option.id);
+    else column.removeAttribute('aria-activedescendant');
+  }
+
+  _options(column) {
+    return [...column.querySelectorAll('[role="option"]')];
+  }
+
+  _selected(column) {
+    return column.querySelector('[role="option"][aria-selected="true"]');
+  }
+
+  // The field box is the input group holding the trigger and its icons.
+  _fieldBox(target) {
+    return target !== this.triggerTarget && this.triggerTarget.parentElement.contains(target);
   }
 }
