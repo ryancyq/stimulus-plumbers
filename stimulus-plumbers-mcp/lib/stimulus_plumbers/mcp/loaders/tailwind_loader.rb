@@ -21,7 +21,7 @@ module StimulusPlumbers
           classes = { default: theme.resolve(key)[:classes].to_s }
 
           params.each do |param, meta|
-            valid = meta[:validate]
+            valid = theme.range_for(meta[:validate])
             next unless valid.respond_to?(:to_a)
 
             valid.to_a.each { |val| classes["#{param}:#{val}"] = theme.resolve(key, param => val)[:classes].to_s }
