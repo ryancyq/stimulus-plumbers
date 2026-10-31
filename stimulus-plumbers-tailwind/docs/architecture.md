@@ -45,6 +45,10 @@ Button, Link, Checkbox, and Radio all share a unified card style via the `--card
 - **Checkbox card** — input visible; label uses `has-[:checked]:border-(--card-ring)`
 - **Radio card/button** — input is `hidden`; label uses `group-has-[:checked]:border-(--card-ring)`
 
+## Character Cells — `Form::CharacterCells`
+
+`Form::CharacterCells` holds the classes shared by `Form::Code` and `Form::CreditCard`. Each module's `CELL` adds its own cell size and spacing.
+
 ## Floating Field Key Ownership
 
 Floating-label theme keys (`form_field_floating`, `form_field_floating_group`, `form_field_floating_label`) and their constants (`FLOATING_INPUT_*`, `FLOATING_GROUP_TYPES`, `FLOATING_LABEL_*`) live in `Form::Field` (`form/field.rb`), **not** `Form::Input`. Floating is a field-layout concern, not an input-element concern.
