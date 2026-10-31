@@ -154,6 +154,19 @@ describe('ComboboxDateController', () => {
     expect(document.activeElement).toBe(trigger);
   });
 
+  it('selecting the selected date reports it without a change event', async () => {
+    const { container, input } = await render();
+    const changed = vi.fn();
+    const formatted = vi.fn();
+    input.addEventListener('change', changed);
+    container.addEventListener('combobox-date:changed', (event) => formatted(event.detail.value));
+
+    change(document.querySelector('#calendar'), '2026-09-15');
+
+    expect(formatted).toHaveBeenCalledWith('2026-09-15');
+    expect(changed).not.toHaveBeenCalled();
+  });
+
   it('form reset reports the restored date', async () => {
     const { container, input } = await render();
     const formatted = vi.fn();
