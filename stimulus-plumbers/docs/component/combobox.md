@@ -322,7 +322,7 @@ formats the input from `combobox-time:changed`.
 | `onClick(event)`     | `click` on root               | A click on the icons or padding focuses `trigger` and opens the panel                                                                             |
 | `onMousedown(event)` | `mousedown` on root           | Keeps focus on `trigger` while the icons or padding are pressed                                                                                   |
 
-Choosing an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are chosen, the value goes into `input`, which dispatches `change`.
+Choosing an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are chosen, the value goes into `input`, which dispatches `change` when the value differs.
 
 **Dispatches**
 
