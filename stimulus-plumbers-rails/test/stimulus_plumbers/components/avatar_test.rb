@@ -64,10 +64,10 @@ class AvatarComponentTest < ActionView::TestCase
     assert_css parse_html(renderer.render(id: "my-avatar")), "#my-avatar"
   end
 
-  def stub_theme_with_variants(variants)
+  def stub_theme_with_variants(*variants)
     Class.new(StimulusPlumbers::Themes::Base) do
-      define_method(:avatar_variant_range) { variants.values }
-      define_method(:avatar_variants) { variants }
+      define_method(:avatar_variant_range) { variants }
+      define_method(:avatar_classes) { |variant: nil, **| variant ? { classes: "variant-#{variant}" } : {} }
     end.new
   end
 
@@ -79,35 +79,40 @@ class AvatarComponentTest < ActionView::TestCase
     StimulusPlumbers.config.theme.use(original)
   end
 
-  def test_derives_variant_from_name
-    stub = stub_theme_with_variants(red: "text-red", blue: "text-blue")
-    with_stub_theme(stub) do
-      html = renderer.render(name: "Test User")
+  def test_derives_the_same_variant_from_the_same_name
+    with_stub_theme(stub_theme_with_variants(:red, :blue)) do
+      first = parse_html(renderer.render(name: "Test User")).at_css("span")["class"]
 
-      assert(stub.avatar_variant_range.any? { |c| html.include?(c) })
+      assert_match(%r{\Avariant-(red|blue)\z}, first)
+      assert_equal first, parse_html(renderer.render(name: "Test User")).at_css("span")["class"]
     end
   end
 
   def test_applies_explicit_variant
-    stub = stub_theme_with_variants(red: "text-red", blue: "text-blue")
-    with_stub_theme(stub) do
-      doc = parse_html(renderer.render(variant: :red))
+    with_stub_theme(stub_theme_with_variants(:red, :blue)) do
+      assert_css parse_html(renderer.render(variant: :blue)), "span.variant-blue"
+    end
+  end
 
-      assert_css doc, ".text-red"
+  def test_uses_the_first_variant_without_a_name_or_initials
+    with_stub_theme(stub_theme_with_variants(:red, :blue)) do
+      assert_css parse_html(renderer.render), "span.variant-red"
     end
   end
 
   def test_does_not_apply_variant_when_url_given
-    theme  = StimulusPlumbers.config.theme.current
-    html   = renderer.render(name: "John", url: "/avatar.jpg")
+    with_stub_theme(stub_theme_with_variants(:red, :blue)) do
+      doc = parse_html(renderer.render(name: "John", url: "/avatar.jpg", variant: :red))
 
-    assert(theme.avatar_variant_range.none? { |c| html.include?(c) })
+      assert_no_css doc, "[class*='variant-']"
+    end
   end
 
   def test_does_not_apply_variant_when_block_given
-    theme  = StimulusPlumbers.config.theme.current
-    html   = renderer.render(name: "John") { "custom" }
+    with_stub_theme(stub_theme_with_variants(:red, :blue)) do
+      doc = parse_html(renderer.render(name: "John", variant: :red) { "custom" })
 
-    assert(theme.avatar_variant_range.none? { |c| html.include?(c) })
+      assert_no_css doc, "[class*='variant-']"
+    end
   end
 end
