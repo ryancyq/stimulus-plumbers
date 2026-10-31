@@ -30,10 +30,6 @@ module StimulusPlumbers
         @name ||= self.class.name.demodulize.delete_suffix("Theme")
       end
 
-      def avatar_variants
-        {}
-      end
-
       def avatar_variant_range
         []
       end
@@ -44,6 +40,14 @@ module StimulusPlumbers
 
       def attribute_names(component)
         SCHEMA.fetch(component, {}).keys
+      end
+
+      # The values a schema validator lists: the validator itself, or what its zero-argument callable returns.
+      # Nil for a predicate, which takes the value.
+      def range_for(validator)
+        return validator if validator.nil? || validator.respond_to?(:include?)
+
+        Plumber::Dispatcher.build(validator).call(self) unless predicate?(validator)
       end
 
       def resolve(component, **args)
@@ -79,12 +83,14 @@ module StimulusPlumbers
       def valid?(validator, value)
         return true if validator.nil?
 
-        if validator.respond_to?(:include?)
-          validator.include?(value)
-        else
-          result = Plumber::Dispatcher.build(validator, value).call(self)
-          result.respond_to?(:include?) ? result.include?(value) : result
-        end
+        result = predicate?(validator) ? Plumber::Dispatcher.build(validator, value).call(self) : range_for(validator)
+        result.respond_to?(:include?) ? result.include?(value) : result
+      end
+
+      def predicate?(validator)
+        return false if validator.respond_to?(:include?)
+
+        !(validator.is_a?(Proc) ? validator : method(validator)).arity.zero?
       end
     end
   end

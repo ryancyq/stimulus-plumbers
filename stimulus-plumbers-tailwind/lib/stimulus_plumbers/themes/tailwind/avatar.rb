@@ -31,12 +31,8 @@ module StimulusPlumbers
           blue:    "text-white bg-blue-600"
         }.freeze
 
-        def avatar_variants
-          VARIANTS
-        end
-
         def avatar_variant_range
-          VARIANTS.values
+          VARIANTS.keys
         end
 
         private
