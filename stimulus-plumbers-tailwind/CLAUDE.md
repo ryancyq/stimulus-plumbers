@@ -10,7 +10,7 @@ stimulus-plumbers-tailwind/
 │   │   ├── tailwind/                       # Engine and version; generators/ holds the install generator's CSS helpers
 │   │   └── themes/
 │   │       ├── tailwind_theme.rb           # TailwindTheme < Base; includes every component module
-│   │       └── tailwind/                   # <component>.rb CSS classes per component; <component>/ for sub-components; icons/ sources + SVGs
+│   │       └── tailwind/                   # <component>.rb CSS classes per component; <component>/ for sub-components and their shared class modules; icons/ sources + SVGs
 │   ├── generators/                         # rails g stimulus_plumbers:tailwind:install
 │   └── tasks/                              # Consumer rake task
 ├── app/assets/stylesheets/                 # Shipped CSS
@@ -37,7 +37,7 @@ stimulus-plumbers-tailwind/
 ## Styling Guidelines
 - **Always use CSS custom properties (CSS variables) instead of hardcoded values** — colors, spacing, sizing, and other design tokens must reference CSS variables (e.g., `var(--sp-color-primary)`) so consumers can theme the library without overriding classes.
 
-> **Architecture decisions** (constant ownership, icon-only pattern, card style, floating fields) are documented in [docs/architecture.md](docs/architecture.md).
+> **Architecture decisions** (constant ownership, icon-only pattern, card style, character cells, floating fields) are documented in [docs/architecture.md](docs/architecture.md).
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`) — covers theme modules and generators
