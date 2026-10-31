@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ComboboxTimeController from '../../../src/controllers/combobox_time_controller';
 import { installNativePopover } from '../../support/native_popover';
-import { startApplication } from '../../support/stimulus';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ComboboxTimeController', () => {
   let application;
@@ -269,5 +269,21 @@ describe('ComboboxTimeController', () => {
     await vi.waitFor(() => expect(formatted).toHaveBeenLastCalledWith('14:30'));
     expect(input.value).toBe('14:30');
     expect(option('minute', '30').getAttribute('aria-selected')).toBe('true');
+  });
+
+  it('form reset fires no change event', async () => {
+    const { container, panel, input } = await render();
+    const formatted = vi.fn();
+    container.addEventListener('combobox-time:changed', formatted);
+    open(panel);
+    option('minute', '00').click();
+    const changed = vi.fn();
+    input.addEventListener('change', changed);
+
+    document.querySelector('#form').reset();
+    await flush();
+
+    expect(formatted).toHaveBeenCalledTimes(2);
+    expect(changed).not.toHaveBeenCalled();
   });
 });
