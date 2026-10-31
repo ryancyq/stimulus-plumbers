@@ -88,12 +88,8 @@ module StimulusPlumbers
           COMBOBOX_FLOATING_FOCUS = %w[focus-within:border-(--sp-color-primary)].freeze
 
           # ── Range ─────────────────────────────────────────────────────────────
-          # A slider is a track and a thumb, so it takes none of INPUT's box chrome.
-          # WebKit has no filled-track pseudo-element: the fill is a gradient stopped at
-          # --sp-progress-percent (set by the progress controller). Firefox has
-          # ::-moz-range-progress and uses that instead.
-          # Must stay on one line: Tailwind scans source text, so a class split across a string
-          # continuation never appears contiguously and is silently dropped from the build.
+          # WebKit fill: a gradient stopped at --sp-progress-percent (set by the progress controller).
+          # Firefox fills with ::-moz-range-progress. Stays on one line for Tailwind's source scan.
           # rubocop:disable-next Layout/LineLength
           RANGE_FILL = "[&::-webkit-slider-runnable-track]:bg-[linear-gradient(to_right,var(--sp-color-primary)_0_calc(var(--sp-progress-percent,0)*1%),transparent_0)]"
 
@@ -128,15 +124,13 @@ module StimulusPlumbers
             "[&::-moz-range-thumb]:bg-(--sp-color-primary)"
           ].freeze
 
-          # The readout sits outside the input, so the input's own disabled:opacity-50 never
-          # reaches it — without this a disabled slider keeps a full-strength readout.
+          # Dims the readout of a disabled slider.
           RANGE_GROUP = %w[
             flex items-center gap-(--sp-space-3)
             [&:has(input:disabled)>span]:opacity-50
           ].freeze
 
-          # Sits beside the track, not over it — no pill background needed.
-          # Shares Progress::VALUE_TEXT, resolved at call time since progress.rb loads later.
+          # Combined with Progress::VALUE_TEXT at call time; progress.rb loads later.
           RANGE_VALUE = %w[shrink-0 text-(--sp-color-fg)].freeze
 
           # ── Choice inputs ─────────────────────────────────────────────────────
@@ -215,8 +209,7 @@ module StimulusPlumbers
             form_field_input_classes(floating: floating, error: error)
           end
 
-          # Not form_field_input_classes — a progressbar is display-only, so it takes none of the
-          # text-input chrome (border, padding, focus ring); the track styling comes from progress_bar.
+          # No text-input chrome; progress_bar styles the track.
           def form_field_input_progress_classes
             { classes: klasses("w-full") }
           end

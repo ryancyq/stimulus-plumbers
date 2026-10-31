@@ -43,7 +43,7 @@ Button, Link, Checkbox, and Radio all share a unified card style via the `--card
 - **Button card** (`type: :card`) — `Button::BASE + Button::CARD + Button::TYPES[:card]`; `size:` ignored
 - **Link card** — `Link::CARD` composes `Control::BASE + Card::BASE + Button::CARD`
 - **Checkbox card** — input visible; label uses `has-[:checked]:border-(--card-ring)`
-- **Radio card/button** — input is `hidden peer`; label uses `peer-checked:border-(--card-ring)`
+- **Radio card/button** — input is `hidden`; label uses `group-has-[:checked]:border-(--card-ring)`
 
 ## Floating Field Key Ownership
 
