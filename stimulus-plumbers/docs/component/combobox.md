@@ -236,13 +236,13 @@ formats the input from `combobox-date:changed`.
 
 **Actions**
 
-| Action               | Wired on                   | Description                                                                                       |
-| -------------------- | -------------------------- | ------------------------------------------------------------------------------------------------- |
-| `onKeydown(event)`   | `keydown` on `trigger`     | ArrowDown opens the panel and focuses the calendar's Tab stop; Tab closes the panel               |
-| `onFocusout(event)`  | `focusout` on root         | Closes the panel when focus leaves the combobox                                                   |
-| `onClick(event)`     | `click` on root            | A click on the icons or padding focuses `trigger` and opens the panel                             |
-| `onMousedown(event)` | `mousedown` on root        | Keeps focus on `trigger` while the icons or padding are pressed                                   |
-| `onChange(event)`    | `calendar:changed` on root | Copies the value into `input`, dispatches `change` on it, closes the panel, and focuses `trigger` |
+| Action               | Wired on                   | Description                                                                                                              |
+| -------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `onKeydown(event)`   | `keydown` on `trigger`     | ArrowDown opens the panel and focuses the calendar's Tab stop; Tab closes the panel                                      |
+| `onFocusout(event)`  | `focusout` on root         | Closes the panel when focus leaves the combobox                                                                          |
+| `onClick(event)`     | `click` on root            | A click on the icons or padding focuses `trigger` and opens the panel                                                    |
+| `onMousedown(event)` | `mousedown` on root        | Keeps focus on `trigger` while the icons or padding are pressed                                                          |
+| `onChange(event)`    | `calendar:changed` on root | Copies the value into `input`, dispatches `change` on it when the value differs, closes the panel, and focuses `trigger` |
 
 **Dispatches**
 
