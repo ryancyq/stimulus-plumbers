@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { onFormReset } from '../plumbers/plumber/form_reset';
 
 export default class extends Controller {
   static targets = ['master', 'item'];
@@ -9,13 +10,7 @@ export default class extends Controller {
     // A morph re-syncs every item's checked state from the markup, but never the master's
     // indeterminate property, so each morphed node schedules a recompute.
     this.element.addEventListener('turbo:morph-element', () => this._scheduleRecompute(), { signal });
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => signal.aborted || event.defaultPrevented || this.recompute()),
-        { signal }
-      );
+    onFormReset(this.element, () => this.recompute(), { signal });
   }
 
   disconnect() {
