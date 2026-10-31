@@ -1,10 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   parseActions,
   parseActionParams,
+  parseController,
   parseDispatches,
   withPlumberSources,
   parseValues,
@@ -244,5 +246,75 @@ describe('withPlumberSources', () => {
 
   it('returns just the source when there are no plumber imports', () => {
     expect(withPlumberSources('const x = 1;', CONTROLLERS_DIR)).toBe('const x = 1;');
+  });
+});
+
+describe('parseController', () => {
+  let root;
+  let controllersDir;
+
+  const write = (path, source) => {
+    mkdirSync(dirname(join(root, path)), { recursive: true });
+    writeFileSync(join(root, path), source);
+  };
+
+  beforeAll(() => {
+    root = mkdtempSync(join(tmpdir(), 'manifest-'));
+    controllersDir = join(root, 'controllers');
+    write('plumbers/ping.js', `export function attachPing(controller) { controller.dispatch('pinged'); }`);
+    write(
+      'controllers/base/shared.js',
+      `import { Controller } from '@hotwired/stimulus';
+import { attachPing } from '../../plumbers/ping';
+
+export default class extends Controller {
+  static targets = ['trigger', 'extra'];
+  static values = { size: Number, open: Boolean };
+
+  onKeydown(event) {}
+
+  onClick(event) {}
+}
+`
+    );
+    write(
+      'controllers/child_controller.js',
+      `import Shared from './base/shared';
+
+export default class extends Shared {
+  static targets = ['extra', 'option'];
+  static values = { size: String };
+
+  onKeydown(event) {}
+
+  onSelect(event) {}
+}
+`
+    );
+  });
+
+  afterAll(() => rmSync(root, { recursive: true, force: true }));
+
+  it('lists inherited targets once, base class first', () => {
+    expect(parseController('child_controller.js', controllersDir).targets).toEqual(['trigger', 'extra', 'option']);
+  });
+
+  it('merges inherited values, the controller overriding its base class', () => {
+    expect(parseController('child_controller.js', controllersDir).values).toEqual({
+      size: { type: 'String' },
+      open: { type: 'Boolean' },
+    });
+  });
+
+  it('lists inherited and overridden actions once', () => {
+    expect(parseController('child_controller.js', controllersDir).actions).toEqual([
+      'onClick',
+      'onKeydown',
+      'onSelect',
+    ]);
+  });
+
+  it('includes the dispatches of a plumber its base class imports', () => {
+    expect(parseController('child_controller.js', controllersDir).dispatches).toEqual(['pinged']);
   });
 });
