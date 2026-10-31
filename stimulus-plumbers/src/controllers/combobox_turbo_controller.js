@@ -1,6 +1,6 @@
-import { Controller } from '@hotwired/stimulus';
+import TurboFrame from './turbo/frame';
 
-export default class extends Controller {
+export default class extends TurboFrame {
   static targets = ['frame', 'status'];
   static values = {
     src: String,
@@ -31,16 +31,6 @@ export default class extends Controller {
     this._cancel();
   }
 
-  onResponse(event) {
-    const response = event.detail.fetchResponse;
-    if (!response?.succeeded || !response.isHTML) this._setStatus(this.errorTextValue);
-  }
-
-  onError(event) {
-    if (event.type === 'turbo:frame-missing') event.preventDefault();
-    this._setStatus(this.errorTextValue);
-  }
-
   // Removing src cancels Turbo's in-flight request.
   _cancel() {
     clearTimeout(this.timer);
@@ -51,6 +41,14 @@ export default class extends Controller {
     const url = new URL(this.srcValue, window.location.href);
     if (query) url.searchParams.set(this.paramValue, query);
     this.frameTarget.setAttribute('src', url.href);
+  }
+
+  get _frame() {
+    return this.hasFrameTarget ? this.frameTarget : null;
+  }
+
+  _failed() {
+    this._setStatus(this.errorTextValue);
   }
 
   _setStatus(text) {

@@ -162,10 +162,10 @@ the frame while loading.
 | `frame`  | `<turbo-frame>` wrapping the listbox |
 | `status` | The combobox's `status` element      |
 
-| Method              | Wired via                                          | Description                                                     |
-| ------------------- | -------------------------------------------------- | --------------------------------------------------------------- |
-| `onResponse(event)` | `turbo:before-fetch-response` on the frame         | Shows `errorText` for a failed or non-HTML response             |
-| `onError(event)`    | `turbo:frame-missing`, `turbo:fetch-request-error` | Shows `errorText`; prevents only Turbo's missing-frame handling |
+| Method              | Wired via                                          | Description                                                                   |
+| ------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `onResponse(event)` | `turbo:before-fetch-response` on the frame         | Shows `errorText` for a failed or non-HTML response for its frame             |
+| `onError(event)`    | `turbo:frame-missing`, `turbo:fetch-request-error` | Shows `errorText` for its frame; prevents only Turbo's missing-frame handling |
 
 ### combobox-fetch
 

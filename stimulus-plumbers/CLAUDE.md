@@ -8,6 +8,7 @@ stimulus-plumbers/
 │   ├── index.js                     # Package entry: every export
 │   ├── accessibility/               # Accessibility utilities (see Guidelines)
 │   ├── controllers/                 # <identifier>_controller.js — one Stimulus controller each
+│   │   └── turbo/                   # <base>.js — base classes some *_turbo controllers extend
 │   ├── date/                        # Date-only core: { year, month, day }, never an instant
 │   ├── plumbers/                    # <name>.js — one plumber each; index.js exports their attach functions
 │   │   ├── formatters/              # Input formatter strategies
@@ -40,7 +41,7 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
 
 - **Naming** — controller helpers are `_`-prefixed methods (the manifest skips them), not `#private` members.
-- **Shared base** — a controller inherits the targets, values, outlets, classes, actions, and dispatched events of a base class it imports from a relative path; the manifest merges them.
+- **Shared base** — controllers that share behaviour extend a base class in a `controllers/` subdirectory (`controllers/turbo/frame.js`); the manifest merges the targets, values, outlets, classes, actions, and dispatched events they inherit.
 - **Listener cleanup** — group listeners that share a lifetime (connection, open state, target) under one `AbortController` and abort it when the lifetime ends; some controllers pair `addEventListener`/`removeEventListener`.
 - **Plumber disposal** — a plumber that holds listeners, observers, timers, requests, or DOM state owns them and exposes an idempotent `disconnect()`; it never takes an owner's `signal` or wraps controller methods. The controller keeps the instance and calls `disconnect()` in its own `disconnect()`; for a target-scoped plumber, also in `xTargetDisconnected` (same element only) and before replacing it in `xTargetConnected`. Target callbacks run before `connect()` and after `disconnect()`, so never use `this.connection` in them.
 - **`onX(event)` adapts, `x(value)` computes** — a `data-action` names only an `onX(event)` adapter or a method that takes no arguments; plain verbs are the programmatic API and never take the event. Name the adapter's first parameter `event`: the manifest reads it to tell an adapter from a method taking a value, and the Rails contract test rejects a `data-action` naming the latter.

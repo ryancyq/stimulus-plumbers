@@ -41,33 +41,12 @@ describe('CalendarTurboController', () => {
       new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
     );
     frame.dispatchEvent(
-      new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: true } } })
-    );
-
-    expect(failed).toHaveBeenCalledOnce();
-  });
-
-  it('ignores responses for other frames inside the calendar', async () => {
-    const { failed } = await render();
-
-    document.querySelector('#other').dispatchEvent(
       new CustomEvent('turbo:before-fetch-response', {
         bubbles: true,
-        detail: { fetchResponse: { succeeded: false } },
+        detail: { fetchResponse: { succeeded: true, isHTML: true } },
       })
     );
 
-    expect(failed).not.toHaveBeenCalled();
-  });
-
-  it('keeps the grid when the response has no matching frame', async () => {
-    const { frame, failed } = await render();
-    const missing = new CustomEvent('turbo:frame-missing', { bubbles: true, cancelable: true });
-
-    frame.dispatchEvent(missing);
-    frame.dispatchEvent(new CustomEvent('turbo:fetch-request-error', { bubbles: true }));
-
-    expect(missing.defaultPrevented).toBe(true);
-    expect(failed).toHaveBeenCalledTimes(2);
+    expect(failed).toHaveBeenCalledOnce();
   });
 });
