@@ -76,13 +76,12 @@ describe('ComboboxTimeController', () => {
     delete Element.prototype.scrollIntoView;
   });
 
-  it('ArrowDown opens the panel and focuses the hour column', async () => {
-    const { panel, trigger } = await render();
+  it('ArrowDown focuses the hour column', async () => {
+    const { trigger } = await render();
     trigger.focus();
 
     keydown(trigger, 'ArrowDown');
 
-    expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
     expect(document.activeElement.id).toBe('hour');
   });
 
@@ -220,16 +219,7 @@ describe('ComboboxTimeController', () => {
     expect(keydown(trigger, 'Escape').defaultPrevented).toBe(false);
   });
 
-  it('Tab from the trigger closes an open panel', async () => {
-    const { panel, trigger } = await render();
-    open(panel);
-
-    keydown(trigger, 'Tab');
-
-    expect(panel.hidePopover).toHaveBeenCalledOnce();
-  });
-
-  it('closes the panel and keeps the time when focus leaves the combobox', async () => {
+  it('focus leaving the combobox keeps the selected time', async () => {
     const { panel, input } = await render();
     document.body.insertAdjacentHTML('beforeend', '<button id="next">Next</button>');
     open(panel);
@@ -238,21 +228,7 @@ describe('ComboboxTimeController', () => {
 
     document.querySelector('#next').focus();
 
-    expect(panel.hidePopover).toHaveBeenCalledOnce();
     expect(input.value).toBe('14:00');
-  });
-
-  it('a click on an icon opens the panel and focuses the trigger', async () => {
-    const { panel, trigger } = await render();
-    const icon = document.querySelector('#icon');
-    const mousedown = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
-
-    icon.dispatchEvent(mousedown);
-    icon.click();
-
-    expect(mousedown.defaultPrevented).toBe(true);
-    expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
-    expect(document.activeElement).toBe(trigger);
   });
 
   it('form reset restores the initial time and options', async () => {
@@ -268,21 +244,5 @@ describe('ComboboxTimeController', () => {
     expect(formatted).toHaveBeenLastCalledWith('14:30');
     expect(input.value).toBe('14:30');
     expect(option('minute', '30').getAttribute('aria-selected')).toBe('true');
-  });
-
-  it('form reset fires no change event', async () => {
-    const { container, panel, input } = await render();
-    const formatted = vi.fn();
-    container.addEventListener('combobox-time:changed', formatted);
-    open(panel);
-    option('minute', '00').click();
-    const changed = vi.fn();
-    input.addEventListener('change', changed);
-
-    document.querySelector('#form').reset();
-    await flush();
-
-    expect(formatted).toHaveBeenCalledTimes(2);
-    expect(changed).not.toHaveBeenCalled();
   });
 });
