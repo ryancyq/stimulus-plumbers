@@ -11,7 +11,7 @@ class BaseThemeAvatarTest < StubThemeTestCase
         define_method(:"#{component}_classes") { |**| {} }
       end
 
-      define_method(:avatar_variant_range) { %w[red blue] } if with_variant_range
+      define_method(:avatar_variant_range) { %i[red blue] } if with_variant_range
     end.new
   end
 
@@ -24,23 +24,31 @@ class BaseThemeAvatarTest < StubThemeTestCase
     mock_logger.verify
   end
 
-  def test_accepts_any_variant_when_range_method_not_defined
-    assert_equal({}, @theme.resolve(:avatar, variant: "anything"))
-  end
-
-  def test_coerces_invalid_variant_to_default_and_warns_when_range_method_defined
-    theme = build_stub_theme(with_variant_range: true)
+  def test_warns_on_any_variant_without_a_variant_range
     mock_logger = Minitest::Mock.new
-    mock_logger.expect(:warn, nil, [%r{unknown value "green"}])
+    mock_logger.expect(:warn, nil, [%r{unknown value :red}])
     Rails.stub(:logger, mock_logger) do
-      theme.resolve(:avatar, variant: "green")
+      @theme.resolve(:avatar, variant: :red)
     end
     mock_logger.verify
   end
 
-  def test_accepts_valid_variant_when_range_method_defined
+  def test_coerces_a_variant_outside_the_range_to_default_and_warns
     theme = build_stub_theme(with_variant_range: true)
+    mock_logger = Minitest::Mock.new
+    mock_logger.expect(:warn, nil, [%r{unknown value :green}])
+    Rails.stub(:logger, mock_logger) do
+      theme.resolve(:avatar, variant: :green)
+    end
+    mock_logger.verify
+  end
 
-    assert_equal({}, theme.resolve(:avatar, variant: "red"))
+  def test_accepts_a_variant_in_the_range
+    theme = build_stub_theme(with_variant_range: true)
+    mock_logger = Minitest::Mock.new
+    Rails.stub(:logger, mock_logger) do
+      theme.resolve(:avatar, variant: :red)
+    end
+    mock_logger.verify
   end
 end
