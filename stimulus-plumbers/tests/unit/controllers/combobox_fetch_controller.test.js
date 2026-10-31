@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ComboboxController from '../../../src/controllers/combobox_controller';
 import ComboboxFetchController from '../../../src/controllers/combobox_fetch_controller';
 import { installNativePopover } from '../../support/native_popover';
-import { flush, startApplication } from '../../support/stimulus';
+import { advance, flush, startApplication } from '../../support/stimulus';
 
 describe('ComboboxFetchController', () => {
   let application;
@@ -29,7 +29,6 @@ describe('ComboboxFetchController', () => {
   };
   const respond = async (index, body, ok = true) => {
     requests[index].resolve({ ok, status: ok ? 200 : 500, text: async () => body });
-    await vi.waitUntil(() => true);
     await flush();
   };
 
@@ -49,7 +48,7 @@ describe('ComboboxFetchController', () => {
       </div>`;
     installNativePopover(document.querySelector('#panel'));
     const container = document.querySelector('#container');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'combobox-fetch'));
+    await flush();
     return { container, control: document.querySelector('#trigger') };
   };
 
@@ -111,10 +110,11 @@ describe('ComboboxFetchController', () => {
   });
 
   it('aborts the in-flight request as soon as a new query starts', async () => {
+    vi.useFakeTimers();
     const { control } = await render({ delay: 50 });
 
     await type(control, 'S');
-    await vi.waitUntil(() => requests.length === 1);
+    await advance(50);
     await type(control, 'Se');
 
     expect(requests[0].signal.aborted).toBe(true);

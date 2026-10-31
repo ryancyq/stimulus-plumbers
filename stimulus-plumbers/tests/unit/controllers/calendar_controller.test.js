@@ -59,7 +59,7 @@ describe('CalendarController', () => {
         <div role="status" data-calendar-target="status"></div>${grid}${PERIOD_LINKS}</section>`;
     document.body.innerHTML = form ? `<form id="form">${section}</form>` : section;
     const container = document.querySelector('#container');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'calendar'));
+    await flush();
     return { container, controller: application.getControllerForElementAndIdentifier(container, 'calendar') };
   };
 
@@ -246,8 +246,9 @@ describe('CalendarController', () => {
       day('2026-09-15').click();
 
       container.querySelector('table').outerHTML = monthMarkup({ focus: '2026-09-10', selected: '2026-09-10' });
-      await vi.waitUntil(() => day('2026-09-15').closest('td').getAttribute('aria-selected') === 'true');
+      await flush();
 
+      expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('true');
       expect(day('2026-09-10').closest('td').getAttribute('aria-selected')).toBe('false');
       expect(tabStops()).toEqual(['2026-09-15']);
     });
@@ -302,7 +303,7 @@ describe('CalendarController', () => {
           <div role="status" data-calendar-target="status"></div>
           <turbo-frame id="container_frame">${frameContent('2026-09-15', 'September 2026')}</turbo-frame></section>`;
       const container = document.querySelector('#container');
-      await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'calendar'));
+      await flush();
       return { container, frame: document.querySelector('turbo-frame') };
     };
     const replace = async (frame, displayed, heading, options) => {
@@ -575,7 +576,7 @@ describe('CalendarController', () => {
             <table role="grid" aria-labelledby="container_heading" data-calendar-target="grid"
                    data-action="keydown->calendar#onKeydown"></table></div>${templates}</section>`;
       const container = document.querySelector('#container');
-      await vi.waitUntil(() => container.querySelector('[data-date]'));
+      await flush();
       return container;
     };
     const values =

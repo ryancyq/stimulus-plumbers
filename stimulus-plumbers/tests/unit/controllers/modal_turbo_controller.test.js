@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ModalController from '../../../src/controllers/modal_controller';
 import ModalTurboController from '../../../src/controllers/modal_turbo_controller';
-import { startApplication } from '../../support/stimulus';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ModalTurboController', () => {
   let application;
@@ -36,8 +36,7 @@ describe('ModalTurboController', () => {
       dialog.dispatchEvent(new Event('close', { bubbles: true }));
     });
     const root = document.querySelector('[data-controller]');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'modal'));
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'modal-turbo'));
+    await flush();
     return {
       root,
       dialog,
@@ -162,11 +161,13 @@ describe('ModalTurboController', () => {
     const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
 
     turbo.onSubmitEnd(eventFor('turbo:submit-end', frame.querySelector('form'), { success: true }));
-    await vi.waitFor(() => expect(frame.innerHTML).toBe(''));
+    await flush();
+    expect(frame.innerHTML).toBe('');
 
     frame.innerHTML = '<p>Saved</p>';
     renderEvent(frame);
-    await vi.waitFor(() => expect(frame.innerHTML).toBe(''));
+    await flush();
+    expect(frame.innerHTML).toBe('');
 
     expect(dialog.close).toHaveBeenCalledOnce();
     expect(dialog.showModal).not.toHaveBeenCalled();
@@ -195,7 +196,8 @@ describe('ModalTurboController', () => {
     expect(frame.innerHTML).toContain('Saved');
 
     finish();
-    await vi.waitFor(() => expect(frame.innerHTML).toBe(''));
+    await flush();
+    expect(frame.innerHTML).toBe('');
   });
 
   it('preserves a pending close clear across frame target replacement', async () => {
@@ -217,14 +219,15 @@ describe('ModalTurboController', () => {
     replacement.dataset.modalTurboTarget = 'frame';
     replacement.dataset.action = 'turbo:frame-render->modal-turbo#onFrameRender';
     frame.replaceWith(replacement);
-    await vi.waitUntil(() => turbo.hasFrameTarget && turbo.frameTarget === replacement);
+    await flush();
     replacement.innerHTML = '<p>Saved</p>';
     renderEvent(replacement);
     expect(dialog.showModal).not.toHaveBeenCalled();
     expect(replacement.innerHTML).toContain('Saved');
 
     finish();
-    await vi.waitFor(() => expect(replacement.innerHTML).toBe(''));
+    await flush();
+    expect(replacement.innerHTML).toBe('');
   });
 
   it('resets a stale successful-submit guard when a new frame request begins', async () => {
@@ -271,11 +274,11 @@ describe('ModalTurboController', () => {
     frame.innerHTML = '<p>Old</p>';
     const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
     turbo.onClosed({ target: dialog });
-    await vi.waitUntil(() => finish);
+    await flush();
     frame.innerHTML = '<p>New</p>';
     renderEvent(frame);
     finish();
-    await vi.waitFor(() => expect(frame.innerHTML).toContain('New'));
+    await flush();
 
     expect(frame.innerHTML).toContain('New');
   });
@@ -303,7 +306,8 @@ describe('ModalTurboController', () => {
     const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
     turbo.onClosed({ target: dialog });
     finish();
-    await vi.waitFor(() => expect(frame.innerHTML).toBe(''));
+    await flush();
+    expect(frame.innerHTML).toBe('');
   });
 
   it('clears on the next frame when animations are unavailable or absent', async () => {
@@ -314,12 +318,14 @@ describe('ModalTurboController', () => {
     frame.innerHTML = '<p>Without API</p>';
     dialog.getAnimations = undefined;
     turbo.onClosed({ target: dialog });
-    await vi.waitFor(() => expect(frame.innerHTML).toBe(''));
+    await flush();
+    expect(frame.innerHTML).toBe('');
 
     frame.innerHTML = '<p>Without animations</p>';
     dialog.getAnimations = vi.fn(() => []);
     turbo.onClosed({ target: dialog });
-    await vi.waitFor(() => expect(frame.innerHTML).toBe(''));
+    await flush();
+    expect(frame.innerHTML).toBe('');
   });
 
   it('clears normally after a finite dialog animation', async () => {
@@ -331,7 +337,8 @@ describe('ModalTurboController', () => {
     frame.innerHTML = '<p>Content</p>';
     const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
     turbo.onClosed({ target: dialog });
-    await vi.waitFor(() => expect(frame.innerHTML).toBe(''));
+    await flush();
+    expect(frame.innerHTML).toBe('');
   });
 
   it('closes and clears synchronously before Turbo caches', async () => {
@@ -373,9 +380,7 @@ describe('ModalTurboController', () => {
     replacement.dataset.modalTurboTarget = 'frame';
     replacement.dataset.action = 'turbo:frame-render->modal-turbo#onFrameRender';
     frame.replaceWith(replacement);
-    const root = document.querySelector('[data-controller]');
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
-    await vi.waitUntil(() => turbo.hasFrameTarget && turbo.frameTarget === replacement);
+    await flush();
     replacement.innerHTML = '<p>Reconnected</p>';
     renderEvent(replacement);
 
@@ -388,8 +393,7 @@ describe('ModalTurboController', () => {
     frame.dataset.modalTurboTarget = 'frame';
     frame.dataset.action = 'turbo:frame-render->modal-turbo#onFrameRender';
     root.querySelector('dialog').append(frame);
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
-    await vi.waitUntil(() => turbo.hasFrameTarget && turbo.frameTarget === frame);
+    await flush();
     frame.innerHTML = '<p>Connected later</p>';
     renderEvent(frame);
 
@@ -400,7 +404,7 @@ describe('ModalTurboController', () => {
     document.body.innerHTML =
       '<div data-controller="modal-turbo"><turbo-frame data-modal-turbo-target="frame"></turbo-frame></div>';
     const root = document.querySelector('[data-controller]');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'modal-turbo'));
+    await flush();
     const frame = root.querySelector('turbo-frame');
     frame.innerHTML = '<form></form><p>Content</p>';
     const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');

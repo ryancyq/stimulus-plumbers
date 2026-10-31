@@ -48,7 +48,7 @@ describe('ComboboxController', () => {
     installNativePopover(panel);
 
     const container = document.querySelector('#container');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'combobox'));
+    await flush();
     return {
       container,
       panel,
@@ -85,8 +85,7 @@ describe('ComboboxController', () => {
         <input type="hidden" data-combobox-target="input" />
         <div data-combobox-target="panel"></div>
       </div>`;
-    const container = document.querySelector('#container');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'combobox'));
+    await flush();
 
     expect(error).toHaveBeenCalledWith(expect.stringContaining('native popover'));
     error.mockRestore();
@@ -491,7 +490,7 @@ describe('ComboboxController', () => {
       trigger.click();
 
       container.remove();
-      await vi.waitUntil(() => !application.getControllerForElementAndIdentifier(container, 'combobox'));
+      await flush();
 
       expect(isOpen(panel)).toBe(false);
     });
@@ -501,8 +500,9 @@ describe('ComboboxController', () => {
       key(trigger, 'ArrowDown');
 
       panel.remove();
-      await vi.waitUntil(() => trigger.getAttribute('aria-expanded') === 'false');
+      await flush();
 
+      expect(trigger.getAttribute('aria-expanded')).toBe('false');
       expect(trigger.hasAttribute('aria-activedescendant')).toBe(false);
     });
   });
@@ -895,7 +895,7 @@ describe('ComboboxController', () => {
       const wrapper = document.createElement('div');
       form.appendChild(wrapper);
       wrapper.appendChild(container);
-      await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'combobox'));
+      await flush();
       vi.useFakeTimers();
       try {
         form.reset();
@@ -916,7 +916,7 @@ describe('ComboboxController', () => {
         <li role="option" data-value="se">Seoul</li>
         <li role="option" data-value="sg">Singapore</li>
       </ul>`;
-      await vi.waitUntil(() => document.querySelector('#listbox [role="option"]').id);
+      await flush();
       key(trigger, 'ArrowDown');
 
       const [seoul] = document.querySelectorAll('#listbox [role="option"]');
@@ -931,7 +931,8 @@ describe('ComboboxController', () => {
       document.querySelector('#listbox').outerHTML = `<ul id="listbox" role="listbox" data-combobox-target="listbox">
         <li id="opt-sg" role="option" data-value="sy">Sydney</li>
       </ul>`;
-      await vi.waitUntil(() => !trigger.hasAttribute('aria-activedescendant'));
+      await flush();
+      expect(trigger.hasAttribute('aria-activedescendant')).toBe(false);
       key(trigger, 'Enter');
 
       expect(selected()).toEqual([]);
@@ -945,8 +946,9 @@ describe('ComboboxController', () => {
       document.querySelector('#listbox').outerHTML = `<ul id="listbox" role="listbox" data-combobox-target="listbox">
         <li id="opt-new" role="option" data-value="new">New</li>
       </ul>`;
-      await vi.waitUntil(() => !trigger.hasAttribute('aria-activedescendant'));
+      await flush();
 
+      expect(trigger.hasAttribute('aria-activedescendant')).toBe(false);
       expect(selected()).toEqual([]);
     });
   });

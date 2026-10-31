@@ -38,26 +38,23 @@ describe('ModalController', () => {
         dialog.dispatchEvent(new Event('close'));
       });
     }
-    const root = document.querySelector('[data-controller="modal"]');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'modal'));
+    await flush();
     return dialog;
   };
 
   it('requires a dialog target', async () => {
     document.body.innerHTML = '<div data-controller="modal"></div>';
-    await vi.waitFor(() =>
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'ModalController requires a dialog target. Add data-modal-target="dialog" to your element.'
-      )
+    await flush();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'ModalController requires a dialog target. Add data-modal-target="dialog" to your element.'
     );
   });
 
   it('rejects a non-dialog target without throwing', async () => {
     document.body.innerHTML = '<div data-controller="modal"><div data-modal-target="dialog"></div></div>';
-    await vi.waitFor(() =>
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'ModalController requires data-modal-target="dialog" to be a native <dialog> element.'
-      )
+    await flush();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'ModalController requires data-modal-target="dialog" to be a native <dialog> element.'
     );
   });
 
@@ -167,7 +164,6 @@ describe('ModalController', () => {
     const oldClosed = vi.fn();
     oldDialog.addEventListener('modal:closed', oldClosed);
 
-    const root = document.querySelector('[data-controller="modal"]');
     const newDialog = document.createElement('dialog');
     newDialog.dataset.modalTarget = 'dialog';
     newDialog.showModal = vi.fn(() => {
@@ -176,7 +172,6 @@ describe('ModalController', () => {
     newDialog.close = vi.fn();
     oldDialog.replaceWith(newDialog);
 
-    await vi.waitUntil(() => root.querySelector('dialog') === newDialog);
     await flush();
     oldDialog.dispatchEvent(new Event('close'));
     expect(oldClosed).not.toHaveBeenCalled();
