@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { onFormReset } from '../../plumbers/plumber/form_reset';
 
 // A read-only combobox trigger with a hidden input and a popover panel.
 // Subclasses define `_focusPanel()`, `_snapshot()` returning `{ value }` plus any state to restore,
@@ -10,13 +11,7 @@ export default class extends Controller {
     this.connection = new AbortController();
     // Survives reconnects.
     this.initial ??= this._snapshot();
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._reset()),
-        { signal: this.connection.signal }
-      );
+    onFormReset(this.element, () => this._reset(), { signal: this.connection.signal });
   }
 
   disconnect() {
