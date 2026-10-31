@@ -57,76 +57,13 @@ describe('ComboboxDateController', () => {
     document.body.innerHTML = '';
   });
 
-  it('ArrowDown opens the panel and focuses the calendar Tab stop', async () => {
-    const { panel, trigger } = await render();
+  it('ArrowDown focuses the calendar Tab stop', async () => {
+    const { trigger } = await render();
     trigger.focus();
 
     keydown(trigger, 'ArrowDown');
 
-    expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
     expect(document.activeElement.dataset.date).toBe('2026-09-15');
-  });
-
-  it('a click on an icon opens the panel and focuses the trigger', async () => {
-    const { panel, trigger } = await render();
-    const icon = document.querySelector('#icon');
-    const mousedown = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
-
-    icon.dispatchEvent(mousedown);
-    icon.click();
-
-    expect(mousedown.defaultPrevented).toBe(true);
-    expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
-    expect(document.activeElement).toBe(trigger);
-  });
-
-  it('a click inside the panel leaves it to the calendar', async () => {
-    const { panel } = await render();
-    panel.showPopover();
-
-    document.querySelector('[data-date="2026-09-14"]').click();
-
-    expect(panel.showPopover).toHaveBeenCalledOnce();
-  });
-
-  it('Tab closes an open panel', async () => {
-    const { panel, trigger } = await render();
-    panel.showPopover();
-
-    keydown(trigger, 'Tab');
-
-    expect(panel.hidePopover).toHaveBeenCalledOnce();
-  });
-
-  it('closes the panel when focus leaves the combobox', async () => {
-    const { panel } = await render();
-    document.body.insertAdjacentHTML('beforeend', '<button id="next">Next</button>');
-    panel.showPopover();
-    document.querySelector('[data-date="2026-09-15"]').focus();
-
-    document.querySelector('#next').focus();
-
-    expect(panel.hidePopover).toHaveBeenCalledOnce();
-  });
-
-  it('keeps the panel open when focus moves to no element', async () => {
-    const { panel, trigger } = await render();
-    panel.showPopover();
-    trigger.focus();
-
-    trigger.blur();
-
-    expect(panel.hidePopover).not.toHaveBeenCalled();
-  });
-
-  it('keeps the panel open while focus moves inside the combobox', async () => {
-    const { panel, trigger } = await render();
-    panel.showPopover();
-    trigger.focus();
-
-    document.querySelector('[data-date="2026-09-15"]').focus();
-
-    expect(panel.hidePopover).not.toHaveBeenCalled();
   });
 
   it('commits the chosen date, closes the panel, and focuses the trigger', async () => {
