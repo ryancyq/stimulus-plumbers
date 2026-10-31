@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { attachPopover, isPopoverElement } from '../plumbers/popover';
+import { onFormReset } from '../plumbers/plumber/form_reset';
 import { ensureId, isAriaDisabled, setExpanded, setHidden, setSelected } from '../accessibility/aria';
 import { ActiveDescendant } from '../accessibility/keyboard';
 import { fuzzyMatcher, matchContains, matchPrefix } from '../researcher';
@@ -54,13 +55,7 @@ export default class extends Controller {
     this.committed = { value: this.inputTarget.value, label: this._displayLabel() };
     // Survives reconnects.
     this.initial ??= { ...this.committed };
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._restoreInitial()),
-        { signal }
-      );
+    onFormReset(this.element, () => this._restoreInitial(), { signal });
     this._syncSelection();
     if (!this.hasPanelTarget)
       console.error('ComboboxController requires a panel target. Add data-combobox-target="panel".');

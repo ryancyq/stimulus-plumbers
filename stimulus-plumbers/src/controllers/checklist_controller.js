@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { onMorph } from '../plumbers/plumber/morph';
+import { onFormReset } from '../plumbers/plumber/form_reset';
 
 export default class extends Controller {
   static targets = ['master', 'item'];
@@ -9,13 +10,7 @@ export default class extends Controller {
     const { signal } = this.connection;
     // Recomputes after a morph or a form reset.
     onMorph(this.element, () => this.recompute(), { signal });
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => signal.aborted || event.defaultPrevented || this.recompute()),
-        { signal }
-      );
+    onFormReset(this.element, () => this.recompute(), { signal });
     this.recompute();
   }
 

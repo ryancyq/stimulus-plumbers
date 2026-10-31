@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { onFormReset } from '../plumbers/plumber/form_reset';
 import { isAriaDisabled, setSelected } from '../accessibility/aria';
 import {
   addDays,
@@ -61,13 +62,7 @@ export default class extends Controller {
     this.connection = new AbortController();
     // Survives reconnects.
     this.initial ??= this.selectedValue;
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._restore()),
-        { signal: this.connection.signal }
-      );
+    onFormReset(this.element, () => this._restore(), { signal: this.connection.signal });
 
     document.addEventListener('turbo:before-cache', () => this._clearNavigation(), { signal: this.connection.signal });
 
