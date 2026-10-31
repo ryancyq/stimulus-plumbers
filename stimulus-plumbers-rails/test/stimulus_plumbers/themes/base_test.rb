@@ -28,12 +28,42 @@ class BaseThemeTest < Minitest::Test
     assert_equal({}, @theme.resolve(:nonexistent))
   end
 
-  def test_avatar_variants_returns_empty_hash
-    assert_equal({}, @theme.avatar_variants)
-  end
-
   def test_avatar_variant_range_returns_empty_array
     assert_equal([], @theme.avatar_variant_range)
+  end
+
+  def test_range_for_a_collection_is_the_collection
+    assert_equal %i[xs sm md], @theme.range_for(%i[xs sm md])
+  end
+
+  def test_range_for_a_symbol_is_what_the_named_method_returns
+    theme = Class.new(StimulusPlumbers::Themes::Base) do
+      private
+
+      def color_range
+        %w[red blue]
+      end
+    end.new
+
+    assert_equal %w[red blue], theme.range_for(:color_range)
+  end
+
+  def test_range_for_a_zero_argument_proc_is_what_it_returns
+    assert_equal %w[red blue], @theme.range_for(-> { %w[red blue] })
+  end
+
+  def test_range_for_a_predicate_symbol_is_nil
+    theme = Class.new(StimulusPlumbers::Themes::Base) do
+      def icon_valid?(name)
+        name.start_with?("hero-")
+      end
+    end.new
+
+    assert_nil theme.range_for(:icon_valid?)
+  end
+
+  def test_range_for_a_predicate_proc_is_nil
+    assert_nil @theme.range_for(->(name) { name.start_with?("hero-") })
   end
 
   def test_valid_nil_validator_accepts_any_value

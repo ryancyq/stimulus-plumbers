@@ -103,7 +103,7 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 | `list_item_content`        | Content wrapper `<span>` (title + description)                  | —                                                                                                                                                                                            |
 | `list_item_title`          | Title `<span>` inside a list item                               | —                                                                                                                                                                                            |
 | `list_item_description`    | Description `<span>` inside a list item                         | —                                                                                                                                                                                            |
-| `avatar`                   | `Avatar`                                                        | `size:`                                                                                                                                                                                      |
+| `avatar`                   | `Avatar`                                                        | `size:`, `variant:` (a name from `avatar_variant_range`)                                                                                                                                     |
 | `card`                     | `Card` outer `<div>`                                            | `variant: :primary\|:secondary\|:tertiary\|…`                                                                                                                                                |
 | `card_header`              | Card header wrapper `<div>` (icon + title)                      | —                                                                                                                                                                                            |
 | `card_icon`                | Icon inside the card header                                     | —                                                                                                                                                                                            |
@@ -135,6 +135,10 @@ StimulusPlumbers.configure do |c|
   c.theme.use(:my_theme)
 end
 ```
+
+### Avatar variants
+
+Override `avatar_variant_range` to list the variant names `avatar_classes(variant:)` accepts. [Avatar](avatar.md) describes how `sp_avatar` uses them.
 
 ### Providing icons
 
@@ -192,9 +196,9 @@ Sources are tried in order; the first non-nil result wins. Aliases are resolved 
 
 When defining a custom schema (advanced), the `validate:` key accepts:
 
-| Type          | Behaviour                                                                        |
-| ------------- | -------------------------------------------------------------------------------- |
-| Array / Range | Value must be `include?`-d                                                       |
-| Symbol        | Method called on the theme; return must respond to `include?` or be truthy/falsy |
-| Proc          | Called via `instance_exec`; same return conventions                              |
-| `nil`         | No validation — any value accepted                                               |
+| Type          | Behaviour                                                                                                                                                               |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Array / Range | Value must be `include?`-d                                                                                                                                              |
+| Symbol        | Method called on the theme; without parameters it returns the allowed values, which must respond to `include?`; with one it receives the value and returns truthy/falsy |
+| Proc          | Called via `instance_exec`; same conventions                                                                                                                            |
+| `nil`         | No validation — any value accepted                                                                                                                                      |

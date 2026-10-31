@@ -14,7 +14,7 @@ Rails helper for rendering a user avatar — image, initials, or fallback silhou
 <%= sp_avatar initials: "RC", name: "Ryan Chang" %>
 
 <%# Named variant + size %>
-<%= sp_avatar initials: "AB", name: "Alice B", variant: :purple, size: :lg %>
+<%= sp_avatar initials: "AB", name: "Alice B", variant: :violet, size: :lg %>
 
 <%# Auto-selected variant (hashed from name) %>
 <%= sp_avatar name: "Ryan Chang" %>
@@ -23,14 +23,14 @@ Rails helper for rendering a user avatar — image, initials, or fallback silhou
 <%= sp_avatar(name: "Ryan") { image_tag "custom.png" } %>
 ```
 
-| Option           | Default | Description                                                                                |
-| ---------------- | ------- | ------------------------------------------------------------------------------------------ |
-| `name`           | `nil`   | Used for `aria-label` and auto-variant selection                                           |
-| `initials`       | `nil`   | Renders an SVG with the initials text; used when no `url` or block is given                |
-| `url`            | `nil`   | Image source; renders `<img>` with `alt="[name]'s avatar"` and `onerror` fallback          |
-| `variant`        | `nil`   | Color variant for the avatar background — auto-selected from theme range if omitted        |
-| `size`           | `:md`   | Size — values defined by the active theme (e.g. `:xs` \| `:sm` \| `:md` \| `:lg` \| `:xl`) |
-| `**html_options` | —       | Forwarded to the `<span>` wrapper                                                          |
+| Option           | Default | Description                                                                                                                                    |
+| ---------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`           | `nil`   | Used for `aria-label` and auto-variant selection                                                                                               |
+| `initials`       | `nil`   | Renders an SVG with the initials text; used when no `url` or block is given                                                                    |
+| `url`            | `nil`   | Image source; renders `<img>` with `alt="[name]'s avatar"` and `onerror` fallback                                                              |
+| `variant`        | `nil`   | Color variant name from the theme's `avatar_variant_range` — picked from it by `name` or `initials` if omitted; ignored with `url:` or a block |
+| `size`           | `:md`   | Size — values defined by the active theme (e.g. `:xs` \| `:sm` \| `:md` \| `:lg` \| `:xl`)                                                     |
+| `**html_options` | —       | Forwarded to the `<span>` wrapper                                                                                                              |
 
 **Render modes (in priority order):**
 
