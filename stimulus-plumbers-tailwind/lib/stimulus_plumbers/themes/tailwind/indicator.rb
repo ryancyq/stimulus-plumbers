@@ -21,7 +21,7 @@ module StimulusPlumbers
           rounded-full text-(length:--sp-text-xs) font-medium text-white
         ].freeze
 
-        # Establishes the positioning context the pulse ring overlays onto — no margin needed.
+        # Positioning context for the pulse ring.
         WRAPPER = %w[relative inline-flex items-center justify-center].freeze
 
         PULSE_RING = %w[
