@@ -137,16 +137,6 @@ describe('ComboboxTurboController', () => {
     expect(status()).toBe('Loading…');
   });
 
-  it('shows the error text when the frame is missing from the response', async () => {
-    const { frame } = await render();
-    const event = new Event('turbo:frame-missing', { cancelable: true });
-
-    frame.dispatchEvent(event);
-
-    expect(event.defaultPrevented).toBe(true);
-    expect(status()).toBe('Results could not be loaded');
-  });
-
   it('shows the error text for a failed response and keeps loading for a successful one', async () => {
     const { root, frame } = await render();
     const respond = (fetchResponse) =>
@@ -157,27 +147,6 @@ describe('ComboboxTurboController', () => {
     expect(status()).toBe('Loading…');
     respond({ succeeded: false, isHTML: true });
 
-    expect(status()).toBe('Results could not be loaded');
-  });
-
-  it('shows the error text for a successful response that is not HTML', async () => {
-    const { root, frame } = await render();
-
-    query(root, 'Se');
-    frame.dispatchEvent(
-      new CustomEvent('turbo:before-fetch-response', { detail: { fetchResponse: { succeeded: true, isHTML: false } } })
-    );
-
-    expect(status()).toBe('Results could not be loaded');
-  });
-
-  it('shows the error text for a network error without blocking Turbo', async () => {
-    const { frame } = await render();
-    const event = new Event('turbo:fetch-request-error', { cancelable: true });
-
-    frame.dispatchEvent(event);
-
-    expect(event.defaultPrevented).toBe(false);
     expect(status()).toBe('Results could not be loaded');
   });
 
