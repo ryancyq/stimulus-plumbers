@@ -66,21 +66,31 @@ export function parseDispatches(source) {
 // controller itself (e.g. attachPopover dispatches 'opened' on behalf of
 // popover_controller.js) — resolve those imports so parsing
 // isn't blind to wiring that lives one level away from the controller class.
-function resolvePlumberSource(importPath, controllersDir) {
-  const plumbersDir = join(controllersDir, '..', 'plumbers');
-  const rel = importPath.replace(/^\.\.\/plumbers\/?/, '');
-  const base = rel ? join(plumbersDir, rel) : plumbersDir;
+function resolvePlumberSource(importPath, dir) {
+  const base = join(dir, importPath);
   return [`${base}.js`, join(base, 'index.js')].find((c) => existsSync(c)) ?? null;
 }
 
-export function withPlumberSources(source, controllersDir) {
-  const importRe = /from\s+['"](\.\.\/plumbers[^'"]*)['"]/g;
+// `dir` is the directory of the file `source` was read from.
+export function withPlumberSources(source, dir) {
+  const importRe = /from\s+['"]((?:\.\.\/)+plumbers[^'"]*)['"]/g;
   const importPaths = [...source.matchAll(importRe)].map((m) => m[1]);
   const extraSources = importPaths
-    .map((p) => resolvePlumberSource(p, controllersDir))
+    .map((p) => resolvePlumberSource(p, dir))
     .filter(Boolean)
     .map((p) => readFileSync(p, 'utf8'));
   return [source, ...extraSources].join('\n');
+}
+
+// A controller extending a class imported from a relative path inherits its static arrays,
+// values, and actions; the result lists `{ source, dir }` for the controller first.
+export function withBaseSources(source, dir) {
+  const base = source.match(/class\s+(?:\w+\s+)?extends\s+(\w+)/)?.[1];
+  const path = base && source.match(new RegExp(`import\\s+${base}\\s+from\\s+['"](\\.[^'"]+)['"]`))?.[1];
+  if (!path) return [{ source, dir }];
+
+  const file = join(dir, `${path}.js`);
+  return [{ source, dir }, ...withBaseSources(readFileSync(file, 'utf8'), dirname(file))];
 }
 
 export function parseArray(source, name) {
@@ -146,26 +156,31 @@ export function parseValues(source) {
   return result;
 }
 
+export function parseController(file, dir) {
+  const sources = withBaseSources(readFileSync(join(dir, file), 'utf8'), dir);
+  const own = sources.map(({ source }) => source);
+  const inherited = [...own].reverse();
+  const array = (name) => [...new Set(inherited.flatMap((source) => parseArray(source, name)))];
+  const source = own.join('\n');
+  const withPlumbers = sources.map(({ source, dir }) => withPlumberSources(source, dir)).join('\n');
+  return {
+    identifier: toIdentifier(file),
+    targets: array('targets'),
+    values: Object.assign({}, ...inherited.map(parseValues)),
+    outlets: array('outlets'),
+    classes: array('classes'),
+    actions: parseActions(source),
+    actionParams: parseActionParams(source),
+    dispatches: parseDispatches(withPlumbers),
+  };
+}
+
 const files = readdirSync(controllersDir)
   .filter((f) => f.endsWith('_controller.js'))
   .sort();
 
 const controllers = {};
-for (const file of files) {
-  const identifier = toIdentifier(file);
-  const source = readFileSync(join(controllersDir, file), 'utf8');
-  const extendedSource = withPlumberSources(source, controllersDir);
-  controllers[identifier] = {
-    identifier,
-    targets: parseArray(source, 'targets'),
-    values: parseValues(source),
-    outlets: parseArray(source, 'outlets'),
-    classes: parseArray(source, 'classes'),
-    actions: parseActions(source),
-    actionParams: parseActionParams(source),
-    dispatches: parseDispatches(extendedSource),
-  };
-}
+for (const file of files) controllers[toIdentifier(file)] = parseController(file, controllersDir);
 
 mkdirSync(dirname(outputFile), { recursive: true });
 writeFileSync(outputFile, JSON.stringify(controllers, null, 2));
