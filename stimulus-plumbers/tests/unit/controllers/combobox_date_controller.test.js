@@ -1,11 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ComboboxDateController from '../../../src/controllers/combobox_date_controller';
 import { installNativePopover } from '../../support/native_popover';
-import { startApplication } from '../../support/stimulus';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ComboboxDateController', () => {
-  let application;
-
   const render = async () => {
     document.body.innerHTML = `
       <form id="form">
@@ -32,7 +30,7 @@ describe('ComboboxDateController', () => {
     const root = document.querySelector('#root');
     const panel = document.querySelector('#panel');
     installNativePopover(panel);
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'combobox-date'));
+    await flush();
     return {
       root,
       panel,
@@ -50,7 +48,7 @@ describe('ComboboxDateController', () => {
     );
 
   beforeEach(() => {
-    application = startApplication({ 'combobox-date': ComboboxDateController });
+    startApplication({ 'combobox-date': ComboboxDateController });
   });
 
   afterEach(() => {
@@ -103,8 +101,9 @@ describe('ComboboxDateController', () => {
     input.value = '2026-09-14';
 
     document.querySelector('#form').reset();
+    await flush();
 
-    await vi.waitFor(() => expect(formatted).toHaveBeenCalledWith('2026-09-15'));
+    expect(formatted).toHaveBeenCalledWith('2026-09-15');
   });
 
   it('ignores a nested combobox date', async () => {

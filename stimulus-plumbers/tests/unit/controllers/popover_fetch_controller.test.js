@@ -4,7 +4,6 @@ import { installNativePopover } from '../../support/native_popover';
 import { flush, startApplication } from '../../support/stimulus';
 
 describe('PopoverFetchController', () => {
-  let application;
   let requests;
 
   // Resolves on demand; rejects with AbortError when aborted, like fetch.
@@ -41,7 +40,7 @@ describe('PopoverFetchController', () => {
     const panel = document.querySelector('#panel');
     installNativePopover(panel);
     panel.showPopover();
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'popover-fetch'));
+    await flush();
     return { root, panel };
   };
   const status = () => document.querySelector('[role="status"]').textContent;
@@ -49,7 +48,7 @@ describe('PopoverFetchController', () => {
 
   beforeEach(() => {
     stubFetch();
-    application = startApplication({ 'popover-fetch': PopoverFetchController });
+    startApplication({ 'popover-fetch': PopoverFetchController });
   });
 
   afterEach(() => {

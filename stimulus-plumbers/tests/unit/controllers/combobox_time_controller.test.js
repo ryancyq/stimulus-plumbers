@@ -1,11 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ComboboxTimeController from '../../../src/controllers/combobox_time_controller';
 import { installNativePopover } from '../../support/native_popover';
-import { startApplication } from '../../support/stimulus';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('ComboboxTimeController', () => {
-  let application;
-
   const options = (name, values, selected) =>
     values
       .map(
@@ -43,7 +41,7 @@ describe('ComboboxTimeController', () => {
     const root = document.querySelector('#root');
     const panel = document.querySelector('#panel');
     installNativePopover(panel);
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'combobox-time'));
+    await flush();
     return {
       root,
       panel,
@@ -70,7 +68,7 @@ describe('ComboboxTimeController', () => {
 
   beforeEach(() => {
     Element.prototype.scrollIntoView = vi.fn();
-    application = startApplication({ 'combobox-time': ComboboxTimeController });
+    startApplication({ 'combobox-time': ComboboxTimeController });
   });
 
   afterEach(() => {
@@ -241,8 +239,9 @@ describe('ComboboxTimeController', () => {
     option('minute', '00').click();
 
     document.querySelector('#form').reset();
+    await flush();
 
-    await vi.waitFor(() => expect(formatted).toHaveBeenLastCalledWith('14:30'));
+    expect(formatted).toHaveBeenLastCalledWith('14:30');
     expect(input.value).toBe('14:30');
     expect(option('minute', '30').getAttribute('aria-selected')).toBe('true');
   });

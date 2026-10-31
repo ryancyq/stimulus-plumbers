@@ -48,7 +48,7 @@ describe('ComboboxController', () => {
     installNativePopover(panel);
 
     const root = document.querySelector('#root');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'combobox'));
+    await flush();
     return {
       root,
       panel,
@@ -85,8 +85,7 @@ describe('ComboboxController', () => {
         <input type="hidden" data-combobox-target="input" />
         <div data-combobox-target="panel"></div>
       </div>`;
-    const root = document.querySelector('#root');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'combobox'));
+    await flush();
 
     expect(error).toHaveBeenCalledWith(expect.stringContaining('native popover'));
     error.mockRestore();
@@ -491,7 +490,7 @@ describe('ComboboxController', () => {
       control.click();
 
       root.remove();
-      await vi.waitUntil(() => !application.getControllerForElementAndIdentifier(root, 'combobox'));
+      await flush();
 
       expect(isOpen(panel)).toBe(false);
     });
@@ -501,8 +500,9 @@ describe('ComboboxController', () => {
       key(control, 'ArrowDown');
 
       panel.remove();
-      await vi.waitUntil(() => control.getAttribute('aria-expanded') === 'false');
+      await flush();
 
+      expect(control.getAttribute('aria-expanded')).toBe('false');
       expect(control.hasAttribute('aria-activedescendant')).toBe(false);
     });
   });
@@ -895,7 +895,7 @@ describe('ComboboxController', () => {
       const wrapper = document.createElement('div');
       form.appendChild(wrapper);
       wrapper.appendChild(root);
-      await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'combobox'));
+      await flush();
       vi.useFakeTimers();
       try {
         form.reset();
@@ -916,7 +916,7 @@ describe('ComboboxController', () => {
         <li role="option" data-value="se">Seoul</li>
         <li role="option" data-value="sg">Singapore</li>
       </ul>`;
-      await vi.waitUntil(() => document.querySelector('#listbox [role="option"]').id);
+      await flush();
       key(control, 'ArrowDown');
 
       const [seoul] = document.querySelectorAll('#listbox [role="option"]');
@@ -931,7 +931,8 @@ describe('ComboboxController', () => {
       document.querySelector('#listbox').outerHTML = `<ul id="listbox" role="listbox" data-combobox-target="listbox">
         <li id="opt-sg" role="option" data-value="sy">Sydney</li>
       </ul>`;
-      await vi.waitUntil(() => !control.hasAttribute('aria-activedescendant'));
+      await flush();
+      expect(control.hasAttribute('aria-activedescendant')).toBe(false);
       key(control, 'Enter');
 
       expect(selected()).toEqual([]);
@@ -945,8 +946,9 @@ describe('ComboboxController', () => {
       document.querySelector('#listbox').outerHTML = `<ul id="listbox" role="listbox" data-combobox-target="listbox">
         <li id="opt-new" role="option" data-value="new">New</li>
       </ul>`;
-      await vi.waitUntil(() => !control.hasAttribute('aria-activedescendant'));
+      await flush();
 
+      expect(control.hasAttribute('aria-activedescendant')).toBe(false);
       expect(selected()).toEqual([]);
     });
   });

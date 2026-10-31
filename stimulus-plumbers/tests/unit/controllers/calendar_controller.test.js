@@ -54,7 +54,7 @@ describe('CalendarController', () => {
         <div role="status" data-calendar-target="status"></div>${grid}</section>`;
     document.body.innerHTML = form ? `<form id="form">${section}</form>` : section;
     const root = document.querySelector('#root');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'calendar'));
+    await flush();
     return { root, controller: application.getControllerForElementAndIdentifier(root, 'calendar') };
   };
 
@@ -241,8 +241,9 @@ describe('CalendarController', () => {
       day('2026-09-15').click();
 
       root.querySelector('table').outerHTML = monthMarkup({ focus: '2026-09-10', selected: '2026-09-10' });
-      await vi.waitUntil(() => day('2026-09-15').closest('td').getAttribute('aria-selected') === 'true');
+      await flush();
 
+      expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('true');
       expect(day('2026-09-10').closest('td').getAttribute('aria-selected')).toBe('false');
       expect(tabStops()).toEqual(['2026-09-15']);
     });
@@ -297,7 +298,7 @@ describe('CalendarController', () => {
           <div role="status" data-calendar-target="status"></div>
           <turbo-frame id="root_frame">${frameContent('2026-09-15', 'September 2026')}</turbo-frame></section>`;
       const root = document.querySelector('#root');
-      await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'calendar'));
+      await flush();
       return { root, frame: document.querySelector('turbo-frame') };
     };
     const replace = async (frame, displayed, heading, options) => {
@@ -524,7 +525,7 @@ describe('CalendarController', () => {
             <table role="grid" aria-labelledby="root_heading" data-calendar-target="grid"
                    data-action="keydown->calendar#onKeydown"></table></div>${templates}</section>`;
       const root = document.querySelector('#root');
-      await vi.waitUntil(() => root.querySelector('[data-date]'));
+      await flush();
       return root;
     };
     const values =
