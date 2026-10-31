@@ -178,6 +178,13 @@ describe('parseDispatches', () => {
 });
 
 describe('parseValues', () => {
+  it('parses a block of only short-form entries', () => {
+    expect(parseValues('static values = { size: Number, open: Boolean };')).toEqual({
+      size: { type: 'Number' },
+      open: { type: 'Boolean' },
+    });
+  });
+
   it('parses short-form and full-form entries', () => {
     const source = `
 export default class extends Controller {

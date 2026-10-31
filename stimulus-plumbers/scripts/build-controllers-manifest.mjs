@@ -134,7 +134,8 @@ export function parseValues(source) {
   }
 
   // Short form: key: Type. Nested `{…}` and literal `{}` defaults collapse so each field reads as one level.
-  const flatBlock = block.replace(/\{\}/g, '""').replace(/\{[^{}]*\}/g, '{}');
+  const entries = block.slice(1, -1).replace(/\{\}/g, '""').replace(/\{[^{}]*\}/g, '{}');
+  const flatBlock = `{${entries}}`;
   const shortRe = /(\w+)\s*:\s*(String|Number|Boolean|Array|Object)\s*[,\n}]/g;
   while ((match = shortRe.exec(flatBlock)) !== null) {
     if (!result[match[1]]) result[match[1]] = { type: match[2] };
