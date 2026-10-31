@@ -19,7 +19,7 @@ export default class extends Controller {
       .closest('form')
       ?.addEventListener(
         'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._apply(this.initial)),
+        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._reset()),
         { signal: this.connection.signal }
       );
   }
@@ -138,6 +138,12 @@ export default class extends Controller {
 
   _snapshot() {
     return { value: this.inputTarget.value, options: this._columns.map((column) => this._selectedOption(column)) };
+  }
+
+  // Restores the initial time without a change event, as a native form reset does.
+  _reset() {
+    this.inputTarget.value = this.initial.value;
+    this._apply(this.initial);
   }
 
   _apply({ value, options }) {
