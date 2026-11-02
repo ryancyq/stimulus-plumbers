@@ -51,8 +51,13 @@ class ControllerSchemaLoaderTest < Minitest::Test
     assert values.key?("minLength"), "Missing value key 'minLength'"
     assert_equal "Number", values["minLength"]["type"]
     assert_equal 1, values["minLength"]["default"]
-    assert_equal "Boolean", values["closeOnSelect"]["type"]
-    assert values["closeOnSelect"]["default"]
+  end
+
+  def test_input_combobox_close_on_select_value
+    close_on_select = @controllers["input-combobox"]["values"]["closeOnSelect"]
+
+    assert_equal "Boolean", close_on_select["type"]
+    assert close_on_select["default"]
   end
 
   def test_input_combobox_outlets
