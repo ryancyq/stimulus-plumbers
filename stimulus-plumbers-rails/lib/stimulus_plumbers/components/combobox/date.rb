@@ -12,8 +12,7 @@ module StimulusPlumbers
           "calendar-month:selected->#{STIMULUS_CONTROLLER}#onDaySelect",
           "calendar-year:selected->#{STIMULUS_CONTROLLER}#onMonthSelect",
           "calendar-decade:selected->#{STIMULUS_CONTROLLER}#onYearSelect",
-          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
-          "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
+          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
         ].join(" ").freeze
 
         class << self

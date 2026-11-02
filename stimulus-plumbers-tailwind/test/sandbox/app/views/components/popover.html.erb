@@ -6,7 +6,7 @@
     <%# ── Interactive popover ─────────────────────────────────────────────── %>
     <%= sp_popover do |p| %>
       <% p.trigger { "Open menu" } %>
-      <% p.panel(role: "dialog", aria: { label: "Menu options" }) do %>
+      <% p.panel(role: :region, aria_label: "Popover options") do %>
         <%= sp_list do |list| %>
           <%= list.section do %>
             <%= list.item("Edit",   url: "#") %>
@@ -15,5 +15,159 @@
         <% end %>
       <% end %>
     <% end %>
+  </div>
+</section>
+
+<section id="popover-details" class="sb-section">
+  <h2>Unnamed structural content</h2>
+  <div class="sb-row">
+    <%= sp_popover do |p| %>
+      <% p.trigger { "Open details" } %>
+      <% p.panel do %>
+        <p>Additional details are available here.</p>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="popover-help" class="sb-section">
+  <h2>Named help</h2>
+  <div class="sb-row">
+    <%= sp_popover do |p| %>
+      <% p.trigger { "Open help" } %>
+      <% p.panel(role: :region, aria_label: "Help") do %>
+        <p>Use the menu to choose an action.</p>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="popover-behavior" class="sb-section">
+  <h2>Lifecycle behavior</h2>
+  <div class="sb-col">
+    <%= sp_popover panel_id: "popover-behavior-panel" do |p| %>
+      <% p.trigger(haspopup: :dialog) { "Lifecycle dialog" } %>
+      <% p.panel(role: :dialog, aria_label: "Lifecycle dialog") do %>
+        <button type="button">Consumer action</button>
+      <% end %>
+    <% end %>
+
+    <%= sp_popover panel_id: "popover-focus-panel" do |p| %>
+      <% p.trigger do |attrs| %>
+        <% attrs = attrs.merge(
+          type: "text",
+          value: "Consumer-owned source",
+          aria: attrs.fetch(:aria, {}).merge(label: "Consumer-owned source"),
+          data: attrs.fetch(:data, {}).merge(action: "click->popover#open")
+        ) %>
+        <%= tag.input(**attrs.except(:panel_id)) %>
+      <% end %>
+      <% p.panel(role: :region, aria_label: "Consumer-owned content") do %>
+        <p>Focus remains owned by the input consumer.</p>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="popover-nested" class="sb-section">
+  <h2>Nested popovers</h2>
+  <div class="sb-col">
+    <%= sp_popover panel_id: "popover-outer-panel" do |outer| %>
+      <% outer.trigger { "Open outer popover" } %>
+      <% outer.panel(role: :region, aria_label: "Outer popover") do %>
+        <p>Outer content remains open while the nested popover is active.</p>
+        <%= sp_popover panel_id: "popover-inner-panel" do |inner| %>
+          <% inner.trigger { "Open nested popover" } %>
+          <% inner.panel(role: :region, aria_label: "Nested popover") do %>
+            <p>Nested content.</p>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section id="popover-positioning" class="sb-section">
+  <h2>Native positioning matrix</h2>
+  <div class="sb-col">
+    <div id="popover-viewport-edge" class="sb-row [margin-block-start:85vh]">
+      <%= sp_popover panel_id: "popover-edge-panel", placement: :block_end_start do |p| %>
+        <% p.trigger { "Viewport edge" } %>
+        <% p.panel(role: :region, aria_label: "Viewport edge content") { "Edge content" } %>
+      <% end %>
+    </div>
+
+    <div id="popover-programmatic" class="sb-row">
+      <%= sp_popover panel_id: "popover-programmatic-panel", placement: :block_end_end do |p| %>
+        <% p.trigger do |attrs| %>
+          <% attrs = attrs.merge(
+            type: "text",
+            value: "Programmatic source",
+            aria: attrs.fetch(:aria, {}).merge(label: "Programmatic source"),
+            data: attrs.fetch(:data, {}).merge(action: "click->popover#open")
+          ) %>
+          <%= tag.input(**attrs.except(:panel_id)) %>
+        <% end %>
+        <% p.panel(role: :region, aria_label: "Programmatic content") do %>
+          <div>Programmatic content</div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div id="popover-scroll-container" class="sb-row [height:12rem] overflow-auto [transform:translateZ(0)]">
+      <div class="flex [height:24rem] items-end">
+        <%= sp_popover panel_id: "popover-scroll-panel", placement: :block_end do |p| %>
+          <% p.trigger { "Scroll container" } %>
+          <% p.panel(role: :region, aria_label: "Scroll content") { "Scroll content" } %>
+        <% end %>
+      </div>
+    </div>
+
+    <div id="popover-rtl" dir="rtl" class="sb-row self-stretch">
+      <%= sp_popover panel_id: "popover-rtl-panel", placement: :block_end_start do |p| %>
+        <% p.trigger { "RTL source" } %>
+        <% p.panel(role: :region, aria_label: "RTL content") { "RTL content" } %>
+      <% end %>
+    </div>
+
+    <div id="popover-vertical" class="sb-row self-stretch [writing-mode:vertical-rl] [zoom:1.25]">
+      <%= sp_popover panel_id: "popover-vertical-panel", placement: :inline_end do |p| %>
+        <% p.trigger { "Vertical source" } %>
+        <% p.panel(role: :region, aria_label: "Vertical content") { "Vertical content" } %>
+      <% end %>
+    </div>
+
+    <div id="popover-long-content" class="sb-row">
+      <%= sp_popover panel_id: "popover-long-panel", placement: :block_end do |p| %>
+        <% p.trigger { "Long content" } %>
+        <% p.panel(role: :region, aria_label: "Long content") do %>
+          <% 80.times do |index| %>
+            <p>Long content item <%= index + 1 %></p>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div id="popover-placement-cases" class="sb-row">
+      <% %i[block_end_start block_end block_end_end block_start_start block_start block_start_end inline_start inline_end].each do |placement| %>
+        <%= sp_popover panel_id: "popover-#{placement}-panel", placement: placement do |p| %>
+          <% p.trigger { placement.to_s.humanize } %>
+          <% p.panel(role: :region, aria_label: "#{placement} content") { placement.to_s } %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div id="popover-in-dialog" class="sb-row">
+      <%= sp_modal id: "popover-native-dialog", aria_label: "Popover host dialog" do |modal| %>
+        <% modal.trigger { "Open popover dialog" } %>
+        <% modal.body do %>
+          <%= sp_popover panel_id: "popover-dialog-panel", placement: :block_end_start do |p| %>
+            <% p.trigger { "Dialog popover" } %>
+            <% p.panel(role: :region, aria_label: "Dialog popover content") { "Dialog content" } %>
+          <% end %>
+        <% end %>
+        <% modal.footer { modal.close_button "Close dialog" } %>
+      <% end %>
+    </div>
   </div>
 </section>

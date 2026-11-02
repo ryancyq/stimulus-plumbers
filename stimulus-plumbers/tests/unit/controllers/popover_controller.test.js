@@ -1,494 +1,255 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-import { visibilityConfig } from '../../../src/plumbers/plumber/config';
 import PopoverController from '../../../src/controllers/popover_controller';
 
 describe('PopoverController', () => {
   let application;
-  let visibleOnlySpy;
+  let consoleErrorSpy;
 
-  const controllerFor = () =>
-    application.getControllerForElementAndIdentifier(document.querySelector('[data-controller="popover"]'), 'popover');
+  const controllerFor = () => {
+    const root = document.querySelector('[data-controller="popover"]');
+    return application.getControllerForElementAndIdentifier(root, 'popover');
+  };
+
+  const nativeEvent = (type, newState, source = null, oldState = newState === 'open' ? 'closed' : 'open') => {
+    const event = new Event(type, { cancelable: type === 'beforetoggle' });
+    Object.defineProperty(event, 'oldState', { value: oldState });
+    Object.defineProperty(event, 'newState', { value: newState });
+    Object.defineProperty(event, 'source', { value: source });
+    return event;
+  };
+
+  const installNativeMethods = (panel) => {
+    let openState = false;
+    panel.matches = vi.fn((selector) => selector === ':popover-open' && openState);
+    panel.showPopover = vi.fn((options) => {
+      const beforetoggle = nativeEvent('beforetoggle', 'open', options?.source ?? null);
+      if (!panel.dispatchEvent(beforetoggle)) return;
+
+      openState = true;
+      panel.dispatchEvent(nativeEvent('toggle', 'open', options?.source ?? null));
+    });
+    panel.hidePopover = vi.fn(() => {
+      if (!openState) return;
+
+      panel.dispatchEvent(nativeEvent('beforetoggle', 'closed'));
+      openState = false;
+      panel.dispatchEvent(nativeEvent('toggle', 'closed'));
+    });
+    panel.togglePopover = vi.fn((options) => {
+      if (openState) {
+        panel.hidePopover();
+        return;
+      }
+
+      panel.showPopover(options);
+    });
+  };
+
+  const render = async ({ trigger = true, authoredExpanded = true, panel = true } = {}) => {
+    const triggerMarkup = trigger
+      ? '<button id="trigger" data-popover-target="trigger"' +
+        (authoredExpanded ? ' aria-expanded="false"' : '') +
+        '>Open</button>'
+      : '';
+    const panelMarkup = panel ? '<div id="panel" popover="auto" data-popover-target="panel">Content</div>' : '';
+    document.body.innerHTML = '<div data-controller="popover">' + triggerMarkup + panelMarkup + '</div>';
+
+    const panelElement = document.querySelector('#panel');
+    if (panelElement) installNativeMethods(panelElement);
+
+    const root = document.querySelector('[data-controller="popover"]');
+    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(root, 'popover'));
+    return { controller: controllerFor(), panel: panelElement, trigger: document.querySelector('#trigger'), root };
+  };
 
   beforeEach(() => {
-    visibleOnlySpy = vi.spyOn(visibilityConfig, 'visibleOnly', 'get').mockReturnValue(false);
-    visibilityConfig.hiddenClass = '';
-
     application = Application.start();
     application.register('popover', PopoverController);
-
-    global.fetch = vi.fn(async () => ({
-      ok: true,
-      text: () => Promise.resolve('<p>Loaded content</p>'),
-    }));
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
     application.stop();
     document.body.innerHTML = '';
-    visibilityConfig.hiddenClass = null;
-    visibleOnlySpy.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
 
-  describe('basic functionality', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover" data-popover-url-value="/content">
-          <div data-popover-target="panel" hidden>Content</div>
-          <div data-popover-target="loader" hidden>Loading...</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
-
-    it('attaches load and visibility to controller', () => {
-      const controller = controllerFor();
-
-      expect(typeof controller.load).toBe('function');
-      expect(controller.visibility).toBeDefined();
-    });
-
-    it('attaches contentLoaderVisibility when loader target is present', () => {
-      expect(controllerFor().contentLoaderVisibility).toBeDefined();
-    });
+  it('declares only the trigger and panel targets and no values', () => {
+    expect(PopoverController.targets).toEqual(['trigger', 'panel']);
+    expect(PopoverController.values).toEqual({});
   });
 
-  describe('trigger aria-expanded', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <button data-popover-target="trigger">Open</button>
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
+  it('reports a missing panel once and leaves actions inert', async () => {
+    document.body.innerHTML = '<div data-controller="popover"></div>';
+    const root = document.querySelector('[data-controller="popover"]');
+    await vi.waitFor(() => expect(consoleErrorSpy).toHaveBeenCalledOnce());
 
-    const button = () => document.querySelector('[data-popover-target="trigger"]');
-
-    it('sets aria-expanded="false" on connect when panel is hidden', () => {
-      expect(button().getAttribute('aria-expanded')).toBe('false');
-    });
-
-    it('sets aria-expanded="true" after open', async () => {
-      await controllerFor().open();
-
-      expect(button().getAttribute('aria-expanded')).toBe('true');
-    });
-
-    it('sets aria-expanded="false" after close', async () => {
-      const controller = controllerFor();
-      await controller.open();
-      await controller.close();
-
-      expect(button().getAttribute('aria-expanded')).toBe('false');
-    });
+    const controller = application.getControllerForElementAndIdentifier(root, 'popover');
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'PopoverController requires a panel target. Add data-popover-target="panel" to your element.'
+    );
+    expect(() => controller.open()).not.toThrow();
+    expect(() => controller.close()).not.toThrow();
+    expect(() => controller.toggle()).not.toThrow();
   });
 
-  describe('open, close, toggle', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <button data-popover-target="trigger">Open</button>
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
+  it('reports a non-popover panel once and leaves actions inert', async () => {
+    document.body.innerHTML = '<div data-controller="popover"><div data-popover-target="panel">Content</div></div>';
+    await vi.waitFor(() => expect(consoleErrorSpy).toHaveBeenCalledOnce());
 
-    const panel = () => document.querySelector('[data-popover-target="panel"]');
-
-    it('open makes panel visible', async () => {
-      await controllerFor().open();
-      expect(panel().hidden).toBe(false);
-    });
-
-    it('close makes panel hidden', async () => {
-      const controller = controllerFor();
-      await controller.open();
-      await controller.close();
-      expect(panel().hidden).toBe(true);
-    });
-
-    it('toggle alternates visibility', async () => {
-      const controller = controllerFor();
-      await controller.toggle();
-      expect(panel().hidden).toBe(false);
-      await controller.toggle();
-      expect(panel().hidden).toBe(true);
-    });
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'PopoverController requires data-popover-target="panel" to be a native popover element.'
+    );
+    expect(() => controllerFor().open()).not.toThrow();
   });
 
-  describe('closeOnSelect', () => {
-    const panel = () => document.querySelector('[data-popover-target="panel"]');
+  it('requires every native popover method', async () => {
+    const panel = document.createElement('div');
+    panel.setAttribute('popover', 'auto');
+    panel.showPopover = vi.fn();
+    panel.hidePopover = vi.fn();
+    document.body.innerHTML = '<div data-controller="popover"></div>';
+    document.querySelector('[data-controller="popover"]').append(panel);
+    panel.dataset.popoverTarget = 'panel';
 
-    it('closes the panel when closeOnSelect value is true (default)', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <button data-popover-target="trigger">Open</button>
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+    await vi.waitFor(() => expect(consoleErrorSpy).toHaveBeenCalledOnce());
 
-      const controller = controllerFor();
-      await controller.open();
-      await controller.closeOnSelect();
-
-      expect(panel().hidden).toBe(true);
-    });
-
-    it('keeps the panel open when closeOnSelect value is false', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover" data-popover-close-on-select-value="false">
-          <button data-popover-target="trigger">Open</button>
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      const controller = controllerFor();
-      await controller.open();
-      await controller.closeOnSelect();
-
-      expect(panel().hidden).toBe(false);
-    });
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'PopoverController requires data-popover-target="panel" to be a native popover element.'
+    );
+    expect(controllerFor().open).toBeTypeOf('function');
   });
 
-  describe('focus management', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <button data-popover-target="trigger">Open</button>
-          <div data-popover-target="panel" hidden><button id="first">First</button></div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
+  it('uses action currentTarget as the native source and prevents default', async () => {
+    const { controller, panel, trigger } = await render();
+    const event = { currentTarget: trigger, preventDefault: vi.fn() };
 
-    it('moves focus into the panel on shown', async () => {
-      // jsdom reports zero dimensions for all elements; override so isVisible() is true.
-      document.getElementById('first').getClientRects = () => [{}];
-      await controllerFor().open();
-      expect(document.activeElement).toBe(document.getElementById('first'));
-    });
+    controller.open(event);
 
-    it('returns focus to the trigger on hidden', async () => {
-      const controller = controllerFor();
-      await controller.open();
-      await controller.close();
-      expect(document.activeElement).toBe(document.querySelector('[data-popover-target="trigger"]'));
-    });
+    expect(event.preventDefault).toHaveBeenCalledOnce();
+    expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
+    expect(panel.matches(':popover-open')).toBe(true);
+
+    controller.close(event);
+    expect(event.preventDefault).toHaveBeenCalledTimes(2);
+    expect(panel.hidePopover).toHaveBeenCalledOnce();
+
+    controller.toggle(event);
+    expect(event.preventDefault).toHaveBeenCalledTimes(3);
+    expect(panel.showPopover).toHaveBeenLastCalledWith({ source: trigger });
   });
 
-  describe('outside-click dismissal', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <button data-popover-target="trigger">Open</button>
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-        <button id="outside">Outside</button>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
+  it('uses the optional trigger target for programmatic open and toggle calls', async () => {
+    const { controller, panel, trigger } = await render();
 
-    it('closes the panel on outside click', async () => {
-      const controller = controllerFor();
-      await controller.open();
+    controller.open();
+    controller.close();
+    controller.toggle();
 
-      document.getElementById('outside').click();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      expect(document.querySelector('[data-popover-target="panel"]').hidden).toBe(true);
-    });
-
-    it('keeps the panel open when clicking inside', async () => {
-      const controller = controllerFor();
-      await controller.open();
-
-      document.querySelector('[data-popover-target="panel"]').click();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      expect(document.querySelector('[data-popover-target="panel"]').hidden).toBe(false);
-    });
+    expect(panel.showPopover).toHaveBeenNthCalledWith(1, { source: trigger });
+    expect(panel.showPopover).toHaveBeenNthCalledWith(2, { source: trigger });
+    expect(panel.hidePopover).toHaveBeenCalledOnce();
   });
 
-  describe('loading content on show', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover" data-popover-url-value="/content">
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
+  it('opens without a source when no trigger target is present', async () => {
+    const { controller, panel } = await render({ trigger: false });
 
-    it('fetches content after panel becomes visible', async () => {
-      await controllerFor().open();
+    controller.open();
 
-      expect(global.fetch).toHaveBeenCalledWith('/content', expect.objectContaining({ signal: expect.any(AbortSignal) }));
-    });
-
-    it('does not re-fetch when reload is "never"', async () => {
-      const controller = controllerFor();
-
-      await controller.open();
-      global.fetch.mockClear();
-      await controller.load();
-
-      expect(global.fetch).not.toHaveBeenCalled();
-    });
+    expect(panel.showPopover).toHaveBeenCalledWith();
   });
 
-  describe('canLoad', () => {
-    it('returns true for regular panel target', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover" data-popover-url-value="/content">
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+  it('synchronizes aria-expanded only when the trigger authored it', async () => {
+    const authored = await render();
+    authored.controller.open();
+    expect(authored.trigger.getAttribute('aria-expanded')).toBe('true');
+    authored.controller.close();
+    expect(authored.trigger.getAttribute('aria-expanded')).toBe('false');
 
-      expect(controllerFor().canLoad()).toBe(true);
-    });
-
-    it('sets turbo-frame src and returns false', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover" data-popover-url-value="/content">
-          <turbo-frame data-popover-target="panel" hidden>Content</turbo-frame>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      const controller = controllerFor();
-      const result = controller.canLoad();
-
-      expect(controller.panelTarget.getAttribute('src')).toBe('/content');
-      expect(result).toBe(false);
-    });
+    document.body.innerHTML = '';
+    const absent = await render({ authoredExpanded: false });
+    absent.controller.open();
+    absent.controller.close();
+    expect(absent.trigger.hasAttribute('aria-expanded')).toBe(false);
   });
 
-  describe('contentLoading and contentLoaded', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <div data-popover-target="panel" hidden>Content</div>
-          <div data-popover-target="loader" hidden>Loading...</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
+  it('observes external native open and close calls', async () => {
+    const { panel, trigger } = await render();
 
-    it('contentLoading shows loader target', async () => {
-      const loader = document.querySelector('[data-popover-target="loader"]');
-      await controllerFor().contentLoading();
-
-      expect(loader.hidden).toBe(false);
-    });
-
-    it('contentLoaded inserts content into panel target', async () => {
-      const panel = document.querySelector('[data-popover-target="panel"]');
-      const template = document.createElement('template');
-      template.innerHTML = '<p>New content</p>';
-      await controllerFor().contentLoaded({ content: template.content });
-
-      expect(panel.querySelector('p').textContent).toBe('New content');
-    });
-
-    it('contentLoaded hides loader after content insertion', async () => {
-      const loader = document.querySelector('[data-popover-target="loader"]');
-      const controller = controllerFor();
-      await controller.contentLoading();
-
-      const template = document.createElement('template');
-      template.innerHTML = '<p>Content</p>';
-      await controller.contentLoaded({ content: template.content });
-
-      expect(loader.hidden).toBe(true);
-    });
+    panel.showPopover();
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    panel.hidePopover();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
   });
 
-  describe('contentLoader', () => {
-    it('returns template element content', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <template data-popover-target="template"><p>Static</p></template>
-          <div data-popover-target="panel" hidden></div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+  it('disposes the old adapter when the panel target is replaced', async () => {
+    const { controller, panel: oldPanel, root } = await render();
+    const oldRemove = vi.spyOn(oldPanel, 'removeEventListener');
+    const newPanel = document.createElement('div');
+    newPanel.id = 'panel';
+    newPanel.setAttribute('popover', 'auto');
+    newPanel.dataset.popoverTarget = 'panel';
+    installNativeMethods(newPanel);
+    oldPanel.replaceWith(newPanel);
 
-      expect(controllerFor().contentLoader()).toBeInstanceOf(DocumentFragment);
-    });
+    await vi.waitFor(() => expect(oldRemove).toHaveBeenCalledWith('beforetoggle', expect.any(Function)));
+    expect(root.querySelector('#panel')).toBe(newPanel);
+    expect(oldRemove).toHaveBeenCalledWith('beforetoggle', expect.any(Function));
+    expect(oldRemove).toHaveBeenCalledWith('toggle', expect.any(Function));
 
-    it('returns innerHTML for non-template target', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <div data-popover-target="template"><p>Static</p></div>
-          <div data-popover-target="panel" hidden></div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(controllerFor().contentLoader()).toContain('<p>Static</p>');
-    });
-
-    it('returns undefined when no template target', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <div data-popover-target="panel" hidden></div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(controllerFor().contentLoader()).toBeUndefined();
-    });
+    controller.open();
+    expect(newPanel.showPopover).toHaveBeenCalledOnce();
   });
 
-  describe('load lifecycle events', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover" data-popover-url-value="/content">
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
+  it('reconnects the same controller instance without duplicating cache behavior', async () => {
+    const { controller, panel, root } = await render();
+    const removePanelListener = vi.spyOn(panel, 'removeEventListener');
+    const removeDocumentListener = vi.spyOn(document, 'removeEventListener');
+    const addDocumentListener = vi.spyOn(document, 'addEventListener');
 
-    it('dispatches load, loading, and loaded events', async () => {
-      const element = document.querySelector('[data-controller="popover"]');
-      const loadSpy = vi.fn();
-      const loadingSpy = vi.fn();
-      const loadedSpy = vi.fn();
+    root.remove();
+    await vi.waitFor(() => expect(removePanelListener).toHaveBeenCalledWith('beforetoggle', expect.any(Function)));
+    expect(removeDocumentListener).toHaveBeenCalledWith('turbo:before-cache', expect.any(Function));
+    document.body.appendChild(root);
+    await vi.waitUntil(() => controllerFor() === controller);
+    await vi.waitFor(() =>
+      expect(addDocumentListener).toHaveBeenCalledWith('turbo:before-cache', expect.any(Function))
+    );
 
-      element.addEventListener('popover:load', loadSpy);
-      element.addEventListener('popover:loading', loadingSpy);
-      element.addEventListener('popover:loaded', loadedSpy);
+    controller.open();
+    document.dispatchEvent(new Event('turbo:before-cache'));
 
-      await controllerFor().open();
-
-      expect(loadSpy).toHaveBeenCalledTimes(1);
-      expect(loadingSpy).toHaveBeenCalledTimes(1);
-      expect(loadedSpy).toHaveBeenCalledTimes(1);
-    });
+    expect(panel.showPopover).toHaveBeenCalledOnce();
+    expect(panel.hidePopover).toHaveBeenCalledOnce();
   });
 
-  describe('screen reader announcements', () => {
-    it('announces "Panel opened" when opened', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <button data-popover-target="trigger" data-action="popover#toggle">Open</button>
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((r) => setTimeout(r, 10));
+  it('closes an open panel synchronously before Turbo caches the page', async () => {
+    const { controller, panel } = await render();
+    controller.open();
+    expect(panel.matches(':popover-open')).toBe(true);
 
-      document.querySelector('[data-action="popover#toggle"]').click();
-      await new Promise((r) => setTimeout(r, 10));
+    document.dispatchEvent(new Event('turbo:before-cache'));
 
-      const liveRegion = document.querySelector('[aria-live]');
-      // aria.js announce() uses setTimeout(100) to set textContent
-      await new Promise((r) => setTimeout(r, 150));
-      expect(liveRegion?.textContent).toBe('Panel opened');
-    });
-
-    it('announces "Panel closed" when closed', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <button data-popover-target="trigger" data-action="popover#toggle">Open</button>
-          <div data-popover-target="panel">Content</div>
-        </div>
-      `;
-      await new Promise((r) => setTimeout(r, 10));
-
-      // close (panel starts visible — no hidden attr)
-      document.querySelector('[data-action="popover#toggle"]').click();
-      await new Promise((r) => setTimeout(r, 150));
-
-      const liveRegion = document.querySelector('[aria-live]');
-      expect(liveRegion?.textContent).toBe('Panel closed');
-    });
+    expect(panel.hidePopover).toHaveBeenCalledOnce();
+    expect(panel.matches(':popover-open')).toBe(false);
   });
 
-  describe('announce values', () => {
-    it('uses data-popover-announce-open-value when provided', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover"
-             data-popover-announce-open-value="Ouvrir panneau">
-          <button data-popover-target="trigger">Open</button>
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((r) => setTimeout(r, 10));
-      const controller = application.getControllerForElementAndIdentifier(
-        document.querySelector('[data-controller="popover"]'),
-        'popover'
-      );
-      expect(controller.announceOpenValue).toBe('Ouvrir panneau');
-    });
+  it('removes native, lifecycle, and cache listeners on disconnect', async () => {
+    const { panel, root } = await render();
+    const remove = vi.spyOn(panel, 'removeEventListener');
+    const removeDocumentListener = vi.spyOn(document, 'removeEventListener');
 
-    it('defaults announceOpenValue to "Panel opened"', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <button data-popover-target="trigger">Open</button>
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((r) => setTimeout(r, 10));
-      const controller = application.getControllerForElementAndIdentifier(
-        document.querySelector('[data-controller="popover"]'),
-        'popover'
-      );
-      expect(controller.announceOpenValue).toBe('Panel opened');
-      expect(controller.announceCloseValue).toBe('Panel closed');
-    });
-  });
+    root.remove();
+    await vi.waitFor(() => expect(remove).toHaveBeenCalledWith('beforetoggle', expect.any(Function)));
 
-  describe('without targets', () => {
-    it('connects without panel target', async () => {
-      document.body.innerHTML = '<div data-controller="popover"></div>';
-      await new Promise((resolve) => setTimeout(resolve, 10));
+    document.dispatchEvent(new Event('turbo:before-cache'));
 
-      const controller = controllerFor();
-
-      expect(controller.load).toBeDefined();
-      expect(controller.visibility).toBeUndefined();
-    });
-
-    it('does not attach contentLoaderVisibility without loader target', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(controllerFor().contentLoaderVisibility).toBeUndefined();
-    });
-
-    it('contentLoading does nothing without loader target', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      await expect(controllerFor().contentLoading()).resolves.toBeUndefined();
-    });
-
-    it('skips fetch when no url value', async () => {
-      document.body.innerHTML = `
-        <div data-controller="popover">
-          <div data-popover-target="panel" hidden>Content</div>
-        </div>
-      `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      await controllerFor().open();
-
-      expect(global.fetch).not.toHaveBeenCalled();
-    });
+    expect(remove).toHaveBeenCalledWith('beforetoggle', expect.any(Function));
+    expect(remove).toHaveBeenCalledWith('toggle', expect.any(Function));
+    expect(remove).toHaveBeenCalledWith('popover:opened', expect.any(Function));
+    expect(remove).toHaveBeenCalledWith('popover:closed', expect.any(Function));
+    expect(removeDocumentListener).toHaveBeenCalledWith('turbo:before-cache', expect.any(Function));
+    expect(panel.hidePopover).not.toHaveBeenCalled();
   });
 });

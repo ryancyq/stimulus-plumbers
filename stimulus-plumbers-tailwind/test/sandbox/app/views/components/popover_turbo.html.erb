@@ -1,0 +1,22 @@
+<section id="popover-turbo" class="sb-section">
+  <h2>Turbo Frame content</h2>
+  <div class="sb-col">
+    <%= link_to "Navigate away", "/components/controls/button", id: "popover-turbo-away" %>
+    <%= sp_popover panel_id: "popover-turbo-panel" do |p| %>
+      <% p.trigger { "Load remote content" } %>
+      <% p.panel(role: :region, aria_label: "Remote popover content") do %>
+        <%= tag.turbo_frame id: "popover-turbo-frame", src: "/components/popover/frame", loading: "lazy" do %>
+          <p>Loading remote content…</p>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= sp_popover panel_id: "popover-replacement-panel" do |p| %>
+      <% p.trigger { "Replace panel content" } %>
+      <% p.panel(role: :region, aria_label: "Replaced popover content") do %>
+        <p>Waiting for replacement…</p>
+        <%= link_to "Replace panel", "/components/popover/frame_replacement", id: "popover-replace-link", data: { turbo_stream: true } %>
+      <% end %>
+    <% end %>
+  </div>
+</section>

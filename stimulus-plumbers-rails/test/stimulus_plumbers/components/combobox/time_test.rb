@@ -151,5 +151,6 @@ class ComboboxTimeTest < ActionView::TestCase
 
     assert_equal "time", data[:input_formatter_format_value]
     assert_equal({ format: :h24 }.to_json, data[:input_formatter_options_value])
+    refute data.fetch(:input_combobox_close_on_select_value)
   end
 end

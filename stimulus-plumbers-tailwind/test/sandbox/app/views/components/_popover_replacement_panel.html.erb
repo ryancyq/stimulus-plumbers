@@ -1,0 +1,6 @@
+<%= StimulusPlumbers::Components::Popover.new(self).build(panel_id: "popover-replacement-panel") do |popover| %>
+  <% popover.panel(role: :region, aria_label: "Replaced popover content") do %>
+    <h3>Replaced popover panel</h3>
+    <p id="popover-replacement-status">The panel target was replaced by a matching Turbo Stream.</p>
+  <% end %>
+<% end %>

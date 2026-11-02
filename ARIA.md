@@ -31,22 +31,22 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - Every dialog has an accessible name through `aria-labelledby` or `aria-label`; do not add redundant `aria-modal="true"`
 - Initial focus is native; use `autofocus` when intentional placement is required. Focus restoration is native-first, with a narrow adapter fallback only when an engine leaves focus on the document or closed dialog
 - Escape and backdrop are dismissal requests governed by `closedby`; explicit completion uses `close()` or `method="dialog"`
+- Escape with a popover open inside the dialog closes only the most recently opened popover; the next Escape dismisses the dialog
 - Every modal contains a visible close, cancel, or completion control; this is especially important when `closedby="none"` disables implicit dismissal
 - Dismissal and explicit completion have different semantics; `modal:before-dismiss` is cancellable and `modal:closed` reports the result
 - Do not add generic open/close live announcements; status and validation messages belong in a live region inside the dialog
 - Ordinary modal triggers do not use `aria-expanded`
 
 #### Popover (`popover_controller`)
-- `role="dialog"` or `role="tooltip"` depending on interactivity
-- Trigger: `<button>` with `aria-haspopup="dialog"` and `aria-expanded="false"` initially
-- `aria-expanded` toggled to `"true"` / `"false"` by the controller via the `trigger` Stimulus target
-- `aria-controls` linking trigger to panel id is recommended but optional
-- Escape closes and returns focus to trigger
+- Native `popover="auto"` supplies the top layer, Escape, and light dismissal
+- The consuming component chooses the panel role and accessible name (e.g. `role="region"` + `aria-label`, `role="dialog"`); the helper infers neither
+- Author `aria-haspopup`, `aria-expanded`, and `aria-controls` only when the consumer owns that popup relationship; the controller updates an authored `aria-expanded` to the settled state
+- The controller does not move focus or announce open/close
 
 #### Combobox (`input_combobox_controller`, `combobox/`)
 - Trigger: `<input role="combobox">` with `aria-haspopup` (`listbox`/`dialog`) and `aria-controls` referencing the **popup element** (the `role="listbox"`/`role="dialog"`)
 - `role="listbox"` permits only `option`/`group` children (`aria-required-children`, WCAG 1.3.1). Status messages (loading, "No results") must be `role="status"`/`aria-live` **siblings of the listbox, never children of it** — for typeahead the listbox is nested in a wrapper panel so the status regions can sit beside it
-- Status/loading regions inside the popover panel must stay **non-focusable** (the popover moves focus into the panel on open)
+- Status/loading regions inside the popover panel must stay **non-focusable**
 
 #### Calendar / Date Picker (`calendar-month`, `combobox-date`)
 - Grid: `role="grid"`, `role="row"`, `role="gridcell"`

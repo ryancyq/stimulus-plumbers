@@ -57,6 +57,17 @@ class ComponentsController < ApplicationController
   def popover
   end
 
+  def popover_turbo
+  end
+
+  def popover_frame
+    render layout: false
+  end
+
+  def popover_frame_replacement
+    render layout: false, content_type: "text/vnd.turbo-stream.html"
+  end
+
   def modal
   end
 

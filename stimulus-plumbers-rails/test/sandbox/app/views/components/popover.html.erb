@@ -1,16 +1,38 @@
 <h1>Popover components</h1>
 
 <div id="popover">
-  <%# ── Interactive popover ────────────────────────────────────────────── %>
-  <%= sp_popover do |p| %>
-    <% p.trigger { "Open menu" } %>
-    <% p.panel(role: "dialog", aria: { label: "Menu options" }) do %>
-      <%= sp_list do |list| %>
-        <%= list.section do |s| %>
-          <%= s.item("Edit",   url: "#") %>
-          <%= s.item("Delete") %>
+  <section id="popover-named-region">
+    <h2>Named region</h2>
+    <%= sp_popover do |p| %>
+      <% p.trigger { "Open menu" } %>
+      <% p.panel(role: :region, aria_label: "Popover options") do %>
+        <%= sp_list do |list| %>
+          <%= list.section do |s| %>
+            <%= s.item("Edit",   url: "#") %>
+            <%= s.item("Delete") %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>
-  <% end %>
+  </section>
+
+  <section id="popover-unnamed-structure">
+    <h2>Unnamed structural content</h2>
+    <%= sp_popover do |p| %>
+      <% p.trigger { "Open details" } %>
+      <% p.panel do %>
+        <p>Additional details are available here.</p>
+      <% end %>
+    <% end %>
+  </section>
+
+  <section id="popover-named-help">
+    <h2>Named help</h2>
+    <%= sp_popover do |p| %>
+      <% p.trigger { "Open help" } %>
+      <% p.panel(role: :region, aria_label: "Help") do %>
+        <p>Use the menu to choose an action.</p>
+      <% end %>
+    <% end %>
+  </section>
 </div>

@@ -1,15 +1,19 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['trigger', 'input'];
+  static targets = ['trigger', 'input', 'panel'];
   static values = {
     value: String,
     minLength: { type: Number, default: 1 },
+    closeOnSelect: { type: Boolean, default: true },
   };
   static outlets = ['combobox-dropdown'];
 
   onSelect(event) {
     if (event.detail?.value !== undefined) this.valueValue = event.detail.value;
+    if (this.closeOnSelectValue && this.hasPanelTarget && this.panelTarget.matches(':popover-open')) {
+      this.panelTarget.hidePopover();
+    }
   }
 
   onInput(event) {

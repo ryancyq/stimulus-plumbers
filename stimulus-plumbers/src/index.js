@@ -18,6 +18,7 @@ export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
 export { CharacterCells, attachCharacterCells } from './plumbers/character_cells.js';
 export { PasswordStrength, attachPasswordStrength, STRENGTH_TYPES } from './plumbers/password_strength.js';
 export { Dialog, attachDialog } from './plumbers/dialog.js';
+export { Popover, attachPopover } from './plumbers/popover.js';
 
 // Export Stimulus controllers
 export { default as CalendarDecadeController } from './controllers/calendar_decade_controller.js';

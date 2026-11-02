@@ -40,6 +40,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
 
     assert_includes ctrl["targets"], "trigger"
     assert_includes ctrl["targets"], "input"
+    assert_includes ctrl["targets"], "panel"
   end
 
   def test_input_combobox_values
@@ -52,16 +53,15 @@ class ControllerSchemaLoaderTest < Minitest::Test
     assert_equal 1, values["minLength"]["default"]
   end
 
-  def test_input_combobox_outlets
-    assert_includes @controllers["input-combobox"]["outlets"], "combobox-dropdown"
+  def test_input_combobox_close_on_select_value
+    close_on_select = @controllers["input-combobox"]["values"]["closeOnSelect"]
+
+    assert_equal "Boolean", close_on_select["type"]
+    assert close_on_select["default"]
   end
 
-  def test_popover_values_include_defaults
-    values = @controllers["popover"]["values"]
-
-    assert_equal "never", values["reload"]["default"]
-    assert_equal 3600, values["staleAfter"]["default"]
-    assert values["closeOnSelect"]["default"]
+  def test_input_combobox_outlets
+    assert_includes @controllers["input-combobox"]["outlets"], "combobox-dropdown"
   end
 
   def test_combobox_date_outlets

@@ -6,8 +6,7 @@ module StimulusPlumbers
       class Time < Plumber::Base
         STIMULUS_CONTROLLER = "combobox-time"
         STIMULUS_ACTION     = [
-          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect",
-          "#{STIMULUS_CONTROLLER}:selected->#{Components::Popover::STIMULUS_CONTROLLER}#closeOnSelect"
+          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
         ].join(" ").freeze
 
         module Metadata
@@ -31,8 +30,10 @@ module StimulusPlumbers
 
           def stimulus_data(_panel_id, options)
             {
-              input_formatter_format_value:  "time",
-              input_formatter_options_value: { format: options.fetch(:format, :h12) }.to_json
+              input_formatter_format_value:         "time",
+              input_formatter_options_value:        { format: options.fetch(:format, :h12) }.to_json,
+              # Each drum step dispatches a selection.
+              input_combobox_close_on_select_value: false
             }
           end
         end

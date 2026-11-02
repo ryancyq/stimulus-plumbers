@@ -14,6 +14,7 @@ require_relative "schema/form/radio/ranges"
 require_relative "schema/progress/ranges"
 require_relative "schema/icon"
 require_relative "schema/modal/ranges"
+require_relative "schema/popover/ranges"
 
 module StimulusPlumbers
   module Themes
@@ -266,10 +267,15 @@ module StimulusPlumbers
       LAYOUT = {
         divider:           {}.freeze,
         divider_separator: {}.freeze,
-        divider_label:     {}.freeze,
-        popover_wrapper:   {}.freeze,
-        popover_trigger:   {}.freeze,
-        popover:           {}.freeze
+        divider_label:     {}.freeze
+      }.freeze
+
+      POPOVER = {
+        popover_wrapper: {},
+        popover_trigger: {},
+        popover:         {
+          placement: { default: :block_end_start, validate: Popover::Ranges::PLACEMENT }
+        }.freeze
       }.freeze
 
       # The outside readout gets its own keys, not parameters on existing ones — a theme method

@@ -70,8 +70,7 @@ stimulus-plumbers-tailwind/
 │   │   │   └── views/                      # ERB views (components + form pages)
 │   │   ├── config/                         # Routes, application, environment
 │   │   └── public/                         # Compiled tailwind.css output (gitignored)
-│   ├── support/
-│   │   └── html_assertions.rb
+│   ├── support/                            # Shared Minitest and Playwright helpers
 │   └── test_helper.rb
 ├── Gemfile
 ├── package.json                            # Tailwind CLI + Playwright

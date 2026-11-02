@@ -37,8 +37,11 @@ export class Dialog {
   #onPointerDown;
   #onPointerUp;
   #onPointerCancel;
+  #onKeyDown;
+  #onPopoverBeforeToggle;
   #pointerDownTarget;
   #pointerDownId;
+  #openPopovers;
 
   constructor(controller, options = {}) {
     this.#controller = controller;
@@ -74,13 +77,20 @@ export class Dialog {
     this.#onPointerDown = this.#handlePointerDown.bind(this);
     this.#onPointerUp = this.#handlePointerUp.bind(this);
     this.#onPointerCancel = this.#handlePointerCancel.bind(this);
+    this.#onKeyDown = this.#handleKeyDown.bind(this);
+    this.#onPopoverBeforeToggle = this.#handlePopoverBeforeToggle.bind(this);
     this.#pointerDownTarget = null;
     this.#pointerDownId = null;
+    this.#openPopovers = [];
 
     this.#element.addEventListener('beforetoggle', this.#onBeforeToggle);
     this.#element.addEventListener('toggle', this.#onToggle);
     this.#element.addEventListener('cancel', this.#onCancel);
     this.#element.addEventListener('close', this.#onClose);
+    // beforetoggle is synchronous and does not bubble; capture sees popovers inside the dialog.
+    this.#element.addEventListener('beforetoggle', this.#onPopoverBeforeToggle, true);
+    // Document-level so Escape is seen when focus is stranded on the body.
+    document.addEventListener('keydown', this.#onKeyDown);
 
     // closedby="any" needs a pointer fallback on engines without closedBy.
     if (!this.#supportsClosedBy) {
@@ -206,6 +216,8 @@ export class Dialog {
     this.#element.removeEventListener('toggle', this.#onToggle);
     this.#element.removeEventListener('cancel', this.#onCancel);
     this.#element.removeEventListener('close', this.#onClose);
+    this.#element.removeEventListener('beforetoggle', this.#onPopoverBeforeToggle, true);
+    document.removeEventListener('keydown', this.#onKeyDown);
 
     if (!this.#supportsClosedBy) {
       this.#element.removeEventListener('pointerdown', this.#onPointerDown);
@@ -218,6 +230,7 @@ export class Dialog {
     this.#pendingDismissResult = null;
     this.#pointerDownTarget = null;
     this.#pointerDownId = null;
+    this.#openPopovers = [];
     this.#clearFocusRestore();
     if (this.#openFallbackTimer !== null) clearTimeout(this.#openFallbackTimer);
     this.#openFallbackTimer = null;
@@ -398,6 +411,41 @@ export class Dialog {
         // A disconnected or otherwise unfocusable invoker is safely ignored.
       }
     });
+  }
+
+  #handlePopoverBeforeToggle(event) {
+    const popover = event.target;
+    if (popover === this.#element || !popover.hasAttribute('popover')) return;
+
+    this.#openPopovers = this.#openPopovers.filter((open) => open !== popover);
+    if (event.newState === 'open') this.#openPopovers.push(popover);
+  }
+
+  // WebKit closes an open popover and its modal dialog on one Escape; close only the popover.
+  #handleKeyDown(event) {
+    if (event.key !== 'Escape' || event.defaultPrevented || event.isComposing || !this.open) return;
+
+    const target = event.target;
+    const inDialog = target === document.body || target === document.documentElement || this.#element.contains(target);
+    // A nested open dialog owns its own Escape.
+    if (!inDialog || this.#element.querySelector('dialog[open]')) return;
+
+    const popover = this.#lastOpenPopover();
+    if (!popover) return;
+
+    event.preventDefault();
+    popover.hidePopover();
+  }
+
+  // Prunes closed entries; falls back to document order for popovers opened before attaching.
+  #lastOpenPopover() {
+    const isOpen = (popover) => this.#element.contains(popover) && popover.matches(':popover-open');
+    const isAuto = (popover) => popover.popover !== 'manual';
+    this.#openPopovers = this.#openPopovers.filter(isOpen);
+    return (
+      this.#openPopovers.findLast(isAuto) ||
+      [...this.#element.querySelectorAll('[popover]')].filter(isOpen).findLast(isAuto)
+    );
   }
 
   #handlePointerDown(event) {

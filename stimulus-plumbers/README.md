@@ -104,7 +104,7 @@ application.register('visibility',               VisibilityController)
 | `checklist` | Master "select all" toggle for native checkbox items | [docs/component/checklist.md](docs/component/checklist.md) |
 | `modal` | Native `<dialog>` lifecycle adapter | [docs/component/modal.md](docs/component/modal.md) |
 | `modal-turbo` | Turbo Frame adapter for `modal` | [docs/component/modal.md](docs/component/modal.md#modal-turbo) |
-| `popover` | Show/hide content with optional remote load | [docs/component/popover.md](docs/component/popover.md) |
+| `popover` | Native HTML Popover lifecycle adapter | [docs/component/popover.md](docs/component/popover.md) |
 | `progress` | Value-driven progress bar/segmented/ring/meter | [docs/component/progress.md](docs/component/progress.md) |
 | `dismisser` | Click-outside dismissal | [docs/component/dismisser.md](docs/component/dismisser.md) |
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
@@ -128,6 +128,7 @@ application.register('visibility',               VisibilityController)
 | `CharacterCells`, `attachCharacterCells` | Character-cell display plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/character-cells.md](docs/plumber/character-cells.md) |
 | `PasswordStrength`, `attachPasswordStrength`, `STRENGTH_TYPES` | Password strength scoring plumber | [docs/plumber/password_strength.md](docs/plumber/password_strength.md) |
 | `Dialog`, `attachDialog` | Native `<dialog>` lifecycle plumber | [docs/plumber/dialog.md](docs/plumber/dialog.md) |
+| `Popover`, `attachPopover` | Native popover lifecycle plumber | [docs/plumber/popover.md](docs/plumber/popover.md) |
 
 ## Method naming convention
 

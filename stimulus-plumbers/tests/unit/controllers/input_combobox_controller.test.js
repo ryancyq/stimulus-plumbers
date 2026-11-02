@@ -42,11 +42,44 @@ describe('InputComboboxController', () => {
       expect(document.querySelector('[data-input-combobox-target="input"]').value).toBe('');
     });
 
-    it('does not manage panel visibility (delegated to popover)', () => {
+    it('does not expose open/close/toggle (delegated to popover)', () => {
       const controller = getController();
       expect(controller.open).toBeUndefined();
       expect(controller.close).toBeUndefined();
       expect(controller.toggle).toBeUndefined();
+    });
+  });
+
+  describe('closeOnSelect', () => {
+    const mountPanel = async ({ open = true, closeOnSelect } = {}) => {
+      const root = document.querySelector('[data-controller="input-combobox"]');
+      if (closeOnSelect !== undefined) root.setAttribute('data-input-combobox-close-on-select-value', closeOnSelect);
+      const panel = document.createElement('div');
+      panel.setAttribute('popover', 'auto');
+      panel.setAttribute('data-input-combobox-target', 'panel');
+      panel.matches = vi.fn((selector) => selector === ':popover-open' && open);
+      panel.hidePopover = vi.fn();
+      root.appendChild(panel);
+      await new Promise((r) => setTimeout(r, 10));
+      return panel;
+    };
+
+    it('hides the open panel after a selection by default', async () => {
+      const panel = await mountPanel();
+      getController().onSelect({ detail: { value: 'a' } });
+      expect(panel.hidePopover).toHaveBeenCalledOnce();
+    });
+
+    it('keeps the panel open when closeOnSelect is false', async () => {
+      const panel = await mountPanel({ closeOnSelect: 'false' });
+      getController().onSelect({ detail: { value: 'a' } });
+      expect(panel.hidePopover).not.toHaveBeenCalled();
+    });
+
+    it('does not hide a panel that is already closed', async () => {
+      const panel = await mountPanel({ open: false });
+      getController().onSelect({ detail: { value: 'a' } });
+      expect(panel.hidePopover).not.toHaveBeenCalled();
     });
   });
 
