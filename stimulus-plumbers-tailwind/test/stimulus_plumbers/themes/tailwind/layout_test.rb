@@ -46,7 +46,7 @@ class TailwindThemeLayoutTest < Minitest::Test
     assert_includes result, "[position:fixed]"
     assert_includes result, "[position-anchor:auto]"
     assert_includes result, "[max-inline-size:min(90vi,32rem)]"
-    assert_includes result, "[max-block-size:min(80vb,32rem)]"
+    assert_includes result, "[max-block-size:min(100%,32rem)]"
     assert_includes result, "overflow-auto"
   end
 

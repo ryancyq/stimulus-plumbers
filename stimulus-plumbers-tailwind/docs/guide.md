@@ -36,5 +36,7 @@ To implement a custom theme instead of/alongside Tailwind, see `guide://theme`
 
 ## Popover placement
 
-The theme applies `sp_popover`'s `placement:` with CSS anchor positioning. Safari draws a panel whose
-trigger sits inside another open popover too high by the page's scroll distance.
+The theme applies `sp_popover`'s `placement:` with CSS anchor positioning. The panel is at most
+32rem tall and no taller than the space on its side of the trigger; longer content scrolls inside
+it. Safari draws a panel whose trigger sits inside another open popover too high by the page's
+scroll distance.

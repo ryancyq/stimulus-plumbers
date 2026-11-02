@@ -25,7 +25,7 @@ module StimulusPlumbers
           rounded-(--sp-radius-md) border border-(--sp-color-border)
           bg-(--sp-color-bg) shadow-(--sp-shadow-md) z-(--sp-z-popover)
           [position:fixed] [position-anchor:auto] [inset:auto] m-0
-          [max-inline-size:min(90vi,32rem)] [max-block-size:min(80vb,32rem)] overflow-auto
+          [max-inline-size:min(90vi,32rem)] [max-block-size:min(100%,32rem)] overflow-auto
         ].freeze
 
         POPOVER_PLACEMENTS = {
