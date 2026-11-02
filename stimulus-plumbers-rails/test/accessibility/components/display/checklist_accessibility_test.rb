@@ -87,13 +87,9 @@ class ChecklistAccessibilityTest < ApplicationAccessibilityTestCase
 
   def test_master_toggles_via_space_key
     within("#checklist-select-all") do
-      # Cuprite's send_keys click-to-focuses before sending the key, which on a real
-      # <input type="checkbox"> double-toggles (click flips it, then Space flips it back)
-      # and nets out to no visible change. An explicit .click first establishes focus (and
-      # checked state) so the subsequent Space keypress is the toggle under test.
-      field = find_field("Select all")
-      field.click
-      field.send_keys(:space)
+      # Cuprite 0.17 send_keys clicks the element first and 0.20 does not; Ferrum types into the focused element only.
+      find_field("Select all").execute_script("this.focus()")
+      page.driver.browser.keyboard.type(:space)
 
       assert_field("Buy milk", checked: true)
       assert_field("Walk the dog", checked: true)
