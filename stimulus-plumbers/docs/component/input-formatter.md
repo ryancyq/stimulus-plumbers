@@ -1,6 +1,6 @@
 # input-formatter
 
-Formats values written to an input element. Handles structured display formatting for credit cards, phone numbers, currencies, dates, and times.
+Formats values written to an input element. Handles structured display formatting for credit cards, phone numbers, currencies, dates, times, and date-times.
 
 > [`combobox-date`](combobox.md#combobox-date) and [`combobox-time`](combobox.md#combobox-time) wire `onChange` to their `changed` events.
 
@@ -47,6 +47,7 @@ Formats values written to an input element. Handles structured display formattin
 | `"currency"`   | Locale-aware thousands separator and decimal places                                                                |
 | `"date"`       | Locale-aware date string                                                                                           |
 | `"time"`       | Locale-aware time string                                                                                           |
+| `"datetime"`   | Locale-aware date and time of a `YYYY-MM-DDTHH:MM` value, on the wall clock                                        |
 | `"code"`       | Charset-filtered fixed-length codes (OTP, PIN); options `{ charset: "digits"\|"letters"\|"alphanumeric", length }` |
 
 Custom formatters can be registered at runtime:
