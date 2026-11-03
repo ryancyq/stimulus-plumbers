@@ -15,9 +15,9 @@ export function timeKey({ hour, minute }) {
 }
 
 export function isDisabled(time, availability = {}) {
-  const { step = 1 } = availability;
+  const { step = 1, ranges = windowRanges(availability) } = availability;
   const key = timeKey(time);
-  return !windowRanges(availability).some(([start, end]) => key >= start && key <= end) || time.minute % step !== 0;
+  return !ranges.some(([start, end]) => key >= start && key <= end) || time.minute % step !== 0;
 }
 
 export function windowRanges({ min, max } = {}) {
@@ -28,6 +28,12 @@ export function windowRanges({ min, max } = {}) {
         [start, '23:59'],
       ]
     : [[start, end]];
+}
+
+export function trimRanges(ranges, from, to) {
+  return ranges
+    .map(([start, end]) => [from != null && from > start ? from : start, to != null && to < end ? to : end])
+    .filter(([start, end]) => start <= end);
 }
 
 export function isHourDisabled(hour, availability = {}) {

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { availabilityErrors, isDisabled, isHourDisabled, parseTimeKey, timeKey, windowRanges } from '../../../src/time';
+import {
+  availabilityErrors,
+  isDisabled,
+  isHourDisabled,
+  parseTimeKey,
+  timeKey,
+  trimRanges,
+  windowRanges,
+} from '../../../src/time';
 import availability from '../../fixtures/time/availability.json';
 
 describe('time core', () => {
@@ -26,6 +34,13 @@ describe('time core', () => {
       ['22:00', '23:59'],
     ]);
     expect(windowRanges({})).toEqual([['00:00', '23:59']]);
+  });
+
+  it('trims ranges before from and after to', () => {
+    availability.trims.forEach(({ time, availability: rules, from = null, to = null, expect: disabled }) => {
+      const ranges = trimRanges(windowRanges(rules), from, to);
+      expect(isDisabled(parseTimeKey(time), { step: rules.step, ranges })).toBe(disabled);
+    });
   });
 
   it.each(availability.invalid)('reports unusable availability: $name', ({ availability: rules, option }) => {
