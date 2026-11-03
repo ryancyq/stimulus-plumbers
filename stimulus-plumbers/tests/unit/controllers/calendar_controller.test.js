@@ -222,6 +222,68 @@ describe('CalendarController', () => {
       expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('true');
     });
 
+    it('shows a selected value set from outside', async () => {
+      const { root } = await render({
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"',
+      });
+
+      root.setAttribute('data-calendar-selected-value', '2026-09-15');
+      await flush();
+
+      expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('true');
+      expect(day('2026-09-10').closest('td').getAttribute('aria-selected')).toBe('false');
+    });
+
+    it('moves the Tab stop to a selected value set from outside', async () => {
+      const { root } = await render({
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-15"',
+      });
+
+      root.setAttribute('data-calendar-selected-value', '2026-09-20');
+      await flush();
+
+      expect(tabStops()).toEqual(['2026-09-20']);
+    });
+
+    it('requests the period of a selected value set from outside', async () => {
+      const { root } = await render({
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-15"',
+      });
+      const navigate = vi.fn();
+      root.addEventListener('calendar:navigate', navigate);
+
+      root.setAttribute('data-calendar-selected-value', '2026-10-05');
+      await flush();
+
+      expect(navigate.mock.calls[0][0].detail).toMatchObject({ to: '2026-10-05', view: 'month', focusDate: null });
+    });
+
+    it('keeps the rendered period when it connects with a selected value outside it', async () => {
+      const navigate = vi.fn();
+      document.addEventListener('calendar:navigate', navigate);
+
+      await render({ attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-10-05"' });
+
+      expect(navigate).not.toHaveBeenCalled();
+      document.removeEventListener('calendar:navigate', navigate);
+    });
+
+    it('form reset requests the period of the initial date', async () => {
+      const { root } = await render({
+        form: true,
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-10-05"',
+      });
+      day('2026-09-15').click();
+      await flush();
+      const navigate = vi.fn();
+      root.addEventListener('calendar:navigate', navigate);
+
+      document.querySelector('#form').reset();
+      await flush();
+
+      expect(navigate.mock.calls[0][0].detail).toMatchObject({ to: '2026-10-05', view: 'month' });
+    });
+
     it('reports re-activating the current date so a dialog can close on it', async () => {
       const { root } = await render({
         attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-15"',

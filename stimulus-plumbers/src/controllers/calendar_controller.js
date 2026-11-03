@@ -411,6 +411,16 @@ export default class extends Controller {
     this._syncSelected();
   }
 
+  // A selected value set from outside shows once Stimulus reports it, with its period and Tab stop; before connect
+  // it is the rendered value, whatever period that shows.
+  selectedValueChanged(value) {
+    this._syncSelected();
+    if (!this.connection || !this.hasGridTarget || !parseDateKey(value)) return;
+
+    if (this.dayTargets.some((day) => day.dataset.date === value)) this._focusSelected();
+    else this._request({ to: value, focusDate: null, view: 'month' }, { focus: 'grid' });
+  }
+
   _control(key) {
     return this.hasGridTarget ? this.gridTarget.querySelector(`[data-date="${key}"]`) : null;
   }

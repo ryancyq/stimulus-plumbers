@@ -48,7 +48,7 @@ the heading is the grid's `aria-labelledby`.
 | Value              | Type    | Default                          | Description                                                                                                                    |
 | ------------------ | ------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `navigation`       | String  | `"stimulus"`                     | `stimulus` draws periods; `turbo` waits for `calendar-turbo`                                                                   |
-| `selected`         | String  | `""`                             | Committed date key                                                                                                             |
+| `selected`         | String  | `""`                             | Committed date key; setting it updates the selection and shows its period                                                      |
 | `selectable`       | Boolean | `false`                          | Day activation commits                                                                                                         |
 | `displayed`        | String  | `selected`, then today           | First period drawn (stimulus)                                                                                                  |
 | `view`             | String  | `"month"`                        | First view drawn: `month`, `year`, or `decade` (stimulus)                                                                      |
