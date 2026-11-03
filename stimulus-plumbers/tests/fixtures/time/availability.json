@@ -422,5 +422,48 @@
       },
       "option": "min"
     }
+  ],
+  "cutoffs": [
+    {
+      "time": "00:30",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00",
+        "from": "01:00"
+      },
+      "expect": true
+    },
+    {
+      "time": "01:30",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00",
+        "from": "01:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "22:30",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00",
+        "from": "01:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "23:00",
+      "availability": {
+        "to": "22:30"
+      },
+      "expect": true
+    },
+    {
+      "time": "22:30",
+      "availability": {
+        "to": "22:30"
+      },
+      "expect": false
+    }
   ]
 }

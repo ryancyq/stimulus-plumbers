@@ -1,0 +1,468 @@
+{
+  "parse": [
+    {
+      "value": "2026-11-03T22:00",
+      "expect": "2026-11-03T22:00"
+    },
+    {
+      "value": "2026-11-03 22:00",
+      "expect": null
+    },
+    {
+      "value": "2026-02-30T10:00",
+      "expect": null
+    },
+    {
+      "value": "2026-11-03T24:00",
+      "expect": null
+    },
+    {
+      "value": "2026-11-03T22:00:00",
+      "expect": null
+    },
+    {
+      "value": "2026-11-03",
+      "expect": null
+    },
+    {
+      "value": "",
+      "expect": null
+    }
+  ],
+  "cases": [
+    {
+      "dateTime": "2026-11-03T21:59",
+      "availability": {
+        "min": "2026-11-03T22:00"
+      },
+      "expect": true
+    },
+    {
+      "dateTime": "2026-11-03T22:00",
+      "availability": {
+        "min": "2026-11-03T22:00"
+      },
+      "expect": false
+    },
+    {
+      "dateTime": "2026-11-04T02:01",
+      "availability": {
+        "max": "2026-11-04T02:00"
+      },
+      "expect": true
+    },
+    {
+      "dateTime": "2026-11-04T01:00",
+      "availability": {
+        "min": "2026-11-03T22:00",
+        "max": "2026-11-04T02:00"
+      },
+      "expect": false
+    },
+    {
+      "dateTime": "2026-11-08T10:00",
+      "availability": {
+        "disabledWeekdays": [
+          0
+        ]
+      },
+      "expect": true
+    },
+    {
+      "dateTime": "2026-11-03T08:00",
+      "availability": {
+        "time": {
+          "min": "09:00"
+        }
+      },
+      "expect": true
+    },
+    {
+      "dateTime": "2026-11-03T09:10",
+      "availability": {
+        "time": {
+          "step": 15
+        }
+      },
+      "expect": true
+    },
+    {
+      "dateTime": "2026-11-03T09:15",
+      "availability": {
+        "time": {
+          "min": "09:00",
+          "max": "17:00",
+          "step": 15
+        }
+      },
+      "expect": false
+    },
+    {
+      "dateTime": "2026-11-03T01:00",
+      "availability": {
+        "time": {
+          "min": "22:00",
+          "max": "02:00"
+        }
+      },
+      "expect": false
+    },
+    {
+      "dateTime": "2026-11-03T03:00",
+      "availability": {
+        "time": {
+          "min": "22:00",
+          "max": "02:00"
+        }
+      },
+      "expect": true
+    },
+    {
+      "dateTime": "2026-11-08T01:00",
+      "availability": {
+        "disabledWeekdays": [
+          0
+        ],
+        "time": {
+          "min": "22:00",
+          "max": "02:00"
+        }
+      },
+      "expect": true
+    },
+    {
+      "dateTime": "2026-11-09T01:00",
+      "availability": {
+        "disabledWeekdays": [
+          0
+        ],
+        "time": {
+          "min": "22:00",
+          "max": "02:00"
+        }
+      },
+      "expect": false
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-11-03",
+      "availability": {
+        "min": "2026-11-03T22:00"
+      },
+      "expect": {
+        "min": null,
+        "max": null,
+        "step": 1,
+        "from": "22:00",
+        "to": null
+      }
+    },
+    {
+      "date": "2026-11-04",
+      "availability": {
+        "min": "2026-11-03T22:00"
+      },
+      "expect": {
+        "min": null,
+        "max": null,
+        "step": 1,
+        "from": null,
+        "to": null
+      }
+    },
+    {
+      "date": "2026-11-03",
+      "availability": {
+        "min": "2026-11-03T08:00",
+        "time": {
+          "min": "09:00",
+          "max": "17:00",
+          "step": 15
+        }
+      },
+      "expect": {
+        "min": "09:00",
+        "max": "17:00",
+        "step": 15,
+        "from": "08:00",
+        "to": null
+      }
+    },
+    {
+      "date": "2026-11-03",
+      "availability": {
+        "min": "2026-11-03T10:00",
+        "time": {
+          "min": "09:00"
+        }
+      },
+      "expect": {
+        "min": "09:00",
+        "max": null,
+        "step": 1,
+        "from": "10:00",
+        "to": null
+      }
+    },
+    {
+      "date": "2026-11-04",
+      "availability": {
+        "max": "2026-11-04T02:00",
+        "time": {
+          "max": "17:00"
+        }
+      },
+      "expect": {
+        "min": null,
+        "max": "17:00",
+        "step": 1,
+        "from": null,
+        "to": "02:00"
+      }
+    },
+    {
+      "date": "2026-11-03",
+      "availability": {
+        "min": "2026-11-03T12:00",
+        "max": "2026-11-03T14:00"
+      },
+      "expect": {
+        "min": null,
+        "max": null,
+        "step": 1,
+        "from": "12:00",
+        "to": "14:00"
+      }
+    },
+    {
+      "date": "2026-11-03",
+      "availability": {
+        "min": "2026-11-03T01:00",
+        "time": {
+          "min": "22:00",
+          "max": "02:00"
+        }
+      },
+      "expect": {
+        "min": "22:00",
+        "max": "02:00",
+        "step": 1,
+        "from": "01:00",
+        "to": null
+      }
+    }
+  ],
+  "dates": [
+    {
+      "name": "bounds give their dates",
+      "availability": {
+        "min": "2026-11-03T22:00",
+        "max": "2026-11-04T02:00"
+      },
+      "expect": {
+        "min": "2026-11-03",
+        "max": "2026-11-04",
+        "disabledDates": [],
+        "disabledWeekdays": [],
+        "disabledMonths": [],
+        "disabledYears": []
+      }
+    },
+    {
+      "name": "a min past the last step leaves its date empty",
+      "availability": {
+        "min": "2026-11-03T23:50",
+        "time": {
+          "step": 15
+        }
+      },
+      "expect": {
+        "min": "2026-11-03",
+        "max": null,
+        "disabledDates": [
+          "2026-11-03"
+        ],
+        "disabledWeekdays": [],
+        "disabledMonths": [],
+        "disabledYears": []
+      }
+    },
+    {
+      "name": "a min after the daily window leaves its date empty",
+      "availability": {
+        "min": "2026-11-03T18:00",
+        "time": {
+          "max": "17:00"
+        }
+      },
+      "expect": {
+        "min": "2026-11-03",
+        "max": null,
+        "disabledDates": [
+          "2026-11-03"
+        ],
+        "disabledWeekdays": [],
+        "disabledMonths": [],
+        "disabledYears": []
+      }
+    },
+    {
+      "name": "date rules pass through",
+      "availability": {
+        "disabledWeekdays": [
+          0,
+          6
+        ],
+        "disabledDates": [
+          "2026-12-25"
+        ]
+      },
+      "expect": {
+        "min": null,
+        "max": null,
+        "disabledDates": [
+          "2026-12-25"
+        ],
+        "disabledWeekdays": [
+          0,
+          6
+        ],
+        "disabledMonths": [],
+        "disabledYears": []
+      }
+    },
+    {
+      "name": "a wrapped window keeps the evening on min's date",
+      "availability": {
+        "min": "2026-11-03T02:30",
+        "time": {
+          "min": "22:00",
+          "max": "02:00"
+        }
+      },
+      "expect": {
+        "min": "2026-11-03",
+        "max": null,
+        "disabledDates": [],
+        "disabledWeekdays": [],
+        "disabledMonths": [],
+        "disabledYears": []
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "valid set",
+      "availability": {
+        "min": "2026-11-03T22:00",
+        "max": "2026-11-04T02:00",
+        "disabledWeekdays": [
+          0
+        ],
+        "time": {
+          "min": "09:00",
+          "step": 15
+        }
+      },
+      "option": null
+    },
+    {
+      "name": "reversed range",
+      "availability": {
+        "min": "2026-11-04T02:00",
+        "max": "2026-11-03T22:00"
+      },
+      "option": "min"
+    },
+    {
+      "name": "min and max on a date with no time left",
+      "availability": {
+        "min": "2026-11-03T10:00",
+        "max": "2026-11-03T11:00",
+        "time": {
+          "min": "12:00",
+          "max": "17:00"
+        }
+      },
+      "option": "min"
+    },
+    {
+      "name": "min and max on neighbouring dates with no time left",
+      "availability": {
+        "min": "2026-11-03T18:00",
+        "max": "2026-11-04T08:00",
+        "time": {
+          "min": "09:00",
+          "max": "17:00"
+        }
+      },
+      "option": "min"
+    },
+    {
+      "name": "a date between min and max keeps the daily window",
+      "availability": {
+        "min": "2026-11-03T18:00",
+        "max": "2026-11-05T08:00",
+        "time": {
+          "min": "09:00",
+          "max": "17:00"
+        }
+      },
+      "option": null
+    },
+    {
+      "name": "non-key min",
+      "availability": {
+        "min": "2026-11-03 22:00"
+      },
+      "option": "min"
+    },
+    {
+      "name": "impossible max",
+      "availability": {
+        "max": "2026-02-30T10:00"
+      },
+      "option": "max"
+    },
+    {
+      "name": "weekday out of range",
+      "availability": {
+        "disabledWeekdays": [
+          7
+        ]
+      },
+      "option": "disabledWeekdays"
+    },
+    {
+      "name": "step off sixty",
+      "availability": {
+        "time": {
+          "step": 7
+        }
+      },
+      "option": "time.step"
+    },
+    {
+      "name": "wrapped daily window",
+      "availability": {
+        "time": {
+          "min": "17:00",
+          "max": "09:00"
+        }
+      },
+      "option": null
+    },
+    {
+      "name": "daily window with no time on the step",
+      "availability": {
+        "time": {
+          "min": "09:05",
+          "max": "09:10",
+          "step": 15
+        }
+      },
+      "option": "time.min"
+    }
+  ]
+}

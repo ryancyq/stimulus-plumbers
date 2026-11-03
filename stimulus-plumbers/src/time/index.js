@@ -16,11 +16,14 @@ export function timeKey({ hour, minute }) {
   return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
 }
 
-// Availability uses time keys for `min` and `max`, a `min` after `max` wrapping past midnight; `step` is minutes
-// counted from midnight.
+// Availability uses time keys for `min` and `max`, a `min` after `max` wrapping past midnight, and for `from` and
+// `to`, which cut off the times before and after them and never wrap; `step` is minutes counted from midnight.
 export function isDisabled(time, availability = {}) {
-  const { min, max, step = 1 } = availability;
-  return outsideWindow(timeKey(time), min, max) || time.minute % step !== 0;
+  const { min, max, from, to, step = 1 } = availability;
+  const key = timeKey(time);
+  return (
+    outsideWindow(key, min, max) || (from != null && key < from) || (to != null && key > to) || time.minute % step !== 0
+  );
 }
 
 // An hour is unavailable when none of its minutes is.

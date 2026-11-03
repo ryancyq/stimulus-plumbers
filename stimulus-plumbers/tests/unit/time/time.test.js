@@ -20,6 +20,12 @@ describe('time core', () => {
     );
   });
 
+  it('cuts off the times before from and after to', () => {
+    availability.cutoffs.forEach(({ time, availability: rules, expect: disabled }) =>
+      expect(isDisabled(parseTimeKey(time), rules)).toBe(disabled)
+    );
+  });
+
   it.each(availability.invalid)('reports unusable availability: $name', ({ availability: rules, option }) => {
     const [error = null] = availabilityErrors(rules);
     expect(error && error.split(' ')[0]).toBe(option);
