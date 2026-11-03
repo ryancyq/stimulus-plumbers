@@ -146,33 +146,36 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
 The browser does not validate these read-only inputs: `required:` sets `aria-required` and a presence validator enforces it, and `min:`, `max:`, `step:`, `disabled_*:`, and `time:` limit the dates and times offered, so validate the value in the model.
 The builder resolves a Proc, Symbol, or callable `min:`, `max:`, `step:`, `disabled_*:`, or `time:` against the form object, as validator options resolve against the record.
 
-**Server enforcement.** Share one hash between the field and the model's `date_availability:` or `time_availability:` validator so they cannot drift:
+**Server enforcement.** Share one hash between the field and the model's `date_availability:`, `time_availability:`, or `datetime_availability:` validator so they cannot drift:
 
 ```ruby
 class Booking < ApplicationRecord
   SLOTS = { min: -> { Date.current }, disabled_weekdays: [0, 6] }.freeze
   HOURS = { min: "09:00", max: "17:00", step: 15 }.freeze
+  VISITS = { min: -> { Time.current }, disabled_weekdays: [0], time: HOURS }.freeze
 
   validates :starts_on, date_availability: SLOTS
   validates :starts_at, time_availability: HOURS
+  validates :visit_at, datetime_availability: VISITS
 end
 ```
 
 ```erb
 <%= f.field :starts_on, as: :date, **Booking::SLOTS %>
 <%= f.field :starts_at, as: :time, **Booking::HOURS %>
+<%= f.field :visit_at, as: :datetime, **Booking::VISITS %>
 ```
 
-| Error             | Message                                | When                                                 |
-| ----------------- | -------------------------------------- | ---------------------------------------------------- |
-| `:invalid`        | Rails' "is invalid"                    | Not a date or `YYYY-MM-DD`, or not a time or `HH:MM` |
-| `:too_early`      | "must be %{count} or later"            | Before `min`                                         |
-| `:too_late`       | "must be %{count} or earlier"          | After `max`                                          |
-| `:outside_window` | "must be from %{min} to %{max}"        | Outside a `min`–`max` that wraps past midnight       |
-| `:unavailable`    | "is not available"                     | A date `disabled_*:` excludes                        |
-| `:step_mismatch`  | "must be in steps of %{count} minutes" | A time off `step:`                                   |
+| Error             | Message                                | When                                                                      |
+| ----------------- | -------------------------------------- | ------------------------------------------------------------------------- |
+| `:invalid`        | Rails' "is invalid"                    | Not a date, a time, or a `YYYY-MM-DD`, `HH:MM`, or `YYYY-MM-DDTHH:MM` key |
+| `:too_early`      | "must be %{count} or later"            | Before `min`                                                              |
+| `:too_late`       | "must be %{count} or earlier"          | After `max`                                                               |
+| `:outside_window` | "must be from %{min} to %{max}"        | Outside a `min`–`max` that wraps past midnight                            |
+| `:unavailable`    | "is not available"                     | A date `disabled_*:` excludes, or a time outside `time:`                  |
+| `:step_mismatch`  | "must be in steps of %{count} minutes" | A time off `step:` or `time: { step: }`                                   |
 
-A blank value passes; pair the validator with `presence:` to require one. A value that fails to cast to a date or time is `:invalid` when the model has `<attribute>_before_type_cast`, as Active Record does; otherwise it reads as blank. Times are read by their clock without seconds; dates as in [`sp_calendar`](calendar.md). `%{count}` is `I18n.l` of the date, or the time in `stimulus_plumbers.availability.time_format`. Unusable static options raise `ArgumentError` when the model loads, and a Proc or Symbol that resolves to one raises when the model validates or the field renders; `message:`, `strict:`, `if:`, `unless:`, and `on:` work as in Rails. The shared hash suits `f.field as: :date` and `as: :time` only: `f.time_field` reads `step` in seconds.
+A blank value passes; pair the validator with `presence:` to require one. A value that fails to cast to a date or time is `:invalid` when the model has `<attribute>_before_type_cast`, as Active Record does; otherwise it reads as blank. Times are read by their clock without seconds; date-times in `Time.zone`, without seconds; dates as in [`sp_calendar`](calendar.md). `%{count}` is `I18n.l` of the date, the time in `stimulus_plumbers.availability.time_format`, or both for a date-time. `time:` resolves as a whole. Unusable static options raise `ArgumentError` when the model loads, and a Proc or Symbol that resolves to one raises when the model validates or the field renders; `message:`, `strict:`, `if:`, `unless:`, and `on:` work as in Rails. The shared hash suits `f.field as: :date`, `as: :time`, and `as: :datetime` only: `f.time_field` reads `step` in seconds.
 
 **Select** (`as: :select`) — select-only combobox ([`sp_combobox_dropdown`](combobox.md#sp_combobox_dropdown)) backed by `combobox`.
 
