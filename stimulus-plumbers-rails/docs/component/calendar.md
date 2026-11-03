@@ -10,7 +10,7 @@
 <%= sp_calendar id: "availability", selectable: true, selected: @booking.date, min: Date.current %>
 ```
 
-`navigation:` picks how periods are rendered; the grid, keys, and events are the same in both
+`navigation:` picks the calendar; the grid, keys, and events are the same in both
 ([JS `calendar`](../../../stimulus-plumbers/docs/component/calendar.md#calendar)).
 
 - `:stimulus` (default): renders a label-free template; the `calendar` controller draws each period
@@ -70,7 +70,6 @@ and the load error) comes from `stimulus_plumbers.calendar.*`.
   id="availability"
   data-controller="calendar"
   data-action="click->calendar#onClick"
-  data-calendar-navigation-value="stimulus"
   data-calendar-displayed-value="2026-09-15"
   data-calendar-view-value="month"
   data-calendar-locale-value="en"

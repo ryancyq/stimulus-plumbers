@@ -67,7 +67,6 @@ Layout/HashAlignment:
 
 Metrics/ClassLength:
   Exclude:
-    - lib/stimulus_plumbers/components/calendar.rb
     - lib/stimulus_plumbers/components/combobox.rb
     - lib/stimulus_plumbers/components/progress_bar.rb
     - lib/stimulus_plumbers/components/timeline/event.rb
@@ -76,7 +75,6 @@ Metrics/ClassLength:
     - lib/stimulus_plumbers/password/requirements.rb
     - test/accessibility/components/popover/combobox_accessibility_test.rb
     - test/generators/**/*_test.rb
-    - test/stimulus_plumbers/components/calendar_test.rb
     - test/stimulus_plumbers/components/checklist_test.rb
     - test/stimulus_plumbers/components/combobox/time_test.rb
     - test/stimulus_plumbers/components/combobox_test.rb

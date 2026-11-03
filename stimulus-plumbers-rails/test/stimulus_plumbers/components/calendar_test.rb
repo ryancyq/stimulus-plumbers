@@ -17,25 +17,21 @@ class CalendarComponentTest < ActionView::TestCase
 
   # render
 
-  def render_calendar(navigation: :turbo, **kwargs)
-    parse_html(renderer.render(id: "cal", today: Date.new(2026, 9, 10), navigation: navigation, **kwargs))
+  def render_calendar(**kwargs)
+    parse_html(renderer.render(id: "cal", today: Date.new(2026, 9, 10), **kwargs))
   end
 
   def test_render_is_a_calendar_with_the_given_id
-    assert_css render_calendar, "div#cal[data-controller~='calendar']"
+    assert_equal "calendar", render_calendar.at_css("div#cal")["data-controller"]
   end
 
   def test_render_announces_from_a_status_region_outside_the_frame
-    doc = render_calendar
-
-    assert_css doc, "#cal > [role='status'][data-calendar-target='status'] + turbo-frame#cal_frame"
-    assert_css doc, "turbo-frame#cal_frame h2#cal_heading"
+    assert_css render_calendar, "#cal > [role='status'][data-calendar-target='status'] + div#cal_frame"
   end
 
-  def test_stimulus_navigation_is_the_default_and_renders_a_label_free_template
-    doc = parse_html(renderer.render(id: "cal"))
+  def test_render_is_a_label_free_template
+    doc = render_calendar
 
-    assert_equal "calendar", doc.at_css("#cal")["data-controller"]
     assert_css doc, "div#cal_frame[hidden] table[role='grid'][aria-labelledby='cal_heading']:empty"
     assert_equal "", doc.at_css("h2#cal_heading").text
     names = doc.css("button[data-navigation]").map { |button| button["data-navigation"] }
@@ -44,16 +40,16 @@ class CalendarComponentTest < ActionView::TestCase
     assert_no_css doc, "[aria-label], turbo-frame"
   end
 
-  def test_stimulus_navigation_renders_templates_for_each_cell
-    doc = parse_html(renderer.render(id: "cal"))
+  def test_render_renders_templates_for_each_cell
+    doc = render_calendar
 
     assert_css doc, "template[data-calendar-target='dateTemplate'] td button[type='button']"
     assert_css doc, "template[data-calendar-target='weekdayTemplate'] th"
     assert_css doc, "template[data-calendar-target='cellTemplate'] td"
   end
 
-  def test_stimulus_navigation_passes_what_the_controller_draws
-    container = render_calendar(navigation: :stimulus, displayed: "2026-12-01", view: :year, first_day_of_week: 1).at_css("#cal")
+  def test_render_passes_what_the_controller_draws
+    container = render_calendar(displayed: "2026-12-01", view: :year, first_day_of_week: 1).at_css("#cal")
 
     assert_equal "2026-12-01", container["data-calendar-displayed-value"]
     assert_equal "year", container["data-calendar-view-value"]
@@ -63,57 +59,11 @@ class CalendarComponentTest < ActionView::TestCase
     assert_equal "Previous month", JSON.parse(container["data-calendar-labels-value"])["previousMonth"]
   end
 
-  def test_turbo_navigation_loads_periods_through_the_adapter
-    container = render_calendar.at_css("#cal")
+  def test_render_falls_back_when_displayed_and_view_are_invalid
+    container = render_calendar(displayed: "not-a-date", view: "week").at_css("#cal")
 
-    assert_equal "calendar calendar-turbo", container["data-controller"]
-    assert_includes container["data-action"].split, "calendar:navigate->calendar-turbo#onNavigate"
-    assert_includes container["data-action"].split, "calendar-turbo:failed->calendar#onFailed"
-  end
-
-  def test_render_links_to_the_adjacent_periods_through_the_url
-    links = render_calendar.css("a[aria-label]").to_h { |link| [link["aria-label"], link["href"]] }
-
-    assert_equal "?cal%5Bdisplayed%5D=2026-08-01&cal%5Bview%5D=month", links["Previous month"]
-    assert_equal "?cal%5Bdisplayed%5D=2026-10-01&cal%5Bview%5D=month", links["Next month"]
-  end
-
-  def test_render_zooms_out_to_the_year
-    link = render_calendar.css("a").find { |a| a.text == "Choose month" }
-
-    assert_equal "?cal%5Bdisplayed%5D=2026-09-10&cal%5Bview%5D=year", link["href"]
-  end
-
-  def test_render_links_from_a_given_url_keeping_its_query
-    href = render_calendar(url: "/people/new?step=2").at_css("a[aria-label='Next month']")["href"]
-
-    assert_equal "/people/new?cal%5Bdisplayed%5D=2026-10-01&cal%5Bview%5D=month&step=2", href
-  end
-
-  def test_render_links_stay_on_this_page_when_the_path_starts_with_slashes
-    request.path = "//evil.example/people"
-    href = render_calendar.at_css("a[aria-label='Next month']")["href"]
-
-    assert_equal "/evil.example/people?cal%5Bdisplayed%5D=2026-10-01&cal%5Bview%5D=month", href
-  end
-
-  def test_render_links_keep_a_current_path_with_unescaped_characters
-    request.path = "/people|archived"
-    href = render_calendar.at_css("a[aria-label='Next month']")["href"]
-
-    assert_equal "/people|archived?cal%5Bdisplayed%5D=2026-10-01&cal%5Bview%5D=month", href
-  end
-
-  def test_render_reads_displayed_and_view_as_the_url_carries_them
-    doc = render_calendar(displayed: "2026-12-01", view: "year")
-
-    assert_equal "2026", doc.at_css("h2").text
-  end
-
-  def test_render_falls_back_when_the_url_carries_invalid_values
-    doc = render_calendar(displayed: "not-a-date", view: "week")
-
-    assert_equal "September 2026", doc.at_css("h2").text
+    assert_equal "2026-09-10", container["data-calendar-displayed-value"]
+    assert_equal "month", container["data-calendar-view-value"]
   end
 
   def test_render_selects_nothing_when_selected_is_not_a_date
@@ -129,31 +79,27 @@ class CalendarComponentTest < ActionView::TestCase
   end
 
   def test_render_accepts_today_as_a_date_key
-    assert_equal "September 2026", render_calendar(today: "2026-09-10").at_css("h2").text
+    assert_equal "2026-09-10", render_calendar(today: "2026-09-10").at_css("#cal")["data-calendar-today-value"]
   end
 
   def test_render_exposes_its_settings_to_the_controller
     container = render_calendar(
-      selected: "2026-09-15", selectable: true, first_day_of_week: 1, min: "2026-09-03", disabled_weekdays: [0, 6]
+      selected: "2026-09-15", selectable: true, min: "2026-09-03", disabled_weekdays: [0, 6]
     ).at_css("#cal")
 
     assert_equal "2026-09-15", container["data-calendar-selected-value"]
     assert_equal "true", container["data-calendar-selectable-value"]
-    assert_equal "turbo", container["data-calendar-navigation-value"]
     assert_equal "The calendar could not be loaded", JSON.parse(container["data-calendar-labels-value"])["error"]
     assert_equal "2026-09-03", container["data-calendar-min-value"]
     assert_equal "[0,6]", container["data-calendar-disabled-weekdays-value"]
   end
 
-  def test_render_marks_the_grid_with_the_period_it_shows
-    grid = render_calendar(displayed: "2026-12-01", view: "year").at_css("table[role='grid']")
-
-    assert_equal "2026-12-01", grid["data-displayed"]
-    assert_equal "year", grid["data-view"]
-  end
-
   def test_render_forwards_html_options_to_the_container
     assert_css render_calendar(class: "my-cal", data: { foo: "bar" }), "div.my-cal[data-foo='bar']"
+  end
+
+  def test_render_drops_url_under_stimulus_navigation
+    assert_nil render_calendar(url: "/calendar").at_css("#cal")["url"]
   end
 
   def test_render_styles_each_part_from_the_theme
@@ -161,7 +107,7 @@ class CalendarComponentTest < ActionView::TestCase
                calendar_cell calendar_date]
     original = StimulusPlumbers.config.theme.current
     StimulusPlumbers.config.theme.use(key_theme(parts))
-    doc = render_calendar(selectable: true)
+    doc = render_calendar
 
     parts.each { |key| assert doc.at_css(".sp-#{key}"), "#{key} is unstyled" }
   ensure
@@ -170,7 +116,6 @@ class CalendarComponentTest < ActionView::TestCase
 
   def test_render_rejects_invalid_options
     assert_raises(ArgumentError) { renderer.render(id: "") }
-    assert_raises(ArgumentError) { render_calendar(navigation: :fetch) }
     assert_raises(ArgumentError) { render_calendar(first_day_of_week: 7) }
     assert_raises(ArgumentError) { render_calendar(today: "2026-9-10") }
     assert_raises(ArgumentError) { render_calendar(min: "2026-09-20", max: "2026-09-01") }

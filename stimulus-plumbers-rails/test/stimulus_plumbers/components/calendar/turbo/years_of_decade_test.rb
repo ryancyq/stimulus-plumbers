@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class CalendarYearsOfDecadeTest < ActionView::TestCase
+class CalendarTurboYearsOfDecadeTest < ActionView::TestCase
   def render_decade(**kwargs)
     parse_html(
       StimulusPlumbers::Components::Calendar.new(self).render(
-        id: "cal", today: Date.new(2026, 9, 10), view: :decade, navigation: :turbo, **kwargs
+        navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), view: :decade, **kwargs
       )
     )
   end

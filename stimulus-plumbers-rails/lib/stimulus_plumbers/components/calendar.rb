@@ -2,117 +2,57 @@
 
 module StimulusPlumbers
   module Components
+    # The `calendar` container: settings and availability values, the status region, and the navigation's body.
     class Calendar < Plumber::Base
       include Plumber::Options::Choice
 
-      STIMULUS_CONTROLLER   = "calendar"
-      TURBO_CONTROLLER      = "calendar-turbo"
-      VIEWS                 = %i[month year decade].freeze
-      NAVIGATIONS           = %i[stimulus turbo].freeze
-      AVAILABILITY_OPTIONS  = %i[min max disabled_dates disabled_weekdays disabled_months disabled_years].freeze
-      CONFIGURATION_OPTIONS = %i[displayed selected today selectable show_other_months first_day_of_week url].freeze
-      TURBO_ACTIONS         = [
-        "click->#{STIMULUS_CONTROLLER}#onClick",
-        "calendar:navigate->#{TURBO_CONTROLLER}#onNavigate",
-        "turbo:before-fetch-response->#{TURBO_CONTROLLER}#onResponse",
-        "turbo:frame-missing->#{TURBO_CONTROLLER}#onError",
-        "turbo:fetch-request-error->#{TURBO_CONTROLLER}#onError",
-        "#{TURBO_CONTROLLER}:failed->#{STIMULUS_CONTROLLER}#onFailed"
-      ].join(" ").freeze
+      STIMULUS_CONTROLLER = "calendar"
+      VIEWS               = %i[month year decade].freeze
+      NAVIGATIONS         = %i[stimulus turbo].freeze
 
-      class << self
-        def frame_id_for(id)
-          "#{id}_frame"
-        end
-
-        def display(date)
-          I18n.l(date, format: :long)
-        end
-      end
-
-      # Options: CONFIGURATION_OPTIONS and AVAILABILITY; the rest go to the container. An invalid `displayed`
-      # or `view` falls back to its default.
-      # `:stimulus` renders a template the controller draws; `:turbo` renders the period in a Turbo Frame.
+      # Options: `navigation` (`:stimulus` or `:turbo`), `url` with `:turbo`, Configuration::OPTIONS, and
+      # Availability::OPTIONS; the rest go to the container.
       def render(id:, view: nil, navigation: :stimulus, **kwargs)
-        validate_id!(id)
-        view = view_for(view, build_configuration(id.to_s, kwargs))
-        navigation = validate_choice!(navigation, NAVIGATIONS, :navigation)
+        body          = navigation_for(navigation, kwargs.delete(:url))
+        configuration = Configuration.extract!(id, view, kwargs)
 
-        template.content_tag(:div, **container_attrs(id, kwargs, view, navigation)) do
-          template.safe_join([status, period_frame(id, view, navigation)])
+        template.content_tag(:div, **container_attrs(configuration, kwargs, body.stimulus_data(configuration))) do
+          template.safe_join([status, body.render(configuration)])
         end
       end
 
       private
 
-      def build_configuration(id, kwargs)
-        options = kwargs.extract!(*CONFIGURATION_OPTIONS)
-        Configuration.new(
-          id:                id,
-          **configuration_dates(options),
-          selectable:        options.fetch(:selectable, false),
-          show_other_months: options.fetch(:show_other_months, false),
-          first_day_of_week: parse_first_day_of_week!(options[:first_day_of_week]),
-          availability:      Availability.new(**kwargs.extract!(*AVAILABILITY_OPTIONS)),
-          link:              period_link(id, options[:url])
+      def navigation_for(navigation, url)
+        case validate_choice!(navigation, NAVIGATIONS, :navigation)
+        when :stimulus then Stimulus.new(template)
+        when :turbo    then Turbo.new(template, url)
+        end
+      end
+
+      def container_attrs(configuration, html_options, data)
+        merge_html_options(
+          theme.resolve(:calendar),
+          html_options,
+          {
+            id:   configuration.id,
+            data: {
+              controller: STIMULUS_CONTROLLER,
+              action:     "click->#{STIMULUS_CONTROLLER}#onClick",
+              **settings_values(configuration),
+              **availability_values(configuration.availability)
+            }
+          },
+          { data: data }
         )
       end
 
-      def configuration_dates(options)
-        today = optional_date(options[:today], :today) || Date.current
-        {
-          today:     today,
-          displayed: date_or_nil(options[:displayed]) || today,
-          selected:  date_or_nil(options[:selected])
-        }
-      end
-
-      def optional_date(value, name)
-        Availability.date(value, name) unless value.nil?
-      end
-
-      def date_or_nil(value)
-        optional_date(value, :date)
-      rescue ArgumentError
-        nil
-      end
-
-      def render_period(view)
-        template.safe_join([Header.new(template).render(view), view.render])
-      end
-
-      def container_attrs(id, kwargs, view, navigation)
-        turbo = navigation == :turbo
-        data  = {
-          controller: [STIMULUS_CONTROLLER, (TURBO_CONTROLLER if turbo)].compact.join(" "),
-          action:     turbo ? TURBO_ACTIONS : "click->#{STIMULUS_CONTROLLER}#onClick",
-          **settings_values(view.configuration, navigation),
-          **(turbo ? {} : period_values(view).compact),
-          **availability_values(view.configuration)
-        }
-        merge_html_options(theme.resolve(:calendar), kwargs, { id: id, data: data })
-      end
-
-      # Container values; the grid carries the shown period.
-      def settings_values(configuration, navigation)
+      def settings_values(configuration)
         {
           "calendar-selected-value"   => configuration.selected&.iso8601,
           "calendar-selectable-value" => configuration.selectable.to_s,
-          "calendar-navigation-value" => navigation.to_s,
           "calendar-labels-value"     => labels.to_json
         }.compact
-      end
-
-      def period_values(view)
-        configuration = view.configuration
-        {
-          "calendar-displayed-value"         => configuration.displayed.iso8601,
-          "calendar-view-value"              => view.view_name.to_s,
-          "calendar-today-value"             => configuration.today.iso8601,
-          "calendar-locale-value"            => I18n.locale.to_s.tr("_", "-"),
-          "calendar-first-day-of-week-value" => configuration.first_day_of_week.to_s,
-          "calendar-show-other-months-value" => configuration.show_other_months.to_s
-        }
       end
 
       def labels
@@ -130,20 +70,15 @@ module StimulusPlumbers
         }
       end
 
-      def availability_values(configuration)
-        availability = configuration.availability
+      def availability_values(availability)
         {
-          "calendar-min-value"               => key(availability.min),
-          "calendar-max-value"               => key(availability.max),
+          "calendar-min-value"               => availability.min&.iso8601,
+          "calendar-max-value"               => availability.max&.iso8601,
           "calendar-disabled-dates-value"    => json(availability.disabled_dates.map(&:iso8601)),
           "calendar-disabled-weekdays-value" => json(availability.disabled_weekdays),
           "calendar-disabled-months-value"   => json(availability.disabled_months),
           "calendar-disabled-years-value"    => json(availability.disabled_years)
         }.compact
-      end
-
-      def key(date)
-        date&.iso8601
       end
 
       def json(values)
@@ -160,39 +95,6 @@ module StimulusPlumbers
             { role: "status", data: { "#{STIMULUS_CONTROLLER}-target" => "status" } }
           )
         )
-      end
-
-      def period_frame(id, view, navigation)
-        return Stimulus.new(template).render(view) unless navigation == :turbo
-
-        template.content_tag(:"turbo-frame", id: self.class.frame_id_for(id)) { render_period(view) }
-      end
-
-      # Builds a period URL from a date and a view; nil disables the control.
-      def period_link(id, url)
-        generator, init_args = url.nil? || url.is_a?(String) ? [PeriodUrl, [template, id, url]] : [url, []]
-        lambda do |date, view|
-          dispatcher = Plumber::Dispatcher.build(generator, date, view, method_name: :call, init_args: init_args)
-          raise ArgumentError, "invalid url: #{url.inspect}" unless dispatcher
-
-          dispatcher.call(template).presence
-        end
-      end
-
-      def view_for(view, configuration)
-        name = VIEWS.find { |candidate| candidate.to_s == view.to_s } || :month
-        { month: DaysOfMonth, year: MonthsOfYear, decade: YearsOfDecade }.fetch(name).new(template, configuration)
-      end
-
-      def parse_first_day_of_week!(value)
-        value = DateAndTime::Calculations::DAYS_INTO_WEEK.fetch(Date.beginning_of_week) if value.nil?
-        return value if value.is_a?(Integer) && (0..6).cover?(value)
-
-        raise ArgumentError, "first_day_of_week must be 0–6"
-      end
-
-      def validate_id!(id)
-        raise ArgumentError, "calendar id must be a nonblank stable id" if id.to_s.blank?
       end
     end
   end

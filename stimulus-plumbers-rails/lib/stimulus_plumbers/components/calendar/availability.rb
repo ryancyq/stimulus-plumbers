@@ -5,6 +5,7 @@ module StimulusPlumbers
     class Calendar
       # Dates are Date objects, YYYY-MM-DD keys, or times read as their date in Time.zone.
       class Availability
+        OPTIONS     = %i[min max disabled_dates disabled_weekdays disabled_months disabled_years].freeze
         KEY_PATTERN = %r{\A\d{4}-\d{2}-\d{2}\z}
 
         attr_reader :min, :max, :disabled_dates, :disabled_weekdays, :disabled_months, :disabled_years

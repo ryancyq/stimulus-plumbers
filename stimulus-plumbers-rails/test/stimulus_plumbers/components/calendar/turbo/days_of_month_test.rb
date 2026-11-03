@@ -2,10 +2,10 @@
 
 require "test_helper"
 
-class CalendarDaysOfMonthTest < ActionView::TestCase
+class CalendarTurboDaysOfMonthTest < ActionView::TestCase
   def render_month(**kwargs)
     html = StimulusPlumbers::Components::Calendar.new(self).render(
-      id: "cal", today: Date.new(2026, 9, 10), first_day_of_week: 0, navigation: :turbo, **kwargs
+      navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), first_day_of_week: 0, **kwargs
     )
     parse_html(html)
   end
