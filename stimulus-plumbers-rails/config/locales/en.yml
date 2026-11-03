@@ -1,5 +1,14 @@
 en:
+  errors:
+    messages:
+      too_early: "must be %{count} or later"
+      too_late: "must be %{count} or earlier"
+      outside_window: "must be from %{min} to %{max}"
+      unavailable: "is not available"
+      step_mismatch: "must be in steps of %{count} minutes"
   stimulus_plumbers:
+    availability:
+      time_format: "%-l:%M %p"
     avatar:
       image_alt: "%{name}'s avatar"
     calendar:
