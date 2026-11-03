@@ -5,6 +5,7 @@ import { PhoneFormatter } from './formatters/phone';
 import { CurrencyFormatter } from './formatters/currency';
 import { DateFormatter } from './formatters/date';
 import { TimeFormatter } from './formatters/time';
+import { DatetimeFormatter } from './formatters/datetime';
 import { CodeFormatter } from './formatters/code';
 
 export const FORMATTER_TYPES = {
@@ -14,6 +15,7 @@ export const FORMATTER_TYPES = {
   CURRENCY: 'currency',
   DATE: 'date',
   TIME: 'time',
+  DATETIME: 'datetime',
   CODE: 'code',
 };
 
@@ -24,6 +26,7 @@ const registry = new Map([
   [FORMATTER_TYPES.CURRENCY, CurrencyFormatter],
   [FORMATTER_TYPES.DATE, DateFormatter],
   [FORMATTER_TYPES.TIME, TimeFormatter],
+  [FORMATTER_TYPES.DATETIME, DatetimeFormatter],
   [FORMATTER_TYPES.CODE, CodeFormatter],
 ]);
 
