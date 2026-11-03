@@ -36,6 +36,7 @@ Exposes `this.formatter` on the controller.
 | `'currency'`   | `CurrencyFormatter`   | Locale-aware normalisation and `Intl.NumberFormat` display                                                  |
 | `'date'`       | `DateFormatter`       | Normalises to ISO 8601; `Intl.DateTimeFormat` display                                                       |
 | `'time'`       | `TimeFormatter`       | Normalises to `HH:MM` (24h); `Intl.DateTimeFormat` display (`locale` plus Intl options such as `hourCycle`) |
+| `'datetime'`   | `DatetimeFormatter`   | Trims to `YYYY-MM-DDTHH:MM`; `Intl.DateTimeFormat` display on the wall clock                                |
 
 ## Custom formatters
 
