@@ -42,7 +42,7 @@ this.rovingTabIndex?.updateItems(this.triggerTargets);
 Use when: DOM focus stays on one owner element while the active option of a listbox changes (`combobox`, each `combobox-time` column).
 
 - The active option is `aria-selected="true"`, and the owner's `aria-activedescendant` references it; options get an id when they lack one.
-- `activate(option)`, `move(delta)`, `first()`, `last()`, and `clear()` change it; `move` stops at the ends and skips options that `enabled` rejects.
+- `activate(option)`, `move(delta)`, `first()`, `last()`, and `clear()` change it; `move` stops at the ends and skips options that `enabled` rejects, and from a rejected active option goes to the nearest enabled option on the delta's side, or on the other side when that side has none.
 - `active` returns the active option, or `null` once it is removed or no longer enabled.
 - The owner is an element, or a function returning the current one.
 - `ActiveDescendant` is **passive** — it attaches no listeners. The controller maps keys to moves.
