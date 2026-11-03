@@ -124,4 +124,5 @@ if defined?(ActiveModel::EachValidator)
   require_relative "stimulus_plumbers/password_strength_validator"
   require_relative "stimulus_plumbers/date_availability_validator"
   require_relative "stimulus_plumbers/time_availability_validator"
+  require_relative "stimulus_plumbers/datetime_availability_validator"
 end
