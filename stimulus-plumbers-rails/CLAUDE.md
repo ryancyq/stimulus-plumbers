@@ -14,6 +14,7 @@ stimulus-plumbers-rails/
 │   │   ├── plumber/                      # Shared base classes; options/ holds the option mixins; Base includes the merging ones
 │   │   ├── themes/                       # Base theme, registry, key schema (schema/<component>/ ranges), icons/
 │   │   ├── dates/                        # Dates::Availability — the dates a date field offers; dates.rb parses date keys
+│   │   ├── times/                        # Times::Availability — the times a time field offers; times.rb parses time keys
 │   │   ├── password/                     # Password::Requirements — server and client rule source of truth
 │   │   ├── generators/                   # Install generator helpers
 │   │   └── *.rb                          # Engine, configuration, and other top-level support
