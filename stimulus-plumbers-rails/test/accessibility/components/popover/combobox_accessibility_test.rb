@@ -26,6 +26,13 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#combobox-time"
   end
 
+  def test_passes_wcag_with_combobox_time_range_open
+    find("#opening").click
+
+    assert_selector "#combobox-time-range [role='combobox'][aria-expanded='true']"
+    assert_accessible context: "#combobox-time-range"
+  end
+
   def test_passes_wcag_with_dropdown_open
     open_combobox "#combobox-dropdown"
 
@@ -327,6 +334,13 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     assert_equal "15:30", find("input[name='standup']", visible: :hidden).value
     assert_match(%r{\A3:30[[:space:]]PM\z}, find("#standup").value)
     assert_selector "#standup[aria-expanded='true']"
+  end
+
+  def test_home_chooses_the_first_available_hour
+    find("#opening").click
+    press :down, :home
+
+    assert_equal "09:00", find("input[name='opening']", visible: :hidden).value
   end
 
   def test_clicking_an_option_updates_the_time
