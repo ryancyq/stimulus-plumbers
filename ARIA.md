@@ -84,7 +84,7 @@
 - Enter closes the popover and keeps the value; Tab out of the columns, focus elsewhere, or an outside click closes and keeps it; Escape restores the value from opening, closes the popover, and keeps an enclosing modal open; Enter and Escape return focus to the input
 - Columns show a visible focus indicator (WCAG 2.4.7)
 
-#### Date-time combobox (`combobox-datetime`)
+#### Date-time combobox (`sp_combobox_datetime`, `combobox-datetime`)
 - Trigger and opening as the date combobox; the popover holds the calendar, then the time columns, in Tab order
 - ArrowDown moves focus to the calendar's Tab stop; choosing a date keeps the popover open, and Tab moves on to the hour column
 - The calendar and columns follow their own patterns above; the columns judge times against the chosen date

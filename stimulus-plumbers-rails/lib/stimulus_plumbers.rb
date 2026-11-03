@@ -95,6 +95,7 @@ require_relative "stimulus_plumbers/components/combobox/temporal/trigger"
 require_relative "stimulus_plumbers/components/combobox/date"
 require_relative "stimulus_plumbers/components/combobox/time"
 require_relative "stimulus_plumbers/components/combobox/time/columns"
+require_relative "stimulus_plumbers/components/combobox/datetime"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field"

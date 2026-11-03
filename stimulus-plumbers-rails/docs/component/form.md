@@ -141,8 +141,10 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
 
 **Time** (`as: :time`) — [`sp_combobox_time`](combobox.md#sp_combobox_time), labelled and described by the field; it takes the same options (`format:`, `min:`, `max:`, `step:`, `open_on_focus:`). Use `f.time_field` for a plain `<input type="time">`.
 
-The browser does not validate either read-only input: `required:` sets `aria-required` and a presence validator enforces it, and `min:`, `max:`, `step:`, and `disabled_*:` limit the dates and times offered, so validate the value in the model.
-The builder resolves a Proc, Symbol, or callable `min:`, `max:`, `step:`, or `disabled_*:` against the form object, as validator options resolve against the record.
+**Date and time** (`as: :datetime`) — [`sp_combobox_datetime`](combobox.md#sp_combobox_datetime), labelled and described by the field; it takes the same options (`format:`, `calendar:`, `min:`, `max:`, `disabled_*:`, `time:`, `open_on_focus:`). Use `f.datetime_local_field` for a plain `<input type="datetime-local">`.
+
+The browser does not validate these read-only inputs: `required:` sets `aria-required` and a presence validator enforces it, and `min:`, `max:`, `step:`, `disabled_*:`, and `time:` limit the dates and times offered, so validate the value in the model.
+The builder resolves a Proc, Symbol, or callable `min:`, `max:`, `step:`, `disabled_*:`, or `time:` against the form object, as validator options resolve against the record.
 
 **Server enforcement.** Share one hash between the field and the model's `date_availability:` or `time_availability:` validator so they cannot drift:
 

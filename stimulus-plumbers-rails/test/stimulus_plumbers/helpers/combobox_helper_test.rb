@@ -83,4 +83,14 @@ class ComboboxHelperTest < ActionView::TestCase
       assert_css doc, "input[type='hidden'][name='meeting'][value='14:30']"
     end
   end
+
+  class DatetimeTest < ComboboxHelperTest
+    def test_renders_a_datetime_combobox
+      doc = parse_html(sp_combobox_datetime(name: "booking", label: "Booking", value: "2026-11-03T22:00"))
+
+      assert_css doc, "[data-controller~='combobox-datetime']"
+      assert_css doc, "input[role='combobox'][aria-label='Booking']"
+      assert_css doc, "input[type='hidden'][name='booking'][value='2026-11-03T22:00']"
+    end
+  end
 end
