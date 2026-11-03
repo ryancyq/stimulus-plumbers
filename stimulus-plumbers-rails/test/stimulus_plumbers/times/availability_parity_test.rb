@@ -20,6 +20,14 @@ class TimesAvailabilityParityTest < ActiveSupport::TestCase
     end
   end
 
+  TimeFixtures.fixture("availability")["trims"].each_with_index do |rule, index|
+    define_method("test_trim_#{index}_#{rule["time"].delete(":")}") do
+      availability = build(rule["availability"]).trim(from: rule["from"], to: rule["to"])
+
+      assert_equal rule["expect"], availability.disabled?(rule["time"]).present?
+    end
+  end
+
   TimeFixtures.fixture("availability")["invalid"].each do |rule|
     define_method("test_invalid_#{rule["name"].parameterize(separator: "_")}") do
       availability = -> { build(rule["availability"]) }

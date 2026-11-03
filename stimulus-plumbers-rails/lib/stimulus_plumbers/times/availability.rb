@@ -43,6 +43,16 @@ module StimulusPlumbers
         HOURS.all? { |hour| hour_disabled?(hour) }
       end
 
+      # A copy whose ranges stop before `from` and after `to`, time keys; it may leave no time.
+      def trim(from: nil, to: nil)
+        trimmed = ranges.map { |start, finish| [[start, from].compact.max, [finish, to].compact.min] }
+        dup.tap { |copy| copy.ranges = trimmed.select { |start, finish| start <= finish } }
+      end
+
+      protected
+
+      attr_writer :ranges
+
       private
 
       # Inclusive [start, finish] time keys; a window that wraps past midnight is two ranges.

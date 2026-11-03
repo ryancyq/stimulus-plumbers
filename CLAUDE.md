@@ -16,6 +16,7 @@ bin/                       # Repo scripts
 
 ## Design Principle
 - Follow WCAG 2.1 Level AA (see [ARIA.md](ARIA.md) for the full criteria table and component ARIA patterns)
+- Date, time, and date-time availability that decides what a field offers or accepts is the same in JS and Ruby, as `stimulus-plumbers/tests/fixtures/` specifies; the validators' whole-value checks and messages are Ruby-only
 
 ## Release
 - `bin/release <version>` — build + commit + publish all four packages (npm, rails, tailwind, mcp)
