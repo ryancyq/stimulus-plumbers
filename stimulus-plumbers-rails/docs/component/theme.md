@@ -74,16 +74,17 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Combobox
 
-| Key                           | Component                                                                          | Variants                 |
-| ----------------------------- | ---------------------------------------------------------------------------------- | ------------------------ |
-| `combobox_listbox`            | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time` columns (the `<ul>`) | —                        |
-| `combobox_option`             | `Combobox::Options::Option`                                                        | —                        |
-| `combobox_option_description` | `Combobox::Options::Option` (description)                                          | —                        |
-| `combobox_option_group`       | `Combobox::Options::OptionGroup`                                                   | —                        |
-| `combobox_option_group_label` | `Combobox::Options::OptionGroup` (label)                                           | —                        |
-| `combobox_status`             | `Combobox::Typeahead` (empty, loading, and error status)                           | —                        |
-| `combobox_time`               | `Combobox::Time` panel (columns row)                                               | —                        |
-| `combobox_time_drum`          | `Combobox::Time` column                                                            | `type: :unit\|:meridiem` |
+| Key                           | Component                                                                                                   | Variants                 |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `combobox_listbox`            | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time` and `Combobox::Datetime` columns (the `<ul>`) | —                        |
+| `combobox_option`             | `Combobox::Options::Option`                                                                                 | —                        |
+| `combobox_option_description` | `Combobox::Options::Option` (description)                                                                   | —                        |
+| `combobox_option_group`       | `Combobox::Options::OptionGroup`                                                                            | —                        |
+| `combobox_option_group_label` | `Combobox::Options::OptionGroup` (label)                                                                    | —                        |
+| `combobox_status`             | `Combobox::Typeahead` (empty, loading, and error status)                                                    | —                        |
+| `combobox_time`               | `Combobox::Time` and `Combobox::Datetime` panels (columns row)                                              | —                        |
+| `combobox_datetime`           | `Combobox::Datetime` panel (calendar and columns)                                                           | —                        |
+| `combobox_time_drum`          | `Combobox::Time` and `Combobox::Datetime` column                                                            | `type: :unit\|:meridiem` |
 
 ### Other components
 

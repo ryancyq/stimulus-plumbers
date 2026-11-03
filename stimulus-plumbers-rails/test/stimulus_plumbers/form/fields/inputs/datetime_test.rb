@@ -36,6 +36,13 @@ class DatetimeTest < ActionView::TestCase
     parse_html(html)
   end
 
+  def build_datetime_combobox(**opts)
+    html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
+      f.field(:appointment, as: :datetime, **opts)
+    end
+    parse_html(html)
+  end
+
   def test_date_native_renders_date_input
     assert_css build_native_date, "input[type='date']"
   end
@@ -145,6 +152,44 @@ class DatetimeTest < ActionView::TestCase
     assert_equal "09:00", container["data-combobox-time-min-value"]
     assert_equal "17:00", container["data-combobox-time-max-value"]
     assert_equal "15", container["data-combobox-time-step-value"]
+  end
+
+  def test_datetime_renders_a_labelled_combobox_submitting_the_attribute
+    @form.appointment = "2026-11-03T22:00"
+    doc = build_datetime_combobox(label: "Appointment")
+
+    assert_css doc,
+               "[data-controller~='combobox-datetime'] input[role='combobox'][aria-labelledby='sign_in_form_appointment_label']"
+    assert_css doc, "input[type='hidden'][name='sign_in_form[appointment]'][value='2026-11-03T22:00']"
+  end
+
+  def test_datetime_resolves_proc_options_against_the_object
+    container = build_datetime_combobox(min: -> { "2026-11-03T22:00" }, time: { step: 15 })
+                .at_css("[data-controller~='combobox-datetime']")
+
+    assert_equal "2026-11-03T22:00", container["data-combobox-datetime-min-value"]
+    assert_equal "15", container["data-combobox-datetime-step-value"]
+  end
+
+  def test_datetime_gives_the_controller_its_date_rules
+    container = build_datetime_combobox(disabled_weekdays: [0, 6]).at_css("[data-controller~='combobox-datetime']")
+
+    assert_equal "[0,6]", container["data-combobox-datetime-disabled-weekdays-value"]
+    assert_nil container["data-combobox-datetime-disabled-dates-value"]
+  end
+
+  def test_datetime_points_the_controller_at_its_calendar
+    container = build_datetime_combobox.at_css("[data-controller~='combobox-datetime']")
+
+    assert_equal "#sign_in_form_appointment_calendar", container["data-combobox-datetime-calendar-outlet"]
+  end
+
+  def test_datetime_raises_when_proc_options_leave_no_time
+    error = assert_raises(ArgumentError) do
+      build_datetime_combobox(min: -> { "2026-11-03T10:00" }, max: "2026-11-03T11:00", time: { min: "12:00", max: "17:00" })
+    end
+
+    assert_match(%r{leave no time}, error.message)
   end
 
   def test_time_native_renders_time_input

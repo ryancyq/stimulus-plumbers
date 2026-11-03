@@ -96,6 +96,7 @@ module StimulusPlumbers
         combobox_typeahead_popover:  {}.freeze,
         combobox_date_popover:       {}.freeze,
         combobox_time_popover:       {}.freeze,
+        combobox_datetime_popover:   {}.freeze,
         combobox_trigger:            {}.freeze,
         combobox_trigger_icon:       {}.freeze,
         combobox_trigger_group:      {}.freeze,
@@ -106,6 +107,7 @@ module StimulusPlumbers
         combobox_listbox:            {}.freeze,
         combobox_status:             {}.freeze,
         combobox_time:               {}.freeze,
+        combobox_datetime:           {}.freeze,
         combobox_time_drum:          { type: { default: :unit, validate: %i[unit meridiem] } }.freeze
       }.freeze
 
