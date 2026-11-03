@@ -81,7 +81,7 @@ The engine re-runs the installer before `assets:precompile` to restore a missing
 `StimulusPlumbers::Form::Builder` wraps all components as model-aware form fields with automatic label, name/id, error, and ARIA wiring.
 
 Password fields support strength rules that also enforce server-side via `validates :password, password_strength:`.
-Date and time fields share their available dates and times with the `date_availability:` and `time_availability:` validators.
+Date and time fields share their available dates and times with the `date_availability:`, `time_availability:`, and `datetime_availability:` validators.
 
 → [docs/component/form.md](docs/component/form.md)
 
