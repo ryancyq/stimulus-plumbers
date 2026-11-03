@@ -26,6 +26,13 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#combobox-time"
   end
 
+  def test_passes_wcag_with_combobox_time_range_open
+    find("#opening").click
+
+    assert_selector "#combobox-time-range [role='combobox'][aria-expanded='true']"
+    assert_accessible context: "#combobox-time-range"
+  end
+
   def test_passes_wcag_with_dropdown_open
     open_combobox "#combobox-dropdown"
 

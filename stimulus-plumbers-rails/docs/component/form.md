@@ -139,9 +139,9 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
 
 **Date** (`as: :date`) — [`sp_combobox_date`](combobox.md#sp_combobox_date), labelled and described by the field; it takes the same options (`format:`, `open_on_focus:`, `calendar:`, `min:`, `max:`, `disabled_*:`). Use `f.date_field` for a plain `<input type="date">`.
 
-**Time** (`as: :time`) — [`sp_combobox_time`](combobox.md#sp_combobox_time), labelled and described by the field; it takes the same options (`format:`, `step:`, `open_on_focus:`). Use `f.time_field` for a plain `<input type="time">`.
+**Time** (`as: :time`) — [`sp_combobox_time`](combobox.md#sp_combobox_time), labelled and described by the field; it takes the same options (`format:`, `min:`, `max:`, `step:`, `open_on_focus:`). Use `f.time_field` for a plain `<input type="time">`.
 
-The browser does not validate either read-only input: `required:` sets `aria-required` and a presence validator enforces it, and `min:`, `max:`, and `disabled_*:` limit the dates offered, so validate the value in the model.
+The browser does not validate either read-only input: `required:` sets `aria-required` and a presence validator enforces it, and `min:`, `max:`, `step:`, and `disabled_*:` limit the dates and times offered, so validate the value in the model.
 
 **Select** (`as: :select`) — select-only combobox ([`sp_combobox_dropdown`](combobox.md#sp_combobox_dropdown)) backed by `combobox`.
 

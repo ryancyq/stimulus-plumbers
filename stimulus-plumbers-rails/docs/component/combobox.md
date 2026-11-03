@@ -159,14 +159,18 @@ It takes the `sp_combobox_date` options `name`, `label`/`labelledby`, `id`, `ope
 
 ```erb
 <%= sp_combobox_time(name: "event[starts_at]", value: @event.starts_at, label: "Starts at",
-                     format: { hourCycle: "h23" }, step: 15) %>
+                     format: { hourCycle: "h23" }, min: "09:00", max: "17:00", step: 15) %>
 ```
 
-| Option   | Default | Description                                                                                             |
-| -------- | ------- | ------------------------------------------------------------------------------------------------------- |
-| `value`  | `nil`   | A time or `HH:MM`; submits `HH:MM`; other text shows as is and selects nothing                          |
-| `format` | `{}`    | `input-formatter` options, passed as given; `locale` defaults to `I18n.locale` and `hourCycle` to `h12` |
-| `step`   | `1`     | Minute interval; `15` lists 00, 15, 30, 45; a minute off it selects no minute and is kept               |
+| Option       | Default | Description                                                                                                                                 |
+| ------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`      | `nil`   | A time, read by its clock without seconds, or `HH:MM`; submits `HH:MM`; other text shows as is and selects nothing                          |
+| `format`     | `{}`    | `input-formatter` options, passed as given; `locale` defaults to `I18n.locale` and `hourCycle` to `h12`                                     |
+| `min`, `max` | `nil`   | Available range as times or `HH:MM`, inclusive; a `min` after `max` wraps past midnight; options outside it are unavailable                 |
+| `step`       | `1`     | Minutes counted from midnight, one of 1–6, 10, 12, 15, 20, 30, 60; `15` lists 00, 15, 30, 45; a minute off it selects no minute and is kept |
+
+A `min` or `max` that is not a time or `HH:MM`, a `min`–`max` with no time on the `step`, or another `step` raises
+`ArgumentError`. An unavailable `value` stays selected; validate it in the model.
 
 `hourCycle: "h11"`/`"h12"` or `hour12: true` adds the AM/PM column with hours 1–12; otherwise hours run 00–23.
 Column names come from `stimulus_plumbers.combobox.time.*_label`; AM and PM labels from
@@ -175,9 +179,10 @@ Column names come from `stimulus_plumbers.combobox.time.*_label`; AM and PM labe
 ```html
 <div
   data-controller="popover combobox-time input-formatter"
+  data-combobox-time-step-value="1"
   data-input-formatter-format-value="time"
   data-input-formatter-options-value='{"hourCycle":"h12","locale":"en"}'
-  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
+  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened popover:closed->combobox-time#onClosed focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
 >
   <div class="[combobox_trigger_group theme classes]">
     <input

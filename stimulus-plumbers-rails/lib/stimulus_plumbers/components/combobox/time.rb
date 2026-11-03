@@ -11,27 +11,25 @@ module StimulusPlumbers
         POPOVER_KEY         = :combobox_time_popover
         ACTIONS             = [
           "popover:before-open->#{STIMULUS_CONTROLLER}#onOpening",
-          "popover:opened->#{STIMULUS_CONTROLLER}#onOpened"
+          "popover:opened->#{STIMULUS_CONTROLLER}#onOpened",
+          "popover:closed->#{STIMULUS_CONTROLLER}#onClosed"
         ].freeze
 
-        # `step:` is the minute interval; a minute off it selects no minute.
-        def render(step: 1, **kwargs)
-          @step = [1, step.to_i].max
-          super(**kwargs)
+        # Options: Times::Availability::OPTIONS; a minute off the `step:` selects no minute.
+        def render(**kwargs)
+          @availability = Times::Availability.new(**kwargs.extract!(*Times::Availability::OPTIONS))
+          super
         end
 
         private
 
-        # [hour, minute] from a time or an "HH:MM" string; anything else renders as text.
+        # [hour, minute] from a time or a time key; anything else renders as text.
         def parse(value)
-          return [value.hour, value.min] if value.respond_to?(:hour) && value.respond_to?(:min)
-
-          match = value.to_s.match(%r{\A(\d{1,2}):(\d{2})})
-          [match[1].to_i, match[2].to_i] if match && match[1].to_i < 24 && match[2].to_i < 60
+          Times.parse_key(value)&.split(":")&.map(&:to_i)
         end
 
         def key_for((hour, minute))
-          format("%<hour>02d:%<minute>02d", hour: hour, minute: minute)
+          Times.key(hour, minute)
         end
 
         # The columns follow `hourCycle` or `hour12`, 12-hour by default.
@@ -47,14 +45,26 @@ module StimulusPlumbers
           @format.fetch(:hour12) { %w[h11 h12].include?(@format[:hourCycle].to_s) }
         end
 
+        def container_attrs(kwargs)
+          merge_html_options(super, { data: availability_values })
+        end
+
+        def availability_values
+          {
+            "combobox-time-min-value"  => @availability.min,
+            "combobox-time-max-value"  => @availability.max,
+            "combobox-time-step-value" => @availability.step
+          }.compact
+        end
+
         def render_panel(panel_attrs)
           template.content_tag(:div, **merge_html_options(panel_attrs, theme.resolve(:combobox_time))) do
             Columns.new(template).render(
-              id:          @id,
-              controller:  STIMULUS_CONTROLLER,
-              value:       @value,
-              step:        @step,
-              twelve_hour: twelve_hour?
+              id:           @id,
+              controller:   STIMULUS_CONTROLLER,
+              value:        @value,
+              availability: @availability,
+              twelve_hour:  twelve_hour?
             )
           end
         end

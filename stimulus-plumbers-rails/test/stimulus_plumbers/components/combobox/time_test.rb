@@ -84,6 +84,77 @@ class ComboboxTimeTest < ActionView::TestCase
     assert_equal "14:58", doc.at_css("input[type='hidden']")["value"]
   end
 
+  def test_a_value_that_is_not_a_time_key_shows_as_typed
+    doc = render_time(value: "9:30")
+
+    assert_equal "9:30", doc.at_css("input#meeting")["value"]
+    assert_no_css doc, "[aria-selected='true']"
+  end
+
+  def test_step_must_divide_an_hour
+    error = assert_raises(ArgumentError) { render_time(step: 45) }
+
+    assert_equal "step must be one of 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60", error.message
+  end
+
+  def test_min_and_max_must_be_time_keys
+    assert_raises(ArgumentError) { render_time(min: "9:00") }
+  end
+
+  def test_min_and_max_must_leave_a_time_on_the_step
+    error = assert_raises(ArgumentError) { render_time(min: "09:05", max: "09:10", step: 15) }
+
+    assert_equal "min and max leave no time on the step", error.message
+  end
+
+  def test_the_container_carries_min_max_and_step
+    container = render_time(min: "09:00", max: "17:00", step: 15).at_css("[data-controller]")
+
+    assert_equal "09:00", container["data-combobox-time-min-value"]
+    assert_equal "17:00", container["data-combobox-time-max-value"]
+    assert_equal "15", container["data-combobox-time-step-value"]
+    assert_nil render_time.at_css("[data-controller]")["data-combobox-time-min-value"]
+  end
+
+  def test_hours_outside_min_and_max_are_unavailable
+    doc = render_time(min: "09:00", max: "17:00", format: { hourCycle: "h23" })
+
+    assert_equal %w[09 10 11 12 13 14 15 16 17], available(doc, "Hour")
+    assert_equal 60, available(doc, "Minute").size
+  end
+
+  def test_a_min_after_max_wraps_past_midnight
+    doc = render_time(min: "22:00", max: "01:00", format: { hourCycle: "h23" })
+
+    assert_equal %w[00 01 22 23], available(doc, "Hour")
+  end
+
+  def test_a_window_that_wraps_past_midnight_limits_twelve_hour_columns_by_the_meridiem
+    doc = render_time(value: "23:30", min: "22:00", max: "01:00")
+
+    assert_equal %w[10 11], available(doc, "Hour")
+    assert_equal %w[AM PM], available(doc, "AM/PM")
+  end
+
+  def test_the_value_limits_the_hours_by_its_meridiem_and_the_minutes_by_its_hour
+    doc = render_time(value: "13:00", max: "13:00", step: 30)
+
+    assert_equal %w[1 12], available(doc, "Hour")
+    assert_equal %w[00], available(doc, "Minute")
+    assert_equal %w[AM PM], available(doc, "AM/PM")
+  end
+
+  def test_a_meridiem_with_no_available_time_is_unavailable
+    assert_equal %w[PM], available(render_time(min: "13:00"), "AM/PM")
+  end
+
+  def test_an_unavailable_value_stays_selected
+    doc = render_time(value: "14:30", max: "14:00", format: { hourCycle: "h23" })
+
+    assert_selected doc, "Minute", "30"
+    assert_equal "true", doc.at_css("[aria-label='Minute'] [aria-selected='true']")["aria-disabled"]
+  end
+
   def test_columns_are_focusable_and_wired_to_the_controller
     column = render_time.at_css("[aria-label='Hour']")
 
@@ -119,7 +190,7 @@ class ComboboxTimeTest < ActionView::TestCase
 
     assert_equal "popover combobox-time input-formatter", container["data-controller"]
     assert_equal "popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened " \
-                 "focusout->combobox-time#onFocusout " \
+                 "popover:closed->combobox-time#onClosed focusout->combobox-time#onFocusout " \
                  "mousedown->combobox-time#onMousedown click->combobox-time#onClick " \
                  "combobox-time:changed->input-formatter#onChange",
                  container["data-action"]
@@ -148,6 +219,10 @@ class ComboboxTimeTest < ActionView::TestCase
 
     assert_equal [label], selected.map(&:text)
     assert_equal selected.first["id"], doc.at_css("[aria-label='#{column}']")["aria-activedescendant"]
+  end
+
+  def available(doc, column)
+    doc.css("[aria-label='#{column}'] [role='option']:not([aria-disabled='true'])").map(&:text)
   end
 
   def format_options(**opts)
