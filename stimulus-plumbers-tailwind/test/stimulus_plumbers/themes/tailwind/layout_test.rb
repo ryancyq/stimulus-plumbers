@@ -46,20 +46,20 @@ class TailwindThemeLayoutTest < Minitest::Test
     assert_includes result, "[position:fixed]"
     assert_includes result, "[position-anchor:auto]"
     assert_includes result, "[max-inline-size:min(90vi,32rem)]"
-    assert_includes result, "[max-block-size:min(100%,32rem)]"
+    assert_includes result, "[max-block-size:min(80vb,32rem)]"
     assert_includes result, "overflow-auto"
   end
 
   def test_popover_maps_every_semantic_placement_to_logical_css
     expected = {
-      block_end_start:   %w[block-end_span-inline-end flip-block,flip-inline],
-      block_end:         %w[block-end flip-block],
-      block_end_end:     %w[block-end_span-inline-start flip-block,flip-inline],
-      block_start_start: %w[block-start_span-inline-end flip-block,flip-inline],
-      block_start:       %w[block-start flip-block],
-      block_start_end:   %w[block-start_span-inline-start flip-block,flip-inline],
-      inline_start:      %w[inline-start flip-inline],
-      inline_end:        %w[inline-end flip-inline]
+      block_end_start:   %w[block-end_span-inline-end flip-block,flip-inline,--sp-popover-fit],
+      block_end:         %w[block-end flip-block,--sp-popover-fit],
+      block_end_end:     %w[block-end_span-inline-start flip-block,flip-inline,--sp-popover-fit],
+      block_start_start: %w[block-start_span-inline-end flip-block,flip-inline,--sp-popover-fit],
+      block_start:       %w[block-start flip-block,--sp-popover-fit],
+      block_start_end:   %w[block-start_span-inline-start flip-block,flip-inline,--sp-popover-fit],
+      inline_start:      %w[inline-start flip-inline,--sp-popover-fit],
+      inline_end:        %w[inline-end flip-inline,--sp-popover-fit]
     }
 
     expected.each do |placement, (area, fallbacks)|

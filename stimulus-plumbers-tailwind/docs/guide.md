@@ -19,7 +19,7 @@ the `STIMULUS_PLUMBERS_CSS_ENTRY` override are shared with the core gem — see
 The Tailwind installer installs these CSS files and imports them relatively:
 
 - `app/assets/stylesheets/stimulus_plumbers/tokens.css`
-- `app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css` — registers the indeterminate progress bar slide keyframe.
+- `app/assets/stylesheets/stimulus_plumbers/tailwind/animations.css` — registers the indeterminate progress bar slide keyframe and the popover's last placement fallback.
 - `app/assets/builds/stimulus_plumbers/tailwind.css` — generated, git-ignored build artifact holding the gem `@source`, regenerated on every build.
 
 The first two files are application-owned: later generator runs restore a missing copy but never overwrite
@@ -37,6 +37,7 @@ To implement a custom theme instead of/alongside Tailwind, see `guide://theme`
 ## Popover placement
 
 The theme applies `sp_popover`'s `placement:` with CSS anchor positioning. The panel is at most
-32rem tall and no taller than the space on its side of the trigger; longer content scrolls inside
-it. Safari draws a panel whose trigger sits inside another open popover too high by the page's
-scroll distance.
+32rem tall and 80% of the viewport; longer content scrolls inside it. A panel that does not fit on
+its side of the trigger flips to the other side; when it fits on neither, it keeps its side and is
+no taller than the space there. Safari draws a panel whose trigger sits inside another open popover
+too high by the page's scroll distance.

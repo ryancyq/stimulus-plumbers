@@ -127,6 +127,11 @@ dialog.sp-modal[open]::backdrop {
   transform: translateY(0);
 }
 
+/* The last placement fallback: the panel keeps its side and is no taller than the space there. */
+@position-try --sp-popover-fit {
+  max-block-size: min(100%, 32rem);
+}
+
 @starting-style {
   .sp-popover[popover]:popover-open {
     opacity: 0;
