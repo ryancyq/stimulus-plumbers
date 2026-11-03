@@ -1,0 +1,426 @@
+{
+  "parse": [
+    {
+      "value": "00:00",
+      "expect": "00:00"
+    },
+    {
+      "value": "09:30",
+      "expect": "09:30"
+    },
+    {
+      "value": "23:59",
+      "expect": "23:59"
+    },
+    {
+      "value": "9:30",
+      "expect": null
+    },
+    {
+      "value": "24:00",
+      "expect": null
+    },
+    {
+      "value": "09:60",
+      "expect": null
+    },
+    {
+      "value": "09:30:00",
+      "expect": null
+    },
+    {
+      "value": "09:30pm",
+      "expect": null
+    },
+    {
+      "value": " 09:30",
+      "expect": null
+    },
+    {
+      "value": "",
+      "expect": null
+    }
+  ],
+  "cases": [
+    {
+      "time": "08:59",
+      "availability": {
+        "min": "09:00"
+      },
+      "expect": true
+    },
+    {
+      "time": "09:00",
+      "availability": {
+        "min": "09:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "17:01",
+      "availability": {
+        "max": "17:00"
+      },
+      "expect": true
+    },
+    {
+      "time": "17:00",
+      "availability": {
+        "max": "17:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "09:15",
+      "availability": {
+        "step": 15
+      },
+      "expect": false
+    },
+    {
+      "time": "09:20",
+      "availability": {
+        "step": 15
+      },
+      "expect": true
+    },
+    {
+      "time": "09:10",
+      "availability": {
+        "min": "09:10",
+        "step": 15
+      },
+      "expect": true
+    },
+    {
+      "time": "10:00",
+      "availability": {
+        "step": 60
+      },
+      "expect": false
+    },
+    {
+      "time": "10:30",
+      "availability": {
+        "step": 60
+      },
+      "expect": true
+    },
+    {
+      "time": "00:00",
+      "availability": {},
+      "expect": false
+    },
+    {
+      "time": "23:59",
+      "availability": {},
+      "expect": false
+    },
+    {
+      "time": "21:59",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": true
+    },
+    {
+      "time": "22:00",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "23:59",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "00:00",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "02:00",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "02:01",
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": true
+    },
+    {
+      "time": "09:00",
+      "availability": {
+        "min": "09:00",
+        "max": "09:00"
+      },
+      "expect": false
+    },
+    {
+      "time": "09:01",
+      "availability": {
+        "min": "09:00",
+        "max": "09:00"
+      },
+      "expect": true
+    },
+    {
+      "time": "22:15",
+      "availability": {
+        "min": "22:10",
+        "max": "01:50",
+        "step": 15
+      },
+      "expect": false
+    },
+    {
+      "time": "00:10",
+      "availability": {
+        "min": "22:10",
+        "max": "01:50",
+        "step": 15
+      },
+      "expect": true
+    },
+    {
+      "time": "01:45",
+      "availability": {
+        "min": "22:10",
+        "max": "01:50",
+        "step": 15
+      },
+      "expect": false
+    },
+    {
+      "time": "09:15",
+      "availability": {
+        "min": "09:15",
+        "max": "09:15",
+        "step": 15
+      },
+      "expect": false
+    }
+  ],
+  "hours": [
+    {
+      "hour": 8,
+      "availability": {
+        "min": "09:00"
+      },
+      "expect": true
+    },
+    {
+      "hour": 9,
+      "availability": {
+        "min": "09:45",
+        "step": 15
+      },
+      "expect": false
+    },
+    {
+      "hour": 9,
+      "availability": {
+        "min": "09:50",
+        "step": 15
+      },
+      "expect": true
+    },
+    {
+      "hour": 17,
+      "availability": {
+        "max": "17:00"
+      },
+      "expect": false
+    },
+    {
+      "hour": 18,
+      "availability": {
+        "max": "17:59"
+      },
+      "expect": true
+    },
+    {
+      "hour": 23,
+      "availability": {
+        "max": "23:59"
+      },
+      "expect": false
+    },
+    {
+      "hour": 12,
+      "availability": {},
+      "expect": false
+    },
+    {
+      "hour": 23,
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": false
+    },
+    {
+      "hour": 2,
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": false
+    },
+    {
+      "hour": 3,
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": true
+    },
+    {
+      "hour": 12,
+      "availability": {
+        "min": "22:00",
+        "max": "02:00"
+      },
+      "expect": true
+    },
+    {
+      "hour": 22,
+      "availability": {
+        "min": "22:50",
+        "max": "01:50",
+        "step": 15
+      },
+      "expect": true
+    },
+    {
+      "hour": 1,
+      "availability": {
+        "min": "22:10",
+        "max": "01:50",
+        "step": 15
+      },
+      "expect": false
+    },
+    {
+      "hour": 22,
+      "availability": {
+        "min": "22:10",
+        "max": "01:50",
+        "step": 15
+      },
+      "expect": false
+    },
+    {
+      "hour": 9,
+      "availability": {
+        "min": "09:15",
+        "max": "09:15",
+        "step": 15
+      },
+      "expect": false
+    },
+    {
+      "hour": 10,
+      "availability": {
+        "min": "09:15",
+        "max": "09:15",
+        "step": 15
+      },
+      "expect": true
+    }
+  ],
+  "invalid": [
+    {
+      "name": "valid set",
+      "availability": {
+        "min": "09:00",
+        "max": "17:00",
+        "step": 15
+      },
+      "option": null
+    },
+    {
+      "name": "wrapped range",
+      "availability": {
+        "min": "17:00",
+        "max": "09:00"
+      },
+      "option": null
+    },
+    {
+      "name": "non-canonical min",
+      "availability": {
+        "min": "9:00"
+      },
+      "option": "min"
+    },
+    {
+      "name": "impossible max",
+      "availability": {
+        "max": "24:00"
+      },
+      "option": "max"
+    },
+    {
+      "name": "step off sixty",
+      "availability": {
+        "step": 7
+      },
+      "option": "step"
+    },
+    {
+      "name": "zero step",
+      "availability": {
+        "step": 0
+      },
+      "option": "step"
+    },
+    {
+      "name": "step over an hour",
+      "availability": {
+        "step": 120
+      },
+      "option": "step"
+    },
+    {
+      "name": "non-integer step",
+      "availability": {
+        "step": "15"
+      },
+      "option": "step"
+    },
+    {
+      "name": "no time on the step",
+      "availability": {
+        "min": "09:05",
+        "max": "09:10",
+        "step": 15
+      },
+      "option": "min"
+    },
+    {
+      "name": "min past the last step",
+      "availability": {
+        "min": "23:50",
+        "step": 15
+      },
+      "option": "min"
+    }
+  ]
+}
