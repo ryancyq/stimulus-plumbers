@@ -83,7 +83,7 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 | `combobox_option_group_label` | `Combobox::Options::OptionGroup` (label)                                           | —                        |
 | `combobox_status`             | `Combobox::Typeahead` (empty, loading, and error status)                           | —                        |
 | `combobox_time`               | `Combobox::Time` panel (columns row)                                               | —                        |
-| `combobox_time_drum`          | `Combobox::Time` column                                                            | `type: :unit\|:meridiem` |
+| `combobox_time_column`        | `Combobox::Time` column                                                            | `type: :unit\|:meridiem` |
 
 ### Other components
 

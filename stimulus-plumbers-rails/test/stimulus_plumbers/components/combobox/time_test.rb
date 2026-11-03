@@ -133,7 +133,7 @@ class ComboboxTimeTest < ActionView::TestCase
   end
 
   def test_each_part_is_styled_from_the_theme
-    parts = %i[combobox combobox_trigger combobox_time_popover combobox_time combobox_time_drum combobox_option]
+    parts = %i[combobox combobox_trigger combobox_time_popover combobox_time combobox_time_column combobox_option]
     original = StimulusPlumbers.config.theme.current
     StimulusPlumbers.config.theme.use(key_theme(parts))
     doc = render_time

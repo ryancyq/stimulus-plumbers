@@ -332,4 +332,4 @@ spans.
 | `combobox_option_group_label` | Group label                            |
 | `combobox_status`             | Editable status                        |
 | `combobox_time`               | Time panel columns row                 |
-| `combobox_time_drum`          | Time column (`type: :unit\|:meridiem`) |
+| `combobox_time_column`        | Time column (`type: :unit\|:meridiem`) |

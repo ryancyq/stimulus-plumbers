@@ -123,7 +123,7 @@ export default class extends Controller {
 
   async close() {}
 
-  step(drum, delta) {}
+  step(column, delta) {}
 
   createDayElement(day, { selectable = false, disabled = false } = {}) {}
 }
@@ -140,7 +140,7 @@ export default class extends Controller {
   });
 
   it('splits on top-level commas only, keeping destructured params intact', () => {
-    expect(parseActionParams(SOURCE).step).toEqual(['drum', 'delta']);
+    expect(parseActionParams(SOURCE).step).toEqual(['column', 'delta']);
     expect(parseActionParams(SOURCE).createDayElement).toEqual([
       'day',
       '{ selectable = false, disabled = false } = {}',
