@@ -10,6 +10,7 @@ stimulus-plumbers/
 │   ├── controllers/                 # <identifier>_controller.js — one Stimulus controller each
 │   │   └── combobox/                # <base>.js — mirrors of abstract Combobox::* Rails bases
 │   ├── date/                        # Date-only core: { year, month, day }, never an instant
+│   ├── datetime/                    # Date-time core: { date, time } on the wall clock, never an instant
 │   ├── time/                        # Time-of-day core: { hour, minute }, never an instant
 │   ├── plumbers/                    # <name>.js — one plumber each; index.js exports their attach functions
 │   │   ├── formatters/              # Input formatter strategies
