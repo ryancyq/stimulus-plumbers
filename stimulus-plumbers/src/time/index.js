@@ -16,12 +16,12 @@ export function timeKey({ hour, minute }) {
   return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
 }
 
-// Availability uses time keys for `min` and `max`, a `min` after `max` wrapping past midnight; `step` is minutes
-// counted from midnight.
+// Availability uses time keys for `min` and `max`, a `min` after `max` wrapping past midnight, or `ranges` in place of
+// both; `step` is minutes counted from midnight.
 export function isDisabled(time, availability = {}) {
-  const { step = 1 } = availability;
+  const { step = 1, ranges = windowRanges(availability) } = availability;
   const key = timeKey(time);
-  return !windowRanges(availability).some(([start, end]) => key >= start && key <= end) || time.minute % step !== 0;
+  return !ranges.some(([start, end]) => key >= start && key <= end) || time.minute % step !== 0;
 }
 
 // The daily window as inclusive [start, end] time keys; a window that wraps past midnight is two ranges.
@@ -33,6 +33,13 @@ export function windowRanges({ min, max } = {}) {
         [start, '23:59'],
       ]
     : [[start, end]];
+}
+
+// Ranges that stop before `from` and after `to`, time keys or null.
+export function trimRanges(ranges, from, to) {
+  return ranges
+    .map(([start, end]) => [from != null && from > start ? from : start, to != null && to < end ? to : end])
+    .filter(([start, end]) => start <= end);
 }
 
 // An hour is unavailable when none of its minutes is.

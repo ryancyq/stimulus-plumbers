@@ -11,6 +11,7 @@ stimulus-plumbers/
 │   │   ├── combobox/                # <base>.js — base classes some combobox_* controllers extend
 │   │   └── turbo/                   # <base>.js — base classes some *_turbo controllers extend
 │   ├── date/                        # Date-only core: { year, month, day }, never an instant
+│   ├── datetime/                    # Date-time core: { date, time } on the wall clock, never an instant
 │   ├── time/                        # Time-of-day core: { hour, minute }, never an instant
 │   ├── plumbers/                    # <name>.js — one plumber each; index.js exports their attach functions
 │   │   ├── formatters/              # Input formatter strategies
