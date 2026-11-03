@@ -10,10 +10,11 @@ module StimulusPlumbers
         ICON                = "calendar"
         POPOVER_KEY         = :combobox_date_popover
         ACTIONS             = ["calendar:changed->#{STIMULUS_CONTROLLER}#onChange"].freeze
+        AVAILABILITY        = Dates::Availability
 
         # `calendar:` goes to the `:stimulus` sp_calendar.
         def render(calendar: {}, **kwargs)
-          @calendar = calendar.merge(kwargs.extract!(*Dates::Availability::OPTIONS))
+          @calendar = calendar.merge(kwargs.extract!(*AVAILABILITY::OPTIONS))
           super(**kwargs)
         end
 

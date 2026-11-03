@@ -4,7 +4,8 @@ module StimulusPlumbers
   module Components
     class Combobox
       # A read-only input formatted by input-formatter, with a hidden input and a popover panel.
-      # Subclasses define STIMULUS_CONTROLLER, FORMAT, ICON, POPOVER_KEY, ACTIONS, `parse`, `canonical`, and `render_panel`.
+      # Subclasses define STIMULUS_CONTROLLER, FORMAT, ICON, POPOVER_KEY, AVAILABILITY, ACTIONS, `parse`, `canonical`, and
+      # `render_panel`.
       class Temporal < Plumber::Base
         FORMAT_CONTROLLER = "input-formatter"
         TRIGGER_OPTIONS   = %i[open_on_focus icon_leading icon_trailing trigger].freeze

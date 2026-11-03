@@ -9,6 +9,7 @@ module StimulusPlumbers
         FORMAT              = "time"
         ICON                = "clock"
         POPOVER_KEY         = :combobox_time_popover
+        AVAILABILITY        = Times::Availability
         ACTIONS             = [
           "popover:before-open->#{STIMULUS_CONTROLLER}#onOpening",
           "popover:opened->#{STIMULUS_CONTROLLER}#onOpened",
@@ -17,7 +18,7 @@ module StimulusPlumbers
 
         # Options: Times::Availability::OPTIONS; a minute off the `step:` chooses no minute.
         def render(**kwargs)
-          @availability = Times::Availability.new(**kwargs.extract!(*Times::Availability::OPTIONS))
+          @availability = self.class::AVAILABILITY.new(**kwargs.extract!(*self.class::AVAILABILITY::OPTIONS))
           super
         end
 
