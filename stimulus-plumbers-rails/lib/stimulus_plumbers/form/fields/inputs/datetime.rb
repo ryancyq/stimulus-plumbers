@@ -31,6 +31,10 @@ module StimulusPlumbers
             render_temporal(attribute, Components::Combobox::Time, html_opts, opts, error, **kwargs)
           end
 
+          def render_combobox_datetime(attribute, html_opts, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Datetime, html_opts, opts, error, **kwargs)
+          end
+
           def render_temporal(attribute, component, html_opts, opts, error, floating: nil, **kwargs)
             render_combobox(
               attribute,

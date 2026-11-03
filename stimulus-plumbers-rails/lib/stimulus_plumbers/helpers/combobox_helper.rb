@@ -18,6 +18,10 @@ module StimulusPlumbers
       def sp_combobox_time(...)
         Components::Combobox::Time.new(self).render(...)
       end
+
+      def sp_combobox_datetime(...)
+        Components::Combobox::Datetime.new(self).render(...)
+      end
     end
   end
 end

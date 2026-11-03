@@ -71,6 +71,7 @@ module StimulusPlumbers
 
         # ── Time ──────────────────────────────────────────────────────────────
         TIME             = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
+        DATETIME         = %w[flex flex-wrap items-start gap-(--sp-space-3)].freeze
         TIME_COLUMN      = %w[
           rounded-(--sp-radius-sm) outline-none
           focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--sp-focus-ring-color)
@@ -97,6 +98,10 @@ module StimulusPlumbers
         end
 
         def combobox_time_popover_classes
+          { classes: klasses(*POPOVER) }
+        end
+
+        def combobox_datetime_popover_classes
           { classes: klasses(*POPOVER) }
         end
 
@@ -134,6 +139,10 @@ module StimulusPlumbers
 
         def combobox_time_classes
           { classes: klasses(*TIME) }
+        end
+
+        def combobox_datetime_classes
+          { classes: klasses(*DATETIME) }
         end
 
         def combobox_time_column_classes(type: :unit)

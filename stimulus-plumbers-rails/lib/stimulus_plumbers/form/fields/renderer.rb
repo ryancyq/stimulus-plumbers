@@ -25,6 +25,7 @@ module StimulusPlumbers
           credit_card:    :render_credit_card_input,
           date:           :render_combobox_date,
           time:           :render_combobox_time,
+          datetime:       :render_combobox_datetime,
           select:         :render_combobox_dropdown,
           search:         :render_combobox_typeahead
         }.freeze
@@ -49,6 +50,7 @@ module StimulusPlumbers
           credit_card:    :native,
           date:           :native,
           time:           :native,
+          datetime:       :native,
           select:         :native,
           search:         :native
         }.freeze
