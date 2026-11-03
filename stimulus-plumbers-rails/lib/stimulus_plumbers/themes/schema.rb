@@ -106,7 +106,7 @@ module StimulusPlumbers
         combobox_listbox:            {}.freeze,
         combobox_status:             {}.freeze,
         combobox_time:               {}.freeze,
-        combobox_time_drum:          { type: { default: :unit, validate: %i[unit meridiem] } }.freeze
+        combobox_time_column:        { type: { default: :unit, validate: %i[unit meridiem] } }.freeze
       }.freeze
 
       FORM = {

@@ -105,18 +105,18 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes classes_for(:combobox_status), "empty:hidden"
   end
 
-  # ── time drum ─────────────────────────────────────────────────────────────
+  # ── time column ───────────────────────────────────────────────────────────
 
-  def test_combobox_time_drum_unit_column_shares_the_row_width
-    result = classes_for(:combobox_time_drum, type: :unit)
+  def test_combobox_time_unit_column_shares_the_row_width
+    result = classes_for(:combobox_time_column, type: :unit)
 
     assert_includes result, "flex-1"
     assert_includes result, "min-w-0"
     refute_includes result, "shrink-0"
   end
 
-  def test_combobox_time_drum_meridiem_column_keeps_its_own_width
-    result = classes_for(:combobox_time_drum, type: :meridiem)
+  def test_combobox_time_meridiem_column_keeps_its_own_width
+    result = classes_for(:combobox_time_column, type: :meridiem)
 
     assert_includes result, "shrink-0"
     refute_includes result, "flex-1"
@@ -125,11 +125,11 @@ class TailwindThemeComboboxTest < Minitest::Test
 
   def test_every_time_column_shows_keyboard_focus
     %i[unit meridiem].each do |type|
-      assert_includes classes_for(:combobox_time_drum, type: type), "focus-visible:ring-(--sp-focus-ring-color)"
+      assert_includes classes_for(:combobox_time_column, type: type), "focus-visible:ring-(--sp-focus-ring-color)"
     end
   end
 
-  def test_combobox_time_drum_defaults_to_a_unit_column
-    assert_equal classes_for(:combobox_time_drum, type: :unit), classes_for(:combobox_time_drum)
+  def test_combobox_time_column_defaults_to_a_unit_column
+    assert_equal classes_for(:combobox_time_column, type: :unit), classes_for(:combobox_time_column)
   end
 end
