@@ -315,6 +315,23 @@ describe('ActiveDescendant', () => {
     expect(descendant.active).toBe(option('a'));
   });
 
+  it('moves from a disabled active option to the enabled option on that side', () => {
+    descendant.activate(option('b'));
+    descendant.move(1);
+    expect(descendant.active).toBe(option('c'));
+
+    descendant.activate(option('b'));
+    descendant.move(-1);
+    expect(descendant.active).toBe(option('a'));
+  });
+
+  it('moves from a disabled active option to the other side when that side has none', () => {
+    option('a').setAttribute('aria-disabled', 'true');
+    descendant.activate(option('a'));
+    descendant.move(-1);
+    expect(descendant.active).toBe(option('c'));
+  });
+
   it('starts from the first or last option when none is active', () => {
     descendant.move(1);
     expect(descendant.active).toBe(option('a'));
