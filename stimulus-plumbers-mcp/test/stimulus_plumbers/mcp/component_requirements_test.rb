@@ -21,9 +21,10 @@ class ComponentRequirementsTest < Minitest::Test
   def test_combobox_includes_nested_panel_controllers
     controllers = @requirements[:combobox]
 
-    # Declared on nested sub-components (Combobox::Date/Time), not the top-level class
+    # Declared on nested sub-components (Combobox::Date/Time/Datetime), not the top-level class
     assert_includes controllers, "combobox-date"
     assert_includes controllers, "combobox-time"
+    assert_includes controllers, "combobox-datetime"
   end
 
   def test_popover_controllers

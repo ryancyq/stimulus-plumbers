@@ -81,6 +81,13 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#combobox-time-range"
   end
 
+  def test_passes_wcag_with_combobox_datetime_open
+    find("#booking").click
+
+    assert_selector "#combobox-datetime [role='combobox'][aria-expanded='true']"
+    assert_accessible context: "#combobox-datetime"
+  end
+
   def test_passes_wcag_with_dropdown_open
     open_combobox "#combobox-dropdown"
 
@@ -364,6 +371,27 @@ class ComboboxAccessibilityTest < ApplicationAccessibilityTestCase
     assert_equal "15:30", find("input[name='standup']", visible: :hidden).value
     assert_match(%r{\A3:30[[:space:]]PM\z}, find("#standup").value)
     assert_selector "#standup[aria-expanded='true']"
+  end
+
+  def test_selecting_a_date_keeps_the_time_and_tab_moves_on_to_the_hour
+    find("#booking").click
+    press :down, :right, :enter
+
+    assert_equal "2024-02-16T21:00", find("input[name='booking']", visible: :hidden).value
+    assert_selector "#booking[aria-expanded='true']"
+
+    press :tab
+
+    assert_equal "Hour", evaluate_script("document.activeElement.getAttribute('aria-label')")
+  end
+
+  def test_escape_from_the_calendar_restores_the_date_and_time
+    find("#booking").click
+    press :down, :right, :enter, :escape
+
+    assert_selector "#booking[aria-expanded='false']"
+    assert_equal "2024-02-15T21:00", find("input[name='booking']", visible: :hidden).value
+    assert_focused "#booking"
   end
 
   def test_clicking_an_option_updates_the_time

@@ -39,6 +39,9 @@ en:
       date:
         label: "date"
         dialog: "Choose %{label}"
+      datetime:
+        label: "date and time"
+        dialog: "Choose %{label}"
     form:
       password:
         show: "Show password"

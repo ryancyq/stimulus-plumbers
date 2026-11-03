@@ -354,7 +354,8 @@ Selecting an option sets `aria-selected` and the column's `aria-activedescendant
 
 ## combobox-datetime
 
-Extends [`combobox-time`](#combobox-time) with a [`calendar`](calendar.md#calendar) in the popover.
+Extends [`combobox-time`](#combobox-time) with a [`calendar`](calendar.md#calendar) in the popover
+([Rails `sp_combobox_datetime`](../../../stimulus-plumbers-rails/docs/component/combobox.md#sp_combobox_datetime)).
 It has the `combobox-time` targets, actions, and keys; `input` submits the `YYYY-MM-DDTHH:MM` value. It adds:
 
 **Targets**

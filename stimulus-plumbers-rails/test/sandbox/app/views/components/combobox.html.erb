@@ -44,6 +44,16 @@
   </div>
 </section>
 
+<%# ── Date and time ─────────────────────────────────────────────────── %>
+<section id="combobox-datetime" class="sb-section">
+  <h2>Date and time — Selected, with a range</h2>
+  <div class="sb-col">
+    <%= sp_combobox_datetime(id: "booking", name: "booking", label: "Booking", value: "2024-02-15T21:00",
+                             min: "2024-02-03T09:00", max: "2024-12-31T17:00",
+                             time: { min: "09:00", max: "22:00", step: 15 }, calendar: { today: today }) %>
+  </div>
+</section>
+
 <%# ── Dropdown ───────────────────────────────────────────────────────── %>
 <section id="combobox-dropdown" class="sb-section">
   <h2>Dropdown</h2>

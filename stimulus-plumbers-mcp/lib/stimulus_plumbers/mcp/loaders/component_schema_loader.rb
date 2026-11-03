@@ -9,6 +9,7 @@ module StimulusPlumbers
       FIELD_AS_CONTROLLERS = {
         date:                      "combobox-date",
         time:                      "combobox-time",
+        datetime:                  "combobox-datetime",
         select:                    "combobox",
         search:                    "combobox",
         collection_select:         "combobox",
