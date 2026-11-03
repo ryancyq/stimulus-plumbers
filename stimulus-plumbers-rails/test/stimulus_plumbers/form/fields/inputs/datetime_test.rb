@@ -174,7 +174,7 @@ class DatetimeTest < ActionView::TestCase
     assert_includes build_time_combobox.text, "is invalid"
   end
 
-  def test_time_pre_selects_drums_from_model_value
+  def test_time_pre_selects_columns_from_model_value
     @form.define_singleton_method(:meeting_time) { "14:30" }
 
     assert_css build_time_combobox, "ul[aria-label='Hour']   li[data-value='2'][aria-selected='true']"

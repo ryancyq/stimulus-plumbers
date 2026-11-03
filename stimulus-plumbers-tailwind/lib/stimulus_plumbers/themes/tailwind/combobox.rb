@@ -71,12 +71,12 @@ module StimulusPlumbers
 
         # ── Time ──────────────────────────────────────────────────────────────
         TIME             = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
-        TIME_DRUM        = %w[
+        TIME_COLUMN      = %w[
           rounded-(--sp-radius-sm) outline-none
           focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--sp-focus-ring-color)
         ].freeze
-        TIME_DRUM_UNIT     = %w[flex-1 min-w-0].freeze
-        TIME_DRUM_MERIDIEM = %w[shrink-0].freeze
+        TIME_COLUMN_UNIT     = %w[flex-1 min-w-0].freeze
+        TIME_COLUMN_MERIDIEM = %w[shrink-0].freeze
 
         private
 
@@ -136,8 +136,8 @@ module StimulusPlumbers
           { classes: klasses(*TIME) }
         end
 
-        def combobox_time_drum_classes(type: :unit)
-          { classes: klasses(*TIME_DRUM, *(type == :meridiem ? TIME_DRUM_MERIDIEM : TIME_DRUM_UNIT)) }
+        def combobox_time_column_classes(type: :unit)
+          { classes: klasses(*TIME_COLUMN, *(type == :meridiem ? TIME_COLUMN_MERIDIEM : TIME_COLUMN_UNIT)) }
         end
       end
     end
