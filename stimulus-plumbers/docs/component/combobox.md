@@ -1,6 +1,6 @@
 # Combobox Controllers
 
-`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date` and `combobox-time` keep a read-only input in step with their popover.
+`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date`, `combobox-time`, and `combobox-datetime` keep a read-only input in step with their popover.
 
 ---
 
@@ -342,6 +342,49 @@ Choosing an option sets `aria-selected` and the column's `aria-activedescendant`
 | Event                   | Detail                | When                                                           |
 | ----------------------- | --------------------- | -------------------------------------------------------------- |
 | `combobox-time:changed` | `{ value }` (`HH:MM`) | After a choice that completes the time, Escape, and form reset |
+
+---
+
+## combobox-datetime
+
+Extends [`combobox-time`](#combobox-time) with a [`calendar`](calendar.md#calendar) in the popover.
+It has the `combobox-time` targets, actions, and keys; `input` submits the `YYYY-MM-DDTHH:MM` value. It adds:
+
+**Targets**
+
+| Target     | Description                                                  |
+| ---------- | ------------------------------------------------------------ |
+| `calendar` | The `calendar` root; its `selected` value is the chosen date |
+
+**Values**
+
+| Value                | Type   | Default | Description                            |
+| -------------------- | ------ | ------- | -------------------------------------- |
+| `min`, `max`         | String | `""`    | Range as `YYYY-MM-DDTHH:MM`, inclusive |
+| `timeMin`, `timeMax` | String | `""`    | Daily window as `HH:MM`, inclusive     |
+| `step`               | Number | `1`     | As in `combobox-time`                  |
+
+The time columns offer the chosen date's times: the daily window, cut off before `min` on its date and after `max` on
+its date. A daily window that wraps past midnight offers each date its own times after `timeMin` and before `timeMax`.
+Before a date is chosen they offer the daily window. The calendar's own values limit the dates.
+Invalid `min`, `max`, `timeMin`, `timeMax`, or `step` values, or ones that leave no time, are reported with
+`console.error`.
+
+**Actions**
+
+| Action            | Wired on                   | Description                                                                      |
+| ----------------- | -------------------------- | -------------------------------------------------------------------------------- |
+| `onDateChange()`  | `calendar:changed` on root | Takes the chosen date; the panel stays open                                      |
+| `onEscape(event)` | `keydown.esc` on `panel`   | Restores the date and time from opening, closes the panel, and focuses `trigger` |
+
+ArrowDown on `trigger` focuses the calendar's Tab stop. Once a date, hour, minute, and any AM or PM are chosen and
+available, the value goes into `input`.
+
+**Dispatches**
+
+| Event                       | Detail                           | When                                                                |
+| --------------------------- | -------------------------------- | ------------------------------------------------------------------- |
+| `combobox-datetime:changed` | `{ value }` (`YYYY-MM-DDTHH:MM`) | After a choice that completes the date-time, Escape, and form reset |
 
 ## Migration from the legacy combobox controllers
 

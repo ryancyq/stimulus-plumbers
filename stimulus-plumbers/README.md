@@ -34,6 +34,7 @@ import {
   InputRevealableController,
   ComboboxDateController,
   ComboboxTimeController,
+  ComboboxDatetimeController,
   CalendarController,
   CalendarTurboController,
   ChecklistController,
@@ -62,6 +63,7 @@ application.register('input-clearable',          InputClearableController)
 application.register('input-revealable',         InputRevealableController)
 application.register('combobox-date',            ComboboxDateController)
 application.register('combobox-time',            ComboboxTimeController)
+application.register('combobox-datetime',        ComboboxDatetimeController)
 application.register('calendar',                 CalendarController)
 application.register('calendar-turbo',           CalendarTurboController)
 application.register('checklist',                ChecklistController)
@@ -92,6 +94,7 @@ application.register('visibility',               VisibilityController)
 | `input-revealable` | Obscured input with reveal toggle | [docs/component/input-revealable.md](docs/component/input-revealable.md) |
 | `combobox-date` | Read-only date input whose popover holds a `calendar` | [docs/component/combobox.md](docs/component/combobox.md#combobox-date) |
 | `combobox-time` | Read-only time input whose popover holds hour, minute, and AM/PM columns | [docs/component/combobox.md](docs/component/combobox.md#combobox-time) |
+| `combobox-datetime` | Read-only date-time input whose popover holds a calendar and the time columns | [docs/component/combobox.md](docs/component/combobox.md#combobox-datetime) |
 | `calendar` | Calendar grid — draws periods with `Intl` or enhances server markup; one Tab stop, grid keyboard, selection, navigation | [docs/component/calendar.md](docs/component/calendar.md#calendar) |
 | `calendar-turbo` | Loads `calendar` periods through a Turbo Frame | [docs/component/calendar.md](docs/component/calendar.md#calendar-turbo) |
 | `checklist` | Master "select all" toggle for native checkbox items | [docs/component/checklist.md](docs/component/checklist.md) |
