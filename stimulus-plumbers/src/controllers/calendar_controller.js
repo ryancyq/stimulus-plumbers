@@ -442,6 +442,17 @@ export default class extends Controller {
     this._syncSelected();
   }
 
+  // Shows a value set in the browser with its Tab stop, and its period in stimulus mode; before connect it only marks
+  // the selection.
+  selectedValueChanged(value) {
+    this._syncSelected();
+    if (!this.connection || !this.hasGridTarget || !parseDateKey(value)) return;
+
+    if (this.dayTargets.some((day) => day.dataset.date === value)) this._focusSelected();
+    else if (this._usesStimulusNavigation)
+      this._request({ to: value, focusDate: null, view: 'month' }, { focus: 'grid' });
+  }
+
   _control(key) {
     return this.hasGridTarget ? this.gridTarget.querySelector(`[data-date="${key}"]`) : null;
   }

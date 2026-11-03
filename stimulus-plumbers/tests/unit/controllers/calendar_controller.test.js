@@ -227,6 +227,55 @@ describe('CalendarController', () => {
       expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('true');
     });
 
+    it('shows a selected value set from outside', async () => {
+      const { container } = await render({
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"',
+      });
+
+      container.setAttribute('data-calendar-selected-value', '2026-09-15');
+      await flush();
+
+      expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('true');
+      expect(day('2026-09-10').closest('td').getAttribute('aria-selected')).toBe('false');
+    });
+
+    it('moves the Tab stop to a selected value set from outside', async () => {
+      const { container } = await render({
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-15"',
+      });
+
+      container.setAttribute('data-calendar-selected-value', '2026-09-20');
+      await flush();
+
+      expect(tabStops()).toEqual(['2026-09-20']);
+    });
+
+    it('keeps the rendered period when it connects with a selected value outside it', async () => {
+      const navigate = vi.fn();
+      document.addEventListener('calendar:navigate', navigate);
+
+      await render({ attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-10-05"' });
+
+      expect(navigate).not.toHaveBeenCalled();
+      document.removeEventListener('calendar:navigate', navigate);
+    });
+
+    it('form reset keeps the shown period under turbo navigation', async () => {
+      const { container } = await render({
+        form: true,
+        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-10-05"',
+      });
+      day('2026-09-15').click();
+      await flush();
+      const navigate = vi.fn();
+      container.addEventListener('calendar:navigate', navigate);
+
+      document.querySelector('#form').reset();
+      await flush();
+
+      expect(navigate).not.toHaveBeenCalled();
+    });
+
     it('reports re-activating the current date so a dialog can close on it', async () => {
       const { container } = await render({
         attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-15"',
@@ -329,6 +378,15 @@ describe('CalendarController', () => {
       day('2026-09-15').dispatchEvent(new KeyboardEvent('keydown', { key: 'PageDown', shiftKey: true, bubbles: true }));
 
       expect(navigate).not.toHaveBeenCalled();
+      expect(frame.getAttribute('src')).toBeNull();
+    });
+
+    it('keeps the shown period for a selected value set from outside', async () => {
+      const { container, frame } = await renderFramed();
+
+      container.setAttribute('data-calendar-selected-value', '2026-10-05');
+      await flush();
+
       expect(frame.getAttribute('src')).toBeNull();
     });
 
@@ -768,6 +826,15 @@ describe('CalendarController', () => {
       container.querySelector('[data-navigation="zoom"]').click();
 
       expect(year.hidden).toBe(true);
+    });
+
+    it('shows the period of a selected value set from outside', async () => {
+      const container = await renderLocal(values);
+
+      container.setAttribute('data-calendar-selected-value', '2026-10-05');
+      await flush();
+
+      expect(container.querySelector('h2').textContent).toBe('October 2026');
     });
 
     it('draws the intended date when the keyboard leaves the period', async () => {

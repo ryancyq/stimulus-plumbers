@@ -34,6 +34,9 @@ view and returns the URL. Without a URL, the control renders disabled, and a key
                 url: ->(date, view) { calendar_path(date.strftime("%Y/%m"), view: view) } %>
 ```
 
+A `selected` set in the browser moves the calendar only under `:stimulus`
+([JS `calendar`](../../../stimulus-plumbers/docs/component/calendar.md#calendar)).
+
 | Option              | Default                  | Description                                                                                                                                 |
 | ------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `id`                | required                 | Stable id; the container, frame, heading, and grid ids derive from it                                                                       |
