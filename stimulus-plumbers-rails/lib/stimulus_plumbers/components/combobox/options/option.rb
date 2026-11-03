@@ -13,7 +13,7 @@ module StimulusPlumbers
 
           def render_option(label:, value:, id: nil, description: nil, disabled: false, selected: false)
             attrs = merge_html_options(
-              theme.resolve(:combobox_option, disabled: disabled),
+              theme.resolve(:combobox_option),
               option_attrs(label, value, id, description, disabled: disabled, selected: selected)
             )
 
