@@ -38,6 +38,15 @@ module StimulusPlumbers
         HOURS.all? { |hour| hour_disabled?(hour) }
       end
 
+      def trim(from: nil, to: nil)
+        trimmed = ranges.map { |start, finish| [[start, from].compact.max, [finish, to].compact.min] }
+        dup.tap { |copy| copy.ranges = trimmed.select { |start, finish| start <= finish } }
+      end
+
+      protected
+
+      attr_writer :ranges
+
       private
 
       def window_ranges
