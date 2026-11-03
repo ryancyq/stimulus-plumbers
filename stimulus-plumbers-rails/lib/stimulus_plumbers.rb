@@ -116,4 +116,8 @@ module StimulusPlumbers
 end
 
 require_relative "stimulus_plumbers/engine" if defined?(Rails::Engine)
-require_relative "stimulus_plumbers/password_strength_validator" if defined?(ActiveModel::EachValidator)
+if defined?(ActiveModel::EachValidator)
+  require_relative "stimulus_plumbers/password_strength_validator"
+  require_relative "stimulus_plumbers/date_availability_validator"
+  require_relative "stimulus_plumbers/time_availability_validator"
+end
