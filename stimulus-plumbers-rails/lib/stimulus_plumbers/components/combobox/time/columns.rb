@@ -5,10 +5,10 @@ module StimulusPlumbers
     class Combobox
       class Time
         class Columns < Plumber::Base
-          def render(id:, controller:, value:, step:, twelve_hour:)
+          def render(id:, controller:, value:, availability:, twelve_hour:)
             @id           = id
             @controller   = controller
-            @step         = step
+            @availability = availability
             @twelve_hour  = twelve_hour
             @hour, minute = value
             template.safe_join(columns(minute))
@@ -25,17 +25,17 @@ module StimulusPlumbers
           def columns(minute)
             [
               column("hour", hours, @hour && hour_value(@hour)),
-              column("minute", minutes, (pad(minute) if minute && (minute % @step).zero?)),
-              (column("meridiem", meridiems, @hour && (@hour < 12 ? "AM" : "PM")) if @twelve_hour)
+              column("minute", minutes, (pad(minute) if minute && (minute % @availability.step).zero?)),
+              (column("meridiem", meridiems, meridiem) if @twelve_hour)
             ].compact
           end
 
           def hours
-            @twelve_hour ? (1..12).map { |hour| [hour.to_s] * 2 } : (0..23).map { |hour| [pad(hour)] * 2 }
+            @twelve_hour ? (1..12).map { |hour| [hour.to_s] * 2 } : Times::HOURS.map { |hour| [pad(hour)] * 2 }
           end
 
           def minutes
-            (0...60).step(@step).map { |minute| [pad(minute)] * 2 }
+            (0...60).step(@availability.step).map { |minute| [pad(minute)] * 2 }
           end
 
           def meridiems
@@ -46,13 +46,44 @@ module StimulusPlumbers
             @twelve_hour ? (((hour - 1) % 12) + 1).to_s : pad(hour)
           end
 
+          def meridiem
+            @hour && (@hour < 12 ? "AM" : "PM") if @twelve_hour
+          end
+
           def column(name, items, selected)
             options = items.map do |label, value|
               Options::Option.new(template).render(
-                id: option_id(name, value), label: label, value: value, selected: value == selected
+                id:       option_id(name, value),
+                label:    label,
+                value:    value,
+                selected: value == selected,
+                disabled: disabled?(name, value)
               )
             end
             template.content_tag(:ul, template.safe_join(options), **column_attrs(name, selected))
+          end
+
+          def disabled?(name, value)
+            case name
+            when "meridiem" then hours_disabled?(hours_for(nil, value))
+            when "hour"     then hours_disabled?(hours_for(value, meridiem))
+            else
+              (@hour ? [@hour] : Times::HOURS).all? do |hour|
+                @availability.disabled?(Times.key(hour, value.to_i))
+              end
+            end
+          end
+
+          def hours_disabled?(hours)
+            hours.all? { |hour| @availability.hour_disabled?(hour) }
+          end
+
+          def hours_for(hour, meridiem)
+            return hour ? [hour.to_i] : Times::HOURS unless @twelve_hour
+
+            Times::HOURS.select do |each|
+              (hour.nil? || each % 12 == hour.to_i % 12) && (meridiem.nil? || (each >= 12) == (meridiem == "PM"))
+            end
           end
 
           def column_attrs(name, selected)
