@@ -15,7 +15,6 @@ stimulus-plumbers-rails/
 │       │   │   └── slots.rb
 │       │   ├── calendar.rb               # sp_calendar root: settings and availability values, status region; navigation: picks the body
 │       │   ├── calendar/
-│       │   │   ├── availability.rb       # Calendar::Availability — min/max/disabled_* the calendar offers; invalid options raise
 │       │   │   ├── configuration.rb      # Calendar::Configuration — displayed/view/selected/today and display options
 │       │   │   ├── stimulus.rb           # navigation: :stimulus — label-free header, empty grid, themed cell templates
 │       │   │   ├── stimulus/
@@ -169,6 +168,9 @@ stimulus-plumbers-rails/
 │       │   └── icons/
 │       │       ├── external.rb           # SVG file parser (include into any icon source module)
 │       │       └── registry.rb           # Lazy-loading Registry < SimpleDelegator (source-injected)
+│       ├── dates.rb                      # Dates.parse_key — YYYY-MM-DD date keys
+│       ├── dates/
+│       │   └── availability.rb           # Dates::Availability — min/max/disabled_* the date fields offer; invalid options raise
 │       ├── password/
 │       │   └── requirements.rb           # Password::Requirements — rule DSL + evaluate/valid?/to_stimulus (server + client source of truth)
 │       ├── password_strength_validator.rb # Top-level PasswordStrengthValidator (ActiveModel::EachValidator)
@@ -179,6 +181,7 @@ stimulus-plumbers-rails/
 ├── test/
 │   ├── stimulus_plumbers/
 │   │   ├── components/                   # Unit tests per component
+│   │   ├── dates/                        # Dates::Availability against the JS date fixtures
 │   │   ├── helpers/                      # Helper-level HTML output tests
 │   │   ├── form/                         # Form builder + field tests
 │   │   ├── plumber/                      # Plumber base class tests
@@ -187,7 +190,7 @@ stimulus-plumbers-rails/
 │   │   ├── components/                   # Nested by route category
 │   │   └── form/
 │   ├── sandbox/                          # Minimal Rails app used by a11y tests
-│   ├── support/                          # Shared test helpers (HtmlAssertions, StubTheme)
+│   ├── support/                          # Shared test helpers (HtmlAssertions, StubTheme, DateFixtures)
 │   └── test_helper.rb
 ├── docs/
 │   ├── analysis/                         # Design analysis documents
