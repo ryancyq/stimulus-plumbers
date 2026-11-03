@@ -123,6 +123,30 @@ class DatetimeTest < ActionView::TestCase
     assert_css doc, "[data-controller='calendar'][data-calendar-min-value='2026-09-03']"
   end
 
+  def test_date_resolves_proc_and_symbol_options_against_the_object
+    @form.weekday = 6
+    @form.define_singleton_method(:latest_birthday) { Date.new(2026, 9, 30) }
+    calendar = build_date_combobox(
+      min:               -> { Date.new(2026, 9, 1) },
+      max:               :latest_birthday,
+      disabled_weekdays: ->(form) { [form.weekday] }
+    ).at_css("[data-controller='calendar']")
+
+    assert_equal "2026-09-01", calendar["data-calendar-min-value"]
+    assert_equal "2026-09-30", calendar["data-calendar-max-value"]
+    assert_equal "[6]", calendar["data-calendar-disabled-weekdays-value"]
+  end
+
+  def test_time_resolves_proc_and_symbol_options_against_the_object
+    @form.define_singleton_method(:opening) { "09:00" }
+    container = build_time_combobox(min: :opening, max: -> { "17:00" }, step: ->(_form) { 15 })
+                .at_css("[data-controller~='combobox-time']")
+
+    assert_equal "09:00", container["data-combobox-time-min-value"]
+    assert_equal "17:00", container["data-combobox-time-max-value"]
+    assert_equal "15", container["data-combobox-time-step-value"]
+  end
+
   def test_time_native_renders_time_input
     assert_css build_native_time, "input[type='time']"
   end

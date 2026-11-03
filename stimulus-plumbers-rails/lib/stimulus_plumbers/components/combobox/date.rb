@@ -12,9 +12,10 @@ module StimulusPlumbers
           "calendar:changed->#{STIMULUS_CONTROLLER}#onChange",
           "popover:before-open->#{STIMULUS_CONTROLLER}#onOpening"
         ].freeze
+        AVAILABILITY = Dates::Availability
 
         def render(calendar: {}, **kwargs)
-          @calendar = calendar.merge(kwargs.extract!(*Dates::Availability::OPTIONS))
+          @calendar = calendar.merge(kwargs.extract!(*AVAILABILITY::OPTIONS))
           super(**kwargs)
         end
 
