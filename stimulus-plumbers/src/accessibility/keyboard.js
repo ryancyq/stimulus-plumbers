@@ -172,11 +172,14 @@ export class ActiveDescendant {
     option.scrollIntoView?.({ block: 'nearest' });
   }
 
-  /** Moves by delta and stops at the ends; with no active option, starts at the first or last. */
+  /**
+   * Moves by delta and stops at the ends. From a disabled active option, moves to the enabled options
+   * on the delta's side of it; with no active option, starts at the first or last.
+   */
   move(delta) {
     const options = this.#enabledOptions();
-    const index = options.indexOf(this.active);
-    if (index === -1) this.activate(delta > 0 ? options[0] : options.at(-1));
+    const index = this.#enabledIndex(delta);
+    if (index === null) this.activate(delta > 0 ? options[0] : options.at(-1));
     else this.activate(options[Math.min(Math.max(index + delta, 0), options.length - 1)]);
   }
 
@@ -200,5 +203,15 @@ export class ActiveDescendant {
 
   #enabledOptions() {
     return this.#options().filter((option) => this.#enabled(option));
+  }
+
+  // The active option's index among enabled options; a disabled one sits between its neighbours.
+  #enabledIndex(delta) {
+    const options = this.#options();
+    const position = options.indexOf(this.#active);
+    if (position === -1) return null;
+
+    const before = options.slice(0, position).filter((option) => this.#enabled(option)).length;
+    return this.#enabled(this.#active) || delta < 0 ? before : before - 1;
   }
 }
