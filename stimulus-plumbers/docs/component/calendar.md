@@ -49,7 +49,7 @@ the heading is the grid's `aria-labelledby`.
 | Value              | Type    | Default                          | Description                                                                                                                    |
 | ------------------ | ------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `navigation`       | String  | `"stimulus"`                     | `stimulus` draws periods; `turbo` waits for `calendar-turbo`                                                                   |
-| `selected`         | String  | `""`                             | Selected date key                                                                                                              |
+| `selected`         | String  | `""`                             | Selected date key; setting it updates the selection                                                                            |
 | `selectable`       | Boolean | `false`                          | Day activation selects                                                                                                         |
 | `displayed`        | String  | `selected`, then today           | First period drawn (stimulus)                                                                                                  |
 | `view`             | String  | `"month"`                        | First view drawn: `month`, `year`, or `decade` (stimulus)                                                                      |
@@ -100,6 +100,16 @@ period arrives, the controller moves the Tab stop to the intended date (or the n
 one in that period), returns focus there or to the same header control if focus is still in the
 calendar (with no available date, to a header control, as [ARIA.md](../../../ARIA.md) lists), writes the heading to `status`, and dispatches `navigated`. A grid for another period is
 ignored.
+
+A `selected` set in the browser (a form reset, Escape in a combobox panel, or an attribute change) updates the
+selection. Stimulus navigation also shows that date's period; turbo navigation stays on the shown period.
+
+With September shown, restoring March 12:
+
+| Navigation | Shows     | March 12                                  |
+| ---------- | --------- | ----------------------------------------- |
+| `stimulus` | March     | selected, with the Tab stop               |
+| `turbo`    | September | selected once the user navigates to March |
 
 ---
 
