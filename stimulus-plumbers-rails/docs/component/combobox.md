@@ -326,7 +326,7 @@ spans.
 | `combobox_date_popover`       | `sp_combobox_date` panel               |
 | `combobox_time_popover`       | `sp_combobox_time` panel               |
 | `combobox_listbox`            | Listbox                                |
-| `combobox_option`             | Option (`disabled:`)                   |
+| `combobox_option`             | Option                                 |
 | `combobox_option_description` | Option description                     |
 | `combobox_option_group`       | Group item                             |
 | `combobox_option_group_label` | Group label                            |

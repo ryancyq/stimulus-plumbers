@@ -77,7 +77,7 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 | Key                           | Component                                                                          | Variants                 |
 | ----------------------------- | ---------------------------------------------------------------------------------- | ------------------------ |
 | `combobox_listbox`            | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time` columns (the `<ul>`) | —                        |
-| `combobox_option`             | `Combobox::Options::Option`                                                        | `disabled: bool`         |
+| `combobox_option`             | `Combobox::Options::Option`                                                        | —                        |
 | `combobox_option_description` | `Combobox::Options::Option` (description)                                          | —                        |
 | `combobox_option_group`       | `Combobox::Options::OptionGroup`                                                   | —                        |
 | `combobox_option_group_label` | `Combobox::Options::OptionGroup` (label)                                           | —                        |
@@ -213,4 +213,5 @@ When defining a custom schema (advanced), the `validate:` key accepts:
 | `combobox_typeahead_empty`, `combobox_typeahead_loading`, `combobox_typeahead_loading_icon`                              | `combobox_status`                                                                                           |
 | `combobox_date_navigation`, `combobox_date_navigation_navigator`, `combobox_date_navigation_title`                       | `calendar_header`, `calendar_navigation`, `calendar_heading`                                                |
 | `combobox_time_drum` `type: :period`                                                                                     | `type: :meridiem`                                                                                           |
+| `combobox_option` `disabled:`                                                                                            | `combobox_option`, styled from the option's `aria-disabled`                                                 |
 | `combobox_popover`                                                                                                       | `combobox_dropdown_popover`, `combobox_typeahead_popover`, `combobox_date_popover`, `combobox_time_popover` |

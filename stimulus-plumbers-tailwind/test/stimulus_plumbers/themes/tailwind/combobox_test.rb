@@ -83,15 +83,11 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "text-(--sp-color-muted-fg)"
   end
 
-  def test_combobox_option_dims_and_blocks_the_pointer_when_disabled
-    result = classes_for(:combobox_option, disabled: true)
+  def test_combobox_option_dims_and_blocks_the_pointer_when_aria_disabled
+    result = classes_for(:combobox_option)
 
-    assert_includes result, "opacity-50"
-    assert_includes result, "cursor-not-allowed"
-  end
-
-  def test_combobox_option_is_not_dimmed_when_enabled
-    refute_includes classes_for(:combobox_option, disabled: false), "opacity-50"
+    assert_includes result, "aria-disabled:opacity-50"
+    assert_includes result, "aria-disabled:cursor-not-allowed"
   end
 
   # ── option group ──────────────────────────────────────────────────────────

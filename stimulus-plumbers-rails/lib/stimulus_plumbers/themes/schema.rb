@@ -99,7 +99,7 @@ module StimulusPlumbers
         combobox_trigger:            {}.freeze,
         combobox_trigger_icon:       {}.freeze,
         combobox_trigger_group:      {}.freeze,
-        combobox_option:             { disabled: { default: false, validate: Ranges::BOOL } }.freeze,
+        combobox_option:             {}.freeze,
         combobox_option_description: {}.freeze,
         combobox_option_group:       {}.freeze,
         combobox_option_group_label: {}.freeze,

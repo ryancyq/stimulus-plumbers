@@ -51,7 +51,7 @@ module StimulusPlumbers
         ].freeze
 
         OPTION_DISABLED = %w[
-          opacity-50 cursor-not-allowed pointer-events-none
+          aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none
         ].freeze
 
         OPTION_DESCRIPTION = %w[basis-full text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
@@ -112,14 +112,8 @@ module StimulusPlumbers
           { classes: klasses(*LISTBOX) }
         end
 
-        def combobox_option_classes(disabled: false)
-          {
-            classes: klasses(
-              *OPTION,
-              *OPTION_SELECTED,
-              *(disabled ? OPTION_DISABLED : [])
-            )
-          }
+        def combobox_option_classes
+          { classes: klasses(*OPTION, *OPTION_SELECTED, *OPTION_DISABLED) }
         end
 
         def combobox_option_description_classes
