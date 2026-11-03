@@ -77,7 +77,7 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 | Key                           | Component                                                                          | Variants                 |
 | ----------------------------- | ---------------------------------------------------------------------------------- | ------------------------ |
 | `combobox_listbox`            | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time` columns (the `<ul>`) | —                        |
-| `combobox_option`             | `Combobox::Options::Option`                                                        | `disabled: bool`         |
+| `combobox_option`             | `Combobox::Options::Option`                                                        | —                        |
 | `combobox_option_description` | `Combobox::Options::Option` (description)                                          | —                        |
 | `combobox_option_group`       | `Combobox::Options::OptionGroup`                                                   | —                        |
 | `combobox_option_group_label` | `Combobox::Options::OptionGroup` (label)                                           | —                        |
