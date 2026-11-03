@@ -1,6 +1,6 @@
 # Combobox Controllers
 
-`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date` and `combobox-time` keep a read-only input in step with their popover.
+`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date`, `combobox-time`, and `combobox-datetime` keep a read-only input in step with their popover.
 
 ---
 
@@ -349,3 +349,54 @@ Selecting an option sets `aria-selected` and the column's `aria-activedescendant
 | Event                   | Detail                | When                                                              |
 | ----------------------- | --------------------- | ----------------------------------------------------------------- |
 | `combobox-time:changed` | `{ value }` (`HH:MM`) | After a selection that completes the time, Escape, and form reset |
+
+---
+
+## combobox-datetime
+
+Extends [`combobox-time`](#combobox-time) with a [`calendar`](calendar.md#calendar) in the popover.
+It has the `combobox-time` targets, actions, and keys; `input` submits the `YYYY-MM-DDTHH:MM` value. It adds:
+
+**Targets**
+
+| Target     | Description                                                         |
+| ---------- | ------------------------------------------------------------------- |
+| `calendar` | The `calendar` container; its `selected` value is the selected date |
+
+**Outlets**
+
+| Outlet     | Description                                            |
+| ---------- | ------------------------------------------------------ |
+| `calendar` | The same calendar; ArrowDown has it focus its Tab stop |
+
+**Values**
+
+| Value                                                                  | Type   | Default | Description                              |
+| ---------------------------------------------------------------------- | ------ | ------- | ---------------------------------------- |
+| `min`, `max`                                                           | String | `""`    | Range as `YYYY-MM-DDTHH:MM`, inclusive   |
+| `timeMin`, `timeMax`                                                   | String | `""`    | Daily window as `HH:MM`, inclusive       |
+| `disabledDates`, `disabledWeekdays`, `disabledMonths`, `disabledYears` | Array  | `[]`    | As in [`calendar`](calendar.md#calendar) |
+| `step`                                                                 | Number | `1`     | As in `combobox-time`                    |
+
+The time columns offer the selected date's times: the daily window's ranges, trimmed at `min` on its date and `max` on
+its date. A daily window that wraps past midnight offers each date its own times after `timeMin` and before `timeMax`.
+Before a date is selected they offer the daily window. When the calendar connects, its `min`, `max`, and `disabled*`
+values become the dates from `min`'s to `max`'s, less the `disabled*` dates and a `min` or `max` date with no time left.
+Invalid `min`, `max`, `timeMin`, `timeMax`, `step`, or `disabled*` values, or ones that leave no time, are reported with
+`console.error` and leave the calendar's values as rendered.
+
+**Actions**
+
+| Action            | Wired on                        | Description                                                                      |
+| ----------------- | ------------------------------- | -------------------------------------------------------------------------------- |
+| `onDateChange()`  | `calendar:changed` on container | Takes the selected date; the panel stays open                                    |
+| `onEscape(event)` | `keydown.esc` on `panel`        | Restores the date and time from opening, closes the panel, and focuses `trigger` |
+
+ArrowDown on `trigger` has the `calendar` outlet focus its Tab stop. Once a date, hour, minute, and any AM or PM are selected and
+available, the value goes into `input`.
+
+**Dispatches**
+
+| Event                       | Detail                           | When                                                                   |
+| --------------------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| `combobox-datetime:changed` | `{ value }` (`YYYY-MM-DDTHH:MM`) | After a selection that completes the date-time, Escape, and form reset |

@@ -91,6 +91,14 @@
 - Enter closes the popover and keeps the value; Tab out of the columns, focus elsewhere, or an outside click closes and keeps it; Escape restores the value from opening, closes the popover, and keeps an enclosing modal open; Enter and Escape return focus to the input
 - Columns show a visible focus indicator (WCAG 2.4.7)
 
+#### Date-time combobox (`combobox-datetime`)
+
+- Trigger and opening as the date combobox; the popover holds the calendar, then the time columns, in Tab order
+- ArrowDown moves focus as in the date combobox; selecting a date keeps the popover open, and Tab moves on to the hour column
+- The calendar and columns follow their own patterns above; the columns judge times against the selected date
+- Escape anywhere in the popover restores the value from opening, closes it, and returns focus to the input; Enter in a column closes it and keeps the value
+- The available dates and times belong in the field's hint (WCAG 3.3.2)
+
 #### Form Fields (`form/`, `form-field_controller`)
 
 - Every input must have a visible `<label>` via `for`/`id` or `aria-labelledby`

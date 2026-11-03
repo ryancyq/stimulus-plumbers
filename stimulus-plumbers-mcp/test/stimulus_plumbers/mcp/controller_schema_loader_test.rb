@@ -5,7 +5,7 @@ require_relative "../../test_helper"
 class ControllerSchemaLoaderTest < Minitest::Test
   EXPECTED_IDENTIFIERS = %w[
     calendar calendar-turbo
-    combobox combobox-turbo combobox-fetch combobox-date combobox-time
+    combobox combobox-turbo combobox-fetch combobox-date combobox-time combobox-datetime
     input-clearable input-formatter input-revealable
     checklist clipboard reorderable progress timeline dismisser flipper
     modal modal-turbo panner password-strength popover popover-fetch visibility

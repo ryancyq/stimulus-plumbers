@@ -2,7 +2,7 @@
 
 Formats values written to an input element. Handles structured display formatting for credit cards, phone numbers, currencies, dates, times, and date-times.
 
-> [`combobox-date`](combobox.md#combobox-date) and [`combobox-time`](combobox.md#combobox-time) wire `onChange` to their `changed` events.
+> [`combobox-date`](combobox.md#combobox-date), [`combobox-time`](combobox.md#combobox-time), and [`combobox-datetime`](combobox.md#combobox-datetime) wire `onChange` to their `changed` events.
 
 ## Targets
 
@@ -21,14 +21,14 @@ Formats values written to an input element. Handles structured display formattin
 
 ## Methods
 
-| Method            | Wired via                                        | Description                                                                                                                                  |
-| ----------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `format(value)`   | —                                                | Programmatic API — normalises, formats, writes to `input` target, dispatches `formatted`                                                     |
-| `onChange(event)` | `combobox-date:changed`, `combobox-time:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`                                                                         |
-| `onPaste(event)`  | `clipboard:pasted`                               | Event adapter — normalises and validates pasted text; when valid, calls `format(value)` and cancels the event so the native paste is skipped |
-| `onInput(event)`  | `input` DOM event                                | Event adapter — re-formats from the input's current value                                                                                    |
-| `onFocus(event)`  | `focus` DOM event                                | Event adapter — redraws cells so the caret cell appears                                                                                      |
-| `onBlur(event)`   | `blur` DOM event                                 | Event adapter — redraws cells so the caret cell clears                                                                                       |
+| Method            | Wired via                                                                     | Description                                                                                                                                  |
+| ----------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `format(value)`   | —                                                                             | Programmatic API — normalises, formats, writes to `input` target, dispatches `formatted`                                                     |
+| `onChange(event)` | `combobox-date:changed`, `combobox-time:changed`, `combobox-datetime:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`                                                                         |
+| `onPaste(event)`  | `clipboard:pasted`                                                            | Event adapter — normalises and validates pasted text; when valid, calls `format(value)` and cancels the event so the native paste is skipped |
+| `onInput(event)`  | `input` DOM event                                                             | Event adapter — re-formats from the input's current value                                                                                    |
+| `onFocus(event)`  | `focus` DOM event                                                             | Event adapter — redraws cells so the caret cell appears                                                                                      |
+| `onBlur(event)`   | `blur` DOM event                                                              | Event adapter — redraws cells so the caret cell clears                                                                                       |
 
 ## Dispatches
 

@@ -28,6 +28,7 @@ export { default as ChecklistController } from './controllers/checklist_controll
 export { default as ClipboardController } from './controllers/clipboard_controller.js';
 export { default as ComboboxController } from './controllers/combobox_controller.js';
 export { default as ComboboxDateController } from './controllers/combobox_date_controller.js';
+export { default as ComboboxDatetimeController } from './controllers/combobox_datetime_controller.js';
 export { default as ComboboxFetchController } from './controllers/combobox_fetch_controller.js';
 export { default as ComboboxTimeController } from './controllers/combobox_time_controller.js';
 export { default as ComboboxTurboController } from './controllers/combobox_turbo_controller.js';
