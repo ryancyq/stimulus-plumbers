@@ -10,7 +10,7 @@
 <%= sp_calendar id: "availability", selectable: true, selected: @booking.date, min: Date.current %>
 ```
 
-`navigation:` picks how periods are rendered; the grid, keys, and events are the same in both
+`navigation:` picks the calendar; the grid, keys, and events are the same in both
 ([JS `calendar`](../../../stimulus-plumbers/docs/component/calendar.md#calendar)).
 
 - `:stimulus` (default): renders a label-free template; the `calendar` controller draws each period
@@ -25,24 +25,24 @@
                 displayed: params.dig(:availability, :displayed), view: params.dig(:availability, :view) %>
 ```
 
-| Option              | Default                  | Description                                                             |
-| ------------------- | ------------------------ | ----------------------------------------------------------------------- |
-| `id`                | required                 | Stable id; the root, frame, heading, and grid ids derive from it        |
-| `navigation`        | `:stimulus`              | `:stimulus` or `:turbo`                                                 |
-| `displayed`         | `today`                  | `Date` or `YYYY-MM-DD` inside the period shown                          |
-| `view`              | `:month`                 | `:month`, `:year`, or `:decade`                                         |
-| `selected`          | `nil`                    | Committed date                                                          |
-| `today`             | `Date.current`           | Marked `aria-current="date"`                                            |
-| `selectable`        | `false`                  | Days commit a date; otherwise the grid is `aria-readonly`               |
-| `show_other_months` | `false`                  | Shows adjacent-month days                                               |
-| `first_day_of_week` | `Date.beginning_of_week` | `0` (Sunday) to `6`                                                     |
-| `url`               | current URL              | Base of the period URLs; pass the form's GET URL when a POST re-renders |
-| `min`, `max`        | `nil`                    | Earliest and latest available date (`Date` or `YYYY-MM-DD`)             |
-| `disabled_dates`    | `[]`                     | Unavailable dates                                                       |
-| `disabled_weekdays` | `[]`                     | Unavailable weekdays, `0`–`6`                                           |
-| `disabled_months`   | `[]`                     | Unavailable months, `1`–`12`                                            |
-| `disabled_years`    | `[]`                     | Unavailable years                                                       |
-| `**html_options`    | —                        | Forwarded to the root `<div>`                                           |
+| Option              | Default                  | Description                                                                            |
+| ------------------- | ------------------------ | -------------------------------------------------------------------------------------- |
+| `id`                | required                 | Stable id; the root, frame, heading, and grid ids derive from it                       |
+| `navigation`        | `:stimulus`              | `:stimulus` or `:turbo`                                                                |
+| `displayed`         | `today`                  | `Date` or `YYYY-MM-DD` inside the period shown                                         |
+| `view`              | `:month`                 | `:month`, `:year`, or `:decade`                                                        |
+| `selected`          | `nil`                    | Committed date                                                                         |
+| `today`             | `Date.current`           | Marked `aria-current="date"`                                                           |
+| `selectable`        | `false`                  | Days commit a date; otherwise the grid is `aria-readonly`                              |
+| `show_other_months` | `false`                  | Shows adjacent-month days                                                              |
+| `first_day_of_week` | `Date.beginning_of_week` | `0` (Sunday) to `6`                                                                    |
+| `url`               | current URL              | `:turbo` only. Base of the period URLs; pass the form's GET URL when a POST re-renders |
+| `min`, `max`        | `nil`                    | Earliest and latest available date (`Date` or `YYYY-MM-DD`)                            |
+| `disabled_dates`    | `[]`                     | Unavailable dates                                                                      |
+| `disabled_weekdays` | `[]`                     | Unavailable weekdays, `0`–`6`                                                          |
+| `disabled_months`   | `[]`                     | Unavailable months, `1`–`12`                                                           |
+| `disabled_years`    | `[]`                     | Unavailable years                                                                      |
+| `**html_options`    | —                        | Forwarded to the root `<div>`                                                          |
 
 Dates are a `Date`, a `YYYY-MM-DD` string, or a time, read as its date in `Time.zone`. An invalid
 `min`, `max`, or `disabled_*`, a `min` after `max`, and an invalid `today` raise
@@ -61,7 +61,6 @@ the load error) comes from `stimulus_plumbers.calendar.*`.
   id="availability"
   data-controller="calendar"
   data-action="click->calendar#onClick"
-  data-calendar-navigation-value="stimulus"
   data-calendar-displayed-value="2026-09-15"
   data-calendar-view-value="month"
   data-calendar-locale-value="en"

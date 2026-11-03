@@ -104,7 +104,7 @@ A read-only date input whose popover holds [`sp_calendar`](calendar.md); `combob
 | `open_on_focus`                | `true`           | Wires [`popover#onFocus`](../../../stimulus-plumbers/docs/component/popover.md#methods) |
 | `icon_leading`/`icon_trailing` | `nil`/`calendar` | Decorative icons                                                                        |
 | `trigger`                      | `{}`             | Attributes for the input                                                                |
-| `calendar`                     | `{}`             | [`sp_calendar`](calendar.md) options (`displayed`, `today`, `url`, …)                   |
+| `calendar`                     | `{}`             | [`sp_calendar`](calendar.md) `:stimulus` options (`displayed`, `today`, …)              |
 | `min`, `max`, `disabled_*`     | —                | Available dates, as in [`sp_calendar`](calendar.md)                                     |
 | `**html_options`               | —                | Forwarded to the wrapper `div`                                                          |
 

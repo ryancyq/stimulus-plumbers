@@ -5,11 +5,22 @@ module StimulusPlumbers
     class Calendar
       # Stimulus navigation: the header, empty grid, and cell templates the controller draws; hidden until drawn.
       class Stimulus < Plumber::Base
-        def render(view)
+        def root_data(configuration)
+          {
+            "calendar-displayed-value"         => configuration.displayed.iso8601,
+            "calendar-view-value"              => configuration.view.to_s,
+            "calendar-today-value"             => configuration.today.iso8601,
+            "calendar-locale-value"            => I18n.locale.to_s.tr("_", "-"),
+            "calendar-first-day-of-week-value" => configuration.first_day_of_week.to_s,
+            "calendar-show-other-months-value" => configuration.show_other_months.to_s
+          }
+        end
+
+        def render(configuration)
           template.safe_join(
             [
-              template.content_tag(:div, id: Calendar.frame_id_for(view.configuration.id), hidden: true) do
-                template.safe_join([header(view), grid(view)])
+              template.content_tag(:div, id: configuration.frame_id, hidden: true) do
+                template.safe_join([Header.new(template).render(configuration), grid(configuration)])
               end,
               cell_templates
             ]
@@ -18,33 +29,7 @@ module StimulusPlumbers
 
         private
 
-        def header(view)
-          template.content_tag(:div, **merge_html_options(theme.resolve(:calendar_header))) do
-            template.safe_join(
-              [
-                step_button("previous", "chevron-left"),
-                template.content_tag(:h2, nil, **merge_html_options(theme.resolve(:calendar_heading), { id: view.heading_id })),
-                navigation_button("zoom"),
-                step_button("next", "chevron-right")
-              ]
-            )
-          end
-        end
-
-        def step_button(name, icon)
-          navigation_button(name) { Icon.new(template).render(icon, aria: { hidden: "true" }) }
-        end
-
-        def navigation_button(name, &block)
-          template.content_tag(
-            :button,
-            block ? template.capture(&block) : nil,
-            type: "button",
-            **merge_html_options(theme.resolve(:calendar_navigation), { data: { navigation: name } })
-          )
-        end
-
-        def grid(view)
+        def grid(configuration)
           template.content_tag(
             :table,
             nil,
@@ -52,7 +37,7 @@ module StimulusPlumbers
               theme.resolve(:calendar_grid),
               {
                 role: "grid",
-                aria: { labelledby: view.heading_id },
+                aria: { labelledby: configuration.heading_id },
                 data: {
                   "#{STIMULUS_CONTROLLER}-target" => "grid",
                   action:                           "keydown->#{STIMULUS_CONTROLLER}#onKeydown"

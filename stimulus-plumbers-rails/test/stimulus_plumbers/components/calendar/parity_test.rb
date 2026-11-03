@@ -23,8 +23,8 @@ class CalendarParityTest < ActionView::TestCase
 
   def render_month(month:, first_day_of_week: 0, displayed: nil, show_other_months: true, **kwargs)
     html = StimulusPlumbers::Components::Calendar.new(self).render(
-      id:                "cal",
       navigation:        :turbo,
+      id:                "cal",
       displayed:         displayed || "#{month}-01",
       first_day_of_week: first_day_of_week,
       show_other_months: show_other_months,

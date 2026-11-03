@@ -13,16 +13,20 @@ stimulus-plumbers-rails/
 │       │   │   ├── group.rb
 │       │   │   ├── icon_layout.rb        # Shared leading/trailing icon layout — included by Button and Form::Fields::Inputs::Submit
 │       │   │   └── slots.rb
-│       │   ├── calendar.rb               # sp_calendar renderer (#render, navigation: :stimulus | :turbo)
+│       │   ├── calendar.rb               # sp_calendar root: settings and availability values, status region; navigation: picks the body
 │       │   ├── calendar/
 │       │   │   ├── availability.rb       # Calendar::Availability — min/max/disabled_* the calendar offers; invalid options raise
 │       │   │   ├── configuration.rb      # Calendar::Configuration — displayed/view/selected/today and display options
 │       │   │   ├── stimulus.rb           # navigation: :stimulus — label-free header, empty grid, themed cell templates
-│       │   │   ├── header.rb             # Previous/next links, labelling heading, zoom-out link (navigation: :turbo)
-│       │   │   ├── grid.rb               # Base grid: table, one Tab stop, cell controls (navigation: :turbo)
-│       │   │   ├── days_of_month.rb      # Days (buttons); weekday headers from first_day_of_week
-│       │   │   ├── months_of_year.rb     # Months (links that zoom in)
-│       │   │   └── years_of_decade.rb    # Years (links that zoom in)
+│       │   │   ├── stimulus/
+│       │   │   │   └── header.rb         # Previous/next and zoom buttons, empty heading
+│       │   │   ├── turbo.rb              # navigation: :turbo — period in a Turbo Frame, link builder
+│       │   │   └── turbo/
+│       │   │       ├── header.rb         # Previous/next links, labelling heading, zoom-out link
+│       │   │       ├── grid.rb           # Base grid: table, one Tab stop, cell controls
+│       │   │       ├── days_of_month.rb  # Days (buttons); weekday headers from first_day_of_week
+│       │   │       ├── months_of_year.rb # Months (links that zoom in)
+│       │   │       └── years_of_decade.rb # Years (links that zoom in)
 │       │   ├── card.rb                   # sp_card renderer
 │       │   ├── card/
 │       │   │   └── slots.rb
