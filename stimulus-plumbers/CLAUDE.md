@@ -11,12 +11,13 @@ stimulus-plumbers/
 │   │   ├── combobox/                # <base>.js — base classes some combobox_* controllers extend
 │   │   └── turbo/                   # <base>.js — base classes some *_turbo controllers extend
 │   ├── date/                        # Date-only core: { year, month, day }, never an instant
+│   ├── time/                        # Time-of-day core: { hour, minute }, never an instant
 │   ├── plumbers/                    # <name>.js — one plumber each; index.js exports their attach functions
 │   │   ├── formatters/              # Input formatter strategies
 │   │   └── plumber/                 # Plumber base classes and shared helpers
 │   └── *.js                         # Standalone utilities (e.g. requestor.js)
 ├── tests/                           # Layers in root CLAUDE.md "Testing"
-│   ├── unit/                        # <src path>.test.js, except date/date.test.js for src/date/; scripts/ tests sit at the unit/ root
+│   ├── unit/                        # <src path>.test.js; a src/<core>/index.js is <core>/<core>.test.js; scripts/ tests sit at the unit/ root
 │   ├── fixtures/                    # JSON fixtures shared with the Rails tests
 │   ├── support/                     # Shared test helpers and jsdom shims (see Guidelines)
 │   └── setup.js                     # jsdom defaults and per-test teardown (root CLAUDE.md "Testing")
