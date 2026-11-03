@@ -8,7 +8,7 @@ See [docs/component/combobox.md](../../../stimulus-plumbers/docs/component/combo
 
 ### `sp_combobox`
 
-Single entry point. The panel type is chosen by a method call on the yielded
+Single entry point. The panel type is selected by a method call on the yielded
 `Combobox::Config` ([`Plumber::Config`](plumber.md#plumberconfig))
 (`c.dropdown`, `c.typeahead`, `c.date`, `c.time`) — the panel owns its `aria-haspopup`,
 popup id, trigger icon, and wrapper data. The `sp_combobox_*` helpers below are thin
@@ -182,7 +182,7 @@ defaults to `false` because each drum step is a selection.
 
 ### Popover body by variant
 
-Each variant builds its own panel root via `Popover#build_panel` (see
+Each variant builds its own panel container via `Popover#build_panel` (see
 [popover.md](popover.md)), adding its controller and role to the panel wiring. The
 trigger's `aria-controls` points at the popup — the panel for dropdown/date/time, the
 nested `<ul role="listbox">` for typeahead.

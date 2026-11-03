@@ -36,7 +36,7 @@ end
 | Option           | Description                                                             |
 | ---------------- | ----------------------------------------------------------------------- |
 | `date`           | `Date` — sets `year-value`, `month-value` (0-indexed) on the controller |
-| `**html_options` | Forwarded to the `calendar-month` controller root element               |
+| `**html_options` | Forwarded to the `calendar-month` controller container element          |
 
 For the JS controller API (targets, values, keyboard behaviour), see the [JS package docs](../../../stimulus-plumbers/docs/component/calendar.md).
 

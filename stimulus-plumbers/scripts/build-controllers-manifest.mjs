@@ -131,9 +131,7 @@ export function parseValues(source) {
     result[match[1]] = entry;
   }
 
-  // Short form: key: Type — strip nested {…} first so inner `type: Foo` isn't captured.
-  // Collapse literal empty-object defaults first so a field wrapper containing one
-  // (e.g. `{ type: Object, default: {} }`) still reads as a single nesting level.
+  // Short form: key: Type. Nested `{…}` and literal `{}` defaults collapse so each field reads as one level.
   const flatBlock = block.replace(/\{\}/g, '""').replace(/\{[^{}]*\}/g, '{}');
   const shortRe = /(\w+)\s*:\s*(String|Number|Boolean|Array|Object)\s*[,\n}]/g;
   while ((match = shortRe.exec(flatBlock)) !== null) {
