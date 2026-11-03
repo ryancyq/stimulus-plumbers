@@ -86,7 +86,8 @@
 
 - Trigger and opening as the date combobox; ArrowDown moves focus to the hour column
 - Columns: focusable `role="listbox"` named Hour, Minute, and AM/PM, with `aria-activedescendant` referencing the selected `role="option"` (`aria-selected="true"`); a minute off the step selects no minute option; Tab moves between columns
-- Arrow Up/Down move one option, Home/End to the ends; each selection updates the value
+- Arrow Up/Down move one option, Home/End to the ends, skipping unavailable options; each selection updates the value
+- Options outside the available times are `aria-disabled="true"`, judged against the selected AM or PM, then hour; a selected option that a later selection makes unavailable keeps `aria-selected="true"`. The available range belongs in the field's hint (WCAG 3.3.2)
 - Enter closes the popover and keeps the value; Tab out of the columns, focus elsewhere, or an outside click closes and keeps it; Escape restores the value from opening, closes the popover, and keeps an enclosing modal open; Enter and Escape return focus to the input
 - Columns show a visible focus indicator (WCAG 2.4.7)
 

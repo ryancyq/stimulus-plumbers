@@ -18,13 +18,13 @@ describe('ComboboxTimeController', () => {
       ${options(name, values, selected)}
     </ul>`;
 
-  const render = async ({ value = '14:30', twelveHour = true } = {}) => {
+  const render = async ({ value = '14:30', twelveHour = true, availability = {} } = {}) => {
     const [hour, minute] = value ? value.split(':').map(Number) : [];
     const hourValue = value && (twelveHour ? String(((hour + 11) % 12) + 1) : String(hour).padStart(2, '0'));
     document.body.innerHTML = `
       <form id="form">
-        <div id="container" data-controller="combobox-time"
-             data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick">
+        <div id="container" data-controller="combobox-time" ${values(availability)}
+             data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened popover:closed->combobox-time#onClosed focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick">
           <div id="group">
             <span id="icon" aria-hidden="true"></span>
             <input id="trigger" readonly value="${value}" data-combobox-time-target="trigger"
@@ -49,6 +49,14 @@ describe('ComboboxTimeController', () => {
       input: document.querySelector('[type="hidden"]'),
     };
   };
+
+  const values = (availability) =>
+    Object.entries(availability)
+      .map(([name, value]) => `data-combobox-time-${name}-value="${value}"`)
+      .join(' ');
+
+  const disabled = (name, value) => option(name, value).getAttribute('aria-disabled') === 'true';
+  const selected = (name, value) => option(name, value).getAttribute('aria-selected') === 'true';
 
   const keydown = (element, key) => {
     const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
@@ -244,5 +252,160 @@ describe('ComboboxTimeController', () => {
     expect(formatted).toHaveBeenLastCalledWith('14:30');
     expect(input.value).toBe('14:30');
     expect(option('minute', '30').getAttribute('aria-selected')).toBe('true');
+  });
+
+  describe('availability', () => {
+    it('marks the times outside min–max unavailable', async () => {
+      await render({ value: '', twelveHour: false, availability: { min: '01:00', max: '14:00' } });
+
+      expect(disabled('hour', '00')).toBe(true);
+      expect(disabled('hour', '01')).toBe(false);
+      expect(disabled('hour', '14')).toBe(false);
+      expect(disabled('minute', '30')).toBe(false);
+    });
+
+    it('the selected hour limits the minutes', async () => {
+      const { panel } = await render({ value: '', twelveHour: false, availability: { max: '14:00' } });
+      open(panel);
+
+      option('hour', '14').click();
+
+      expect(disabled('minute', '00')).toBe(false);
+      expect(disabled('minute', '30')).toBe(true);
+    });
+
+    it('the selected AM or PM limits the hours, and hours never limit it', async () => {
+      const { panel } = await render({ value: '', availability: { max: '13:00' } });
+      open(panel);
+      expect(disabled('hour', '2')).toBe(false);
+
+      option('meridiem', 'PM').click();
+
+      expect(disabled('hour', '2')).toBe(true);
+      expect(disabled('hour', '1')).toBe(false);
+      expect(disabled('meridiem', 'AM')).toBe(false);
+    });
+
+    it('AM or PM with no available time is unavailable', async () => {
+      await render({ value: '', availability: { min: '13:00' } });
+
+      expect(disabled('meridiem', 'AM')).toBe(true);
+      expect(disabled('meridiem', 'PM')).toBe(false);
+    });
+
+    it('a min after max wraps past midnight', async () => {
+      await render({ value: '', availability: { min: '22:00', max: '01:00' } });
+
+      expect(disabled('meridiem', 'AM')).toBe(false);
+      expect(disabled('meridiem', 'PM')).toBe(false);
+      expect(disabled('hour', '1')).toBe(false);
+      expect(disabled('hour', '2')).toBe(true);
+    });
+
+    it('a window that wraps past midnight limits 12-hour selections by AM or PM', async () => {
+      await render({ value: '00:30', availability: { min: '22:00', max: '01:00' } });
+
+      expect(disabled('hour', '12')).toBe(false);
+      expect(disabled('hour', '1')).toBe(false);
+      expect(disabled('hour', '2')).toBe(true);
+      expect(disabled('meridiem', 'AM')).toBe(false);
+      expect(disabled('meridiem', 'PM')).toBe(false);
+
+      option('meridiem', 'PM').click();
+
+      expect(disabled('hour', '12')).toBe(true);
+    });
+
+    it('arrows, Home, and End skip unavailable options', async () => {
+      const { panel } = await render({ value: '', twelveHour: false, availability: { min: '01:00', max: '01:30' } });
+      const hour = document.querySelector('#hour');
+      open(panel);
+
+      keydown(hour, 'Home');
+      expect(selected('hour', '01')).toBe(true);
+
+      keydown(hour, 'ArrowDown');
+      expect(selected('hour', '01')).toBe(true);
+
+      keydown(hour, 'End');
+      expect(selected('hour', '01')).toBe(true);
+    });
+
+    it('clicking an unavailable option selects nothing', async () => {
+      const { panel, input } = await render({ twelveHour: false, availability: { min: '01:00' } });
+      open(panel);
+
+      option('hour', '00').click();
+
+      expect(selected('hour', '14')).toBe(true);
+      expect(input.value).toBe('14:30');
+    });
+
+    it('a selection that makes another unavailable keeps it selected and leaves the input unchanged', async () => {
+      const { panel, input } = await render({ value: '01:30', availability: { max: '13:00' } });
+      open(panel);
+
+      option('meridiem', 'PM').click();
+
+      expect(selected('minute', '30')).toBe(true);
+      expect(disabled('minute', '30')).toBe(true);
+      expect(input.value).toBe('01:30');
+
+      option('minute', '00').click();
+      expect(input.value).toBe('13:00');
+    });
+
+    it('closing the panel discards a selection that made another unavailable', async () => {
+      const { container, panel, input } = await render({ value: '01:30', availability: { max: '13:00' } });
+      const changed = vi.fn();
+      open(panel);
+      option('hour', '2').click();
+      option('meridiem', 'PM').click();
+      expect(disabled('minute', '30')).toBe(true);
+      container.addEventListener('combobox-time:changed', changed);
+
+      panel.hidePopover();
+      lifecycle(panel, 'closed');
+
+      expect(input.value).toBe('02:30');
+      expect(selected('hour', '2')).toBe(true);
+      expect(selected('meridiem', 'AM')).toBe(true);
+      expect(disabled('minute', '30')).toBe(false);
+      expect(changed).not.toHaveBeenCalled();
+    });
+
+    it('closing the panel discards a selection still in progress', async () => {
+      const { panel } = await render({ value: '' });
+      open(panel);
+      option('hour', '1').click();
+
+      panel.hidePopover();
+      lifecycle(panel, 'closed');
+
+      expect(selected('hour', '1')).toBe(false);
+    });
+
+    it('Escape restores an unavailable value and its options', async () => {
+      const { panel, input } = await render({ twelveHour: false, availability: { max: '14:00' } });
+      const minute = document.querySelector('#minute');
+      open(panel);
+
+      keydown(minute, 'ArrowUp');
+      expect(input.value).toBe('14:00');
+
+      keydown(minute, 'Escape');
+
+      expect(input.value).toBe('14:30');
+      expect(selected('minute', '30')).toBe(true);
+    });
+
+    it('reports unusable availability', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await render({ availability: { min: '09:05', max: '09:10', step: 15 } });
+
+      expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('min and max leave no time on the step'));
+      consoleError.mockRestore();
+    });
   });
 });
