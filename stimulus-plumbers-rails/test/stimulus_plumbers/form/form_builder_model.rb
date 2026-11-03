@@ -15,6 +15,7 @@ class FormBuilderModel
                 :country,
                 :city,
                 :meeting_time,
+                :appointment,
                 :timezone,
                 :weekday,
                 :age,

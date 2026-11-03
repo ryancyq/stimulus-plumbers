@@ -64,6 +64,7 @@ The engine re-runs the installer before `assets:precompile` to restore a missing
 | Combobox — dropdown | `sp_combobox_dropdown` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_dropdown) |
 | Combobox — typeahead | `sp_combobox_typeahead` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_typeahead) |
 | Combobox — time | `sp_combobox_time` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_time) |
+| Combobox — date and time | `sp_combobox_datetime` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_datetime) |
 | Divider | `sp_divider` | [docs/component/divider.md](docs/component/divider.md) |
 | Icon | `sp_icon` | [docs/component/icon.md](docs/component/icon.md) |
 | Indicator | `sp_indicator` | [docs/component/indicator.md](docs/component/indicator.md) |
