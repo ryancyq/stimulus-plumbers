@@ -8,6 +8,7 @@ module StimulusPlumbers
       module Inputs
         module Datetime
           include Combobox
+          include ResolveValue
 
           def date_field(attribute, options = {})
             html_options = merge_html_options(theme.resolve(:form_field_input), options)
@@ -39,8 +40,14 @@ module StimulusPlumbers
               error:     error,
               floating:  floating,
               value:     (object.public_send(attribute) if object.respond_to?(attribute)),
-              **kwargs
+              **kwargs,
+              **availability(component, kwargs)
             )
+          end
+
+          # A Proc, Symbol, or callable availability option resolves against the object.
+          def availability(component, kwargs)
+            kwargs.slice(*component::AVAILABILITY::OPTIONS).transform_values { |value| resolve_value(object, value) }
           end
         end
       end

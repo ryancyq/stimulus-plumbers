@@ -17,6 +17,7 @@ require_relative "stimulus_plumbers/plumber/base"
 require_relative "stimulus_plumbers/plumber/options/choice"
 
 require_relative "stimulus_plumbers/password/requirements"
+require_relative "stimulus_plumbers/resolve_value"
 require_relative "stimulus_plumbers/dates"
 require_relative "stimulus_plumbers/dates/availability"
 require_relative "stimulus_plumbers/times"
