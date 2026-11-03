@@ -272,7 +272,7 @@ formats the input from `combobox-time:changed`.
 <div
   data-controller="popover combobox-time input-formatter"
   data-input-formatter-format-value="time"
-  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
+  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened popover:closed->combobox-time#onClosed focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
 >
   <input
     role="combobox"
@@ -316,6 +316,18 @@ formats the input from `combobox-time:changed`.
 | `minute`   | Minute column; option values `00`–`59`                                       |
 | `meridiem` | Optional AM/PM column; option values `AM` and `PM`                           |
 
+**Values**
+
+| Value        | Type   | Default | Description                                                          |
+| ------------ | ------ | ------- | -------------------------------------------------------------------- |
+| `min`, `max` | String | `""`    | Range as `HH:MM`, inclusive; a `min` after `max` wraps past midnight |
+| `step`       | Number | `1`     | Minutes counted from midnight; one of 1–6, 10, 12, 15, 20, 30, 60    |
+
+An option is unavailable (`aria-disabled="true"`) when no time in `min`–`max` and on the `step` matches it and the
+selections it depends on: an hour depends on the selected AM or PM, a minute on the selected AM or PM and hour. Arrows, Home,
+and End skip unavailable options and a click on one does nothing. A selection that makes a selected option unavailable
+keeps it selected, and nothing goes into `input` until every selected option is available. Closing the panel discards every selection not in `input`, and the columns show its value again. Invalid `min`, `max`, or `step` values, or ones that leave no time, are reported with `console.error`.
+
 **Actions**
 
 | Action               | Wired on                           | Description                                                                                                                                       |
@@ -323,6 +335,7 @@ formats the input from `combobox-time:changed`.
 | `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and focuses `hour`; Tab closes the panel; Escape as in `onNavigate`                                                     |
 | `onOpening(event)`   | `popover:before-open` on container | Records the value Escape restores                                                                                                                 |
 | `onOpened(event)`    | `popover:opened` on container      | Scrolls the selected options into view                                                                                                            |
+| `onClosed(event)`    | `popover:closed` on container      | Discards the selections not in `input`                                                                                                            |
 | `onNavigate(event)`  | `keydown` on a column              | Arrows, Home, and End select an option; Enter closes the panel; Escape restores the value from opening and closes the panel; both focus `trigger` |
 | `onSelect(event)`    | `click` on a column                | Selects the clicked option                                                                                                                        |
 | `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                                                   |
