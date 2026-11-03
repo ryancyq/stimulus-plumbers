@@ -432,6 +432,15 @@ export default class extends Controller {
     });
   }
 
+  selectedValueChanged(value) {
+    this._syncSelected();
+    if (!this.connection || !this.hasGridTarget || !parseDateKey(value)) return;
+
+    if (this.dayTargets.some((day) => day.dataset.date === value)) this._focusSelected();
+    else if (this._usesStimulusNavigation)
+      this._request({ to: value, focusDate: null, view: 'month' }, { focus: 'grid' });
+  }
+
   _control(key) {
     return this.hasGridTarget ? this.gridTarget.querySelector(`[data-date="${key}"]`) : null;
   }
