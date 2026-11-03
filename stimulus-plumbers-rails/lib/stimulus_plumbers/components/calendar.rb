@@ -11,7 +11,7 @@ module StimulusPlumbers
       NAVIGATIONS         = %i[stimulus turbo].freeze
 
       # Options: `navigation` (`:stimulus` or `:turbo`), `url` with `:turbo`, Configuration::OPTIONS, and
-      # Availability::OPTIONS; the rest go to the root.
+      # Dates::Availability::OPTIONS; the rest go to the root.
       def render(id:, view: nil, navigation: :stimulus, **kwargs)
         body          = navigation_for(navigation, kwargs)
         configuration = Configuration.extract!(id, view, kwargs)

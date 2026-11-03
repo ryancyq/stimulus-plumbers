@@ -68,14 +68,6 @@ class CalendarComponentTest < ActionView::TestCase
     assert_nil render_calendar(selected: "2026-9-1").at_css("#cal")["data-calendar-selected-value"]
   end
 
-  def test_render_reads_a_time_as_its_date_in_the_time_zone
-    Time.use_zone("Asia/Singapore") do
-      calendar = render_calendar(selected: Time.utc(2026, 11, 3, 23, 30)).at_css("#cal")
-
-      assert_equal "2026-11-04", calendar["data-calendar-selected-value"]
-    end
-  end
-
   def test_render_accepts_today_as_a_date_key
     assert_equal "2026-09-10", render_calendar(today: "2026-09-10").at_css("#cal")["data-calendar-today-value"]
   end

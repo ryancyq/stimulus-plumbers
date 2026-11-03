@@ -18,9 +18,10 @@ module StimulusPlumbers
                     :first_day_of_week
 
         class << self
-          # Takes OPTIONS and Availability::OPTIONS out of `options`.
+          # Takes OPTIONS and Dates::Availability::OPTIONS out of `options`.
           def extract!(id, view, options)
-            new(id, view, options.extract!(*OPTIONS), Availability.new(**options.extract!(*Availability::OPTIONS)))
+            availability = Dates::Availability.new(**options.extract!(*Dates::Availability::OPTIONS))
+            new(id, view, options.extract!(*OPTIONS), availability)
           end
         end
 
@@ -47,19 +48,15 @@ module StimulusPlumbers
         private
 
         def assign_dates(options)
-          @today     = optional_date(options[:today], :today) || Date.current
-          @displayed = date_or_nil(options[:displayed]) || @today
-          @selected  = date_or_nil(options[:selected])
+          @today     = today!(options[:today])
+          @displayed = Dates.parse_key(options[:displayed]) || @today
+          @selected  = Dates.parse_key(options[:selected])
         end
 
-        def optional_date(value, name)
-          Availability.date(value, name) unless value.nil?
-        end
+        def today!(value)
+          return Date.current if value.nil?
 
-        def date_or_nil(value)
-          optional_date(value, :date)
-        rescue ArgumentError
-          nil
+          Dates.parse_key(value) || raise(ArgumentError, "today must be a date or date key")
         end
 
         def first_day_of_week!(value)

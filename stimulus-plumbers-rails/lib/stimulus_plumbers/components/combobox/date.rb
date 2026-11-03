@@ -13,7 +13,7 @@ module StimulusPlumbers
 
         # `calendar:` goes to the `:stimulus` sp_calendar.
         def render(calendar: {}, **kwargs)
-          @calendar = calendar.merge(kwargs.extract!(*Calendar::Availability::OPTIONS))
+          @calendar = calendar.merge(kwargs.extract!(*Dates::Availability::OPTIONS))
           super(**kwargs)
         end
 
@@ -21,9 +21,7 @@ module StimulusPlumbers
 
         # A value that is not a date renders as text and selects nothing.
         def parse(value)
-          Calendar::Availability.date(value, :value)
-        rescue ArgumentError
-          nil
+          Dates.parse_key(value)
         end
 
         def canonical(date)

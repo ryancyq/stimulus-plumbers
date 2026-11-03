@@ -17,6 +17,8 @@ require_relative "stimulus_plumbers/plumber/base"
 require_relative "stimulus_plumbers/plumber/options/choice"
 
 require_relative "stimulus_plumbers/password/requirements"
+require_relative "stimulus_plumbers/dates"
+require_relative "stimulus_plumbers/dates/availability"
 
 # -- UI components --
 require_relative "stimulus_plumbers/components/icon"
@@ -61,7 +63,6 @@ require_relative "stimulus_plumbers/components/password_strength"
 
 # -- Calendar --
 require_relative "stimulus_plumbers/components/calendar"
-require_relative "stimulus_plumbers/components/calendar/availability"
 require_relative "stimulus_plumbers/components/calendar/configuration"
 require_relative "stimulus_plumbers/components/calendar/stimulus"
 require_relative "stimulus_plumbers/components/calendar/stimulus/header"
