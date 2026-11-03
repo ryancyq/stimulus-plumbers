@@ -22,6 +22,8 @@ require_relative "stimulus_plumbers/dates"
 require_relative "stimulus_plumbers/dates/availability"
 require_relative "stimulus_plumbers/times"
 require_relative "stimulus_plumbers/times/availability"
+require_relative "stimulus_plumbers/datetimes"
+require_relative "stimulus_plumbers/datetimes/availability"
 
 # -- UI components --
 require_relative "stimulus_plumbers/components/icon"
