@@ -20,6 +20,15 @@ class TimesAvailabilityParityTest < ActiveSupport::TestCase
     end
   end
 
+  TimeFixtures.fixture("availability")["cutoffs"].each_with_index do |rule, index|
+    define_method("test_cutoff_#{index}_#{rule["time"].delete(":")}") do
+      json = rule["availability"]
+      availability = build(json.except("from", "to")).narrow(from: json["from"], to: json["to"])
+
+      assert_equal rule["expect"], availability.disabled?(rule["time"]).present?
+    end
+  end
+
   TimeFixtures.fixture("availability")["invalid"].each do |rule|
     define_method("test_invalid_#{rule["name"].parameterize(separator: "_")}") do
       availability = -> { build(rule["availability"]) }

@@ -7,7 +7,7 @@ module StimulusPlumbers
       OPTIONS = %i[min max step].freeze
       STEPS   = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60].freeze
 
-      attr_reader :min, :max, :step
+      attr_reader :min, :max, :step, :from, :to
 
       def initialize(min: nil, max: nil, step: 1)
         @min = min && key!(min, :min)
@@ -20,7 +20,7 @@ module StimulusPlumbers
 
       # `key` is a time key.
       def disabled?(key)
-        outside_window?(key) || !(key[3, 2].to_i % step).zero?
+        outside_window?(key) || cut_off?(key) || !(key[3, 2].to_i % step).zero?
       end
 
       # Before `min` or after `max`; between them when the window wraps past midnight.
@@ -44,7 +44,24 @@ module StimulusPlumbers
         (0..23).all? { |hour| hour_disabled?(hour) }
       end
 
+      # A copy that also cuts off the times before `from` and after `to`, time keys that never wrap; it may leave
+      # no time.
+      def narrow(from: nil, to: nil)
+        dup.tap { |copy| copy.cut(from, to) }
+      end
+
+      protected
+
+      def cut(from, to)
+        @from = from
+        @to   = to
+      end
+
       private
+
+      def cut_off?(key)
+        (from && key < from) || (to && key > to)
+      end
 
       def key!(value, name)
         Times.parse_key(value) || raise(ArgumentError, "#{name} must be a time or time key")
