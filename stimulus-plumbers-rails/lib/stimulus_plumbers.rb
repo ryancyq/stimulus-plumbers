@@ -19,6 +19,8 @@ require_relative "stimulus_plumbers/plumber/options/choice"
 require_relative "stimulus_plumbers/password/requirements"
 require_relative "stimulus_plumbers/dates"
 require_relative "stimulus_plumbers/dates/availability"
+require_relative "stimulus_plumbers/times"
+require_relative "stimulus_plumbers/times/availability"
 
 # -- UI components --
 require_relative "stimulus_plumbers/components/icon"
