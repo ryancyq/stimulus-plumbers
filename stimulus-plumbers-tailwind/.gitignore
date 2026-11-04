@@ -15,7 +15,7 @@
 /vendor/bundle/
 
 # Node
-/node_modules/
+/node_modules
 
 # Generated assets
 /test/sandbox/public/tailwind.css
