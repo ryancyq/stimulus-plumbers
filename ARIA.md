@@ -152,9 +152,9 @@
 
 - Each item: native `<input type="checkbox">` inside a `<label>` — role, keyboard activation (Space), focus, and checked-state announcement are all handled by the browser. The component sets no ARIA attributes on items.
 - Read-only item (`readonly: true`): native `disabled` attribute — removes the control from the tab order and announces it as unavailable to assistive tech. No `aria-readonly`/`tabindex` hack.
-- Master "select all" toggle (`select_all:`): same `<input type="checkbox">` shape as an item. Its `indeterminate` property (JS-only, no HTML attribute) is set client-side by the `checklist` controller when some but not all enabled items are checked — modern browsers map `indeterminate` to the accessibility tree's `mixed` checked state automatically, satisfying WCAG 4.1.2 with no manual ARIA.
-- Accepted tradeoff: because `indeterminate` has no HTML attribute, the server can only render the master's initial `checked` state for the all-true case; every other case (including mixed) renders unchecked and is corrected to `indeterminate` once the `checklist` controller connects — a brief, accepted flash for the mixed case only.
-- Disabled (readonly) items are excluded from the master's aggregate and from bulk toggling — the `checklist` controller filters them out via their own `.disabled` property, mirroring their exclusion from tab order and AT interaction.
+- Select-all checkbox (`select_all:`): a native checkbox like an item. The `checklist` controller sets its `indeterminate` property when some but not all enabled items are checked; browsers expose it as the `mixed` checked state (WCAG 4.1.2), so it needs no ARIA.
+- `indeterminate` has no HTML attribute, so the server renders the select-all checkbox `checked` only when every item is checked; a mixed group renders unchecked until the `checklist` controller connects.
+- Disabled (readonly) items are left out of the select-all state and bulk toggling, as they are left out of the tab order.
 
 #### Progress (`progress_controller`, `sp_progress_*`)
 
