@@ -111,42 +111,42 @@ module StimulusPlumbers
           private
 
           def form_field_input_group_classes(floating: nil)
-            { classes: klasses(*FLOATING_GROUP_TYPES.fetch(floating, [])) }
+            { classes: class_names(*FLOATING_GROUP_TYPES.fetch(floating, [])) }
           end
 
           def form_field_label_classes(floating: nil, hidden: false, error: false, **)
             if floating
               color = error ? FLOATING_LABEL_ERROR : FLOATING_LABEL_FOCUS
-              { classes: klasses(*FLOATING_LABEL, *FLOATING_LABEL_TYPES.fetch(floating, []), *color) }
+              { classes: class_names(*FLOATING_LABEL, *FLOATING_LABEL_TYPES.fetch(floating, []), *color) }
             else
-              { classes: klasses(*LABEL, hidden ? "sr-only" : nil) }
+              { classes: class_names(*LABEL, hidden ? "sr-only" : nil) }
             end
           end
 
           def form_field_required_mark_classes
-            { classes: klasses(*REQUIRED_MARK) }
+            { classes: class_names(*REQUIRED_MARK) }
           end
 
           def form_field_hint_classes
-            { classes: klasses(*HINT) }
+            { classes: class_names(*HINT) }
           end
 
           def form_field_error_classes
-            { classes: klasses(*ERROR_TEXT) }
+            { classes: class_names(*ERROR_TEXT) }
           end
 
           def form_field_choice_items_classes(layout: :stacked)
-            { classes: klasses(*CHOICE_ITEMS_LAYOUT.fetch(layout)) }
+            { classes: class_names(*CHOICE_ITEMS_LAYOUT.fetch(layout)) }
           end
 
           def form_field_checkbox_label_classes(type: :default, variant: :default)
             card_color = type == :card ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:tertiary]) : []
-            { classes: klasses(*CHECKBOX_LABEL_TYPES.fetch(type), *card_color) }
+            { classes: class_names(*CHECKBOX_LABEL_TYPES.fetch(type), *card_color) }
           end
 
           def form_field_radio_label_classes(type: :default, variant: :default)
             card_color = %i[button card].include?(type) ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:tertiary]) : []
-            { classes: klasses(*RADIO_LABEL_TYPES.fetch(type), *card_color) }
+            { classes: class_names(*RADIO_LABEL_TYPES.fetch(type), *card_color) }
           end
 
           def form_field_radio_item_group_classes

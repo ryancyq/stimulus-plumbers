@@ -23,20 +23,20 @@ module StimulusPlumbers
           private
 
           def timeline_group_classes
-            { classes: klasses(WRAPPER) }
+            { classes: class_names(WRAPPER) }
           end
 
           def timeline_group_section_classes
-            { classes: klasses(SECTION) }
+            { classes: class_names(SECTION) }
           end
 
           def timeline_group_section_date_classes
-            { classes: klasses(DATE) }
+            { classes: class_names(DATE) }
           end
 
           def timeline_group_section_list_classes(orientation: :vertical)
             list = orientation.to_sym == :horizontal ? LIST_HORIZONTAL : LIST_VERTICAL
-            { classes: klasses(list) }
+            { classes: class_names(list) }
           end
         end
       end

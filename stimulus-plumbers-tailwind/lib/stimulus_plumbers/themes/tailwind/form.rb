@@ -10,7 +10,7 @@ module StimulusPlumbers
         private
 
         def form_group_classes(layout: :stacked, **_rest)
-          { classes: klasses(*GROUP, layout == :inline ? GROUP_INLINE : "flex-col") }
+          { classes: class_names(*GROUP, layout == :inline ? GROUP_INLINE : "flex-col") }
         end
 
         def form_submit_classes(**)
@@ -18,7 +18,7 @@ module StimulusPlumbers
         end
 
         def form_submit_label_classes(hidden: false, **)
-          { classes: klasses(hidden ? "sr-only" : nil) }
+          { classes: class_names(hidden ? "sr-only" : nil) }
         end
       end
     end

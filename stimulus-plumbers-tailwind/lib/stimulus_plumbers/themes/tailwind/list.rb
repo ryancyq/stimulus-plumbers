@@ -44,39 +44,39 @@ module StimulusPlumbers
         private
 
         def list_classes
-          { classes: klasses("py-(--sp-space-1)") }
+          { classes: class_names("py-(--sp-space-1)") }
         end
 
         def list_section_classes
-          { classes: klasses("py-(--sp-space-2)") }
+          { classes: class_names("py-(--sp-space-2)") }
         end
 
         def list_section_title_classes
-          { classes: klasses(*SECTION_TITLE) }
+          { classes: class_names(*SECTION_TITLE) }
         end
 
         def list_section_description_classes
-          { classes: klasses(*SECTION_DESCRIPTION) }
+          { classes: class_names(*SECTION_DESCRIPTION) }
         end
 
         def list_item_classes
-          { classes: klasses(*ITEM) }
+          { classes: class_names(*ITEM) }
         end
 
         def list_item_icon_classes
-          { classes: klasses("stroke-current") }
+          { classes: class_names("stroke-current") }
         end
 
         def list_item_content_classes
-          { classes: klasses(*ITEM_CONTENT) }
+          { classes: class_names(*ITEM_CONTENT) }
         end
 
         def list_item_title_classes
-          { classes: klasses(*ITEM_TITLE) }
+          { classes: class_names(*ITEM_TITLE) }
         end
 
         def list_item_description_classes
-          { classes: klasses(*ITEM_DESCRIPTION) }
+          { classes: class_names(*ITEM_DESCRIPTION) }
         end
       end
     end

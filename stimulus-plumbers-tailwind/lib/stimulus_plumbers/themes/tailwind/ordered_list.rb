@@ -40,27 +40,27 @@ module StimulusPlumbers
         private
 
         def ordered_list_classes
-          { classes: klasses("flex flex-col gap-(--sp-space-1) py-(--sp-space-1)") }
+          { classes: class_names("flex flex-col gap-(--sp-space-1) py-(--sp-space-1)") }
         end
 
         def ordered_list_item_classes
-          { classes: klasses(*ITEM) }
+          { classes: class_names(*ITEM) }
         end
 
         def ordered_list_item_handle_classes
-          { classes: klasses(*HANDLE) }
+          { classes: class_names(*HANDLE) }
         end
 
         def ordered_list_item_content_classes
-          { classes: klasses(*CONTENT) }
+          { classes: class_names(*CONTENT) }
         end
 
         def ordered_list_item_title_classes
-          { classes: klasses(*TITLE) }
+          { classes: class_names(*TITLE) }
         end
 
         def ordered_list_item_description_classes
-          { classes: klasses(*DESCRIPTION) }
+          { classes: class_names(*DESCRIPTION) }
         end
       end
     end
