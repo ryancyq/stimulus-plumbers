@@ -77,7 +77,7 @@ module StimulusPlumbers
         aria.compact
       end
 
-      def build_html_options(input_id, aria)
+      def input_attrs(input_id, aria)
         attrs = { id: input_id, aria: aria }
         attrs[:required] = true if @required
         attrs

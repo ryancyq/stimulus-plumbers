@@ -85,11 +85,11 @@ module StimulusPlumbers
         }
         data["combobox-close-on-select-value"] = close_on_select.to_s unless close_on_select.nil?
 
-        merge_html_options(theme.resolve(:combobox), kwargs, { data: data }, *extra_container_options)
+        merge_html_options(theme.resolve(:combobox), kwargs, { data: data }, *extra_container_attrs)
       end
 
-      # Container options merged after the combobox's own.
-      def extra_container_options
+      # Container attributes merged after the combobox's own.
+      def extra_container_attrs
         []
       end
 

@@ -37,12 +37,12 @@ module StimulusPlumbers
             # A shared `requirements:` object (spec Section C) takes precedence over a field block.
             @password_requirements = kwargs.delete(:requirements) || build_password_requirements(&block)
             input_id = input_attrs[:id]
-            html_options = password_html_options(input_attrs, opts, error, floating, kwargs)
+            html_options = password_input_attrs(input_attrs, opts, error, floating, kwargs)
             html_options = apply_strength_wiring(html_options, input_id) if @password_requirements.active?
             input = if revealable
                       render_revealable_password(error, floating: floating) do
-                        revealable_html_options = merge_html_options(html_options, { data: { input_revealable_target: "input" } })
-                        @template.password_field(@object_name, attribute, objectify_options(revealable_html_options))
+                        revealable_attrs = merge_html_options(html_options, { data: { input_revealable_target: "input" } })
+                        @template.password_field(@object_name, attribute, objectify_options(revealable_attrs))
                       end
                     else
                       @template.password_field(@object_name, attribute, objectify_options(html_options))
@@ -56,7 +56,7 @@ module StimulusPlumbers
             StimulusPlumbers::Password::Requirements.build(&block)
           end
 
-          def password_html_options(input_attrs, opts, error, floating, kwargs)
+          def password_input_attrs(input_attrs, opts, error, floating, kwargs)
             merge_html_options(
               theme.resolve(:form_field_input, floating: floating, error: error),
               opts,

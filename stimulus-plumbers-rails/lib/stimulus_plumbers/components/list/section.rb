@@ -64,8 +64,8 @@ module StimulusPlumbers
         end
 
         def render_section_body(title, &block)
-          opts = title.present? ? { aria: { label: title } } : {}
-          template.content_tag(:ul, template.capture(self, &block), opts)
+          ul_attrs = title.present? ? { aria: { label: title } } : {}
+          template.content_tag(:ul, template.capture(self, &block), ul_attrs)
         end
       end
     end

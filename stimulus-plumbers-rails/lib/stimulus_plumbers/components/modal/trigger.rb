@@ -10,8 +10,8 @@ module StimulusPlumbers
           button = Components::Button.new(template)
           return render_custom(button, modal_id, type, variant, size, kwargs, &block) if block_given? && block.arity == 1
 
-          options = merge_html_options(kwargs, command_attrs(modal_id))
-          button.render(nil, type: type, variant: variant, size: size, **options, &block)
+          button_attrs = merge_html_options(kwargs, command_attrs(modal_id))
+          button.render(nil, type: type, variant: variant, size: size, **button_attrs, &block)
         end
 
         private

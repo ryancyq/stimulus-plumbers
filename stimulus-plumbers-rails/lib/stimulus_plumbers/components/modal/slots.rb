@@ -57,9 +57,9 @@ module StimulusPlumbers
             data:       data
           }
           native[:value] = result unless result.nil?
-          button_options = merge_html_options(kwargs, native)
+          button_attrs = merge_html_options(kwargs, native)
 
-          Components::Button.new(@template).render(content, **button_options, &block)
+          Components::Button.new(@template).render(content, **button_attrs, &block)
         end
       end
     end

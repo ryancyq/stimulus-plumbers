@@ -8,8 +8,8 @@ module StimulusPlumbers
         @orientation = orientation
         content    = template.capture(self, &block)
         stimulus   = @interactive ? { data: { controller: "timeline" } } : {}
-        ol_options = merge_html_options(theme.resolve(:timeline, orientation: orientation), kwargs, stimulus)
-        list       = template.content_tag(:ol, content, **ol_options)
+        ol_attrs   = merge_html_options(theme.resolve(:timeline, orientation: orientation), kwargs, stimulus)
+        list       = template.content_tag(:ol, content, **ol_attrs)
 
         orientation.to_sym == :vertical ? render_vertical_container(list) : list
       end

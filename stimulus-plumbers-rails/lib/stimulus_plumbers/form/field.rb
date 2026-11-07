@@ -62,7 +62,7 @@ module StimulusPlumbers
         { describedby: described_by(object, attribute, input_id), labelledby: self.class.label_id(input_id) }.compact
       end
 
-      def build_html_options(input_id, aria)
+      def input_attrs(input_id, aria)
         return super if native_label?
 
         { id: input_id, aria: aria }
@@ -71,8 +71,8 @@ module StimulusPlumbers
       def render_default_field(object, attribute, input_id, &block)
         error_override = error?(object, attribute)
         aria           = build_aria(object, attribute, input_id)
-        field_opts = build_html_options(input_id, aria)
-        field_html = @template.capture(field_opts, @kwargs, error_override, &block)
+        attrs          = input_attrs(input_id, aria)
+        field_html     = @template.capture(attrs, @kwargs, error_override, &block)
         Fields::Group.new(@template).render(layout: @layout, error: error_override) do
           @template.safe_join(
             [
@@ -100,12 +100,12 @@ module StimulusPlumbers
       def render_floating_field(object, attribute, input_id, &block)
         error_override = error?(object, attribute)
         aria           = build_aria(object, attribute, input_id)
-        field_opts     = build_html_options(input_id, aria).merge(placeholder: " ")
+        attrs          = input_attrs(input_id, aria).merge(placeholder: " ")
         Fields::Group.new(@template).render(layout: @layout, error: error_override) do
           @template.safe_join(
             [
               floating_field_label(input_id, error: error_override) do
-                @template.capture(field_opts, @kwargs, error_override, &block)
+                @template.capture(attrs, @kwargs, error_override, &block)
               end,
               render_hint(input_id),
               render_errors(object, attribute, input_id)

@@ -19,11 +19,11 @@ module StimulusPlumbers
             html_options = {},
             &block
           )
-            item_opts = merge_html_options(theme.resolve(:form_field_input_radio), html_options)
+            item_attrs = merge_html_options(theme.resolve(:form_field_input_radio), html_options)
             if block_given?
-              super(attribute, collection, value_method, text_method, options, item_opts, &block)
+              super(attribute, collection, value_method, text_method, options, item_attrs, &block)
             else
-              super(attribute, collection, value_method, text_method, options, item_opts) do |builder|
+              super(attribute, collection, value_method, text_method, options, item_attrs) do |builder|
                 render_radio_button_label(builder, theme.resolve(:form_field_radio_label))
               end
             end
@@ -36,24 +36,24 @@ module StimulusPlumbers
             variant = kwargs.delete(:variant) { :default }
             field = Field.new(@template, **{ layout: :inline }.deep_merge(field_opts))
             render_fieldset(attribute, field) do |error|
-              item_opts = merge_html_options(
+              item_attrs = merge_html_options(
                 theme.resolve(:form_field_input_radio, error: error, type: type, variant: variant),
                 kwargs,
                 field.required ? { aria: { required: "true" } } : {}
               )
               @template.collection_radio_buttons(
-                @object_name, attribute, collection, value_method, text_method, {}, item_opts
+                @object_name, attribute, collection, value_method, text_method, {}, item_attrs
               ) do |builder|
                 render_radio_button_label(builder, theme.resolve(:form_field_radio_label, type: type, variant: variant), type)
               end
             end
           end
 
-          def render_radio_button_label(builder, label_opts, type = :default)
-            html_options = merge_html_options(label_opts)
+          def render_radio_button_label(builder, label_attrs, type = :default)
+            html_options = merge_html_options(label_attrs)
             if %i[button card].include?(type)
-              group_options = merge_html_options(theme.resolve(:form_field_radio_item_container))
-              @template.content_tag(:div, **group_options) do
+              container_attrs = merge_html_options(theme.resolve(:form_field_radio_item_container))
+              @template.content_tag(:div, **container_attrs) do
                 @template.safe_join(
                   [
                     builder.radio_button,

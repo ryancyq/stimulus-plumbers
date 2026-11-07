@@ -36,7 +36,7 @@ module StimulusPlumbers
       end
 
       def img_avatar(name, url)
-        img_options = merge_html_options(
+        img_attrs = merge_html_options(
           theme.resolve(:avatar_image),
           {
             src:     url,
@@ -44,7 +44,7 @@ module StimulusPlumbers
             onerror: "this.src=''"
           }
         )
-        template.tag.img(**img_options)
+        template.tag.img(**img_attrs)
       end
 
       # The given variant name, or one picked from the theme's range by name or initials.

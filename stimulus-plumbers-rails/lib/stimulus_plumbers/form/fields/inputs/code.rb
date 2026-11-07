@@ -46,7 +46,7 @@ module StimulusPlumbers
           end
 
           def render_code_field(attribute, input_attrs, opts, config)
-            overlay_options = merge_html_options(
+            overlay_attrs = merge_html_options(
               theme.resolve(:form_field_input_code_overlay, error: config[:error]),
               opts,
               input_attrs
@@ -57,7 +57,7 @@ module StimulusPlumbers
             )
             @template.content_tag(:div, **container_attrs) do
               @template.safe_join(
-                [render_code_cells(config), code_input(attribute, overlay_options, config)]
+                [render_code_cells(config), code_input(attribute, overlay_attrs, config)]
               )
             end
           end
@@ -82,7 +82,7 @@ module StimulusPlumbers
           end
 
           def code_input(attribute, overlay_attrs, config)
-            input_options = merge_html_options(
+            html_options = merge_html_options(
               overlay_attrs,
               config[:kwargs],
               {
@@ -92,7 +92,7 @@ module StimulusPlumbers
                 data:         { input_formatter_target: "input", action: STIMULUS_ACTION }
               }
             )
-            @template.text_field(@object_name, attribute, objectify_options(input_options))
+            @template.text_field(@object_name, attribute, objectify_options(html_options))
           end
 
           def render_code_cells(config)
@@ -110,19 +110,19 @@ module StimulusPlumbers
           end
 
           def render_code_cell(config)
-            cell_options = merge_html_options(
+            cell_attrs = merge_html_options(
               theme.resolve(:form_field_input_code_cell, error: config[:error]),
               { data: { input_formatter_target: "cell" } }
             )
-            @template.content_tag(:span, nil, **cell_options)
+            @template.content_tag(:span, nil, **cell_attrs)
           end
 
           def render_code_separator(config)
-            separator_options = merge_html_options(
+            separator_attrs = merge_html_options(
               theme.resolve(:form_field_input_code_separator),
               { aria: { hidden: true } }
             )
-            @template.content_tag(:span, config[:separator], **separator_options)
+            @template.content_tag(:span, config[:separator], **separator_attrs)
           end
 
           def validate_code_options!(length, groups)
