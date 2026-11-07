@@ -12,7 +12,7 @@ module StimulusPlumbers
           kwargs,
           { role: "group", aria: labelled_aria(label, labelledby: labelledby) }
         )
-        html_options = merge_html_options(html_options, select_all_wrapper_attrs) if select_all
+        html_options = merge_html_options(html_options, select_all_stimulus_attrs) if select_all
         template.content_tag(:div, template.safe_join([select_all_control, captured].compact), **html_options)
       end
 
@@ -38,7 +38,7 @@ module StimulusPlumbers
         )
       end
 
-      def select_all_wrapper_attrs
+      def select_all_stimulus_attrs
         { data: { controller: "checklist", action: "change->checklist#onChange" } }
       end
 

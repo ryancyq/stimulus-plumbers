@@ -29,9 +29,9 @@ module StimulusPlumbers
 
         def build(id:, handle: :item, &block)
           @handle = handle
-          tabindex     = @state&.dig(:tab_stop) ? 0 : -1
-          html_options = merge_html_options(theme.resolve(:ordered_list_item), { id: id, tabindex: tabindex }, item_target_attrs)
-          template.capture(html_options, &block)
+          tabindex   = @state&.dig(:tab_stop) ? 0 : -1
+          item_attrs = merge_html_options(theme.resolve(:ordered_list_item), { id: id, tabindex: tabindex }, item_stimulus_attrs)
+          template.capture(item_attrs, &block)
         end
 
         private
@@ -50,7 +50,7 @@ module StimulusPlumbers
           slots
         end
 
-        def item_target_attrs
+        def item_stimulus_attrs
           if @handle == :item
             { data: { "reorderable-target": "item handle", action: HANDLE_ACTION } }
           else
@@ -74,11 +74,11 @@ module StimulusPlumbers
           custom_icon = render_icon_slot(slots, slot_name)
           return unless custom_icon || is_handle
 
-          html_options = merge_html_options(theme.resolve(:ordered_list_item_handle), handle_target_attrs(is_handle))
+          html_options = merge_html_options(theme.resolve(:ordered_list_item_handle), handle_stimulus_attrs(is_handle))
           template.content_tag(:span, custom_icon || default_handle_icon, **html_options)
         end
 
-        def handle_target_attrs(is_handle)
+        def handle_stimulus_attrs(is_handle)
           return {} unless is_handle
 
           { data: { "reorderable-target": "handle", action: HANDLE_ACTION } }

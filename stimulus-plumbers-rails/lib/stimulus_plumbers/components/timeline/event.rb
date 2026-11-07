@@ -123,8 +123,12 @@ module StimulusPlumbers
 
           content = slots.resolve(:time)
           time_type = slots.options_for(:time)[:type] || :default
-          time_target = @interactive ? { data: { "timeline-target": "time" } } : {}
-          attrs = merge_html_options(theme.resolve(:timeline_item_time, type: time_type), { datetime: datetime }, time_target)
+          time_stimulus_attrs = @interactive ? { data: { "timeline-target": "time" } } : {}
+          attrs = merge_html_options(
+            theme.resolve(:timeline_item_time, type: time_type),
+            { datetime: datetime },
+            time_stimulus_attrs
+          )
           template.content_tag(:time, content, **attrs)
         end
 

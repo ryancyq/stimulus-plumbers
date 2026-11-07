@@ -27,13 +27,14 @@ module StimulusPlumbers
 
           # No readout to contain, so the input hosts the controller itself.
           def range_input(attribute, current, min, max, format, input_attrs, opts, kwargs)
-            wired = format.nil? ? range_stimulus_data(current, min, max, format) : { data: { "progress-target": "input" } }
+            input_stimulus_attrs =
+              format.nil? ? range_stimulus_attrs(current, min, max, format) : { data: { "progress-target": "input" } }
             html_options = merge_html_options(
               theme.resolve(:form_field_input_range),
               opts,
               input_attrs,
               kwargs,
-              wired,
+              input_stimulus_attrs,
               # The input carries the track gradient, so the fill percentage lands here, not on
               # the container. Server-rendered so the fill is right before the controller connects.
               { min: min, max: max, style: "--sp-progress-percent: #{integral(percent(current, min, max).round(2))}" }
@@ -46,7 +47,7 @@ module StimulusPlumbers
           def range_container(input, current, min, max, format)
             html_options = merge_html_options(
               theme.resolve(:form_field_input_range_container),
-              range_stimulus_data(current, min, max, format)
+              range_stimulus_attrs(current, min, max, format)
             )
             body = @template.safe_join([input, range_value(format, current, min, max)])
             @template.content_tag(:div, body, **html_options)
@@ -64,8 +65,8 @@ module StimulusPlumbers
             )
           end
 
-          def range_stimulus_data(current, min, max, format)
-            progress_stimulus_data(
+          def range_stimulus_attrs(current, min, max, format)
+            progress_stimulus_attrs(
               value:   current,
               min:     min,
               max:     max,

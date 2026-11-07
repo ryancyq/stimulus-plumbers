@@ -53,7 +53,7 @@ module StimulusPlumbers
             )
             container_attrs = merge_html_options(
               theme.resolve(:form_field_input_code, error: config[:error]),
-              code_options(config)
+              code_stimulus_attrs(config)
             )
             @template.content_tag(:div, **container_attrs) do
               @template.safe_join(
@@ -62,7 +62,7 @@ module StimulusPlumbers
             end
           end
 
-          def code_options(config)
+          def code_stimulus_attrs(config)
             {
               data: {
                 controller:                    STIMULUS_CONTROLLER,

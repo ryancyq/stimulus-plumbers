@@ -35,7 +35,7 @@ module StimulusPlumbers
         merge_html_options(
           theme.resolve(:progress_segments_container),
           kwargs,
-          segmented_stimulus_data(current, min, max, mode, indeterminate),
+          segmented_stimulus_attrs(current, min, max, mode, indeterminate),
           {
             role:  "progressbar",
             aria:  progress_aria(value: current, min: min, max: max, indeterminate: indeterminate),
@@ -49,8 +49,8 @@ module StimulusPlumbers
         raise ArgumentError, "segments must be a positive integer" unless segments.is_a?(Integer) && segments.positive?
       end
 
-      def segmented_stimulus_data(current, min, max, mode, indeterminate)
-        progress_stimulus_data(
+      def segmented_stimulus_attrs(current, min, max, mode, indeterminate)
+        progress_stimulus_attrs(
           value:                          current,
           min:                            min,
           max:                            max,
@@ -94,7 +94,7 @@ module StimulusPlumbers
         merge_html_options(
           bar_container_theme(format, readout),
           kwargs,
-          bar_stimulus_data(current, min, max, indeterminate, format),
+          bar_stimulus_attrs(current, min, max, indeterminate, format),
           { role: "progressbar", aria: aria, style: progress_style(current, min, max, kwargs[:style]) }
         )
       end
@@ -105,8 +105,8 @@ module StimulusPlumbers
         theme.resolve(:progress_bar, labelled: !format.nil?)
       end
 
-      def bar_stimulus_data(current, min, max, indeterminate, format)
-        progress_stimulus_data(
+      def bar_stimulus_attrs(current, min, max, indeterminate, format)
+        progress_stimulus_attrs(
           value:                          current,
           min:                            min,
           max:                            max,

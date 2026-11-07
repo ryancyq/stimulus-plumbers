@@ -16,20 +16,20 @@ module StimulusPlumbers
         html_options = merge_html_options(
           theme.resolve(:progress_meter),
           kwargs,
-          progress_stimulus_data(
+          progress_stimulus_attrs(
             value:             value,
             min:               min,
             max:               max,
             variant:           "meter",
             "progress-target": "meter",
-            **threshold_data(low: low, high: high, optimum: optimum)
+            **threshold_values(low: low, high: high, optimum: optimum)
           ),
           attrs
         )
         template.content_tag(:meter, nil, **html_options)
       end
 
-      def threshold_data(low:, high:, optimum:)
+      def threshold_values(low:, high:, optimum:)
         data = {}
         data[:"progress-low-value"]     = low if low
         data[:"progress-high-value"]    = high if high

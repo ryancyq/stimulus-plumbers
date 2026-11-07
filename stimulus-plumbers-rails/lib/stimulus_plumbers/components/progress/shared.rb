@@ -10,7 +10,7 @@ module StimulusPlumbers
 
         private
 
-        def progress_stimulus_data(value:, min:, max:, variant:, **extra)
+        def progress_stimulus_attrs(value:, min:, max:, variant:, **extra)
           {
             data: {
               controller:               "progress",
