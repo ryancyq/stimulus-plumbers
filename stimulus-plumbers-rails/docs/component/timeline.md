@@ -35,7 +35,7 @@ Rails helper for rendering a themed timeline as an ordered list with optional in
 | ---------------- | ----------- | ------------------------------------------------------------------------------------------------------------ |
 | `orientation:`   | `:vertical` | Layout direction — `:vertical` \| `:horizontal`. Passed to theme as `theme.resolve(:timeline, orientation:)` |
 | `interactive:`   | `false`     | Adds `data-controller="timeline"` to `<ol>`                                                                  |
-| `**html_options` | —           | Forwarded to the outer `<ol>`                                                                                |
+| `**html_options` | —           | Forwarded to the `<ol>`                                                                                      |
 
 ### `t.event` options
 
@@ -50,13 +50,13 @@ Rails helper for rendering a themed timeline as an ordered list with optional in
 | Slot method                      | Description                                                                                             |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `e.with_indicator`               | Dot indicator `<div aria-hidden="true">`                                                                |
-| `e.with_indicator(icon: "name")` | Icon indicator — renders `Icon` component inside the wrapper                                            |
+| `e.with_indicator(icon: "name")` | Icon indicator — renders `Icon` component inside the indicator                                          |
 | `e.with_time { text }`           | Text content for `<time>`; requires `datetime:` on `t.event`                                            |
 | `e.with_title { text }`          | Static `<h3>` — mutually exclusive with `e.with_trigger`                                                |
 | `e.with_trigger { text }`        | `<h3><button>` — mutually exclusive with `e.with_title`; button has `aria-expanded` and `aria-controls` |
 | `e.with_description { text }`    | `<p>` element                                                                                           |
 | `e.with_detail { text }`         | Collapsible `<div hidden>` — requires `e.with_trigger`; id linked to trigger's `aria-controls`          |
-| `e.with_actions { content }`     | Actions wrapper `<div>` — suppressed when block yields nil/empty                                        |
+| `e.with_actions { content }`     | Actions `<div>` — suppressed when block yields nil/empty                                                |
 
 **Slot rules:**
 
@@ -146,22 +146,22 @@ Each `g.section` block yields a `t` scoped to that section (same `t.event` API a
 
 ## Theme keys
 
-| Key                           | Element                            | Variants              |
-| ----------------------------- | ---------------------------------- | --------------------- |
-| `timeline`                    | Outer `<ol>`                       | `orientation:`        |
-| `timeline_item`               | `<li>`                             | `orientation:`        |
-| `timeline_item_indicator`     | Indicator `<div>`                  | `type: :dot \| :icon` |
-| `timeline_item_time`          | `<time>`                           | —                     |
-| `timeline_item_title`         | Static `<h3>`                      | —                     |
-| `timeline_item_heading`       | `<h3>` wrapping the trigger button | —                     |
-| `timeline_item_trigger`       | `<button>` inside the heading      | —                     |
-| `timeline_item_description`   | `<p>`                              | —                     |
-| `timeline_item_detail`        | Collapsible `<div>`                | —                     |
-| `timeline_item_actions`       | Actions `<div>`                    | —                     |
-| `timeline_group`              | `sp_timeline_group` outer `<div>`  | —                     |
-| `timeline_group_section`      | `g.section` outer `<div>`          | —                     |
-| `timeline_group_section_date` | Section `<time>`                   | —                     |
-| `timeline_group_section_list` | Section `<ol>`                     | `orientation:`        |
+| Key                           | Element                                     | Variants              |
+| ----------------------------- | ------------------------------------------- | --------------------- |
+| `timeline`                    | `<ol>` (inside the container when vertical) | `orientation:`        |
+| `timeline_item`               | `<li>`                                      | `orientation:`        |
+| `timeline_item_indicator`     | Indicator `<div>`                           | `type: :dot \| :icon` |
+| `timeline_item_time`          | `<time>`                                    | —                     |
+| `timeline_item_title`         | Static `<h3>`                               | —                     |
+| `timeline_item_heading`       | `<h3>` wrapping the trigger button          | —                     |
+| `timeline_item_trigger`       | `<button>` inside the heading               | —                     |
+| `timeline_item_description`   | `<p>`                                       | —                     |
+| `timeline_item_detail`        | Collapsible `<div>`                         | —                     |
+| `timeline_item_actions`       | Actions `<div>`                             | —                     |
+| `timeline_group`              | `sp_timeline_group` outer `<div>`           | —                     |
+| `timeline_group_section`      | `g.section` outer `<div>`                   | —                     |
+| `timeline_group_section_date` | Section `<time>`                            | —                     |
+| `timeline_group_section_list` | Section `<ol>`                              | `orientation:`        |
 
 ---
 

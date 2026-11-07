@@ -5,7 +5,7 @@ module StimulusPlumbers
     module Tailwind
       module Timeline
         module Group
-          WRAPPER         = %w[flex flex-col gap-y-4].freeze
+          CONTAINER       = %w[flex flex-col gap-y-4].freeze
           SECTION         = %w[
             p-4
             bg-(--sp-color-bg-muted)
@@ -23,7 +23,7 @@ module StimulusPlumbers
           private
 
           def timeline_group_classes
-            { classes: class_names(WRAPPER) }
+            { classes: class_names(CONTAINER) }
           end
 
           def timeline_group_section_classes

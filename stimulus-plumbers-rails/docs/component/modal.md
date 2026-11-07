@@ -51,7 +51,7 @@ Use the existing builder slots for a form rendered in the current page:
 | `size:`          | `:md`           | `:sm`, `:md`, `:lg`, or `:xl`       |
 | `closed_by:`     | `:closerequest` | `:any`, `:closerequest`, or `:none` |
 | `kind:`          | `:dialog`       | `:dialog` or `:alertdialog`         |
-| `**html_options` | —               | Attributes for the outer wrapper    |
+| `**html_options` | —               | Attributes for the container        |
 
 `title:` takes precedence over `aria_label:`. A title renders as `#{id}-title` and owns the
 dialog's `aria-labelledby`. The `body` slot is the default scrolling region; `header` adds
@@ -75,14 +75,14 @@ dialog closing establishes `dialog.returnValue`.
 ## Turbo modal
 
 `sp_modal_turbo` renders a layout-level Turbo modal with `modal` and `modal-turbo` on the same
-wrapper. It has no block or builder:
+container. It has no block or builder:
 
 ```erb
 <%= sp_modal_turbo id: "modal", size: :md, closed_by: :closerequest %>
 ```
 
 Options are `id:` (required stable frame ID), `size: :md`, `closed_by: :closerequest`,
-`close_on_success: true`, `aria_label: nil`, and wrapper `**html_options`. Without `aria_label`,
+`close_on_success: true`, `aria_label: nil`, and container `**html_options`. Without `aria_label`,
 the dialog uses `aria-labelledby="#{id}-title"`; remote responses should include a visible
 heading with that ID. With `aria_label`, it uses `aria-label` instead.
 

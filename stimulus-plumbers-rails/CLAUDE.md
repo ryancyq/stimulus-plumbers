@@ -58,7 +58,7 @@ stimulus-plumbers-rails/
 
 **Form field unit tests** cover both builder levels:
 - Native override (`email_field`, `text_area`, …) — element type and forwarded HTML attributes
-- Full-field wrapper (`f.field(as:)`) — label (explicit **and** the `human_attribute_name` default), hint, error message, `aria-invalid`, `aria-describedby`, `required`, `hide_label`, all floating variants (`:floating_filled`, `:floating_outlined`, `:floating_standard`), and combined hint+error `aria-describedby`
+- Full-field helper (`f.field(as:)`) — label (explicit **and** the `human_attribute_name` default), hint, error message, `aria-invalid`, `aria-describedby`, `required`, `hide_label`, all floating variants (`:floating_filled`, `:floating_outlined`, `:floating_standard`), and combined hint+error `aria-describedby`
 - When `error:` override is set, assert the override message appears **and** model errors are suppressed
 
 ## I18n / Locale Convention

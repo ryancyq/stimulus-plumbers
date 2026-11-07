@@ -25,13 +25,13 @@ module StimulusPlumbers
             template.safe_join(
               [
                 legend(field, attribute),
-                fields_wrapper(field.layout) { template.capture(error, &block) }
+                choice_items(field.layout) { template.capture(error, &block) }
               ]
             )
           end
         end
 
-        def fields_wrapper(layout, &block)
+        def choice_items(layout, &block)
           html_options = merge_html_options(theme.resolve(:form_field_choice_items, layout: layout))
           template.content_tag(:div, **html_options, &block)
         end

@@ -5,7 +5,6 @@ module StimulusPlumbers
     module Fields
       module Inputs
         module Password
-          # Reveal toggle: input group wrapper, toggle button, and its icon pair.
           module Revealable
             STIMULUS_CONTROLLER = "input-revealable"
             STIMULUS_ACTION     = "click->#{STIMULUS_CONTROLLER}#toggle".freeze

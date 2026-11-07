@@ -6,7 +6,7 @@ module StimulusPlumbers
       class Label
         class Floating < Plumber::Base
           def render(text:, for_id:, id:, floating:, required:, error:, &block)
-            html_options  = merge_html_options(theme.resolve(:form_field_input_group, floating: floating))
+            html_options  = merge_html_options(theme.resolve(:form_field_floating_container, floating: floating))
             label_options = merge_html_options(theme.resolve(:form_field_label, floating: floating, error: error))
             mark_options  = required && merge_html_options(
               { aria: { hidden: true } },

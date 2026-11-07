@@ -15,7 +15,7 @@ end
 class ModalTest < ActionView::TestCase
   include ModalTestHelpers
 
-  def test_renders_controller_wrapper_and_native_dialog
+  def test_renders_controller_container_and_native_dialog
     doc = parse_html(render_modal)
 
     assert_css doc, "div[data-controller~='modal'] > dialog#example[data-modal-target='dialog']"
@@ -54,13 +54,13 @@ class ModalTest < ActionView::TestCase
     assert_css parse_html(render_modal), "dialog[closedby='closerequest']"
   end
 
-  def test_forwards_wrapper_html_options_without_losing_controller
+  def test_forwards_container_html_options_without_losing_controller
     doc = parse_html(render_modal(id: "example", class: "custom", data: { testid: "modal" }))
-    wrapper = doc.at_css("div[data-controller]")
+    container = doc.at_css("div[data-controller]")
 
-    assert_includes wrapper["class"], "custom"
-    assert_includes wrapper["data-controller"].split, "modal"
-    assert_equal "modal", wrapper["data-testid"]
+    assert_includes container["class"], "custom"
+    assert_includes container["data-controller"].split, "modal"
+    assert_equal "modal", container["data-testid"]
   end
 
   def test_validates_required_semantics

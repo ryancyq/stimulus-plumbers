@@ -448,7 +448,7 @@ class TailwindThemeFormInputTest < Minitest::Test
   end
 
   def test_range_readout_dims_with_a_disabled_control
-    assert_includes classes_for(:form_field_input_range_group), "[&:has(input:disabled)>span]:opacity-50"
+    assert_includes classes_for(:form_field_input_range_container), "[&:has(input:disabled)>span]:opacity-50"
   end
 
   def test_range_readout_sits_beside_the_track_not_over_it

@@ -6,7 +6,7 @@ module StimulusPlumbers
       module PasswordStrength
         private
 
-        def password_strength_wrapper_classes
+        def password_strength_container_classes
           { classes: class_names("flex", "flex-col", "gap-(--sp-space-2)") }
         end
 

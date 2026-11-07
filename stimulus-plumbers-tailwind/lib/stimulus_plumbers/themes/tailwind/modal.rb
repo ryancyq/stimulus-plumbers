@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Themes
     module Tailwind
       module Modal
-        WRAPPER = %w[inline-block].freeze
+        CONTAINER = %w[inline-block].freeze
 
         SURFACE = %w[
           sp-modal m-0 box-border w-screen h-screen supports-[height:100dvh]:h-[100dvh] max-w-none max-h-none p-0
@@ -80,8 +80,8 @@ module StimulusPlumbers
 
         private
 
-        def modal_wrapper_classes
-          { classes: class_names(*WRAPPER) }
+        def modal_container_classes
+          { classes: class_names(*CONTAINER) }
         end
 
         def modal_classes(size: :md)
