@@ -15,7 +15,7 @@ describe('ReorderableController', () => {
   });
 
   const HANDLE_ACTIONS =
-    'pointerdown->reorderable#onPointerDown pointermove->reorderable#onPointerMove pointerup->reorderable#onPointerUp';
+    'pointerdown->reorderable#onPointerdown pointermove->reorderable#onPointermove pointerup->reorderable#onPointerup';
 
   const buildHTML = () => `
     <ul data-controller="reorderable" data-reorderable-editing-value="true">

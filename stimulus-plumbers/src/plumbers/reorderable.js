@@ -119,7 +119,7 @@ export class Reorderable extends Plumber {
   }
 
   // Returns the moved item (or null if no drag was in progress) purely for test
-  // assertions — the controller's onPointerUp ignores the return value, since a
+  // assertions — the controller's onPointerup ignores the return value, since a
   // drag deliberately does not refocus or announce (unlike a keyboard move).
   endDrag(handle, pointerId) {
     if (!this.draggingItem) return null;

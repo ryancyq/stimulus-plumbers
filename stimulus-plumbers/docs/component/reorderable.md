@@ -26,9 +26,9 @@ Reorders a vertical or horizontal list of items via pointer drag (a dedicated ha
 
 | Name            | Purpose                                                                                                    |
 | --------------- | ---------------------------------------------------------------------------------------------------------- |
-| `onPointerDown` | Wire to `pointerdown` on the `handle` target — starts a drag (no-op unless `editingValue`)                 |
-| `onPointerMove` | Wire to `pointermove` on the `handle` target — live-reorders while dragging (no-op unless `editingValue`)  |
-| `onPointerUp`   | Wire to `pointerup` on the `handle` target — ends the drag (no-op unless `editingValue`)                   |
+| `onPointerdown` | Wire to `pointerdown` on the `handle` target — starts a drag (no-op unless `editingValue`)                 |
+| `onPointermove` | Wire to `pointermove` on the `handle` target — live-reorders while dragging (no-op unless `editingValue`)  |
+| `onPointerup`   | Wire to `pointerup` on the `handle` target — ends the drag (no-op unless `editingValue`)                   |
 | `toggleEditing` | Flips `editingValue` — wire to e.g. `click->reorderable#toggleEditing` on an app-provided Edit/Done button |
 | `enterEditing`  | Sets `editingValue` to `true` explicitly                                                                   |
 | `exitEditing`   | Sets `editingValue` to `false` explicitly                                                                  |
@@ -57,7 +57,7 @@ An interrupted drag (`pointercancel`, lost pointer capture, or leaving editing m
   <li id="row-1" data-reorderable-target="item" tabindex="0">
     <span
       data-reorderable-target="handle"
-      data-action="pointerdown->reorderable#onPointerDown pointermove->reorderable#onPointerMove pointerup->reorderable#onPointerUp"
+      data-action="pointerdown->reorderable#onPointerdown pointermove->reorderable#onPointermove pointerup->reorderable#onPointerup"
     >
       ::
     </span>
@@ -66,7 +66,7 @@ An interrupted drag (`pointercancel`, lost pointer capture, or leaving editing m
   <li id="row-2" data-reorderable-target="item" tabindex="-1">
     <span
       data-reorderable-target="handle"
-      data-action="pointerdown->reorderable#onPointerDown pointermove->reorderable#onPointerMove pointerup->reorderable#onPointerUp"
+      data-action="pointerdown->reorderable#onPointerdown pointermove->reorderable#onPointermove pointerup->reorderable#onPointerup"
     >
       ::
     </span>

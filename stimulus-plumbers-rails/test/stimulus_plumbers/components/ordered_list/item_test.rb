@@ -25,7 +25,7 @@ class OrderedListItemTest < ActionView::TestCase
     doc = parse_html(renderer.render("Row", id: "row-1"))
 
     assert_css doc, "li[data-reorderable-target~='handle']"
-    assert_css doc, "li[data-action*='reorderable#onPointerDown']"
+    assert_css doc, "li[data-action*='reorderable#onPointerdown']"
   end
 
   def test_handle_leading_wires_leading_span_not_li
