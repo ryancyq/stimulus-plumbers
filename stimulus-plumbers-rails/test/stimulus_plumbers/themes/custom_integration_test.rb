@@ -37,7 +37,7 @@ class CustomThemeIntegrationTest < ActionView::TestCase
     assert_css build_field, "label.label"
   end
 
-  def test_custom_form_group_classes_applied_to_wrapper
+  def test_custom_form_group_classes_applied_to_container
     assert_css build_field, "div.field"
   end
 

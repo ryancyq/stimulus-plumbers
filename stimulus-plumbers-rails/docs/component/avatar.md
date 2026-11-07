@@ -30,7 +30,7 @@ Rails helper for rendering a user avatar — image, initials, or fallback silhou
 | `url`            | `nil`   | Image source; renders `<img>` with `alt="[name]'s avatar"` and `onerror` fallback                                                              |
 | `variant`        | `nil`   | Color variant name from the theme's `avatar_variant_range` — picked from it by `name` or `initials` if omitted; ignored with `url:` or a block |
 | `size`           | `:md`   | Size — values defined by the active theme (e.g. `:xs` \| `:sm` \| `:md` \| `:lg` \| `:xl`)                                                     |
-| `**html_options` | —       | Forwarded to the `<span>` wrapper                                                                                                              |
+| `**html_options` | —       | Forwarded to the container `<span>`                                                                                                            |
 
 **Render modes (in priority order):**
 

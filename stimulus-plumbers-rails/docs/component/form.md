@@ -20,10 +20,10 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 
 ## Two-level API
 
-| Level                                 | What it renders                                                 | When to use                                  |
-| ------------------------------------- | --------------------------------------------------------------- | -------------------------------------------- |
-| **Level 1** — native helper overrides | Input element only (theme classes, no label/hint/error wrapper) | When you control surrounding markup manually |
-| **Level 2** — full-field helpers      | Label + input + hint + error, fully wired for accessibility     | Default choice                               |
+| Level                                 | What it renders                                                   | When to use                                  |
+| ------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------- |
+| **Level 1** — native helper overrides | Input element only (theme classes, no label/hint/error container) | When you control surrounding markup manually |
+| **Level 2** — full-field helpers      | Label + input + hint + error, fully wired for accessibility       | Default choice                               |
 
 ---
 
@@ -59,7 +59,7 @@ Special options on native helpers:
 
 ### f.submit
 
-`f.submit` renders a themed `<button type="submit">` without a field wrapper.
+`f.submit` renders a themed `<button type="submit">` without a field container.
 
 ```erb
 <%= f.submit "Save" %>
@@ -125,7 +125,7 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
       choices: ["ruby", "rails", "hotwire"], clearable: true %>
 ```
 
-`f.field` can take a block when its renderer declares `&block`; that declaration opts the renderer into the block DSL. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` wrapper containing the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`. The meter, level, and rule states render the empty-password result, so rules an empty password already meets (such as `negate: true`) start as met.
+`f.field` can take a block when its renderer declares `&block`; that declaration opts the renderer into the block DSL. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` container holding the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`. The meter, level, and rule states render the empty-password result, so rules an empty password already meets (such as `negate: true`) start as met.
 
 `choices:` takes the standard Rails shape — an array of `[label, value]` pairs (or a flat array of strings).
 
@@ -199,7 +199,7 @@ Use `f.select` for a native `<select>`.
 `match:`, `min_length:`, `source:`, and `param:` pass through to [`sp_combobox_typeahead`](combobox.md#sp_combobox_typeahead).
 Use `f.search_field` for a native `<input type="search">`.
 
-**Password** (`as: :password`) — reveal-toggle wrapper backed by `input-revealable`.
+**Password** (`as: :password`) — reveal-toggle container backed by `input-revealable`.
 
 | Option         | Values                   | Default              | Description                                      |
 | -------------- | ------------------------ | -------------------- | ------------------------------------------------ |
@@ -304,7 +304,7 @@ Its label renders as a `<span>`, not a `<label>`, and names the bar via `aria-la
       group_label_method: :name %>
 ```
 
-Groups render as `role="group"` labelled by their heading through `aria-labelledby`. Use native `f.collection_select` / `f.grouped_collection_select` to skip the field wrapper.
+Groups render as `role="group"` labelled by their heading through `aria-labelledby`. Use native `f.collection_select` / `f.grouped_collection_select` to skip the field container.
 
 ---
 

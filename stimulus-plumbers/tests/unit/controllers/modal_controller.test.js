@@ -98,8 +98,8 @@ describe('ModalController', () => {
 
   it('normalizes programmatic results', async () => {
     const dialog = await render();
-    const root = document.querySelector('[data-controller="modal"]');
-    const controller = application.getControllerForElementAndIdentifier(root, 'modal');
+    const container = document.querySelector('[data-controller="modal"]');
+    const controller = application.getControllerForElementAndIdentifier(container, 'modal');
     controller.open();
     controller.close(42);
 

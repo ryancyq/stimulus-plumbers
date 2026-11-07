@@ -57,7 +57,7 @@ module StimulusPlumbers
 
       def render_popover(panel_id: nil, mode: :auto, placement: :block_end_start, **kwargs, &block)
         html_options = merge_html_options(
-          theme.resolve(:popover_wrapper),
+          theme.resolve(:popover_container),
           kwargs,
           { data: { controller: STIMULUS_CONTROLLER } }
         )

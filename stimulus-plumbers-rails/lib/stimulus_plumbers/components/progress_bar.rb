@@ -33,7 +33,7 @@ module StimulusPlumbers
 
       def segmented_html_options(current, min, max, segments, mode, indeterminate, kwargs)
         merge_html_options(
-          theme.resolve(:progress_segment_group),
+          theme.resolve(:progress_segments_container),
           kwargs,
           segmented_stimulus_data(current, min, max, mode, indeterminate),
           {
@@ -75,7 +75,7 @@ module StimulusPlumbers
         raise ArgumentError, "readout must be one of #{Themes::Schema::Progress::Ranges::PLACEMENT.join(", ")}"
       end
 
-      # The track clips its overflow, so an outside readout needs the root to be a wrapper.
+      # The track clips its overflow, so an outside readout sits beside it in the container.
       def bar_body(format, readout, text)
         return render_fill if format.nil?
         return template.safe_join([render_fill, render_value(text, :inside)]) if readout.to_sym == :inside
@@ -92,15 +92,15 @@ module StimulusPlumbers
         valuetext = text unless format&.to_sym == :percent
         aria      = progress_aria(value: current, min: min, max: max, indeterminate: indeterminate, valuetext: valuetext)
         merge_html_options(
-          bar_root_theme(format, readout),
+          bar_container_theme(format, readout),
           kwargs,
           bar_stimulus_data(current, min, max, indeterminate, format),
           { role: "progressbar", aria: aria, style: progress_style(current, min, max, kwargs[:style]) }
         )
       end
 
-      def bar_root_theme(format, readout)
-        return theme.resolve(:progress_bar_group) if format && readout.to_sym == :outside
+      def bar_container_theme(format, readout)
+        return theme.resolve(:progress_bar_container) if format && readout.to_sym == :outside
 
         theme.resolve(:progress_bar, labelled: !format.nil?)
       end

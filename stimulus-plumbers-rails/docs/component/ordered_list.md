@@ -31,15 +31,15 @@ Rails helper for a flat, reorderable list — pointer-drag and keyboard reorder 
 
 ### `list.item(content, id:, handle:, url:, target:, active:, **html_options, &block)`
 
-| Option           | Default | Description                                                                                                                                                          |
-| ---------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `content`        | `nil`   | Item label — positional arg or via `item.with_title`.                                                                                                                |
-| `id:`            | —       | **Required.** Raises `ArgumentError` if missing.                                                                                                                     |
-| `handle:`        | `:item` | `:item` (whole `<li>` is the drag surface) \| `:leading` \| `:trailing` (that icon position is).                                                                     |
-| `url:`           | `nil`   | Renders `<a href>` around the title/description. Without it, content renders with no wrapper (no click target at all — no `<button>` fallback, unlike `List::Item`). |
-| `target:`        | `nil`   | Forwarded to the `<a>` (e.g. `"_blank"`), only used when `url:` is set.                                                                                              |
-| `active:`        | `false` | Adds `aria-current="page"`, only used when `url:` is set.                                                                                                            |
-| `**html_options` | —       | Forwarded to the `<a>` when `url:` is set. Raises `ArgumentError` if given without `url:` — there is no element for them to land on.                                 |
+| Option           | Default | Description                                                                                                                                               |
+| ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `content`        | `nil`   | Item label — positional arg or via `item.with_title`.                                                                                                     |
+| `id:`            | —       | **Required.** Raises `ArgumentError` if missing.                                                                                                          |
+| `handle:`        | `:item` | `:item` (whole `<li>` is the drag surface) \| `:leading` \| `:trailing` (that icon position is).                                                          |
+| `url:`           | `nil`   | Renders `<a href>` around the title/description. Without it, content renders bare (no click target at all — no `<button>` fallback, unlike `List::Item`). |
+| `target:`        | `nil`   | Forwarded to the `<a>` (e.g. `"_blank"`), only used when `url:` is set.                                                                                   |
+| `active:`        | `false` | Adds `aria-current="page"`, only used when `url:` is set.                                                                                                 |
+| `**html_options` | —       | Forwarded to the `<a>` when `url:` is set. Raises `ArgumentError` if given without `url:` — there is no element for them to land on.                      |
 
 ### Item slot methods (yielded as `item`)
 
@@ -106,7 +106,7 @@ Icon positions (leading/trailing) are always siblings of the `<a>`, never nested
 | `ordered_list`                  | Outer `<ol>`                                     | —        |
 | `ordered_list_item`             | `<li>`                                           | —        |
 | `ordered_list_item_handle`      | Leading/trailing `<span>` (decorative-or-handle) | —        |
-| `ordered_list_item_content`     | Content wrapper `<span>` inside `<a>` (or bare)  | —        |
+| `ordered_list_item_content`     | Content `<span>` inside `<a>` (or bare)          | —        |
 | `ordered_list_item_title`       | Title `<span>`                                   | —        |
 | `ordered_list_item_description` | Description `<span>`                             | —        |
 

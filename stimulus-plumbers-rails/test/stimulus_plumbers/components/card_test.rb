@@ -15,7 +15,7 @@ class CardComponentTest < ActionView::TestCase
     assert_equal StimulusPlumbers.config.theme.current, renderer.theme
   end
 
-  def test_card_root_element_is_div
+  def test_card_container_element_is_div
     assert_css parse_html(renderer.render { |card| card.with_title("Card") }), "div"
   end
 

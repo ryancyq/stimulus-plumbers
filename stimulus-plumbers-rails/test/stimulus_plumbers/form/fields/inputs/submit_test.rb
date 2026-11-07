@@ -111,7 +111,7 @@ class SubmitTest < ActionView::TestCase
     assert_no_css doc, "label"
   end
 
-  def test_submit_renders_no_wrapper_div
+  def test_submit_renders_no_field_container
     doc = build_form { |f| f.submit "Save" }
 
     assert_no_css doc, "div"

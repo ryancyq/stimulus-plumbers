@@ -11,13 +11,13 @@ class ModalTurboTest < ActionView::TestCase
     renderer.render(id: "modal", **options)
   end
 
-  def test_renders_turbo_modal_wrapper_and_native_dialog
-    doc     = parse_html(render_turbo)
-    wrapper = doc.at_css("div[data-controller]")
+  def test_renders_turbo_modal_container_and_native_dialog
+    doc = parse_html(render_turbo)
+    container = doc.at_css("div[data-controller]")
 
-    assert_includes wrapper["data-controller"].split, "modal"
-    assert_includes wrapper["data-controller"].split, "modal-turbo"
-    assert_equal "true", wrapper["data-modal-turbo-close-on-success-value"]
+    assert_includes container["data-controller"].split, "modal"
+    assert_includes container["data-controller"].split, "modal-turbo"
+    assert_equal "true", container["data-modal-turbo-close-on-success-value"]
     assert_css doc, "dialog[closedby='closerequest'][data-modal-target='dialog']"
     assert_no_css doc, "dialog[aria-modal]"
   end
@@ -32,7 +32,7 @@ class ModalTurboTest < ActionView::TestCase
     assert_includes frame["data-action"], "turbo:submit-end->modal-turbo#onSubmitEnd"
   end
 
-  def test_preserves_wrapper_html_data_and_action_options
+  def test_preserves_container_html_data_and_action_options
     doc = parse_html(
       renderer.render(
         id:    "modal",
@@ -40,12 +40,12 @@ class ModalTurboTest < ActionView::TestCase
         data:  { action: "audit#closed", testid: "wrapper" }
       )
     )
-    wrapper = doc.at_css("div[data-controller]")
+    container = doc.at_css("div[data-controller]")
 
-    assert_includes wrapper["class"], "custom-wrapper"
-    assert_includes wrapper["data-action"].split, "audit#closed"
-    assert_includes wrapper["data-action"].split, "modal:closed->modal-turbo#onClosed"
-    assert_equal "wrapper", wrapper["data-testid"]
+    assert_includes container["class"], "custom-wrapper"
+    assert_includes container["data-action"].split, "audit#closed"
+    assert_includes container["data-action"].split, "modal:closed->modal-turbo#onClosed"
+    assert_equal "wrapper", container["data-testid"]
   end
 
   def test_uses_labelledby_by_default

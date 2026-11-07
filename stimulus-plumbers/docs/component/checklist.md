@@ -17,7 +17,7 @@ Select-all checkbox for a group of native `<input type="checkbox">` checklist it
 
 | Name        | Purpose                                                                                                                                                      |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `onChange`  | Wired to `change` on the wrapper — event adapter: calls `toggleAll` if the event came from the select-all checkbox, otherwise `recompute`                    |
+| `onChange`  | Wired to `change` on the container — event adapter: calls `toggleAll` if the event came from the select-all checkbox, otherwise `recompute`                  |
 | `toggleAll` | Programmatic API — sets every enabled item's `.checked` to the given value, dispatching `input` and `change` on each item it changes, then calls `recompute` |
 | `recompute` | Programmatic API — writes the select-all checkbox's `.checked`/`.indeterminate` from the enabled items' aggregate state                                      |
 

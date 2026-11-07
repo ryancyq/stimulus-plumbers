@@ -106,7 +106,7 @@ A read-only date input whose popover holds [`sp_calendar`](calendar.md); `combob
 | `trigger`                      | `{}`             | Attributes for the input                                                                |
 | `calendar`                     | `{}`             | [`sp_calendar`](calendar.md) `:stimulus` options (`displayed`, `today`, …)              |
 | `min`, `max`, `disabled_*`     | —                | Available dates, as in [`sp_calendar`](calendar.md)                                     |
-| `**html_options`               | —                | Forwarded to the wrapper `div`                                                          |
+| `**html_options`               | —                | Forwarded to the container `div`                                                        |
 
 ```html
 <div

@@ -14,8 +14,8 @@ module StimulusPlumbers
         # tabular-nums so the readout doesn't jitter as digits change under a drag.
         VALUE_TEXT = %w[text-xs font-medium leading-none tabular-nums].freeze
 
-        # Row wrapper for an outside readout — the track shrinks to leave room for the text.
-        BAR_GROUP = %w[flex w-full items-center gap-(--sp-space-2)].freeze
+        # Row container for an outside readout — the track shrinks to leave room for the text.
+        BAR_CONTAINER = %w[flex w-full items-center gap-(--sp-space-2)].freeze
 
         # Clipped to the glyphs, this paints primary-fg up to the fill edge and fg past it, so the
         # digits split rather than sit on a pill — neither color alone clears AA over both. The
@@ -53,7 +53,7 @@ module StimulusPlumbers
         BAR_FILL = [*FILL_BASE, *FILL_INDETERMINATE].freeze
 
         # Row of equal-width slots; each slot is its own track with a SEGMENT_FILL inside.
-        SEGMENT_GROUP = %w[flex w-full gap-(--sp-space-1)].freeze
+        SEGMENTS_CONTAINER = %w[flex w-full gap-(--sp-space-1)].freeze
 
         SEGMENT = %w[
           flex-1 h-2 overflow-hidden rounded-full
@@ -89,8 +89,8 @@ module StimulusPlumbers
           { classes: class_names(*BAR, BAR_HEIGHTS.fetch(labelled)) }
         end
 
-        def progress_bar_group_classes
-          { classes: class_names(*BAR_GROUP) }
+        def progress_bar_container_classes
+          { classes: class_names(*BAR_CONTAINER) }
         end
 
         def progress_bar_value_classes
@@ -105,8 +105,8 @@ module StimulusPlumbers
           { classes: class_names(*BAR_FILL) }
         end
 
-        def progress_segment_group_classes
-          { classes: class_names(*SEGMENT_GROUP) }
+        def progress_segments_container_classes
+          { classes: class_names(*SEGMENTS_CONTAINER) }
         end
 
         def progress_segment_classes

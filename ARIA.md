@@ -122,7 +122,7 @@
 - The real `<input>` is the entire accessible surface; cells are stamped `aria-hidden="true"` automatically.
 - The input requires a `<label>` (visually hidden allowed), `autocomplete="one-time-code"` for OTP (WCAG 1.3.5), `inputmode` matching the charset, and `maxlength` matching the code length.
 - Overlay the input with `opacity: 0` — never `display: none`/`visibility: hidden`, which remove it from the tab order (WCAG 2.1.1).
-- Focus visibility (WCAG 2.4.7): the caret cell (`data-caret`) appears only while the input has focus; style the wrapper with `:focus-within` plus `[data-caret]`.
+- Focus visibility (WCAG 2.4.7): the caret cell (`data-caret`) appears only while the input has focus; style the container with `:focus-within` plus `[data-caret]`.
 
 #### Input Clearable (`input_clearable_controller`)
 

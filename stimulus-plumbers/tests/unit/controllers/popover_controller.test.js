@@ -8,8 +8,8 @@ describe('PopoverController', () => {
   let consoleErrorSpy;
 
   const controllerFor = () => {
-    const root = document.querySelector('[data-controller="popover"]');
-    return application.getControllerForElementAndIdentifier(root, 'popover');
+    const container = document.querySelector('[data-controller="popover"]');
+    return application.getControllerForElementAndIdentifier(container, 'popover');
   };
 
   const render = async ({ trigger = true, authoredExpanded = true, panel = true } = {}) => {
@@ -24,9 +24,9 @@ describe('PopoverController', () => {
     const panelElement = document.querySelector('#panel');
     if (panelElement) installNativePopover(panelElement);
 
-    const root = document.querySelector('[data-controller="popover"]');
+    const container = document.querySelector('[data-controller="popover"]');
     await flush();
-    return { controller: controllerFor(), panel: panelElement, trigger: document.querySelector('#trigger'), root };
+    return { controller: controllerFor(), panel: panelElement, trigger: document.querySelector('#trigger'), container };
   };
 
   beforeEach(() => {
@@ -46,11 +46,11 @@ describe('PopoverController', () => {
 
   it('reports a missing panel once and leaves actions inert', async () => {
     document.body.innerHTML = '<div data-controller="popover"></div>';
-    const root = document.querySelector('[data-controller="popover"]');
+    const container = document.querySelector('[data-controller="popover"]');
     await flush();
     expect(consoleErrorSpy).toHaveBeenCalledOnce();
 
-    const controller = application.getControllerForElementAndIdentifier(root, 'popover');
+    const controller = application.getControllerForElementAndIdentifier(container, 'popover');
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'PopoverController requires a panel target. Add data-popover-target="panel" to your element.'
     );
@@ -188,11 +188,11 @@ describe('PopoverController', () => {
   });
 
   it('reconnects the same controller instance without duplicating cache behavior', async () => {
-    const { controller, panel, root } = await render();
+    const { controller, panel, container } = await render();
 
-    root.remove();
+    container.remove();
     await flush();
-    document.body.appendChild(root);
+    document.body.appendChild(container);
     await flush();
     expect(controllerFor()).toBe(controller);
 
@@ -245,11 +245,11 @@ describe('PopoverController', () => {
     });
 
     it('stays closed inside an open modal', async () => {
-      const { controller, panel, root, trigger } = await render();
+      const { controller, panel, container, trigger } = await render();
       const dialog = document.createElement('dialog');
       dialog.matches = (selector) => selector === ':modal';
-      root.replaceWith(dialog);
-      dialog.append(root);
+      container.replaceWith(dialog);
+      dialog.append(container);
       await flush();
       document.dispatchEvent(new Event('pointerdown'));
 
@@ -261,9 +261,9 @@ describe('PopoverController', () => {
   });
 
   it('stops syncing the trigger and closing for the Turbo cache after disconnect', async () => {
-    const { panel, root, trigger } = await render();
+    const { panel, container, trigger } = await render();
 
-    root.remove();
+    container.remove();
     await flush();
     panel.showPopover();
     await flush();

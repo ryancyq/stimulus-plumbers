@@ -27,9 +27,9 @@ Rails helpers for rendering the four standalone `progress` variants. The control
 <%= sp_progress_bar(value: 45, format: :percent, readout: :outside, aria: { label: "Upload progress" }) %>
 ```
 
-`:outside` wraps the root around a track element plus the readout, since the track clips its overflow. Role, ARIA, and `data-controller` stay on the root in both.
+`:outside` puts a track element and the readout inside the container, since the track clips its overflow. Role, ARIA, and `data-controller` stay on the container in both.
 
-Theme keys: `progress_bar_value` (inside), `progress_bar_value_outside` + `progress_bar_group` (outside). A theme without the latter two renders `:outside` unstyled, not broken.
+Theme keys: `progress_bar_value` (inside), `progress_bar_value_outside` + `progress_bar_container` (outside). A theme without the latter two renders `:outside` unstyled, not broken.
 
 The fill's geometry comes from the rendered `--sp-progress-percent`
 ([JS](../../../stimulus-plumbers/docs/component/progress.md#geometry)), so it paints

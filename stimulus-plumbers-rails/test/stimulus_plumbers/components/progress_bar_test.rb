@@ -265,31 +265,31 @@ class ProgressBarTest < ActionView::TestCase
   end
 
   def test_inside_readout_shares_the_track_element
-    doc  = parse_html(renderer.render(value: 45, format: :percent))
-    root = doc.at_css("div[role='progressbar']")
+    doc = parse_html(renderer.render(value: 45, format: :percent))
+    container = doc.at_css("div[role='progressbar']")
 
-    assert_equal root, readout(doc).parent
-    assert_equal root, doc.at_css("[data-progress-target='fill']").parent
+    assert_equal container, readout(doc).parent
+    assert_equal container, doc.at_css("[data-progress-target='fill']").parent
   end
 
   def test_outside_readout_is_a_sibling_of_the_track
-    doc  = parse_html(renderer.render(value: 45, format: :percent, readout: :outside))
-    root = doc.at_css("div[role='progressbar']")
+    doc = parse_html(renderer.render(value: 45, format: :percent, readout: :outside))
+    container = doc.at_css("div[role='progressbar']")
 
-    assert_equal root, readout(doc).parent
-    refute_equal root, doc.at_css("[data-progress-target='fill']").parent
+    assert_equal container, readout(doc).parent
+    refute_equal container, doc.at_css("[data-progress-target='fill']").parent
     assert_equal "45%", readout(doc).text
   end
 
   # Outside the controller element, the readout never updates.
   def test_outside_readout_and_fill_stay_within_the_controller_element
-    root = parse_html(renderer.render(value: 45, format: :percent, readout: :outside)).at_css("[data-controller='progress']")
+    container = parse_html(renderer.render(value: 45, format: :percent, readout: :outside)).at_css("[data-controller='progress']")
 
-    assert_css root, "[data-progress-target='value']"
-    assert_css root, "[data-progress-target='fill']"
+    assert_css container, "[data-progress-target='value']"
+    assert_css container, "[data-progress-target='fill']"
   end
 
-  def test_outside_readout_keeps_the_progressbar_aria_on_the_root
+  def test_outside_readout_keeps_the_progressbar_aria_on_the_container
     doc = parse_html(renderer.render(value: 45, format: :value_max, readout: :outside))
 
     assert_css doc, "div[role='progressbar'][aria-valuenow='45'][aria-valuetext='45 / 100']"

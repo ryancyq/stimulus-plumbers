@@ -34,7 +34,7 @@ class FormBuilderTest < ActionView::TestCase
     assert_no_css doc, "label"
   end
 
-  def test_hidden_field_renders_without_field_wrapper
+  def test_hidden_field_renders_without_field_container
     doc = build_field(:hidden_field, :email)
 
     assert_css doc, "input[type='hidden']"
