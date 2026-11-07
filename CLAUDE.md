@@ -45,6 +45,31 @@ bin/                       # Repo scripts
 - When removing a component or helper, remove its README table row, doc file, and any cross-references in ARIA.md in the same commit.
 - Export name in `src/index.js` must match the name used in the README setup snippet and the Controllers table — verify with `grep` before writing docs.
 
+## Naming
+
+| Term                     | Meaning                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------------------ |
+| `container`              | An element holding a component or one of its parts, with no role noun of its own                 |
+| `group`                  | Part of a component name (`button_group`, `input_group`) or a `role="group"` set                 |
+| `control`                | An interactive element; a `trigger` is one kind                                                  |
+| `trigger`                | The `role=combobox` element, a control opening a panel, dialog, or detail, or a reorderable link |
+| `panel`                  | The popover a trigger opens                                                                      |
+| `navigation`             | How a calendar changes period (`stimulus` or `turbo`); also its controls' `data-navigation`      |
+| `period`                 | A calendar's month, year, or decade span                                                         |
+| `window`                 | A time availability's daily `min`–`max`, held as ranges                                          |
+| `column`                 | One listbox of a time panel: hour, minute, or meridiem; a `unit` column is hour or minute        |
+| date/time `key`          | A canonical date or time string                                                                  |
+| `value`                  | What a field holds (not a Stimulus `*-value`)                                                    |
+| `selected`               | Marked in a column, listbox, or calendar                                                         |
+| `active`                 | The option keyboard movement is on; a list item's `active:` marks the current page or item       |
+| `selectAll`/`select_all` | The checkbox that toggles every enabled checklist item                                           |
+
+- **Holders** — an element is named for its role (`header`, `actions`, `items`), else `<part>_container`; a component's outer element takes the bare component key, or `<name>_container` when that key names another element. `group` is never a holder's suffix.
+- **Ruby attributes** — a method or local holding one element's HTML attributes is `*_attrs` (`*_stimulus_attrs` when they are only Stimulus attributes); the hash under its `data:` key is `*_values` when it holds only Stimulus values, otherwise `*_data`; `html_options` is what a caller forwards and what a component merges it into.
+- **Ruby raising methods** — `validate_*!` raises; `parse_*!` converts or raises.
+- **JS private methods** — a command is a verb phrase (`_draw`, `_moveTo`); a method or getter that returns something is named for it with a noun (`_availability`, `_strengthOf`); a predicate reads as a yes/no question (`_hasResults`, `_isOpen`, `_owns(event)`); a hook that runs after an event is named for that event, in the past tense (`_failed`, `_modalOpened`, `_selectionChanged`).
+- **Actions** — an adapter is named for the event it handles: a DOM event spelled like the event (`onKeydown`, `onPointerdown`, `onFocusout`), a key filter like its key (`onEscape` for `keydown.esc`), a custom or Turbo event camelCased (`onDateChange`, `onResponse`). When the event alone doesn't say what happens, it is named for the command it runs (`onSelect` on `click`, `onDismiss`).
+
 ## Testing
 
 Every behaviour has exactly one owning layer — the first layer below that can observe it. The one sanctioned overlap: a user-facing interaction keeps its logic branches in a controller test and one keyboard/focus happy path in a Rails a11y test.
