@@ -4,8 +4,8 @@ module StimulusPlumbers
   module Components
     class OrderedList
       class Item < Plumber::Base
-        HANDLE_ACTION = "pointerdown->reorderable#onPointerDown pointermove->reorderable#onPointerMove " \
-                        "pointerup->reorderable#onPointerUp"
+        HANDLE_ACTION = "pointerdown->reorderable#onPointerdown pointermove->reorderable#onPointermove " \
+                        "pointerup->reorderable#onPointerup"
 
         # `state:` is the list's: whether it is editing, and whether this item is the roving Tab stop.
         def render(content = nil, id:, handle: :item, url: nil, target: nil, active: false, state: {}, **html_options, &block)

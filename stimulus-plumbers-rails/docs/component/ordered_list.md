@@ -68,7 +68,7 @@ If `handle: :leading`/`:trailing` is set and the corresponding icon slot isn't, 
   <li
     id="item-1"
     data-reorderable-target="item handle"
-    data-action="pointerdown->reorderable#onPointerDown pointermove->reorderable#onPointerMove pointerup->reorderable#onPointerUp"
+    data-action="pointerdown->reorderable#onPointerdown pointermove->reorderable#onPointermove pointerup->reorderable#onPointerup"
   >
     First
   </li>
@@ -81,7 +81,7 @@ If `handle: :leading`/`:trailing` is set and the corresponding icon slot isn't, 
 <li id="link-1" data-reorderable-target="item">
   <span
     data-reorderable-target="handle"
-    data-action="pointerdown->reorderable#onPointerDown ..."
+    data-action="pointerdown->reorderable#onPointerdown ..."
   >
     <svg aria-hidden="true">...</svg>
     <!-- grip-vertical, or a custom icon if item.with_icon_leading was set -->
