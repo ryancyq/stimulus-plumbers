@@ -68,8 +68,8 @@ The `method_name:` and `init_args: [template]` are injected automatically — yo
 | ------------------ | ------------------- | --------------------------------------------------- |
 | `Symbol`           | `MethodCall`        | `self.send(symbol, *args, **kwargs)`                |
 | `Proc` / block     | `InstanceExec`      | `self.instance_exec(*args, **kwargs, &proc)`        |
-| `Class` / `Module` | `KlassProxy`        | `Class.new(template).method_name(*args, **kwargs)`  |
-| `String`           | `KlassProxy`        | Resolved via `safe_constantize`, then same as Class |
+| `Class` / `Module` | `ClassCall`         | `Class.new(template).method_name(*args, **kwargs)`  |
+| `String`           | `ClassCall`         | Resolved via `safe_constantize`, then same as Class |
 
 ### Example
 

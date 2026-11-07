@@ -164,19 +164,19 @@ class PlumberDispatcherTest < Minitest::Test
     end
   end
 
-  class KlassProxyTest < PlumberDispatcherTest
+  class ClassCallTest < PlumberDispatcherTest
     def target
       Object.new
     end
 
     def test_instantiates_klass_with_init_args_and_calls_method
-      proxy = Dispatcher::KlassProxy.new(FakeRenderer, :render_item, "hello", init_args: ["tmpl"])
+      class_call = Dispatcher::ClassCall.new(FakeRenderer, :render_item, "hello", init_args: ["tmpl"])
 
-      assert_equal "rendered:hello", proxy.call(target)
+      assert_equal "rendered:hello", class_call.call(target)
     end
 
     def test_passes_init_kwargs_to_klass_new
-      proxy = Dispatcher::KlassProxy.new(
+      class_call = Dispatcher::ClassCall.new(
         FakeRenderer,
         :render_item,
         "hello",
@@ -184,11 +184,11 @@ class PlumberDispatcherTest < Minitest::Test
         init_kwargs: { extra: "opt" }
       )
 
-      assert_equal "rendered:hello", proxy.call(target)
+      assert_equal "rendered:hello", class_call.call(target)
     end
 
     def test_passes_method_kwargs
-      proxy = Dispatcher::KlassProxy.new(
+      class_call = Dispatcher::ClassCall.new(
         FakeRenderer,
         :render_with_options,
         "card",
@@ -196,29 +196,29 @@ class PlumberDispatcherTest < Minitest::Test
         style:     "bold"
       )
 
-      assert_equal "card[bold]", proxy.call(target)
+      assert_equal "card[bold]", class_call.call(target)
     end
 
     def test_raises_for_invalid_klass
-      assert_raises(ArgumentError) { Dispatcher::KlassProxy.new("not a class", :render_item) }
+      assert_raises(ArgumentError) { Dispatcher::ClassCall.new("not a class", :render_item) }
     end
 
     def test_raises_for_invalid_method_name
-      assert_raises(ArgumentError) { Dispatcher::KlassProxy.new(FakeRenderer, 123) }
+      assert_raises(ArgumentError) { Dispatcher::ClassCall.new(FakeRenderer, 123) }
     end
 
     def test_forwards_block_to_method
-      proxy = Dispatcher::KlassProxy.new(
+      class_call = Dispatcher::ClassCall.new(
         FakeRenderer, :render_with_block, "hello", init_args: ["tmpl"]
       ) { |v| "wrapped:#{v}" }
 
-      assert_equal "wrapped:hello", proxy.call(target)
+      assert_equal "wrapped:hello", class_call.call(target)
     end
 
     def test_method_receives_no_block_when_none_given
-      proxy = Dispatcher::KlassProxy.new(FakeRenderer, :render_with_block, "hello", init_args: ["tmpl"])
+      class_call = Dispatcher::ClassCall.new(FakeRenderer, :render_with_block, "hello", init_args: ["tmpl"])
 
-      assert_equal "rendered:hello", proxy.call(target)
+      assert_equal "rendered:hello", class_call.call(target)
     end
   end
 
@@ -231,19 +231,19 @@ class PlumberDispatcherTest < Minitest::Test
       assert_instance_of Dispatcher::InstanceExec, Dispatcher.build(proc { "x" })
     end
 
-    def test_returns_klass_proxy_for_module
-      assert_instance_of Dispatcher::KlassProxy,
+    def test_returns_class_call_for_module
+      assert_instance_of Dispatcher::ClassCall,
                          Dispatcher.build(FakeRenderer, method_name: :render_item, init_args: ["tmpl"])
     end
 
-    def test_returns_klass_proxy_for_string
+    def test_returns_class_call_for_string
       result = Dispatcher.build(
         "PlumberDispatcherTest::FakeRenderer",
         method_name: :render_item,
         init_args:   ["tmpl"]
       )
 
-      assert_instance_of Dispatcher::KlassProxy, result
+      assert_instance_of Dispatcher::ClassCall, result
       assert_equal FakeRenderer, result.klass
     end
 
@@ -263,7 +263,7 @@ class PlumberDispatcherTest < Minitest::Test
       assert_equal({ foo: "bar" }, Dispatcher.build(:some_method, foo: "bar").kwargs)
     end
 
-    def test_forwards_init_args_and_init_kwargs_to_klass_proxy
+    def test_forwards_init_args_and_init_kwargs_to_class_call
       result = Dispatcher.build(
         FakeRenderer,
         method_name: :render_item,
@@ -282,7 +282,7 @@ class PlumberDispatcherTest < Minitest::Test
       assert_equal blk, result.block
     end
 
-    def test_forwards_block_to_klass_proxy
+    def test_forwards_block_to_class_call
       blk = proc { |v| "wrapped:#{v}" }
       result = Dispatcher.build(FakeRenderer, method_name: :render_item, init_args: ["tmpl"], &blk)
 
