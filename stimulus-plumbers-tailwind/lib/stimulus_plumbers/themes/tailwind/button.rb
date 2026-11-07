@@ -138,7 +138,7 @@ module StimulusPlumbers
 
         def button_classes(type: :default, variant: :primary, size: :md)
           {
-            classes: klasses(
+            classes: class_names(
               *BASE,
               *(type == :card ? CARD : LAYOUT),
               *VARIANTS.fetch(variant, VARIANTS[:primary]),
@@ -149,7 +149,7 @@ module StimulusPlumbers
         end
 
         def button_icon_classes
-          { classes: klasses("stroke-current") }
+          { classes: class_names("stroke-current") }
         end
       end
     end

@@ -72,14 +72,14 @@ module StimulusPlumbers
         def link_classes(type: :default, variant: :default)
           variant_classes = VARIANTS.fetch(variant, VARIANTS[:default])
           case type
-          when :button then { classes: klasses(*BUTTON, *variant_classes) }
-          when :card   then { classes: klasses(*CARD, *variant_classes) }
-          else              { classes: klasses(*BASE, *variant_classes) }
+          when :button then { classes: class_names(*BUTTON, *variant_classes) }
+          when :card   then { classes: class_names(*CARD, *variant_classes) }
+          else              { classes: class_names(*BASE, *variant_classes) }
           end
         end
 
         def link_icon_classes
-          { classes: klasses("stroke-current") }
+          { classes: class_names("stroke-current") }
         end
       end
     end

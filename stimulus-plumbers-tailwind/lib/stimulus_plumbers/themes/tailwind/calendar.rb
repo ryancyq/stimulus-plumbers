@@ -37,39 +37,39 @@ module StimulusPlumbers
         private
 
         def calendar_classes
-          { classes: klasses(*GRID) }
+          { classes: class_names(*GRID) }
         end
 
         def calendar_status_classes
-          { classes: klasses(*STATUS) }
+          { classes: class_names(*STATUS) }
         end
 
         def calendar_header_classes
-          { classes: klasses(*HEADER) }
+          { classes: class_names(*HEADER) }
         end
 
         def calendar_heading_classes
-          { classes: klasses(*HEADING) }
+          { classes: class_names(*HEADING) }
         end
 
         def calendar_navigation_classes
-          { classes: klasses(*NAVIGATION) }
+          { classes: class_names(*NAVIGATION) }
         end
 
         def calendar_grid_classes
-          { classes: klasses(*GRID_TABLE) }
+          { classes: class_names(*GRID_TABLE) }
         end
 
         def calendar_weekday_classes
-          { classes: klasses(*WEEKDAY) }
+          { classes: class_names(*WEEKDAY) }
         end
 
         def calendar_cell_classes
-          { classes: klasses(*CELL) }
+          { classes: class_names(*CELL) }
         end
 
         def calendar_date_classes
-          { classes: klasses(*DATE) }
+          { classes: class_names(*DATE) }
         end
       end
     end

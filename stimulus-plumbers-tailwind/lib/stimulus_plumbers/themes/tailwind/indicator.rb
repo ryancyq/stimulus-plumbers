@@ -33,15 +33,15 @@ module StimulusPlumbers
         private
 
         def indicator_classes(type: :dot, variant: nil)
-          { classes: klasses(*(type.to_sym == :badge ? BADGE : DOT), VARIANTS.fetch(variant, nil)) }
+          { classes: class_names(*(type.to_sym == :badge ? BADGE : DOT), VARIANTS.fetch(variant, nil)) }
         end
 
         def indicator_wrapper_classes
-          { classes: klasses(*WRAPPER) }
+          { classes: class_names(*WRAPPER) }
         end
 
         def indicator_pulse_classes
-          { classes: klasses(*PULSE_RING) }
+          { classes: class_names(*PULSE_RING) }
         end
       end
     end

@@ -37,27 +37,27 @@ module StimulusPlumbers
         private
 
         def checklist_classes
-          { classes: klasses(*CHECKLIST) }
+          { classes: class_names(*CHECKLIST) }
         end
 
         def checklist_item_classes
-          { classes: klasses(*ITEM) }
+          { classes: class_names(*ITEM) }
         end
 
         def checklist_item_input_classes
-          { classes: klasses(*INPUT) }
+          { classes: class_names(*INPUT) }
         end
 
         def checklist_item_content_classes
-          { classes: klasses(*CONTENT) }
+          { classes: class_names(*CONTENT) }
         end
 
         def checklist_item_title_classes
-          { classes: klasses(*TITLE) }
+          { classes: class_names(*TITLE) }
         end
 
         def checklist_item_description_classes
-          { classes: klasses(*DESCRIPTION) }
+          { classes: class_names(*DESCRIPTION) }
         end
       end
     end

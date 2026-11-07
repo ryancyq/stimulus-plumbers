@@ -86,43 +86,43 @@ module StimulusPlumbers
         private
 
         def progress_bar_classes(labelled: false)
-          { classes: klasses(*BAR, BAR_HEIGHTS.fetch(labelled)) }
+          { classes: class_names(*BAR, BAR_HEIGHTS.fetch(labelled)) }
         end
 
         def progress_bar_group_classes
-          { classes: klasses(*BAR_GROUP) }
+          { classes: class_names(*BAR_GROUP) }
         end
 
         def progress_bar_value_classes
-          { classes: klasses(*BAR_VALUE) }
+          { classes: class_names(*BAR_VALUE) }
         end
 
         def progress_bar_value_outside_classes
-          { classes: klasses(*BAR_VALUE_OUTSIDE) }
+          { classes: class_names(*BAR_VALUE_OUTSIDE) }
         end
 
         def progress_bar_fill_classes
-          { classes: klasses(*BAR_FILL) }
+          { classes: class_names(*BAR_FILL) }
         end
 
         def progress_segment_group_classes
-          { classes: klasses(*SEGMENT_GROUP) }
+          { classes: class_names(*SEGMENT_GROUP) }
         end
 
         def progress_segment_classes
-          { classes: klasses(*SEGMENT) }
+          { classes: class_names(*SEGMENT) }
         end
 
         def progress_segment_fill_classes
-          { classes: klasses(*SEGMENT_FILL) }
+          { classes: class_names(*SEGMENT_FILL) }
         end
 
         def progress_ring_classes(size: nil)
-          { classes: klasses(*RING, *Array(RING_SIZES[size])) }
+          { classes: class_names(*RING, *Array(RING_SIZES[size])) }
         end
 
         def progress_meter_classes
-          { classes: klasses(*METER) }
+          { classes: class_names(*METER) }
         end
       end
     end

@@ -54,7 +54,7 @@ module StimulusPlumbers
 
       private
 
-      def klasses(*classes)
+      def class_names(*classes)
         classes.flatten.reject(&:blank?).join(" ")
       end
     end

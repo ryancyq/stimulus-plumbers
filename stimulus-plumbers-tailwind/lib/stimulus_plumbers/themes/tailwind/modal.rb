@@ -81,35 +81,35 @@ module StimulusPlumbers
         private
 
         def modal_wrapper_classes
-          { classes: klasses(*WRAPPER) }
+          { classes: class_names(*WRAPPER) }
         end
 
         def modal_classes(size: :md)
-          { classes: klasses(*SURFACE, *SIZES.fetch(size, SIZES[:md])) }
+          { classes: class_names(*SURFACE, *SIZES.fetch(size, SIZES[:md])) }
         end
 
         def modal_backdrop_classes
-          { classes: klasses(*BACKDROP) }
+          { classes: class_names(*BACKDROP) }
         end
 
         def modal_header_classes
-          { classes: klasses(*HEADER) }
+          { classes: class_names(*HEADER) }
         end
 
         def modal_title_classes
-          { classes: klasses(*TITLE) }
+          { classes: class_names(*TITLE) }
         end
 
         def modal_body_classes
-          { classes: klasses(*BODY) }
+          { classes: class_names(*BODY) }
         end
 
         def modal_turbo_classes
-          { classes: klasses(*TURBO_FRAME) }
+          { classes: class_names(*TURBO_FRAME) }
         end
 
         def modal_footer_classes
-          { classes: klasses(*FOOTER) }
+          { classes: class_names(*FOOTER) }
         end
       end
     end

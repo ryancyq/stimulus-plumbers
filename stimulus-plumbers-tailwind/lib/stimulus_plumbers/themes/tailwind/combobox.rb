@@ -83,71 +83,71 @@ module StimulusPlumbers
         private
 
         def combobox_classes
-          { classes: klasses(*CONTAINER) }
+          { classes: class_names(*CONTAINER) }
         end
 
         def combobox_dropdown_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_typeahead_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_date_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_time_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_datetime_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_trigger_classes
-          { classes: klasses(*TRIGGER) }
+          { classes: class_names(*TRIGGER) }
         end
 
         def combobox_trigger_group_classes
-          { classes: klasses(*TRIGGER_GROUP) }
+          { classes: class_names(*TRIGGER_GROUP) }
         end
 
         def combobox_listbox_classes
-          { classes: klasses(*LISTBOX) }
+          { classes: class_names(*LISTBOX) }
         end
 
         def combobox_option_classes
-          { classes: klasses(*OPTION, *OPTION_SELECTED, *OPTION_DISABLED) }
+          { classes: class_names(*OPTION, *OPTION_SELECTED, *OPTION_DISABLED) }
         end
 
         def combobox_option_description_classes
-          { classes: klasses(*OPTION_DESCRIPTION) }
+          { classes: class_names(*OPTION_DESCRIPTION) }
         end
 
         def combobox_option_group_classes
-          { classes: klasses(*OPTION_GROUP) }
+          { classes: class_names(*OPTION_GROUP) }
         end
 
         def combobox_option_group_label_classes
-          { classes: klasses(*OPTION_GROUP_LABEL) }
+          { classes: class_names(*OPTION_GROUP_LABEL) }
         end
 
         def combobox_status_classes
-          { classes: klasses(*STATUS) }
+          { classes: class_names(*STATUS) }
         end
 
         def combobox_time_classes
-          { classes: klasses(*TIME) }
+          { classes: class_names(*TIME) }
         end
 
         def combobox_datetime_classes
-          { classes: klasses(*DATETIME) }
+          { classes: class_names(*DATETIME) }
         end
 
         def combobox_time_column_classes(type: :unit)
-          { classes: klasses(*TIME_COLUMN, *(type == :meridiem ? TIME_COLUMN_MERIDIEM : TIME_COLUMN_UNIT)) }
+          { classes: class_names(*TIME_COLUMN, *(type == :meridiem ? TIME_COLUMN_MERIDIEM : TIME_COLUMN_UNIT)) }
         end
       end
     end
