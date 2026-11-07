@@ -10,9 +10,9 @@ module StimulusPlumbers
           include Combobox
 
           def search_field(attribute, options = {})
-            clearable    = options.delete(:clearable) { false }
-            data         = clearable ? { data: { input_clearable_target: "input" } } : {}
-            html_options = merge_html_options(theme.resolve(:form_field_input), options, data)
+            clearable = options.delete(:clearable) { false }
+            clearable_stimulus_attrs = clearable ? { data: { input_clearable_target: "input" } } : {}
+            html_options = merge_html_options(theme.resolve(:form_field_input), options, clearable_stimulus_attrs)
             render_input_group(
               trailing: clearable ? method(:clear_button) : nil,
               error:    false,

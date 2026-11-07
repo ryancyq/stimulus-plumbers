@@ -53,7 +53,7 @@ module StimulusPlumbers
             )
             container_attrs = merge_html_options(
               theme.resolve(:form_field_input_credit_card, error: config[:error]),
-              credit_card_options(config)
+              credit_card_stimulus_attrs(config)
             )
             @template.content_tag(:div, **container_attrs) do
               @template.safe_join(
@@ -62,7 +62,7 @@ module StimulusPlumbers
             end
           end
 
-          def credit_card_options(config)
+          def credit_card_stimulus_attrs(config)
             {
               data: {
                 controller:                   STIMULUS_CONTROLLER,
