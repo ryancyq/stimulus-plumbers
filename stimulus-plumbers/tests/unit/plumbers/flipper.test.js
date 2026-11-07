@@ -67,13 +67,13 @@ describe('Flipper', () => {
     });
   });
 
-  describe('biggerRectThan', () => {
+  describe('fits', () => {
     it('returns true when big rect is larger in both dimensions', () => {
       const flipper = new Flipper(mockController, { anchor });
       const big = { width: 200, height: 200 };
       const small = { width: 100, height: 100 };
 
-      expect(flipper.biggerRectThan(big, small)).toBe(true);
+      expect(flipper.fits(big, small)).toBe(true);
     });
 
     it('returns false when big rect is smaller in width', () => {
@@ -81,7 +81,7 @@ describe('Flipper', () => {
       const big = { width: 50, height: 200 };
       const small = { width: 100, height: 100 };
 
-      expect(flipper.biggerRectThan(big, small)).toBe(false);
+      expect(flipper.fits(big, small)).toBe(false);
     });
 
     it('returns false when big rect is smaller in height', () => {
@@ -89,7 +89,7 @@ describe('Flipper', () => {
       const big = { width: 200, height: 50 };
       const small = { width: 100, height: 100 };
 
-      expect(flipper.biggerRectThan(big, small)).toBe(false);
+      expect(flipper.fits(big, small)).toBe(false);
     });
 
     it('returns true when dimensions are equal', () => {
@@ -97,11 +97,11 @@ describe('Flipper', () => {
       const big = { width: 100, height: 100 };
       const small = { width: 100, height: 100 };
 
-      expect(flipper.biggerRectThan(big, small)).toBe(true);
+      expect(flipper.fits(big, small)).toBe(true);
     });
   });
 
-  describe('quadrumRect', () => {
+  describe('spaceAround', () => {
     it('calculates available space in all four directions', () => {
       const flipper = new Flipper(mockController, { anchor });
       const inner = {
@@ -117,22 +117,22 @@ describe('Flipper', () => {
         height: 300,
       };
 
-      const quadrum = flipper.quadrumRect(inner, outer);
+      const space = flipper.spaceAround(inner, outer);
 
-      expect(quadrum.left.width).toBe(100);
-      expect(quadrum.right.width).toBe(150);
-      expect(quadrum.top.height).toBe(100);
-      expect(quadrum.bottom.height).toBe(150);
+      expect(space.left.width).toBe(100);
+      expect(space.right.width).toBe(150);
+      expect(space.top.height).toBe(100);
+      expect(space.bottom.height).toBe(150);
     });
   });
 
-  describe('quadrumPlacement', () => {
+  describe('placeOn', () => {
     it('places element at top of anchor', () => {
       const flipper = new Flipper(mockController, { anchor });
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { width: 200, height: 100 };
 
-      const placement = flipper.quadrumPlacement(anchorRect, 'top', reference);
+      const placement = flipper.placeOn('top', anchorRect, reference);
 
       expect(placement.y).toBe(0); // 100 - 100
       expect(placement.height).toBe(100);
@@ -143,7 +143,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { width: 200, height: 100 };
 
-      const placement = flipper.quadrumPlacement(anchorRect, 'bottom', reference);
+      const placement = flipper.placeOn('bottom', anchorRect, reference);
 
       expect(placement.y).toBe(150); // 100 + 50
       expect(placement.height).toBe(100);
@@ -154,7 +154,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { width: 80, height: 100 };
 
-      const placement = flipper.quadrumPlacement(anchorRect, 'left', reference);
+      const placement = flipper.placeOn('left', anchorRect, reference);
 
       expect(placement.x).toBe(20); // 100 - 80
       expect(placement.width).toBe(80);
@@ -165,7 +165,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { width: 80, height: 100 };
 
-      const placement = flipper.quadrumPlacement(anchorRect, 'right', reference);
+      const placement = flipper.placeOn('right', anchorRect, reference);
 
       expect(placement.x).toBe(150); // 100 + 50
       expect(placement.width).toBe(80);
@@ -176,17 +176,17 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { width: 80, height: 100 };
 
-      expect(() => flipper.quadrumPlacement(anchorRect, 'invalid', reference)).toThrow();
+      expect(() => flipper.placeOn('invalid', anchorRect, reference)).toThrow();
     });
   });
 
-  describe('quadrumAlignment', () => {
+  describe('alignOn', () => {
     it('aligns to start for top/bottom placement', () => {
       const flipper = new Flipper(mockController, { anchor, alignment: 'start' });
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { x: 0, y: 200, width: 80, height: 100 };
 
-      const aligned = flipper.quadrumAlignment(anchorRect, 'bottom', reference);
+      const aligned = flipper.alignOn('bottom', anchorRect, reference);
 
       expect(aligned.x).toBe(100);
     });
@@ -196,7 +196,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { x: 0, y: 200, width: 80, height: 100 };
 
-      const aligned = flipper.quadrumAlignment(anchorRect, 'bottom', reference);
+      const aligned = flipper.alignOn('bottom', anchorRect, reference);
 
       expect(aligned.x).toBe(85); // 100 + 50/2 - 80/2
     });
@@ -206,7 +206,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { x: 0, y: 200, width: 80, height: 100 };
 
-      const aligned = flipper.quadrumAlignment(anchorRect, 'bottom', reference);
+      const aligned = flipper.alignOn('bottom', anchorRect, reference);
 
       expect(aligned.x).toBe(70); // 100 + 50 - 80
     });
@@ -216,7 +216,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { x: 150, y: 0, width: 80, height: 100 };
 
-      const aligned = flipper.quadrumAlignment(anchorRect, 'right', reference);
+      const aligned = flipper.alignOn('right', anchorRect, reference);
 
       expect(aligned.y).toBe(100);
     });
@@ -226,7 +226,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { x: 150, y: 0, width: 80, height: 100 };
 
-      const aligned = flipper.quadrumAlignment(anchorRect, 'right', reference);
+      const aligned = flipper.alignOn('right', anchorRect, reference);
 
       expect(aligned.y).toBe(75); // 100 + 50/2 - 100/2
     });
@@ -236,7 +236,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { x: 150, y: 0, width: 80, height: 100 };
 
-      const aligned = flipper.quadrumAlignment(anchorRect, 'right', reference);
+      const aligned = flipper.alignOn('right', anchorRect, reference);
 
       expect(aligned.y).toBe(50); // 100 + 50 - 100
     });
@@ -246,7 +246,7 @@ describe('Flipper', () => {
       const anchorRect = { x: 100, y: 100, width: 50, height: 50 };
       const reference = { x: 150, y: 0, width: 80, height: 100 };
 
-      expect(() => flipper.quadrumAlignment(anchorRect, 'invalid', reference)).toThrow();
+      expect(() => flipper.alignOn('invalid', anchorRect, reference)).toThrow();
     });
   });
 
