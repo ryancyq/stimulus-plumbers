@@ -59,7 +59,7 @@ module StimulusPlumbers
           }.compact
         end
 
-        def extra_container_options
+        def extra_container_attrs
           [{ data: editable_data }, ({ data: @turbo.stimulus_data } if @turbo)].compact
         end
 

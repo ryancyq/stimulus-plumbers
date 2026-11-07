@@ -65,7 +65,7 @@ module StimulusPlumbers
         validate_readout!(readout)
         current      = clamp(value, min, max)
         text         = value_text(format, current, min, max) unless indeterminate
-        html_options = bar_html_options(current, min, max, indeterminate, format, readout, text, kwargs)
+        html_options = bar_attrs(current, min, max, indeterminate, format, readout, text, kwargs)
         template.content_tag(:div, bar_body(format, readout, text), **html_options)
       end
 
@@ -87,7 +87,7 @@ module StimulusPlumbers
         template.content_tag(:div, render_fill, **merge_html_options(theme.resolve(:progress_bar, labelled: false)))
       end
 
-      def bar_html_options(current, min, max, indeterminate, format, readout, text, kwargs)
+      def bar_attrs(current, min, max, indeterminate, format, readout, text, kwargs)
         # `percent` omits aria-valuetext — AT derives the percentage from aria-valuenow itself.
         valuetext = text unless format&.to_sym == :percent
         aria      = progress_aria(value: current, min: min, max: max, indeterminate: indeterminate, valuetext: valuetext)
