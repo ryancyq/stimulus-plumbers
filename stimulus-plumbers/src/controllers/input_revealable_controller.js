@@ -25,17 +25,17 @@ export default class extends Controller {
     this.revealedValue = !this.revealedValue;
   }
 
-  // Draws synchronously, before the page is cached.
+  // Syncs at once, before the page is cached.
   _conceal() {
     this.revealedValue = false;
-    this.draw();
+    this._syncRevealed();
   }
 
   revealedValueChanged() {
-    this.draw();
+    this._syncRevealed();
   }
 
-  draw() {
+  _syncRevealed() {
     if (this.hasInputTarget) this.inputTarget.type = this.revealedValue ? 'text' : 'password';
     if (!this.hasToggleTarget) return;
 
