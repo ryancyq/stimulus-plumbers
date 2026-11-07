@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fuzzyMatcher } from '../../src/researcher';
+import { fuzzyMatcher } from '../../src/matcher';
 
 describe('fuzzyMatcher', () => {
   it('empty needle matches any haystack', () => {
