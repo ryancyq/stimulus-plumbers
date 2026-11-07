@@ -3,7 +3,7 @@
 module StimulusPlumbers
   module Plumber
     module Dispatcher
-      class KlassProxy
+      class ClassCall
         attr_reader :klass, :method_name, :args, :kwargs, :init_args, :init_kwargs, :block
 
         def initialize(klass, method_name, *args, init_args: [], init_kwargs: {}, **kwargs, &block)

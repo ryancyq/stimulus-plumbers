@@ -12,8 +12,8 @@ Dispatcher.build(callable, *args, **kwargs, &block)
 | ------------------ | -------------- | ------------------------------------------------------------ |
 | `Symbol`           | `MethodCall`   | Calls the named method on `target`                           |
 | `Proc`             | `InstanceExec` | Executes the proc via `instance_exec` on `target`            |
-| `Module` / `Class` | `KlassProxy`   | Instantiates the class, calls `method_name:` on the instance |
-| `String`           | `KlassProxy`   | Resolved via `safe_constantize`, then same as `Module`       |
+| `Module` / `Class` | `ClassCall`    | Instantiates the class, calls `method_name:` on the instance |
+| `String`           | `ClassCall`    | Resolved via `safe_constantize`, then same as `Module`       |
 
 All dispatchers share one interface: `dispatcher.call(target)`.
 
@@ -48,7 +48,7 @@ renderer = proc { |attribute, opts, wrap| wrap.call(@template.text_field(@object
 Dispatcher.build(renderer, attribute, html_opts, wrapper).call(form_builder)
 ```
 
-### KlassProxy
+### ClassCall
 
 Instantiates `callable` with `init_args:` / `init_kwargs:`, then calls `method_name:` on the instance. `target` is ignored. A `String` callable is resolved via `safe_constantize` at build time.
 
@@ -71,6 +71,6 @@ Dispatcher.build(
 
 ## Block forwarding
 
-`MethodCall` and `KlassProxy` capture a block at build time and forward it to the dispatched method. `dispatcher.block` returns `nil` when no block is given.
+`MethodCall` and `ClassCall` capture a block at build time and forward it to the dispatched method. `dispatcher.block` returns `nil` when no block is given.
 
 `InstanceExec` does not participate — the `Proc` is the block. Compose further callables as positional arguments instead.
