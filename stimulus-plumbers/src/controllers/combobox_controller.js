@@ -3,7 +3,7 @@ import { attachPopover, isPopoverElement } from '../plumbers/popover';
 import { onFormReset } from '../plumbers/plumber/form_reset';
 import { ensureId, isAriaDisabled, setExpanded, setHidden, setSelected } from '../accessibility/aria';
 import { ActiveDescendant } from '../accessibility/keyboard';
-import { fuzzyMatcher, matchContains, matchPrefix } from '../researcher';
+import { fuzzyMatcher, matchContains, matchPrefix } from '../matcher';
 
 const OPTION_SELECTOR = '[role="option"]';
 const MATCHERS = {

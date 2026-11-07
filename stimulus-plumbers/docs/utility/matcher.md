@@ -1,4 +1,4 @@
-# Researcher
+# Matcher
 
 Client-side string matching.
 

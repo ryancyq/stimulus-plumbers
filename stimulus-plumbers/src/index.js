@@ -12,7 +12,7 @@ export * from './accessibility/aria.js';
 
 // Export utilities
 export { Requestor } from './requestor.js';
-export { fuzzyMatcher } from './researcher.js';
+export { fuzzyMatcher } from './matcher.js';
 
 export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
 export { CharacterCells, attachCharacterCells } from './plumbers/character_cells.js';
