@@ -12,11 +12,11 @@ module StimulusPlumbers
 
           private
 
-          def render_text_area_input(attribute, html_opts, opts, error, floating: nil, **kwargs)
+          def render_text_area_input(attribute, input_attrs, opts, error, floating: nil, **kwargs)
             html_options = merge_html_options(
               theme.resolve(:form_field_input_textarea, floating: floating, error: error),
               opts,
-              html_opts,
+              input_attrs,
               kwargs
             )
             @template.text_area(@object_name, attribute, objectify_options(html_options))

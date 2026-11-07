@@ -20,7 +20,7 @@ module StimulusPlumbers
 
           def render_credit_card_input(
             attribute,
-            html_opts,
+            input_attrs,
             opts,
             error,
             groups: DEFAULT_GROUPS,
@@ -41,14 +41,14 @@ module StimulusPlumbers
               inputmode:    kwargs.delete(:inputmode) || DEFAULT_INPUTMODE,
               kwargs:       kwargs
             }
-            render_credit_card_field(attribute, html_opts, opts, config)
+            render_credit_card_field(attribute, input_attrs, opts, config)
           end
 
-          def render_credit_card_field(attribute, html_opts, opts, config)
+          def render_credit_card_field(attribute, input_attrs, opts, config)
             overlay_options = merge_html_options(
               theme.resolve(:form_field_input_credit_card_overlay, error: config[:error]),
               opts,
-              html_opts
+              input_attrs
             )
             container_attrs = merge_html_options(
               theme.resolve(:form_field_input_credit_card, error: config[:error]),
@@ -71,9 +71,9 @@ module StimulusPlumbers
             }
           end
 
-          def credit_card_input(attribute, html_opts, config)
+          def credit_card_input(attribute, overlay_attrs, config)
             input_options = merge_html_options(
-              html_opts,
+              overlay_attrs,
               config[:kwargs],
               {
                 maxlength:    config[:maxlength],

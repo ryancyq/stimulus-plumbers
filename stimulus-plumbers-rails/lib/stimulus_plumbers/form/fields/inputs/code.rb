@@ -19,7 +19,7 @@ module StimulusPlumbers
 
           def render_code_input(
             attribute,
-            html_opts,
+            input_attrs,
             opts,
             error,
             length: nil,
@@ -42,14 +42,14 @@ module StimulusPlumbers
               inputmode:    kwargs.delete(:inputmode) || (charset.to_sym == DEFAULT_CHARSET ? "numeric" : nil),
               kwargs:       kwargs
             }
-            render_code_field(attribute, html_opts, opts, config)
+            render_code_field(attribute, input_attrs, opts, config)
           end
 
-          def render_code_field(attribute, html_opts, opts, config)
+          def render_code_field(attribute, input_attrs, opts, config)
             overlay_options = merge_html_options(
               theme.resolve(:form_field_input_code_overlay, error: config[:error]),
               opts,
-              html_opts
+              input_attrs
             )
             container_attrs = merge_html_options(
               theme.resolve(:form_field_input_code, error: config[:error]),
@@ -81,9 +81,9 @@ module StimulusPlumbers
             config[:groups].presence
           end
 
-          def code_input(attribute, html_opts, config)
+          def code_input(attribute, overlay_attrs, config)
             input_options = merge_html_options(
-              html_opts,
+              overlay_attrs,
               config[:kwargs],
               {
                 maxlength:    config[:length],

@@ -33,11 +33,11 @@ module StimulusPlumbers
 
           private
 
-          def render_password_input(attribute, html_opts, opts, error, floating: nil, revealable: false, **kwargs, &block)
+          def render_password_input(attribute, input_attrs, opts, error, floating: nil, revealable: false, **kwargs, &block)
             # A shared `requirements:` object (spec Section C) takes precedence over a field block.
             @password_requirements = kwargs.delete(:requirements) || build_password_requirements(&block)
-            input_id = html_opts[:id]
-            html_options = password_html_options(html_opts, opts, error, floating, kwargs)
+            input_id = input_attrs[:id]
+            html_options = password_html_options(input_attrs, opts, error, floating, kwargs)
             html_options = apply_strength_wiring(html_options, input_id) if @password_requirements.active?
             input = if revealable
                       render_revealable_password(error, floating: floating) do
@@ -56,11 +56,11 @@ module StimulusPlumbers
             StimulusPlumbers::Password::Requirements.build(&block)
           end
 
-          def password_html_options(html_opts, opts, error, floating, kwargs)
+          def password_html_options(input_attrs, opts, error, floating, kwargs)
             merge_html_options(
               theme.resolve(:form_field_input, floating: floating, error: error),
               opts,
-              html_opts,
+              input_attrs,
               kwargs,
               { autocomplete: kwargs.delete(:autocomplete) || DEFAULT_AUTOCOMPLETE }
             )

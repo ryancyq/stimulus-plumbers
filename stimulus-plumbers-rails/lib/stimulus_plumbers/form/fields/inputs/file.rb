@@ -12,11 +12,11 @@ module StimulusPlumbers
 
           private
 
-          def render_file_input(attribute, html_opts, opts, error, floating: nil, **kwargs)
+          def render_file_input(attribute, input_attrs, opts, error, floating: nil, **kwargs)
             html_options = merge_html_options(
               theme.resolve(:form_field_input_file, floating: floating, error: error),
               opts,
-              html_opts,
+              input_attrs,
               kwargs
             )
             @template.file_field(@object_name, attribute, objectify_options(html_options))

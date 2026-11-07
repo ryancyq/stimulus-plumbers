@@ -27,7 +27,7 @@ module StimulusPlumbers
 
           def render_combobox_typeahead(
             attribute,
-            html_opts,
+            input_attrs,
             opts,
             error,
             floating: nil,
@@ -39,7 +39,7 @@ module StimulusPlumbers
             render_combobox(
               attribute,
               component:    Components::Combobox::Typeahead,
-              html_opts:    html_opts,
+              input_attrs:  input_attrs,
               opts:         clearable ? merge_html_options(opts, { data: { controller: "input-clearable" } }) : opts,
               error:        error,
               floating:     floating,

@@ -28,16 +28,16 @@ module StimulusPlumbers
           private
 
           TEXT_FIELD_METHODS.each do |as_key, template_method|
-            define_method(:"render_#{as_key}_input") do |attribute, html_opts, opts, error, **kwargs|
-              render_text(attribute, html_opts, opts, error, template_method, **kwargs)
+            define_method(:"render_#{as_key}_input") do |attribute, input_attrs, opts, error, **kwargs|
+              render_text(attribute, input_attrs, opts, error, template_method, **kwargs)
             end
           end
 
-          def render_text(attribute, html_opts, opts, error, template_method, floating: nil, **kwargs)
+          def render_text(attribute, input_attrs, opts, error, template_method, floating: nil, **kwargs)
             html_options = merge_html_options(
               theme.resolve(:form_field_input, floating: floating, error: error),
               opts,
-              html_opts,
+              input_attrs,
               kwargs
             )
             @template.public_send(template_method, @object_name, attribute, objectify_options(html_options))

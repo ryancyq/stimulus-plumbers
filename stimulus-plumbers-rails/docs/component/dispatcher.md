@@ -25,7 +25,7 @@ Calls a named method on `target`. Positional args beyond the method's arity are 
 
 ```ruby
 Dispatcher.build(:render_input, attribute).call(form_builder)
-Dispatcher.build(:render_input, attribute, html_opts, as: :text).call(form_builder)
+Dispatcher.build(:render_input, attribute, input_attrs, as: :text).call(form_builder)
 
 # block forwarded to the method
 Dispatcher.build(:render_input, attribute) { |html| tag.div(html) }.call(form_builder)
@@ -36,16 +36,16 @@ Dispatcher.build(:render_input, attribute) { |html| tag.div(html) }.call(form_bu
 Executes a `Proc` via `instance_exec` on `target`. The proc body has full access to `target`'s instance methods and instance variables.
 
 ```ruby
-renderer = proc { |attribute, opts| @template.text_field(@object_name, attribute, opts) }
-Dispatcher.build(renderer, attribute, html_opts).call(form_builder)
+renderer = proc { |attribute, input_attrs| @template.text_field(@object_name, attribute, input_attrs) }
+Dispatcher.build(renderer, attribute, input_attrs).call(form_builder)
 ```
 
 The `Proc` itself is the block — any `&block` passed to `build` is ignored. To compose a secondary callable, pass it as a positional argument:
 
 ```ruby
 wrapper  = ->(html) { tag.div(html, class: "wrapper") }
-renderer = proc { |attribute, opts, wrap| wrap.call(@template.text_field(@object_name, attribute, opts)) }
-Dispatcher.build(renderer, attribute, html_opts, wrapper).call(form_builder)
+renderer = proc { |attribute, input_attrs, wrap| wrap.call(@template.text_field(@object_name, attribute, input_attrs)) }
+Dispatcher.build(renderer, attribute, input_attrs, wrapper).call(form_builder)
 ```
 
 ### ClassCall
@@ -55,7 +55,7 @@ Instantiates `callable` with `init_args:` / `init_kwargs:`, then calls `method_n
 ```ruby
 Dispatcher.build(
   MyRenderer,
-  attribute, html_opts,
+  attribute, input_attrs,
   method_name: :render,
   init_args:   [@template]
 ).call(anything)

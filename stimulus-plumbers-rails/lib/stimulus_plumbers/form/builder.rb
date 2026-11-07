@@ -94,11 +94,11 @@ module StimulusPlumbers
         validate_field_block!(as, block)
 
         field = Field.new(@template, label_mode: Fields::Renderer.label_mode(as), **field_opts)
-        field.render(object, attribute, input_id: field_id(attribute)) do |html_opts, opts, error|
+        field.render(object, attribute, input_id: field_id(attribute)) do |input_attrs, opts, error|
           Plumber::Dispatcher.build(
             Fields::Renderer::FIELD.fetch(as),
             attribute,
-            html_opts,
+            input_attrs,
             opts,
             error,
             floating: field.floating,

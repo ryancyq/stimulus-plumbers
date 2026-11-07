@@ -16,22 +16,22 @@ module StimulusPlumbers
           private
 
           # `floating:` is dropped — a label can't sit inside a slider.
-          def render_range_input(attribute, html_opts, opts, _error, format: nil, min: 0, max: 100, **kwargs)
+          def render_range_input(attribute, input_attrs, opts, _error, format: nil, min: 0, max: 100, **kwargs)
             validate_format!(format)
             current = clamp(numeric(object.public_send(attribute)), min, max)
-            input   = range_input(attribute, current, min, max, format, html_opts, opts, kwargs.except(:floating))
+            input   = range_input(attribute, current, min, max, format, input_attrs, opts, kwargs.except(:floating))
             return input if format.nil?
 
             range_container(input, current, min, max, format)
           end
 
           # No readout to contain, so the input hosts the controller itself.
-          def range_input(attribute, current, min, max, format, html_opts, opts, kwargs)
+          def range_input(attribute, current, min, max, format, input_attrs, opts, kwargs)
             wired = format.nil? ? range_stimulus_data(current, min, max, format) : { data: { "progress-target": "input" } }
             html_options = merge_html_options(
               theme.resolve(:form_field_input_range),
               opts,
-              html_opts,
+              input_attrs,
               kwargs,
               wired,
               # The input carries the track gradient, so the fill percentage lands here, not on

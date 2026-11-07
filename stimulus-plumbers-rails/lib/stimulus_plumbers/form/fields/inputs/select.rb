@@ -23,7 +23,7 @@ module StimulusPlumbers
 
           def render_combobox_dropdown(
             attribute,
-            html_opts,
+            input_attrs,
             opts,
             error,
             floating: nil,
@@ -36,13 +36,13 @@ module StimulusPlumbers
             current_value = selected || (object.respond_to?(attribute) ? object.public_send(attribute) : nil)
             render_combobox(
               attribute,
-              component: Components::Combobox::Dropdown,
-              html_opts: html_opts,
-              opts:      opts,
-              error:     error,
-              floating:  floating,
-              options:   build_select_dropdown_choices(Array(choices), include_blank: include_blank, prompt: prompt),
-              value:     current_value,
+              component:   Components::Combobox::Dropdown,
+              input_attrs: input_attrs,
+              opts:        opts,
+              error:       error,
+              floating:    floating,
+              options:     build_select_dropdown_choices(Array(choices), include_blank: include_blank, prompt: prompt),
+              value:       current_value,
               **kwargs
             )
           end
