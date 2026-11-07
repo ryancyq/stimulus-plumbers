@@ -13,7 +13,7 @@ Value-driven progress indicator supporting five render variants: a linear bar, a
 | `fill`  | `<div>` (bar, segment slot) / `<circle pathLength="100">` (ring) | Element the geometry CSS sizes from `--sp-progress-percent` (see [Geometry](#geometry)). Segmented renders **one `fill` per segment** |
 | `meter` | `<meter>`                                                        | Present only for `variant: "meter"` — native element, attributes synced directly                                                      |
 | `value` | `<span>`                                                         | Optional on-screen readout; its `textContent` is set from `format`. Bar and range variants                                            |
-| `input` | `<input type="range">`                                           | Range-only, and only when a readout is present — the controller then sits on a wrapper containing both                                |
+| `input` | `<input type="range">`                                           | Range-only, and only when a readout is present — the controller then sits on a container holding both                                 |
 
 ## Values
 
@@ -55,7 +55,7 @@ The controller writes `--sp-progress-percent` (0–100, two decimals) on the con
 | `ring`          | Root `--sp-progress-percent`; fill `<circle pathLength="100">`                               | `stroke-dasharray: 100; stroke-dashoffset: calc(100 - var(--sp-progress-percent))`           |
 | `indeterminate` | `data-progress-indeterminate-value="true"`                                                   | Fill (bar width, ring arc, segment chunk) at `--sp-progress-indeterminate-fraction` (`0.25`) |
 
-A theme can also read the root's `--sp-progress-percent`, for example to split the readout's color at the fill edge.
+A theme can also read the container's `--sp-progress-percent`, for example to split the readout's color at the fill edge.
 
 ## Methods
 
@@ -159,7 +159,7 @@ Changing any other value (`min`, `max`, `indeterminate`, `format`, …) re-rende
   data-action="input->progress#refresh"
 />
 
-<!-- Range with a readout — a target must be a descendant, so a wrapper hosts the controller -->
+<!-- Range with a readout — a target must be a descendant, so a container hosts the controller -->
 <div
   data-controller="progress"
   data-progress-variant-value="range"

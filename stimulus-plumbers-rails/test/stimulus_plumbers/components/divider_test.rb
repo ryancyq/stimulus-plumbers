@@ -41,14 +41,14 @@ class DividerComponentTest < ActionView::TestCase
     assert_css doc, "div[role='separator']"
   end
 
-  def test_nil_label_renders_hr_inside_wrapper
+  def test_nil_label_renders_hr_inside_container
     doc = parse_html(renderer.render(nil))
 
     assert_css doc, "div[role='separator'] hr"
     assert_no_css doc, "span"
   end
 
-  def test_blank_label_renders_hr_inside_wrapper
+  def test_blank_label_renders_hr_inside_container
     doc = parse_html(renderer.render(""))
 
     assert_css doc, "div[role='separator'] hr"

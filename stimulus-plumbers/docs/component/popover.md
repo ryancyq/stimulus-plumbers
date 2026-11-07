@@ -90,10 +90,10 @@ The endpoint responds with an element of the region's `id`.
 | `loadingText` | String  | `Loading…`                    | Status while loading                              |
 | `errorText`   | String  | `Content could not be loaded` | Status after a failed load; the next open retries |
 
-| Action            | Wired on                 | Description                                                                   |
-| ----------------- | ------------------------ | ----------------------------------------------------------------------------- |
-| `onOpened(event)` | `popover:opened` on root | Loads the region; restores focus the swap drops ([ARIA.md](../../../ARIA.md)) |
-| `onClosed(event)` | `popover:closed` on root | Cancels a load in flight                                                      |
+| Action            | Wired on                          | Description                                                                   |
+| ----------------- | --------------------------------- | ----------------------------------------------------------------------------- |
+| `onOpened(event)` | `popover:opened` on the container | Loads the region; restores focus the swap drops ([ARIA.md](../../../ARIA.md)) |
+| `onClosed(event)` | `popover:closed` on the container | Cancels a load in flight                                                      |
 
 Events from popovers inside the region are ignored.
 

@@ -9,9 +9,9 @@ test.describe("turbo modal", () => {
   test("targets the Turbo frame and opens on a matching render", async ({
     page,
   }) => {
-    const root = page.locator("#modal-turbo");
-    const link = root.getByRole("link", { name: "Edit profile" });
-    const dialog = root.locator("dialog");
+    const container = page.locator("#modal-turbo");
+    const link = container.getByRole("link", { name: "Edit profile" });
+    const dialog = container.locator("dialog");
 
     await expect(link).toHaveAttribute("data-turbo-frame", "modal");
     await link.click();
@@ -33,9 +33,9 @@ test.describe("turbo modal", () => {
   test("reconnects after the Turbo frame target is replaced", async ({
     page,
   }) => {
-    const root = page.locator("#modal-turbo");
-    const dialog = root.locator("dialog");
-    const frame = root.locator("turbo-frame");
+    const container = page.locator("#modal-turbo");
+    const dialog = container.locator("dialog");
+    const frame = container.locator("turbo-frame");
     const frameActions = await frame.getAttribute("data-action");
 
     const stream = `<turbo-stream action="replace" target="modal">
@@ -65,9 +65,9 @@ test.describe("turbo modal", () => {
       );
       test.skip(!supported, "Exit transitions need CSS overlay support.");
 
-      const root = page.locator("#modal-turbo");
-      const dialog = root.locator("dialog");
-      await root.getByRole("link", { name: "Edit profile" }).click();
+      const container = page.locator("#modal-turbo");
+      const dialog = container.locator("dialog");
+      await container.getByRole("link", { name: "Edit profile" }).click();
       await dialog.getByLabel("Name").fill("Ada");
 
       const [state] = await Promise.all([
@@ -110,16 +110,16 @@ test.describe("turbo modal", () => {
         ),
       ).toBe(true);
       await expect(dialog).not.toHaveAttribute("open", "");
-      await expect(root.locator("turbo-frame")).toBeEmpty();
+      await expect(container.locator("turbo-frame")).toBeEmpty();
     });
   });
 
   test("scrolls structured long content without moving the footer", async ({
     page,
   }) => {
-    const root = page.locator("#modal-turbo");
-    await root.getByRole("link", { name: "Edit profile" }).click();
-    const dialog = root.locator("dialog");
+    const container = page.locator("#modal-turbo");
+    await container.getByRole("link", { name: "Edit profile" }).click();
+    const dialog = container.locator("dialog");
     const frame = dialog.locator("turbo-frame");
     const body = frame.locator(":scope > div");
     const footer = frame.locator(":scope > footer");
@@ -143,9 +143,9 @@ test.describe("turbo modal", () => {
   test("keeps the Turbo modal open after a 422 validation response", async ({
     page,
   }) => {
-    const root = page.locator("#modal-turbo");
-    await root.getByRole("link", { name: "Edit profile" }).click();
-    const dialog = root.locator("dialog");
+    const container = page.locator("#modal-turbo");
+    await container.getByRole("link", { name: "Edit profile" }).click();
+    const dialog = container.locator("dialog");
     await dialog.getByRole("button", { name: "Save" }).click();
 
     await expect(dialog).toHaveAttribute("open", "");
@@ -154,23 +154,23 @@ test.describe("turbo modal", () => {
   });
 
   test("closes and clears after a successful submission", async ({ page }) => {
-    const root = page.locator("#modal-turbo");
-    await root.getByRole("link", { name: "Edit profile" }).click();
-    const dialog = root.locator("dialog");
+    const container = page.locator("#modal-turbo");
+    await container.getByRole("link", { name: "Edit profile" }).click();
+    const dialog = container.locator("dialog");
     await dialog.getByLabel("Name").fill("Ada");
     await dialog.getByRole("button", { name: "Save" }).click();
 
     await expect(dialog).not.toHaveAttribute("open", "");
-    await expect(root.locator("turbo-frame")).toBeEmpty();
+    await expect(container.locator("turbo-frame")).toBeEmpty();
   });
 
   test("restores a closed and empty modal from the Turbo cache", async ({
     page,
   }) => {
-    const root = page.locator("#modal-turbo");
-    await root.getByRole("link", { name: "Edit profile" }).click();
-    const dialog = root.locator("dialog");
-    const frame = root.locator("turbo-frame");
+    const container = page.locator("#modal-turbo");
+    await container.getByRole("link", { name: "Edit profile" }).click();
+    const dialog = container.locator("dialog");
+    const frame = container.locator("turbo-frame");
     await expect(dialog).toHaveAttribute("open", "");
 
     await dialog.getByRole("link", { name: "Cancel" }).click();

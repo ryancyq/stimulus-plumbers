@@ -50,11 +50,11 @@ module StimulusPlumbers
               opts,
               html_opts
             )
-            wrapper_options = merge_html_options(
+            container_attrs = merge_html_options(
               theme.resolve(:form_field_input_credit_card, error: config[:error]),
               credit_card_options(config)
             )
-            @template.content_tag(:div, **wrapper_options) do
+            @template.content_tag(:div, **container_attrs) do
               @template.safe_join(
                 [render_credit_card_cells(config), credit_card_input(attribute, overlay_options, config)]
               )

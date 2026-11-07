@@ -51,4 +51,4 @@ Button, Link, Checkbox, and Radio all share a unified card style via the `--card
 
 ## Floating Field Key Ownership
 
-Floating-label theme keys (`form_field_floating`, `form_field_floating_group`, `form_field_floating_label`) and their constants (`FLOATING_INPUT_*`, `FLOATING_GROUP_TYPES`, `FLOATING_LABEL_*`) live in `Form::Field` (`form/field.rb`), **not** `Form::Input`. Floating is a field-layout concern, not an input-element concern.
+Floating-label theme keys (`form_field_floating`, `form_field_floating_container`, `form_field_floating_label`) and their constants (`FLOATING_INPUT_*`, `FLOATING_GROUP_TYPES`, `FLOATING_LABEL_*`) live in `Form::Field` (`form/field.rb`), **not** `Form::Input`. Floating is a field-layout concern, not an input-element concern.

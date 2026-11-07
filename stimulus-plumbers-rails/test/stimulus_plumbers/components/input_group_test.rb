@@ -7,19 +7,19 @@ class ComponentsInputGroupTest < ActionView::TestCase
     StimulusPlumbers::Components::InputGroup.new(self).render(...)
   end
 
-  def test_renders_div_wrapper
+  def test_renders_div_container
     html = input_group { "<input>".html_safe }
 
     assert_includes html, "<div"
   end
 
-  def test_renders_input_inside_wrapper
+  def test_renders_input_inside_container
     doc = parse_html(input_group { "<input type='text'>".html_safe })
 
     assert_css doc, "div input[type='text']"
   end
 
-  def test_renders_trailing_inside_wrapper
+  def test_renders_trailing_inside_container
     doc = parse_html(input_group(trailing: "<button>X</button>".html_safe) { "<input>".html_safe })
 
     assert_css doc, "div button"
@@ -31,7 +31,7 @@ class ComponentsInputGroupTest < ActionView::TestCase
     assert_css doc, "div button"
   end
 
-  def test_renders_leading_inside_wrapper
+  def test_renders_leading_inside_container
     doc = parse_html(input_group(leading: "<span>$</span>".html_safe) { "<input>".html_safe })
 
     assert_css doc, "div span"
@@ -74,7 +74,7 @@ class ComponentsInputGroupTest < ActionView::TestCase
     assert_equal %w[span input button], names
   end
 
-  def test_passes_extra_html_attributes_to_wrapper
+  def test_passes_extra_html_attributes_to_container
     doc = parse_html(input_group("data-controller": "foo") { "<input>".html_safe })
 
     assert_css doc, "div[data-controller='foo']"

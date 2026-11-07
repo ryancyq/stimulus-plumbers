@@ -60,7 +60,7 @@ module StimulusPlumbers
           ].freeze
           FLOATING_INPUT_GROUP_ERROR = %w[border-(--sp-color-error)].freeze
 
-          # ── Combobox wrappers ─────────────────────────────────────────────────
+          # ── Combobox containers ───────────────────────────────────────────────
           COMBOBOX_INPUT = %w[
             [&>input:not([type=hidden])]:border-0
             [&>input:not([type=hidden])]:rounded-none
@@ -125,7 +125,7 @@ module StimulusPlumbers
           ].freeze
 
           # Dims the readout of a disabled slider.
-          RANGE_GROUP = %w[
+          RANGE_CONTAINER = %w[
             flex items-center gap-(--sp-space-3)
             [&:has(input:disabled)>span]:opacity-50
           ].freeze
@@ -218,8 +218,8 @@ module StimulusPlumbers
             { classes: class_names(*RANGE) }
           end
 
-          def form_field_input_range_group_classes
-            { classes: class_names(*RANGE_GROUP) }
+          def form_field_input_range_container_classes
+            { classes: class_names(*RANGE_CONTAINER) }
           end
 
           def form_field_input_range_value_classes

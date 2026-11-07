@@ -12,7 +12,7 @@ module StimulusPlumbers
         slots = Modal::Slots.new(template, modal_id: options[:id])
         yield slots if block_given?
 
-        template.content_tag(:div, **wrapper_attrs(html_options)) do
+        template.content_tag(:div, **container_attrs(html_options)) do
           template.safe_join([slots.resolve(:trigger), render_dialog(slots, options)].compact)
         end
       end
@@ -34,9 +34,9 @@ module StimulusPlumbers
         }
       end
 
-      def wrapper_attrs(html_options)
+      def container_attrs(html_options)
         merge_html_options(
-          theme.resolve(:modal_wrapper),
+          theme.resolve(:modal_container),
           html_options,
           { data: { controller: STIMULUS_CONTROLLER } }
         )

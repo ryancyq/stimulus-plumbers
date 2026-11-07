@@ -14,7 +14,7 @@ module StimulusPlumbers
         return dot unless pulse
 
         template.content_tag(
-          :span, template.safe_join([render_pulse_ring, dot]), **merge_html_options(theme.resolve(:indicator_wrapper))
+          :span, template.safe_join([render_pulse_ring, dot]), **merge_html_options(theme.resolve(:indicator_container))
         )
       end
 

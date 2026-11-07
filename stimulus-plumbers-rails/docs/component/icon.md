@@ -17,7 +17,7 @@ Rails helper for rendering a named icon from the active theme's icon registry.
 | ---------------- | ---------- | ---------------------------------------------------------------------- |
 | `name`           | (required) | Positional (1st argument). Icon name — looked up in the theme registry |
 | `size`           | `:lg`      | `:sm` \| `:md` \| `:lg` — theme-resolved size class                    |
-| `**html_options` | —          | Forwarded to the root element                                          |
+| `**html_options` | —          | Forwarded to the `<svg>` (or the fallback `<span>`)                    |
 
 ---
 

@@ -37,7 +37,7 @@ describe('ProgressController', () => {
       expect(el.getAttribute('aria-valuemax')).toBe('100');
     });
 
-    it('publishes the percent on the root for the geometry', () => {
+    it('publishes the percent on the container for the geometry', () => {
       const el = document.querySelector('[data-controller="progress"]');
       expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('30');
       getController().setValue(80);
@@ -102,7 +102,7 @@ describe('ProgressController', () => {
       await flush();
     });
 
-    it('publishes the percent on the root for the dash', () => {
+    it('publishes the percent on the container for the dash', () => {
       const el = document.querySelector('[data-controller="progress"]');
       expect(el.style.getPropertyValue('--sp-progress-percent')).toBe('25');
       getController().setValue(50);
@@ -236,7 +236,7 @@ describe('ProgressController', () => {
       await flush();
     };
     const readout = () => document.querySelector('[data-progress-target="value"]');
-    const host = () => document.querySelector('[data-controller="progress"]');
+    const container = () => document.querySelector('[data-controller="progress"]');
 
     it('renders the percentage when format is percent', async () => {
       await setup({ format: 'percent' });
@@ -261,18 +261,18 @@ describe('ProgressController', () => {
 
     it('leaves aria-valuetext unset for percent', async () => {
       await setup({ format: 'percent' });
-      expect(host().hasAttribute('aria-valuetext')).toBe(false);
+      expect(container().hasAttribute('aria-valuetext')).toBe(false);
     });
 
     it('sets aria-valuetext for value_max', async () => {
       await setup({ format: 'value_max' });
-      expect(host().getAttribute('aria-valuetext')).toBe('45 / 100');
+      expect(container().getAttribute('aria-valuetext')).toBe('45 / 100');
     });
 
     it('clears the readout and aria-valuetext while indeterminate', async () => {
       await setup({ format: 'value_max', indeterminate: true });
       expect(readout().textContent).toBe('');
-      expect(host().hasAttribute('aria-valuetext')).toBe(false);
+      expect(container().hasAttribute('aria-valuetext')).toBe(false);
     });
 
     it('leaves author-rendered text alone for an unknown format', async () => {
@@ -295,7 +295,7 @@ describe('ProgressController', () => {
         </div>
       `;
       await flush();
-      expect(host().style.getPropertyValue('--sp-progress-percent')).toBe('45');
+      expect(container().style.getPropertyValue('--sp-progress-percent')).toBe('45');
     });
 
     it('accounts for a non-zero minimum', async () => {
@@ -322,15 +322,15 @@ describe('ProgressController', () => {
     it('clamps a value that arrives out of range in the markup', async () => {
       await setup({ value: 150, max: 100 });
       expect(readout().textContent).toBe('100%');
-      expect(host().style.getPropertyValue('--sp-progress-percent')).toBe('100');
-      expect(host().getAttribute('aria-valuenow')).toBe('100');
+      expect(container().style.getPropertyValue('--sp-progress-percent')).toBe('100');
+      expect(container().getAttribute('aria-valuenow')).toBe('100');
     });
 
     it('clamps a value below the minimum', async () => {
       await setup({ value: -10, min: 0, max: 100 });
       expect(readout().textContent).toBe('0%');
-      expect(host().style.getPropertyValue('--sp-progress-percent')).toBe('0');
-      expect(host().getAttribute('aria-valuenow')).toBe('0');
+      expect(container().style.getPropertyValue('--sp-progress-percent')).toBe('0');
+      expect(container().getAttribute('aria-valuenow')).toBe('0');
     });
 
     it('renders integral values without a decimal point', async () => {
@@ -415,7 +415,7 @@ describe('ProgressController', () => {
   });
 
   describe('range variant with a readout', () => {
-    // With a readout the controller moves to a wrapper — a Stimulus target must be a
+    // With a readout the controller moves to a container — a Stimulus target must be a
     // descendant of its controller element, so a sibling span would never resolve.
     const setup = async (format = 'percent') => {
       document.body.innerHTML = `
@@ -440,19 +440,19 @@ describe('ProgressController', () => {
       expect(readout.textContent).toBe('80%');
     });
 
-    it('paints the fill on the input, not the wrapper', async () => {
+    it('paints the fill on the input, not the container', async () => {
       const { input } = await setup();
-      const wrapper = document.querySelector('[data-controller="progress"]');
+      const container = document.querySelector('[data-controller="progress"]');
       expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('45');
-      expect(wrapper.style.getPropertyValue('--sp-progress-percent')).toBe('');
+      expect(container.style.getPropertyValue('--sp-progress-percent')).toBe('');
     });
 
     // The native input announces its own value; aria-valuetext here would duplicate it.
     it('leaves aria-valuetext off a non-percent readout', async () => {
       const { input, readout } = await setup('value_max');
-      const wrapper = document.querySelector('[data-controller="progress"]');
+      const container = document.querySelector('[data-controller="progress"]');
       expect(readout.textContent).toBe('45 / 100');
-      expect(wrapper.hasAttribute('aria-valuetext')).toBe(false);
+      expect(container.hasAttribute('aria-valuetext')).toBe(false);
       expect(input.hasAttribute('aria-valuetext')).toBe(false);
     });
   });

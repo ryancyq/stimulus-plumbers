@@ -76,7 +76,7 @@ class BaseThemeFormTest < StubThemeTestCase
 
   def test_password_strength_keys_resolve_to_no_ops
     %i[
-      password_strength_wrapper password_strength_rules
+      password_strength_container password_strength_rules
       password_strength_rule_icon password_strength_level
     ].each do |key|
       assert_empty @theme.resolve(key)

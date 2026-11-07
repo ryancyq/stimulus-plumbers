@@ -10,7 +10,7 @@ module StimulusPlumbers
           HINT          = %w[text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
           ERROR_TEXT    = %w[text-(length:--sp-text-xs) text-(--sp-color-error)].freeze
 
-          FLOATING_GROUP_TYPES = {
+          FLOATING_CONTAINER_TYPES = {
             filled:   %w[relative].freeze,
             outlined: %w[relative].freeze,
             standard: %w[relative z-0].freeze
@@ -110,8 +110,8 @@ module StimulusPlumbers
 
           private
 
-          def form_field_input_group_classes(floating: nil)
-            { classes: class_names(*FLOATING_GROUP_TYPES.fetch(floating, [])) }
+          def form_field_floating_container_classes(floating: nil)
+            { classes: class_names(*FLOATING_CONTAINER_TYPES.fetch(floating, [])) }
           end
 
           def form_field_label_classes(floating: nil, hidden: false, error: false, **)
@@ -149,7 +149,7 @@ module StimulusPlumbers
             { classes: class_names(*RADIO_LABEL_TYPES.fetch(type), *card_color) }
           end
 
-          def form_field_radio_item_group_classes
+          def form_field_radio_item_container_classes
             { classes: "contents group" }
           end
         end

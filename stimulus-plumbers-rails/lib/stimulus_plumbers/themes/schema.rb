@@ -136,12 +136,12 @@ module StimulusPlumbers
           type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
-        form_field_radio_item_group:            {}.freeze,
+        form_field_radio_item_container:        {}.freeze,
         form_field_input:                       {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_input_group:                 {
+        form_field_floating_container:          {
           floating: { default: nil, validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
         form_field_input_textarea:              {
@@ -152,7 +152,7 @@ module StimulusPlumbers
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        password_strength_wrapper:              {}.freeze,
+        password_strength_container:            {}.freeze,
         password_strength_rules_heading:        {}.freeze,
         password_strength_rules:                {}.freeze,
         password_strength_rule:                 {}.freeze,
@@ -174,7 +174,7 @@ module StimulusPlumbers
         }.freeze,
         form_field_input_progress:              {}.freeze,
         form_field_input_range:                 {}.freeze,
-        form_field_input_range_group:           {}.freeze,
+        form_field_input_range_container:       {}.freeze,
         form_field_input_range_value:           {}.freeze,
         form_field_input_combobox:              {
           error:    { default: false, validate: Ranges::BOOL },
@@ -220,12 +220,12 @@ module StimulusPlumbers
       }.freeze
 
       INDICATOR = {
-        indicator:         {
+        indicator:           {
           type:    { default: :dot,     validate: Indicator::Ranges::TYPE },
           variant: { default: :primary, validate: Indicator::Ranges::VARIANT }
         }.freeze,
-        indicator_wrapper: {}.freeze,
-        indicator_pulse:   {}.freeze
+        indicator_container: {}.freeze,
+        indicator_pulse:     {}.freeze
       }.freeze
 
       INPUT_GROUP = {
@@ -244,21 +244,21 @@ module StimulusPlumbers
       }.freeze
 
       MODAL = {
-        modal_wrapper:  {}.freeze,
-        modal:          { size: { default: :md, validate: Modal::Ranges::SIZE } }.freeze,
-        modal_backdrop: {}.freeze,
-        modal_header:   {}.freeze,
-        modal_title:    {}.freeze,
-        modal_body:     {}.freeze,
-        modal_footer:   {}.freeze,
-        modal_turbo:    {}.freeze
+        modal_container: {}.freeze,
+        modal:           { size: { default: :md, validate: Modal::Ranges::SIZE } }.freeze,
+        modal_backdrop:  {}.freeze,
+        modal_header:    {}.freeze,
+        modal_title:     {}.freeze,
+        modal_body:      {}.freeze,
+        modal_footer:    {}.freeze,
+        modal_turbo:     {}.freeze
       }.freeze
 
       LAYOUT = {
         divider:           {}.freeze,
         divider_separator: {}.freeze,
         divider_label:     {}.freeze,
-        popover_wrapper:   {}.freeze,
+        popover_container: {}.freeze,
         popover_trigger:   {}.freeze,
         popover:           { placement: { default: :block_end_start, validate: Popover::Ranges::PLACEMENT } }.freeze
       }.freeze
@@ -266,16 +266,16 @@ module StimulusPlumbers
       # The outside readout gets its own keys, not parameters on existing ones — a theme method
       # written before them has no keyword to accept.
       PROGRESS = {
-        progress_bar:               { labelled: { default: false, validate: Ranges::BOOL } }.freeze,
-        progress_bar_group:         {}.freeze,
-        progress_bar_fill:          {}.freeze,
-        progress_bar_value:         {}.freeze,
-        progress_bar_value_outside: {}.freeze,
-        progress_segment_group:     {}.freeze,
-        progress_segment:           {}.freeze,
-        progress_segment_fill:      {}.freeze,
-        progress_ring:              { size: { default: nil, validate: %i[sm md lg] } }.freeze,
-        progress_meter:             {}.freeze
+        progress_bar:                { labelled: { default: false, validate: Ranges::BOOL } }.freeze,
+        progress_bar_container:      {}.freeze,
+        progress_bar_fill:           {}.freeze,
+        progress_bar_value:          {}.freeze,
+        progress_bar_value_outside:  {}.freeze,
+        progress_segments_container: {}.freeze,
+        progress_segment:            {}.freeze,
+        progress_segment_fill:       {}.freeze,
+        progress_ring:               { size: { default: nil, validate: %i[sm md lg] } }.freeze,
+        progress_meter:              {}.freeze
       }.freeze
 
       TIMELINE = {

@@ -40,9 +40,9 @@ class CodeTest < ActionView::TestCase
     doc = build_field
 
     assert_css doc, "[data-controller='input-formatter'][data-input-formatter-format-value='code']"
-    wrapper = doc.at_css("[data-controller='input-formatter']")
+    container = doc.at_css("[data-controller='input-formatter']")
 
-    assert_equal '{"charset":"digits","length":6}', wrapper["data-input-formatter-options-value"]
+    assert_equal '{"charset":"digits","length":6}', container["data-input-formatter-options-value"]
   end
 
   def test_renders_one_cell_per_code_character

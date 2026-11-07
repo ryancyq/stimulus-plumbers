@@ -58,7 +58,7 @@ class ChecklistTest < ActionView::TestCase
     assert_css doc, "label input[type='checkbox'][data-checklist-target='selectAll']"
   end
 
-  def test_select_all_wraps_wrapper_with_checklist_controller
+  def test_select_all_wires_the_container_to_the_checklist_controller
     doc = parse_html(renderer.render(select_all: true) { |c| c.item("Buy milk", checked: true) })
 
     div = doc.at_css("div[role='group']")

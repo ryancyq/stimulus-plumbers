@@ -79,7 +79,7 @@ Rails helper for rendering a themed card with optional icon, title, body, and ac
 | Key           | Element                                                       | Variants                                      |
 | ------------- | ------------------------------------------------------------- | --------------------------------------------- |
 | `card`        | Outer `<div>`                                                 | `variant: :primary\|:secondary\|:tertiary\|…` |
-| `card_header` | Header wrapper `<div>` (icon+title)                           | —                                             |
+| `card_header` | Header `<div>` (icon + title)                                 | —                                             |
 | `card_icon`   | Icon inside the header                                        | —                                             |
 | `card_title`  | Title element (`h2` etc.)                                     | —                                             |
 | `card_body`   | Body `<div>`                                                  | —                                             |

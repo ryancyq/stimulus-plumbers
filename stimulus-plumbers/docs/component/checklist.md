@@ -15,11 +15,11 @@ Select-all checkbox for a group of native `<input type="checkbox">` checklist it
 
 ## Actions
 
-| Name        | Purpose                                                                                                                                   |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`  | Wired to `change` on the wrapper — event adapter: calls `toggleAll` if the event came from the select-all checkbox, otherwise `recompute` |
-| `toggleAll` | Programmatic API — sets every enabled item's `.checked` to the given value, then calls `recompute`                                        |
-| `recompute` | Programmatic API — writes the select-all checkbox's `.checked`/`.indeterminate` from the enabled items' aggregate state                   |
+| Name        | Purpose                                                                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`  | Wired to `change` on the container — event adapter: calls `toggleAll` if the event came from the select-all checkbox, otherwise `recompute` |
+| `toggleAll` | Programmatic API — sets every enabled item's `.checked` to the given value, then calls `recompute`                                          |
+| `recompute` | Programmatic API — writes the select-all checkbox's `.checked`/`.indeterminate` from the enabled items' aggregate state                     |
 
 The select-all checkbox also recomputes when items are added or removed, after a Turbo morph, and after a form reset.
 

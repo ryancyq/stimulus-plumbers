@@ -35,10 +35,10 @@ describe('ModalTurboController', () => {
       dialog.open = false;
       dialog.dispatchEvent(new Event('close', { bubbles: true }));
     });
-    const root = document.querySelector('[data-controller]');
+    const container = document.querySelector('[data-controller]');
     await flush();
     return {
-      root,
+      container,
       dialog,
       frame: document.querySelector('turbo-frame'),
     };
@@ -140,11 +140,11 @@ describe('ModalTurboController', () => {
   });
 
   it('closes successful forms by default and keeps failed forms open', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     frame.innerHTML = '<form id="inside"></form>';
     dialog.open = true;
     const form = frame.querySelector('form');
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
 
     turbo.onSubmitEnd(eventFor('turbo:submit-end', form, { success: false }));
     expect(dialog.close).not.toHaveBeenCalled();
@@ -153,12 +153,12 @@ describe('ModalTurboController', () => {
   });
 
   it('clears a successful response rendered after the previous clear without reopening', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => callback());
     dialog.getAnimations = vi.fn(() => []);
     frame.innerHTML = '<form></form>';
     dialog.open = true;
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
 
     turbo.onSubmitEnd(eventFor('turbo:submit-end', frame.querySelector('form'), { success: true }));
     await flush();
@@ -175,7 +175,7 @@ describe('ModalTurboController', () => {
   });
 
   it('keeps a redirected success response until the pending close animation finishes', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => callback());
     let finish;
     dialog.getAnimations = vi.fn(() => [
@@ -186,7 +186,7 @@ describe('ModalTurboController', () => {
     ]);
     frame.innerHTML = '<form></form>';
     dialog.open = true;
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
 
     turbo.onSubmitEnd(eventFor('turbo:submit-end', frame.querySelector('form'), { success: true }));
 
@@ -201,7 +201,7 @@ describe('ModalTurboController', () => {
   });
 
   it('preserves a pending close clear across frame target replacement', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => callback());
     let finish;
     dialog.getAnimations = vi.fn(() => [
@@ -212,7 +212,7 @@ describe('ModalTurboController', () => {
     ]);
     frame.innerHTML = '<form></form>';
     dialog.open = true;
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
 
     turbo.onSubmitEnd(eventFor('turbo:submit-end', frame.querySelector('form'), { success: true }));
     const replacement = document.createElement('turbo-frame');
@@ -248,12 +248,12 @@ describe('ModalTurboController', () => {
   });
 
   it('supports opting out of successful-submit closing and ignores unrelated forms', async () => {
-    const { root, dialog, frame } = await render({ closeOnSuccess: false });
+    const { container, dialog, frame } = await render({ closeOnSuccess: false });
     frame.innerHTML = '<form id="inside"></form>';
     dialog.open = true;
     const unrelated = document.createElement('form');
     document.body.append(unrelated);
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
 
     turbo.onSubmitEnd(eventFor('turbo:submit-end', unrelated, { success: true }));
     turbo.onSubmitEnd(eventFor('turbo:submit-end', frame.querySelector('form'), { success: true }));
@@ -261,7 +261,7 @@ describe('ModalTurboController', () => {
   });
 
   it('clears after animations and cancels stale clears when content renders again', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     dialog.open = true;
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => callback());
     let finish;
@@ -272,7 +272,7 @@ describe('ModalTurboController', () => {
       },
     ]);
     frame.innerHTML = '<p>Old</p>';
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
     turbo.onClosed({ target: dialog });
     await flush();
     frame.innerHTML = '<p>New</p>';
@@ -284,7 +284,7 @@ describe('ModalTurboController', () => {
   });
 
   it('does not wait for infinite descendant animations', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => callback());
     let finish;
     const descendant = document.createElement('div');
@@ -303,7 +303,7 @@ describe('ModalTurboController', () => {
       },
     ]);
     frame.innerHTML = '<p>Content</p>';
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
     turbo.onClosed({ target: dialog });
     finish();
     await flush();
@@ -311,9 +311,9 @@ describe('ModalTurboController', () => {
   });
 
   it('clears on the next frame when animations are unavailable or absent', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => callback());
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
 
     frame.innerHTML = '<p>Without API</p>';
     dialog.getAnimations = undefined;
@@ -329,13 +329,13 @@ describe('ModalTurboController', () => {
   });
 
   it('clears normally after a finite dialog animation', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => callback());
     dialog.getAnimations = vi.fn(() => [
       { effect: { target: dialog, getComputedTiming: () => ({ endTime: 100 }) }, finished: Promise.resolve() },
     ]);
     frame.innerHTML = '<p>Content</p>';
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
     turbo.onClosed({ target: dialog });
     await flush();
     expect(frame.innerHTML).toBe('');
@@ -356,7 +356,7 @@ describe('ModalTurboController', () => {
   });
 
   it('cancels a pending clear when disconnected', async () => {
-    const { root, dialog, frame } = await render();
+    const { container, dialog, frame } = await render();
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => callback());
     let finish;
     const finished = new Promise((resolve) => (finish = resolve));
@@ -364,7 +364,7 @@ describe('ModalTurboController', () => {
       { effect: { target: dialog, getComputedTiming: () => ({ endTime: 100 }) }, finished },
     ]);
     frame.innerHTML = '<p>Content</p>';
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
     turbo.onClosed({ target: dialog });
     application.stop();
     finish();
@@ -388,11 +388,11 @@ describe('ModalTurboController', () => {
   });
 
   it('recovers when its required frame target is connected later', async () => {
-    const { root, dialog } = await render({ frame: false });
+    const { container, dialog } = await render({ frame: false });
     const frame = document.createElement('turbo-frame');
     frame.dataset.modalTurboTarget = 'frame';
     frame.dataset.action = 'turbo:frame-render->modal-turbo#onFrameRender';
-    root.querySelector('dialog').append(frame);
+    container.querySelector('dialog').append(frame);
     await flush();
     frame.innerHTML = '<p>Connected later</p>';
     renderEvent(frame);
@@ -403,11 +403,11 @@ describe('ModalTurboController', () => {
   it('remains inert when no modal controller is co-located', async () => {
     document.body.innerHTML =
       '<div data-controller="modal-turbo"><turbo-frame data-modal-turbo-target="frame"></turbo-frame></div>';
-    const root = document.querySelector('[data-controller]');
+    const container = document.querySelector('[data-controller]');
     await flush();
-    const frame = root.querySelector('turbo-frame');
+    const frame = container.querySelector('turbo-frame');
     frame.innerHTML = '<form></form><p>Content</p>';
-    const turbo = application.getControllerForElementAndIdentifier(root, 'modal-turbo');
+    const turbo = application.getControllerForElementAndIdentifier(container, 'modal-turbo');
 
     expect(() => renderEvent(frame)).not.toThrow();
     turbo.onSubmitEnd(eventFor('turbo:submit-end', frame.querySelector('form'), { success: true }));

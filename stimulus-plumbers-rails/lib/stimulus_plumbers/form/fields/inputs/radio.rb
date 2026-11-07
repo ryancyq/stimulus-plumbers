@@ -52,7 +52,7 @@ module StimulusPlumbers
           def render_radio_button_label(builder, label_opts, type = :default)
             html_options = merge_html_options(label_opts)
             if %i[button card].include?(type)
-              group_options = merge_html_options(theme.resolve(:form_field_radio_item_group))
+              group_options = merge_html_options(theme.resolve(:form_field_radio_item_container))
               @template.content_tag(:div, **group_options) do
                 @template.safe_join(
                   [

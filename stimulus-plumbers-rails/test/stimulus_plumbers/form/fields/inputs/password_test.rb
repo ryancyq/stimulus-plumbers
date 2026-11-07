@@ -32,7 +32,7 @@ class PasswordTest < ActionView::TestCase
     assert_css doc, "ul li[data-rule='digit']", text: "One number"
   end
 
-  # Reads a JSON data-* value attribute off the wrapper. Shared to keep each
+  # Reads a JSON data-* value attribute off the container. Shared to keep each
   # test under Metrics/AbcSize (inlining JSON.parse(at_css(...)) trips it).
   def strength_value(doc, name)
     JSON.parse(doc.at_css("[#{name}]")[name])
@@ -67,7 +67,7 @@ class PasswordTest < ActionView::TestCase
     assert(descriptors.any? { |d| d["key"] == "digit" })
   end
 
-  def test_strength_wrapper_carries_level_labels
+  def test_strength_container_carries_level_labels
     doc = build_field { |p| p.enforce(min_length: 8, max_length: 64) }
     labels = JSON.parse(doc.at_css("[data-password-strength-labels-value]")["data-password-strength-labels-value"])
 
@@ -114,7 +114,7 @@ class PasswordTest < ActionView::TestCase
     assert_css build_native, "input[type='password']"
   end
 
-  def test_does_not_render_input_group_wrapper
+  def test_does_not_render_input_group_container
     assert_no_css build_native, "[data-controller='input-revealable']"
   end
 

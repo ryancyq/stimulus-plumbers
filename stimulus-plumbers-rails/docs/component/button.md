@@ -69,7 +69,7 @@ Wraps buttons in a themed container `<div>`.
 | Option           | Default   | Description                                |
 | ---------------- | --------- | ------------------------------------------ |
 | `layout`         | `:inline` | Layout direction — `:inline` \| `:stacked` |
-| `**html_options` | —         | Forwarded to the wrapper `<div>`           |
+| `**html_options` | —         | Forwarded to the container `<div>`         |
 
 ---
 

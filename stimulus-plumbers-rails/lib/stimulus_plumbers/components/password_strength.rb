@@ -14,17 +14,17 @@ module StimulusPlumbers
       def render(input:, input_id:, config:)
         @config = config
         @initial = config.evaluate("")
-        template.content_tag(:div, **wrapper_options(config)) do
+        template.content_tag(:div, **container_attrs(config)) do
           template.safe_join([input, render_meter, render_level, render_rules_heading, render_rules(input_id)])
         end
       end
 
       private
 
-      def wrapper_options(config)
+      def container_attrs(config)
         stimulus = config.to_stimulus
         merge_html_options(
-          theme.resolve(:password_strength_wrapper),
+          theme.resolve(:password_strength_container),
           data: {
             controller:                      "password-strength",
             password_strength_rules_value:   stimulus[:rules].to_json,

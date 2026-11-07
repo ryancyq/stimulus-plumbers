@@ -31,32 +31,32 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Form fields
 
-| Key                              | Component                                                  | Variants                                                    |
-| -------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------- |
-| `form_group`                     | `Fields::Group` (wrapper div)                              | `layout: :stacked\|:inline`, `error: bool`                  |
-| `form_field_label`               | `Fields::Label`, `Fields::Fieldset` (`<legend>`)           | `required: bool`, `hidden: bool`                            |
-| `form_field_required_mark`       | Required `*` span in label/legend                          | —                                                           |
-| `form_field_hint`                | `Fields::Hint`                                             | —                                                           |
-| `form_field_error`               | `Fields::Error`                                            | —                                                           |
-| `form_field_choice_items`        | Collection wrapper (the items container inside a fieldset) | `layout: :stacked\|:inline`                                 |
-| `form_field_checkbox_label`      | `<label>` wrapping each checkbox in a collection           | `type: :default\|:button\|:card`, `variant:`                |
-| `form_field_radio_label`         | `<label>` for each radio button in a collection            | `type: :default\|:button\|:card`, `variant:`                |
-| `form_field_input`               | Text-like `<input>` (text, email, number, url, tel, …)     | `error: bool`                                               |
-| `form_field_floating`            | `<input>` inside a floating-label field                    | `type: :filled\|:outlined\|:standard`, `error: bool`        |
-| `form_field_floating_group`      | Wrapper `<div>` that groups floating input + label         | `type: :filled\|:outlined\|:standard`                       |
-| `form_field_floating_label`      | Animated `<label>` that floats above the input             | `type: :filled\|:outlined\|:standard`, `error: bool`        |
-| `form_field_input_textarea`      | `<textarea>`                                               | `error: bool`                                               |
-| `form_field_input_file`          | `<input type="file">`                                      | `error: bool`                                               |
-| `form_field_input_select`        | Native `<select>`                                          | `error: bool`                                               |
-| `form_field_input_checkbox`      | `<input type="checkbox">` element in a collection          | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
-| `form_field_input_radio`         | `<input type="radio">` element in a collection             | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
-| `form_field_input_combobox`      | Combobox wrapper input (resets child input/trigger styles) | `error: bool`                                               |
-| `form_field_input_reveal`        | Password reveal wrapper (resets child input styles)        | `error: bool`                                               |
-| `form_field_input_clearable`     | Clearable wrapper (resets child input styles)              | —                                                           |
-| `form_field_input_button_reveal` | Show/hide toggle button inside a password field            | —                                                           |
-| `form_field_input_button_clear`  | Clear button inside a search/clearable field               | —                                                           |
-| `form_submit`                    | Submit button (`Builder#submit`)                           | `type: :link\|:default\|…`, `variant:`                      |
-| `input_group`                    | `Fields::InputGroup` (input + adornment wrapper)           | `error: bool`                                               |
+| Key                              | Component                                              | Variants                                                    |
+| -------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------- |
+| `form_group`                     | `Fields::Group` (container div)                        | `layout: :stacked\|:inline`, `error: bool`                  |
+| `form_field_label`               | `Fields::Label`, `Fields::Fieldset` (`<legend>`)       | `required: bool`, `hidden: bool`                            |
+| `form_field_required_mark`       | Required `*` span in label/legend                      | —                                                           |
+| `form_field_hint`                | `Fields::Hint`                                         | —                                                           |
+| `form_field_error`               | `Fields::Error`                                        | —                                                           |
+| `form_field_choice_items`        | `<div>` holding the items inside a fieldset            | `layout: :stacked\|:inline`                                 |
+| `form_field_checkbox_label`      | `<label>` wrapping each checkbox in a collection       | `type: :default\|:button\|:card`, `variant:`                |
+| `form_field_radio_label`         | `<label>` for each radio button in a collection        | `type: :default\|:button\|:card`, `variant:`                |
+| `form_field_input`               | Text-like `<input>` (text, email, number, url, tel, …) | `error: bool`                                               |
+| `form_field_floating`            | `<input>` inside a floating-label field                | `type: :filled\|:outlined\|:standard`, `error: bool`        |
+| `form_field_floating_container`  | `<div>` holding the floating input and its label       | `type: :filled\|:outlined\|:standard`                       |
+| `form_field_floating_label`      | Animated `<label>` that floats above the input         | `type: :filled\|:outlined\|:standard`, `error: bool`        |
+| `form_field_input_textarea`      | `<textarea>`                                           | `error: bool`                                               |
+| `form_field_input_file`          | `<input type="file">`                                  | `error: bool`                                               |
+| `form_field_input_select`        | Native `<select>`                                      | `error: bool`                                               |
+| `form_field_input_checkbox`      | `<input type="checkbox">` element in a collection      | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
+| `form_field_input_radio`         | `<input type="radio">` element in a collection         | `type: :default\|:button\|:card`, `variant:`, `error: bool` |
+| `form_field_input_combobox`      | Combobox container (resets child input/trigger styles) | `error: bool`                                               |
+| `form_field_input_reveal`        | Password reveal container (resets child input styles)  | `error: bool`                                               |
+| `form_field_input_clearable`     | Clearable container (resets child input styles)        | —                                                           |
+| `form_field_input_button_reveal` | Show/hide toggle button inside a password field        | —                                                           |
+| `form_field_input_button_clear`  | Clear button inside a search/clearable field           | —                                                           |
+| `form_submit`                    | Submit button (`Builder#submit`)                       | `type: :link\|:default\|…`, `variant:`                      |
+| `input_group`                    | `Fields::InputGroup` (input + adornment container)     | `error: bool`                                               |
 
 ### Calendar
 
@@ -96,17 +96,17 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 | `link`                     | `Link`                                                          | `type: :default\|:button\|:card`, `variant: :default\|:success\|:destructive\|:warning\|:info`                                                                                               |
 | `link_icon`                | `Link` (icon rendered via `icon_leading:` / `icon_trailing:`)   | —                                                                                                                                                                                            |
 | `list`                     | `List` outer `<ul>`                                             | —                                                                                                                                                                                            |
-| `list_section`             | `List::Section` wrapper `<li>`                                  | —                                                                                                                                                                                            |
+| `list_section`             | `List::Section` `<li>`                                          | —                                                                                                                                                                                            |
 | `list_section_title`       | Section title `<span>` or `<h{n}>`                              | —                                                                                                                                                                                            |
 | `list_section_description` | Section description `<span>`                                    | —                                                                                                                                                                                            |
 | `list_item`                | `List::Item` — applied to inner `<a>` or `<button>`             | —                                                                                                                                                                                            |
 | `list_item_icon`           | Leading and trailing icons inside a list item                   | —                                                                                                                                                                                            |
-| `list_item_content`        | Content wrapper `<span>` (title + description)                  | —                                                                                                                                                                                            |
+| `list_item_content`        | Content `<span>` (title + description)                          | —                                                                                                                                                                                            |
 | `list_item_title`          | Title `<span>` inside a list item                               | —                                                                                                                                                                                            |
 | `list_item_description`    | Description `<span>` inside a list item                         | —                                                                                                                                                                                            |
 | `avatar`                   | `Avatar`                                                        | `size:`, `variant:` (a name from `avatar_variant_range`)                                                                                                                                     |
 | `card`                     | `Card` outer `<div>`                                            | `variant: :primary\|:secondary\|:tertiary\|…`                                                                                                                                                |
-| `card_header`              | Card header wrapper `<div>` (icon + title)                      | —                                                                                                                                                                                            |
+| `card_header`              | Card header `<div>` (icon + title)                              | —                                                                                                                                                                                            |
 | `card_icon`                | Icon inside the card header                                     | —                                                                                                                                                                                            |
 | `card_title`               | Card title element (`h2` etc.)                                  | —                                                                                                                                                                                            |
 | `card_body`                | Card body `<div>`                                               | —                                                                                                                                                                                            |

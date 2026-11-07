@@ -25,7 +25,7 @@ class DividerHelperTest < ActionView::TestCase
     assert_includes doc.at_css("span").text, "or"
   end
 
-  def test_no_label_renders_hr_inside_wrapper
+  def test_no_label_renders_hr_inside_container
     doc = parse_html(sp_divider)
 
     assert_css doc, "div[role='separator'] hr"

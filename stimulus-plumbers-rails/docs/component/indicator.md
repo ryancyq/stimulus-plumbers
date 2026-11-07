@@ -33,7 +33,7 @@ Presentational status marker — a colored dot, an animated "pulse" ring, or a n
 | `pulse:`         | `false`    | Adds an animated ring element (`prefers-reduced-motion` suppresses the animation)                                         |
 | `**html_options` | —          | Forwarded to the dot `<span>`                                                                                             |
 
-When `pulse: true`, the dot is wrapped in an extra `<span>` (`indicator_wrapper` theme key) that positions the ring behind the dot — no margin offsets involved.
+When `pulse: true`, the dot is wrapped in an extra `<span>` (`indicator_container` theme key) that positions the ring behind the dot — no margin offsets involved.
 
 **Every indicator must be paired with an accessible name** — a visible label or `aria-label`/adjacent `sr-only` text. The component renders no text and cannot infer the right label, so the caller must supply one.
 

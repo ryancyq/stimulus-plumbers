@@ -30,7 +30,7 @@ rules live in [ARIA.md](../../../ARIA.md).
 | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `popover.trigger(haspopup: nil, controls: panel_id)`                         | Zero-arity block renders a `<button popovertarget>`; a one-arity block yields the relationship attributes for a caller-rendered source |
 | `popover.panel(tag: :div, role: nil, aria_label: nil, aria_labelledby: nil)` | Renders the panel element                                                                                                              |
-| `popover.build_panel(role: nil, aria_label: nil, aria_labelledby: nil)`      | Yields the panel attributes for a caller-owned root element; `popover_target: false` leaves the panel to the caller's own controller   |
+| `popover.build_panel(role: nil, aria_label: nil, aria_labelledby: nil)`      | Yields the panel attributes for a caller-owned element; `popover_target: false` leaves the panel to the caller's own controller        |
 
 `haspopup:` also authors `aria-haspopup`, `aria-expanded="false"`, and `aria-controls` (`controls:`); without it
 the trigger gets none of them. A caller-rendered source adds its own activation action:
@@ -58,7 +58,7 @@ For remote content, put a matching Turbo Frame in the panel; the endpoint return
 ## Rendered HTML Structure
 
 ```html
-<div data-controller="popover" class="[popover_wrapper theme classes]">
+<div data-controller="popover" class="[popover_container theme classes]">
   <button
     type="button"
     popovertarget="[id]_popover"
@@ -82,11 +82,11 @@ For remote content, put a matching Turbo Frame in the panel; the endpoint return
 
 ## Theme keys
 
-| Key               | Element         | Variants                   |
-| ----------------- | --------------- | -------------------------- |
-| `popover_wrapper` | Outer `<div>`   | —                          |
-| `popover_trigger` | Packaged button | —                          |
-| `popover`         | Panel           | `placement:` (see Options) |
+| Key                 | Element         | Variants                   |
+| ------------------- | --------------- | -------------------------- |
+| `popover_container` | Outer `<div>`   | —                          |
+| `popover_trigger`   | Packaged button | —                          |
+| `popover`           | Panel           | `placement:` (see Options) |
 
 ## ARIA
 

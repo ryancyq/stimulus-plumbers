@@ -51,11 +51,11 @@ module StimulusPlumbers
               opts,
               html_opts
             )
-            wrapper_options = merge_html_options(
+            container_attrs = merge_html_options(
               theme.resolve(:form_field_input_code, error: config[:error]),
               code_options(config)
             )
-            @template.content_tag(:div, **wrapper_options) do
+            @template.content_tag(:div, **container_attrs) do
               @template.safe_join(
                 [render_code_cells(config), code_input(attribute, overlay_options, config)]
               )

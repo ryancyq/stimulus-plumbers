@@ -17,7 +17,7 @@ class SearchTest < ActionView::TestCase
     parse_html(html)
   end
 
-  # f.field(as: :search) — full wrapper: label + combobox + hint + error
+  # f.field(as: :search) — full field: label + combobox + hint + error
   def build_field(**opts)
     html = view.form_with(model: @form, builder: StimulusPlumbers::Form::Builder, url: "/session") do |f|
       f.field(:email, as: :search, **opts)
@@ -37,7 +37,7 @@ class SearchTest < ActionView::TestCase
     assert_no_css build_native, "input[type='hidden'][name='sign_in_form[email]']"
   end
 
-  def test_native_clearable_renders_input_clearable_controller_wrapper
+  def test_native_clearable_renders_input_clearable_controller_container
     assert_css build_native(clearable: true), "[data-controller='input-clearable']"
   end
 

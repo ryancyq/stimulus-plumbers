@@ -22,7 +22,7 @@ module StimulusPlumbers
             input   = range_input(attribute, current, min, max, format, html_opts, opts, kwargs.except(:floating))
             return input if format.nil?
 
-            range_group(input, current, min, max, format)
+            range_container(input, current, min, max, format)
           end
 
           # No readout to contain, so the input hosts the controller itself.
@@ -35,17 +35,17 @@ module StimulusPlumbers
               kwargs,
               wired,
               # The input carries the track gradient, so the fill percentage lands here, not on
-              # the wrapper. Server-rendered so the fill is right before the controller connects.
+              # the container. Server-rendered so the fill is right before the controller connects.
               { min: min, max: max, style: "--sp-progress-percent: #{integral(percent(current, min, max).round(2))}" }
             )
             @template.range_field(@object_name, attribute, objectify_options(html_options))
           end
 
           # A Stimulus target must be a descendant of its controller element, so a readout
-          # forces a wrapper local to the input row.
-          def range_group(input, current, min, max, format)
+          # forces a container local to the input row.
+          def range_container(input, current, min, max, format)
             html_options = merge_html_options(
-              theme.resolve(:form_field_input_range_group),
+              theme.resolve(:form_field_input_range_container),
               range_stimulus_data(current, min, max, format)
             )
             body = @template.safe_join([input, range_value(format, current, min, max)])

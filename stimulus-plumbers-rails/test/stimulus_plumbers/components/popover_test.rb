@@ -21,7 +21,7 @@ module PopoverTestHelpers
 
   def popover_test_theme
     Class.new(StimulusPlumbers::Themes::Base) do
-      def popover_wrapper_classes(**)
+      def popover_container_classes(**)
         {}
       end
 
@@ -46,14 +46,14 @@ class PopoverComponentTest < ActionView::TestCase
     assert_equal StimulusPlumbers.config.theme.current, popover.theme
   end
 
-  def test_renders_controller_wrapper_and_forwards_options
+  def test_renders_controller_container_and_forwards_options
     doc = parse_html(render_popover(id: "wrapper", class: "dropdown", data: { testid: "popover" }))
-    wrapper = doc.at_css("div[data-controller]")
+    container = doc.at_css("div[data-controller]")
 
-    assert_equal "wrapper", wrapper["id"]
-    assert_includes wrapper["class"], "dropdown"
-    assert_includes wrapper["data-controller"].split, "popover"
-    assert_equal "popover", wrapper["data-testid"]
+    assert_equal "wrapper", container["id"]
+    assert_includes container["class"], "dropdown"
+    assert_includes container["data-controller"].split, "popover"
+    assert_equal "popover", container["data-testid"]
   end
 
   def test_generated_panel_id_uses_template_dom_id_and_panel_id_for
@@ -84,18 +84,18 @@ class PopoverComponentTest < ActionView::TestCase
     "#{id}_popover"
   end
 
-  def test_caller_panel_id_and_wrapper_id_are_independent
+  def test_caller_panel_id_and_container_id_are_independent
     doc = parse_html(
       render_popover(id: "wrapper", panel_id: "stable-panel") do |popover|
         popover.trigger { "Open" }
         popover.panel { "Content" }
       end
     )
-    wrapper = doc.at_css("div[data-controller]")
+    container = doc.at_css("div[data-controller]")
     trigger = doc.at_css("button")
     panel = doc.at_css("[data-popover-target='panel']")
 
-    assert_equal "wrapper", wrapper["id"]
+    assert_equal "wrapper", container["id"]
     assert_equal "stable-panel", trigger["popovertarget"]
     assert_equal "stable-panel", panel["id"]
   end
@@ -270,7 +270,7 @@ class PopoverBuildTest < ActionView::TestCase
     assert_nil panel["data-popover-target"]
   end
 
-  def test_build_returns_native_content_without_wrapper
+  def test_build_returns_native_content_without_container
     doc = parse_html(
       renderer.build(panel_id: "panel") do |popover|
         popover.trigger { "Open" }

@@ -159,13 +159,13 @@ class TailwindThemeFormFieldTest < Minitest::Test
     refute_class_containing result, "--card-ring"
   end
 
-  # :form_field_input_group
+  # :form_field_floating_container
 
   def test_every_floating_input_group_positions_its_floating_label
     %i[filled outlined standard].each do |floating|
-      assert_includes classes_for(:form_field_input_group, floating: floating), "relative", floating
+      assert_includes classes_for(:form_field_floating_container, floating: floating), "relative", floating
     end
-    assert_includes classes_for(:form_field_input_group, floating: :standard), "z-0"
+    assert_includes classes_for(:form_field_floating_container, floating: :standard), "z-0"
   end
 
   # :form_field_label (floating)

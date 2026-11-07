@@ -9,7 +9,7 @@ class PopoverHelperTest < ActionView::TestCase
     assert_css parse_html(sp_popover { |_p| nil }), "div"
   end
 
-  def test_wrapper_has_stimulus_controller
+  def test_container_has_stimulus_controller
     assert_css parse_html(sp_popover { |_p| nil }), "[data-controller~='popover']"
   end
 

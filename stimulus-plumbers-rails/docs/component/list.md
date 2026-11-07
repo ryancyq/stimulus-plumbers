@@ -141,12 +141,12 @@ When `url:` is present and `target: "_blank"` is set, `icon_trailing: "external-
 | Key                        | Element                                               | Variants |
 | -------------------------- | ----------------------------------------------------- | -------- |
 | `list`                     | Outer `<ul>`                                          | —        |
-| `list_section`             | Section wrapper `<li>`                                | —        |
+| `list_section`             | Section `<li>`                                        | —        |
 | `list_section_title`       | Section title `<span>` or `<h{n}>`                    | —        |
 | `list_section_description` | Section description `<span>`                          | —        |
 | `list_item`                | Item `<li>` (theme applied to inner `<a>`/`<button>`) | —        |
 | `list_item_icon`           | Leading and trailing icon elements                    | —        |
-| `list_item_content`        | Content wrapper `<span>` (title + description)        | —        |
+| `list_item_content`        | Content `<span>` (title + description)                | —        |
 | `list_item_title`          | Title `<span>`                                        | —        |
 | `list_item_description`    | Description `<span>`                                  | —        |
 

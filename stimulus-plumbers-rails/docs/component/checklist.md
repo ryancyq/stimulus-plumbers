@@ -27,7 +27,7 @@ Rails helper for rendering an accessible group of checkbox-style items. Items re
 
 | Option              | Default        | Description                                                                                                            |
 | ------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `label:`            | `nil`          | Sets `aria-label` on the group wrapper                                                                                 |
+| `label:`            | `nil`          | Sets `aria-label` on the group                                                                                         |
 | `labelledby:`       | `nil`          | Sets `aria-labelledby`; takes precedence over `label:` when both given                                                 |
 | `select_all:`       | `false`        | `true` renders a select-all checkbox wired to the group's items                                                        |
 | `select_all_label:` | `"Select all"` | Label text for the select-all checkbox (used as both `aria-label` and visible text); ignored unless `select_all: true` |
@@ -135,14 +135,14 @@ The select-all checkbox's `checked` state is computed from the items' `checked:`
 
 ## Theme keys
 
-| Key                          | Element                                        | Variants |
-| ---------------------------- | ---------------------------------------------- | -------- |
-| `checklist`                  | Outer `<div role="group">`                     | —        |
-| `checklist_item`             | Item `<label>`                                 | —        |
-| `checklist_item_input`       | Item/select-all checkbox `<input>`             | —        |
-| `checklist_item_content`     | Content wrapper `<span>` (title + description) | —        |
-| `checklist_item_title`       | Title `<span>`                                 | —        |
-| `checklist_item_description` | Description `<span>`                           | —        |
+| Key                          | Element                                | Variants |
+| ---------------------------- | -------------------------------------- | -------- |
+| `checklist`                  | Outer `<div role="group">`             | —        |
+| `checklist_item`             | Item `<label>`                         | —        |
+| `checklist_item_input`       | Item/select-all checkbox `<input>`     | —        |
+| `checklist_item_content`     | Content `<span>` (title + description) | —        |
+| `checklist_item_title`       | Title `<span>`                         | —        |
+| `checklist_item_description` | Description `<span>`                   | —        |
 
 Checked-state styling (strikethrough title) reads the sibling `<input>`'s `:checked` state via Tailwind's `:has()`-based `group-has-checked/checklist-item:` variant — there is no `aria-checked` or `checked:` theme-resolver kwarg to pass.
 

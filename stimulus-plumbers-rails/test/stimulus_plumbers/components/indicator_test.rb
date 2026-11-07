@@ -57,7 +57,7 @@ class IndicatorTest < ActionView::TestCase
         {}
       end
 
-      def indicator_wrapper_classes
+      def indicator_container_classes
         { classes: "wrapper-test" }
       end
 

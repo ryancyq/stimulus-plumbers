@@ -10,7 +10,7 @@ module StimulusPlumbers
         DIVIDER_LABEL     = %w[text-(length:--sp-text-sm) text-(--sp-color-muted-fg) whitespace-nowrap font-medium].freeze
 
         # ── Popover ───────────────────────────────────────────────────────────
-        POPOVER_WRAPPER = %w[relative inline-block].freeze
+        POPOVER_CONTAINER = %w[relative inline-block].freeze
         POPOVER_TRIGGER = [
           *Control::BASE,
           "inline-flex items-center justify-center gap-(--sp-space-2)",
@@ -61,8 +61,8 @@ module StimulusPlumbers
           { classes: class_names(*DIVIDER_LABEL) }
         end
 
-        def popover_wrapper_classes
-          { classes: class_names(*POPOVER_WRAPPER) }
+        def popover_container_classes
+          { classes: class_names(*POPOVER_CONTAINER) }
         end
 
         def popover_trigger_classes

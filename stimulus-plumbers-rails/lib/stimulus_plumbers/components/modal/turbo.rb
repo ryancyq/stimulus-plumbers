@@ -15,7 +15,7 @@ module StimulusPlumbers
             aria_label:       aria_label.presence
           }
 
-          template.content_tag(:div, **wrapper_attrs(html_options, options)) do
+          template.content_tag(:div, **container_attrs(html_options, options)) do
             template.content_tag(:dialog, **dialog_attrs(options)) do
               render_frame(options[:id])
             end
@@ -24,9 +24,9 @@ module StimulusPlumbers
 
         private
 
-        def wrapper_attrs(html_options, options)
+        def container_attrs(html_options, options)
           merge_html_options(
-            theme.resolve(:modal_wrapper),
+            theme.resolve(:modal_container),
             html_options,
             {
               data: {

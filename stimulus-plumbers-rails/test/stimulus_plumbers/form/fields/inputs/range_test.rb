@@ -91,10 +91,10 @@ class FormFieldsRangeTest < ActionView::TestCase
   end
 
   def test_readout_is_contained_by_the_controller_element
-    host = build_field(format: :percent).at_css("[data-controller='progress']")
+    container = build_field(format: :percent).at_css("[data-controller='progress']")
 
-    assert host.at_css("[data-progress-target='value']"), "value target must be inside the controller"
-    assert host.at_css("input[type='range'][data-progress-target='input']")
+    assert container.at_css("[data-progress-target='value']"), "value target must be inside the controller"
+    assert container.at_css("input[type='range'][data-progress-target='input']")
   end
 
   def test_readout_is_hidden_from_assistive_technology
@@ -109,7 +109,7 @@ class FormFieldsRangeTest < ActionView::TestCase
     assert_equal "45 / 100", build_field(format: :value_max).at_css("[data-progress-target='value']").text
   end
 
-  # The input carries the track gradient, so the property has to land there, not on the wrapper.
+  # The input carries the track gradient, so the property has to land there, not on the container.
   def test_fill_percentage_is_server_rendered_on_the_input
     doc = build_field(format: :percent)
 
