@@ -48,14 +48,14 @@ class ChecklistTest < ActionView::TestCase
   def test_select_all_false_by_default_leaves_output_unchanged
     doc = parse_html(renderer.render { |c| c.item("Buy milk", checked: true) })
 
-    assert_no_css doc, "input[data-checklist-target='master']"
+    assert_no_css doc, "input[data-checklist-target='selectAll']"
     assert_no_css doc, "div[data-controller='checklist']"
   end
 
-  def test_select_all_renders_master_input
+  def test_select_all_renders_select_all_input
     doc = parse_html(renderer.render(select_all: true) { |c| c.item("Buy milk", checked: true) })
 
-    assert_css doc, "label input[type='checkbox'][data-checklist-target='master']"
+    assert_css doc, "label input[type='checkbox'][data-checklist-target='selectAll']"
   end
 
   def test_select_all_wraps_wrapper_with_checklist_controller
@@ -83,7 +83,7 @@ class ChecklistTest < ActionView::TestCase
       end
     )
 
-    assert_css doc, "input[data-checklist-target='master'][checked]"
+    assert_css doc, "input[data-checklist-target='selectAll'][checked]"
   end
 
   def test_select_all_unchecked_when_all_items_unchecked
@@ -94,7 +94,7 @@ class ChecklistTest < ActionView::TestCase
       end
     )
 
-    assert_no_css doc, "input[data-checklist-target='master'][checked]"
+    assert_no_css doc, "input[data-checklist-target='selectAll'][checked]"
   end
 
   def test_select_all_unchecked_when_items_are_mixed
@@ -105,13 +105,13 @@ class ChecklistTest < ActionView::TestCase
       end
     )
 
-    assert_no_css doc, "input[data-checklist-target='master'][checked]"
+    assert_no_css doc, "input[data-checklist-target='selectAll'][checked]"
   end
 
   def test_select_all_unchecked_when_zero_items
     doc = parse_html(renderer.render(select_all: true) { nil })
 
-    assert_no_css doc, "input[data-checklist-target='master'][checked]"
+    assert_no_css doc, "input[data-checklist-target='selectAll'][checked]"
   end
 
   def test_select_all_excludes_readonly_items_from_aggregate
@@ -122,6 +122,6 @@ class ChecklistTest < ActionView::TestCase
       end
     )
 
-    assert_no_css doc, "input[data-checklist-target='master'][checked]"
+    assert_no_css doc, "input[data-checklist-target='selectAll'][checked]"
   end
 end

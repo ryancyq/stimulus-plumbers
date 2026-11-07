@@ -44,7 +44,7 @@ class ChecklistAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#checklist-select-all"
   end
 
-  def test_master_toggles_via_space_key
+  def test_select_all_toggles_via_space_key
     within("#checklist-select-all") do
       # Cuprite 0.17 send_keys clicks the element first and 0.20 does not; Ferrum types into the focused element only.
       find_field("Select all").execute_script("this.focus()")

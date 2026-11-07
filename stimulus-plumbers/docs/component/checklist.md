@@ -1,6 +1,6 @@
 # Checklist
 
-Master "select all" toggle for a group of native `<input type="checkbox">` checklist items. Aggregates their `.checked` state onto a master checkbox's `checked`/`indeterminate` properties and toggles them all at once. See [stimulus-plumbers-rails's docs/component/checklist.md](../../../stimulus-plumbers-rails/docs/component/checklist.md) for the Rails render options.
+Select-all checkbox for a group of native `<input type="checkbox">` checklist items. Aggregates their `.checked` state onto a select-all checkbox's `checked`/`indeterminate` properties and toggles them all at once. See [stimulus-plumbers-rails's docs/component/checklist.md](../../../stimulus-plumbers-rails/docs/component/checklist.md) for the Rails render options.
 
 ## Stimulus Identifier
 
@@ -8,27 +8,27 @@ Master "select all" toggle for a group of native `<input type="checkbox">` check
 
 ## Targets
 
-| Name     | Purpose                                                               |
-| -------- | --------------------------------------------------------------------- |
-| `master` | The "select all" `<input type="checkbox">` — receives aggregate state |
-| `item`   | Each checklist item `<input type="checkbox">`                         |
+| Name        | Purpose                                                             |
+| ----------- | ------------------------------------------------------------------- |
+| `selectAll` | The select-all `<input type="checkbox">` — receives aggregate state |
+| `item`      | Each checklist item `<input type="checkbox">`                       |
 
 ## Actions
 
-| Name        | Purpose                                                                                                                      |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`  | Wired to `change` on the wrapper — event adapter: calls `toggleAll` if the event came from the master, otherwise `recompute` |
-| `toggleAll` | Programmatic API — sets every enabled item's `.checked` to the given value, then calls `recompute`                           |
-| `recompute` | Programmatic API — writes the master's `.checked`/`.indeterminate` from the enabled items' aggregate state                   |
+| Name        | Purpose                                                                                                                                   |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`  | Wired to `change` on the wrapper — event adapter: calls `toggleAll` if the event came from the select-all checkbox, otherwise `recompute` |
+| `toggleAll` | Programmatic API — sets every enabled item's `.checked` to the given value, then calls `recompute`                                        |
+| `recompute` | Programmatic API — writes the select-all checkbox's `.checked`/`.indeterminate` from the enabled items' aggregate state                   |
 
-The master also recomputes when items are added or removed, after a Turbo morph, and after a form reset.
+The select-all checkbox also recomputes when items are added or removed, after a Turbo morph, and after a form reset.
 
 ## Example HTML
 
 ```html
 <div data-controller="checklist" data-action="change->checklist#onChange">
   <label>
-    <input type="checkbox" data-checklist-target="master" />
+    <input type="checkbox" data-checklist-target="selectAll" />
     Select all
   </label>
 

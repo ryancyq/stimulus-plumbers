@@ -25,13 +25,13 @@ Rails helper for rendering an accessible group of checkbox-style items. Items re
 <% end %>
 ```
 
-| Option              | Default        | Description                                                                                                      |
-| ------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `label:`            | `nil`          | Sets `aria-label` on the group wrapper                                                                           |
-| `labelledby:`       | `nil`          | Sets `aria-labelledby`; takes precedence over `label:` when both given                                           |
-| `select_all:`       | `false`        | `true` renders a master "select all" toggle wired to the group's items                                           |
-| `select_all_label:` | `"Select all"` | Label text for the master toggle (used as both `aria-label` and visible text); ignored unless `select_all: true` |
-| `**html_options`    | —              | Forwarded to the `<div role="group">`                                                                            |
+| Option              | Default        | Description                                                                                                            |
+| ------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `label:`            | `nil`          | Sets `aria-label` on the group wrapper                                                                                 |
+| `labelledby:`       | `nil`          | Sets `aria-labelledby`; takes precedence over `label:` when both given                                                 |
+| `select_all:`       | `false`        | `true` renders a select-all checkbox wired to the group's items                                                        |
+| `select_all_label:` | `"Select all"` | Label text for the select-all checkbox (used as both `aria-label` and visible text); ignored unless `select_all: true` |
+| `**html_options`    | —              | Forwarded to the `<div role="group">`                                                                                  |
 
 ### `select_all:`
 
@@ -42,9 +42,9 @@ Rails helper for rendering an accessible group of checkbox-style items. Items re
 <% end %>
 ```
 
-Renders a master `<label><input type="checkbox"></label>` before the items, wired to the `checklist` Stimulus controller. See [stimulus-plumbers's docs/component/checklist.md](../../../stimulus-plumbers/docs/component/checklist.md) for the controller's targets and actions.
+Renders a select-all `<label><input type="checkbox"></label>` before the items, wired to the `checklist` Stimulus controller. See [stimulus-plumbers's docs/component/checklist.md](../../../stimulus-plumbers/docs/component/checklist.md) for the controller's targets and actions.
 
-Read-only items (`readonly: true`) are excluded from the master's aggregate state — see [ARIA.md's Checklist pattern](../../../ARIA.md) for why.
+Read-only items (`readonly: true`) are excluded from the select-all checkbox's aggregate state — see [ARIA.md's Checklist pattern](../../../ARIA.md) for why.
 
 ### `checklist.item(content, checked:, readonly:, **html_options, &block)`
 
@@ -97,7 +97,7 @@ Renders a `<label>` wrapping a native `<input type="checkbox">`.
   <label class="[checklist_item theme classes]">
     <input
       type="checkbox"
-      data-checklist-target="master"
+      data-checklist-target="selectAll"
       class="[checklist_item_input theme classes]"
     />
     Select all
@@ -115,7 +115,7 @@ Renders a `<label>` wrapping a native `<input type="checkbox">`.
 </div>
 ```
 
-The master's `checked` state is computed from the items' `checked:` values at render time (all-true renders `checked`; every other case, including mixed, renders unchecked) — the `checklist` controller corrects it to `indeterminate` client-side once connected. See [ARIA.md's Checklist pattern](../../../ARIA.md) for the accepted flash this tradeoff causes in the mixed case.
+The select-all checkbox's `checked` state is computed from the items' `checked:` values at render time (all-true renders `checked`; every other case, including mixed, renders unchecked) — the `checklist` controller corrects it to `indeterminate` client-side once connected. See [ARIA.md's Checklist pattern](../../../ARIA.md) for the accepted flash this tradeoff causes in the mixed case.
 
 ### Read-only item (`readonly: true`)
 
@@ -139,7 +139,7 @@ The master's `checked` state is computed from the items' `checked:` values at re
 | ---------------------------- | ---------------------------------------------- | -------- |
 | `checklist`                  | Outer `<div role="group">`                     | —        |
 | `checklist_item`             | Item `<label>`                                 | —        |
-| `checklist_item_input`       | Item/master checkbox `<input>`                 | —        |
+| `checklist_item_input`       | Item/select-all checkbox `<input>`             | —        |
 | `checklist_item_content`     | Content wrapper `<span>` (title + description) | —        |
 | `checklist_item_title`       | Title `<span>`                                 | —        |
 | `checklist_item_description` | Description `<span>`                           | —        |
@@ -150,4 +150,4 @@ Checked-state styling (strikethrough title) reads the sibling `<input>`'s `:chec
 
 ## ARIA
 
-See [ARIA.md's Checklist pattern](../../../ARIA.md) for why items use native `<input type="checkbox">` with no ARIA attributes, the `disabled` read-only behavior, and the `indeterminate` tradeoff for the master toggle.
+See [ARIA.md's Checklist pattern](../../../ARIA.md) for why items use native `<input type="checkbox">` with no ARIA attributes, the `disabled` read-only behavior, and the `indeterminate` tradeoff for the select-all checkbox.

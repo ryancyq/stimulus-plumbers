@@ -6,14 +6,14 @@ module StimulusPlumbers
       def render(label: nil, labelledby: nil, select_all: false, select_all_label: "Select all", **kwargs, &block)
         @item_states = [] if select_all
         captured = template.capture(self, &block)
-        master = select_all ? render_select_all(select_all_label) : nil
+        select_all_control = select_all ? render_select_all(select_all_label) : nil
         html_options = merge_html_options(
           theme.resolve(:checklist),
           kwargs,
           { role: "group", aria: labelled_aria(label, labelledby: labelledby) }
         )
         html_options = merge_html_options(html_options, select_all_wrapper_attrs) if select_all
-        template.content_tag(:div, template.safe_join([master, captured].compact), **html_options)
+        template.content_tag(:div, template.safe_join([select_all_control, captured].compact), **html_options)
       end
 
       def item(content = nil, **kwargs, &block)
@@ -25,15 +25,15 @@ module StimulusPlumbers
 
       def render_select_all(select_all_label)
         template.content_tag(:label, **merge_html_options(theme.resolve(:checklist_item))) do
-          template.safe_join([render_master_input, template.content_tag(:span, select_all_label)])
+          template.safe_join([render_select_all_input, template.content_tag(:span, select_all_label)])
         end
       end
 
-      def render_master_input
+      def render_select_all_input
         template.tag.input(
           **merge_html_options(
             theme.resolve(:checklist_item_input),
-            { type: "checkbox", checked: all_items_checked? || nil, data: { checklist_target: "master" } }
+            { type: "checkbox", checked: all_items_checked? || nil, data: { checklist_target: "selectAll" } }
           )
         )
       end

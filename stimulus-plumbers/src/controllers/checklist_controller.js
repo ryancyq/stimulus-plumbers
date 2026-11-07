@@ -2,12 +2,12 @@ import { Controller } from '@hotwired/stimulus';
 import { onFormReset } from '../plumbers/plumber/form_reset';
 
 export default class extends Controller {
-  static targets = ['master', 'item'];
+  static targets = ['selectAll', 'item'];
 
   connect() {
     this.connection = new AbortController();
     const { signal } = this.connection;
-    // A morph re-syncs every item's checked state from the markup, but never the master's
+    // A morph re-syncs every item's checked state from the markup, but never the select-all checkbox's
     // indeterminate property, so each morphed node schedules a recompute.
     this.element.addEventListener('turbo:morph-element', () => this._scheduleRecompute(), { signal });
     onFormReset(this.element, () => this.recompute(), { signal });
@@ -18,7 +18,7 @@ export default class extends Controller {
     this.connection = null;
   }
 
-  masterTargetConnected() {
+  selectAllTargetConnected() {
     this._scheduleRecompute();
   }
 
@@ -31,8 +31,8 @@ export default class extends Controller {
   }
 
   onChange(event) {
-    if (this.hasMasterTarget && event.target === this.masterTarget) {
-      this.toggleAll(this.masterTarget.checked);
+    if (this.hasSelectAllTarget && event.target === this.selectAllTarget) {
+      this.toggleAll(this.selectAllTarget.checked);
       return;
     }
     this.recompute();
@@ -46,11 +46,11 @@ export default class extends Controller {
   }
 
   recompute() {
-    if (!this.hasMasterTarget) return;
+    if (!this.hasSelectAllTarget) return;
     const items = this.enabledItems();
     const checkedCount = items.filter((item) => item.checked).length;
-    this.masterTarget.checked = items.length > 0 && checkedCount === items.length;
-    this.masterTarget.indeterminate = checkedCount > 0 && checkedCount < items.length;
+    this.selectAllTarget.checked = items.length > 0 && checkedCount === items.length;
+    this.selectAllTarget.indeterminate = checkedCount > 0 && checkedCount < items.length;
   }
 
   enabledItems() {
