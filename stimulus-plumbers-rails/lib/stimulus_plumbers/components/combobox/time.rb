@@ -3,139 +3,115 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      class Time < Plumber::Base
+      # A read-only time input whose popover holds hour, minute, and AM/PM columns.
+      class Time < Temporal
         STIMULUS_CONTROLLER = "combobox-time"
-        STIMULUS_ACTION     = [
-          "#{STIMULUS_CONTROLLER}:selected->#{Combobox::STIMULUS_CONTROLLER}#onSelect"
-        ].join(" ").freeze
+        FORMAT              = "time"
+        ICON                = "clock"
+        POPOVER_KEY         = :combobox_time_popover
+        ACTIONS             = [
+          "popover:before-open->#{STIMULUS_CONTROLLER}#onOpening",
+          "popover:opened->#{STIMULUS_CONTROLLER}#onOpened"
+        ].freeze
+        COLUMN_ACTION       = "keydown->#{STIMULUS_CONTROLLER}#onNavigate click->#{STIMULUS_CONTROLLER}#onSelect".freeze
 
-        module Metadata
-          module_function
-
-          def haspopup
-            "dialog"
-          end
-
-          def popup_id_for(panel_id)
-            panel_id
-          end
-
-          def trigger_icon
-            "clock"
-          end
-
-          def trigger_options
-            {}
-          end
-
-          def stimulus_data(_panel_id, options)
-            {
-              input_formatter_format_value:         "time",
-              input_formatter_options_value:        { format: options.fetch(:format, :h12) }.to_json,
-              # Each drum step dispatches a selection.
-              input_combobox_close_on_select_value: false
-            }
-          end
-        end
-
-        def render(...)
-          render_time(...)
+        # `step:` is the minute interval; a minute off it chooses no minute.
+        def render(step: 1, **kwargs)
+          @step = [1, step.to_i].max
+          super(**kwargs)
         end
 
         private
 
-        def render_time(panel_attrs: {}, format: :h12, step: 1, value: nil, label: nil, labelledby: nil)
-          step = [1, step.to_i].max
-          time = parse_time(value)
+        # [hour, minute] from a time or an "HH:MM" string; anything else renders as text.
+        def parse(value)
+          return [value.hour, value.min] if value.respond_to?(:hour) && value.respond_to?(:min)
 
-          attrs = merge_html_options(panel_attrs, theme.resolve(:combobox_time), dialog_attrs(label, labelledby))
-          template.content_tag(:div, **attrs) { template.safe_join(drums(format, step, time)) }
+          match = value.to_s.match(%r{\A(\d{1,2}):(\d{2})})
+          [match[1].to_i, match[2].to_i] if match && match[1].to_i < 24 && match[2].to_i < 60
         end
 
-        def dialog_attrs(label, labelledby)
-          resolved_label = label || I18n.t("stimulus_plumbers.combobox.time.dialog_label")
-          {
-            role: "dialog",
-            aria: labelled_aria(resolved_label, labelledby: labelledby),
-            data: { controller: STIMULUS_CONTROLLER, action: STIMULUS_ACTION }
-          }
+        def canonical((hour, minute))
+          format("%<hour>02d:%<minute>02d", hour: hour, minute: minute)
         end
 
-        def drums(format, step, time)
-          cols = [hour_drum(format, time), minute_drum(step, time)]
-          cols << period_drum(time) if format == :h12
-          cols
+        # The columns follow `hourCycle` or `hour12`, 12-hour by default.
+        def format_options(format)
+          return super unless format.respond_to?(:to_h)
+
+          { hourCycle: "h12" }.merge(super)
         end
 
-        def hour_drum(format, time)
-          items = if format == :h12
-                    (1..12).map { |h| [h.to_s] * 2 }
-                  else
-                    (0..23).map { |h| [h.to_s.rjust(2, "0")] * 2 }
-                  end
-          render_drum("hour", t("hour_label"), items, selected_hour(format, time))
+        def twelve_hour?
+          return true unless @format.is_a?(Hash)
+
+          @format.fetch(:hour12) { %w[h11 h12].include?(@format[:hourCycle].to_s) }
         end
 
-        def minute_drum(step, time)
-          items    = (0...60).step(step).map { |m| [m.to_s.rjust(2, "0")] * 2 }
-          selected = time ? round_minute(time.min, step).to_s.rjust(2, "0") : nil
-          render_drum("minute", t("minute_label"), items, selected)
-        end
-
-        def period_drum(time)
-          items    = [[t("am"), "AM"], [t("pm"), "PM"]]
-          selected = time && (time.hour < 12 ? "AM" : "PM")
-          render_drum("period", t("period_label"), items, selected)
-        end
-
-        def selected_hour(format, time)
-          return nil unless time
-
-          if format == :h12
-            h = time.hour % 12
-            (h.zero? ? 12 : h).to_s
-          else
-            time.hour.to_s.rjust(2, "0")
+        def render_panel(panel_attrs)
+          template.content_tag(:div, **merge_html_options(panel_attrs, theme.resolve(:combobox_time))) do
+            template.safe_join(columns)
           end
         end
 
-        def round_minute(minute, step)
-          return minute if step == 1
-
-          ((minute.to_f / step).round * step) % 60
+        def columns
+          hour, minute = @value
+          [
+            column("hour", hours, hour && hour_value(hour)),
+            column("minute", minutes, (pad(minute) if minute && (minute % @step).zero?)),
+            (column("meridiem", meridiems, hour && (hour < 12 ? "AM" : "PM")) if twelve_hour?)
+          ].compact
         end
 
-        def render_drum(target, label, items, selected)
-          attrs = merge_html_options(
+        def hours
+          twelve_hour? ? (1..12).map { |hour| [hour.to_s] * 2 } : (0..23).map { |hour| [pad(hour)] * 2 }
+        end
+
+        def minutes
+          (0...60).step(@step).map { |minute| [pad(minute)] * 2 }
+        end
+
+        # Labels come from the gem's keys, then Rails' `time.am`/`time.pm`.
+        def meridiems
+          [[t("am", default: :"time.am"), "AM"], [t("pm", default: :"time.pm"), "PM"]]
+        end
+
+        def hour_value(hour)
+          twelve_hour? ? (((hour - 1) % 12) + 1).to_s : pad(hour)
+        end
+
+        def column(name, items, selected)
+          options = items.map do |label, value|
+            Options::Option.new(template).render(
+              id: option_id(name, value), label: label, value: value, selected: value == selected
+            )
+          end
+          template.content_tag(:ul, template.safe_join(options), **column_attrs(name, selected))
+        end
+
+        def column_attrs(name, selected)
+          merge_html_options(
             theme.resolve(:combobox_listbox),
-            theme.resolve(:combobox_time_drum, type: target == "period" ? :period : :unit),
+            theme.resolve(:combobox_time_drum, type: name == "meridiem" ? :meridiem : :unit),
             {
               role:     "listbox",
               tabindex: "0",
-              aria:     { label: label },
-              data:     { "#{STIMULUS_CONTROLLER}_target": target }
-            },
-            { data: { action: "click->#{STIMULUS_CONTROLLER}#onSelect keydown->#{STIMULUS_CONTROLLER}#onNavigate" } }
+              aria:     { label: t("#{name}_label"), activedescendant: (option_id(name, selected) if selected) }.compact,
+              data:     { "#{STIMULUS_CONTROLLER}-target" => name, action: COLUMN_ACTION }
+            }
           )
-          template.content_tag(:ul, **attrs) do
-            template.safe_join(
-              items.map do |text, value|
-                Options::Option.new(template).render(label: text, value: value, selected: value.to_s == selected.to_s)
-              end
-            )
-          end
         end
 
-        def parse_time(value)
-          return nil if value.nil? || value.to_s.strip.empty?
-
-          ::Time.parse(value.to_s)
-        rescue ArgumentError
-          nil
+        def option_id(name, value)
+          "#{@id}_#{name}_#{value}"
         end
 
-        def t(key)
-          I18n.t("stimulus_plumbers.combobox.time.#{key}")
+        def pad(number)
+          number.to_s.rjust(2, "0")
+        end
+
+        def t(key, **options)
+          I18n.t("stimulus_plumbers.combobox.time.#{key}", **options)
         end
       end
     end

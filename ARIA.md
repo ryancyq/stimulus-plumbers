@@ -17,12 +17,12 @@
 
 ## JS Keyboard Navigation Patterns
 
-Two helper classes handle keyboard navigation in controllers — see [`stimulus-plumbers/docs/accessibility/design.md`](stimulus-plumbers/docs/accessibility/design.md) for full API.
+`RovingTabIndex` and `ActiveDescendant` handle keyboard navigation in controllers — see [`stimulus-plumbers/docs/accessibility/design.md`](stimulus-plumbers/docs/accessibility/design.md) for full API.
 
 | Pattern | Class | When to use |
 | --- | --- | --- |
 | Roving tabindex | `RovingTabIndex` | Disclosure widgets, trees, toolbars — focus moves between items |
-| Managed focus / listbox | `ListboxNavigation` | Combobox listbox, `role="listbox"` — input keeps focus, `aria-selected` moves |
+| Active descendant | `ActiveDescendant` | Listboxes whose owner keeps focus — `aria-activedescendant` and `aria-selected` follow the active option |
 
 ## Component-Specific Patterns (APG)
 
@@ -42,19 +42,46 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 - The consuming component chooses the panel role and accessible name (e.g. `role="region"` + `aria-label`, `role="dialog"`); the helper infers neither
 - Author `aria-haspopup`, `aria-expanded`, and `aria-controls` only when the consumer owns that popup relationship; the controller updates an authored `aria-expanded` to the settled state
 - The controller does not move focus or announce open/close
+- `popover-fetch` marks the loading region `aria-busy="true"`, writes loading and error text to a `role="status"` outside the region, and, when the swap drops focus, moves it to the first focusable element in the new region, else to the panel, which needs `tabindex="-1"`
 
-#### Combobox (`input_combobox_controller`, `combobox/`)
-- Trigger: `<input role="combobox">` with `aria-haspopup` (`listbox`/`dialog`) and `aria-controls` referencing the **popup element** (the `role="listbox"`/`role="dialog"`)
-- `role="listbox"` permits only `option`/`group` children (`aria-required-children`, WCAG 1.3.1). Status messages (loading, "No results") must be `role="status"`/`aria-live` **siblings of the listbox, never children of it** — for typeahead the listbox is nested in a wrapper panel so the status regions can sit beside it
-- Status/loading regions inside the popover panel must stay **non-focusable**
+#### Combobox (`combobox_controller`)
+- Trigger: `<button type="button" role="combobox">` (select-only) or `<input role="combobox" aria-autocomplete="list">` (editable) with `aria-expanded` and `aria-controls` referencing the `role="listbox"`
+- The trigger and the listbox each have an accessible name (`label:` or `labelledby:`)
+- DOM focus stays on the trigger; `aria-activedescendant` references the active option and is absent when none is active
+- `aria-selected` follows the active option (APG single-select); the committed value is the hidden input and the trigger's label
+- Arrow Down/Up open and move through enabled, visible options; select-only Home/End jump to the ends; editable Space/Home/End stay native
+- Enter (and select-only Space) commits the active option; Tab commits it and moves focus natively; Escape closes without committing; Enter and Escape are ignored while composing
+- Typing never activates an option; disabled options use `aria-disabled="true"` and are skipped
+- The panel is `popover="manual"`; the combobox closes it on commit, Escape, Tab, and a click or focus outside
+- Options carry instance-unique IDs. `role="listbox"` permits only `option`/`group` children (`aria-required-children`, WCAG 1.3.1), so a group is `li[role="none"] > ul[role="group"]` labelled through `aria-labelledby` by a `li[role="none"]` heading
+- An option's description is linked with `aria-describedby`, never part of its name (`aria-labelledby` on the label span)
+- Status messages (loading, "No results") are non-focusable `role="status"` **siblings of the listbox, never children of it**
+- Remote results replace the listbox with one of the same ID and accessible name; the loading frame or listbox carries `aria-busy="true"`
 
-#### Calendar / Date Picker (`calendar-month`, `combobox-date`)
-- Grid: `role="grid"`, `role="row"`, `role="gridcell"`
-- Navigation buttons: `aria-label="Previous Month"` / `"Next Month"` (via `Combobox::Date::Navigation`)
-- Selected date: `aria-selected="true"`; today: `aria-current="date"`
-- Disabled dates: `aria-disabled="true"`, `tabindex="-1"`
-- Three views: month (days grid), year (months grid), decade (years grid); zoom out via `combobox-date#zoomOut`
-- Arrow keys navigate cells; Enter/Space select; Escape closes picker
+#### Calendar (`sp_calendar`, `calendar`)
+- Grid: `<table role="grid">` labelled by the period heading (`aria-labelledby`); weekday `<th scope="col">` carry the full name in `abbr`
+- Exactly one enabled cell control has `tabindex="0"`; the rest `-1`
+- Selected date: `aria-selected="true"` on the gridcell; today: `aria-current="date"` on the control, independent of selection
+- Unavailable dates: `aria-disabled="true"`; a display-only grid is `aria-readonly="true"`; an unavailable selected date keeps `aria-selected="true"`
+- Every control has a full-date `aria-label`; the heading sits inside the replaced frame without `aria-live`, and a persistent `role="status"` outside it announces period changes
+- Previous/next, zoom, and month or year cells are buttons in stimulus mode; in Turbo mode they are links that work without JavaScript, and an unavailable month or year cell is `role="link"` with `aria-disabled="true"` and no `href`
+- Keys on a day: Arrow Left/Right ±1 day, Arrow Up/Down ±7 days, Home/End to the first/last day shown in the week, Page Up/Down ±1 month and Shift+Page Up/Down ±1 year (both clamp the day); Enter/Space commit; leaving the shown period requests navigation and focus follows the intended date
+- Keys in the year and decade views: arrows move one cell or one row of four, Home/End to the row's ends; Enter or Space opens the month or year
+- Focus never commits; arrows may land on unavailable days, which cannot be selected; Tab leaves the grid; Escape belongs to an enclosing dialog or popover
+
+#### Date combobox (`sp_combobox_date`, `combobox-date`)
+- Trigger: read-only `<input role="combobox">` with `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls` referencing a non-modal popover `role="dialog"` named "Choose <label>" or by the field label; icons are `aria-hidden`
+- Focus opens the popover without moving focus, except inside an open modal (a modal moving focus on focus is a change of context); a click on the input or its icons and ArrowDown also open it
+- ArrowDown moves focus to the calendar's Tab stop: the selected date, otherwise today, otherwise the first available date
+- Choosing a date fills the input, closes the popover, and returns focus to the input without reopening it; Escape closes without changing the value; Tab closes it and moves on
+- An unavailable value shows as given; the field's error (`aria-invalid`, `aria-describedby`) reports it. Unavailable dates not visible without exploring the grid, such as disabled weekdays or dates, belong in the field's hint (WCAG 3.3.2)
+
+#### Time combobox (`sp_combobox_time`, `combobox-time`)
+- Trigger and opening as the date combobox; ArrowDown moves focus to the hour column
+- Columns: focusable `role="listbox"` named Hour, Minute, and AM/PM, with `aria-activedescendant` referencing the chosen `role="option"` (`aria-selected="true"`); a minute off the step chooses no minute option; Tab moves between columns
+- Arrow Up/Down move one option, Home/End to the ends; each choice updates the value
+- Enter closes the popover and keeps the value; Tab out of the columns, focus elsewhere, or an outside click closes and keeps it; Escape restores the value from opening, closes the popover, and keeps an enclosing modal open; Enter and Escape return focus to the input
+- Columns show a visible focus indicator (WCAG 2.4.7)
 
 #### Form Fields (`form/`, `form-field_controller`)
 - Every input must have a visible `<label>` via `for`/`id` or `aria-labelledby`
@@ -76,7 +103,7 @@ Two helper classes handle keyboard navigation in controllers — see [`stimulus-
 
 #### Input Clearable (`input_clearable_controller`)
 - Clear button: `hidden` attribute while the input is empty, removing it from the keyboard/AT tab order until there's something to clear
-- Escape inside the input clears it (keyboard equivalent to clicking the clear button, WCAG 2.1.1); default is prevented so it doesn't also close a parent overlay
+- Escape inside the input clears it (keyboard equivalent to clicking the clear button, WCAG 2.1.1), except while the input is an expanded combobox or another handler took the Escape; default is prevented so it doesn't also close a parent overlay
 - Focus returns to the input after clearing (WCAG 2.4.3 Focus Order)
 - No `aria-live` announcement — clearing is user-initiated and the button's disappearance is self-explanatory
 

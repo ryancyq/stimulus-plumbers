@@ -2,175 +2,91 @@
 
 require "test_helper"
 
-class CalendarTurboComponentTest < ActionView::TestCase
+class CalendarTurboTest < ActionView::TestCase
   def renderer
-    StimulusPlumbers::Components::Calendar::Turbo.new(self)
+    StimulusPlumbers::Components::Calendar.new(self)
   end
 
-  def test_exposes_template
-    assert_equal self, renderer.template
+  def render_calendar(**kwargs)
+    parse_html(renderer.render(navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), **kwargs))
   end
 
-  def test_exposes_theme
-    assert_equal StimulusPlumbers.config.theme.current, renderer.theme
+  def test_render_announces_from_a_status_region_outside_the_frame
+    doc = render_calendar
+
+    assert_css doc, "#cal > [role='status'][data-calendar-target='status'] + turbo-frame#cal_frame"
+    assert_css doc, "turbo-frame#cal_frame h2#cal_heading"
   end
 
-  def test_has_calendar_month_selector_controller
-    assert_includes renderer.month(date: Date.new(2026, 4, 1)), 'data-controller="calendar-month-selector"'
+  def test_render_loads_periods_through_the_adapter
+    root = render_calendar.at_css("#cal")
+
+    assert_equal "calendar calendar-turbo", root["data-controller"]
+    assert_equal "turbo", root["data-calendar-navigation-value"]
+    assert_includes root["data-action"].split, "click->calendar#onClick"
+    assert_includes root["data-action"].split, "calendar:navigate->calendar-turbo#onNavigate"
+    assert_includes root["data-action"].split, "calendar-turbo:failed->calendar#onFailed"
   end
 
-  def test_has_grid_role
-    assert_includes renderer.month(date: Date.new(2026, 4, 1)), 'role="grid"'
+  def test_render_links_to_the_adjacent_periods_through_the_url
+    links = render_calendar.css("a[aria-label]").to_h { |link| [link["aria-label"], link["href"]] }
+
+    assert_equal "?cal%5Bdisplayed%5D=2026-08-01&cal%5Bview%5D=month", links["Previous month"]
+    assert_equal "?cal%5Bdisplayed%5D=2026-10-01&cal%5Bview%5D=month", links["Next month"]
   end
 
-  def test_merges_extra_data_attributes
-    html = renderer.month(date: Date.new(2026, 4, 1), data: { foo: "bar" })
+  def test_render_zooms_out_to_the_year
+    link = render_calendar.css("a").find { |a| a.text == "Choose month" }
 
-    assert_includes html, "data-foo"
-    assert_includes html, "bar"
+    assert_equal "?cal%5Bdisplayed%5D=2026-09-10&cal%5Bview%5D=year", link["href"]
   end
 
-  def test_merges_custom_class
-    assert_includes renderer.month(date: Date.new(2026, 4, 1), class: "my-cal"), "my-cal"
+  def test_render_links_from_a_given_url_keeping_its_query
+    doc  = render_calendar(url: "/people/new?step=2")
+    href = doc.at_css("a[aria-label='Next month']")["href"]
+
+    assert_equal "/people/new?cal%5Bdisplayed%5D=2026-10-01&cal%5Bview%5D=month&step=2", href
+    assert_equal "/people/new?step=2", doc.at_css("#cal")["data-calendar-url-value"]
   end
 
-  def test_renders_seven_column_headers
-    assert_equal 7, renderer.month(date: Date.new(2026, 4, 1)).scan('role="columnheader"').length
+  def test_render_links_stay_on_this_page_when_the_path_starts_with_slashes
+    request.path = "//evil.example/people"
+    href = render_calendar.at_css("a[aria-label='Next month']")["href"]
+
+    assert_equal "/evil.example/people?cal%5Bdisplayed%5D=2026-10-01&cal%5Bview%5D=month", href
   end
 
-  def test_column_headers_are_in_a_row
-    assert_includes renderer.month(date: Date.new(2026, 4, 1)), '<div role="row"'
+  def test_render_links_keep_a_current_path_with_unescaped_characters
+    request.path = "/people|archived"
+    href = render_calendar.at_css("a[aria-label='Next month']")["href"]
+
+    assert_equal "/people|archived?cal%5Bdisplayed%5D=2026-10-01&cal%5Bview%5D=month", href
   end
 
-  def test_days_of_month_has_rowgroup_role
-    assert_includes renderer.month(date: Date.new(2026, 4, 1)), 'role="rowgroup"'
+  def test_render_reads_displayed_and_view_as_the_url_carries_them
+    assert_equal "2026", render_calendar(displayed: "2026-12-01", view: "year").at_css("h2").text
   end
 
-  def test_today_has_aria_current
-    html = renderer.month(date: Date.new(2026, 4, 1), today: Date.new(2026, 4, 15))
-
-    assert_includes html, 'aria-current="date"'
+  def test_render_falls_back_when_the_url_carries_invalid_values
+    assert_equal "September 2026", render_calendar(displayed: "not-a-date", view: "week").at_css("h2").text
   end
 
-  def test_only_one_cell_has_tabindex_zero
-    doc = parse_html(renderer.month(date: Date.new(2026, 4, 1), today: Date.new(2026, 4, 15)))
+  def test_render_marks_the_grid_with_the_period_it_shows
+    grid = render_calendar(displayed: "2026-12-01", view: "year").at_css("table[role='grid']")
 
-    assert_equal 1, doc.css('[role=rowgroup] [tabindex="0"]').length
+    assert_equal "2026-12-01", grid["data-displayed"]
+    assert_equal "year", grid["data-view"]
   end
 
-  def test_renders_28_gridcells_for_month_without_padding
-    # Feb 2026: starts Sunday, 28 days, no padding
-    doc = parse_html(renderer.month(date: Date.new(2026, 2, 1)))
+  def test_render_styles_each_part_from_the_theme
+    parts = %i[calendar_status calendar_header calendar_heading calendar_navigation calendar_grid calendar_weekday
+               calendar_cell calendar_date]
+    original = StimulusPlumbers.config.theme.current
+    StimulusPlumbers.config.theme.use(key_theme(parts))
+    doc = render_calendar(selectable: true)
 
-    assert_equal 28, doc.css("[role=rowgroup] [role=gridcell]").length
-  end
-
-  def test_renders_35_gridcells_including_hidden_padding
-    # Apr 2026: 3 prev + 30 current + 2 next = 35
-    doc = parse_html(renderer.month(date: Date.new(2026, 4, 1)))
-
-    assert_equal 35, doc.css("[role=rowgroup] [role=gridcell]").length
-  end
-
-  def test_renders_42_gridcells_for_6_week_month
-    # Jul 2023: 6 prev + 31 current + 5 next = 42
-    doc = parse_html(renderer.month(date: Date.new(2023, 7, 1), show_other_months: true))
-
-    assert_equal 42, doc.css("[role=rowgroup] [role=gridcell]").length
-  end
-
-  def test_padding_cells_are_aria_hidden_by_default
-    # Apr 2026: 5 padding days (3 prev + 2 next)
-    doc = parse_html(renderer.month(date: Date.new(2026, 4, 1)))
-
-    assert_equal 0, doc.css("[role=rowgroup] [aria-disabled=true]").length
-    assert_css doc, "[role=rowgroup] [aria-hidden=true]"
-  end
-
-  def test_padding_cells_are_disabled_gridcells_when_show_other_months
-    # Apr 2026: 5 padding days (3 prev + 2 next)
-    doc = parse_html(renderer.month(date: Date.new(2026, 4, 1), show_other_months: true))
-
-    assert_css doc, "[role=rowgroup] [aria-disabled=true]"
-    assert_no_css doc, "[role=rowgroup] [aria-hidden=true]"
-  end
-
-  def test_current_month_cells_are_spans_when_not_selectable
-    # Feb 2026: no padding, all gridcells are current-month spans
-    doc = parse_html(renderer.month(date: Date.new(2026, 2, 1)))
-
-    assert_no_css doc, "[role=rowgroup] button"
-  end
-
-  def test_current_month_cells_are_buttons_when_selectable
-    # Feb 2026: no padding, all gridcells are buttons
-    doc = parse_html(renderer.month(date: Date.new(2026, 2, 1), selectable: true))
-
-    assert_css doc, "[role=rowgroup] button"
-    assert_no_css doc, "[role=rowgroup] span[role=gridcell]"
-  end
-
-  def test_selectable_cells_have_aria_selected
-    doc = parse_html(renderer.month(date: Date.new(2026, 4, 1), selectable: true))
-
-    assert_css doc, "[role=rowgroup] [aria-selected]"
-  end
-
-  def test_non_selectable_cells_omit_aria_selected
-    doc = parse_html(renderer.month(date: Date.new(2026, 4, 1)))
-
-    assert_no_css doc, "[role=rowgroup] [aria-selected]"
-  end
-
-  def test_selected_date_has_aria_selected_true
-    doc = parse_html(
-      renderer.month(
-        date:          Date.new(2026, 4, 1),
-        today:         Date.new(2026, 4, 15),
-        selectable:    true,
-        selected_date: Date.new(2026, 4, 10)
-      )
-    )
-
-    assert_css doc, "[role=rowgroup] [aria-selected=true]"
-  end
-
-  def test_year_has_grid_role
-    assert_includes renderer.year(date: Date.new(2026, 4, 1)), 'role="grid"'
-  end
-
-  def test_year_has_year_view_aria_label
-    assert_includes renderer.year(date: Date.new(2026, 4, 1)), 'aria-label="Year view"'
-  end
-
-  def test_year_has_calendar_year_selector_controller
-    assert_includes renderer.year(date: Date.new(2026, 4, 1)), 'data-controller="calendar-year-selector"'
-  end
-
-  def test_decade_has_grid_role
-    assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'role="grid"'
-  end
-
-  def test_decade_has_decade_view_aria_label
-    assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'aria-label="Decade view"'
-  end
-
-  def test_decade_has_calendar_decade_selector_controller
-    assert_includes renderer.decade(date: Date.new(2026, 4, 1)), 'data-controller="calendar-decade-selector"'
-  end
-
-  def test_non_selected_cells_have_aria_selected_false
-    # Feb 2026: 28 days, no padding — 1 selected, 27 unselected
-    doc = parse_html(
-      renderer.month(
-        date:          Date.new(2026, 2, 1),
-        today:         Date.new(2026, 2, 1),
-        selectable:    true,
-        selected_date: Date.new(2026, 2, 10)
-      )
-    )
-
-    assert_equal 1,  doc.css("[role=rowgroup] [aria-selected=true]").length
-    assert_equal 27, doc.css("[role=rowgroup] [aria-selected=false]").length
+    parts.each { |key| assert doc.at_css(".sp-#{key}"), "#{key} is unstyled" }
+  ensure
+    StimulusPlumbers.config.theme.use(original)
   end
 end

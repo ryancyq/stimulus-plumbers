@@ -3,90 +3,32 @@
 module StimulusPlumbers
   module Components
     class Combobox
+      # The role=combobox element inside its TriggerGroup; the block renders the element from its attributes.
       class Trigger < Plumber::Base
-        STIMULUS_ACTION = [
-          "focus->#{Components::Popover::STIMULUS_CONTROLLER}#open",
-          "keydown.esc->#{Components::Popover::STIMULUS_CONTROLLER}#close"
-        ].join(" ").freeze
-
         def render(...)
           render_trigger(...)
         end
 
         private
 
-        def render_trigger(
-          stimulus_controller:,
-          popover:,
-          readonly: true,
-          aria: {},
-          id: nil,
-          data: {},
-          icon_leading: nil,
-          icon_trailing: nil,
-          **kwargs
-        )
-          input_html = render_input(
-            stimulus_controller: stimulus_controller,
-            popover:             popover,
-            readonly:            readonly,
-            aria:                aria,
-            id:                  id,
-            data:                data,
-            **kwargs
-          )
-
-          return input_html unless icon_leading || icon_trailing
-
-          render_trigger_group(icon_leading, icon_trailing) { input_html }
+        def render_trigger(icon_leading: nil, icon_trailing: nil, trailing: nil, **kwargs, &host)
+          TriggerGroup.new(template).render(icon_leading: icon_leading, icon_trailing: icon_trailing, trailing: trailing) do
+            host.call(host_attrs(**kwargs))
+          end
         end
 
-        def render_input(
-          stimulus_controller:,
-          popover:,
-          readonly:,
-          aria:,
-          id:,
-          data:,
-          **kwargs
-        )
-          stimulus_data = {
-            popover_target:                  popover.dig(:data, :popover_target),
-            "#{stimulus_controller}_target": "trigger",
-            input_formatter_target:          "input",
-            action:                          STIMULUS_ACTION
-          }
-
-          template.tag.input(
-            **merge_html_options(
-              theme.resolve(:combobox_trigger),
-              {
-                id:       id,
-                type:     "text",
-                readonly: (readonly ? true : nil),
-                role:     "combobox",
-                aria:     popover.fetch(:aria, {}).deep_merge(aria),
-                data:     stimulus_data
-              },
-              { data: data },
-              kwargs
-            )
-          )
-        end
-
-        def render_trigger_group(icon_leading, icon_trailing, &block)
-          InputGroup.new(template).render(
-            leading:  icon_leading  ? -> { render_trigger_icon(icon_leading) }  : nil,
-            trailing: icon_trailing ? -> { render_trigger_icon(icon_trailing) } : nil,
-            **theme.resolve(:combobox_trigger_group)
-          ) { template.capture(&block) }
-        end
-
-        def render_trigger_icon(name)
-          Components::Icon.new(template).render(
-            name,
-            classes: theme.resolve(:combobox_trigger_icon).fetch(:classes, ""),
-            aria:    { hidden: "true" }
+        def host_attrs(id:, listbox_id:, actions: [], aria: {}, data: {}, **kwargs)
+          merge_html_options(
+            theme.resolve(:combobox_trigger),
+            {
+              id:   id,
+              role: "combobox",
+              aria: { expanded: "false", controls: listbox_id }.merge(aria),
+              data: { "#{Combobox::STIMULUS_CONTROLLER}-target" => "trigger" }
+            },
+            { data: { action: [*actions, "keydown->#{Combobox::STIMULUS_CONTROLLER}#onKeydown"].join(" ") } },
+            { data: data },
+            kwargs
           )
         end
       end

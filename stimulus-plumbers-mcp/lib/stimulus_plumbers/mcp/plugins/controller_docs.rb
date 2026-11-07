@@ -22,7 +22,7 @@ module StimulusPlumbers
                 uri:         "controller://docs",
                 name:        "controller-docs-index",
                 description: "Index of JS controller narrative docs, grouped by controller family " \
-                             "(e.g. :calendar covers calendar-month/-year/-decade)",
+                             "(e.g. :calendar covers calendar and calendar-turbo)",
                 mime_type:   "application/json"
               )
             ].freeze

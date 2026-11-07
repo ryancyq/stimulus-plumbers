@@ -21,64 +21,26 @@ module StimulusPlumbers
 
           private
 
-          def render_combobox_date(
-            attribute,
-            html_opts,
-            opts,
-            error,
-            floating: nil,
-            icon_leading: nil,
-            icon_trailing: nil,
-            **kwargs
-          )
-            current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
-            labelledby    = Field.label_id(html_opts[:id])
-            combobox_opts = {
-              input:   { value: current_value },
-              trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
-              **opts
-            }
-            render_combobox(
-              attribute,
-              input_id: html_opts[:id],
-              opts:     combobox_opts,
-              error:    error,
-              floating: floating,
-              **kwargs
-            ) do |c|
-              c.date(value: current_value, labelledby: labelledby)
-            end
+          # Explicit keywords: Ruby 3.0 reports `...` as taking none.
+          def render_combobox_date(attribute, html_opts, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Date, html_opts, opts, error, **kwargs)
           end
 
-          def render_combobox_time(
-            attribute,
-            html_opts,
-            opts,
-            error,
-            floating: nil,
-            format: :h12,
-            step: 1,
-            icon_leading: nil,
-            icon_trailing: nil,
-            **kwargs
-          )
-            current_value = object.respond_to?(attribute) ? object.public_send(attribute) : nil
-            labelledby    = Field.label_id(html_opts[:id])
-            combobox_opts = {
-              input:   { value: current_value },
-              trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
-              **opts
-            }
+          def render_combobox_time(attribute, html_opts, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Time, html_opts, opts, error, **kwargs)
+          end
+
+          def render_temporal(attribute, component, html_opts, opts, error, floating: nil, **kwargs)
             render_combobox(
               attribute,
-              input_id: html_opts[:id],
-              opts:     combobox_opts,
-              error:    error,
-              floating: floating,
+              component: component,
+              html_opts: html_opts,
+              opts:      opts,
+              error:     error,
+              floating:  floating,
+              value:     (object.public_send(attribute) if object.respond_to?(attribute)),
               **kwargs
-            ) do |c|
-              c.time(format: format, step: step, value: current_value, labelledby: labelledby)
-            end
+            )
           end
         end
       end

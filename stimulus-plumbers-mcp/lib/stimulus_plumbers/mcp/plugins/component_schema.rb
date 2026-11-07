@@ -108,8 +108,8 @@ module StimulusPlumbers
               server,
               name:         "get_field_as_controller",
               description:  "Returns the Stimulus controller identifier backing an f.field/f.collection_field " \
-                            "as: value (e.g. \"select\" -> \"combobox-dropdown\"), for as: values whose picker " \
-                            "is controller-backed. Plain input as: values (text, email, file, ...) return not-found",
+                            "as: value (e.g. \"select\" -> \"combobox\"), for as: values backed by a " \
+                            "Stimulus controller. Plain input as: values (text, email, file, ...) return not-found",
               input_schema: { properties: { as: { type: "string" } }, required: ["as"] }
             ) do |as:|
               controller = schema[:field_as_controllers][as.to_sym]

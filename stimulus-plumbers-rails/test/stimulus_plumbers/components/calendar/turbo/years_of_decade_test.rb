@@ -3,142 +3,47 @@
 require "test_helper"
 
 class CalendarTurboYearsOfDecadeTest < ActionView::TestCase
-  def renderer(
-    date: Date.new(2026, 6, 1),
-    today: Date.new(2026, 6, 1),
-    selected_date: nil,
-    since: nil,
-    till: nil,
-    disabled_years: []
-  )
-    StimulusPlumbers::Components::Calendar::Turbo::YearsOfDecade
-      .new(self,
-           date:           date,
-           today:          today,
-           selected_date:  selected_date,
-           since:          since,
-           till:           till,
-           disabled_years: disabled_years)
-  end
-
-  def doc(**kwargs)
-    parse_html(renderer(**kwargs).render)
-  end
-
-  def test_renders_rowgroup_role
-    assert_css doc, "[role='rowgroup']"
-  end
-
-  def test_renders_12_gridcells
-    assert_equal 12, doc.css("[role='gridcell']").length
-  end
-
-  def test_renders_3_rows
-    assert_equal 3, doc.css("[role='row']").length
-  end
-
-  def test_each_row_has_4_cells
-    doc.css("[role='row']").each do |row|
-      assert_equal 4, row.css("[role='gridcell']").length
-    end
-  end
-
-  def test_all_cells_are_buttons
-    assert_equal 12, doc.css("button[role='gridcell']").length
-  end
-
-  def test_decade_spans_correct_years
-    result = doc(date: Date.new(2026, 1, 1))
-    years = result.css("[data-year]").map { |el| el["data-year"].to_i }
-
-    assert_equal (2019..2030).to_a, years.sort
-  end
-
-  def test_buffer_years_have_aria_disabled
-    result = doc(date: Date.new(2026, 1, 1))
-
-    disabled = result.css("[aria-disabled='true']")
-    disabled_years = disabled.map { |el| el["data-year"].to_i }.sort
-
-    assert_equal [2019, 2030], disabled_years
-  end
-
-  def test_decade_years_do_not_have_aria_disabled
-    result = doc(date: Date.new(2026, 1, 1))
-
-    non_disabled = result.css("[role='gridcell']:not([aria-disabled='true'])")
-
-    assert_equal 10, non_disabled.length
-  end
-
-  def test_current_year_has_aria_current
-    result = doc(date: Date.new(2026, 1, 1), today: Date.new(2026, 6, 1))
-
-    assert_equal 1, result.css("[aria-current='year']").length
-    assert_equal "2026", result.at_css("[aria-current='year']")["data-year"]
-  end
-
-  def test_selected_year_has_aria_selected_true
-    result = doc(date: Date.new(2026, 1, 1), selected_date: Date.new(2023, 4, 10))
-
-    assert_equal 1, result.css("[aria-selected='true']").length
-    assert_equal "2023", result.at_css("[aria-selected='true']")["data-year"]
-  end
-
-  def test_unselected_years_have_aria_selected_false
-    result = doc(date: Date.new(2026, 1, 1), selected_date: Date.new(2023, 4, 10))
-
-    assert_equal 11, result.css("[aria-selected='false']").length
-  end
-
-  def test_without_selected_date_all_have_aria_selected_false
-    result = doc(selected_date: nil)
-
-    assert_equal 12, result.css("[aria-selected='false']").length
-    assert_equal 0,  result.css("[aria-selected='true']").length
-  end
-
-  def test_focused_cell_has_tabindex_zero
-    result = doc(date: Date.new(2026, 1, 1), today: Date.new(2026, 6, 1))
-
-    assert_equal 1, result.css("[tabindex='0']").length
-    assert_equal "2026", result.at_css("[tabindex='0']")["data-year"]
-  end
-
-  def test_disabled_cell_does_not_get_tabindex_zero
-    result = doc(
-      date:           Date.new(2026, 1, 1),
-      today:          Date.new(2026, 6, 1),
-      disabled_years: [2026]
+  def render_decade(**kwargs)
+    parse_html(
+      StimulusPlumbers::Components::Calendar.new(self).render(
+        navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), view: :decade, **kwargs
+      )
     )
-
-    assert_equal 0, result.css("[tabindex='0']").length
   end
 
-  def test_since_disables_years_before_range
-    result = doc(date: Date.new(2026, 1, 1), since: Date.new(2023, 1, 1))
+  def test_decade_heading_labels_the_years_with_a_neighbour_either_side
+    doc   = render_decade
+    years = doc.css("[data-calendar-target='period']").map(&:text)
 
-    assert result.at_css("[data-year='2022'][aria-disabled='true']")
-    assert_nil result.at_css("[data-year='2023'][aria-disabled='true']")
+    assert_equal "2020 – 2029", doc.at_css("h2").text
+    assert_equal (2019..2030).map(&:to_s), years
+    assert_css doc, "[data-date='2019-01-01'][data-outside='true']"
+    assert_no_css doc, "[data-date='2020-01-01'][data-outside]"
   end
 
-  def test_till_disables_years_after_range
-    result = doc(date: Date.new(2026, 1, 1), till: Date.new(2027, 12, 31))
+  def test_each_year_zooms_in_to_its_year_and_is_named_by_it
+    year = render_decade.at_css("[data-date='2024-01-01']")
 
-    assert result.at_css("[data-year='2028'][aria-disabled='true']")
-    assert_nil result.at_css("[data-year='2027'][aria-disabled='true']")
+    assert_equal "?cal%5Bdisplayed%5D=2024-01-01&cal%5Bview%5D=year", year["href"]
+    assert_nil year["aria-label"]
   end
 
-  def test_disabled_years_list_disables_by_integer
-    result = doc(date: Date.new(2026, 1, 1), disabled_years: [2025])
-
-    assert result.at_css("[data-year='2025'][aria-disabled='true']")
-    assert_nil result.at_css("[data-year='2026'][aria-disabled='true']")
+  def test_disabled_years_are_unavailable_and_do_not_open
+    assert_css render_decade(disabled_years: [2027]), "a[aria-disabled='true'][data-date='2027-01-01']:not([href])"
   end
 
-  def test_disabled_years_list_disables_by_string
-    result = doc(date: Date.new(2026, 1, 1), disabled_years: ["2025"])
+  def test_the_decade_has_no_wider_view
+    assert(render_decade.css("a").none? { |link| link.text.start_with?("Choose") })
+  end
 
-    assert result.at_css("[data-year='2025'][aria-disabled='true']")
+  def test_the_first_decade_stops_at_year_one
+    doc = render_decade(displayed: "0005-06-01")
+
+    assert_equal %w[1 2 3 4 5 6 7 8 9 10], doc.css("[data-calendar-target='period']").map(&:text)
+    assert_no_css doc, "a[aria-label='Previous decade']"
+  end
+
+  def test_the_last_decade_has_no_next
+    assert_no_css render_decade(displayed: "9995-06-01"), "a[aria-label='Next decade']"
   end
 end

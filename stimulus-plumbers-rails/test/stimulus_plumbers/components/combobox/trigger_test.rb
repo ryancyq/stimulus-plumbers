@@ -3,87 +3,46 @@
 require "test_helper"
 
 class ComboboxTriggerTest < ActionView::TestCase
-  def render_trigger(popover: {}, **opts)
-    default_popover = {
-      panel_id: "combo_popover",
-      aria:     { haspopup: "listbox", expanded: "false", controls: "combo_popover" },
-      data:     { popover_target: "trigger" }
-    }
-    StimulusPlumbers::Components::Combobox::Trigger.new(self).render(
-      stimulus_controller: "input-combobox",
-      popover:             default_popover.deep_merge(popover),
-      **opts
+  def render_trigger(**kwargs)
+    parse_html(
+      StimulusPlumbers::Components::Combobox::Trigger.new(self).render(
+        id: "city", listbox_id: "city_listbox", aria: { label: "City" }, **kwargs
+      ) { |attrs| tag.button("Seoul", type: "button", **attrs) }
     )
   end
 
-  def test_renders_input_element
-    assert_css parse_html(render_trigger), "input"
+  def test_block_renders_the_host_with_the_combobox_attributes
+    control = render_trigger.at_css("[role='combobox']")
+
+    assert_equal "button", control.name
+    assert_equal "Seoul", control.text
+    assert_equal "trigger", control["data-combobox-target"]
+    assert_equal "keydown->combobox#onKeydown", control["data-action"]
   end
 
-  def test_input_type_is_text
-    assert_css parse_html(render_trigger), "input[type='text']"
+  def test_actions_run_before_keydown
+    control = render_trigger(actions: ["input->combobox#onInput"]).at_css("[role='combobox']")
+
+    assert_equal "input->combobox#onInput keydown->combobox#onKeydown", control["data-action"]
   end
 
-  def test_role_is_combobox
-    assert_css parse_html(render_trigger), "input[role='combobox']"
+  def test_names_the_control_and_references_the_listbox
+    control = render_trigger.at_css("[role='combobox']")
+
+    assert_equal "City", control["aria-label"]
+    assert_equal "city_listbox", control["aria-controls"]
+    assert_equal "false", control["aria-expanded"]
   end
 
-  def test_readonly_by_default
-    assert_css parse_html(render_trigger), "input[readonly]"
+  def test_icons_sit_beside_the_host
+    assert_css render_trigger(icon_trailing: "chevron-down"), "[role='combobox'] ~ [aria-hidden='true']"
+    assert_no_css render_trigger, "[role='combobox'] ~ *"
   end
 
-  def test_readonly_false_omits_attribute
-    assert_no_css parse_html(render_trigger(readonly: false)), "input[readonly]"
-  end
+  def test_trailing_content_replaces_the_icon
+    doc = render_trigger(icon_trailing: "chevron-down", trailing: -> { tag.button("Clear", type: "button") })
 
-  def test_aria_expanded_is_false
-    assert_css parse_html(render_trigger), "input[aria-expanded='false']"
-  end
-
-  def test_aria_haspopup
-    assert_css parse_html(render_trigger(popover: { aria: { haspopup: "dialog" } })), "input[aria-haspopup='dialog']"
-  end
-
-  def test_aria_controls_points_to_popover
-    assert_css parse_html(render_trigger), "input[aria-controls='combo_popover']"
-  end
-
-  def test_aria_autocomplete_when_set
-    assert_css parse_html(render_trigger(aria: { autocomplete: "list" })), "input[aria-autocomplete='list']"
-  end
-
-  def test_aria_autocomplete_omitted_when_nil
-    assert_no_css parse_html(render_trigger), "input[aria-autocomplete]"
-  end
-
-  def test_aria_label_when_set
-    assert_css parse_html(render_trigger(aria: { label: "Country" })), "input[aria-label='Country']"
-  end
-
-  def test_aria_invalid_forwarded_via_aria_kwarg
-    assert_css parse_html(render_trigger(aria: { invalid: "true" })), "input[aria-invalid='true']"
-  end
-
-  def test_aria_invalid_does_not_clobber_structural_aria
-    doc = parse_html(render_trigger(aria: { invalid: "true" }))
-
-    assert_css doc, "input[aria-expanded='false']"
-    assert_css doc, "input[aria-haspopup='listbox']"
-    assert_css doc, "input[aria-controls='combo_popover']"
-  end
-
-  def test_stimulus_target_data_attribute
-    assert_css parse_html(render_trigger), "[data-input-combobox-target~='trigger']"
-  end
-
-  def test_popover_trigger_target
-    assert_css parse_html(render_trigger), "[data-popover-target~='trigger']"
-  end
-
-  def test_popover_open_close_action
-    input = parse_html(render_trigger).at_css("input")
-
-    assert_includes input["data-action"], "focus->popover#open"
-    assert_includes input["data-action"], "keydown.esc->popover#close"
+    assert_css doc, "[role='combobox'] ~ button", text: "Clear"
+    assert_no_css doc, "[role='combobox'] ~ [aria-hidden='true']"
   end
 end

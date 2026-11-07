@@ -60,31 +60,30 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 
 ### Calendar
 
-| Key                        | Component                                               | Variants        |
-| -------------------------- | ------------------------------------------------------- | --------------- |
-| `calendar`                 | `Calendar`, `Calendar::Turbo`                           | —               |
-| `calendar_days_of_week`    | `Calendar::Turbo::DaysOfWeek`                           | —               |
-| `calendar_days_of_month`   | `Calendar::Turbo::DaysOfMonth`                          | —               |
-| `calendar_row`             | `Calendar::Turbo::DaysOfMonth` (each week row)          | —               |
-| `calendar_day`             | `Calendar::Turbo::DaysOfMonth` (each day cell)          | `outside: bool` |
-| `calendar_months_of_year`  | `Calendar::Turbo::MonthsOfYear` (rowgroup wrapper)      | —               |
-| `calendar_month`           | `Calendar::Turbo::MonthsOfYear` (each month cell)       | —               |
-| `calendar_years_of_decade` | `Calendar::Turbo::YearsOfDecade` (rowgroup wrapper)     | —               |
-| `calendar_year`            | `Calendar::Turbo::YearsOfDecade` (each year cell)       | —               |
-| `calendar_quarter_grid`    | `Calendar::Turbo` year/decade grid wrapper (4-col grid) | —               |
+| Key                   | Component                                          | Variants |
+| --------------------- | -------------------------------------------------- | -------- |
+| `calendar`            | `sp_calendar` root `<div>`                         | —        |
+| `calendar_status`     | `sp_calendar` status region outside the frame      | —        |
+| `calendar_header`     | `sp_calendar` previous/next, heading, and zoom row | —        |
+| `calendar_heading`    | `sp_calendar` heading that labels the grid         | —        |
+| `calendar_navigation` | `sp_calendar` previous, next, and zoom links       | —        |
+| `calendar_grid`       | `sp_calendar` `<table role="grid">`                | —        |
+| `calendar_weekday`    | `sp_calendar` weekday `<th>`                       | —        |
+| `calendar_cell`       | `sp_calendar` `<td>`                               | —        |
+| `calendar_date`       | `sp_calendar` day button or month/year link        | —        |
 
 ### Combobox
 
-| Key                                  | Component                                                                        | Variants                           |
-| ------------------------------------ | -------------------------------------------------------------------------------- | ---------------------------------- |
-| `combobox_listbox`                   | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time::Drum` (the `<ul>`) | —                                  |
-| `combobox_option`                    | `Combobox::Options::Option`                                                      | `selected: bool`, `disabled: bool` |
-| `combobox_option_group`              | `Combobox::Options::OptionGroup`                                                 | —                                  |
-| `combobox_typeahead_loading`         | `Combobox::Typeahead` (loading indicator)                                        | —                                  |
-| `combobox_typeahead_empty`           | `Combobox::Typeahead` (no-results message)                                       | —                                  |
-| `combobox_time`                      | `Combobox::Time` (drum wrapper)                                                  | —                                  |
-| `combobox_date_navigation`           | `Combobox::Date::Navigation` (nav bar)                                           | —                                  |
-| `combobox_date_navigation_navigator` | `Combobox::Date::Navigator` (each prev/next/title button)                        | —                                  |
+| Key                           | Component                                                                          | Variants                 |
+| ----------------------------- | ---------------------------------------------------------------------------------- | ------------------------ |
+| `combobox_listbox`            | `Combobox::Dropdown`, `Combobox::Typeahead`, `Combobox::Time` columns (the `<ul>`) | —                        |
+| `combobox_option`             | `Combobox::Options::Option`                                                        | `disabled: bool`         |
+| `combobox_option_description` | `Combobox::Options::Option` (description)                                          | —                        |
+| `combobox_option_group`       | `Combobox::Options::OptionGroup`                                                   | —                        |
+| `combobox_option_group_label` | `Combobox::Options::OptionGroup` (label)                                           | —                        |
+| `combobox_status`             | `Combobox::Typeahead` (empty, loading, and error status)                           | —                        |
+| `combobox_time`               | `Combobox::Time` panel (columns row)                                               | —                        |
+| `combobox_time_drum`          | `Combobox::Time` column                                                            | `type: :unit\|:meridiem` |
 
 ### Other components
 
@@ -112,7 +111,7 @@ Each row lists the theme key, the component that uses it, and the variants it ac
 | `card_body`                | Card body `<div>`                                               | —                                                                                                                                                                                            |
 | `card_action`              | Card action `<div>`                                             | —                                                                                                                                                                                            |
 | `icon`                     | `Icon`                                                          | —                                                                                                                                                                                            |
-| `popover`                  | `Popover`                                                       | —                                                                                                                                                                                            |
+| `popover`                  | `Popover` panel                                                 | `placement: :block_end_start\|:block_end\|:block_start\|:inline_end\|…`                                                                                                                      |
 
 ## Custom theme
 
@@ -199,3 +198,15 @@ When defining a custom schema (advanced), the `validate:` key accepts:
 | Symbol        | Method called on the theme; return must respond to `include?` or be truthy/falsy |
 | Proc          | Called via `instance_exec`; same return conventions                              |
 | `nil`         | No validation — any value accepted                                               |
+
+## Migration from removed theme keys
+
+| Removed                                                                                                                  | Use                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `calendar_day`, `calendar_month`, `calendar_year`                                                                        | `calendar_date`                                                                                             |
+| `calendar_days_of_week`                                                                                                  | `calendar_weekday`                                                                                          |
+| `calendar_days_of_month`, `calendar_months_of_year`, `calendar_years_of_decade`, `calendar_quarter_grid`, `calendar_row` | `calendar_grid`, `calendar_cell`                                                                            |
+| `combobox_typeahead_empty`, `combobox_typeahead_loading`, `combobox_typeahead_loading_icon`                              | `combobox_status`                                                                                           |
+| `combobox_date_navigation`, `combobox_date_navigation_navigator`, `combobox_date_navigation_title`                       | `calendar_header`, `calendar_navigation`, `calendar_heading`                                                |
+| `combobox_time_drum` `type: :period`                                                                                     | `type: :meridiem`                                                                                           |
+| `combobox_popover`                                                                                                       | `combobox_dropdown_popover`, `combobox_typeahead_popover`, `combobox_date_popover`, `combobox_time_popover` |

@@ -28,14 +28,14 @@ Exposes `this.formatter` on the controller.
 
 ## Built-in types
 
-| `type`         | Class                 | Description                                                              |
-| -------------- | --------------------- | ------------------------------------------------------------------------ |
-| `'plain'`      | `PlainFormatter`      | No-op — passes value through unchanged                                   |
-| `'creditCard'` | `CreditCardFormatter` | Normalises to digits only; formats as `#### #### #### ####`              |
-| `'phone'`      | `PhoneFormatter`      | Normalises to digits or E.164; formats local numbers as `(555) 123-4567` |
-| `'currency'`   | `CurrencyFormatter`   | Locale-aware normalisation and `Intl.NumberFormat` display               |
-| `'date'`       | `DateFormatter`       | Normalises to ISO 8601; `Intl.DateTimeFormat` display                    |
-| `'time'`       | `TimeFormatter`       | Normalises to `HH:MM` (24h); formats as h12 or h24                       |
+| `type`         | Class                 | Description                                                                                                 |
+| -------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `'plain'`      | `PlainFormatter`      | No-op — passes value through unchanged                                                                      |
+| `'creditCard'` | `CreditCardFormatter` | Normalises to digits only; formats as `#### #### #### ####`                                                 |
+| `'phone'`      | `PhoneFormatter`      | Normalises to digits or E.164; formats local numbers as `(555) 123-4567`                                    |
+| `'currency'`   | `CurrencyFormatter`   | Locale-aware normalisation and `Intl.NumberFormat` display                                                  |
+| `'date'`       | `DateFormatter`       | Normalises to ISO 8601; `Intl.DateTimeFormat` display                                                       |
+| `'time'`       | `TimeFormatter`       | Normalises to `HH:MM` (24h); `Intl.DateTimeFormat` display (`locale` plus Intl options such as `hourCycle`) |
 
 ## Custom formatters
 

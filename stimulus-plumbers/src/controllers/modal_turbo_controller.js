@@ -12,139 +12,139 @@ export default class extends Controller {
     closeOnSuccess: { type: Boolean, default: true },
   };
 
-  #clearGeneration = 0;
-  #pendingClear;
-  #closingAfterSubmit = false;
-  #connected = false;
-  #onBeforeCache;
-  #onModalOpening;
-  #onModalOpened;
-  #configured = false;
+  _clearGeneration = 0;
+  _pendingClear;
+  _closingAfterSubmit = false;
+  _connected = false;
+  _onBeforeCache;
+  _onModalOpening;
+  _onModalOpened;
+  _configured = false;
 
   connect() {
-    this.#clearGeneration = 0;
-    this.#pendingClear = null;
-    this.#closingAfterSubmit = false;
-    this.#connected = true;
-    this.#onBeforeCache = this.#beforeCache.bind(this);
-    this.#onModalOpening = this.#modalOpening.bind(this);
-    this.#onModalOpened = this.#modalOpened.bind(this);
-    document.addEventListener('turbo:before-cache', this.#onBeforeCache);
-    this.element.addEventListener('modal:before-open', this.#onModalOpening);
-    this.element.addEventListener('modal:opened', this.#onModalOpened);
+    this._clearGeneration = 0;
+    this._pendingClear = null;
+    this._closingAfterSubmit = false;
+    this._connected = true;
+    this._onBeforeCache = this._beforeCache.bind(this);
+    this._onModalOpening = this._modalOpening.bind(this);
+    this._onModalOpened = this._modalOpened.bind(this);
+    document.addEventListener('turbo:before-cache', this._onBeforeCache);
+    this.element.addEventListener('modal:before-open', this._onModalOpening);
+    this.element.addEventListener('modal:opened', this._onModalOpened);
 
     if (!this.hasFrameTarget) {
-      this.#configured = false;
+      this._configured = false;
       console.error(
         'ModalTurboController requires a frame target. Add data-modal-turbo-target="frame" to your element.'
       );
       return;
     }
 
-    this.#configured = true;
+    this._configured = true;
   }
 
   disconnect() {
-    this.#connected = false;
-    this.#configured = false;
-    this.#cancelPendingClear();
-    document.removeEventListener('turbo:before-cache', this.#onBeforeCache);
-    this.element.removeEventListener('modal:before-open', this.#onModalOpening);
-    this.element.removeEventListener('modal:opened', this.#onModalOpened);
+    this._connected = false;
+    this._configured = false;
+    this._cancelPendingClear();
+    document.removeEventListener('turbo:before-cache', this._onBeforeCache);
+    this.element.removeEventListener('modal:before-open', this._onModalOpening);
+    this.element.removeEventListener('modal:opened', this._onModalOpened);
   }
 
   frameTargetConnected() {
-    if (!this.#closingAfterSubmit) this.#cancelPendingClear();
-    if (this.#connected) this.#configured = true;
+    if (!this._closingAfterSubmit) this._cancelPendingClear();
+    if (this._connected) this._configured = true;
   }
 
   frameTargetDisconnected() {
-    if (!this.#closingAfterSubmit) this.#cancelPendingClear();
+    if (!this._closingAfterSubmit) this._cancelPendingClear();
   }
 
   onFrameRender(event) {
-    if (!this.#configured || !this.hasFrameTarget || event.target !== this.frameTarget) return;
+    if (!this._configured || !this.hasFrameTarget || event.target !== this.frameTarget) return;
 
     if (!this.frameTarget.innerHTML.trim()) return;
 
-    const modal = this.#modalController();
+    const modal = this._modalController();
     const dialog = modal?.hasDialogTarget ? modal.dialogTarget : null;
     if (dialog?.open) {
-      this.#cancelPendingClear();
-      this.#focusRenderedContent(dialog);
+      this._cancelPendingClear();
+      this._focusRenderedContent(dialog);
       return;
     }
 
     if (event.detail?.fetchResponse?.succeeded !== true) return;
-    if (this.#closingAfterSubmit) {
-      if (!this.#pendingClear) this.#clearFrame();
+    if (this._closingAfterSubmit) {
+      if (!this._pendingClear) this._clearFrame();
       return;
     }
 
-    this.#cancelPendingClear();
+    this._cancelPendingClear();
     modal?.open();
   }
 
   onBeforeFetchRequest(event) {
-    if (!this.#configured || !this.hasFrameTarget) return;
+    if (!this._configured || !this.hasFrameTarget) return;
     if (event.target !== this.frameTarget && !this.frameTarget.contains(event.target)) return;
 
-    this.#closingAfterSubmit = false;
+    this._closingAfterSubmit = false;
   }
 
   onSubmitEnd(event) {
-    if (!this.#configured || !this.hasFrameTarget) return;
+    if (!this._configured || !this.hasFrameTarget) return;
 
     const form = event.target;
     if (!(form instanceof HTMLFormElement) || !this.frameTarget.contains(form)) return;
     if (event.detail?.success !== true || !this.closeOnSuccessValue) return;
-    const modal = this.#modalController();
+    const modal = this._modalController();
     if (!modal) return;
 
-    this.#closingAfterSubmit = true;
+    this._closingAfterSubmit = true;
     modal.close();
   }
 
   onClosed(event) {
-    if (!this.#configured || !this.hasFrameTarget) return;
+    if (!this._configured || !this.hasFrameTarget) return;
 
-    const modal = this.#modalController();
+    const modal = this._modalController();
     const dialog = event.target?.closest?.('dialog') || (modal?.hasDialogTarget ? modal.dialogTarget : null);
     if (!dialog) {
-      this.#clearFrame();
+      this._clearFrame();
       return;
     }
 
-    this.#cancelPendingClear();
-    const generation = this.#clearGeneration;
-    const pendingClear = this.#afterAnimations(dialog);
-    this.#pendingClear = pendingClear;
+    this._cancelPendingClear();
+    const generation = this._clearGeneration;
+    const pendingClear = this._afterAnimations(dialog);
+    this._pendingClear = pendingClear;
     pendingClear.then(() => {
-      if (this.#pendingClear === pendingClear) this.#pendingClear = null;
-      if (!this.#connected || !this.#configured || generation !== this.#clearGeneration) return;
-      this.#clearFrame();
+      if (this._pendingClear === pendingClear) this._pendingClear = null;
+      if (!this._connected || !this._configured || generation !== this._clearGeneration) return;
+      this._clearFrame();
     });
   }
 
-  #beforeCache() {
-    if (!this.#configured) return;
+  _beforeCache() {
+    if (!this._configured) return;
 
-    this.#cancelPendingClear();
-    this.#closingAfterSubmit = false;
-    this.#modalController()?.close();
-    this.#clearFrame();
+    this._cancelPendingClear();
+    this._closingAfterSubmit = false;
+    this._modalController()?.close();
+    this._clearFrame();
   }
 
-  #modalOpening() {
-    this.#closingAfterSubmit = false;
-    this.#cancelPendingClear();
+  _modalOpening() {
+    this._closingAfterSubmit = false;
+    this._cancelPendingClear();
   }
 
-  #modalOpened() {
-    this.#cancelPendingClear();
+  _modalOpened() {
+    this._cancelPendingClear();
   }
 
-  #focusRenderedContent(dialog) {
+  _focusRenderedContent(dialog) {
     const active = document.activeElement;
     if (active === dialog || dialog.contains(active)) return;
 
@@ -157,27 +157,27 @@ export default class extends Controller {
     dialog.focus?.({ preventScroll: true });
   }
 
-  #modalController() {
+  _modalController() {
     return this.application?.getControllerForElementAndIdentifier(this.element, 'modal');
   }
 
-  #cancelPendingClear() {
-    if (!this.#pendingClear) return;
+  _cancelPendingClear() {
+    if (!this._pendingClear) return;
 
-    this.#clearGeneration += 1;
-    this.#pendingClear = null;
+    this._clearGeneration += 1;
+    this._pendingClear = null;
   }
 
-  #clearFrame() {
+  _clearFrame() {
     if (!this.hasFrameTarget) return;
 
-    this.#cancelPendingClear();
+    this._cancelPendingClear();
     this.frameTarget.removeAttribute('src');
     this.frameTarget.removeAttribute('complete');
     this.frameTarget.replaceChildren();
   }
 
-  #afterAnimations(dialog) {
+  _afterAnimations(dialog) {
     return new Promise((resolve) => {
       const nextFrame = window.requestAnimationFrame || ((callback) => window.setTimeout(callback, 0));
       nextFrame(() => {
@@ -186,7 +186,7 @@ export default class extends Controller {
           return;
         }
 
-        const animations = this.#exitAnimations(dialog);
+        const animations = this._exitAnimations(dialog);
         if (!animations.length) {
           resolve();
           return;
@@ -197,7 +197,7 @@ export default class extends Controller {
     });
   }
 
-  #exitAnimations(dialog) {
+  _exitAnimations(dialog) {
     return dialog.getAnimations({ subtree: true }).filter((animation) => {
       const effect = animation.effect;
       const ownedByDialog = effect?.target === dialog || effect?.pseudoElement === '::backdrop';

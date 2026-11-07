@@ -66,7 +66,7 @@ Use `StimulusPlumbers::Form::Builder` (set `config.action_view.default_form_buil
   `f.field(attr, as:)`, `f.collection_field(attr, as:, collection:, ...)`, `f.choice(attr, as:)`.
   See `component://form/docs` ([form.md](https://github.com/ryancyq/stimulus-plumbers/blob/main/stimulus-plumbers-rails/docs/component/form.md))
   for valid `as:` values per builder method and
-  which ones are backed by a Stimulus controller (date/time/select/search pickers).
+  which ones are backed by a Stimulus controller (date/time/select/search comboboxes).
 - **Level 1.** Native helper overrides (`f.text_field`, `f.select`, `f.check_box`, ...) render
   only the themed input element — use when you control the surrounding markup.
 

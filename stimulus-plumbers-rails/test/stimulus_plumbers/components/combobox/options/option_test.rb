@@ -45,4 +45,36 @@ class ComboboxOptionsOptionTest < ActionView::TestCase
   def test_no_spans_without_description
     assert_equal 0, parse_html(renderer.render(label: "Canada", value: "ca")).css("span").length
   end
+
+  def test_renders_the_given_id
+    assert_css parse_html(renderer.render(label: "Canada", value: "ca", id: "o1")), "li#o1"
+  end
+
+  def test_names_an_option_by_label_and_describes_it_by_description
+    option = parse_html(renderer.render(label: "Canada", value: "ca", description: "North America", id: "o1")).at_css("li")
+
+    assert_equal "Canada", option["data-label"]
+    assert_equal "o1_label", option["aria-labelledby"]
+    assert_equal "o1_description", option["aria-describedby"]
+    assert_equal "Canada", option.at_css("#o1_label").text
+  end
+
+  def test_applies_the_description_theme_to_the_description_only
+    original = StimulusPlumbers.config.theme.current
+    StimulusPlumbers.config.theme.use(description_theme)
+    doc = parse_html(renderer.render(label: "Canada", value: "ca", description: "North America", id: "o1"))
+
+    assert_css doc, "#o1_description.sp-description", text: "North America"
+    assert_no_css doc, "#o1_label[class]"
+  ensure
+    StimulusPlumbers.config.theme.use(original)
+  end
+
+  def description_theme
+    Class.new(StimulusPlumbers::Themes::Base) do
+      def combobox_option_description_classes(**)
+        { classes: "sp-description" }
+      end
+    end.new
+  end
 end

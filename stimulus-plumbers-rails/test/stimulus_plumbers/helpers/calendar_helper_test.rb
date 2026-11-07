@@ -5,31 +5,16 @@ require "test_helper"
 class CalendarHelperTest < ActionView::TestCase
   include StimulusPlumbers::Helpers::CalendarHelper
 
-  def test_renders_calendar_month_controller
-    assert_css parse_html(sp_calendar_month), "[data-controller~='calendar-month']"
+  def test_renders_a_calendar_the_controller_draws_by_default
+    assert_equal "calendar", parse_html(sp_calendar(id: "cal")).at_css("div#cal")["data-controller"]
   end
 
-  def test_sets_year_value_from_date
-    assert_css parse_html(sp_calendar_month(date: Date.new(2026, 4, 15))),
-               "[data-calendar-month-year-value='2026']"
+  def test_renders_a_turbo_calendar
+    assert_equal "calendar calendar-turbo",
+                 parse_html(sp_calendar(id: "cal", navigation: :turbo)).at_css("div#cal")["data-controller"]
   end
 
-  def test_sets_month_value_as_zero_indexed_from_date
-    assert_css parse_html(sp_calendar_month(date: Date.new(2026, 4, 15))),
-               "[data-calendar-month-month-value='3']"
-  end
-
-  def test_omits_date_values_when_date_is_nil
-    doc = parse_html(sp_calendar_month)
-
-    assert_no_css doc, "[data-calendar-month-year-value]"
-    assert_no_css doc, "[data-calendar-month-month-value]"
-  end
-
-  def test_merges_custom_data_attributes_with_date
-    doc = parse_html(sp_calendar_month(date: Date.new(2026, 4, 1), data: { foo: "bar" }))
-
-    assert_css doc, "[data-foo='bar']"
-    assert_css doc, "[data-calendar-month-year-value='2026']"
+  def test_rejects_an_unknown_navigation
+    assert_raises(ArgumentError) { sp_calendar(id: "cal", navigation: :fetch) }
   end
 end

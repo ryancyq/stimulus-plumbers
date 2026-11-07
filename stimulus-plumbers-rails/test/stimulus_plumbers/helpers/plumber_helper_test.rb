@@ -10,7 +10,7 @@ class PlumberHelperTest < ActionView::TestCase
   end
 
   def test_appends_suffix_without_record
-    assert_match(%r{\Asp_[a-f0-9]+_datepicker\z}, sp_dom_id(suffix: "datepicker"))
+    assert_match(%r{\Asp_[a-f0-9]+_date\z}, sp_dom_id(suffix: "date"))
   end
 
   def test_generates_unique_ids_without_record

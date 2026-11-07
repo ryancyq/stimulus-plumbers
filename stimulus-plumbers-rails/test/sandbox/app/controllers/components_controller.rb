@@ -4,26 +4,17 @@ class ComponentsController < ApplicationController
   def profile
   end
 
-  def calendar_stimulus
-    year               = params[:year]&.to_i
-    month              = params[:month]&.to_i
-    @date              = year && month ? Date.new(year, month, 1) : nil
-    @show_other_months = params[:show_other_months] == "true"
-    @since             = parse_date(:since)
-    @till              = parse_date(:till)
-  end
-
-  def calendar_turbo
-    @selectable        = params[:selectable] == "true"
-    @show_other_months = params[:show_other_months] == "true"
-    @view              = params[:view]
-    @date              = parse_date(:date) || Date.today
-    @selected_date     = parse_date(:selected_date)
-    @since             = parse_date(:since)
-    @till              = parse_date(:till)
+  def calendar_inline
   end
 
   def combobox
+  end
+
+  CITIES = [%w[Seoul se], %w[Seville sv], %w[Singapore sg], %w[Stockholm st], %w[Sydney sy]].freeze
+
+  def combobox_cities
+    query   = params[:q].to_s.downcase
+    @cities = CITIES.select { |label, _| label.downcase.start_with?(query) }
   end
 
   def search
@@ -42,6 +33,15 @@ class ComponentsController < ApplicationController
   end
 
   def popover
+  end
+
+  def popover_fetch
+  end
+
+  def popover_menu
+    return head(:internal_server_error) if params[:fail]
+
+    render layout: false
   end
 
   def modal
@@ -85,11 +85,5 @@ class ComponentsController < ApplicationController
   end
 
   def indicator
-  end
-
-  private
-
-  def parse_date(key)
-    Date.parse(params[key]) if params[key]
   end
 end

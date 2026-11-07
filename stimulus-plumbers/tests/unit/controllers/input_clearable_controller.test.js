@@ -65,8 +65,7 @@ describe('InputClearableController', () => {
   describe('input event', () => {
     beforeEach(async () => {
       await setup(`
-        <div data-controller="input-clearable"
-             data-action="input->input-clearable#draw">
+        <div data-controller="input-clearable">
           <input type="search" value="" data-input-clearable-target="input">
           <button type="button" aria-label="Clear search"
                   data-input-clearable-target="clear"
@@ -171,6 +170,22 @@ describe('InputClearableController', () => {
       input.dispatchEvent(event)
       expect(input.value).toBe('hello')
     })
+
+    it('leaves Escape to an expanded combobox', () => {
+      const input = document.querySelector('[data-input-clearable-target="input"]')
+      input.setAttribute('aria-expanded', 'true')
+      const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+      input.dispatchEvent(event)
+      expect(input.value).toBe('hello')
+      expect(event.defaultPrevented).toBe(false)
+    })
+
+    it('leaves an Escape that a combobox already handled', () => {
+      const input = document.querySelector('[data-input-clearable-target="input"]')
+      input.addEventListener('keydown', (event) => event.preventDefault(), { capture: true })
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+      expect(input.value).toBe('hello')
+    })
   })
 
   describe('missing targets', () => {
@@ -179,7 +194,7 @@ describe('InputClearableController', () => {
     })
 
     it('does not throw on connect when targets are absent', () => {
-      expect(() => getController().draw()).not.toThrow()
+      expect(() => getController().connect()).not.toThrow()
     })
 
     it('does not throw when clear() is called without targets', () => {

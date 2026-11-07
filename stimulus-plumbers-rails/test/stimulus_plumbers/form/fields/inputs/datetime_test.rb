@@ -94,22 +94,33 @@ class DatetimeTest < ActionView::TestCase
                  build_date_combobox.at_css("input[type='hidden'][name='sign_in_form[birthday]']")["value"]
   end
 
-  def test_date_sets_combobox_value_data_from_model_value
+  def test_date_fills_the_input_from_model_value
     @form.define_singleton_method(:birthday) { "2000-06-15" }
 
-    assert_css build_date_combobox, "[data-input-combobox-value-value='2000-06-15']"
+    assert_equal "2000-06-15", build_date_combobox.at_css("input[role='combobox']")["value"]
   end
 
   def test_date_renders_error_message_with_error_override
     assert_includes build_date_combobox(error: "Invalid date").text, "Invalid date"
   end
 
-  def test_date_calendar_outlet_wired_to_calendar_element
-    doc             = build_date_combobox
-    date_controller = doc.at_css("[data-controller~='combobox-date']")
-    calendar        = doc.at_css("[data-controller~='calendar-month']")
+  def test_date_input_is_labelled_and_described_by_the_field
+    @form.errors.add(:birthday, "is invalid")
+    input = build_date_combobox(hint: "Select your birthday").at_css("input[role='combobox']")
 
-    assert_equal "##{calendar["id"]}", date_controller["data-combobox-date-calendar-month-outlet"]
+    assert_equal "sign_in_form_birthday", input["id"]
+    assert_equal "sign_in_form_birthday_label", input["aria-labelledby"]
+    assert_equal "sign_in_form_birthday_hint sign_in_form_birthday_error", input["aria-describedby"]
+    assert_equal "true", input["aria-invalid"]
+  end
+
+  def test_date_forwards_format_and_min
+    doc = build_date_combobox(format: { month: "long" }, min: "2026-09-03")
+
+    root = doc.at_css("[data-controller~='combobox-date']")
+
+    assert_equal({ "locale" => "en", "month" => "long" }, JSON.parse(root["data-input-formatter-options-value"]))
+    assert_css doc, "[data-controller='calendar'][data-calendar-min-value='2026-09-03']"
   end
 
   def test_time_native_renders_time_input
@@ -168,14 +179,14 @@ class DatetimeTest < ActionView::TestCase
 
     assert_css build_time_combobox, "ul[aria-label='Hour']   li[data-value='2'][aria-selected='true']"
     assert_css build_time_combobox, "ul[aria-label='Minute'] li[data-value='30'][aria-selected='true']"
-    assert_css build_time_combobox, "ul[aria-label='Period'] li[data-value='PM'][aria-selected='true']"
+    assert_css build_time_combobox, "ul[aria-label='AM/PM'] li[data-value='PM'][aria-selected='true']"
   end
 
-  def test_time_format_h24_renders_two_drums
-    doc = build_time_combobox(format: :h24)
+  def test_time_format_h23_renders_two_columns
+    doc = build_time_combobox(format: { hourCycle: "h23" })
 
     assert_equal 2, doc.css("ul[role='listbox']").length
-    assert_no_css doc, "ul[aria-label='Period']"
+    assert_no_css doc, "ul[aria-label='AM/PM']"
   end
 
   def test_time_step_15_reduces_minute_options

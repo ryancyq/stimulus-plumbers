@@ -4,27 +4,17 @@ class ComponentsController < ApplicationController
   def profile
   end
 
-  def calendar_stimulus
-    year               = params[:year]&.to_i
-    month              = params[:month]&.to_i
-    @date              = year && month ? Date.new(year, month, 1) : Date.today
-    @show_other_months = params[:show_other_months] == "true"
-    @since             = parse_date(:since)
-    @till              = parse_date(:till)
-  end
-
-  def calendar_turbo
-    @view              = params[:view]
-    @selectable        = params[:selectable] == "true"
-    @show_other_months = params[:show_other_months] == "true"
-    @date          = month_date_from_params(:year, :month) || Date.today
-    @today         = full_date_from_params(:today_year, :today_month, :today_day) || Date.today
-    @selected_date = parse_date(:selected_date)
-    @since         = parse_date(:since)
-    @till          = parse_date(:till)
+  def calendar_inline
   end
 
   def combobox
+  end
+
+  CITIES = [%w[Seoul se], %w[Seville sv], %w[Singapore sg], %w[Stockholm st], %w[Sydney sy]].freeze
+
+  def combobox_cities
+    query   = params[:q].to_s.downcase
+    @cities = CITIES.select { |label, _| label.downcase.start_with?(query) }
   end
 
   def search
@@ -58,6 +48,15 @@ class ComponentsController < ApplicationController
   end
 
   def popover_turbo
+  end
+
+  def popover_fetch
+  end
+
+  def popover_menu
+    return head(:internal_server_error) if params[:fail]
+
+    render layout: false
   end
 
   def popover_frame
@@ -94,24 +93,5 @@ class ComponentsController < ApplicationController
   end
 
   def timeline
-  end
-
-  private
-
-  def parse_date(key)
-    Date.parse(params[key]) if params[key]
-  end
-
-  def month_date_from_params(year_key, month_key)
-    year  = params[year_key]&.to_i
-    month = params[month_key]&.to_i
-    Date.new(year, month, 1) if year && month
-  end
-
-  def full_date_from_params(year_key, month_key, day_key)
-    year  = params[year_key]&.to_i
-    month = params[month_key]&.to_i
-    day   = params[day_key]&.to_i
-    Date.new(year, month, day) if year && month && day
   end
 end

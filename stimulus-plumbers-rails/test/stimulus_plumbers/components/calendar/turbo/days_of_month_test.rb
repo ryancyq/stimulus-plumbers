@@ -3,197 +3,76 @@
 require "test_helper"
 
 class CalendarTurboDaysOfMonthTest < ActionView::TestCase
-  def renderer(date: Date.new(2026, 4, 1), **opts)
-    StimulusPlumbers::Components::Calendar::Turbo::DaysOfMonth.new(self, date: date, **opts)
+  def render_month(**kwargs)
+    html = StimulusPlumbers::Components::Calendar.new(self).render(
+      navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), first_day_of_week: 0, **kwargs
+    )
+    parse_html(html)
   end
 
-  def cells_for_month(doc, month)
-    doc.css("[role='gridcell']").select do |el|
-      el.at_css("time")&.[]("datetime")&.then { |d| Date.parse(d).month == month }
-    end
+  def test_grid_is_labelled_by_the_month_heading
+    doc = render_month
+
+    assert_equal "September 2026", doc.at_css("h2#cal_heading").text
+    assert_css doc, "table[role='grid'][aria-labelledby='cal_heading'][data-calendar-target='grid']"
   end
 
-  def test_renders_rowgroup
-    assert_css parse_html(renderer.render), "[role='rowgroup']"
+  def test_weekday_headers_start_on_the_first_day_of_the_week_with_full_names
+    headers = render_month(first_day_of_week: 1).css("thead th[scope='col']")
+
+    assert_equal %w[Mon Tue Wed Thu Fri Sat Sun], headers.map(&:text)
+    assert_equal "Monday", headers.first["abbr"]
   end
 
-  def test_today_has_aria_current_date
-    html = renderer(today: Date.new(2026, 4, 15)).render
+  def test_each_day_is_a_button_with_a_date_key_and_full_label
+    day = render_month.at_css("td[role='gridcell'] button[data-date='2026-09-15']")
 
-    assert_includes html, 'aria-current="date"'
+    assert_equal "15", day.text
+    assert_equal "September 15, 2026", day["aria-label"]
+    assert_equal "day", day["data-calendar-target"]
   end
 
-  def test_only_one_cell_has_tabindex_zero
-    html = renderer(today: Date.new(2026, 4, 15)).render
+  def test_exactly_one_day_is_in_the_tab_sequence
+    doc = render_month(selected: Date.new(2026, 9, 15))
 
-    assert_equal 1, html.scan('tabindex="0"').length
+    assert_equal(["2026-09-15"], doc.css("[tabindex='0']").map { |day| day["data-date"] })
   end
 
-  def test_renders_28_gridcells_for_february_without_padding
-    # Feb 2026: starts Sunday, 28 days, no padding
-    html = renderer(date: Date.new(2026, 2, 1)).render
+  def test_a_selectable_month_marks_the_selected_cell
+    doc = render_month(selected: Date.new(2026, 9, 15), selectable: true)
 
-    assert_equal 28, html.scan('role="gridcell"').length
+    assert_css doc, "td[aria-selected='true'] [data-date='2026-09-15']"
+    assert_css doc, "td[aria-selected='false'] [data-date='2026-09-16']"
+    assert_no_css doc, "table[aria-readonly]"
   end
 
-  def test_renders_35_gridcells_for_april_with_padding
-    # Apr 2026: 3 prev + 30 current + 2 next = 35
-    html = renderer.render
+  def test_a_display_only_month_is_read_only
+    doc = render_month(selected: Date.new(2026, 9, 15))
 
-    assert_equal 35, html.scan('role="gridcell"').length
+    assert_css doc, "table[aria-readonly='true']"
+    assert_no_css doc, "td[aria-selected]"
   end
 
-  def test_renders_42_gridcells_for_six_week_month
-    # Jul 2023: 6 prev + 31 current + 5 next = 42
-    html = renderer(date: Date.new(2023, 7, 1), show_other_months: true).render
+  def test_today_is_marked_current_independently_of_selection
+    doc = render_month(selected: Date.new(2026, 9, 15))
 
-    assert_equal 42, html.scan('role="gridcell"').length
+    assert_css doc, "[data-date='2026-09-10'][aria-current='date']"
+    assert_no_css doc, "[data-date='2026-09-15'][aria-current]"
   end
 
-  def test_padding_cells_are_aria_hidden_by_default
-    html = renderer.render
+  def test_constrained_days_are_unavailable
+    doc = render_month(min: "2026-09-05", disabled_weekdays: [0])
 
-    assert_not_includes html, 'aria-disabled="true"'
-    assert_includes html, 'aria-hidden="true"'
+    assert_css doc, "[data-date='2026-09-04'][aria-disabled='true']"
+    assert_css doc, "[data-date='2026-09-13'][aria-disabled='true']"
+    assert_no_css doc, "[data-date='2026-09-14'][aria-disabled]"
   end
 
-  def test_padding_cells_are_disabled_when_show_other_months
-    html = renderer(show_other_months: true).render
+  def test_adjacent_month_days_are_empty_cells_unless_shown
+    hidden = render_month
+    shown  = render_month(show_other_months: true)
 
-    assert_includes     html, 'aria-disabled="true"'
-    assert_not_includes html, 'aria-hidden="true"'
-  end
-
-  def test_current_month_cells_are_spans_when_not_selectable
-    html = renderer(date: Date.new(2026, 2, 1)).render
-
-    assert_not_includes html, "<button"
-  end
-
-  def test_current_month_cells_are_buttons_when_selectable
-    html = renderer(date: Date.new(2026, 2, 1), selectable: true).render
-
-    assert_includes     html, "<button"
-    assert_not_includes html, '<span role="gridcell"'
-  end
-
-  def test_selectable_cells_have_aria_selected
-    assert_includes renderer(selectable: true).render, "aria-selected="
-  end
-
-  def test_non_selectable_cells_omit_aria_selected
-    assert_not_includes renderer.render, "aria-selected="
-  end
-
-  def test_selected_date_has_aria_selected_true
-    html = renderer(selectable: true, selected_date: Date.new(2026, 4, 10)).render
-
-    assert_includes html, 'aria-selected="true"'
-  end
-
-  def test_non_selected_cells_have_aria_selected_false
-    # Feb 2026: 28 days, no padding — 1 selected, 27 unselected
-    html = renderer(
-      date:          Date.new(2026, 2, 1),
-      today:         Date.new(2026, 2, 1),
-      selectable:    true,
-      selected_date: Date.new(2026, 2, 10)
-    ).render
-
-    assert_equal 1,  html.scan('aria-selected="true"').length
-    assert_equal 27, html.scan('aria-selected="false"').length
-  end
-
-  def test_merges_custom_class
-    assert_includes renderer.render(class: "my-days"), "my-days"
-  end
-
-  # Current-month range (since/till)
-  def test_current_month_out_of_range_cell_is_disabled_span_when_selectable
-    # Apr 2026: days 21-30 are past till=Apr 20, so they're disabled spans even with selectable=true
-    html = renderer(selectable: true, till: Date.new(2026, 4, 20)).render
-    late_april = cells_for_month(parse_html(html), 4).select { |el| el.at_css("time").text.to_i > 20 }
-
-    assert_equal 10, late_april.length
-    assert(late_april.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
-  end
-
-  def test_current_month_in_range_cells_are_buttons_when_selectable
-    # Apr 2026: days 1-20 within till=Apr 20 render as buttons
-    html = renderer(selectable: true, till: Date.new(2026, 4, 20)).render
-    doc  = parse_html(html)
-    early_april = cells_for_month(doc, 4).select { |el| Date.parse(el.at_css("time")["datetime"]).day <= 20 }
-
-    assert_equal 20, early_april.length
-    assert(early_april.all? { |el| el.name == "button" })
-  end
-
-  def test_non_selectable_out_of_range_cells_are_disabled_spans
-    # Even without selectable, out-of-range current-month cells have aria-disabled
-    html = renderer(till: Date.new(2026, 4, 20)).render
-    doc  = parse_html(html)
-    late_april = cells_for_month(doc, 4).select { |el| Date.parse(el.at_css("time")["datetime"]).day > 20 }
-
-    assert(late_april.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
-  end
-
-  def test_current_month_cells_before_since_are_disabled
-    # Apr 2026: days 1-4 before since=Apr 5
-    html = renderer(selectable: true, since: Date.new(2026, 4, 5)).render
-    early_april = cells_for_month(parse_html(html), 4).select { |el| el.at_css("time").text.to_i < 5 }
-
-    assert_equal 4, early_april.length
-    assert(early_april.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
-  end
-
-  # Outside day navigation
-  def test_outside_day_is_button_when_selectable_and_show_other_months
-    # Apr 2026: 3 prev-month days (Mar 29-31) + 2 next-month days (May 1-2)
-    html = renderer(selectable: true, show_other_months: true).render
-
-    doc = parse_html(html)
-    outside_buttons = doc.css("button[role='gridcell'][aria-selected='false']").select do |btn|
-      btn.at_css("time")&.[]("datetime")&.then { |d| Date.parse(d) }&.then { |d| d.month != 4 }
-    end
-
-    assert_equal 5, outside_buttons.length
-  end
-
-  def test_outside_day_has_no_aria_disabled_when_selectable_and_in_range
-    html = renderer(selectable: true, show_other_months: true).render
-
-    doc = parse_html(html)
-    outside_buttons = doc.css("button[role='gridcell']").select do |btn|
-      btn.at_css("time")&.[]("datetime")&.then { |d| Date.parse(d) }&.then { |d| d.month != 4 }
-    end
-
-    outside_buttons.each do |btn|
-      assert_nil btn["aria-disabled"]
-    end
-  end
-
-  def test_outside_day_is_span_with_aria_disabled_when_not_selectable
-    html = renderer(show_other_months: true).render
-
-    assert_not_includes html, "<button"
-    assert_includes html, 'aria-disabled="true"'
-  end
-
-  def test_outside_day_beyond_till_is_disabled_even_when_selectable
-    # Apr 2026: May 1-2 are outside trailing days; set till = Apr 30
-    doc = parse_html(renderer(selectable: true, show_other_months: true, till: Date.new(2026, 4, 30)).render)
-    may_cells = cells_for_month(doc, 5)
-
-    assert(may_cells.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
-    assert_equal 2, may_cells.length
-  end
-
-  def test_outside_day_before_since_is_disabled_even_when_selectable
-    # Apr 2026: Mar 29-31 are leading outside days; set since = Apr 1
-    doc = parse_html(renderer(selectable: true, show_other_months: true, since: Date.new(2026, 4, 1)).render)
-    march_cells = cells_for_month(doc, 3)
-
-    assert(march_cells.all? { |el| el.name == "span" && el["aria-disabled"] == "true" })
-    assert_equal 3, march_cells.length
+    assert_no_css hidden, "[data-date='2026-08-30']"
+    assert_css shown, "[data-date='2026-08-30'][data-outside='true']"
   end
 end

@@ -1,11 +1,13 @@
 import { test, expect } from "@playwright/test";
+import { settled } from "../../../support/playwright.js";
 
 const FIXED_DATE = new Date("2024-02-29T12:00:00Z");
 
 // Union the section and its open popover panel into a single clip rect.
 async function screenshotWithPanel(page, sectionLocator, filename) {
-  const panel = sectionLocator.locator("[data-popover-target='panel']");
+  const panel = sectionLocator.locator("[popover]");
   await panel.waitFor({ state: "visible" });
+  await expect(panel).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
   const sBox = await sectionLocator.boundingBox();
   const pBox = await panel.boundingBox();
   const x = Math.min(sBox.x, pBox.x);
@@ -60,6 +62,15 @@ test.describe("combobox", () => {
     await screenshotWithPanel(page, section, "time-open.png");
   });
 
+  test("time — selected, hour column focused", async ({ page }) => {
+    const section = page.locator("#combobox-time-selected");
+    const control = section.getByRole("combobox", { name: "Standup" });
+    await control.click();
+    await control.press("ArrowDown");
+    await expect(section.getByRole("listbox", { name: "Hour" })).toBeFocused();
+    await screenshotWithPanel(page, section, "time-selected-focused.png");
+  });
+
   test("dropdown — open", async ({ page }) => {
     const section = page.locator("#combobox-dropdown");
     await section.getByRole("combobox", { name: "Country" }).click();
@@ -72,22 +83,56 @@ test.describe("combobox", () => {
     await screenshotWithPanel(page, section, "typeahead-open.png");
   });
 
-  test("typeahead — loading", async ({ page }) => {
-    const section = page.locator("#combobox-typeahead");
-    await section.getByRole("combobox", { name: "City" }).click();
-    await section
-      .locator("[data-combobox-dropdown-target='loading']")
-      .evaluate((el) => el.removeAttribute("hidden"));
-    await screenshotWithPanel(page, section, "typeahead-loading.png");
+  test("dropdown — active option", async ({ page }) => {
+    const section = page.locator("#combobox-dropdown");
+    const control = section.getByRole("combobox", { name: "Country" });
+    await control.click();
+    await control.press("ArrowDown");
+    await expect(
+      section.locator("[role='option'][aria-selected='true']"),
+    ).toHaveCount(1);
+    await screenshotWithPanel(page, section, "dropdown-active.png");
   });
 
-  test("typeahead — empty", async ({ page }) => {
+  test("typeahead — filtered", async ({ page }) => {
     const section = page.locator("#combobox-typeahead");
-    await section.getByRole("combobox", { name: "City" }).click();
-    await section
-      .locator("[data-combobox-dropdown-target='empty']")
-      .evaluate((el) => el.removeAttribute("hidden"));
-    await screenshotWithPanel(page, section, "typeahead-empty.png");
+    await section.getByRole("combobox", { name: "City" }).fill("Se");
+    await expect(section.getByRole("option")).toHaveCount(1);
+    await screenshotWithPanel(page, section, "typeahead-filtered.png");
+  });
+
+  test("typeahead — no results", async ({ page }) => {
+    const section = page.locator("#combobox-typeahead");
+    await section.getByRole("combobox", { name: "City" }).fill("zzz");
+    await expect(section.getByRole("status")).toHaveText("No results");
+    await screenshotWithPanel(page, section, "typeahead-no-results.png");
+  });
+
+  test("typeahead remote — results", async ({ page }) => {
+    const section = page.locator("#combobox-typeahead-remote");
+    await section.getByRole("combobox", { name: "Remote city" }).fill("Se");
+    await expect(section.getByRole("option")).toHaveCount(2);
+    await screenshotWithPanel(page, section, "typeahead-remote-results.png");
+  });
+
+  test("typeahead remote — loading", async ({ page }) => {
+    await page.route("**/combobox/cities?*", () => {});
+    const section = page.locator("#combobox-typeahead-remote");
+    await section.getByRole("combobox", { name: "Remote city" }).fill("Se");
+    await expect(section.getByRole("status")).toHaveText("Loading…");
+    await screenshotWithPanel(page, section, "typeahead-remote-loading.png");
+  });
+
+  test("typeahead remote — error", async ({ page }) => {
+    await page.route("**/combobox/cities?*", (route) =>
+      route.fulfill({ status: 500, body: "Server error" }),
+    );
+    const section = page.locator("#combobox-typeahead-remote");
+    await section.getByRole("combobox", { name: "Remote city" }).fill("Se");
+    await expect(section.getByRole("status")).toHaveText(
+      "Results could not be loaded",
+    );
+    await screenshotWithPanel(page, section, "typeahead-remote-error.png");
   });
 
   test("preselected — closed", async ({ page }) => {
@@ -100,6 +145,16 @@ test.describe("combobox", () => {
     const section = page.locator("#combobox-preselected");
     await section.getByRole("combobox", { name: "Country" }).click();
     await screenshotWithPanel(page, section, "preselected-open.png");
+  });
+
+  test("dropdown grouped — open", async ({ page }) => {
+    const section = page.locator("#combobox-dropdown-grouped");
+    // Centered; the panel opens below the field.
+    await section.evaluate((element) =>
+      element.scrollIntoView({ block: "center" }),
+    );
+    await section.getByRole("combobox", { name: "Country" }).click();
+    await screenshotWithPanel(page, section, "dropdown-grouped-open.png");
   });
 
   test("disabled option — open", async ({ page }) => {
@@ -138,9 +193,18 @@ test.describe("combobox", () => {
     );
   });
 
+  test("dropdown error — focused", async ({ page }) => {
+    const section = page.locator("#combobox-dropdown-error");
+    await section.getByRole("combobox").focus();
+    await expect(
+      section.locator("[data-controller~='combobox']"),
+    ).not.toHaveCSS("box-shadow", "none");
+    await expect(section).toHaveScreenshot("dropdown-error-focused.png");
+  });
+
   test("dropdown error — open", async ({ page }) => {
     const section = page.locator("#combobox-dropdown-error");
-    await section.locator("input[role='combobox']").click();
+    await section.getByRole("combobox").click();
     await screenshotWithPanel(page, section, "dropdown-error-open.png");
   });
 
@@ -152,7 +216,132 @@ test.describe("combobox", () => {
 
   test("typeahead error — open", async ({ page }) => {
     const section = page.locator("#combobox-typeahead-error");
-    await section.locator("input[role='combobox']").click();
+    await section.getByRole("combobox").click();
     await screenshotWithPanel(page, section, "typeahead-error-open.png");
+  });
+
+  test("date selected — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-date-selected")).toHaveScreenshot(
+      "date-selected-closed.png",
+    );
+  });
+
+  test("date selected — open from the icon", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    await section.locator("#deadline + [aria-hidden='true']").click();
+    await screenshotWithPanel(page, section, "date-selected-open.png");
+  });
+
+  test("date selected — calendar focused", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    await section.getByRole("combobox", { name: "Deadline" }).click();
+    await page.keyboard.press("ArrowDown");
+    await expect(section.locator("[data-date='2024-02-15']")).toBeFocused();
+    await screenshotWithPanel(
+      page,
+      section,
+      "date-selected-calendar-focused.png",
+    );
+  });
+
+  test("date selected — next month", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    await section.getByRole("combobox", { name: "Deadline" }).click();
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("PageDown");
+    await expect(section.locator("[data-date='2024-03-15']")).toBeFocused();
+    await screenshotWithPanel(page, section, "date-selected-next-month.png");
+  });
+
+  test("date selected — tabbed out", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    const input = section.getByRole("combobox", { name: "Deadline" });
+    await input.click();
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("Tab");
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(section).toHaveScreenshot("date-selected-tabbed-out.png");
+  });
+
+  test("date selected — chosen", async ({ page }) => {
+    const section = page.locator("#combobox-date-selected");
+    const input = section.getByRole("combobox", { name: "Deadline" });
+    await input.click();
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("Enter");
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(input).toHaveValue("February 16, 2024");
+    await expect(section).toHaveScreenshot("date-selected-chosen.png");
+  });
+
+  test("date in a modal — open", async ({ page }) => {
+    const section = page.locator("#combobox-date-modal");
+    const dialog = section.locator("dialog");
+    await section.getByRole("button", { name: "Plan a trip" }).click();
+    await expect(dialog).toHaveAttribute("open", "");
+    await settled(section);
+    const input = dialog.getByRole("combobox", { name: "Departure" });
+    await input.focus();
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await page.keyboard.press("ArrowDown");
+    await settled(section);
+    await screenshotWithPanel(page, dialog, "date-modal-open.png");
+  });
+
+  test("time in a modal — open", async ({ page }) => {
+    const section = page.locator("#combobox-time-modal");
+    const dialog = section.locator("dialog");
+    await section.getByRole("button", { name: "Book a call" }).click();
+    await expect(dialog).toHaveAttribute("open", "");
+    await settled(section);
+    const input = dialog.getByRole("combobox", { name: "Call" });
+    await input.focus();
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await page.keyboard.press("ArrowDown");
+    await settled(section);
+    await screenshotWithPanel(page, dialog, "time-modal-open.png");
+  });
+
+  test("modal — closed", async ({ page }) => {
+    await expect(page.locator("#combobox-modal")).toHaveScreenshot(
+      "modal-closed.png",
+    );
+  });
+
+  test("modal — open", async ({ page }) => {
+    const section = page.locator("#combobox-modal");
+    const dialog = section.locator("dialog");
+    await section
+      .getByRole("button", { name: "Choose shipping country" })
+      .click();
+    await expect(dialog).toHaveAttribute("open", "");
+    await settled(section);
+    await dialog.getByRole("combobox", { name: "Shipping country" }).click();
+    await dialog.locator("[popover]").waitFor({ state: "visible" });
+    await settled(section);
+    await expect(page).toHaveScreenshot("modal-open.png");
+  });
+});
+
+test.describe("combobox — forced colors", () => {
+  test.skip(
+    ({ browserName }) => browserName !== "chromium",
+    "Only Chromium emulates forced colors",
+  );
+
+  test("dropdown — active option", async ({ page }) => {
+    await page.emulateMedia({ forcedColors: "active" });
+    const section = page.locator("#combobox-dropdown");
+    const control = section.getByRole("combobox", { name: "Country" });
+    await control.click();
+    await control.press("ArrowDown");
+    const active = section.locator("[role='option'][aria-selected='true']");
+    await expect(active).toHaveCSS("outline-style", "solid");
+    await screenshotWithPanel(
+      page,
+      section,
+      "dropdown-active-forced-colors.png",
+    );
   });
 });

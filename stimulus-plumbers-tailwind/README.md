@@ -58,7 +58,7 @@ bin/rails stimulus_plumbers:tailwind:install
 |--------|------------|
 | `Tailwind::Avatar` | Avatar |
 | `Tailwind::Button` | Button |
-| `Tailwind::Calendar` | Calendar grid, date picker |
+| `Tailwind::Calendar` | Calendar grid |
 | `Tailwind::Card` | Card |
 | `Tailwind::Combobox` | Combobox (date, time, dropdown, typeahead) |
 | `Tailwind::Modal` | Native dialog modal and Turbo modal |

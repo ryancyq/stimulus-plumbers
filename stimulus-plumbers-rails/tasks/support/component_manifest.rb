@@ -2,6 +2,7 @@
 
 require "pathname"
 require "active_support/core_ext/enumerable"
+require_relative "ruby_source"
 
 module StimulusPlumbers
   # Dev/CI/release-only: scans this gem's lib/ for data-action/-target/-value wiring
@@ -15,6 +16,8 @@ module StimulusPlumbers
   # controllers.manifest.json): dynamic identifiers that can't be statically
   # resolved to a constant (e.g. a local variable) are silently skipped, not
   # flagged — this generator produces data for a manifest, not developer warnings.
+  # A class's `controller` or `self.class::STIMULUS_CONTROLLER` resolves to the
+  # STIMULUS_CONTROLLER of the class and each subclass that defines one.
   class ComponentManifest
     RAILS_LIB = Pathname.new(__dir__).join("../../lib").expand_path
 
@@ -25,12 +28,14 @@ module StimulusPlumbers
       \#(?<method>[a-zA-Z_]\w*)
     /x
 
+    INHERITED_CONTROLLER = %r{\A(?:controller|self\.class::STIMULUS_CONTROLLER)\z}
     TARGET_RE = /(?<q1>["'])(?<id>[\w-]+|\#\{[^}]*\})-target\k<q1>\s*(?:=>|:)\s*(?<q2>["'])(?<names>[^"']*)\k<q2>/
     VALUE_KEY_RE = %r{["'](?<key>[\w-]+-value)["']}
 
     class << self
       def call(known_identifiers:)
-        const_table = build_const_table(RAILS_LIB)
+        consts = build_const_table(RAILS_LIB)
+        const_table = consts.merge(inherited_controllers(RAILS_LIB, consts))
         manifest = known_identifiers.index_with { { "actions" => [], "listens" => [], "targets" => [], "values" => [] } }
 
         RAILS_LIB.glob("**/*.rb").each { |file| scan_file(file, const_table, known_identifiers, manifest) }
@@ -41,7 +46,7 @@ module StimulusPlumbers
       private
 
       def scan_file(file, const_table, known_identifiers, manifest)
-        stacks = nesting_stack(file)
+        stacks = RubySource.nesting_stack(file)
         file.readlines.each_with_index do |line, idx|
           nesting = stacks[idx]
           extract_actions(line, nesting, const_table, manifest)
@@ -52,27 +57,11 @@ module StimulusPlumbers
 
       # ─── Shared with bin/audit-action-contract's constant-resolution approach ──
 
-      def nesting_stack(file)
-        stack = []
-        file.readlines.map do |line|
-          update_nesting_stack(stack, line)
-          stack.map { |(_, name)| name }
-        end
-      end
-
-      def update_nesting_stack(stack, line)
-        if (m = line.match(%r{^(\s*)(?:class|module)\s+(\w+)}))
-          stack << [m[1].size, m[2]]
-        elsif (m = line.match(%r{^(\s*)end\s*$})) && stack.any? && stack.last[0] == m[1].size
-          stack.pop
-        end
-      end
-
       def build_const_table(root)
         table = {}
         root.glob("**/*.rb").each do |file|
           lines = file.readlines
-          stacks = nesting_stack(file)
+          stacks = RubySource.nesting_stack(file)
           lines.each_with_index do |line, idx|
             next unless (m = line.match(%r{^\s*([A-Z][A-Z0-9_]*)\s*=\s*"([^"]+)"}))
 
@@ -82,17 +71,35 @@ module StimulusPlumbers
         table
       end
 
-      def resolve(identifier, const_table, nesting)
-        return identifier unless identifier.start_with?('#{')
+      # "<Class>::<inherited>" => the STIMULUS_CONTROLLER of Class and each subclass that defines one.
+      def inherited_controllers(root, consts)
+        RubySource.ancestors(root).each_with_object({}) do |(name, ancestors), table|
+          id = consts["#{name}::STIMULUS_CONTROLLER"]
+          [name, *ancestors].each { |base| (table["#{base}::<inherited>"] ||= []) << id } if id
+        end
+      end
+
+      # Identifiers an interpolation names: one constant, or each subclass's controller.
+      def resolve_all(identifier, const_table, nesting)
+        return [identifier] unless identifier.start_with?('#{')
 
         inner = identifier[2..-2]
-        return nil if inner =~ %r{^[a-z]}
+        return inherited_ids(nesting, const_table) if inner.match?(INHERITED_CONTROLLER)
+        return [] if inner =~ %r{^[a-z]}
 
         nesting.size.downto(0) do |i|
           key = (nesting.first(i) + [inner]).join("::")
-          return const_table[key] if const_table.key?(key)
+          return [const_table[key]] if const_table.key?(key)
         end
-        nil
+        []
+      end
+
+      def inherited_ids(nesting, const_table)
+        nesting.size.downto(1) do |i|
+          ids = const_table["#{nesting.first(i).join("::")}::<inherited>"]
+          return ids if ids
+        end
+        []
       end
 
       # ─── Extraction ─────────────────────────────────────────────────────────
@@ -106,28 +113,28 @@ module StimulusPlumbers
       end
 
       def extract_action_token(token, nesting, const_table, manifest)
-        target = resolve(token[:target], const_table, nesting)
-        return if target.nil? || !manifest.key?(target)
+        targets = resolve_all(token[:target], const_table, nesting).select { |id| manifest.key?(id) }
+        return if targets.empty?
 
         # `src:event->target#method` is a listen on src *and* an action on target.
         extract_listen_token(token, nesting, const_table, manifest) if token[:src]
-        manifest[target]["actions"] << token[:method]
+        targets.each { |target| manifest[target]["actions"] << token[:method] }
       end
 
       def extract_listen_token(token, nesting, const_table, manifest)
-        src = resolve(token[:src], const_table, nesting)
-        return unless src && manifest.key?(src) && token[:event]
+        return unless token[:event]
 
-        manifest[src]["listens"] << token[:event]
+        resolve_all(token[:src], const_table, nesting).each do |src|
+          manifest[src]["listens"] << token[:event] if manifest.key?(src)
+        end
       end
 
       def extract_targets(line, nesting, const_table, manifest)
         line.scan(TARGET_RE) do
           m = Regexp.last_match
-          id = resolve(m[:id], const_table, nesting)
-          next unless id && manifest.key?(id)
-
-          manifest[id]["targets"].concat(m[:names].split)
+          resolve_all(m[:id], const_table, nesting).each do |id|
+            manifest[id]["targets"].concat(m[:names].split) if manifest.key?(id)
+          end
         end
       end
 

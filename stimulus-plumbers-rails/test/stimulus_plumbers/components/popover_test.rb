@@ -260,6 +260,16 @@ end
 class PopoverBuildTest < ActionView::TestCase
   include PopoverTestHelpers
 
+  def test_build_panel_can_leave_the_panel_to_the_callers_controller
+    html = renderer.build(panel_id: "p", mode: :manual) do |popover|
+      popover.build_panel(popover_target: false) { |attrs| content_tag(:div, "Content", **attrs) }
+    end
+    panel = parse_html(html).at_css("#p")
+
+    assert_equal "manual", panel["popover"]
+    assert_nil panel["data-popover-target"]
+  end
+
   def test_build_returns_native_content_without_wrapper
     doc = parse_html(
       renderer.build(panel_id: "panel") do |popover|

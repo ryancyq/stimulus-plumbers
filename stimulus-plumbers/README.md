@@ -26,23 +26,21 @@ Register the controllers you need with your Stimulus application:
 ```javascript
 import { Application } from '@hotwired/stimulus'
 import {
-  InputComboboxController,
+  ComboboxController,
+  ComboboxTurboController,
+  ComboboxFetchController,
   InputFormatterController,
   InputClearableController,
   InputRevealableController,
   ComboboxDateController,
   ComboboxTimeController,
-  ComboboxDropdownController,
-  CalendarMonthController,
-  CalendarMonthSelectorController,
-  CalendarYearController,
-  CalendarYearSelectorController,
-  CalendarDecadeController,
-  CalendarDecadeSelectorController,
+  CalendarController,
+  CalendarTurboController,
   ChecklistController,
   ModalController,
   ModalTurboController,
   PopoverController,
+  PopoverFetchController,
   ProgressController,
   DismisserController,
   FlipperController,
@@ -56,23 +54,21 @@ import {
 
 const application = Application.start()
 
-application.register('input-combobox',           InputComboboxController)
+application.register('combobox',                 ComboboxController)
+application.register('combobox-turbo',           ComboboxTurboController)
+application.register('combobox-fetch',           ComboboxFetchController)
 application.register('input-formatter',          InputFormatterController)
 application.register('input-clearable',          InputClearableController)
 application.register('input-revealable',         InputRevealableController)
 application.register('combobox-date',            ComboboxDateController)
 application.register('combobox-time',            ComboboxTimeController)
-application.register('combobox-dropdown',        ComboboxDropdownController)
-application.register('calendar-month',            CalendarMonthController)
-application.register('calendar-month-selector',   CalendarMonthSelectorController)
-application.register('calendar-year',             CalendarYearController)
-application.register('calendar-year-selector',    CalendarYearSelectorController)
-application.register('calendar-decade',           CalendarDecadeController)
-application.register('calendar-decade-selector',  CalendarDecadeSelectorController)
+application.register('calendar',                 CalendarController)
+application.register('calendar-turbo',           CalendarTurboController)
 application.register('checklist',                ChecklistController)
 application.register('modal',                    ModalController)
 application.register('modal-turbo',               ModalTurboController)
 application.register('popover',                  PopoverController)
+application.register('popover-fetch',            PopoverFetchController)
 application.register('progress',                 ProgressController)
 application.register('dismisser',                DismisserController)
 application.register('flipper',                  FlipperController)
@@ -88,23 +84,21 @@ application.register('visibility',               VisibilityController)
 
 | Controller | Description | Docs |
 |-----------|-------------|------|
-| `input-combobox` | Wrapper: trigger, popover, hidden value | [docs/component/combobox.md](docs/component/combobox.md#input-combobox) |
+| `combobox` | Listbox combobox: keyboard, active option, commit, and dismissal on a manual popover | [docs/component/combobox.md](docs/component/combobox.md#combobox) |
+| `combobox-turbo` | Remote results for `combobox` through a Turbo Frame | [docs/component/combobox.md](docs/component/combobox.md#combobox-turbo) |
+| `combobox-fetch` | Remote results for `combobox` through `fetch`, without Turbo | [docs/component/combobox.md](docs/component/combobox.md#combobox-fetch) |
 | `input-formatter` | Formats and displays values | [docs/component/input-formatter.md](docs/component/input-formatter.md) |
 | `input-clearable` | Input with clear button | [docs/component/input-clearable.md](docs/component/input-clearable.md) |
 | `input-revealable` | Obscured input with reveal toggle | [docs/component/input-revealable.md](docs/component/input-revealable.md) |
-| `combobox-date` | Calendar grid date picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-date) |
-| `combobox-time` | Drum/scroll-wheel time picker | [docs/component/combobox.md](docs/component/combobox.md#combobox-time) |
-| `combobox-dropdown` | Listbox with fuzzy filter or server fetch | [docs/component/combobox.md](docs/component/combobox.md#combobox-dropdown) |
-| `calendar-month` | Calendar month grid — renders days, handles clicks, dispatches selection events | [docs/component/calendar.md](docs/component/calendar.md) |
-| `calendar-month-selector` | SSR/Turbo thin selector for server-rendered month grids | [docs/component/calendar.md](docs/component/calendar.md#calendar-month-selector) |
-| `calendar-year` | Calendar year grid — renders month buttons, dispatches selection events | [docs/component/calendar.md](docs/component/calendar.md#calendar-year) |
-| `calendar-year-selector` | SSR/Turbo thin selector for server-rendered year grids | [docs/component/calendar.md](docs/component/calendar.md#calendar-year-selector) |
-| `calendar-decade` | Calendar decade grid — renders year buttons, dispatches selection events | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade) |
-| `calendar-decade-selector` | SSR/Turbo thin selector for server-rendered decade grids | [docs/component/calendar.md](docs/component/calendar.md#calendar-decade-selector) |
+| `combobox-date` | Read-only date input whose popover holds a `calendar` | [docs/component/combobox.md](docs/component/combobox.md#combobox-date) |
+| `combobox-time` | Read-only time input whose popover holds hour, minute, and AM/PM columns | [docs/component/combobox.md](docs/component/combobox.md#combobox-time) |
+| `calendar` | Calendar grid — draws periods with `Intl` or enhances server markup; one Tab stop, grid keyboard, selection, navigation | [docs/component/calendar.md](docs/component/calendar.md#calendar) |
+| `calendar-turbo` | Loads `calendar` periods through a Turbo Frame | [docs/component/calendar.md](docs/component/calendar.md#calendar-turbo) |
 | `checklist` | Master "select all" toggle for native checkbox items | [docs/component/checklist.md](docs/component/checklist.md) |
 | `modal` | Native `<dialog>` lifecycle adapter | [docs/component/modal.md](docs/component/modal.md) |
 | `modal-turbo` | Turbo Frame adapter for `modal` | [docs/component/modal.md](docs/component/modal.md#modal-turbo) |
 | `popover` | Native HTML Popover lifecycle adapter | [docs/component/popover.md](docs/component/popover.md) |
+| `popover-fetch` | Loads a popover region through `fetch` when the panel opens, without Turbo | [docs/component/popover.md](docs/component/popover.md#popover-fetch) |
 | `progress` | Value-driven progress bar/segmented/ring/meter | [docs/component/progress.md](docs/component/progress.md) |
 | `dismisser` | Click-outside dismissal | [docs/component/dismisser.md](docs/component/dismisser.md) |
 | `flipper` | Floating element positioning | [docs/component/flipper.md](docs/component/flipper.md) |
@@ -121,14 +115,15 @@ application.register('visibility',               VisibilityController)
 |--------|-------------|------|
 | `setExpanded`, `setHidden`, `announce`, `generateId`, `ensureId`, `connectTriggerToTarget` | ARIA state helpers | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
 | `FocusTrap`, `getFocusableElements`, `focusFirst` | Focus management | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
-| `RovingTabIndex`, `ListboxNavigation`, `isActivationKey`, `isArrowKey` | Keyboard interaction | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
+| `RovingTabIndex`, `ActiveDescendant`, `isActivationKey`, `isArrowKey` | Keyboard interaction | [docs/utility/accessibility.md](docs/utility/accessibility.md) |
 | `Requestor` | Fetch wrapper with lifecycle events | [docs/utility/requestor.md](docs/utility/requestor.md) |
-| `fuzzyMatcher`, `filterOptions` | Option filtering for comboboxes | [docs/utility/researcher.md](docs/utility/researcher.md) |
+| `fuzzyMatcher` | Fuzzy subsequence matching | [docs/utility/researcher.md](docs/utility/researcher.md) |
 | `Formatter`, `FORMATTER_TYPES` | Input formatter plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/formatter.md](docs/plumber/formatter.md) |
 | `CharacterCells`, `attachCharacterCells` | Character-cell display plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/character-cells.md](docs/plumber/character-cells.md) |
 | `PasswordStrength`, `attachPasswordStrength`, `STRENGTH_TYPES` | Password strength scoring plumber | [docs/plumber/password_strength.md](docs/plumber/password_strength.md) |
 | `Dialog`, `attachDialog` | Native `<dialog>` lifecycle plumber | [docs/plumber/dialog.md](docs/plumber/dialog.md) |
 | `Popover`, `attachPopover` | Native popover lifecycle plumber | [docs/plumber/popover.md](docs/plumber/popover.md) |
+| `FragmentLoader`, `attachFragmentLoader` | Fetches HTML and swaps in the element with the target's id | [docs/plumber/fragment_loader.md](docs/plumber/fragment_loader.md) |
 
 ## Method naming convention
 
@@ -136,9 +131,9 @@ Controllers follow a consistent naming pattern:
 
 | Pattern | Parameter | Role | Example |
 |---------|-----------|------|---------|
-| `x(value)` | raw value | Programmatic API — pure logic, callable directly | `select('us')`, `format('4242…')`, `filter('query')` |
+| `x(value)` | raw value | Programmatic API — pure logic, callable directly | `select('2026-09-15')`, `format('4242…')`, `setValue(40)` |
 | `onX(event)` | DOM event | Event adapter — extracts payload, calls programmatic API | `onSelect(event)`, `onChange(event)`, `onPaste(event)`, `onInput(event)` |
-| `past()` | — | Plumber callback — called by plumber after async operation completes | `shown()`, `dismissed()`, `flipped()`, `contentLoaded()` |
+| `past()` | — | Plumber callback — called by plumber after async operation completes | `shown()`, `dismissed()`, `flipped()` |
 
 Wire event adapters via `data-action`; call programmatic APIs directly from other controllers or outlets.
 

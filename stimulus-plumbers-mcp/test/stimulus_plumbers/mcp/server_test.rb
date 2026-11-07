@@ -16,7 +16,7 @@ class ServerTest < Minitest::Test
     "get_component_helper"    => { name: "button" },
     "list_component_docs"     => {},
     "list_controllers"        => {},
-    "get_controller_schema"   => { name: "input-combobox" },
+    "get_controller_schema"   => { name: "combobox" },
     "get_component_theme"     => { name: "button" },
     "get_component_tailwind"  => { name: "button" },
     "get_source_versions"     => {},
@@ -58,7 +58,7 @@ class ServerTest < Minitest::Test
     data = JSON.parse(call_tool("get_component_schema", { name: "combobox" }).dig("result", "content", 0, "text"))
 
     assert data.key?("controllers"), "expected controllers key in #{data.inspect}"
-    assert_includes data["controllers"], "input-combobox"
+    assert_includes data["controllers"], "combobox"
   end
 
   def test_versions_sources_resource_matches_get_source_versions_tool
@@ -74,13 +74,13 @@ class ServerTest < Minitest::Test
   end
 
   SHARED_SCHEME_URIS = {
-    "component://button/schema"          => "application/json",
-    "component://button/docs"            => "text/markdown",
-    "component://button/helper"          => "application/json",
-    "component://button/theme"           => "application/json",
-    "component://button/tailwind"        => "application/json",
-    "controller://input-combobox/schema" => "application/json",
-    "controller://docs/combobox"         => "text/markdown"
+    "component://button/schema"    => "application/json",
+    "component://button/docs"      => "text/markdown",
+    "component://button/helper"    => "application/json",
+    "component://button/theme"     => "application/json",
+    "component://button/tailwind"  => "application/json",
+    "controller://combobox/schema" => "application/json",
+    "controller://docs/combobox"   => "text/markdown"
   }.freeze
 
   def read_resource(uri)

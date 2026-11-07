@@ -2,80 +2,97 @@
 
 module StimulusPlumbers
   module Components
+    # The `calendar` root: settings and availability values, the status region, and the navigation's body.
     class Calendar < Plumber::Base
-      MONTH_STIMULUS_CONTROLLER  = "calendar-month"
-      YEAR_STIMULUS_CONTROLLER   = "calendar-year"
-      DECADE_STIMULUS_CONTROLLER = "calendar-decade"
+      include Plumber::Options::Choice
 
-      def month(**kwargs)
-        html_options = merge_html_options(
-          theme.resolve(:calendar),
-          kwargs,
-          { data: { controller: MONTH_STIMULUS_CONTROLLER } },
-          { data: stimulus_theme_options }
-        )
-        template.content_tag(:div, **html_options, role: "grid") do
-          template.safe_join([days_of_week, days_of_month])
-        end
-      end
+      STIMULUS_CONTROLLER = "calendar"
+      VIEWS               = %i[month year decade].freeze
+      NAVIGATIONS         = %i[stimulus turbo].freeze
 
-      def year(**kwargs)
-        html_options = merge_html_options(
-          {
-            hidden: true,
-            role:   "grid",
-            aria:   { label: I18n.t("stimulus_plumbers.calendar.year_view") },
-            data:   { controller: YEAR_STIMULUS_CONTROLLER }
-          },
-          kwargs
-        )
-        template.content_tag(:div, **html_options) do
-          template.tag.div(data: { "#{YEAR_STIMULUS_CONTROLLER}-target": "grid" }, role: "rowgroup")
-        end
-      end
+      # Options: `navigation` (`:stimulus` or `:turbo`), `url` with `:turbo`, Configuration::OPTIONS, and
+      # Dates::Availability::OPTIONS; the rest go to the root.
+      def render(id:, view: nil, navigation: :stimulus, **kwargs)
+        body          = navigation_for(navigation, kwargs)
+        configuration = Configuration.extract!(id, view, kwargs)
 
-      def decade(**kwargs)
-        html_options = merge_html_options(
-          {
-            hidden: true,
-            role:   "grid",
-            aria:   { label: I18n.t("stimulus_plumbers.calendar.decade_view") },
-            data:   { controller: DECADE_STIMULUS_CONTROLLER }
-          },
-          kwargs
-        )
-        template.content_tag(:div, **html_options) do
-          template.tag.div(data: { "#{DECADE_STIMULUS_CONTROLLER}-target": "grid" }, role: "rowgroup")
+        template.content_tag(:div, **root_attrs(configuration, kwargs, body.root_data(configuration))) do
+          template.safe_join([status, body.render(configuration)])
         end
       end
 
       private
 
-      def stimulus_theme_options
-        {
-          "#{MONTH_STIMULUS_CONTROLLER}-row-class":                theme.resolve(:calendar_row).fetch(:classes, ""),
-          "#{MONTH_STIMULUS_CONTROLLER}-day-of-month-class":       theme.resolve(:calendar_day).fetch(:classes, ""),
-          "#{MONTH_STIMULUS_CONTROLLER}-day-of-other-month-class": theme.resolve(:calendar_day, outside: true).fetch(:classes, "")
-        }
+      def navigation_for(navigation, kwargs)
+        case validate_choice!(navigation, NAVIGATIONS, :navigation)
+        when :stimulus then Stimulus.new(template)
+        when :turbo    then Turbo.new(template, kwargs.delete(:url))
+        end
       end
 
-      def days_of_week
-        template.tag.div(
-          **merge_html_options(
-            theme.resolve(:calendar_days_of_week),
-            { data: { "#{MONTH_STIMULUS_CONTROLLER}-target": "daysOfWeek" } }
-          )
+      def root_attrs(configuration, html_options, data)
+        merge_html_options(
+          theme.resolve(:calendar),
+          html_options,
+          {
+            id:   configuration.id,
+            data: {
+              controller: STIMULUS_CONTROLLER,
+              action:     "click->#{STIMULUS_CONTROLLER}#onClick",
+              **settings_values(configuration),
+              **availability_values(configuration.availability)
+            }
+          },
+          { data: data }
         )
       end
 
-      def days_of_month
-        template.tag.div(
+      def settings_values(configuration)
+        {
+          "calendar-selected-value"   => configuration.selected&.iso8601,
+          "calendar-selectable-value" => configuration.selectable.to_s,
+          "calendar-labels-value"     => labels.to_json
+        }.compact
+      end
+
+      def labels
+        scope = "stimulus_plumbers.calendar"
+        {
+          previousMonth:  I18n.t("#{scope}.previous_month"),
+          nextMonth:      I18n.t("#{scope}.next_month"),
+          previousYear:   I18n.t("#{scope}.previous_year"),
+          nextYear:       I18n.t("#{scope}.next_year"),
+          previousDecade: I18n.t("#{scope}.previous_decade"),
+          nextDecade:     I18n.t("#{scope}.next_decade"),
+          chooseMonth:    I18n.t("#{scope}.zoom_out.year"),
+          chooseYear:     I18n.t("#{scope}.zoom_out.decade"),
+          error:          I18n.t("#{scope}.error")
+        }
+      end
+
+      def availability_values(availability)
+        {
+          "calendar-min-value"               => availability.min&.iso8601,
+          "calendar-max-value"               => availability.max&.iso8601,
+          "calendar-disabled-dates-value"    => json(availability.disabled_dates.map(&:iso8601)),
+          "calendar-disabled-weekdays-value" => json(availability.disabled_weekdays),
+          "calendar-disabled-months-value"   => json(availability.disabled_months),
+          "calendar-disabled-years-value"    => json(availability.disabled_years)
+        }.compact
+      end
+
+      def json(values)
+        values.to_json if values.any?
+      end
+
+      # Outside the frame.
+      def status
+        template.content_tag(
+          :div,
+          nil,
           **merge_html_options(
-            theme.resolve(:calendar_days_of_month),
-            {
-              role: "rowgroup",
-              data: { "#{MONTH_STIMULUS_CONTROLLER}-target": "daysOfMonth" }
-            }
+            theme.resolve(:calendar_status),
+            { role: "status", data: { "#{STIMULUS_CONTROLLER}-target" => "status" } }
           )
         )
       end

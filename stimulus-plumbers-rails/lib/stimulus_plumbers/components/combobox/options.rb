@@ -8,51 +8,79 @@ module StimulusPlumbers
           render_options(...)
         end
 
+        def label_for(items, value)
+          return nil if value.to_s.empty?
+
+          normalized(items, value.to_s).each do |item|
+            options = item.key?(:optgroup) ? normalized(item[:optgroup][:options], value.to_s) : [item]
+            match = options.find { |option| option[:selected] }
+            return match[:label] if match
+          end
+          nil
+        end
+
         private
 
-        def render_options(items, value: nil, &block)
-          @selected_value = value.to_s
-          template.safe_join(items.filter_map { |item| render_item(item, &block) })
+        def render_options(items, value: nil, id_prefix: nil, &block)
+          @selected_value = value&.to_s
+          @id_prefix      = id_prefix
+          @option_index   = 0
+          @group_index    = 0
+          render_items(items, &block)
+        end
+
+        def render_items(items, &block)
+          template.safe_join(normalized(items, @selected_value).map { |item| render_item(item, &block) })
         end
 
         def render_item(item, &block)
-          attrs = normalize_item(item)
-          return nil if attrs.nil?
+          return template.capture(item, &block) if block
 
-          if attrs.key?(:optgroup)
-            block ? template.capture(attrs, &block) : OptionGroup.new(template).render(**attrs[:optgroup], value: @selected_value)
+          if item.key?(:optgroup)
+            group = item[:optgroup]
+            OptionGroup.new(template).render(label: group[:label], id: next_id("group")) do
+              render_items(group[:options])
+            end
           else
-            block ? template.capture(attrs, &block) : Option.new(template).render(**attrs)
+            Option.new(template).render(**item, id: next_id("option"))
           end
         end
 
-        def normalize_item(item)
+        def next_id(kind)
+          return nil unless @id_prefix
+
+          index = kind == "group" ? (@group_index += 1) : (@option_index += 1)
+          "#{@id_prefix}_#{kind}_#{index}"
+        end
+
+        def normalized(items, selected_value)
+          Array(items).filter_map { |item| normalize_item(item, selected_value) }
+        end
+
+        def normalize_item(item, selected_value)
           case item
-          when Hash  then normalize_hash(item)
-          when Array then normalize_array(item)
+          when Hash  then normalize_hash(item, selected_value)
+          when Array then normalize_option(item[0], item[1].to_s, item[2] || {}, selected_value)
           else
             StimulusPlumbers::Logger.warn("Options#normalize_item: unrecognized item type #{item.class}, skipping")
             nil
           end
         end
 
-        def normalize_hash(item)
+        def normalize_hash(item, selected_value)
           if item.key?(:options)
             { optgroup: { label: item[:label], options: item[:options] } }
           else
-            normalize_option(item[:label], item[:value].to_s, item)
+            normalize_option(item[:label], item[:value].to_s, item, selected_value)
           end
         end
 
-        def normalize_array(item)
-          normalize_option(item[0], item[1].to_s, item[2] || {})
-        end
-
-        def normalize_option(label, value, attrs)
+        def normalize_option(label, value, attrs, selected_value)
           {
             label:       label,
             value:       value,
-            selected:    @selected_value == value,
+            # Blank commits nothing.
+            selected:    !selected_value.to_s.empty? && selected_value == value,
             disabled:    attrs[:disabled] || false,
             description: attrs[:description]
           }

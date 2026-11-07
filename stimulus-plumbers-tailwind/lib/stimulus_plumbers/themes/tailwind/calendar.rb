@@ -6,62 +6,31 @@ module StimulusPlumbers
       module Calendar
         GRID = [].freeze
 
-        DAYS_OF_WEEK = %w[
-          grid grid-cols-7 text-center text-(length:--sp-text-xs)
-          font-medium text-(--sp-color-muted-fg) mb-(--sp-space-1)
+        STATUS     = %w[sr-only].freeze
+        HEADER     = %w[flex items-center gap-(--sp-space-1) mb-(--sp-space-2)].freeze
+        HEADING    = %w[flex-1 text-center text-(length:--sp-text-sm) font-semibold text-(--sp-color-fg)].freeze
+        NAVIGATION = %w[
+          inline-flex items-center justify-center min-h-(--sp-calendar-day-size) min-w-(--sp-calendar-day-size)
+          px-(--sp-space-2) rounded-(--sp-radius-md) text-(length:--sp-text-sm) text-(--sp-color-fg)
+          hover:bg-(--sp-color-muted)
+          focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--sp-focus-ring-color)
         ].freeze
-
-        DAYS_OF_MONTH = %w[grid grid-cols-7 justify-items-center].freeze
-
-        DAY = %w[
-          size-(--sp-calendar-day-size) rounded-(--sp-radius-md)
-          flex items-center justify-center text-(length:--sp-text-sm)
-          [&:is(button)]:hover:bg-(--sp-color-muted) [&:is(button)]:cursor-pointer
-          aria-[current=date]:font-bold
-          aria-selected:bg-(--sp-color-primary)
-          aria-selected:text-(--sp-color-primary-fg)
-          aria-selected:hover:bg-(--sp-color-primary)/90
-          aria-[hidden=true]:pointer-events-none
-          aria-[disabled=true]:text-(--sp-color-muted-fg)
-          aria-[disabled=true]:opacity-40
-          aria-[disabled=true]:pointer-events-none
-          disabled:text-(--sp-color-muted-fg)
-          disabled:opacity-40
-          disabled:pointer-events-none
-        ].freeze
-
-        QUARTER_GRID = %w[grid grid-cols-4 gap-(--sp-space-1)].freeze
-
-        MONTHS_OF_YEAR = "contents"
-
-        MONTH = %w[
-          rounded-(--sp-radius-md) flex items-center justify-center
-          text-(length:--sp-text-sm) h-10 flex-1 px-(--sp-space-2)
-          hover:bg-(--sp-color-muted) cursor-pointer
-          aria-selected:bg-(--sp-color-primary)
-          aria-selected:text-(--sp-color-primary-fg)
-          aria-selected:hover:bg-(--sp-color-primary)/90
-          aria-[current=month]:font-bold
-          aria-[disabled=true]:text-(--sp-color-muted-fg)
-          aria-[disabled=true]:opacity-40
-          aria-[disabled=true]:pointer-events-none
-          aria-[disabled=true]:hover:bg-transparent
-        ].freeze
-
-        YEARS_OF_DECADE = "contents"
-
-        YEAR = %w[
-          rounded-(--sp-radius-md) flex items-center justify-center
-          text-(length:--sp-text-sm) h-10 flex-1 px-(--sp-space-2)
-          hover:bg-(--sp-color-muted) cursor-pointer
-          aria-selected:bg-(--sp-color-primary)
-          aria-selected:text-(--sp-color-primary-fg)
-          aria-selected:hover:bg-(--sp-color-primary)/90
-          aria-[current=year]:font-bold
-          aria-[disabled=true]:text-(--sp-color-muted-fg)
-          aria-[disabled=true]:opacity-40
-          aria-[disabled=true]:pointer-events-none
-          aria-[disabled=true]:hover:bg-transparent
+        GRID_TABLE = %w[w-full border-collapse [[aria-busy=true]_&]:opacity-60].freeze
+        WEEKDAY    = %w[pb-(--sp-space-1) text-center text-(length:--sp-text-xs) font-medium text-(--sp-color-muted-fg)].freeze
+        CELL       = %w[p-(--sp-space-0-5) text-center].freeze
+        DATE = %w[
+          inline-flex items-center justify-center w-full min-h-(--sp-calendar-day-size) min-w-(--sp-calendar-day-size)
+          rounded-(--sp-radius-md) text-(length:--sp-text-sm) leading-tight text-(--sp-color-fg)
+          cursor-pointer hover:bg-(--sp-color-muted)
+          focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--sp-focus-ring-color)
+          aria-[current=date]:font-bold aria-[current=date]:underline aria-[current=date]:underline-offset-4
+          [[aria-selected=true]>&]:bg-(--sp-color-primary) [[aria-selected=true]>&]:text-(--sp-color-primary-fg)
+          [[aria-selected=true]>&]:hover:bg-(--sp-color-primary)/90
+          forced-colors:[[aria-selected=true]>&]:forced-color-adjust-none
+          forced-colors:[[aria-selected=true]>&]:bg-[Highlight] forced-colors:[[aria-selected=true]>&]:text-[HighlightText]
+          data-outside:text-(--sp-color-muted-fg)
+          aria-disabled:opacity-40 aria-disabled:line-through aria-disabled:cursor-not-allowed
+          aria-disabled:hover:bg-transparent
         ].freeze
 
         private
@@ -70,41 +39,36 @@ module StimulusPlumbers
           { classes: klasses(*GRID) }
         end
 
-        def calendar_days_of_week_classes
-          { classes: klasses(*DAYS_OF_WEEK) }
+        def calendar_status_classes
+          { classes: klasses(*STATUS) }
         end
 
-        def calendar_days_of_month_classes
-          { classes: klasses(*DAYS_OF_MONTH) }
+        def calendar_header_classes
+          { classes: klasses(*HEADER) }
         end
 
-        def calendar_months_of_year_classes
-          { classes: MONTHS_OF_YEAR }
+        def calendar_heading_classes
+          { classes: klasses(*HEADING) }
         end
 
-        def calendar_years_of_decade_classes
-          { classes: YEARS_OF_DECADE }
+        def calendar_navigation_classes
+          { classes: klasses(*NAVIGATION) }
         end
 
-        def calendar_row_classes
-          { classes: "contents" }
+        def calendar_grid_classes
+          { classes: klasses(*GRID_TABLE) }
         end
 
-        def calendar_day_classes(outside: false, **)
-          extra = outside ? %w[text-(--sp-color-muted-fg)] : []
-          { classes: klasses(*DAY, *extra) }
+        def calendar_weekday_classes
+          { classes: klasses(*WEEKDAY) }
         end
 
-        def calendar_month_classes(**)
-          { classes: klasses(*MONTH) }
+        def calendar_cell_classes
+          { classes: klasses(*CELL) }
         end
 
-        def calendar_year_classes(**)
-          { classes: klasses(*YEAR) }
-        end
-
-        def calendar_quarter_grid_classes
-          { classes: klasses(*QUARTER_GRID) }
+        def calendar_date_classes
+          { classes: klasses(*DATE) }
         end
       end
     end

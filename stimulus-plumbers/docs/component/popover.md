@@ -27,8 +27,8 @@ Use a native popover panel; put remote content in a Turbo Frame inside it:
 ```
 
 Remove the `url`, `loadedAt`, `reload`, `staleAfter`, `closeOnSelect`, `announceOpen`, and `announceClose`
-values and any `controller.visibility`, `shift()`, or `flip()` dependencies. Combobox close-on-select moved to
-[`input-combobox`](combobox.md#input-combobox).
+values and any `controller.visibility`, `shift()`, or `flip()` dependencies. Combobox close-on-commit is
+[`combobox`](combobox.md#combobox)'s `closeOnCommit` value.
 
 ## Targets
 
@@ -39,11 +39,12 @@ values and any `controller.visibility`, `shift()`, or `flip()` dependencies. Com
 
 ## Methods
 
-| Method           | Description                                                       |
-| ---------------- | ----------------------------------------------------------------- |
-| `open(event?)`   | Opens the panel; an action event's current target is the source   |
-| `close(event?)`  | Closes the panel                                                  |
-| `toggle(event?)` | Toggles the panel; an action event's current target is the source |
+| Method           | Description                                                                                                                                     |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `open(event?)`   | Opens the panel; an action event's current target is the source                                                                                 |
+| `close(event?)`  | Closes the panel                                                                                                                                |
+| `toggle(event?)` | Toggles the panel; an action event's current target is the source                                                                               |
+| `onFocus(event)` | `focus->popover#onFocus` opens on focus, except before any user input since connect, when focus returns from the panel, or inside an open modal |
 
 The packaged button opens declaratively with `popovertarget` and needs no action. A custom source wires its own,
 e.g. `click->popover#open` on an input. Light dismissal treats a custom source as outside the panel, so with
@@ -62,6 +63,53 @@ Events are dispatched from the panel:
 
 `source` is the native invoker, or `null` for an external `showPopover()` call. `popover="manual"` panels get
 no light dismissal; the consuming component provides every close path.
+
+## popover-fetch
+
+Loads a region inside the panel through the [fragment loader](../plumber/fragment_loader.md) when the
+panel opens. No Turbo dependency; Turbo apps put a lazy Turbo Frame in the panel instead.
+
+```html
+<div
+  data-controller="popover popover-fetch"
+  data-popover-fetch-src-value="/menu"
+  data-action="popover:opened->popover-fetch#onOpened popover:closed->popover-fetch#onClosed"
+>
+  <button data-popover-target="trigger" popovertarget="account-actions">Account</button>
+  <div
+    id="account-actions"
+    data-popover-target="panel"
+    popover="auto"
+    role="region"
+    aria-label="Account actions"
+    tabindex="-1"
+  >
+    <div id="account_menu" data-popover-fetch-target="region"></div>
+    <div role="status" data-popover-fetch-target="status"></div>
+  </div>
+</div>
+```
+
+The endpoint responds with an element of the region's `id`.
+
+| Target   | Description                                                  |
+| -------- | ------------------------------------------------------------ |
+| `region` | Element replaced by the response; inside the panel, not it   |
+| `status` | Optional; shows the loading and error text, outside `region` |
+
+| Value         | Type    | Default                       | Description                                       |
+| ------------- | ------- | ----------------------------- | ------------------------------------------------- |
+| `src`         | String  | —                             | Region URL                                        |
+| `reload`      | Boolean | `false`                       | Loads on every open instead of the first          |
+| `loadingText` | String  | `Loading…`                    | Status while loading                              |
+| `errorText`   | String  | `Content could not be loaded` | Status after a failed load; the next open retries |
+
+| Action            | Wired on                 | Description                                                                   |
+| ----------------- | ------------------------ | ----------------------------------------------------------------------------- |
+| `onOpened(event)` | `popover:opened` on root | Loads the region; restores focus the swap drops ([ARIA.md](../../../ARIA.md)) |
+| `onClosed(event)` | `popover:closed` on root | Cancels a load in flight                                                      |
+
+Events from popovers inside the region are ignored.
 
 ## Accessibility
 
