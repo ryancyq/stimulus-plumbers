@@ -26,7 +26,7 @@ module StimulusPlumbers
 
           def button_group_classes(layout: :inline)
             {
-              classes: klasses(*LAYOUTS.fetch(layout, LAYOUTS[:inline]))
+              classes: class_names(*LAYOUTS.fetch(layout, LAYOUTS[:inline]))
             }
           end
         end

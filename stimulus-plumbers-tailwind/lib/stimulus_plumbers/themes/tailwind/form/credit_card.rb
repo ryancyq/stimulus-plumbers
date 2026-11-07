@@ -28,23 +28,23 @@ module StimulusPlumbers
           private
 
           def form_field_input_credit_card_classes(error: false, **)
-            { classes: klasses(*CREDIT_CARD_FIELD, *(error ? CREDIT_CARD_FIELD_ERROR : [])) }
+            { classes: class_names(*CREDIT_CARD_FIELD, *(error ? CREDIT_CARD_FIELD_ERROR : [])) }
           end
 
           def form_field_input_credit_card_cells_classes(**)
-            { classes: klasses(*CREDIT_CARD_CELLS) }
+            { classes: class_names(*CREDIT_CARD_CELLS) }
           end
 
           def form_field_input_credit_card_cell_classes(error: false, **)
-            { classes: klasses(*CREDIT_CARD_CELL, *(error ? CREDIT_CARD_CELL_ERROR : [])) }
+            { classes: class_names(*CREDIT_CARD_CELL, *(error ? CREDIT_CARD_CELL_ERROR : [])) }
           end
 
           def form_field_input_credit_card_separator_classes(**)
-            { classes: klasses(*CREDIT_CARD_SEPARATOR) }
+            { classes: class_names(*CREDIT_CARD_SEPARATOR) }
           end
 
           def form_field_input_credit_card_overlay_classes(**)
-            { classes: klasses(*CREDIT_CARD_OVERLAY) }
+            { classes: class_names(*CREDIT_CARD_OVERLAY) }
           end
         end
       end

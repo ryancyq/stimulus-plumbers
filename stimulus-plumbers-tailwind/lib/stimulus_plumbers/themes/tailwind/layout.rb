@@ -50,27 +50,27 @@ module StimulusPlumbers
         private
 
         def divider_classes
-          { classes: klasses(*DIVIDER) }
+          { classes: class_names(*DIVIDER) }
         end
 
         def divider_separator_classes
-          { classes: klasses(*DIVIDER_SEPARATOR) }
+          { classes: class_names(*DIVIDER_SEPARATOR) }
         end
 
         def divider_label_classes
-          { classes: klasses(*DIVIDER_LABEL) }
+          { classes: class_names(*DIVIDER_LABEL) }
         end
 
         def popover_wrapper_classes
-          { classes: klasses(*POPOVER_WRAPPER) }
+          { classes: class_names(*POPOVER_WRAPPER) }
         end
 
         def popover_trigger_classes
-          { classes: klasses(*POPOVER_TRIGGER) }
+          { classes: class_names(*POPOVER_TRIGGER) }
         end
 
         def popover_classes(placement: :block_end_start)
-          { classes: klasses(*POPOVER, *POPOVER_PLACEMENTS.fetch(placement, POPOVER_PLACEMENTS[:block_end_start])) }
+          { classes: class_names(*POPOVER, *POPOVER_PLACEMENTS.fetch(placement, POPOVER_PLACEMENTS[:block_end_start])) }
         end
       end
     end
