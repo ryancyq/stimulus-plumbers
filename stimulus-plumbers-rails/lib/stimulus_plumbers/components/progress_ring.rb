@@ -16,7 +16,7 @@ module StimulusPlumbers
         icon_attrs = merge_html_options(
           theme.resolve(:progress_ring, size: size),
           kwargs,
-          progress_stimulus_data(
+          progress_stimulus_attrs(
             value: current, min: min, max: max, variant: "ring", "progress-indeterminate-value": indeterminate
           ),
           {

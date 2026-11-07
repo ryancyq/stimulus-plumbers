@@ -6,7 +6,7 @@ module StimulusPlumbers
       def render(move_key: "Alt", editing: false, orientation: nil, role: "list", **kwargs, &block)
         @editing    = editing
         @item_count = 0
-        stimulus = {
+        reorderable_stimulus_attrs = {
           data: {
             controller:                      "reorderable",
             "reorderable-move-key-value":    move_key,
@@ -14,7 +14,7 @@ module StimulusPlumbers
             "reorderable-orientation-value": orientation
           }.compact
         }
-        html_options = merge_html_options(theme.resolve(:ordered_list), kwargs, stimulus)
+        html_options = merge_html_options(theme.resolve(:ordered_list), kwargs, reorderable_stimulus_attrs)
         template.content_tag(:ol, template.capture(self, &block), **html_options, role: role)
       end
 
