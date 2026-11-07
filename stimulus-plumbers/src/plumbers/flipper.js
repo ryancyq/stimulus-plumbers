@@ -75,14 +75,14 @@ export class Flipper extends WindowObserver {
   };
 
   flippedRect(anchorRect, referenceRect) {
-    const candidateRects = this.quadrumRect(anchorRect, viewportRect());
+    const space = this.spaceAround(anchorRect, viewportRect());
     const candidates = [this.placement, directionMap[this.placement]];
     let flipped = {};
     while (!Object.keys(flipped).length && candidates.length > 0) {
       const candidate = candidates.shift();
-      if (!this.biggerRectThan(candidateRects[candidate], referenceRect)) continue;
-      const placementRect = this.quadrumPlacement(anchorRect, candidate, referenceRect);
-      const alignmentRect = this.quadrumAlignment(anchorRect, candidate, placementRect);
+      if (!this.fits(space[candidate], referenceRect)) continue;
+      const placementRect = this.placeOn(candidate, anchorRect, referenceRect);
+      const alignmentRect = this.alignOn(candidate, anchorRect, placementRect);
       flipped['top'] = `${alignmentRect['top'] + window.scrollY}px`;
       flipped['left'] = `${alignmentRect['left'] + window.scrollX}px`;
     }
@@ -93,7 +93,7 @@ export class Flipper extends WindowObserver {
     return flipped;
   }
 
-  quadrumRect(inner, outer) {
+  spaceAround(inner, outer) {
     return {
       left: defineRect({ x: outer.x, y: outer.y, width: inner.x - outer.x, height: outer.height }),
       right: defineRect({
@@ -112,8 +112,8 @@ export class Flipper extends WindowObserver {
     };
   }
 
-  quadrumPlacement(anchor, direction, reference) {
-    switch (direction) {
+  placeOn(side, anchor, reference) {
+    switch (side) {
       case 'top':
         return defineRect({
           x: reference.x,
@@ -143,12 +143,12 @@ export class Flipper extends WindowObserver {
           height: reference.height,
         });
       default:
-        throw `Unable place at the quadrum, ${direction}`;
+        throw `Unable to place on side ${side}`;
     }
   }
 
-  quadrumAlignment(anchor, direction, reference) {
-    switch (direction) {
+  alignOn(side, anchor, reference) {
+    switch (side) {
       case 'top':
       case 'bottom': {
         let alignment = anchor.x;
@@ -164,12 +164,12 @@ export class Flipper extends WindowObserver {
         return defineRect({ x: reference.x, y: alignment, width: reference.width, height: reference.height });
       }
       default:
-        throw `Unable align at the quadrum, ${direction}`;
+        throw `Unable to align on side ${side}`;
     }
   }
 
-  biggerRectThan(big, small) {
-    return big.height >= small.height && big.width >= small.width;
+  fits(space, rect) {
+    return space.height >= rect.height && space.width >= rect.width;
   }
 
   enhance() {
