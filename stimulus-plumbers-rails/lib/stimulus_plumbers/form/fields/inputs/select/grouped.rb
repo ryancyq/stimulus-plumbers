@@ -14,19 +14,10 @@ module StimulusPlumbers
               option_key_method,
               option_value_method,
               options = {},
-              html_opts = {}
+              html_options = {}
             )
-              html_options = merge_html_options(theme.resolve(:form_select), html_opts)
-              super(
-                attribute,
-                collection,
-                group_method,
-                group_label_method,
-                option_key_method,
-                option_value_method,
-                options,
-                html_options
-              )
+              html_options = merge_html_options(theme.resolve(:form_select), html_options)
+              super
             end
 
             private

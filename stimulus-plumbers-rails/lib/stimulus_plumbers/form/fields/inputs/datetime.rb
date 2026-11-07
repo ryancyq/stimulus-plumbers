@@ -23,27 +23,27 @@ module StimulusPlumbers
           private
 
           # Explicit keywords: Ruby 3.0 reports `...` as taking none.
-          def render_combobox_date(attribute, html_opts, opts, error, **kwargs)
-            render_temporal(attribute, Components::Combobox::Date, html_opts, opts, error, **kwargs)
+          def render_combobox_date(attribute, input_attrs, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Date, input_attrs, opts, error, **kwargs)
           end
 
-          def render_combobox_time(attribute, html_opts, opts, error, **kwargs)
-            render_temporal(attribute, Components::Combobox::Time, html_opts, opts, error, **kwargs)
+          def render_combobox_time(attribute, input_attrs, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Time, input_attrs, opts, error, **kwargs)
           end
 
-          def render_combobox_datetime(attribute, html_opts, opts, error, **kwargs)
-            render_temporal(attribute, Components::Combobox::Datetime, html_opts, opts, error, **kwargs)
+          def render_combobox_datetime(attribute, input_attrs, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Datetime, input_attrs, opts, error, **kwargs)
           end
 
-          def render_temporal(attribute, component, html_opts, opts, error, floating: nil, **kwargs)
+          def render_temporal(attribute, component, input_attrs, opts, error, floating: nil, **kwargs)
             render_combobox(
               attribute,
-              component: component,
-              html_opts: html_opts,
-              opts:      opts,
-              error:     error,
-              floating:  floating,
-              value:     (object.public_send(attribute) if object.respond_to?(attribute)),
+              component:   component,
+              input_attrs: input_attrs,
+              opts:        opts,
+              error:       error,
+              floating:    floating,
+              value:       (object.public_send(attribute) if object.respond_to?(attribute)),
               **kwargs,
               **availability(component, kwargs)
             )
