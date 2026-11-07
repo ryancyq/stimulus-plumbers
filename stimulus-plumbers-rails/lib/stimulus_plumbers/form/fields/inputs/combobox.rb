@@ -12,14 +12,14 @@ module StimulusPlumbers
           private
 
           def render_combobox(attribute, component:, input_attrs:, opts:, error:, floating: nil, trigger: {}, **kwargs)
-            theme_opts = theme.resolve(:form_field_input_combobox, floating: floating, error: error)
+            theme_attrs = theme.resolve(:form_field_input_combobox, floating: floating, error: error)
             component.new(@template).render(
               id:         input_attrs[:id],
               name:       field_name(attribute),
               labelledby: Field.label_id(input_attrs[:id]),
               trigger:    merge_html_options({ aria: input_attrs[:aria] }, trigger),
               **kwargs.slice(*COMBOBOX_OPTIONS),
-              **merge_html_options(theme_opts, opts, kwargs.except(*COMBOBOX_OPTIONS))
+              **merge_html_options(theme_attrs, opts, kwargs.except(*COMBOBOX_OPTIONS))
             )
           end
         end
