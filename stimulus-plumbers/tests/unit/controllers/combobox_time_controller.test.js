@@ -1,297 +1,275 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { Application } from '@hotwired/stimulus'
-import ComboboxTimeController from '../../../src/controllers/combobox_time_controller'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Application } from '@hotwired/stimulus';
+import ComboboxTimeController from '../../../src/controllers/combobox_time_controller';
+import { installNativePopover } from '../../support/native_popover';
 
 describe('ComboboxTimeController', () => {
-  let application
+  let application;
 
-  const getController = () =>
-    application.getControllerForElementAndIdentifier(
-      document.querySelector('[data-controller="combobox-time"]'),
-      'combobox-time'
-    )
+  const options = (name, values, selected) =>
+    values
+      .map(
+        (value) =>
+          `<li role="option" id="t_${name}_${value}" data-value="${value}" aria-selected="${value === selected}">${value}</li>`
+      )
+      .join('');
+
+  const column = (name, values, selected) => `
+    <ul role="listbox" tabindex="0" id="${name}" data-combobox-time-target="${name}"
+        data-action="keydown->combobox-time#onNavigate click->combobox-time#onSelect">
+      ${options(name, values, selected)}
+    </ul>`;
+
+  const render = async ({ value = '14:30', twelveHour = true } = {}) => {
+    const [hour, minute] = value ? value.split(':').map(Number) : [];
+    const hourValue = value && (twelveHour ? String(((hour + 11) % 12) + 1) : String(hour).padStart(2, '0'));
+    document.body.innerHTML = `
+      <form id="form">
+        <div id="container" data-controller="combobox-time"
+             data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick">
+          <div id="group">
+            <span id="icon" aria-hidden="true"></span>
+            <input id="trigger" readonly value="${value}" data-combobox-time-target="trigger"
+                   data-action="keydown->combobox-time#onKeydown">
+          </div>
+          <input type="hidden" name="meeting[at]" value="${value}" data-combobox-time-target="input">
+          <div id="panel" popover="auto" data-combobox-time-target="panel">
+            ${column('hour', twelveHour ? ['12', '1', '2'] : ['00', '01', '14'], hourValue)}
+            ${column('minute', ['00', '30'], value && String(minute).padStart(2, '0'))}
+            ${twelveHour ? column('meridiem', ['AM', 'PM'], value && (hour < 12 ? 'AM' : 'PM')) : ''}
+          </div>
+        </div>
+      </form>`;
+    const container = document.querySelector('#container');
+    const panel = document.querySelector('#panel');
+    installNativePopover(panel);
+    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'combobox-time'));
+    return {
+      container,
+      panel,
+      trigger: document.querySelector('#trigger'),
+      input: document.querySelector('[type="hidden"]'),
+    };
+  };
+
+  const keydown = (element, key) => {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    element.dispatchEvent(event);
+    return event;
+  };
+
+  const lifecycle = (panel, name) => panel.dispatchEvent(new CustomEvent(`popover:${name}`, { bubbles: true }));
+
+  const open = (panel) => {
+    lifecycle(panel, 'before-open');
+    panel.showPopover();
+    lifecycle(panel, 'opened');
+  };
+
+  const option = (name, value) => document.querySelector(`#t_${name}_${value}`);
 
   beforeEach(() => {
-    application = Application.start()
-    application.register('combobox-time', ComboboxTimeController)
-    Element.prototype.scrollIntoView = vi.fn()
-  })
+    Element.prototype.scrollIntoView = vi.fn();
+    application = Application.start();
+    application.register('combobox-time', ComboboxTimeController);
+  });
 
   afterEach(() => {
-    application.stop()
-    document.body.innerHTML = ''
-    vi.restoreAllMocks()
-  })
+    application.stop();
+    document.body.innerHTML = '';
+    delete Element.prototype.scrollIntoView;
+  });
 
-  const setup12h = (hour = '10', minute = '30', period = 'AM') => {
-    document.body.innerHTML = `
-      <div data-controller="combobox-time">
-        <div data-combobox-time-target="hour" role="listbox">
-          <div role="option" data-value="10" aria-selected="${hour === '10' ? 'true' : 'false'}">10</div>
-          <div role="option" data-value="11" aria-selected="${hour === '11' ? 'true' : 'false'}">11</div>
-          <div role="option" data-value="12" aria-selected="${hour === '12' ? 'true' : 'false'}">12</div>
-        </div>
-        <div data-combobox-time-target="minute" role="listbox">
-          <div role="option" data-value="00" aria-selected="${minute === '00' ? 'true' : 'false'}">00</div>
-          <div role="option" data-value="30" aria-selected="${minute === '30' ? 'true' : 'false'}">30</div>
-          <div role="option" data-value="45" aria-selected="${minute === '45' ? 'true' : 'false'}">45</div>
-        </div>
-        <div data-combobox-time-target="period" role="listbox">
-          <div role="option" data-value="AM" aria-selected="${period === 'AM' ? 'true' : 'false'}">AM</div>
-          <div role="option" data-value="PM" aria-selected="${period === 'PM' ? 'true' : 'false'}">PM</div>
-        </div>
-      </div>
-    `
-  }
+  it('ArrowDown opens the panel and focuses the hour column', async () => {
+    const { panel, trigger } = await render();
+    trigger.focus();
 
-  const setup24h = (hour = '10', minute = '30') => {
-    document.body.innerHTML = `
-      <div data-controller="combobox-time">
-        <div data-combobox-time-target="hour" role="listbox">
-          <div role="option" data-value="09" aria-selected="${hour === '09' ? 'true' : 'false'}">09</div>
-          <div role="option" data-value="10" aria-selected="${hour === '10' ? 'true' : 'false'}">10</div>
-          <div role="option" data-value="14" aria-selected="${hour === '14' ? 'true' : 'false'}">14</div>
-        </div>
-        <div data-combobox-time-target="minute" role="listbox">
-          <div role="option" data-value="00" aria-selected="${minute === '00' ? 'true' : 'false'}">00</div>
-          <div role="option" data-value="30" aria-selected="${minute === '30' ? 'true' : 'false'}">30</div>
-        </div>
-      </div>
-    `
-  }
+    keydown(trigger, 'ArrowDown');
 
-  describe('connect', () => {
-    it('dispatches "combobox-time:selected" with the initial 24h value (12h mode)', async () => {
-      const handler = vi.fn()
-      document.addEventListener('combobox-time:selected', handler)
-      setup12h('10', '30', 'AM')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(handler).toHaveBeenCalledOnce()
-      expect(handler.mock.calls[0][0].detail.value).toBe('10:30')
-      document.removeEventListener('combobox-time:selected', handler)
-    })
+    expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
+    expect(document.activeElement.id).toBe('hour');
+  });
 
-    it('dispatches "combobox-time:selected" with the initial value (24h mode)', async () => {
-      const handler = vi.fn()
-      document.addEventListener('combobox-time:selected', handler)
-      setup24h('10', '30')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(handler).toHaveBeenCalledOnce()
-      expect(handler.mock.calls[0][0].detail.value).toBe('10:30')
-      document.removeEventListener('combobox-time:selected', handler)
-    })
+  it('each selection updates the input and reports the time', async () => {
+    const { container, panel, input } = await render();
+    const changed = vi.fn();
+    const formatted = vi.fn();
+    input.addEventListener('change', changed);
+    container.addEventListener('combobox-time:changed', (event) => formatted(event.detail.value));
+    open(panel);
 
-    it('does not dispatch when hour or minute is unselected', async () => {
-      const handler = vi.fn()
-      document.addEventListener('combobox-time:selected', handler)
-      document.body.innerHTML = `
-        <div data-controller="combobox-time">
-          <div data-combobox-time-target="hour" role="listbox">
-            <div role="option" data-value="10" aria-selected="false">10</div>
-          </div>
-          <div data-combobox-time-target="minute" role="listbox">
-            <div role="option" data-value="30" aria-selected="false">30</div>
-          </div>
-        </div>
-      `
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(handler).not.toHaveBeenCalled()
-      document.removeEventListener('combobox-time:selected', handler)
-    })
-  })
+    option('minute', '00').click();
 
-  describe('toH24 (24h mode — no period target)', () => {
-    beforeEach(async () => {
-      setup24h('10', '30')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-    })
+    expect(input.value).toBe('14:00');
+    expect(changed).toHaveBeenCalledOnce();
+    expect(formatted).toHaveBeenCalledWith('14:00');
+    expect(panel.hidePopover).not.toHaveBeenCalled();
+  });
 
-    it('returns HH:MM string', () => {
-      expect(getController().toH24()).toBe('10:30')
-    })
+  it('the AM/PM column sets the 24-hour value', async () => {
+    const { panel, input } = await render();
+    open(panel);
 
-    it('returns null when no hour is selected', () => {
-      document
-        .querySelectorAll('[data-combobox-time-target="hour"] [role="option"]')
-        .forEach((o) => o.setAttribute('aria-selected', 'false'))
-      expect(getController().toH24()).toBeNull()
-    })
+    option('hour', '12').click();
+    expect(input.value).toBe('12:30');
 
-    it('returns null when no minute is selected', () => {
-      document
-        .querySelectorAll('[data-combobox-time-target="minute"] [role="option"]')
-        .forEach((o) => o.setAttribute('aria-selected', 'false'))
-      expect(getController().toH24()).toBeNull()
-    })
-  })
+    option('meridiem', 'AM').click();
+    expect(input.value).toBe('00:30');
+  });
 
-  describe('toH24 (12h mode — with period target)', () => {
-    it('converts 12 AM to 00:mm', async () => {
-      setup12h('12', '00', 'AM')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(getController().toH24()).toBe('00:00')
-    })
+  it('a 24-hour time has no AM/PM column', async () => {
+    const { panel, input } = await render({ twelveHour: false });
+    open(panel);
 
-    it('converts 10 AM to 10:mm', async () => {
-      setup12h('10', '30', 'AM')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(getController().toH24()).toBe('10:30')
-    })
+    option('hour', '01').click();
 
-    it('converts 12 PM to 12:mm', async () => {
-      setup12h('12', '00', 'PM')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(getController().toH24()).toBe('12:00')
-    })
+    expect(input.value).toBe('01:30');
+  });
 
-    it('converts 10 PM to 22:mm', async () => {
-      setup12h('10', '30', 'PM')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(getController().toH24()).toBe('22:30')
-    })
+  it('waits for the hour and minute before selecting', async () => {
+    const { panel, input } = await render({ value: '' });
+    open(panel);
 
-    it('converts 11 PM to 23:mm', async () => {
-      setup12h('11', '45', 'PM')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      expect(getController().toH24()).toBe('23:45')
-    })
-  })
+    option('hour', '2').click();
+    option('meridiem', 'PM').click();
+    expect(input.value).toBe('');
 
-  describe('onSelect', () => {
-    beforeEach(async () => {
-      setup12h('10', '30', 'AM')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-    })
+    option('minute', '30').click();
+    expect(input.value).toBe('14:30');
+  });
 
-    it('marks the clicked option as aria-selected="true"', () => {
-      const option = document.querySelector('[data-combobox-time-target="hour"] [data-value="11"]')
-      option.dispatchEvent(new MouseEvent('click', { bubbles: true }))
-      getController().onSelect({ target: option })
-      expect(option.getAttribute('aria-selected')).toBe('true')
-    })
+  it('arrows, Home, and End move the selected option within the column', async () => {
+    const { panel } = await render();
+    const hour = document.querySelector('#hour');
+    open(panel);
 
-    it('clears aria-selected on sibling options in the same drum', () => {
-      const option = document.querySelector('[data-combobox-time-target="hour"] [data-value="11"]')
-      getController().onSelect({ target: option })
-      expect(
-        document.querySelector('[data-combobox-time-target="hour"] [data-value="10"]').getAttribute('aria-selected')
-      ).toBe('false')
-    })
+    keydown(hour, 'ArrowDown');
+    expect(hour.getAttribute('aria-activedescendant')).toBe('t_hour_2');
 
-    it('dispatches "combobox-time:selected" after selection', () => {
-      const handler = vi.fn()
-      document
-        .querySelector('[data-controller="combobox-time"]')
-        .addEventListener('combobox-time:selected', handler)
-      const option = document.querySelector('[data-combobox-time-target="minute"] [data-value="45"]')
-      getController().onSelect({ target: option })
-      expect(handler).toHaveBeenCalledOnce()
-    })
+    keydown(hour, 'Home');
+    expect(option('hour', '12').getAttribute('aria-selected')).toBe('true');
+    expect(hour.getAttribute('aria-activedescendant')).toBe('t_hour_12');
 
-    it('does nothing when event target is not inside an option', () => {
-      const ctrl = getController()
-      const spy = vi.spyOn(ctrl, 'select')
-      ctrl.onSelect({ target: document.querySelector('[data-controller="combobox-time"]') })
-      expect(spy).not.toHaveBeenCalled()
-    })
-  })
+    keydown(hour, 'ArrowUp');
+    expect(hour.getAttribute('aria-activedescendant')).toBe('t_hour_12');
 
-  describe('onNavigate', () => {
-    beforeEach(async () => {
-      setup24h('10', '30')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-    })
+    keydown(hour, 'End');
+    expect(hour.querySelectorAll('[aria-selected="true"]')).toHaveLength(1);
+    expect(hour.getAttribute('aria-activedescendant')).toBe('t_hour_2');
+  });
 
-    it('calls step with delta=1 on ArrowDown', () => {
-      const ctrl = getController()
-      const spy = vi.spyOn(ctrl, 'step')
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      const event = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true })
-      Object.defineProperty(event, 'currentTarget', { value: drum })
-      ctrl.onNavigate(event)
-      expect(spy).toHaveBeenCalledWith(drum, 1)
-    })
+  it('ArrowUp in a column with nothing selected starts at the last option', async () => {
+    const { panel } = await render({ value: '' });
+    const hour = document.querySelector('#hour');
+    open(panel);
 
-    it('calls step with delta=-1 on ArrowUp', () => {
-      const ctrl = getController()
-      const spy = vi.spyOn(ctrl, 'step')
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      const event = new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true })
-      Object.defineProperty(event, 'currentTarget', { value: drum })
-      ctrl.onNavigate(event)
-      expect(spy).toHaveBeenCalledWith(drum, -1)
-    })
+    keydown(hour, 'ArrowUp');
 
-    it('prevents default on arrow keys', () => {
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      const event = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true })
-      Object.defineProperty(event, 'currentTarget', { value: drum })
-      const spy = vi.spyOn(event, 'preventDefault')
-      getController().onNavigate(event)
-      expect(spy).toHaveBeenCalled()
-    })
+    expect(hour.getAttribute('aria-activedescendant')).toBe('t_hour_2');
+  });
 
-    it('ignores unrelated keys', () => {
-      const ctrl = getController()
-      const spy = vi.spyOn(ctrl, 'step')
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
-      Object.defineProperty(event, 'currentTarget', { value: drum })
-      ctrl.onNavigate(event)
-      expect(spy).not.toHaveBeenCalled()
-    })
-  })
+  it('Enter closes the panel, keeps the time, and focuses the trigger', async () => {
+    const { panel, trigger, input } = await render();
+    open(panel);
+    option('minute', '00').click();
 
-  describe('step', () => {
-    beforeEach(async () => {
-      setup24h('10', '30')
-      await new Promise((resolve) => setTimeout(resolve, 10))
-    })
+    keydown(document.querySelector('#minute'), 'Enter');
 
-    it('advances to the next option in the drum', () => {
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      getController().step(drum, 1)
-      expect(drum.querySelector('[data-value="14"]').getAttribute('aria-selected')).toBe('true')
-      expect(drum.querySelector('[data-value="10"]').getAttribute('aria-selected')).toBe('false')
-    })
+    expect(panel.hidePopover).toHaveBeenCalledOnce();
+    expect(input.value).toBe('14:00');
+    expect(document.activeElement).toBe(trigger);
+  });
 
-    it('moves to the previous option in the drum', () => {
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      getController().step(drum, -1)
-      expect(drum.querySelector('[data-value="09"]').getAttribute('aria-selected')).toBe('true')
-      expect(drum.querySelector('[data-value="10"]').getAttribute('aria-selected')).toBe('false')
-    })
+  it('Escape restores the time from opening, closes the panel, and focuses the trigger', async () => {
+    const { container, panel, trigger, input } = await render();
+    const formatted = vi.fn();
+    container.addEventListener('combobox-time:changed', (event) => formatted(event.detail.value));
+    open(panel);
+    option('minute', '00').click();
 
-    it('does not advance past the last option', () => {
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      drum.querySelector('[data-value="10"]').setAttribute('aria-selected', 'false')
-      drum.querySelector('[data-value="14"]').setAttribute('aria-selected', 'true')
-      getController().step(drum, 1)
-      expect(drum.querySelector('[data-value="14"]').getAttribute('aria-selected')).toBe('true')
-    })
+    const event = keydown(document.querySelector('#minute'), 'Escape');
 
-    it('does not go before the first option', () => {
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      drum.querySelector('[data-value="10"]').setAttribute('aria-selected', 'false')
-      drum.querySelector('[data-value="09"]').setAttribute('aria-selected', 'true')
-      getController().step(drum, -1)
-      expect(drum.querySelector('[data-value="09"]').getAttribute('aria-selected')).toBe('true')
-    })
+    expect(event.defaultPrevented).toBe(true);
+    expect(input.value).toBe('14:30');
+    expect(formatted).toHaveBeenLastCalledWith('14:30');
+    expect(option('minute', '30').getAttribute('aria-selected')).toBe('true');
+    expect(panel.hidePopover).toHaveBeenCalledOnce();
+    expect(document.activeElement).toBe(trigger);
+  });
 
-    it('dispatches "combobox-time:selected" after stepping', () => {
-      const handler = vi.fn()
-      document
-        .querySelector('[data-controller="combobox-time"]')
-        .addEventListener('combobox-time:selected', handler)
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      getController().step(drum, 1)
-      expect(handler).toHaveBeenCalledOnce()
-    })
+  it('Escape restores the time before the opened event arrives', async () => {
+    const { panel, trigger, input } = await render();
+    lifecycle(panel, 'before-open');
+    panel.showPopover();
+    option('minute', '00').click();
 
-    it('calls scrollIntoView on the newly selected option', () => {
-      const drum = document.querySelector('[data-combobox-time-target="hour"]')
-      getController().step(drum, 1)
-      expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' })
-    })
-  })
-})
+    keydown(trigger, 'Escape');
+
+    expect(input.value).toBe('14:30');
+  });
+
+  it('Escape from the trigger restores the time too', async () => {
+    const { panel, trigger, input } = await render();
+    open(panel);
+    option('minute', '00').click();
+
+    keydown(trigger, 'Escape');
+
+    expect(input.value).toBe('14:30');
+  });
+
+  it('leaves Escape alone while the panel is closed', async () => {
+    const { trigger } = await render();
+
+    expect(keydown(trigger, 'Escape').defaultPrevented).toBe(false);
+  });
+
+  it('Tab from the trigger closes an open panel', async () => {
+    const { panel, trigger } = await render();
+    open(panel);
+
+    keydown(trigger, 'Tab');
+
+    expect(panel.hidePopover).toHaveBeenCalledOnce();
+  });
+
+  it('closes the panel and keeps the time when focus leaves the combobox', async () => {
+    const { panel, input } = await render();
+    document.body.insertAdjacentHTML('beforeend', '<button id="next">Next</button>');
+    open(panel);
+    option('minute', '00').click();
+    document.querySelector('#minute').focus();
+
+    document.querySelector('#next').focus();
+
+    expect(panel.hidePopover).toHaveBeenCalledOnce();
+    expect(input.value).toBe('14:00');
+  });
+
+  it('a click on an icon opens the panel and focuses the trigger', async () => {
+    const { panel, trigger } = await render();
+    const icon = document.querySelector('#icon');
+    const mousedown = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+
+    icon.dispatchEvent(mousedown);
+    icon.click();
+
+    expect(mousedown.defaultPrevented).toBe(true);
+    expect(panel.showPopover).toHaveBeenCalledWith({ source: trigger });
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('form reset restores the initial time and options', async () => {
+    const { container, panel, input } = await render();
+    const formatted = vi.fn();
+    container.addEventListener('combobox-time:changed', (event) => formatted(event.detail.value));
+    open(panel);
+    option('minute', '00').click();
+
+    document.querySelector('#form').reset();
+
+    await vi.waitFor(() => expect(formatted).toHaveBeenLastCalledWith('14:30'));
+    expect(input.value).toBe('14:30');
+    expect(option('minute', '30').getAttribute('aria-selected')).toBe('true');
+  });
+});

@@ -4,15 +4,15 @@ module StimulusPlumbers
   module MCP
     class ComponentSchemaLoader
       # Not derivable from Form::Fields::Renderer's method names (`search:` renders via
-      # `render_combobox_typeahead`, but wires up "combobox-dropdown", not
-      # "combobox-typeahead") — hand-maintained; keep in sync with form.md's "backed by" notes.
+      # `render_combobox_typeahead`, but wires up "combobox") — hand-maintained; keep in sync
+      # with form.md's "backed by" notes.
       FIELD_AS_CONTROLLERS = {
         date:                      "combobox-date",
         time:                      "combobox-time",
-        select:                    "combobox-dropdown",
-        search:                    "combobox-dropdown",
-        collection_select:         "combobox-dropdown",
-        grouped_collection_select: "combobox-dropdown"
+        select:                    "combobox",
+        search:                    "combobox",
+        collection_select:         "combobox",
+        grouped_collection_select: "combobox"
       }.freeze
 
       class << self

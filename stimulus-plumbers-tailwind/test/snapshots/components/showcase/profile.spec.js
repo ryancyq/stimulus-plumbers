@@ -26,46 +26,52 @@ test.describe("profile", () => {
     );
   });
 
-  test.describe("date picker", () => {
-    test("open", async ({ page }) => {
-      const datePicker = page
+  // The section can outgrow a phone viewport, so these capture the viewport.
+  test.describe("date combobox", () => {
+    const open = async (page) => {
+      const input = page
         .locator("#profile-default")
         .getByRole("combobox", { name: "Date" });
-      await datePicker.click();
-      await expect(datePicker).toHaveAttribute("aria-expanded", "true");
-      await expect(page.locator("#profile-default")).toHaveScreenshot(
-        "datepicker-open.png",
+      await input.click();
+      await expect(input).toHaveAttribute("aria-expanded", "true");
+      await page.evaluate(() =>
+        Promise.all(
+          document.getAnimations().map((animation) => animation.finished),
+        ),
       );
+    };
+
+    test("open", async ({ page }) => {
+      await open(page);
+      await expect(page).toHaveScreenshot("date-open.png");
     });
 
     test("previous month", async ({ page }) => {
-      const datePicker = page
-        .locator("#profile-default")
-        .getByRole("combobox", { name: "Date" });
-      await datePicker.click();
-      await expect(datePicker).toHaveAttribute("aria-expanded", "true");
+      await open(page);
       await page
         .locator("#profile-default")
-        .getByRole("button", { name: "Previous Month" })
+        .getByRole("button", { name: "Previous month" })
         .click();
-      await expect(page.locator("#profile-default")).toHaveScreenshot(
-        "datepicker-prev-month.png",
-      );
+      await expect(
+        page
+          .locator("#profile-default")
+          .getByRole("heading", { name: "January 2024" }),
+      ).toBeVisible();
+      await expect(page).toHaveScreenshot("date-previous-month.png");
     });
 
     test("next month", async ({ page }) => {
-      const datePicker = page
-        .locator("#profile-default")
-        .getByRole("combobox", { name: "Date" });
-      await datePicker.click();
-      await expect(datePicker).toHaveAttribute("aria-expanded", "true");
+      await open(page);
       await page
         .locator("#profile-default")
-        .getByRole("button", { name: "Next Month" })
+        .getByRole("button", { name: "Next month" })
         .click();
-      await expect(page.locator("#profile-default")).toHaveScreenshot(
-        "datepicker-next-month.png",
-      );
+      await expect(
+        page
+          .locator("#profile-default")
+          .getByRole("heading", { name: "March 2024" }),
+      ).toBeVisible();
+      await expect(page).toHaveScreenshot("date-next-month.png");
     });
   });
 });

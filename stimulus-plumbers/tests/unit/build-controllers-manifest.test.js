@@ -80,9 +80,10 @@ describe('parseActions', () => {
 
     expect(manifest.popover.targets).toEqual(['trigger', 'panel'])
     expect(manifest.popover.values).toEqual({})
-    expect(manifest.popover.actions).toEqual(['close', 'open', 'toggle'])
+    expect(manifest.popover.actions).toEqual(['close', 'onFocus', 'open', 'toggle'])
     expect(manifest.popover.actionParams).toEqual({
       close: ['event'],
+      onFocus: ['event'],
       open: ['event'],
       toggle: ['event'],
     })
@@ -123,6 +124,17 @@ export default class extends Controller {
       'day',
       '{ selectable = false, disabled = false } = {}',
     ])
+  })
+
+  it('leaves out underscore-prefixed helpers', () => {
+    const source = `
+export default class extends Controller {
+  onSelect(event) {}
+
+  _sync(option) {}
+}
+`
+    expect(parseActionParams(source)).toEqual({ onSelect: ['event'] })
   })
 
   it('covers exactly the methods listed as actions', () => {
@@ -183,9 +195,9 @@ export default class extends Controller {
 
 describe('withPlumberSources', () => {
   it('includes dispatch calls from an imported plumber file', () => {
-    const source = `import { attachCalendarYearSelector } from '../plumbers/calendar-selector';`
+    const source = `import { attachFlipper } from '../plumbers/flipper';`
     const combined = withPlumberSources(source, CONTROLLERS_DIR)
-    expect(parseDispatches(combined)).toContain('selected')
+    expect(parseDispatches(combined)).toContain('flipped')
   })
 
   it('retains dispatches from an imported plumber without treating them as controller methods', () => {

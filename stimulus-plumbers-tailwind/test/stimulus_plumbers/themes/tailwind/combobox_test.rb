@@ -19,13 +19,10 @@ class TailwindThemeComboboxTest < Minitest::Test
 
   # ── popover ───────────────────────────────────────────────────────────────
 
-  def test_combobox_popover_includes_absolute_positioning_classes
-    result = classes_for(:combobox_popover)
-
-    assert_includes result, "absolute"
-    assert_includes result, "top-full"
-    assert_includes result, "left-0"
-    assert_includes result, "min-w-full"
+  def test_each_combobox_popover_anchors_to_its_field
+    %i[combobox_dropdown_popover combobox_typeahead_popover combobox_date_popover combobox_time_popover].each do |key|
+      assert_includes classes_for(key), "[&[popover]]:[position-anchor:--sp-field]", key
+    end
   end
 
   # ── trigger ───────────────────────────────────────────────────────────────
@@ -45,6 +42,10 @@ class TailwindThemeComboboxTest < Minitest::Test
 
   # ── trigger group ─────────────────────────────────────────────────────────
 
+  def test_combobox_trigger_keeps_an_input_width_when_empty
+    assert_includes classes_for(:combobox_trigger), "min-w-(--sp-combobox-min-size)"
+  end
+
   def test_combobox_trigger_group_includes_flex_layout_classes
     result = classes_for(:combobox_trigger_group)
 
@@ -53,12 +54,12 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "gap-(--sp-space-2)"
   end
 
-  def test_combobox_trigger_group_resets_child_input_styles
+  def test_combobox_trigger_group_resets_the_combobox_control_styles
     result = classes_for(:combobox_trigger_group)
 
-    assert_includes result, "[&>input]:border-0"
-    assert_includes result, "[&>input]:rounded-none"
-    assert_includes result, "[&>input]:focus:ring-0"
+    assert_includes result, "[&>[role=combobox]]:border-0"
+    assert_includes result, "[&>[role=combobox]]:rounded-none"
+    assert_includes result, "[&>[role=combobox]]:focus:ring-0"
     refute_includes result, "sp-combobox-group"
   end
 
@@ -90,6 +91,10 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes classes_for(:combobox_listbox), "min-h-(--sp-space-6)"
   end
 
+  def test_combobox_listbox_collapses_without_a_visible_option
+    assert_includes classes_for(:combobox_listbox), "not-has-[[role=option]:not([hidden])]:hidden"
+  end
+
   # ── option ────────────────────────────────────────────────────────────────
 
   def test_combobox_option_returns_a_classes_string
@@ -106,15 +111,25 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes result, "cursor-pointer"
   end
 
-  def test_combobox_option_includes_selected_classes_when_selected
-    result = classes_for(:combobox_option, selected: true)
+  def test_combobox_option_highlights_whichever_option_is_aria_selected
+    result = classes_for(:combobox_option)
 
-    assert_includes result, "bg-(--sp-color-primary)/10"
-    assert_includes result, "text-(--sp-color-primary)"
+    assert_includes result, "aria-selected:bg-(--sp-color-primary)/10"
+    assert_includes result, "aria-selected:text-(--sp-color-primary)"
   end
 
-  def test_combobox_option_excludes_selected_classes_when_not_selected
-    refute_includes classes_for(:combobox_option, selected: false), "bg-(--sp-color-primary)/10"
+  def test_combobox_option_marks_the_active_option_beyond_color
+    result = classes_for(:combobox_option)
+
+    assert_includes result, "aria-selected:outline-2"
+    assert_includes result, "aria-selected:outline-(--sp-color-primary)"
+  end
+
+  def test_combobox_option_description_is_smaller_muted_text
+    result = classes_for(:combobox_option_description)
+
+    assert_includes result, "text-(length:--sp-text-xs)"
+    assert_includes result, "text-(--sp-color-muted-fg)"
   end
 
   def test_combobox_option_includes_disabled_classes_when_disabled
@@ -134,22 +149,25 @@ class TailwindThemeComboboxTest < Minitest::Test
     assert_includes classes_for(:combobox_option_group), "py-(--sp-space-1)"
   end
 
-  # ── typeahead ─────────────────────────────────────────────────────────────
+  def test_combobox_option_group_label_is_a_muted_heading
+    result = classes_for(:combobox_option_group_label)
 
-  def test_combobox_typeahead_loading_includes_layout_classes
-    result = classes_for(:combobox_typeahead_loading)
+    assert_includes result, "font-semibold"
+    assert_includes result, "text-(--sp-color-muted-fg)"
+  end
+
+  # ── status ────────────────────────────────────────────────────────────────
+
+  def test_combobox_status_includes_layout_classes
+    result = classes_for(:combobox_status)
 
     assert_includes result, "flex"
     assert_includes result, "items-center"
     assert_includes result, "justify-center"
   end
 
-  def test_combobox_typeahead_empty_includes_layout_classes
-    result = classes_for(:combobox_typeahead_empty)
-
-    assert_includes result, "flex"
-    assert_includes result, "items-center"
-    assert_includes result, "justify-center"
+  def test_combobox_status_collapses_without_a_message
+    assert_includes classes_for(:combobox_status), "empty:hidden"
   end
 
   # ── time ──────────────────────────────────────────────────────────────────
@@ -175,12 +193,18 @@ class TailwindThemeComboboxTest < Minitest::Test
     refute_includes result, "shrink-0"
   end
 
-  def test_combobox_time_drum_period_includes_shrink_class
-    result = classes_for(:combobox_time_drum, type: :period)
+  def test_combobox_time_drum_meridiem_includes_shrink_class
+    result = classes_for(:combobox_time_drum, type: :meridiem)
 
     assert_includes result, "shrink-0"
     refute_includes result, "flex-1"
     refute_includes result, "min-w-0"
+  end
+
+  def test_every_time_column_shows_keyboard_focus
+    %i[unit meridiem].each do |type|
+      assert_includes classes_for(:combobox_time_drum, type: type), "focus-visible:ring-(--sp-focus-ring-color)"
+    end
   end
 
   def test_combobox_time_drum_defaults_to_unit_classes
@@ -188,26 +212,5 @@ class TailwindThemeComboboxTest < Minitest::Test
 
     assert_includes result, "flex-1"
     assert_includes result, "min-w-0"
-  end
-
-  # ── date navigation ───────────────────────────────────────────────────────
-
-  def test_combobox_date_navigation_includes_flex_classes
-    result = classes_for(:combobox_date_navigation)
-
-    assert_includes result, "flex"
-    assert_includes result, "justify-between"
-  end
-
-  def test_combobox_date_navigation_navigator_returns_empty_classes
-    refute_includes classes_for(:combobox_date_navigation_navigator), "size-(--sp-control-size)"
-  end
-
-  def test_combobox_date_navigation_title_includes_flex_grow
-    assert_includes classes_for(:combobox_date_navigation_title), "flex-1"
-  end
-
-  def test_combobox_date_navigation_title_includes_text_center
-    assert_includes classes_for(:combobox_date_navigation_title), "text-center"
   end
 end

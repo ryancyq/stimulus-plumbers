@@ -18,7 +18,7 @@ class ProfileAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#profile"
   end
 
-  def test_passes_wcag_with_datepicker_open
+  def test_passes_wcag_with_date_combobox_open
     find("input[aria-label='Date']").click
 
     assert_accessible context: "#profile"

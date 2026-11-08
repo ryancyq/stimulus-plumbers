@@ -4,131 +4,53 @@ module StimulusPlumbers
   module Components
     class Calendar
       class Turbo
-        class MonthsOfYear < Plumber::Base
-          YEAR_SIZE      = 12
-          MONTHS_PER_ROW = 4
-          MONTH_FORMATS  = %i[narrow short long].freeze
+        class MonthsOfYear < Grid
+          COLUMNS = 4
 
-          attr_reader :date, :today, :selected_date, :format, :since, :till, :disabled_months
-
-          def initialize(
-            template,
-            date: Date.today,
-            today: Date.today,
-            selected_date: nil,
-            format: :short,
-            since: nil,
-            till: nil,
-            disabled_months: []
-          )
-            super(template)
-            @date           = date
-            @today          = today
-            @selected_date  = selected_date
-            @format         = format
-            @since          = since
-            @till           = till
-            @disabled_months = disabled_months
+          def rows
+            @rows ||= (1..12).map { |month| Date.new(configuration.displayed.year, month, 1) }.each_slice(COLUMNS).to_a
           end
 
-          def render(...)
-            render_months_of_year(...)
+          def heading
+            configuration.displayed.year.to_s
+          end
+
+          def view_name
+            :year
+          end
+
+          def step(direction)
+            configuration.displayed.beginning_of_year >> (12 * direction)
+          end
+
+          def zoom_out
+            :decade
           end
 
           private
 
-          def render_months_of_year(**html_options)
-            html_options = merge_html_options(
-              theme.resolve(:calendar_months_of_year),
-              html_options
-            )
-            template.content_tag(:div, role: "rowgroup", **html_options) { months_of_year }
+          def target
+            "period"
           end
 
-          def months_of_year
-            row_options = merge_html_options(
-              theme.resolve(:calendar_row),
-              { role: "row" }
-            )
-            template.safe_join(
-              month_names.each_slice(MONTHS_PER_ROW).map do |months|
-                template.content_tag(:div, **row_options) { months_in_row(months) }
-              end
-            )
+          def control_view
+            :month
           end
 
-          def month_names
-            I18n.t("date.abbr_month_names").compact.first(YEAR_SIZE)
-                .zip(I18n.t("date.month_names").compact.first(YEAR_SIZE))
-                .each_with_index.map do |(abbr, full), i|
-                  month_num = i + 1
-                  [month_num, abbr, full, month_disabled?(month_num, abbr, full)]
-                end
+          def render_control(date, tabindex)
+            period_control(I18n.l(date, format: "%B"), date, tabindex)
           end
 
-          def months_in_row(months)
-            template.safe_join(months.map { |number, abbr, full, disabled| month_cell(number, abbr, full, disabled) })
+          def label(date)
+            I18n.l(date, format: "%B %Y")
           end
 
-          def month_cell(month_number, abbr, full, disabled)
-            options = month_cell_html_options(month_number, disabled)
-            options[:aria][:label] = abbr if format == :narrow
-            template.content_tag(:button, display_name(abbr, full), **options)
+          def disabled?(date)
+            configuration.availability.month_disabled?(date.year, date.month) || period_url(date).nil?
           end
 
-          def display_name(abbr, full)
-            case format
-            when :narrow then abbr[0, 1]
-            when :long   then full
-            else              abbr
-            end
-          end
-
-          def month_cell_html_options(month_number, disabled)
-            merge_html_options(
-              theme.resolve(:calendar_month),
-              {
-                role:     "gridcell",
-                tabindex: focused_month?(month_number, disabled) ? 0 : -1,
-                data:     { month: month_number },
-                aria:     {
-                  current:  current_month?(month_number) ? "month" : nil,
-                  selected: selected_date_in_month?(month_number) ? "true" : "false",
-                  disabled: disabled ? "true" : nil
-                }
-              }
-            )
-          end
-
-          def month_disabled?(month_num, abbr, full)
-            month_start = Date.new(date.year, month_num, 1)
-            month_end   = Date.new(date.year, month_num, -1)
-            (since && month_end < since) ||
-              (till && month_start > till) ||
-              month_in_disabled_list?(month_num, abbr, full)
-          end
-
-          def month_in_disabled_list?(month_num, abbr, full)
-            disabled_months.any? { |v| v.to_s == month_num.to_s } ||
-              disabled_months.include?(abbr) ||
-              disabled_months.include?(full)
-          end
-
-          def current_month?(month_number)
-            month_number == today.month && date.year == today.year
-          end
-
-          def focused_month?(month_number, disabled)
-            !disabled && (selected_date_in_month?(month_number) ||
-              (current_month?(month_number) && !selected_date_in_current_year?))
-          end
-
-          def selected_date_in_current_year?
-            selected_date && selected_date.year == date.year
-          end
-
-          def selected_date_in_month?(month)
-            selected_date && month == selected_date.month && date.year == selected_date.year
+          def unit(date)
+            date.beginning_of_month
           end
         end
       end

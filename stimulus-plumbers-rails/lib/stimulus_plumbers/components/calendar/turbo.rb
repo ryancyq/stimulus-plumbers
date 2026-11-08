@@ -3,107 +3,56 @@
 module StimulusPlumbers
   module Components
     class Calendar
+      # Turbo navigation: Rails renders each period inside a Turbo Frame that `calendar-turbo` reloads.
       class Turbo < Plumber::Base
-        MONTH_SELECTOR_CONTROLLER   = "calendar-month-selector"
-        YEAR_SELECTOR_CONTROLLER    = "calendar-year-selector"
-        DECADE_SELECTOR_CONTROLLER  = "calendar-decade-selector"
+        TURBO_CONTROLLER = "calendar-turbo"
+        ACTIONS          = [
+          "calendar:navigate->#{TURBO_CONTROLLER}#onNavigate",
+          "turbo:before-fetch-response->#{TURBO_CONTROLLER}#onResponse",
+          "turbo:frame-missing->#{TURBO_CONTROLLER}#onError",
+          "turbo:fetch-request-error->#{TURBO_CONTROLLER}#onError",
+          "#{TURBO_CONTROLLER}:failed->#{STIMULUS_CONTROLLER}#onFailed"
+        ].join(" ").freeze
 
-        def month(
-          date: Date.today,
-          today: Date.today,
-          show_other_months: false,
-          weekday_format: :short,
-          selectable: false,
-          selected_date: nil,
-          since: nil,
-          till: nil,
-          **kwargs
-        )
-          html_options = merge_html_options(
-            theme.resolve(:calendar),
-            kwargs,
-            { data: { controller: MONTH_SELECTOR_CONTROLLER } }
-          )
-          template.content_tag(:div, role: "grid", **html_options) do
-            template.safe_join(
-              [
-                Turbo::DaysOfWeek.new(template, format: weekday_format).render,
-                Turbo::DaysOfMonth.new(
-                  template,
-                  date:              date,
-                  today:             today,
-                  selectable:        selectable,
-                  selected_date:     selected_date,
-                  show_other_months: show_other_months,
-                  since:             since,
-                  till:              till
-                ).render
-              ]
-            )
+        # `url`: a base URL String, a Symbol naming a view method, or a Proc run on the view; nil uses the current URL.
+        def initialize(template, url)
+          super(template)
+          @url = url
+        end
+
+        def stimulus_data(_configuration)
+          {
+            controller:                  TURBO_CONTROLLER,
+            action:                      ACTIONS,
+            "calendar-navigation-value" => "turbo"
+          }
+        end
+
+        # The period in a Turbo Frame.
+        def render(configuration)
+          grid = grid_for(configuration)
+          template.content_tag(:"turbo-frame", id: configuration.frame_id) do
+            template.safe_join([Header.new(template).render(grid), grid.render])
           end
         end
 
-        def year(
-          date: Date.today,
-          today: Date.today,
-          selected_date: nil,
-          month_format: :short,
-          since: nil,
-          till: nil,
-          disabled_months: [],
-          **kwargs
-        )
-          html_options = merge_html_options(
-            theme.resolve(:calendar_quarter_grid),
-            kwargs,
-            {
-              role: "grid",
-              aria: { label: I18n.t("stimulus_plumbers.calendar.year_view") },
-              data: { controller: YEAR_SELECTOR_CONTROLLER }
-            }
-          )
-          template.content_tag(:div, **html_options) do
-            Turbo::MonthsOfYear.new(
-              template,
-              date:            date,
-              today:           today,
-              selected_date:   selected_date,
-              format:          month_format,
-              since:           since,
-              till:            till,
-              disabled_months: disabled_months
-            ).render
-          end
+        private
+
+        attr_reader :url
+
+        def grid_for(configuration)
+          grid = { month: DaysOfMonth, year: MonthsOfYear, decade: YearsOfDecade }.fetch(configuration.view)
+          grid.new(template, configuration, url_builder(configuration.id))
         end
 
-        def decade(
-          date: Date.today,
-          today: Date.today,
-          selected_date: nil,
-          since: nil,
-          till: nil,
-          disabled_years: [],
-          **kwargs
-        )
-          html_options = merge_html_options(
-            theme.resolve(:calendar_quarter_grid),
-            kwargs,
-            {
-              role: "grid",
-              aria: { label: I18n.t("stimulus_plumbers.calendar.decade_view") },
-              data: { controller: DECADE_SELECTOR_CONTROLLER }
-            }
-          )
-          template.content_tag(:div, **html_options) do
-            Turbo::YearsOfDecade.new(
-              template,
-              date:           date,
-              today:          today,
-              selected_date:  selected_date,
-              since:          since,
-              till:           till,
-              disabled_years: disabled_years
-            ).render
+        # Builds a period URL from a date and a view; nil disables the control.
+        def url_builder(id)
+          generator, init_args = url.nil? || url.is_a?(String) ? [PeriodUrl, [template, id, url]] : [url, []]
+          lambda do |date, view|
+            dispatcher = Plumber::Dispatcher.build(generator, date, view, method_name: :call, init_args: init_args)
+            raise ArgumentError, "invalid url: #{url.inspect}" unless dispatcher
+
+            dispatcher.call(template).presence
           end
         end
       end

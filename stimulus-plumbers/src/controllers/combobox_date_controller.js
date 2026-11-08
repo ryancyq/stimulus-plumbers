@@ -1,173 +1,83 @@
 import { Controller } from '@hotwired/stimulus';
-import { tryParseDate } from '../plumbers/plumber/date';
-import { setHidden } from '../accessibility/aria';
-
-const VIEWS = ['month', 'year', 'decade'];
 
 export default class extends Controller {
-  static targets = ['previous', 'next', 'day', 'month', 'year', 'viewTitle'];
-  static outlets = ['calendar-month', 'calendar-year', 'calendar-decade'];
-  static values = {
-    date: String,
-    view: { type: String, default: 'month' },
-    locales: { type: Array, default: ['default'] },
-    dayFormat: { type: String, default: 'numeric' },
-    monthFormat: { type: String, default: 'long' },
-    yearFormat: { type: String, default: 'numeric' },
-  };
+  static targets = ['trigger', 'input', 'panel'];
+  static outlets = ['calendar'];
 
-  initialize() {
-    this.previous = this.previous.bind(this);
-    this.next = this.next.bind(this);
+  connect() {
+    this.connection = new AbortController();
+    // Survives reconnects.
+    this.initial ??= this.inputTarget.value;
+    this.element
+      .closest('form')
+      ?.addEventListener(
+        'reset',
+        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._restore()),
+        { signal: this.connection.signal }
+      );
   }
 
-  async calendarMonthOutletConnected() {
-    if (this.dateValue) {
-      const date = tryParseDate(this.dateValue);
-      if (date) await this.calendarMonthOutlet.calendar.navigate(date);
-    }
-    this.draw();
+  disconnect() {
+    this.connection?.abort();
+    this.connection = null;
   }
 
-  onDaySelect(event) {
-    this.dateValue = event.detail.iso;
-    this.draw();
-    this.dispatch('selected', { detail: { value: event.detail.iso }, bubbles: true });
-  }
-
-  zoomOut() {
-    const idx = VIEWS.indexOf(this.viewValue);
-    if (idx < VIEWS.length - 1) {
-      this.viewValue = VIEWS[idx + 1];
-      this.draw();
+  // ArrowDown opens the panel and has the calendar outlet focus its Tab stop; Tab closes the panel.
+  // The native popover API opens and closes the panel; the popover controller follows its toggle events.
+  onKeydown(event) {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (!this._isOpen) this.panelTarget.showPopover({ source: this.triggerTarget });
+      if (this.hasCalendarOutlet) this.calendarOutlet.focusTabStop();
+    } else if (event.key === 'Tab' && this._isOpen) {
+      this.panelTarget.hidePopover();
     }
   }
 
-  async onMonthSelect(event) {
-    const { month } = event.detail; // 1-indexed
-    if (!this.hasCalendarMonthOutlet) return;
-    const { year } = this.calendarMonthOutlet.calendar;
-    await this.calendarMonthOutlet.calendar.navigate(new Date(year, month - 1, 1));
-    this.viewValue = 'month';
-    this.draw();
+  // Clicks on the icons and padding open the panel from the trigger.
+  onClick(event) {
+    if (!this._isInFieldBox(event.target)) return;
+
+    this.triggerTarget.focus({ preventScroll: true });
+    if (!this._isOpen) this.panelTarget.showPopover({ source: this.triggerTarget });
   }
 
-  async onYearSelect(event) {
-    const { year } = event.detail;
-    if (!this.hasCalendarMonthOutlet) return;
-    const { month } = this.calendarMonthOutlet.calendar;
-    await this.calendarMonthOutlet.calendar.navigate(new Date(year, month, 1));
-    if (this.hasCalendarYearOutlet) {
-      this.calendarYearOutlet.navigate(this.calendarMonthOutlet.calendar.current);
-    }
-    this.viewValue = 'year';
-    this.draw();
+  // Keeps focus on the trigger while the icons and padding are pressed.
+  onMousedown(event) {
+    if (this._isInFieldBox(event.target)) event.preventDefault();
   }
 
-  previousTargetConnected(target) {
-    target.addEventListener('click', this.previous);
+  // Closes the panel when focus moves to an element outside the combobox; WebKit sends focus
+  // nowhere on a click inside the panel.
+  onFocusout(event) {
+    const target = event.relatedTarget;
+    if (this._isOpen && target && !this.element.contains(target)) this.panelTarget.hidePopover();
   }
 
-  previousTargetDisconnected(target) {
-    target.removeEventListener('click', this.previous);
+  // Copies the selected date into the field, closes the panel, and focuses the trigger.
+  onChange(event) {
+    this.inputTarget.value = event.detail.value;
+    this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+    this._selectionChanged();
+    if (this._isOpen) this.panelTarget.hidePopover();
+    this.triggerTarget.focus();
   }
 
-  async previous() {
-    await this.calendarMonthOutlet.calendar.step(...this.stepArgs(-1));
-    this.syncOutletValues();
-    this.draw();
+  get _isOpen() {
+    return this.panelTarget.matches(':popover-open');
   }
 
-  nextTargetConnected(target) {
-    target.addEventListener('click', this.next);
+  _restore() {
+    this.inputTarget.value = this.initial;
+    this._selectionChanged();
   }
 
-  nextTargetDisconnected(target) {
-    target.removeEventListener('click', this.next);
+  _selectionChanged() {
+    this.dispatch('changed', { detail: { value: this.inputTarget.value } });
   }
 
-  async next() {
-    await this.calendarMonthOutlet.calendar.step(...this.stepArgs(1));
-    this.syncOutletValues();
-    this.draw();
-  }
-
-  draw() {
-    this.drawDay();
-    this.drawMonth();
-    this.drawYear();
-    this.drawViewTitle();
-    this.drawView();
-  }
-
-  drawDay() {
-    if (!this.hasDayTarget || !this.hasCalendarMonthOutlet) return;
-    const { year, month, day } = this.calendarMonthOutlet.calendar;
-    this.dayTarget.textContent = new Intl.DateTimeFormat(this.localesValue, { day: this.dayFormatValue }).format(
-      new Date(year, month, day)
-    );
-  }
-
-  drawMonth() {
-    if (!this.hasMonthTarget || !this.hasCalendarMonthOutlet) return;
-    const { year, month } = this.calendarMonthOutlet.calendar;
-    this.monthTarget.textContent = new Intl.DateTimeFormat(this.localesValue, { month: this.monthFormatValue }).format(
-      new Date(year, month)
-    );
-  }
-
-  drawYear() {
-    if (!this.hasYearTarget || !this.hasCalendarMonthOutlet) return;
-    const { year } = this.calendarMonthOutlet.calendar;
-    this.yearTarget.textContent = new Intl.DateTimeFormat(this.localesValue, { year: this.yearFormatValue }).format(
-      new Date(year, 0)
-    );
-  }
-
-  drawViewTitle() {
-    if (!this.hasViewTitleTarget || !this.hasCalendarMonthOutlet) return;
-    const { year, month } = this.calendarMonthOutlet.calendar;
-    this.viewTitleTarget.textContent = this.viewTitleLabel(year, month);
-  }
-
-  syncOutletValues() {
-    if (!this.hasCalendarMonthOutlet) return;
-    const { current } = this.calendarMonthOutlet.calendar;
-    if (!current) return;
-    if (this.hasCalendarYearOutlet) this.calendarYearOutlet.navigate(current);
-    if (this.hasCalendarDecadeOutlet) this.calendarDecadeOutlet.navigate(current);
-  }
-
-  stepArgs(direction) {
-    if (this.viewValue === 'year') return ['year', direction];
-    if (this.viewValue === 'decade') return ['year', direction * 10];
-    return ['month', direction];
-  }
-
-  viewTitleLabel(year, month) {
-    if (this.viewValue === 'year') return String(year);
-    if (this.viewValue === 'decade') {
-      const start = Math.floor(year / 10) * 10;
-      return `${start}–${start + 9}`;
-    }
-    return new Intl.DateTimeFormat(this.localesValue, { month: 'long', year: 'numeric' }).format(new Date(year, month));
-  }
-
-  drawView() {
-    const inMonthView = this.viewValue === 'month';
-    const inYearView = this.viewValue === 'year';
-    const inDecadeView = this.viewValue === 'decade';
-
-    if (this.hasCalendarMonthOutlet) {
-      const outlet = this.calendarMonthOutlet;
-      if (outlet.hasDaysOfWeekTarget) setHidden(outlet.daysOfWeekTarget, !inMonthView);
-      if (outlet.hasDaysOfMonthTarget) setHidden(outlet.daysOfMonthTarget, !inMonthView);
-    }
-    if (this.hasCalendarYearOutlet) {
-      setHidden(this.calendarYearOutletElement, !inYearView);
-    }
-    if (this.hasCalendarDecadeOutlet) {
-      setHidden(this.calendarDecadeOutletElement, !inDecadeView);
-    }
+  // Whether the target is in the input group holding the trigger, other than the trigger.
+  _isInFieldBox(target) {
+    return target !== this.triggerTarget && this.triggerTarget.parentElement.contains(target);
   }
 }

@@ -56,7 +56,7 @@ module StimulusPlumbers
 
         private
 
-        def panel_attrs(panel_id, mode:, placement:, role:, aria_label:, aria_labelledby:, **kwargs)
+        def panel_attrs(panel_id, mode:, placement:, role:, aria_label:, aria_labelledby:, popover_target: true, **kwargs)
           merge_html_options(
             {
               id:      panel_id,
@@ -65,7 +65,7 @@ module StimulusPlumbers
               aria:    { label: aria_label, labelledby: aria_labelledby }.compact
             },
             theme.resolve(:popover, placement: placement),
-            { data: { popover_target: "panel" } },
+            popover_target ? { data: { popover_target: "panel" } } : {},
             kwargs
           )
         end

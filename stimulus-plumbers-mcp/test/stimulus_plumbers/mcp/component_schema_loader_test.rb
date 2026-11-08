@@ -70,7 +70,7 @@ class ComponentSchemaLoaderTest < Minitest::Test
   end
 
   def test_field_as_controllers_maps_combobox_backed_as_values
-    assert_equal "combobox-dropdown", @schema[:field_as_controllers][:select]
+    assert_equal "combobox",          @schema[:field_as_controllers][:select]
     assert_equal "combobox-date",     @schema[:field_as_controllers][:date]
   end
 

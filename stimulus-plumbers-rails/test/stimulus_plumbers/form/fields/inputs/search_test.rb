@@ -74,16 +74,11 @@ class SearchTest < ActionView::TestCase
     assert_css build_field, "input[type='hidden'][name='sign_in_form[email]']"
   end
 
-  def test_renders_combobox_trigger
-    assert_css build_field, "input[role='combobox']"
-  end
+  def test_renders_an_editable_freeform_combobox
+    doc = build_field
 
-  def test_trigger_is_not_readonly
-    assert_not build_field.at_css("input[role='combobox']").key?("readonly"), "Expected trigger to not be readonly"
-  end
-
-  def test_trigger_has_haspopup_listbox
-    assert_css build_field, "input[aria-haspopup='listbox']"
+    assert_css doc, "[data-combobox-mode-value='editable'][data-combobox-value-policy-value='freeform']"
+    assert_css doc, "input#sign_in_form_email[role='combobox']"
   end
 
   def test_renders_listbox_popover
@@ -91,7 +86,7 @@ class SearchTest < ActionView::TestCase
   end
 
   def test_has_input_action_for_filtering
-    assert_css build_field, "[data-action*='input->input-combobox#onInput']"
+    assert_css build_field, "input[role='combobox'][data-action*='input->combobox#onInput']"
   end
 
   def test_renders_initial_choices
@@ -101,12 +96,28 @@ class SearchTest < ActionView::TestCase
     assert_css doc, "li[role='option'][data-value='paris']"
   end
 
-  def test_url_sets_combobox_dropdown_url_value
-    assert_css build_field(url: "/cities"), "[data-combobox-dropdown-url-value='/cities']"
+  def test_clearable_keeps_caller_controllers_on_the_container
+    container = build_field(clearable: true, data: { controller: "analytics", testid: "q" }).at_css("[data-testid='q']")
+
+    assert_equal %w[analytics combobox input-clearable], container["data-controller"].split.sort
   end
 
-  def test_url_option_does_not_leak_into_html_attributes
-    assert_nil build_field(url: "/cities").at_css("[url]")
+  def test_value_policy_can_be_restricted
+    assert_css build_field(value_policy: :restricted), "[data-combobox-value-policy-value='restricted']"
+  end
+
+  def test_source_reaches_the_combobox
+    doc = build_field(source: "/cities", param: :term)
+
+    assert_css doc, "[data-controller='combobox combobox-turbo'][data-combobox-turbo-src-value='/cities']"
+    assert_css doc, "turbo-frame[data-combobox-turbo-target='frame']"
+  end
+
+  def test_match_and_min_length_reach_the_combobox
+    doc = build_field(match: :contains, min_length: 2)
+
+    assert_css doc, "[data-controller~='combobox'][data-combobox-match-value='contains'][data-combobox-min-length-value='2']"
+    assert_no_css doc, "[match], [min_length]"
   end
 
   def test_renders_custom_label_text
@@ -130,15 +141,8 @@ class SearchTest < ActionView::TestCase
     assert_equal "true", build_field.at_css("input[role='combobox']")["aria-invalid"]
   end
 
-  def test_clearable_renders_input_clearable_controller_wrapper
-    assert_css build_field(clearable: true), "[data-controller='input-clearable']"
-  end
-
-  def test_clearable_combobox_is_inside_input_clearable_wrapper
-    doc     = build_field(clearable: true)
-    wrapper = doc.at_css("[data-controller='input-clearable']")
-
-    assert_not_nil wrapper.at_css("[data-controller~='input-combobox']")
+  def test_clearable_puts_input_clearable_on_the_combobox_container
+    assert_css build_field(clearable: true), "[data-controller~='combobox'][data-controller~='input-clearable']"
   end
 
   def test_clearable_trigger_has_input_clearable_target
@@ -170,11 +174,8 @@ class SearchTest < ActionView::TestCase
     assert_css build_field(clearable: true), "button[data-input-clearable-target='clear'] span"
   end
 
-  def test_clearable_clear_button_is_inside_input_clearable_wrapper
-    doc     = build_field(clearable: true)
-    wrapper = doc.at_css("[data-controller='input-clearable']")
-
-    assert_not_nil wrapper.at_css("button[data-input-clearable-target='clear']")
+  def test_clearable_clear_button_sits_beside_the_control
+    assert_css build_field(clearable: true), "input[role='combobox'] ~ button[data-input-clearable-target='clear']"
   end
 
   def test_without_clearable_does_not_render_clear_button
@@ -196,9 +197,9 @@ class SearchTest < ActionView::TestCase
                  build_field.at_css("input[type='hidden'][name='sign_in_form[email]']")["value"]
   end
 
-  def test_model_value_sets_combobox_value_data_attribute
+  def test_model_value_shows_as_the_freeform_text
     @form.define_singleton_method(:email) { "hello@example.com" }
 
-    assert_css build_field, "[data-input-combobox-value-value='hello@example.com']"
+    assert_equal "hello@example.com", build_field.at_css("input[role='combobox']")["value"]
   end
 end

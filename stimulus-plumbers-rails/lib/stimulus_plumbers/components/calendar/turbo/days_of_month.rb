@@ -4,185 +4,96 @@ module StimulusPlumbers
   module Components
     class Calendar
       class Turbo
-        class DaysOfMonth < Plumber::Base
-          DAYS_PER_ROW = 7
+        class DaysOfMonth < Grid
+          DAYS_PER_WEEK = 7
 
-          attr_reader :date, :today, :selectable, :selected_date, :show_other_months, :since, :till
-
-          def initialize(
-            template,
-            date: Date.today,
-            today: Date.today,
-            selectable: false,
-            selected_date: nil,
-            show_other_months: false,
-            since: nil,
-            till: nil
-          )
-            super(template)
-            @date              = date
-            @today             = today
-            @selectable        = selectable
-            @selected_date     = selected_date
-            @show_other_months = show_other_months
-            @since             = since
-            @till              = till
+          # Whole weeks covering the month, starting on first_day_of_week.
+          def rows
+            @rows ||= (grid_start..grid_end).each_slice(DAYS_PER_WEEK).to_a
           end
 
-          def render(...)
-            render_days_of_month(...)
+          def heading
+            I18n.l(configuration.displayed, format: "%B %Y")
+          end
+
+          def view_name
+            :month
+          end
+
+          # The month a year away, or nil outside 0001–9999.
+          def neighbour_year(direction)
+            date = step(direction * 12)
+            date if (1..9999).cover?(date.year)
+          end
+
+          def step(direction)
+            configuration.displayed.beginning_of_month >> direction
+          end
+
+          def zoom_out
+            :year
           end
 
           private
 
-          def render_days_of_month(**html_options)
-            html_options = merge_html_options(
-              theme.resolve(:calendar_days_of_month),
-              html_options
-            )
-            template.content_tag(:div, **html_options, role: "rowgroup") { weeks_of_month }
+          def grid_start
+            first = configuration.displayed.beginning_of_month
+            first - ((first.wday - configuration.first_day_of_week) % DAYS_PER_WEEK)
           end
 
-          def weeks_of_month
-            week_options = merge_html_options(
-              theme.resolve(:calendar_row),
-              { role: "row" }
-            )
-            template.safe_join(
-              build_days.each_slice(DAYS_PER_ROW).map do |days|
-                template.content_tag(:div, **week_options) { days_in_row(days) }
-              end
-            )
+          def grid_end
+            last = configuration.displayed.end_of_month
+            last + ((configuration.first_day_of_week + 6 - last.wday) % DAYS_PER_WEEK)
           end
 
-          def focus_day
-            @focus_day ||= if selected_date_in_current_month?
-                             selected_date
-                           elsif today_in_current_month?
-                             today
-                           else
-                             date.beginning_of_month
-                           end
+          def target
+            "day"
           end
 
-          def build_days
-            first        = date.beginning_of_month
-            last         = date.end_of_month
-            current_days = first.upto(last).to_a
-            prev_filler_days(first) + current_days + next_filler_days(last, current_days.length)
+          def grid_attrs
+            merge_html_options(super, { aria: { readonly: configuration.selectable ? nil : "true" }.compact })
           end
 
-          def prev_filler_days(first_day_of_month)
-            week_start = first_day_of_month - first_day_of_month.wday
-            week_start.upto(first_day_of_month - 1).to_a
-          end
-
-          def next_filler_days(last_day_of_month, days_in_month)
-            week_start_offset = last_day_of_month.beginning_of_month.wday
-            total             = week_start_offset + days_in_month
-            next_count = (DAYS_PER_ROW - (total % DAYS_PER_ROW)) % DAYS_PER_ROW
-            next_count.positive? ? (last_day_of_month + 1).upto(last_day_of_month + next_count).to_a : []
-          end
-
-          def selected_date_in_current_month?
-            selected_date&.month == date.month && selected_date&.year == date.year
-          end
-
-          def today_in_current_month?
-            today.month == date.month && today.year == date.year
-          end
-
-          def days_in_row(days)
-            template.safe_join(
-              days.map do |day|
-                if day.month == date.month
-                  current_month_day_cell(day)
-                elsif show_other_months
-                  other_month_day_cell(day)
-                else
-                  hidden_day_cell(day)
-                end
-              end
-            )
-          end
-
-          def hidden_day_cell(date)
-            html_options = merge_html_options(
-              theme.resolve(:calendar_day),
-              { role: "gridcell", tabindex: -1, aria: { hidden: "true" } }
-            )
-            template.content_tag(:span, **html_options) do
-              template.content_tag(:time, nil, datetime: date.iso8601)
+          def render_head
+            template.content_tag(:thead) do
+              template.content_tag(:tr) { template.safe_join(rows.first.map { |date| weekday_header(date.wday) }) }
             end
           end
 
-          def current_month_day_cell(date)
-            if in_range?(date)
-              tag = selectable ? :button : :span
-              template.content_tag(tag, **day_cell_html_options(date)) do
-                template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
-              end
-            else
-              disabled_current_month_day_cell(date)
-            end
-          end
-
-          def disabled_current_month_day_cell(date)
-            html_options = merge_html_options(
-              theme.resolve(:calendar_day),
-              { role: "gridcell", tabindex: -1, aria: { disabled: "true" } }
-            )
-            template.content_tag(:span, **html_options) do
-              template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
-            end
-          end
-
-          def day_cell_html_options(date)
-            is_today = date == today
-            is_selected = selected_date && date == selected_date
-            merge_html_options(
-              theme.resolve(:calendar_day),
-              {
-                role:     "gridcell",
-                tabindex: date == focus_day ? 0 : -1,
-                aria:     {
-                  current:  is_today ? "date" : nil,
-                  selected: if selectable then is_selected ? "true" : "false" end
-                }
-              }
+          def weekday_header(wday)
+            template.content_tag(
+              :th,
+              I18n.t("date.abbr_day_names")[wday],
+              **merge_html_options(
+                theme.resolve(:calendar_weekday), { scope: "col", abbr: I18n.t("date.day_names")[wday] }
+              )
             )
           end
 
-          def other_month_day_cell(date)
-            if selectable && in_range?(date)
-              navigable_other_month_day_cell(date)
-            else
-              disabled_other_month_day_cell(date)
-            end
+          def cell_attrs(date)
+            return { role: "gridcell" } unless configuration.selectable
+
+            { role: "gridcell", aria: { selected: (configuration.selected == date).to_s } }
           end
 
-          def navigable_other_month_day_cell(date)
-            options = merge_html_options(
-              theme.resolve(:calendar_day, outside: true),
-              { role: "gridcell", tabindex: -1, aria: { selected: "false" } }
-            )
-            template.content_tag(:button, **options, type: "button") do
-              template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
-            end
+          def render_control(date, tabindex)
+            template.content_tag(:button, date.day.to_s, type: "button", **control_attrs(date, tabindex))
           end
 
-          def disabled_other_month_day_cell(date)
-            options = merge_html_options(
-              theme.resolve(:calendar_day, outside: true),
-              { role: "gridcell", tabindex: -1, aria: { disabled: "true", selected: "false" } }
-            )
-            template.content_tag(:span, **options) do
-              template.content_tag(:time, date.day.to_s, datetime: date.iso8601)
-            end
+          def label(date)
+            I18n.l(date, format: :long)
           end
 
-          def in_range?(date)
-            (since.nil? || date >= since) && (till.nil? || date <= till)
+          def navigable?(date)
+            super && (configuration.show_other_months || date.month == configuration.displayed.month)
+          end
+
+          def outside?(date)
+            date.month != configuration.displayed.month
+          end
+
+          def disabled?(date)
+            configuration.availability.disabled?(date)
           end
         end
       end

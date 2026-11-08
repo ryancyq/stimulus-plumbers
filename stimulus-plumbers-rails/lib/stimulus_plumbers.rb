@@ -13,10 +13,12 @@ require_relative "stimulus_plumbers/logger"
 # -- Plumber base --
 require_relative "stimulus_plumbers/plumber/dispatcher"
 require_relative "stimulus_plumbers/plumber/slots"
-require_relative "stimulus_plumbers/plumber/config"
 require_relative "stimulus_plumbers/plumber/base"
+require_relative "stimulus_plumbers/plumber/options/choice"
 
 require_relative "stimulus_plumbers/password/requirements"
+require_relative "stimulus_plumbers/dates"
+require_relative "stimulus_plumbers/dates/availability"
 
 # -- UI components --
 require_relative "stimulus_plumbers/components/icon"
@@ -61,25 +63,33 @@ require_relative "stimulus_plumbers/components/password_strength"
 
 # -- Calendar --
 require_relative "stimulus_plumbers/components/calendar"
+require_relative "stimulus_plumbers/components/calendar/configuration"
+require_relative "stimulus_plumbers/components/calendar/stimulus"
+require_relative "stimulus_plumbers/components/calendar/stimulus/header"
 require_relative "stimulus_plumbers/components/calendar/turbo"
-require_relative "stimulus_plumbers/components/calendar/turbo/days_of_week"
+require_relative "stimulus_plumbers/components/calendar/turbo/header"
+require_relative "stimulus_plumbers/components/calendar/turbo/period_url"
+require_relative "stimulus_plumbers/components/calendar/turbo/grid"
 require_relative "stimulus_plumbers/components/calendar/turbo/days_of_month"
 require_relative "stimulus_plumbers/components/calendar/turbo/months_of_year"
 require_relative "stimulus_plumbers/components/calendar/turbo/years_of_decade"
 
 # -- Combobox --
 require_relative "stimulus_plumbers/components/combobox"
+require_relative "stimulus_plumbers/components/combobox/trigger_group"
 require_relative "stimulus_plumbers/components/combobox/trigger"
+require_relative "stimulus_plumbers/components/combobox/listbox"
+require_relative "stimulus_plumbers/components/combobox/panel"
+require_relative "stimulus_plumbers/components/combobox/turbo"
+require_relative "stimulus_plumbers/components/combobox/dropdown"
+require_relative "stimulus_plumbers/components/combobox/typeahead"
 require_relative "stimulus_plumbers/components/combobox/options"
 require_relative "stimulus_plumbers/components/combobox/options/option"
 require_relative "stimulus_plumbers/components/combobox/options/option_group"
+require_relative "stimulus_plumbers/components/combobox/temporal"
+require_relative "stimulus_plumbers/components/combobox/temporal/trigger"
 require_relative "stimulus_plumbers/components/combobox/date"
-require_relative "stimulus_plumbers/components/combobox/date/navigator"
-require_relative "stimulus_plumbers/components/combobox/date/navigation"
-require_relative "stimulus_plumbers/components/combobox/dropdown"
-require_relative "stimulus_plumbers/components/combobox/typeahead"
 require_relative "stimulus_plumbers/components/combobox/time"
-require_relative "stimulus_plumbers/components/combobox/config"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field"

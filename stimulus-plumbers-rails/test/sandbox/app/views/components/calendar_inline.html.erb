@@ -1,0 +1,29 @@
+<h1>Calendar</h1>
+
+<%# Each calendar reads <id>[displayed] and <id>[view] from params. %>
+<% today = Date.new(2026, 9, 10) %>
+<%# ?navigation=turbo renders every calendar in Turbo mode. %>
+<% navigation = params[:navigation] == "turbo" ? :turbo : :stimulus %>
+<% period = ->(id) { { displayed: params.dig(id, "displayed"), view: params.dig(id, "view"), navigation: navigation } } %>
+
+<div id="calendar-inline">
+  <section id="calendar-inline-month">
+    <%= sp_calendar id: "calendar-month", today: today, selectable: true, selected: "2026-09-15",
+                    min: "2026-09-03", disabled_weekdays: [0, 6], **period.("calendar-month") %>
+  </section>
+
+  <section id="calendar-inline-other-months">
+    <%= sp_calendar id: "calendar-other-months", today: today, show_other_months: true, first_day_of_week: 1,
+                    **period.("calendar-other-months") %>
+  </section>
+
+  <section id="calendar-inline-year">
+    <%= sp_calendar id: "calendar-year", today: today, **period.("calendar-year"),
+                    view: params.dig("calendar-year", "view") || :year %>
+  </section>
+
+  <section id="calendar-inline-decade">
+    <%= sp_calendar id: "calendar-decade", today: today, disabled_years: [2027], **period.("calendar-decade"),
+                    view: params.dig("calendar-decade", "view") || :decade %>
+  </section>
+</div>

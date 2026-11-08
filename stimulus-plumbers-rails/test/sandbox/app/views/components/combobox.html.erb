@@ -1,14 +1,28 @@
 <h1>Combobox components</h1>
 
+<% today = Date.new(2026, 9, 10) %>
+
 <div id="combobox">
   <%# ── Date ──────────────────────────────────────────────────────────── %>
   <section id="combobox-date">
-    <%= sp_combobox_date(label: "Birthday") %>
+    <%= sp_combobox_date(id: "birthday", name: "birthday", label: "Birthday", calendar: { today: today }) %>
+  </section>
+
+  <%# ── Date (selected, with a range) ──────────────────────────────────── %>
+  <section id="combobox-date-selected">
+    <%= sp_combobox_date(id: "deadline", name: "deadline", label: "Deadline", value: Date.new(2026, 9, 15),
+                         format: { month: "long", day: "numeric", year: "numeric" },
+                         min: "2026-09-03", max: "2026-12-31", calendar: { today: today }) %>
   </section>
 
   <%# ── Time ──────────────────────────────────────────────────────────── %>
   <section id="combobox-time">
     <%= sp_combobox_time(label: "Meeting Time") %>
+  </section>
+
+  <%# ── Time (selected) ───────────────────────────────────────────────── %>
+  <section id="combobox-time-selected">
+    <%= sp_combobox_time(id: "standup", name: "standup", label: "Standup", value: "14:30") %>
   </section>
 
   <%# ── Dropdown ───────────────────────────────────────────────────────── %>
@@ -21,14 +35,22 @@
 
   <%# ── Typeahead ──────────────────────────────────────────────────────── %>
   <section id="combobox-typeahead">
-    <%= sp_combobox_typeahead(label: "City") %>
+    <%= sp_combobox_typeahead(
+          label:   "City",
+          options: [["Singapore", "sg"], ["Seoul", "se"], ["Sydney", "sy"]]
+        ) %>
+  </section>
+
+  <%# ── Typeahead (remote) ─────────────────────────────────────────────── %>
+  <section id="combobox-typeahead-remote">
+    <%= sp_combobox_typeahead(id: "remote-city", label: "Remote city", source: "/components/popover/combobox/cities") %>
   </section>
 
   <%# ── Date (with error) ──────────────────────────────────────────────────── %>
   <section id="combobox-date-error">
     <% date_error = SignUp.new.tap { |f| f.errors.add(:birth_date, "is invalid") } %>
     <%= form_with(model: date_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-      <%= f.field :birth_date, as: :date, label: "Birthday" %>
+      <%= f.field :birth_date, as: :date, label: "Birthday", calendar: { today: today } %>
     <% end %>
   </section>
 
@@ -53,7 +75,7 @@
   <section id="combobox-typeahead-error">
     <% typeahead_error = SignUp.new.tap { |f| f.errors.add(:name, "is invalid") } %>
     <%= form_with(model: typeahead_error, url: "/demo", builder: StimulusPlumbers::Form::Builder) do |f| %>
-      <%= f.field :name, as: :search, label: "City" %>
+      <%= f.field :name, as: :search, label: "City", choices: [["Singapore", "sg"], ["Seoul", "se"]] %>
     <% end %>
   </section>
 
@@ -72,6 +94,53 @@
           label:   "Country",
           options: [["Australia", "au"], ["Canada", "ca", { disabled: true }], ["United States", "us"]]
         ) %>
+  </section>
+
+  <%# ── Dropdown (grouped, with descriptions) ───────────────────────────────── %>
+  <section id="combobox-dropdown-grouped">
+    <%= sp_combobox_dropdown(
+          label:   "Country",
+          options: [
+            { label: "Americas", options: [["Canada", "ca", { description: "North America" }], ["Chile", "cl"]] },
+            { label: "Oceania",  options: [["Australia", "au", { description: "Oceania" }]] }
+          ]
+        ) %>
+  </section>
+
+  <%# ── In a modal ────────────────────────────────────────────────────────── %>
+  <section id="combobox-modal">
+    <%= sp_modal id: "combobox-dialog", aria_label: "Shipping" do |modal| %>
+      <% modal.trigger { "Choose shipping country" } %>
+      <% modal.body do %>
+        <%= sp_combobox_dropdown(
+              label:   "Shipping country",
+              options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]
+            ) %>
+      <% end %>
+      <% modal.footer { modal.close_button "Done" } %>
+    <% end %>
+  </section>
+
+  <%# ── Date in a modal ───────────────────────────────────────────────────── %>
+  <section id="combobox-date-modal">
+    <%= sp_modal id: "combobox-date-dialog", aria_label: "Trip" do |modal| %>
+      <% modal.trigger { "Plan a trip" } %>
+      <% modal.body do %>
+        <%= sp_combobox_date(id: "departure", name: "departure", label: "Departure", calendar: { today: today }) %>
+      <% end %>
+      <% modal.footer { modal.close_button "Done" } %>
+    <% end %>
+  </section>
+
+  <%# ── Time in a modal ───────────────────────────────────────────────────── %>
+  <section id="combobox-time-modal">
+    <%= sp_modal id: "combobox-time-dialog", aria_label: "Call" do |modal| %>
+      <% modal.trigger { "Book a call" } %>
+      <% modal.body do %>
+        <%= sp_combobox_time(id: "call", name: "call", label: "Call", value: "09:00") %>
+      <% end %>
+      <% modal.footer { modal.close_button "Done" } %>
+    <% end %>
   </section>
 
 </div>

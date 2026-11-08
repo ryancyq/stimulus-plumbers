@@ -14,15 +14,14 @@ class ComponentRequirementsTest < Minitest::Test
   def test_combobox_controllers
     controllers = @requirements[:combobox]
 
-    assert_includes controllers, "input-combobox"
+    assert_includes controllers, "combobox"
     assert_includes controllers, "input-formatter"
   end
 
   def test_combobox_includes_nested_panel_controllers
     controllers = @requirements[:combobox]
 
-    # Declared on nested sub-components (Combobox::Dropdown/Date/Time), not the top-level class
-    assert_includes controllers, "combobox-dropdown"
+    # Declared on nested sub-components (Combobox::Date/Time), not the top-level class
     assert_includes controllers, "combobox-date"
     assert_includes controllers, "combobox-time"
   end
@@ -34,12 +33,8 @@ class ComponentRequirementsTest < Minitest::Test
   def test_calendar_controllers
     controllers = @requirements[:calendar]
 
-    assert_includes controllers, "calendar-month"
-    assert_includes controllers, "calendar-year"
-    assert_includes controllers, "calendar-decade"
-    assert_includes controllers, "calendar-month-selector"
-    assert_includes controllers, "calendar-year-selector"
-    assert_includes controllers, "calendar-decade-selector"
+    assert_includes controllers, "calendar"
+    assert_includes controllers, "calendar-turbo"
   end
 
   def test_button_has_no_controllers

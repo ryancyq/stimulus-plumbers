@@ -7,12 +7,9 @@ require_relative "../../../tasks/support/component_manifest"
 class ComponentManifestTest < Minitest::Test
   JS_MANIFEST_PATH = File.expand_path("../../../../stimulus-plumbers/dist/controllers.manifest.json", __dir__)
 
-  # calendar-month covers constant-interpolated identifiers (calendar.rb's
-  # MONTH_STIMULUS_CONTROLLER); combobox-date must also be known for the
-  # "calendar-month:selected->combobox-date#onDaySelect" binding to register
-  # (the listen source only registers once its target resolves); modal is
-  # wired by the modal helper's generated action.
-  KNOWN_IDS = %w[popover reorderable calendar-month combobox-date modal modal-turbo].freeze
+  # calendar: constant-interpolated identifier; combobox-date: the calendar:changed binding;
+  # modal: the helper's generated action.
+  KNOWN_IDS = %w[popover reorderable calendar combobox-date modal modal-turbo].freeze
 
   def setup
     @result = StimulusPlumbers::ComponentManifest.call(known_identifiers: KNOWN_IDS)
@@ -29,12 +26,12 @@ class ComponentManifestTest < Minitest::Test
   end
 
   def test_extracts_dispatch_listens
-    assert_includes @result["calendar-month"]["listens"], "selected"
+    assert_includes @result["calendar"]["listens"], "changed"
   end
 
-  # "calendar-month:selected->combobox-date#onDaySelect" — both halves must be recorded.
+  # "calendar:changed->combobox-date#onChange" — both halves must be recorded.
   def test_extracts_actions_wired_from_a_custom_event
-    assert_includes @result["combobox-date"]["actions"], "onDaySelect"
+    assert_includes @result["combobox-date"]["actions"], "onChange"
   end
 
   def test_extracts_targets
@@ -48,7 +45,13 @@ class ComponentManifestTest < Minitest::Test
   end
 
   def test_resolves_constant_interpolated_identifiers
-    assert_includes @result["calendar-month"]["targets"], "daysOfWeek"
+    assert_includes @result["calendar"]["targets"], "grid"
+  end
+
+  # Combobox::Temporal wires "focusout->#{controller}#onFocusout" with each subclass's STIMULUS_CONTROLLER.
+  def test_resolves_a_controller_passed_down_from_a_base_class
+    assert_includes @result["combobox-date"]["actions"], "onFocusout"
+    assert_includes @result["combobox-date"]["targets"], "trigger"
   end
 
   def test_extracts_modal_open_action

@@ -54,7 +54,7 @@
       <% end %>
     <% end %>
 
-    <%# ── Date picker ──────────────────────────────────────────────────── %>
-    <%= sp_combobox_date(label: "Date") %>
+    <%# ── Date ─────────────────────────────────────────────────────────── %>
+    <%= sp_combobox_date(id: "profile_date", label: "Date", calendar: { today: Date.new(2024, 2, 29) }) %>
   </div>
 </section>

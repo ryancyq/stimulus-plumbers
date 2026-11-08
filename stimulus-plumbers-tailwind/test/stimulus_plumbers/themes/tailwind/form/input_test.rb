@@ -231,6 +231,24 @@ class TailwindThemeFormInputTest < Minitest::Test
     assert_includes result, "[&>div:first-child]:focus-within:ring-0"
   end
 
+  def test_form_field_input_combobox_shows_the_focus_ring_on_the_field
+    assert_includes classes_for(:form_field_input_combobox), "focus-within:ring-(--sp-focus-ring-color)"
+    refute_includes classes_for(:form_field_input_combobox), "focus-within:ring-(--sp-color-error)"
+  end
+
+  def test_form_field_input_combobox_error_focus_ring_uses_the_error_color
+    result = classes_for(:form_field_input_combobox, error: true)
+
+    assert_includes result, "focus-within:ring-(--sp-color-error)"
+    refute_includes result, "focus-within:ring-(--sp-focus-ring-color)"
+  end
+
+  def test_form_field_input_combobox_floating_highlights_the_border_on_focus
+    assert_includes classes_for(:form_field_input_combobox, floating: :outlined), "focus-within:border-(--sp-color-primary)"
+    refute_includes classes_for(:form_field_input_combobox, floating: :outlined, error: true),
+                    "focus-within:border-(--sp-color-primary)"
+  end
+
   def test_form_field_input_combobox_floating_includes_floating_input_base
     result = classes_for(:form_field_input_combobox, floating: :outlined)
 

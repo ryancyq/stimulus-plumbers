@@ -90,7 +90,7 @@ class ComponentDocsLoaderTest < Minitest::Test
   def test_bold_subheadings_are_composed_with_parent_heading
     signatures = form_helpers.map { |h| h[:signature] }
 
-    assert_includes signatures, "f.field — Time"
+    assert_includes signatures, "f.field — Password"
     assert_includes signatures, "f.field — Select"
     assert_includes signatures, "f.field — Search"
   end

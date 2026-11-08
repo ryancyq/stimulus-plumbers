@@ -269,7 +269,7 @@ class FormBuilderTest < ActionView::TestCase
       text_method:  :last
     )
 
-    assert_css doc, "input[role='combobox']"
+    assert_css doc, "button[role='combobox']"
     assert_css doc, "li[role='option'][data-value='admin']"
     assert_css doc, "li[role='option'][data-value='user']"
   end

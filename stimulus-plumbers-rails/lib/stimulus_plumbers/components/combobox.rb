@@ -2,94 +2,109 @@
 
 module StimulusPlumbers
   module Components
+    # The `combobox` controller markup: container, Trigger, hidden input, and Panel. Dropdown and Typeahead define MODE,
+    # the trigger element, and the popover theme key.
     class Combobox < Plumber::Base
-      STIMULUS_CONTROLLER = "input-combobox"
-      FORMAT_CONTROLLER   = "input-formatter"
-      FORMAT_ACTION       = "input-combobox:changed->input-formatter#onChange"
+      include Plumber::Options::Choice
 
-      def render(trigger: {}, input: {}, id: nil, label: nil, close_on_select: nil, **kwargs, &block)
-        trigger_opts = trigger.dup
-        config       = resolve_config(&block)
-        trigger_id   = id || trigger_opts.delete(:id) || template.sp_dom_id
-        panel_id     = Popover.panel_id_for(trigger_id)
+      STIMULUS_CONTROLLER = "combobox"
 
-        template.content_tag(:div, **combobox_attrs(input, close_on_select, config, panel_id, kwargs)) do
-          build_popover(trigger_opts, input, config, trigger_id, panel_id, label)
+      class << self
+        def listbox_id_for(panel_id)
+          [panel_id, "listbox"].compact.join("_")
+        end
+      end
+
+      def render(
+        name: nil,
+        options: [],
+        value: nil,
+        label: nil,
+        labelledby: nil,
+        id: nil,
+        close_on_select: nil,
+        trigger: {},
+        **kwargs
+      )
+        @ids     = ids_for(id || template.sp_dom_id)
+        @options = options
+        @value   = value&.to_s
+        group    = kwargs.extract!(:icon_leading, :icon_trailing, :trailing)
+
+        template.content_tag(:div, **container_attrs(close_on_select, kwargs)) do
+          template.safe_join(
+            [
+              render_trigger(label, labelledby, group.merge(trigger)),
+              hidden_input(name),
+              render_panel(labelled_aria(label, labelledby: labelledby))
+            ]
+          )
         end
       end
 
       private
 
-      def resolve_config
-        config = Combobox::Config.new(template)
-        yield config if block_given?
-        config
+      def ids_for(trigger_id)
+        panel_id = Popover.panel_id_for(trigger_id)
+        { trigger: trigger_id, panel: panel_id, listbox: self.class.listbox_id_for(panel_id) }
       end
 
-      def build_popover(trigger, input, config, trigger_id, panel_id, label)
-        metadata = config.metadata
+      def render_trigger(label, labelledby, trigger)
+        Trigger.new(template).render(
+          id:         @ids[:trigger],
+          listbox_id: @ids[:listbox],
+          actions:    trigger_actions,
+          **trigger_options(trigger),
+          aria:       trigger_aria.merge(labelled_aria(label, labelledby: labelledby)).merge(trigger.fetch(:aria, {}))
+        ) { |attrs| render_trigger_element(attrs) }
+      end
 
-        Components::Popover.new(template).build(panel_id: panel_id) do |p|
-          p.trigger(haspopup: metadata.haspopup, controls: metadata.popup_id_for(panel_id)) do |attrs|
-            build_combobox_trigger(attrs, trigger, input, metadata, trigger_id, label)
-          end
-          p.build_panel(
-            classes: theme.resolve(:combobox_popover).fetch(:classes, ""),
-            data:    { "#{STIMULUS_CONTROLLER}_target": "panel" }
-          ) do |panel_attrs|
-            config.render_panel(panel_attrs: panel_attrs)
-          end
+      # Trigger options; Dropdown adds its default icon.
+      def trigger_options(trigger)
+        trigger
+      end
+
+      # Actions before the shared keydown; Typeahead adds input.
+      def trigger_actions
+        []
+      end
+
+      def trigger_aria
+        {}
+      end
+
+      def display_label
+        Options.new(template).label_for(@options, @value).to_s
+      end
+
+      def container_attrs(close_on_select, kwargs)
+        data = {
+          controller:             STIMULUS_CONTROLLER,
+          action:                 "mousedown->#{STIMULUS_CONTROLLER}#onMousedown click->#{STIMULUS_CONTROLLER}#onClick",
+          "combobox-mode-value" => self.class::MODE
+        }
+        data["combobox-close-on-select-value"] = close_on_select.to_s unless close_on_select.nil?
+
+        merge_html_options(theme.resolve(:combobox), kwargs, { data: data }, *extra_container_options)
+      end
+
+      # Container options merged after the combobox's own.
+      def extra_container_options
+        []
+      end
+
+      def render_panel(aria)
+        Panel.new(template).render(id: @ids[:panel], theme_key: self.class::POPOVER_KEY) do
+          panel_content(Listbox.new(template).render(id: @ids[:listbox], options: @options, value: @value, aria: aria))
         end
       end
 
-      def combobox_attrs(input, close_on_select, config, panel_id, kwargs)
-        merge_html_options(
-          theme.resolve(:combobox),
-          kwargs,
-          { data: stimulus_data(input[:value]) },
-          { data: config.metadata.stimulus_data(panel_id, config.options) },
-          { data: { input_combobox_close_on_select_value: close_on_select }.compact }
-        )
+      def panel_content(listbox)
+        listbox
       end
 
-      def build_combobox_trigger(attrs, trigger, input, metadata, trigger_id, label)
-        opts = trigger_options(metadata, trigger)
-        opts[:aria] = (opts[:aria] || {}).merge(label: label) if label
-
-        template.safe_join(
-          [
-            Combobox::Trigger.new(template).render(
-              stimulus_controller: STIMULUS_CONTROLLER,
-              popover:             attrs,
-              id:                  trigger_id,
-              **opts
-            ),
-            hidden_input(input)
-          ]
-        )
-      end
-
-      def trigger_options(metadata, trigger)
-        defaults = metadata.trigger_options.dup
-        defaults[:icon_trailing] = metadata.trigger_icon if metadata.trigger_icon
-        defaults.deep_merge(trigger)
-      end
-
-      def stimulus_data(initial_value)
-        data = {
-          controller: "#{Popover::STIMULUS_CONTROLLER} #{STIMULUS_CONTROLLER} #{FORMAT_CONTROLLER}",
-          action:     FORMAT_ACTION
-        }
-        data[:input_combobox_value_value] = initial_value if initial_value.present?
-        data
-      end
-
-      def hidden_input(input)
-        stimulus_data = merge_html_options(
-          { "#{STIMULUS_CONTROLLER}_target": "input" },
-          input.fetch(:data, {})
-        )
-        template.tag.input(type: "hidden", name: input[:name], value: input[:value], data: stimulus_data)
+      def hidden_input(name)
+        template.tag.input(type: "hidden", name: name, value: @value, data: { "#{STIMULUS_CONTROLLER}-target" => "input" })
       end
     end
   end

@@ -1,0 +1,80 @@
+{
+  "cases": [
+    {
+      "name": "selected wins",
+      "month": "2026-09",
+      "selected": "2026-09-15",
+      "today": "2026-09-10",
+      "displayed": "2026-09-01",
+      "expect": "2026-09-15"
+    },
+    {
+      "name": "today without a selection",
+      "month": "2026-09",
+      "today": "2026-09-10",
+      "displayed": "2026-09-01",
+      "expect": "2026-09-10"
+    },
+    {
+      "name": "displayed when today is elsewhere",
+      "month": "2026-09",
+      "today": "2026-10-10",
+      "displayed": "2026-09-05",
+      "expect": "2026-09-05"
+    },
+    {
+      "name": "first enabled as the fallback",
+      "month": "2026-09",
+      "today": "2026-10-10",
+      "expect": "2026-09-01"
+    },
+    {
+      "name": "disabled selection falls through",
+      "month": "2026-09",
+      "selected": "2026-09-15",
+      "today": "2026-09-10",
+      "availability": {
+        "disabledDates": [
+          "2026-09-15"
+        ]
+      },
+      "expect": "2026-09-10"
+    },
+    {
+      "name": "first enabled skips the minimum",
+      "month": "2026-09",
+      "today": "2026-10-10",
+      "availability": {
+        "min": "2026-09-08"
+      },
+      "expect": "2026-09-08"
+    },
+    {
+      "name": "hidden adjacent-month selection is not shown",
+      "month": "2026-09",
+      "selected": "2026-08-31",
+      "today": "2026-09-10",
+      "firstDayOfWeek": 1,
+      "expect": "2026-09-10"
+    },
+    {
+      "name": "visible adjacent-month selection is shown",
+      "month": "2026-09",
+      "selected": "2026-08-31",
+      "today": "2026-09-10",
+      "firstDayOfWeek": 1,
+      "showOtherMonths": true,
+      "expect": "2026-08-31"
+    },
+    {
+      "name": "nothing enabled",
+      "month": "2026-09",
+      "availability": {
+        "disabledMonths": [
+          9
+        ]
+      },
+      "expect": null
+    }
+  ]
+}

@@ -127,43 +127,6 @@ Slots needing custom validation (e.g. a required keyword) define `with_*` manual
 
 ---
 
-## Plumber::Config
-
-Sibling of `Slots` for block DSLs whose payload is configuration rather than content. Used by `Combobox::Config`. (Password rules are **not** a `Plumber::Config` — `Password::Requirements` is a standalone model-layer object; see the password field in [form.md](form.md).)
-
-**Which one to subclass — does the block body produce markup?** Yes → `Slots`. No → `Config`.
-
-|                   | `Plumber::Slots`                                 | `Plumber::Config`                                |
-| ----------------- | ------------------------------------------------ | ------------------------------------------------ |
-| Holds             | content — blocks rendered through the view       | configuration — values, hashes, class references |
-| Template used for | `capture` (essential)                            | passing through to renderers only                |
-| Declares          | `slot :a, :b` macro, generating `with_*` setters | plain named methods                              |
-| Public read API   | `resolve` / `options_for`                        | none — subclasses expose named readers           |
-
-`Config` never captures, so it inherits no `slot` macro. Its whole store is **private**: `Slots` publishes `resolve` because its payload is uniform content a renderer reads generically, whereas a `Config`'s settings are typed, so each subclass names its own readers.
-
-```ruby
-class MyConfig < StimulusPlumbers::Plumber::Config
-  def panel(**options)
-    configure(:panel, options)        # stores, returns nil
-  end
-
-  def panel_options
-    config(:panel)                    # reads, nil when unset
-  end
-
-  def panel?
-    configured?(:panel)               # distinguishes unset from set-to-nil
-  end
-end
-```
-
-Setters return `nil` for the same reason `set_slot` does — the DSL method reads as a command.
-
-Construct with the view `template`; `Config` exposes it via `attr_reader` so subclasses can hand it to renderers (see `Combobox::Config#render_panel`).
-
----
-
 ## Plumber::Options::Html
 
 Mixin for safely deep-merging HTML attribute hashes. Handles three concerns that a plain `Hash#merge` gets wrong:

@@ -4,13 +4,11 @@ require_relative "../../test_helper"
 
 class ControllerSchemaLoaderTest < Minitest::Test
   EXPECTED_IDENTIFIERS = %w[
-    calendar-decade calendar-decade-selector
-    calendar-month calendar-month-selector
-    calendar-year calendar-year-selector
-    combobox-date combobox-time combobox-dropdown
-    input-clearable input-combobox input-formatter input-revealable
+    calendar calendar-turbo
+    combobox combobox-turbo combobox-fetch combobox-date combobox-time
+    input-clearable input-formatter input-revealable
     checklist clipboard reorderable progress timeline dismisser flipper
-    modal modal-turbo panner password-strength popover visibility
+    modal modal-turbo panner password-strength popover popover-fetch visibility
   ].freeze
 
   def setup
@@ -35,39 +33,32 @@ class ControllerSchemaLoaderTest < Minitest::Test
     assert_empty @controllers["modal"]["values"]
   end
 
-  def test_input_combobox_targets
-    ctrl = @controllers["input-combobox"]
-
-    assert_includes ctrl["targets"], "trigger"
-    assert_includes ctrl["targets"], "input"
-    assert_includes ctrl["targets"], "panel"
+  def test_combobox_targets
+    assert_equal %w[trigger input panel listbox status], @controllers["combobox"]["targets"]
   end
 
-  def test_input_combobox_values
-    values = @controllers["input-combobox"]["values"]
+  def test_combobox_values
+    values = @controllers["combobox"]["values"]
 
-    assert values.key?("value"), "Missing value key 'value'"
-    assert_equal "String", values["value"]["type"]
-    assert values.key?("minLength"), "Missing value key 'minLength'"
+    assert_equal "String", values["mode"]["type"]
+    assert_equal "select_only", values["mode"]["default"]
     assert_equal "Number", values["minLength"]["type"]
     assert_equal 1, values["minLength"]["default"]
   end
 
-  def test_input_combobox_close_on_select_value
-    close_on_select = @controllers["input-combobox"]["values"]["closeOnSelect"]
+  def test_combobox_close_on_select_value
+    close_on_select = @controllers["combobox"]["values"]["closeOnSelect"]
 
     assert_equal "Boolean", close_on_select["type"]
     assert close_on_select["default"]
   end
 
-  def test_input_combobox_outlets
-    assert_includes @controllers["input-combobox"]["outlets"], "combobox-dropdown"
+  def test_outlets
+    assert_includes @controllers["password-strength"]["outlets"], "progress"
   end
 
-  def test_combobox_date_outlets
-    assert_includes @controllers["combobox-date"]["outlets"], "calendar-month"
-    assert_includes @controllers["combobox-date"]["outlets"], "calendar-year"
-    assert_includes @controllers["combobox-date"]["outlets"], "calendar-decade"
+  def test_combobox_date_targets
+    assert_equal %w[trigger input panel], @controllers["combobox-date"]["targets"]
   end
 
   def test_each_controller_has_required_keys

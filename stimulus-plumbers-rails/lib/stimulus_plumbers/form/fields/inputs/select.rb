@@ -27,8 +27,6 @@ module StimulusPlumbers
             opts,
             error,
             floating: nil,
-            icon_leading: nil,
-            icon_trailing: nil,
             choices: [],
             include_blank: nil,
             prompt: nil,
@@ -36,20 +34,17 @@ module StimulusPlumbers
             **kwargs
           )
             current_value = selected || (object.respond_to?(attribute) ? object.public_send(attribute) : nil)
-            all_choices   = build_select_dropdown_choices(Array(choices), include_blank: include_blank, prompt: prompt)
-            labelledby    = Field.label_id(html_opts[:id])
-            combobox_opts = build_select_dropdown_opts(
-              html_opts, current_value, opts: opts, icon_leading: icon_leading, icon_trailing: icon_trailing
-            )
             render_combobox(
               attribute,
-              input_id: html_opts[:id],
-              opts:     combobox_opts,
-              error:    error,
-              floating: floating
-            ) do |c|
-              c.dropdown(options: all_choices, value: current_value, labelledby: labelledby, **kwargs)
-            end
+              component: Components::Combobox::Dropdown,
+              html_opts: html_opts,
+              opts:      opts,
+              error:     error,
+              floating:  floating,
+              options:   build_select_dropdown_choices(Array(choices), include_blank: include_blank, prompt: prompt),
+              value:     current_value,
+              **kwargs
+            )
           end
 
           def render_collection_combobox_dropdown(
@@ -76,14 +71,6 @@ module StimulusPlumbers
           )
             choices = build_grouped_choices(collection, group_label_method, group_method, value_method, text_method)
             render_field(:select, attribute, field_opts, { choices: choices, **kwargs })
-          end
-
-          def build_select_dropdown_opts(html_opts, current_value, opts:, icon_leading:, icon_trailing:)
-            {
-              input:   { value: current_value },
-              trigger: { aria: html_opts[:aria], icon_leading: icon_leading, icon_trailing: icon_trailing }.compact,
-              **opts
-            }
           end
 
           def build_select_dropdown_choices(choices, include_blank:, prompt:)

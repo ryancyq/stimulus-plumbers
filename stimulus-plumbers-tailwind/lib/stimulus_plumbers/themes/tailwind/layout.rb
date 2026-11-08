@@ -25,18 +25,26 @@ module StimulusPlumbers
           rounded-(--sp-radius-md) border border-(--sp-color-border)
           bg-(--sp-color-bg) shadow-(--sp-shadow-md) z-(--sp-z-popover)
           [position:fixed] [position-anchor:auto] [inset:auto] m-0
-          [max-inline-size:min(90vi,32rem)] [max-block-size:min(100%,32rem)] overflow-auto
+          [max-inline-size:min(90vi,32rem)] [max-block-size:min(80vb,32rem)] overflow-auto
         ].freeze
 
         POPOVER_PLACEMENTS = {
-          block_end_start:   %w[[position-area:block-end_span-inline-end] [position-try-fallbacks:flip-block,flip-inline]],
-          block_end:         %w[[position-area:block-end] [position-try-fallbacks:flip-block]],
-          block_end_end:     %w[[position-area:block-end_span-inline-start] [position-try-fallbacks:flip-block,flip-inline]],
-          block_start_start: %w[[position-area:block-start_span-inline-end] [position-try-fallbacks:flip-block,flip-inline]],
-          block_start:       %w[[position-area:block-start] [position-try-fallbacks:flip-block]],
-          block_start_end:   %w[[position-area:block-start_span-inline-start] [position-try-fallbacks:flip-block,flip-inline]],
-          inline_start:      %w[[position-area:inline-start] [position-try-fallbacks:flip-inline]],
-          inline_end:        %w[[position-area:inline-end] [position-try-fallbacks:flip-inline]]
+          block_end_start:   %w[[position-area:block-end_span-inline-end]
+                                [position-try-fallbacks:flip-block,flip-inline,--sp-popover-fit]],
+          block_end:         %w[[position-area:block-end]
+                                [position-try-fallbacks:flip-block,--sp-popover-fit]],
+          block_end_end:     %w[[position-area:block-end_span-inline-start]
+                                [position-try-fallbacks:flip-block,flip-inline,--sp-popover-fit]],
+          block_start_start: %w[[position-area:block-start_span-inline-end]
+                                [position-try-fallbacks:flip-block,flip-inline,--sp-popover-fit]],
+          block_start:       %w[[position-area:block-start]
+                                [position-try-fallbacks:flip-block,--sp-popover-fit]],
+          block_start_end:   %w[[position-area:block-start_span-inline-start]
+                                [position-try-fallbacks:flip-block,flip-inline,--sp-popover-fit]],
+          inline_start:      %w[[position-area:inline-start]
+                                [position-try-fallbacks:flip-inline,--sp-popover-fit]],
+          inline_end:        %w[[position-area:inline-end]
+                                [position-try-fallbacks:flip-inline,--sp-popover-fit]]
         }.freeze
 
         private

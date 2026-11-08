@@ -13,13 +13,13 @@ Exposes `this.visibility` on the controller.
 
 ## Options
 
-| Option       | Type        | Default            | Description                                                              |
-| ------------ | ----------- | ------------------ | ------------------------------------------------------------------------ |
-| `element`    | HTMLElement | controller.element | Target element to show/hide                                              |
-| `visibility` | String      | `'visibility'`     | Namespace for the controller property (e.g. `'contentLoaderVisibility'`) |
-| `activator`  | HTMLElement | `null`             | Element that receives `aria-expanded` updates                            |
-| `onShown`    | String      | `'shown'`          | Controller method called after element is shown                          |
-| `onHidden`   | String      | `'hidden'`         | Controller method called after element is hidden                         |
+| Option       | Type        | Default            | Description                                                      |
+| ------------ | ----------- | ------------------ | ---------------------------------------------------------------- |
+| `element`    | HTMLElement | controller.element | Target element to show/hide                                      |
+| `visibility` | String      | `'visibility'`     | Namespace for the controller property (e.g. `'panelVisibility'`) |
+| `activator`  | HTMLElement | `null`             | Element that receives `aria-expanded` updates                    |
+| `onShown`    | String      | `'shown'`          | Controller method called after element is shown                  |
+| `onHidden`   | String      | `'hidden'`         | Controller method called after element is hidden                 |
 
 ## Controller property — `this.visibility`
 

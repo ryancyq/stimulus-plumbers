@@ -3,7 +3,10 @@
 module StimulusPlumbers
   module Components
     class Popover < Plumber::Base
+      include Plumber::Options::Choice
+
       STIMULUS_CONTROLLER = "popover"
+      MODES               = %i[auto manual].freeze
 
       class << self
         def panel_id_for(trigger_id)
@@ -19,7 +22,7 @@ module StimulusPlumbers
         @panel_id     = panel_id || self.class.panel_id_for(template.sp_dom_id)
         @trigger_html = nil
         @panel_html   = nil
-        @mode         = validate_mode!(mode)
+        @mode         = validate_choice!(mode, MODES, :mode)
         @placement    = placement
         yield self if block_given?
         template.safe_join([@trigger_html, @panel_html])
@@ -61,13 +64,6 @@ module StimulusPlumbers
         template.content_tag(:div, **html_options) do
           build(panel_id: panel_id, mode: mode, placement: placement, &block)
         end
-      end
-
-      def validate_mode!(mode)
-        normalized = mode.to_sym if mode.respond_to?(:to_sym)
-        return normalized if %i[auto manual].include?(normalized)
-
-        raise ArgumentError, "popover mode must be one of: auto, manual"
       end
     end
   end

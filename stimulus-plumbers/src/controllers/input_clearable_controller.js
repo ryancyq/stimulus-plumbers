@@ -5,12 +5,12 @@ export default class extends Controller {
   static targets = ['input', 'clear'];
 
   initialize() {
-    this.onInput = this.draw.bind(this);
-    this.onEscape = this.handleEscape.bind(this);
+    this.onInput = this._syncClear.bind(this);
+    this.onEscape = this._handleEscape.bind(this);
   }
 
   connect() {
-    this.draw();
+    this._syncClear();
   }
 
   inputTargetConnected(input) {
@@ -26,18 +26,20 @@ export default class extends Controller {
   clear() {
     if (!this.hasInputTarget) return;
     this.inputTarget.value = '';
-    this.draw();
+    this._syncClear();
     this.inputTarget.focus();
     this.inputTarget.dispatchEvent(new Event('input', { bubbles: true }));
   }
 
-  draw() {
+  _syncClear() {
     if (!this.hasInputTarget || !this.hasClearTarget) return;
     setHidden(this.clearTarget, this.inputTarget.value.length === 0);
   }
 
-  handleEscape(event) {
+  _handleEscape(event) {
     if (event.key !== 'Escape') return;
+    // An open combobox owns Escape.
+    if (event.defaultPrevented || this.inputTarget.getAttribute('aria-expanded') === 'true') return;
     if (this.inputTarget.value === '') return;
     event.preventDefault();
     this.clear();
