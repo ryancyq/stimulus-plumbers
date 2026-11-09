@@ -198,25 +198,36 @@ test.describe("touch", () => {
   });
 });
 
+// Drags one finger up by `distance` from (x, y) through CDP touch events.
+async function touchScroll(page, { x, y, distance }) {
+  const cdp = await page.context().newCDPSession(page);
+  const touch = (type, dy) =>
+    cdp.send("Input.dispatchTouchEvent", {
+      type,
+      touchPoints: type === "touchEnd" ? [] : [{ x, y: y - dy }],
+    });
+
+  await touch("touchStart", 0);
+  for (let step = 1; step <= 10; step++) {
+    await touch("touchMove", (distance * step) / 10);
+  }
+  await touch("touchEnd");
+}
+
 test.describe("touch scrolling", () => {
   test.skip(
     ({ isMobile, browserName }) => !isMobile || browserName !== "chromium",
-    "Only Chromium synthesizes touch scrolling.",
+    "CDP touch input is Chromium-only.",
   );
 
   test("does not close the panel", async ({ page }) => {
     const trigger = page
       .locator("#combobox-dropdown")
       .getByRole("combobox", { name: "Country" });
-    const cdp = await page.context().newCDPSession(page);
 
     await trigger.tap();
-    await cdp.send("Input.synthesizeScrollGesture", {
-      x: 20,
-      y: 500,
-      yDistance: -200,
-      gestureSourceType: "touch",
-    });
+    await touchScroll(page, { x: 20, y: 500, distance: 200 });
+
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(0);
