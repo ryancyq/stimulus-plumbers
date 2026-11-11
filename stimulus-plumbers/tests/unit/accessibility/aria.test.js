@@ -85,6 +85,12 @@ describe('ARIA utilities', () => {
       expect(trigger.getAttribute('aria-describedby')).toBe('target');
     });
 
+    it.each(['tooltip', 'region', 'status'])('does not set aria-haspopup for the non-popup %s role', (role) => {
+      connectTriggerToTarget({ trigger, target, role });
+
+      expect(trigger.hasAttribute('aria-haspopup')).toBe(false);
+    });
+
     it('does not override existing role by default', () => {
       target.setAttribute('role', 'existing');
 

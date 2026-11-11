@@ -20,7 +20,9 @@ test.describe("profile", () => {
       .locator("#profile-default")
       .getByRole("button", { name: "More options" });
     await btn.click();
-    await expect(btn).toHaveAttribute("aria-expanded", "true");
+    await expect(
+      page.getByRole("dialog", { name: "More options" }),
+    ).toBeVisible();
     await expect(page.locator("#profile-default")).toHaveScreenshot(
       "popover-open.png",
     );

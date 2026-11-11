@@ -10,7 +10,7 @@ export default class extends Controller {
   };
 
   connect() {
-    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
+    attachFormatter(this, { type: this.formatValue, options: this.formatterOptions });
     this.attachCells();
     this.primeFilledState();
     this.format(this.readValue());
@@ -18,7 +18,7 @@ export default class extends Controller {
 
   formatValueChanged() {
     if (!this.formatter) return;
-    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
+    attachFormatter(this, { type: this.formatValue, options: this.formatterOptions });
     this.attachCells();
     this.primeFilledState();
     this.format(this.readValue());
@@ -26,7 +26,7 @@ export default class extends Controller {
 
   optionsValueChanged() {
     if (!this.formatter) return;
-    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
+    attachFormatter(this, { type: this.formatValue, options: this.formatterOptions });
     this.attachCells();
     this.primeFilledState();
     this.format(this.readValue());
@@ -34,6 +34,7 @@ export default class extends Controller {
 
   groupsValueChanged() {
     if (!this.formatter) return;
+    attachFormatter(this, { type: this.formatValue, options: this.formatterOptions });
     this.attachCells();
     this.format(this.readValue());
   }
@@ -61,7 +62,12 @@ export default class extends Controller {
     if (!this.formatter || !raw) return;
     const value = this.formatter.normalize(raw);
     if (!this.formatter.validate(value)) return;
+    event.preventDefault();
     this.format(value);
+  }
+
+  get formatterOptions() {
+    return this.groupsValue.length > 0 ? { ...this.optionsValue, groups: this.groupsValue } : this.optionsValue;
   }
 
   attachCells() {

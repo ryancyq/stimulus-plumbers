@@ -74,6 +74,27 @@ describe('InputRevealableController', () => {
       await new Promise((resolve) => setTimeout(resolve, 10))
       expect(input.type).toBe('password')
     })
+
+    it('conceals before Turbo caches the page', async () => {
+      const input = document.querySelector('[data-input-revealable-target="input"]')
+
+      getController().toggle()
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      document.dispatchEvent(new Event('turbo:before-cache'))
+
+      expect(input.type).toBe('password')
+      expect(getController().revealedValue).toBe(false)
+    })
+
+    it('conceals when the page is hidden for the back-forward cache', async () => {
+      const input = document.querySelector('[data-input-revealable-target="input"]')
+
+      getController().toggle()
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      window.dispatchEvent(new Event('pagehide'))
+
+      expect(input.type).toBe('password')
+    })
   })
 
   it('toggles without icon targets present', async () => {

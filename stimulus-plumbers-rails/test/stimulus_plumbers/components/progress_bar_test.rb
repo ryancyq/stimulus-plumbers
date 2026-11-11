@@ -89,6 +89,18 @@ class ProgressBarTest < ActionView::TestCase
     assert_css doc, "div[data-progress-indeterminate-value='true']"
   end
 
+  def test_renders_the_clamped_percent_for_the_geometry
+    doc = parse_html(renderer.render(value: 1, max: 3))
+
+    assert_css doc, "div[role='progressbar'][style='--sp-progress-percent: 33.33']"
+  end
+
+  def test_custom_style_follows_the_percent
+    doc = parse_html(renderer.render(value: 50, style: "color: red"))
+
+    assert_css doc, "div[role='progressbar'][style='--sp-progress-percent: 50; color: red']"
+  end
+
   def test_merges_custom_html_options
     assert_css parse_html(renderer.render(value: 30, id: "my-progress")), "div#my-progress"
   end
@@ -106,6 +118,14 @@ class ProgressBarTest < ActionView::TestCase
     assert_css doc, "div[role='progressbar'][data-progress-variant-value='segmented']"
     assert_css doc, "div[data-progress-segment-mode-value='discrete']"
     assert_css doc, "div[aria-valuenow='6'][aria-valuemax='10']"
+  end
+
+  def test_segmented_renders_its_slot_count_and_each_slot_index
+    doc     = parse_html(renderer.render_segmented(value: 6, segments: 3, max: 10))
+    indexes = doc.css("[data-progress-target='fill']").map { |fill| fill["style"] }
+
+    assert_css doc, "div[role='progressbar'][style='--sp-progress-percent: 60; --sp-progress-count: 3']"
+    assert_equal ["--sp-progress-index: 0", "--sp-progress-index: 1", "--sp-progress-index: 2"], indexes
   end
 
   def test_segmented_forwards_continuous_mode

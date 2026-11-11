@@ -34,6 +34,5 @@ async dismissed() {
 
 ## Notes
 
-- The Dismisser plumber attaches a document-level `mousedown` listener. When a click lands outside the **controller element**, it calls `dismissed()`. If a `trigger` target is present, it is passed to `dismissed()` as `{ target }` context — it does not change the boundary.
-- Used internally by `modal` (custom overlay mode) and `form-field` to handle click-outside-to-close.
+- The Dismisser plumber attaches a window-level `click` listener. When a click lands outside the **controller element**, it calls `dismissed()`. If a `trigger` target is present, it is passed to `dismissed()` as `{ target }` context — it does not change the boundary.
 - `dismissed()` is not called when clicking on the trigger element itself.

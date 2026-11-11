@@ -19,4 +19,12 @@ class CreditCardAccessibilityTest < ApplicationAccessibilityTestCase
   def test_label_comes_from_the_locale_file
     assert_selector "#credit-card-default label", text: "Card on file"
   end
+
+  def test_typing_a_full_card_number_fills_every_group
+    within "#credit-card-default" do
+      find("input[type='text']").send_keys "4242424242424242"
+
+      assert_field type: "text", with: "4242 4242 4242 4242"
+    end
+  end
 end

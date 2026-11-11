@@ -1,14 +1,15 @@
 # Shifter
 
-Applies a CSS `translate` transform to keep an element inside the viewport boundaries. Recalculates on `resize` (or configured events). Used by `visibility`.
+Applies a CSS `translate` transform to keep an element inside the viewport boundaries. Recalculates on `resize` (or configured events). Used by `panner` and `visibility`.
 
-Extends `WindowObserver`. Exposes `this.shift()` on the controller, registers window event listeners, and cleans up on `disconnect`.
+Extends `WindowObserver`. Exposes `this.shift()` on the controller and registers window event listeners until its `disconnect()` is called.
 
 ## Factory
 
 ```js
 import { attachShifter } from '../plumbers';
-attachShifter(controller, options);
+const shifter = attachShifter(controller, options);
+shifter.disconnect(); // when the element's lifetime ends
 ```
 
 ## Options

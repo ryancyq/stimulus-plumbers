@@ -7,10 +7,12 @@ module StimulusPlumbers
         HANDLE_ACTION = "pointerdown->reorderable#onPointerDown pointermove->reorderable#onPointerMove " \
                         "pointerup->reorderable#onPointerUp"
 
-        def render(content = nil, id:, handle: :item, url: nil, target: nil, active: false, **html_options, &block)
+        # `state:` is the list's: whether it is editing, and whether this item is the roving Tab stop.
+        def render(content = nil, id:, handle: :item, url: nil, target: nil, active: false, state: {}, **html_options, &block)
           validate_options!(id, url, html_options)
 
-          slots = build_slots(content, &block)
+          slots  = build_slots(content, &block)
+          @state = state
 
           build(id: id, handle: handle) do |attrs|
             template.content_tag(:li, **attrs) do
@@ -27,7 +29,8 @@ module StimulusPlumbers
 
         def build(id:, handle: :item, &block)
           @handle = handle
-          html_options = merge_html_options(theme.resolve(:ordered_list_item), { id: id }, item_target_attrs)
+          tabindex     = @state&.dig(:tab_stop) ? 0 : -1
+          html_options = merge_html_options(theme.resolve(:ordered_list_item), { id: id, tabindex: tabindex }, item_target_attrs)
           template.capture(html_options, &block)
         end
 
@@ -60,7 +63,8 @@ module StimulusPlumbers
           return content unless url.present?
 
           aria  = active ? { aria: { current: "page" } } : {}
-          attrs = merge_html_options(html_options, { data: { "reorderable-target": "trigger" } }, aria)
+          inert = @state[:editing] ? { aria: { disabled: "true" }, tabindex: -1 } : { aria: { disabled: "false" } }
+          attrs = merge_html_options(html_options, { data: { "reorderable-target": "trigger" } }, aria, inert)
           template.content_tag(:a, content, href: url, target: target, **attrs)
         end
 

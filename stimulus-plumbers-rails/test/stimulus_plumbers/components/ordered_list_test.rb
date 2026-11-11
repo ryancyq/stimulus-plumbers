@@ -55,6 +55,25 @@ class OrderedListComponentTest < ActionView::TestCase
     assert_css doc, "li#row-1"
   end
 
+  def test_first_item_is_the_roving_tab_stop
+    doc = parse_html(renderer.render { |list| safe_join(%w[a b c].map { |id| list.item(id, id: id) }) })
+    tabindexes = doc.css("li").map { |item| item["tabindex"] }
+
+    assert_equal %w[0 -1 -1], tabindexes
+  end
+
+  def test_triggers_are_inert_while_editing
+    doc = parse_html(renderer.render(editing: true) { |list| list.item("Row", id: "row", url: "/row") })
+
+    assert_css doc, "a[data-reorderable-target='trigger'][aria-disabled='true'][tabindex='-1']"
+  end
+
+  def test_triggers_are_enabled_outside_editing
+    doc = parse_html(renderer.render { |list| list.item("Row", id: "row", url: "/row") })
+
+    assert_css doc, "a[data-reorderable-target='trigger'][aria-disabled='false']:not([tabindex])"
+  end
+
   def test_has_no_section_method
     refute_respond_to renderer, :section
   end

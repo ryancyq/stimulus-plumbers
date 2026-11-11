@@ -125,7 +125,7 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
       choices: ["ruby", "rails", "hotwire"], clearable: true %>
 ```
 
-`f.field` can take a block when its renderer declares `&block`; that declaration opts the renderer into the block DSL. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` wrapper containing the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`.
+`f.field` can take a block when its renderer declares `&block`; that declaration opts the renderer into the block DSL. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` wrapper containing the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`. The meter, level, and rule states render the empty-password result, so rules an empty password already meets (such as `negate: true`) start as met.
 
 `choices:` takes the standard Rails shape — an array of `[label, value]` pairs (or a flat array of strings).
 
@@ -212,14 +212,14 @@ The validator also accepts inline options (`password_strength: { min_length: 12,
 | `autocomplete` | String                                   | `"one-time-code"`      | Native autocomplete value                                |
 | `inputmode`    | String                                   | `"numeric"` for digits | Native input mode                                        |
 
-**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group; their sum sets `maxlength`.
+**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group; `maxlength` is their sum plus one space per group break.
 
-| Option         | Values                     | Default        | Description                                                  |
-| -------------- | -------------------------- | -------------- | ------------------------------------------------------------ |
-| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group; their sum sets `maxlength` |
-| `separator`    | String / `nil`             | `nil`          | Character between cells; `nil` renders none                  |
-| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                    |
-| `inputmode`    | String                     | `"numeric"`    | Native input mode                                            |
+| Option         | Values                     | Default        | Description                                                                     |
+| -------------- | -------------------------- | -------------- | ------------------------------------------------------------------------------- |
+| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group; the input value is spaced at each group break |
+| `separator`    | String / `nil`             | `nil`          | Character between cells; `nil` renders none                                     |
+| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                                       |
+| `inputmode`    | String                     | `"numeric"`    | Native input mode                                                               |
 
 Character-cell fields do not support `floating:` labels.
 

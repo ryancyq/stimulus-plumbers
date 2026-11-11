@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { morphElements } from '@hotwired/turbo';
 import { Application } from '@hotwired/stimulus';
 import ReorderableController from '../../../src/controllers/reorderable_controller';
 
@@ -81,6 +82,22 @@ describe('ReorderableController', () => {
       expect(spy.mock.calls[0][0].detail.itemIds).toEqual(['row-b', 'row-a', 'row-c']);
     });
 
+    it('moves the item one position after the list reconnects', async () => {
+      const element = await setup();
+      element.remove();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      document.body.appendChild(element);
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      const items = () => element.querySelectorAll('[data-reorderable-target="item"]');
+      items()[0].focus();
+
+      items()[0].dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true })
+      );
+
+      expect(Array.from(items()).map((i) => i.id)).toEqual(['row-b', 'row-a', 'row-c']);
+    });
+
     it('reorders correctly even if RovingTabIndex is activated before Reorderable attaches (order independence)', async () => {
       document.body.innerHTML = buildHTML();
       const element = document.querySelector('[data-controller="reorderable"]');
@@ -134,6 +151,25 @@ describe('ReorderableController', () => {
       expect(spy.mock.calls[0][0].detail.itemIds).toEqual(['row-b', 'row-a', 'row-c']);
       // A pointer drag must not steal focus (unlike a keyboard move, see spec Approach)
       expect(Array.from(reordered)).not.toContain(document.activeElement);
+    });
+
+    it('reverts a drag in progress when editing ends', async () => {
+      const element = await setup();
+      const items = stubRects(element);
+      const handle = items[0].querySelector('[data-reorderable-target="handle"]');
+      handle.setPointerCapture = vi.fn();
+      handle.releasePointerCapture = vi.fn();
+      const spy = vi.fn();
+      element.addEventListener('reorderable:reordered', spy);
+
+      handle.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, bubbles: true }));
+      handle.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientY: 61, bubbles: true }));
+      element.setAttribute('data-reorderable-editing-value', 'false');
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      const order = Array.from(element.querySelectorAll('[data-reorderable-target="item"]')).map((i) => i.id);
+      expect(order).toEqual(['row-a', 'row-b', 'row-c']);
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 
@@ -266,6 +302,34 @@ describe('ReorderableController', () => {
 
       controller.exitEditing();
       expect(controller.editingValue).toBe(false);
+    });
+
+    it('disables a trigger streamed in while editing', async () => {
+      const element = await setup(buildEditingHTML(true));
+
+      element.insertAdjacentHTML(
+        'beforeend',
+        `<li id="row-c" data-reorderable-target="item"><a href="/c" data-reorderable-target="trigger">C</a></li>`
+      );
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      const trigger = element.querySelector('#row-c [data-reorderable-target="trigger"]');
+      expect(trigger.getAttribute('aria-disabled')).toBe('true');
+      expect(trigger.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('re-enables the triggers when a morph ends editing', async () => {
+      const element = await setup(buildEditingHTML(true));
+      const next = document.createElement('div');
+      next.innerHTML = buildEditingHTML(false);
+
+      morphElements(element, next.firstElementChild);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      element.querySelectorAll('[data-reorderable-target="trigger"]').forEach((trigger) => {
+        expect(trigger.getAttribute('aria-disabled')).toBe('false');
+        expect(trigger.hasAttribute('tabindex')).toBe(false);
+      });
     });
   });
 });

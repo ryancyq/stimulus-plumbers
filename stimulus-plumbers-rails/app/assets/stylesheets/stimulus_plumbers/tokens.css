@@ -135,11 +135,44 @@
   --sp-modal-size-xl:     56rem;
 
 
+  /* ── Progress ────────────────────────────────────────────────────────── */
+  --sp-progress-indeterminate-fraction: 0.25; /* bar width, ring arc, and segment chunk while indeterminate */
+
+
   /* ── Z-index ─────────────────────────────────────────────────────────── */
   --sp-z-popover: 50;
 }
 
-/* Smooth width changes on the progress bar fill — renders with or without a theme. */
+/* Progress geometry from --sp-progress-percent (0–100), so the server-rendered markup paints
+   it before the controller connects — renders with or without a theme. */
 [data-progress-target="fill"] {
+  width: calc(var(--sp-progress-percent, 0) * 1%);
   transition: width 0.3s ease;
+}
+
+/* Slot i fills its share of [i, i + 1); discrete rounds a started slot up to whole. */
+[data-progress-variant-value="segmented"] [data-progress-target="fill"] {
+  --sp-progress-segment-fill: clamp(
+    0,
+    var(--sp-progress-percent, 0) / 100 * var(--sp-progress-count, 1) - var(--sp-progress-index, 0),
+    1
+  );
+  width: calc(round(up, var(--sp-progress-segment-fill), 1) * 100%);
+}
+
+[data-progress-segment-mode-value="continuous"] [data-progress-target="fill"] {
+  width: calc(var(--sp-progress-segment-fill, 0) * 100%);
+}
+
+/* The ring's fill circle has pathLength="100", so the dash is the percent itself. */
+[data-progress-variant-value="ring"] [data-progress-target="fill"] {
+  stroke-dasharray: 100;
+  stroke-dashoffset: calc(100 - var(--sp-progress-percent, 0));
+}
+
+[data-progress-indeterminate-value="true"] [data-progress-target="fill"] {
+  width: calc(var(--sp-progress-indeterminate-fraction) * 100%);
+  stroke-dasharray: calc(var(--sp-progress-indeterminate-fraction) * 100)
+    calc(100 - var(--sp-progress-indeterminate-fraction) * 100);
+  stroke-dashoffset: 0;
 }

@@ -32,6 +32,19 @@ const VALID_CARD_LENGTH = /^\d{13,19}$/;
 /** Captures groups of up to 4 characters followed by at least one more character */
 const GROUP_FOUR_DIGITS = /(.{4})(?=.)/g;
 
+/** Splits value at each group size; digits past the groups' sum form a trailing group */
+function groupDigits(value, groups) {
+  const parts = [];
+  let start = 0;
+  for (const size of groups) {
+    if (start >= value.length) break;
+    parts.push(value.slice(start, start + size));
+    start += size;
+  }
+  if (start < value.length) parts.push(value.slice(start));
+  return parts.join(' ');
+}
+
 export const CreditCardFormatter = {
   /**
    * Converts raw input to the canonical stored form: digits only, no separators.
@@ -57,13 +70,16 @@ export const CreditCardFormatter = {
   },
 
   /**
-   * Formats a canonical card number for display: groups of 4 separated by spaces.
-   * e.g. '4242424242424242' → '4242 4242 4242 4242'
+   * Formats a canonical card number for display: groups separated by spaces, following
+   * `options.groups` when given, else groups of 4.
+   * e.g. '4242424242424242' → '4242 4242 4242 4242'; [4,6,5] → '3782 822463 10005'
    * @param {string} value - Canonical value from normalize()
+   * @param {{ groups?: number[] }} [options]
    * @returns {string} Formatted display string, or '' for non-string input
    */
-  format(value) {
+  format(value, options = {}) {
     if (typeof value !== 'string') return '';
+    if (Array.isArray(options.groups) && options.groups.length > 0) return groupDigits(value, options.groups);
     return value.replace(GROUP_FOUR_DIGITS, '$1 ');
   },
 

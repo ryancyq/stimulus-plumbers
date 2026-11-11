@@ -1,28 +1,29 @@
 # Flipper
 
-Positions an element relative to an anchor, flipping to the opposite direction when the preferred placement overflows the viewport. Used by `flipper` and `popover`.
+Positions an element relative to an anchor, flipping to the opposite direction when the preferred placement overflows the viewport. Used by `flipper`.
 
-Extends `WindowObserver`. Exposes `this.flip()` on the controller, registers window event listeners, and cleans up on `disconnect`.
+Extends `WindowObserver`. Exposes `this.flip()` on the controller and registers window event listeners until its `disconnect()` is called.
 
 ## Factory
 
 ```js
 import { attachFlipper } from '../plumbers';
-attachFlipper(controller, options);
+const flipper = attachFlipper(controller, options);
+flipper.disconnect(); // when the element's lifetime ends
 ```
 
 ## Options
 
-| Option          | Type        | Default            | Description                                                     |
-| --------------- | ----------- | ------------------ | --------------------------------------------------------------- |
-| `element`       | HTMLElement | controller.element | Element to position                                             |
-| `anchor`        | HTMLElement | `null`             | Reference element to position relative to                       |
-| `events`        | String[]    | `['click']`        | Events triggering a flip recalculation                          |
-| `placement`     | String      | `'bottom'`         | Preferred placement: `'top'`, `'bottom'`, `'left'`, `'right'`   |
-| `alignment`     | String      | `'start'`          | Cross-axis alignment: `'start'`, `'center'`, `'end'`            |
-| `ariaRole`      | String      | `null`             | ARIA role applied to element via `connectTriggerToTarget`       |
-| `respectMotion` | Boolean     | `true`             | Suppresses CSS transitions when `prefers-reduced-motion` is set |
-| `onFlipped`     | String      | `'flipped'`        | Controller method called after positioning                      |
+| Option          | Type        | Default                         | Description                                                                                            |
+| --------------- | ----------- | ------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `element`       | HTMLElement | controller.element              | Element to position                                                                                    |
+| `anchor`        | HTMLElement | `null`                          | Reference element to position relative to                                                              |
+| `events`        | String[]    | `['click', 'resize', 'scroll']` | Window events (captured) triggering a flip recalculation; `resize` and `scroll` at most once per frame |
+| `placement`     | String      | `'bottom'`                      | Preferred placement: `'top'`, `'bottom'`, `'left'`, `'right'`                                          |
+| `alignment`     | String      | `'start'`                       | Cross-axis alignment: `'start'`, `'center'`, `'end'`                                                   |
+| `ariaRole`      | String      | `null`                          | ARIA role applied to element via `connectTriggerToTarget`                                              |
+| `respectMotion` | Boolean     | `true`                          | Suppresses CSS transitions when `prefers-reduced-motion` is set                                        |
+| `onFlipped`     | String      | `'flipped'`                     | Controller method called after positioning                                                             |
 
 ## Controller method — `this.flip()`
 

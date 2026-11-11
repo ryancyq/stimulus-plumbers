@@ -176,6 +176,53 @@ describe('VisibilityController', () => {
       expect(dismissSpy).toHaveBeenCalledTimes(1);
       expect(dismissedSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('dispatches dismiss only while content is shown', async () => {
+      visibleOnlySpy.mockReturnValue(true);
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <div data-visibility-target="content" hidden>Content</div>
+        </div>
+        <button id="outside">Outside</button>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const element = document.querySelector('[data-controller="visibility"]');
+      element.getBoundingClientRect = vi.fn(() => ({ top: 0, left: 0, width: 100, height: 100 }));
+      const outsideButton = document.querySelector('#outside');
+      const dismissSpy = vi.fn();
+      element.addEventListener('visibility:dismiss', dismissSpy);
+
+      outsideButton.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(dismissSpy).not.toHaveBeenCalled();
+
+      const controller = application.getControllerForElementAndIdentifier(element, 'visibility');
+      await controller.toggle();
+      outsideButton.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(dismissSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('content replacement', () => {
+    it('toggles a content target that replaced the original', async () => {
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <div data-visibility-target="content" hidden>Old</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const element = document.querySelector('[data-controller="visibility"]');
+      element.innerHTML = '<div data-visibility-target="content" hidden>New</div>';
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const controller = application.getControllerForElementAndIdentifier(element, 'visibility');
+      await controller.toggle();
+
+      expect(element.querySelector('[data-visibility-target="content"]').hidden).toBe(false);
+    });
   });
 
   describe('without content target', () => {
@@ -393,6 +440,49 @@ describe('VisibilityController', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
       expect(content.style.transform).toBeFalsy();
     });
+
+    it('stops shifting content after the content target is removed', async () => {
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <div data-visibility-target="content" hidden>Content</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const content = document.querySelector('[data-visibility-target="content"]');
+      content.getBoundingClientRect = vi.fn(() => ({
+        top: 100, left: 900, bottom: 200, right: 1100,
+        width: 200, height: 100, x: 900, y: 100
+      }));
+
+      content.remove();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      window.dispatchEvent(new Event('resize'));
+
+      expect(content.style.transform).toBeFalsy();
+    });
+
+    it('stops shifting the old content once new content connects', async () => {
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <div id="old-content" data-visibility-target="content" hidden>Old</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      const element = document.querySelector('[data-controller="visibility"]');
+      const oldContent = document.querySelector('#old-content');
+      oldContent.getBoundingClientRect = vi.fn(() => ({
+        top: 100, left: 900, bottom: 200, right: 1100,
+        width: 200, height: 100, x: 900, y: 100
+      }));
+
+      element.insertAdjacentHTML('beforeend', '<div data-visibility-target="content" hidden>New</div>');
+      await new Promise(resolve => setTimeout(resolve, 10));
+      window.dispatchEvent(new Event('resize'));
+
+      expect(oldContent.style.transform).toBeFalsy();
+    });
   });
 
   describe('visibility events', () => {
@@ -506,6 +596,45 @@ describe('VisibilityController', () => {
 
       await controller.toggle();
       expect(controller.visibility.visible).toBe(false);
+    });
+  });
+
+  describe('trigger target', () => {
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="visibility">
+          <button data-visibility-target="trigger" data-action="visibility#toggle">Toggle</button>
+          <div data-visibility-target="content" hidden>Content</div>
+        </div>
+      `;
+      await new Promise(resolve => setTimeout(resolve, 10));
+    });
+
+    it('marks the trigger collapsed while content is hidden', () => {
+      const trigger = document.querySelector('[data-visibility-target="trigger"]');
+
+      expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('marks the trigger expanded while content is shown', async () => {
+      const trigger = document.querySelector('[data-visibility-target="trigger"]');
+
+      trigger.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+      trigger.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('marks a trigger that connects later', async () => {
+      const element = document.querySelector('[data-controller="visibility"]');
+      element.querySelector('[data-visibility-target="trigger"]').remove();
+      element.insertAdjacentHTML('afterbegin', '<button data-visibility-target="trigger">New</button>');
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(element.querySelector('[data-visibility-target="trigger"]').getAttribute('aria-expanded')).toBe('false');
     });
   });
 });

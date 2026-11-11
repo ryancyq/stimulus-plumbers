@@ -61,13 +61,23 @@ describe('ClipboardController', () => {
       )
     })
 
-    it('prevents the default paste behavior', () => {
+    it('lets the native paste through when no listener cancels clipboard:pasted', () => {
       const element = document.querySelector('[data-controller="clipboard"]')
       const event = makePasteEvent({ 'text/plain': 'test' })
-      const preventDefaultSpy = vi.spyOn(event, 'preventDefault')
 
       element.dispatchEvent(event)
-      expect(preventDefaultSpy).toHaveBeenCalled()
+
+      expect(event.defaultPrevented).toBe(false)
+    })
+
+    it('cancels the native paste when a listener cancels clipboard:pasted', () => {
+      const element = document.querySelector('[data-controller="clipboard"]')
+      element.addEventListener('clipboard:pasted', (pasted) => pasted.preventDefault())
+      const event = makePasteEvent({ 'text/plain': 'test' })
+
+      element.dispatchEvent(event)
+
+      expect(event.defaultPrevented).toBe(true)
     })
 
     it('dispatches empty text and empty types when clipboardData is null', async () => {
@@ -199,6 +209,20 @@ describe('ClipboardController', () => {
       expect(spy.mock.calls[0][0].detail.text).toBe('copy this text')
     })
 
+    it('copies the source value when called without an event', async () => {
+      const writeTextSpy = vi.fn().mockResolvedValue(undefined)
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText: writeTextSpy },
+        configurable: true,
+      })
+
+      const element = document.querySelector('[data-controller="clipboard"]')
+      const controller = application.getControllerForElementAndIdentifier(element, 'clipboard')
+      await controller.copy()
+
+      expect(writeTextSpy).toHaveBeenCalledWith('copy this text')
+    })
+
     it('dispatches clipboard:copy-failed when write fails', async () => {
       const element = document.querySelector('[data-controller="clipboard"]')
       const spy = vi.fn()
@@ -258,7 +282,7 @@ describe('ClipboardController', () => {
       expect(writeTextSpy).toHaveBeenCalledWith('span text')
     })
 
-    it('copies empty string when no source target and no params', async () => {
+    it('reports copy-failed instead of clearing the clipboard when there is nothing to copy', async () => {
       application.stop()
       document.body.innerHTML = ''
       application = Application.start()
@@ -274,10 +298,13 @@ describe('ClipboardController', () => {
       })
 
       const element = document.querySelector('[data-controller="clipboard"]')
+      const failedSpy = vi.fn()
+      element.addEventListener('clipboard:copy-failed', failedSpy)
       const controller = application.getControllerForElementAndIdentifier(element, 'clipboard')
       await controller.copy({})
 
-      expect(writeTextSpy).toHaveBeenCalledWith('')
+      expect(writeTextSpy).not.toHaveBeenCalled()
+      expect(failedSpy).toHaveBeenCalledTimes(1)
     })
   })
 })

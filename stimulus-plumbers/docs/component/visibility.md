@@ -4,9 +4,10 @@ Shows/hides a `content` element, keeping it within the viewport and dismissing i
 
 ## Targets
 
-| Target    | Description                                                                       |
-| --------- | --------------------------------------------------------------------------------- |
-| `content` | Element to show/hide. Optional — `toggle()`/`dismissed()` are no-ops when absent. |
+| Target    | Description                                                                        |
+| --------- | ---------------------------------------------------------------------------------- |
+| `content` | Element to show/hide. Optional — `toggle()`/`dismissed()` are no-ops when absent.  |
+| `trigger` | Optional, one per controller — gets `aria-expanded` matching `content` visibility. |
 
 ## Methods
 
@@ -19,7 +20,7 @@ Shows/hides a `content` element, keeping it within the viewport and dismissing i
 
 ```html
 <div data-controller="visibility">
-  <button data-action="visibility#toggle">Toggle</button>
+  <button data-visibility-target="trigger" data-action="visibility#toggle">Toggle</button>
   <div data-visibility-target="content" hidden>Content</div>
 </div>
 ```

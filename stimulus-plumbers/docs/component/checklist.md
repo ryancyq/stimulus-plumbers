@@ -15,11 +15,13 @@ Master "select all" toggle for a group of native `<input type="checkbox">` check
 
 ## Actions
 
-| Name        | Purpose                                                                                                                          |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`  | Wired to `change` on the wrapper — event adapter: if the event came from the master, calls `toggleAll`; always calls `recompute` |
-| `toggleAll` | Programmatic API — sets every enabled item's `.checked` to the given value                                                       |
-| `recompute` | Programmatic API — writes the master's `.checked`/`.indeterminate` from the enabled items' aggregate state                       |
+| Name        | Purpose                                                                                                                      |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`  | Wired to `change` on the wrapper — event adapter: calls `toggleAll` if the event came from the master, otherwise `recompute` |
+| `toggleAll` | Programmatic API — sets every enabled item's `.checked` to the given value, then calls `recompute`                           |
+| `recompute` | Programmatic API — writes the master's `.checked`/`.indeterminate` from the enabled items' aggregate state                   |
+
+The master also recomputes when items are added or removed, after a Turbo morph, and after a form reset.
 
 ## Example HTML
 

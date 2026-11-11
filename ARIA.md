@@ -103,6 +103,11 @@
 - One toggle button swaps visible eye/eye-slash icons and its accessible name; it has no `aria-pressed` because its name describes the next action rather than a persistent state.
 - A live announcement was rejected: changing the input between `password` and `text` provides an independent cue when returning focus to the field, without adding chatty feedback.
 
+#### Password Strength (`password_strength_controller`)
+
+- The visible strength label is plain text, not a live region, so redrawing it never speaks.
+- The level is announced through the shared polite live region after a pause in typing, and only when it differs from the level shown when typing began — never on connect, a Turbo morph, or a restored page.
+
 #### Code Input (`input_formatter_controller` + `character_cells`)
 
 - The real `<input>` is the entire accessible surface; cells are stamped `aria-hidden="true"` automatically.
@@ -166,6 +171,7 @@
 - Expandable items: trigger `<button>` with `aria-expanded="false/true"` + `aria-controls` → detail element id; detail has `hidden` attribute toggled by controller
 - Trigger lives inside `<h3>` (`<h3><button aria-expanded>Title</button></h3>`) — WAI-ARIA Accordion pattern
 - Keyboard (interactive): Up/Down arrows move focus between item triggers; Home/End jump to first/last trigger; Enter/Space toggle expansion (native button behaviour)
+- No live announcement on expand/collapse — `aria-expanded` on the focused trigger already conveys the change
 
 #### Reorderable (`reorderable_controller`)
 

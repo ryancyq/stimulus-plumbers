@@ -84,7 +84,6 @@ export class Shifter extends WindowObserver {
   }
 
   enhance() {
-    super.enhance();
     this.controller.shift = this.shift;
   }
 }

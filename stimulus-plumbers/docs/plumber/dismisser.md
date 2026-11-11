@@ -1,14 +1,15 @@
 # Dismisser
 
-Listens for outside-click (or other) events on `window` and calls a controller callback when a click lands outside the controller's element. Used by `visibility`, `dismisser`, and `modal`.
+Listens for outside-click (or other) events on `window` and calls a controller callback when a click lands outside the controller's element. Used by `visibility` and `dismisser`.
 
-Extends `WindowObserver`. Registers window event listeners on construction and cleans up on controller `disconnect`.
+Extends `WindowObserver`. Registers window event listeners on construction and removes them when its `disconnect()` is called.
 
 ## Factory
 
 ```js
 import { attachDismisser } from '../plumbers';
-attachDismisser(controller, options);
+const dismisser = attachDismisser(controller, options);
+dismisser.disconnect(); // when the element's lifetime ends
 ```
 
 ## Options
@@ -24,7 +25,7 @@ attachDismisser(controller, options);
 
 A dismiss fires only when:
 
-1. The event target is an `HTMLElement`
+1. The event target is an `Element` (HTML or SVG)
 2. The event target is **not** inside `element`
 3. The element is currently **visible** (respects `visibilityConfig.visibleOnly`)
 
@@ -39,7 +40,11 @@ A dismiss fires only when:
 
 ```js
 connect() {
-  attachDismisser(this);
+  this.dismisser = attachDismisser(this);
+}
+
+disconnect() {
+  this.dismisser.disconnect();
 }
 
 async dismissed() {

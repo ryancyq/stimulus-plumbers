@@ -27,7 +27,7 @@ class PasswordTest < ActionView::TestCase
 
     assert_css doc, "[data-controller='password-strength']"
     assert_css doc, "meter[data-progress-target='meter'][low='34'][high='100'][optimum='100']"
-    assert_css doc, "p[data-password-strength-target='level'][aria-live='polite']"
+    assert_css doc, "p[data-password-strength-target='level']"
     assert_css doc, "ul li[data-rule='length']"
     assert_css doc, "ul li[data-rule='digit']", text: "One number"
   end
@@ -36,13 +36,6 @@ class PasswordTest < ActionView::TestCase
   # test under Metrics/AbcSize (inlining JSON.parse(at_css(...)) trips it).
   def strength_value(doc, name)
     JSON.parse(doc.at_css("[#{name}]")[name])
-  end
-
-  def test_outlet_selector_matches_the_meter_id
-    doc = build_field { |p| p.enforce(min_length: 8, max_length: 64) }
-    outlet = doc.at_css("[data-password-strength-progress-outlet]")["data-password-strength-progress-outlet"]
-
-    assert_css doc, "meter#{outlet}"
   end
 
   def test_rules_value_carries_descriptors

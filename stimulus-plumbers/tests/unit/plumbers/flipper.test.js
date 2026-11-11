@@ -2,11 +2,13 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Flipper, attachFlipper } from '../../../src/plumbers/flipper'
 
 describe('Flipper', () => {
+  let observeSpy
   let mockController
   let element
   let anchor
 
   beforeEach(() => {
+    observeSpy = vi.spyOn(Flipper.prototype, 'observe')
     element = document.createElement('div')
     anchor = document.createElement('button')
     document.body.appendChild(element)
@@ -16,7 +18,6 @@ describe('Flipper', () => {
       identifier: 'flipper',
       element: element,
       dispatch: vi.fn((name, options) => true),
-      disconnect: vi.fn(),
     }
 
     // Mock getBoundingClientRect for element
@@ -45,6 +46,8 @@ describe('Flipper', () => {
   })
 
   afterEach(() => {
+    observeSpy.mock.contexts.forEach((observer) => observer.disconnect())
+    observeSpy.mockRestore()
     vi.clearAllMocks()
   })
 
@@ -54,7 +57,7 @@ describe('Flipper', () => {
 
       expect(flipper.controller).toBe(mockController)
       expect(flipper.anchor).toBe(anchor)
-      expect(flipper.events).toEqual(['click'])
+      expect(flipper.events).toEqual(['click', 'resize', 'scroll'])
       expect(flipper.placement).toBe('bottom')
       expect(flipper.alignment).toBe('start')
       expect(flipper.onFlipped).toBe('flipped')
@@ -381,51 +384,96 @@ describe('Flipper', () => {
   })
 
   describe('observe', () => {
-    it('adds event listeners for all configured events', () => {
-      const addEventListenerSpy = vi.spyOn(window, 'addEventListener')
-      const flipper = new Flipper(mockController, {
-        anchor,
-        events: ['click', 'focus'],
-      })
+    it('repositions on every configured event', () => {
+      new Flipper(mockController, { anchor, events: ['click', 'focus'] })
 
-      expect(addEventListenerSpy).toHaveBeenCalledWith('click', flipper.flip, true)
-      expect(addEventListenerSpy).toHaveBeenCalledWith('focus', flipper.flip, true)
+      window.dispatchEvent(new Event('click'))
+      window.dispatchEvent(new Event('focus'))
 
-      addEventListenerSpy.mockRestore()
+      expect(mockController.dispatch.mock.calls.filter(([name]) => name === 'flip')).toHaveLength(2)
     })
   })
 
-  describe('unobserve', () => {
-    it('removes event listeners for all configured events', () => {
-      const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener')
-      const flipper = new Flipper(mockController, {
-        anchor,
-        events: ['click', 'focus'],
-      })
+  describe('resize and scroll', () => {
+    let frames
+    let spies
 
-      flipper.unobserve()
+    beforeEach(() => {
+      frames = new Map()
+      let id = 0
+      spies = [
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+          frames.set(++id, callback)
+          return id
+        }),
+        vi.spyOn(window, 'cancelAnimationFrame').mockImplementation((frame) => frames.delete(frame)),
+      ]
+    })
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('click', flipper.flip, true)
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('focus', flipper.flip, true)
+    afterEach(() => spies.forEach((spy) => spy.mockRestore()))
 
-      removeEventListenerSpy.mockRestore()
+    const runFrames = () => {
+      const pending = [...frames.values()]
+      frames.clear()
+      pending.forEach((callback) => callback())
+    }
+    const flips = () => mockController.dispatch.mock.calls.filter(([name]) => name === 'flip')
+
+    it('repositions once per frame for a burst of events', () => {
+      new Flipper(mockController, { anchor })
+
+      window.dispatchEvent(new Event('scroll'))
+      window.dispatchEvent(new Event('scroll'))
+      window.dispatchEvent(new Event('resize'))
+      runFrames()
+
+      expect(flips()).toHaveLength(1)
+    })
+
+    it('repositions again for a burst after the frame runs', () => {
+      new Flipper(mockController, { anchor })
+
+      window.dispatchEvent(new Event('scroll'))
+      runFrames()
+      window.dispatchEvent(new Event('scroll'))
+      runFrames()
+
+      expect(flips()).toHaveLength(2)
+    })
+
+    it('repositions on a scroll inside a container', () => {
+      new Flipper(mockController, { anchor })
+      const container = document.body.appendChild(document.createElement('div'))
+
+      container.dispatchEvent(new Event('scroll'))
+      runFrames()
+
+      expect(flips()).toHaveLength(1)
+    })
+
+    it('drops a pending repositioning on disconnect', () => {
+      const flipper = new Flipper(mockController, { anchor })
+
+      window.dispatchEvent(new Event('scroll'))
+      flipper.disconnect()
+      runFrames()
+
+      expect(flips()).toHaveLength(0)
+    })
+  })
+
+  describe('disconnect', () => {
+    it('stops repositioning on window events', () => {
+      const flipper = new Flipper(mockController, { anchor })
+
+      flipper.disconnect()
+      window.dispatchEvent(new Event('resize'))
+
+      expect(mockController.dispatch).not.toHaveBeenCalled()
     })
   })
 
   describe('enhance', () => {
-    it('wraps controller disconnect to call unobserve', () => {
-      const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener')
-      const originalDisconnect = mockController.disconnect
-      const flipper = new Flipper(mockController, { anchor })
-
-      mockController.disconnect()
-
-      expect(removeEventListenerSpy).toHaveBeenCalled()
-      expect(originalDisconnect).toHaveBeenCalled()
-
-      removeEventListenerSpy.mockRestore()
-    })
-
     it('adds flip method to controller', () => {
       const flipper = new Flipper(mockController, { anchor })
 

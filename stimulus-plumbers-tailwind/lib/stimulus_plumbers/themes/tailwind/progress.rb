@@ -19,7 +19,7 @@ module StimulusPlumbers
 
         # Clipped to the glyphs, this paints primary-fg up to the fill edge and fg past it, so the
         # digits split rather than sit on a pill — neither color alone clears AA over both. The
-        # edge is --sp-progress-percent (set by the progress controller), 0 until it connects.
+        # edge is --sp-progress-percent, rendered on the root and kept current by the controller.
         # Must stay on one line: Tailwind scans source text, so a class split across a string
         # continuation or interpolation never appears contiguously and is silently dropped.
         # rubocop:disable-next Layout/LineLength
@@ -46,8 +46,8 @@ module StimulusPlumbers
 
         # animations.css renames a slot fill's keyframes but reads iteration-count off this.
         FILL_INDETERMINATE = %w[
-          [.sp-progress-indeterminate_&]:animate-progress-slide
-          [.sp-progress-indeterminate_&]:motion-reduce:animate-none
+          [[data-progress-indeterminate-value=true]_&]:animate-progress-slide
+          [[data-progress-indeterminate-value=true]_&]:motion-reduce:animate-none
         ].freeze
 
         BAR_FILL = [*FILL_BASE, *FILL_INDETERMINATE].freeze
@@ -65,11 +65,11 @@ module StimulusPlumbers
 
         # Circle stroke/fill live in icons/customs/progress-ring.svg — @source never scans
         # .svg files, so Tailwind classes there are inert.
-        # Indeterminate class and utility land on this same svg, so this needs the compound
-        # [&.foo] form, not BAR_FILL's [.foo_&] descendant form.
+        # The indeterminate value and utility land on this same svg, so this needs the compound
+        # [&[…]] form, not BAR_FILL's [[…]_&] descendant form.
         RING = %w[
           -rotate-90 text-(--sp-color-primary)
-          [&.sp-progress-indeterminate]:animate-spin
+          [&[data-progress-indeterminate-value=true]]:animate-spin
         ].freeze
 
         RING_SIZES = { sm: "size-8", md: "size-12", lg: "size-16" }.freeze

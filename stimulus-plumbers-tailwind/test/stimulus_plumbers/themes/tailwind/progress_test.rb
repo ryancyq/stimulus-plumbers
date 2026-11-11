@@ -88,13 +88,13 @@ class TailwindThemeProgressTest < Minitest::Test
   def test_bar_fill_slides_when_indeterminate
     result = classes_for(:progress_bar_fill)
 
-    assert_includes result, "[.sp-progress-indeterminate_&]:animate-progress-slide"
+    assert_includes result, "[[data-progress-indeterminate-value=true]_&]:animate-progress-slide"
   end
 
   def test_bar_fill_respects_reduced_motion
     result = classes_for(:progress_bar_fill)
 
-    assert_includes result, "[.sp-progress-indeterminate_&]:motion-reduce:animate-none"
+    assert_includes result, "[[data-progress-indeterminate-value=true]_&]:motion-reduce:animate-none"
   end
 
   def test_fill_colors_by_intent_for_the_strength_ramp
@@ -107,7 +107,7 @@ class TailwindThemeProgressTest < Minitest::Test
 
   def test_segment_track_stays_static_while_indeterminate
     # The sliding chunk (a progress_bar_fill) carries the motion; the slot itself does not animate.
-    refute_includes classes_for(:progress_segment), "[.sp-progress-indeterminate_&]:animate-pulse"
+    refute_includes classes_for(:progress_segment), "[[data-progress-indeterminate-value=true]_&]:animate-pulse"
   end
 
   def test_ring_size_token_scales_the_ring
@@ -129,8 +129,8 @@ class TailwindThemeProgressTest < Minitest::Test
   def test_segment_fill_keeps_the_indeterminate_animation_hooks
     result = classes_for(:progress_segment_fill)
 
-    assert_includes result, "[.sp-progress-indeterminate_&]:animate-progress-slide"
-    assert_includes result, "[.sp-progress-indeterminate_&]:motion-reduce:animate-none"
+    assert_includes result, "[[data-progress-indeterminate-value=true]_&]:animate-progress-slide"
+    assert_includes result, "[[data-progress-indeterminate-value=true]_&]:motion-reduce:animate-none"
   end
 
   def test_segment_fill_colors_by_intent_like_the_bar_fill
@@ -163,7 +163,7 @@ class TailwindThemeProgressTest < Minitest::Test
   def test_ring_spins_when_indeterminate
     result = classes_for(:progress_ring)
 
-    assert_includes result, "[&.sp-progress-indeterminate]:animate-spin"
+    assert_includes result, "[&[data-progress-indeterminate-value=true]]:animate-spin"
   end
 
   def test_meter_returns_a_classes_string

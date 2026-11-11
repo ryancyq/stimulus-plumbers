@@ -19,7 +19,11 @@ module StimulusPlumbers
           progress_stimulus_data(
             value: current, min: min, max: max, variant: "ring", "progress-indeterminate-value": indeterminate
           ),
-          { role: "progressbar", aria: progress_aria(value: current, min: min, max: max, indeterminate: indeterminate) }
+          {
+            role:  "progressbar",
+            aria:  progress_aria(value: current, min: min, max: max, indeterminate: indeterminate),
+            style: progress_style(current, min, max, kwargs[:style])
+          }
         )
         Components::Icon.new(template).render("progress-ring", **icon_options)
       end

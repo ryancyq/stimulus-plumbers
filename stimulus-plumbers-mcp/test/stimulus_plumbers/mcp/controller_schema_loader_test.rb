@@ -54,7 +54,7 @@ class ControllerSchemaLoaderTest < Minitest::Test
   end
 
   def test_outlets
-    assert_includes @controllers["password-strength"]["outlets"], "progress"
+    assert_includes @controllers["combobox-date"]["outlets"], "calendar"
   end
 
   def test_combobox_date_targets

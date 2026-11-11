@@ -4,7 +4,7 @@ import { connectTriggerToTarget } from '../accessibility/aria';
 
 const defaultOptions = {
   anchor: null,
-  events: ['click'],
+  events: ['click', 'resize', 'scroll'],
   placement: 'bottom',
   alignment: 'start',
   onFlipped: 'flipped',
@@ -35,7 +35,24 @@ export class Flipper extends WindowObserver {
     }
 
     this.enhance();
-    this.observe(this.flip);
+    this.observe(this.onWindowEvent);
+  }
+
+  // Resize and scroll reposition at most once per frame.
+  onWindowEvent = (event) => {
+    if (event.type !== 'resize' && event.type !== 'scroll') return this.flip();
+    if (this.frame) return;
+
+    this.frame = requestAnimationFrame(() => {
+      this.frame = null;
+      this.flip();
+    });
+  };
+
+  disconnect() {
+    cancelAnimationFrame(this.frame);
+    this.frame = null;
+    super.disconnect();
   }
 
   flip = async () => {
@@ -156,7 +173,6 @@ export class Flipper extends WindowObserver {
   }
 
   enhance() {
-    super.enhance();
     this.controller.flip = this.flip;
   }
 }

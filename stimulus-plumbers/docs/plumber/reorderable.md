@@ -19,16 +19,18 @@ attachReorderable(controller, options);
 
 ## Methods
 
-| Method                               | Purpose                                                                                                                                                |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `attachItem(item)`                   | Adds the `keydown` listener for `Alt+Arrow` move handling to `item`                                                                                    |
-| `detachItem(item)`                   | Removes it                                                                                                                                             |
-| `attachItems(items)`                 | Calls `attachItem` for each item in `items`                                                                                                            |
-| `detachItems(items)`                 | Calls `detachItem` for each item in `items`                                                                                                            |
-| `startDrag(item, handle, pointerId)` | Begins tracking `item` as the drag target and captures the pointer on `handle`                                                                         |
-| `drag(event)`                        | Swaps the dragging item past its immediate previous/next sibling once the pointer event's `clientX`/`clientY` (per `orientation`) crosses its midpoint |
-| `endDrag(handle, pointerId)`         | Releases the pointer, dispatches `reordered`, and returns the moved item (or `null` if no drag was in progress)                                        |
-| `orderedIds()`                       | Returns `controller.itemTargets` ids (DOM order), omitting items without an `id`                                                                       |
+| Method                               | Purpose                                                                                                                                                                                                             |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `attachItem(item)`                   | Adds the `keydown` listener for `Alt+Arrow` move handling to `item`                                                                                                                                                 |
+| `detachItem(item)`                   | Removes it                                                                                                                                                                                                          |
+| `attachItems(items)`                 | Calls `attachItem` for each item in `items`                                                                                                                                                                         |
+| `detachItems(items)`                 | Calls `detachItem` for each item in `items`                                                                                                                                                                         |
+| `startDrag(item, handle, pointerId)` | Begins tracking `item` as the drag target, captures the pointer on `handle`, and cancels the drag on `pointercancel` or `lostpointercapture`                                                                        |
+| `drag(event)`                        | Swaps the dragging item past its immediate previous/next sibling once the pointer event's `clientX`/`clientY` (per `orientation`) crosses its midpoint; moves the sibling, so the capturing handle stays in the DOM |
+| `endDrag(handle, pointerId)`         | Releases the pointer, dispatches `reordered`, and returns the moved item (or `null` if no drag was in progress)                                                                                                     |
+| `cancelDrag()`                       | Restores the dragged item to its starting position and releases the pointer, without dispatching; no-op without a drag                                                                                              |
+| `disconnect()`                       | Forgets any active drag and detaches every item's `keydown` listener; idempotent                                                                                                                                    |
+| `orderedIds()`                       | Returns `controller.itemTargets` ids (DOM order), omitting items without an `id`                                                                                                                                    |
 
 Reads the current item list from `controller.itemTargets` on every call (a live Stimulus target getter) — never caches it, so it stays correct across DOM mutations from either drag or keyboard moves.
 

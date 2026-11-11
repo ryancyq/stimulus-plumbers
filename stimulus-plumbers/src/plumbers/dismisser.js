@@ -15,13 +15,12 @@ export class Dismisser extends WindowObserver {
     this.trigger = trigger || this.element;
     this.events = events;
 
-    this.enhance();
     this.observe(this.dismiss);
   }
 
   dismiss = async (event) => {
     const { target } = event;
-    if (!(target instanceof HTMLElement)) return;
+    if (!(target instanceof Element)) return;
     if (this.element.contains(target)) return;
     if (!this.visible) return;
 

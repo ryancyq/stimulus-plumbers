@@ -246,6 +246,17 @@ describe('Visibility', () => {
       expect(mockController.customVis.show).toBeTypeOf('function')
       expect(mockController.customVis.hide).toBeTypeOf('function')
     })
+
+    it('re-attaching points the helpers at the new element', () => {
+      new Visibility(mockController)
+      const replacement = document.createElement('div')
+      replacement.classList.add('hidden')
+      document.body.appendChild(replacement)
+
+      new Visibility(mockController, { element: replacement })
+
+      expect(mockController.visibility.visible).toBe(false)
+    })
   })
 
   describe('activator', () => {

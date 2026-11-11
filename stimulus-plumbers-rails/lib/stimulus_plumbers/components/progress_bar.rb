@@ -21,18 +21,28 @@ module StimulusPlumbers
         **kwargs
       )
         validate_segments!(segments, format)
-        current = clamp(value, min, max)
-        html_options = merge_html_options(
-          theme.resolve(:progress_segment_group),
-          kwargs,
-          segmented_stimulus_data(current, min, max, mode, indeterminate),
-          { role: "progressbar", aria: progress_aria(value: current, min: min, max: max, indeterminate: indeterminate) }
-        )
-        slots = ramp_intents(ramp, segments).map { |intent| render_segment(intent: intent) }
+        current      = clamp(value, min, max)
+        html_options = segmented_html_options(current, min, max, segments, mode, indeterminate, kwargs)
+        slots        = ramp_intents(ramp, segments).each_with_index.map do |intent, index|
+          render_segment(intent: intent, index: index)
+        end
         template.content_tag(:div, template.safe_join(slots), **html_options)
       end
 
       private
+
+      def segmented_html_options(current, min, max, segments, mode, indeterminate, kwargs)
+        merge_html_options(
+          theme.resolve(:progress_segment_group),
+          kwargs,
+          segmented_stimulus_data(current, min, max, mode, indeterminate),
+          {
+            role:  "progressbar",
+            aria:  progress_aria(value: current, min: min, max: max, indeterminate: indeterminate),
+            style: progress_style(current, min, max, kwargs[:style], "--sp-progress-count" => segments)
+          }
+        )
+      end
 
       def validate_segments!(segments, format)
         raise ArgumentError, "format: is not supported with segments:" unless format.nil?
@@ -85,7 +95,7 @@ module StimulusPlumbers
           bar_root_theme(format, readout),
           kwargs,
           bar_stimulus_data(current, min, max, indeterminate, format),
-          { role: "progressbar", aria: aria }
+          { role: "progressbar", aria: aria, style: progress_style(current, min, max, kwargs[:style]) }
         )
       end
 
@@ -120,17 +130,17 @@ module StimulusPlumbers
       end
 
       # `data-intent` is a theme-independent styling hook the theme colors via attribute variants.
-      def render_fill(intent: nil, key: :progress_bar_fill)
+      def render_fill(intent: nil, key: :progress_bar_fill, **html_options)
         data = { "progress-target": "fill" }
         data[:intent] = intent if intent
-        template.content_tag(:div, nil, **merge_html_options(theme.resolve(key), { data: data }))
+        template.content_tag(:div, nil, **merge_html_options(theme.resolve(key), { data: data }, html_options))
       end
 
       # Slots are aria-hidden — the container owns the progressbar ARIA.
-      def render_segment(intent: nil)
+      def render_segment(intent:, index:)
         template.content_tag(
           :div,
-          render_fill(intent: intent, key: :progress_segment_fill),
+          render_fill(intent: intent, key: :progress_segment_fill, style: "--sp-progress-index: #{index}"),
           **merge_html_options(theme.resolve(:progress_segment), { aria: { hidden: true } })
         )
       end
