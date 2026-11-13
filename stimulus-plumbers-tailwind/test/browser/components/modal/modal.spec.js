@@ -214,8 +214,8 @@ test.describe("modal", () => {
 
     const events = await section.evaluate((element) => {
       const dialog = element.querySelector("dialog");
-      const trigger = element.querySelector('[data-action~="modal#open"]');
-      const close = element.querySelector('[data-action~="modal#close"]');
+      const trigger = element.querySelector('[data-action~="modal#onOpen"]');
+      const close = element.querySelector('[data-action~="modal#onClose"]');
 
       return new Promise((resolve) => {
         const events = [];

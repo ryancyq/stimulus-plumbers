@@ -118,7 +118,7 @@ class ModalTriggerTest < ActionView::TestCase
     assert_equal "button", trigger["type"]
     assert_equal "example", trigger["commandfor"]
     assert_equal "show-modal", trigger["command"]
-    assert_equal "modal#open", trigger["data-action"]
+    assert_equal "modal#onOpen", trigger["data-action"]
     assert_nil trigger["aria-expanded"]
   end
 
@@ -129,7 +129,7 @@ class ModalTriggerTest < ActionView::TestCase
     trigger = doc.at_css("button")
 
     assert_includes trigger["data-action"].split, "audit#open"
-    assert_includes trigger["data-action"].split, "modal#open"
+    assert_includes trigger["data-action"].split, "modal#onOpen"
     assert_equal "trigger", trigger["data-testid"]
   end
 
@@ -145,7 +145,7 @@ class ModalTriggerTest < ActionView::TestCase
     assert_equal "button", received[:type]
     assert_equal "example", received[:commandfor]
     assert_equal "show-modal", received[:command]
-    assert_equal "modal#open", received.dig(:data, :action)
+    assert_equal "modal#onOpen", received.dig(:data, :action)
   end
 
   def test_custom_trigger_preserves_caller_data_and_actions
@@ -158,7 +158,7 @@ class ModalTriggerTest < ActionView::TestCase
     end
 
     assert_includes received[:data][:action].split, "audit#open"
-    assert_includes received[:data][:action].split, "modal#open"
+    assert_includes received[:data][:action].split, "modal#onOpen"
     assert_equal "trigger", received[:data][:testid]
   end
 end
@@ -192,8 +192,8 @@ class ModalButtonTest < ActionView::TestCase
       end
     )
 
-    assert_css doc, "button[commandfor='example'][command='request-close'][data-action='modal#dismiss']"
-    assert_css doc, "button[commandfor='example'][command='close'][data-action='modal#close']"
+    assert_css doc, "button[commandfor='example'][command='request-close'][data-action='modal#onDismiss']"
+    assert_css doc, "button[commandfor='example'][command='close'][data-action='modal#onClose']"
     assert_equal 0, doc.css("button[data-modal-result-param], button[value]").length
   end
 
@@ -208,7 +208,7 @@ class ModalButtonTest < ActionView::TestCase
     button = doc.at_css("button[data-action]")
 
     assert_includes button["data-action"].split, "audit#cancel"
-    assert_includes button["data-action"].split, "modal#dismiss"
+    assert_includes button["data-action"].split, "modal#onDismiss"
     assert_button_command button, "request-close"
     assert_equal "cancel", button["data-testid"]
   end
@@ -228,10 +228,10 @@ class ModalButtonTest < ActionView::TestCase
   private
 
   def assert_button_result_markup(doc)
-    assert_button_command doc.at_css("button[data-action='modal#dismiss']"), "request-close", "cancel"
-    assert_button_command doc.at_css("button[data-action='modal#close']"), "close", "delete"
-    assert_css doc, "button[data-action='modal#dismiss'][data-modal-result-param='cancel']"
-    assert_css doc, "button[data-action='modal#close'][data-modal-result-param='delete']"
+    assert_button_command doc.at_css("button[data-action='modal#onDismiss']"), "request-close", "cancel"
+    assert_button_command doc.at_css("button[data-action='modal#onClose']"), "close", "delete"
+    assert_css doc, "button[data-action='modal#onDismiss'][data-modal-result-param='cancel']"
+    assert_css doc, "button[data-action='modal#onClose'][data-modal-result-param='delete']"
   end
 
   def assert_button_command(button, command, value = nil)

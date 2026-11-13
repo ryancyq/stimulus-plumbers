@@ -54,7 +54,7 @@ export default class extends Controller {
 
   format(value) {
     if (!this.formatter) return;
-    this.onFormatting(value);
+    this._writeFormatted(value);
   }
 
   onPaste(event) {
@@ -117,7 +117,7 @@ export default class extends Controller {
     return this.inputTarget instanceof HTMLInputElement ? this.inputTarget.value : this.inputTarget.textContent;
   }
 
-  onFormatting(raw) {
+  _writeFormatted(raw) {
     if (!this.formatter) return;
 
     const value = this.formatter.normalize(raw);

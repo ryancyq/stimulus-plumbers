@@ -52,19 +52,31 @@ export default class extends Controller {
     this._syncTrigger();
   }
 
-  open(event) {
-    this._preventDefault(event);
-    this.popover?.show(this._sourceFor(event));
+  onOpen(event) {
+    event.preventDefault();
+    this.open(event.currentTarget);
   }
 
-  close(event) {
-    this._preventDefault(event);
+  onClose(event) {
+    event.preventDefault();
+    this.close();
+  }
+
+  onToggle(event) {
+    event.preventDefault();
+    this.toggle(event.currentTarget);
+  }
+
+  open(source) {
+    this.popover?.show(source ?? this._defaultSource());
+  }
+
+  close() {
     this.popover?.hide();
   }
 
-  toggle(event) {
-    this._preventDefault(event);
-    this.popover?.toggle(this._sourceFor(event));
+  toggle(source) {
+    this.popover?.toggle(source ?? this._defaultSource());
   }
 
   // Opens on focus, except before any user input since connect, when focus returns from the
@@ -73,7 +85,7 @@ export default class extends Controller {
     if (!this.interacted || this.panelElement?.contains(event.relatedTarget)) return;
     if (event.currentTarget.closest('dialog')?.matches(':modal')) return;
 
-    this.open(event);
+    this.open(event.currentTarget);
   }
 
   _closeForCache() {
@@ -88,12 +100,7 @@ export default class extends Controller {
     this.panelElement = null;
   }
 
-  _preventDefault(event) {
-    if (event && typeof event.preventDefault === 'function') event.preventDefault();
-  }
-
-  _sourceFor(event) {
-    if (event && typeof event.preventDefault === 'function' && event.currentTarget) return event.currentTarget;
+  _defaultSource() {
     return this.hasTriggerTarget ? this.triggerTarget : undefined;
   }
 

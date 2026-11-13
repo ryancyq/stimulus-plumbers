@@ -218,7 +218,7 @@ formats the input from `combobox-date:changed`.
     data-popover-target="trigger"
     data-combobox-date-target="trigger"
     data-input-formatter-target="input"
-    data-action="focus->popover#onFocus click->popover#open keydown->combobox-date#onKeydown"
+    data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-date#onKeydown"
   />
   <input type="hidden" name="person[birthday]" value="2026-09-15" data-combobox-date-target="input" />
   <div id="birthday_popover" popover="auto" role="dialog" data-popover-target="panel" data-combobox-date-target="panel">
@@ -284,7 +284,7 @@ formats the input from `combobox-time:changed`.
     data-popover-target="trigger"
     data-combobox-time-target="trigger"
     data-input-formatter-target="input"
-    data-action="focus->popover#onFocus click->popover#open keydown->combobox-time#onKeydown"
+    data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-time#onKeydown"
   />
   <input type="hidden" name="meeting" value="14:30" data-combobox-time-target="input" />
   <div id="meeting_popover" popover="auto" role="dialog" data-popover-target="panel" data-combobox-time-target="panel">

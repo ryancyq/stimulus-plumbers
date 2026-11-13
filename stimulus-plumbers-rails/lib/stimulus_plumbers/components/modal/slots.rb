@@ -4,6 +4,8 @@ module StimulusPlumbers
   module Components
     class Modal
       class Slots < Plumber::Slots
+        BUTTON_ACTIONS = { "dismiss" => "modal#onDismiss", "close" => "modal#onClose" }.freeze
+
         include Plumber::Options::Html
 
         def initialize(template, modal_id:)
@@ -47,7 +49,7 @@ module StimulusPlumbers
         end
 
         def render_button(content, action:, result:, **kwargs, &block)
-          data = { action: "modal##{action}" }
+          data = { action: BUTTON_ACTIONS.fetch(action) }
           data[:modal_result_param] = result unless result.nil?
           native = {
             commandfor: @modal_id,

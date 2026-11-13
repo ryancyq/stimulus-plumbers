@@ -225,7 +225,7 @@ class TimelineHelperTest < ActionView::TestCase
     assert_css doc, "ol[data-controller='timeline']"
     assert_css doc, "h3 button"
     assert_css doc, "button[data-timeline-target='trigger']"
-    assert_css doc, "button[data-action='timeline#toggle']"
+    assert_css doc, "button[data-action='timeline#onToggle']"
     assert_css doc, "button[aria-expanded='false']"
   end
 
@@ -288,7 +288,7 @@ class TimelineHelperTest < ActionView::TestCase
     )
 
     assert_css doc, "button[data-timeline-target='trigger']"
-    assert_css doc, "button[data-action='timeline#toggle']"
+    assert_css doc, "button[data-action='timeline#onToggle']"
     assert_css doc, "button[aria-expanded='false']"
     assert_css doc, "button[aria-controls='ev-1_detail']"
     assert_css doc, "div[hidden]"
