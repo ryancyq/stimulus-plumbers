@@ -108,8 +108,12 @@ test.describe("combobox", () => {
     await screenshotWithPanel(page, section, "typeahead-no-results.png");
   });
 
+  // fill() does not scroll in WebKit, so these center the section first; the panel opens below.
   test("typeahead remote — results", async ({ page }) => {
     const section = page.locator("#combobox-typeahead-remote");
+    await section.evaluate((element) =>
+      element.scrollIntoView({ block: "center" }),
+    );
     await section.getByRole("combobox", { name: "Remote city" }).fill("Se");
     await expect(section.getByRole("option")).toHaveCount(2);
     await screenshotWithPanel(page, section, "typeahead-remote-results.png");
@@ -118,6 +122,9 @@ test.describe("combobox", () => {
   test("typeahead remote — loading", async ({ page }) => {
     await page.route("**/combobox/cities?*", () => {});
     const section = page.locator("#combobox-typeahead-remote");
+    await section.evaluate((element) =>
+      element.scrollIntoView({ block: "center" }),
+    );
     await section.getByRole("combobox", { name: "Remote city" }).fill("Se");
     await expect(section.getByRole("status")).toHaveText("Loading…");
     await screenshotWithPanel(page, section, "typeahead-remote-loading.png");
@@ -128,6 +135,9 @@ test.describe("combobox", () => {
       route.fulfill({ status: 500, body: "Server error" }),
     );
     const section = page.locator("#combobox-typeahead-remote");
+    await section.evaluate((element) =>
+      element.scrollIntoView({ block: "center" }),
+    );
     await section.getByRole("combobox", { name: "Remote city" }).fill("Se");
     await expect(section.getByRole("status")).toHaveText(
       "Results could not be loaded",
