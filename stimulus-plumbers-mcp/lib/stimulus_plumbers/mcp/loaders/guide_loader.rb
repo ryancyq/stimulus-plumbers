@@ -12,7 +12,7 @@ module StimulusPlumbers
             component:  read_file(component_guide_path),
             controller: read_file(controller_guide_path),
             tailwind:   read_file(tailwind_guide_path),
-            theme:      read_file(File.join(ComponentDocsLoader.docs_dir, "theme.md"))
+            theme:      ComponentDocsLoader.read(:theme)
           }
         end
 

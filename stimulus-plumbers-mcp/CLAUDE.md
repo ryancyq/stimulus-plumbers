@@ -12,7 +12,7 @@ stimulus-plumbers-mcp/
 │   └── stimulus_plumbers/mcp/
 │       ├── server.rb                           # Server.build (see docs/architecture.md "Server.build Flow")
 │       ├── loaders/                            # One loader per source into store[loader_key], plus ComponentRequirements (see docs/architecture.md "Loader Naming")
-│       │   ├── support/                        # Pure helpers with no source of their own (parsers, path resolution)
+│       │   ├── support/                        # Pure helpers with no source of their own (parsers, link rewriting, path resolution)
 │       │   └── guide.md                        # MCP-authored overview — the only guide content not sourced from another package
 │       └── plugins/                            # One per source, subclassing base.rb (see docs/architecture.md "Plugin Class Contract")
 ├── test/
