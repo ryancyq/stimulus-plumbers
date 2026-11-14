@@ -27,6 +27,7 @@ stimulus-plumbers-mcp/     # Ruby gem: stimulus_plumbers_mcp — MCP server expo
 
 ## Docs
 - `npm run format:docs` / `format:docs:check` — prettier over all `*/docs/**/*.md`
+- `node --run docs:links` — relative links and their anchors resolve in every `*/docs/**/*.md`, `README.md`, `CLAUDE.md`, and `ARIA.md`
 
 ## Doc Update Rule
 - When changing component API (targets, values, options, HTML structure), update `docs/component/*.md` and any CLAUDE.md sections that reference it in the same change.

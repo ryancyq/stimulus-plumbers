@@ -2,7 +2,7 @@
 
 require_relative "../../test_helper"
 
-# Wrong table headers and broken links fail silently otherwise — get_component_helper
+# Wrong table headers fail silently otherwise — get_component_helper
 # just returns less than documented. Runs against every docs_dir the server serves.
 class DocsLintTest < Minitest::Test
   DOC_DIRS = [
@@ -41,23 +41,6 @@ class DocsLintTest < Minitest::Test
         assert_includes table[:header],
                         "Description",
                         "#{File.basename(path)}: option table #{table[:header].inspect} has no Description column"
-      end
-    end
-  end
-
-  def test_relative_markdown_links_resolve_to_real_files
-    each_doc do |path, content|
-      content.scan(%r{\[[^\]]*\]\(([^)]+)\)}).each do |(target)|
-        next if target.match?(%r{\A[a-z]+://}i)
-
-        file_part = target.split("#").first
-        next if file_part.nil? || file_part.empty?
-
-        resolved = File.expand_path(file_part, File.dirname(path))
-
-        assert_path_exists resolved,
-                           "#{File.basename(path)}: link target #{target.inspect} does not resolve " \
-                           "(resolved to #{resolved})"
       end
     end
   end
