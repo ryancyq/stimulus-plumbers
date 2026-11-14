@@ -27,7 +27,7 @@ bin/                       # Repo scripts
 - Never put `${{ … }}` inside a workflow `run:`; pass it through `env:` and reference the shell variable (`"$VAR"`)
 
 ## Docs
-- `npm run format:docs` / `format:docs:check` — prettier over all `*/docs/**/*.md`
+- `node --run docs:format:write` / `docs:format:check` — prettier over all `*/docs/**/*.md`
 - `node --run docs:links` — relative links and their anchors resolve in every `*/docs/**/*.md`, `README.md`, `CLAUDE.md`, and `ARIA.md`
 
 ## Doc Update Rule
