@@ -5,50 +5,21 @@
 ```
 stimulus-plumbers/
 ├── src/
-│   ├── accessibility/               # ARIA, focus, keyboard utilities
-│   │   ├── aria.js
-│   │   ├── focus.js
-│   │   └── keyboard.js
-│   ├── controllers/                 # Stimulus controllers
-│   │   ├── *_controller.js
+│   ├── index.js                     # Package entry: every export
+│   ├── accessibility/               # Accessibility utilities (see Guidelines)
+│   ├── controllers/                 # <identifier>_controller.js — one Stimulus controller each
 │   ├── date/                        # Date-only core: { year, month, day }, never an instant
-│   │   └── index.js
-│   ├── plumbers/                    # Core plumber utilities
+│   ├── plumbers/                    # <name>.js — one plumber each; index.js exports their attach functions
 │   │   ├── formatters/              # Input formatter strategies
-│   │   │   └── *.js
-│   │   ├── plumber/                 # Base plumber classes
-│   │   │   ├── config.js
-│   │   │   ├── geometry.js
-│   │   │   ├── index.js
-│   │   │   └── window_observer.js
-│   │   └── *.js
-│   ├── index.js                     # Main entry point
-│   ├── requestor.js                 # HTTP request helper
-│   └── researcher.js                # Fuzzy match / filter helper
-├── tests/
-│   ├── unit/
-│   │   ├── accessibility/
-│   │   │   └── *.test.js
-│   │   ├── controllers/
-│   │   │   └── *.test.js
-│   │   ├── date/                    # Runs tests/fixtures/date/*.json across timezones
-│   │   │   └── *.test.js
-│   │   ├── plumbers/
-│   │   │   ├── formatters/
-│   │   │   │   └── *.test.js
-│   │   │   ├── plumber/
-│   │   │   │   └── *.test.js
-│   │   │   └── *.test.js
-│   │   └── *.test.js
+│   │   └── plumber/                 # Plumber base classes and shared helpers
+│   └── *.js                         # Standalone utilities (e.g. requestor.js)
+├── tests/                           # Layers in root CLAUDE.md "Testing"
+│   ├── unit/                        # <src path>.test.js, except date/date.test.js for src/date/; scripts/ tests sit at the unit/ root
 │   ├── fixtures/                    # JSON fixtures shared with the Rails tests
-│   ├── support/                     # Shared test helpers and jsdom shims
-│   └── setup.js                     # jsdom setup and per-test teardown
-├── eslint.config.js
-├── package.json
-├── vite.config.js
-├── .prettierrc.json
-├── .gitignore
-└── README.md
+│   ├── support/                     # Shared test helpers and jsdom shims (see Guidelines)
+│   └── setup.js                     # jsdom defaults and per-test teardown (root CLAUDE.md "Testing")
+├── scripts/                         # Build scripts
+└── docs/                            # component/, plumber/, utility/, accessibility/ — one <name>.md each; guide.md
 ```
 
 > See [README.md](README.md) for installation, controller usage examples, and developer setup.

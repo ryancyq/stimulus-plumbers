@@ -5,80 +5,30 @@
 ```
 stimulus-plumbers-tailwind/
 ├── lib/
-│   ├── stimulus_plumbers_tailwind.rb       # Entry point: registers :tailwind theme
-│   ├── generators/
-│   │   └── stimulus_plumbers/
-│   │       └── tailwind/
-│   │           └── install/
-│   │               └── install_generator.rb # `rails g stimulus_plumbers:tailwind:install` — injects @source into Tailwind entry CSS
-│   ├── tasks/
-│   │   └── stimulus_plumbers_tailwind.rake # Consumer rake task: install, hooked into assets:precompile + tailwindcss:build
-│   └── stimulus_plumbers/
-│       ├── tailwind/
-│       │   ├── version.rb                  # StimulusPlumbers::Tailwind::VERSION
-│       │   └── engine.rb                   # StimulusPlumbers::Tailwind::Engine < Rails::Engine — registers :tailwind theme on boot
-│       └── themes/
-│           ├── tailwind_theme.rb            # TailwindTheme < Base (includes component modules)
-│           └── tailwind/
-│               ├── control.rb              # Control::BASE — shared interactive foundation (required first)
-│               ├── list.rb                  # List CSS classes
-│               ├── avatar.rb               # Avatar CSS classes
-│               ├── button.rb               # Button CSS classes
-│               ├── button/
-│               │   └── group.rb            # Button::Group CSS classes
-│               ├── calendar.rb             # Calendar CSS classes
-│               ├── card.rb                 # Card CSS classes + Card::VARIANTS (--card-ring)
-│               ├── combobox.rb             # Combobox CSS classes
-│               ├── form.rb                 # Form CSS classes (form_group, form_submit, input_group)
-│               ├── form/
-│               │   ├── field.rb            # Form::Field — floating (form_field_floating*), label/hint/error/choice CSS classes
-│               │   └── input.rb            # Form::Input — input/checkbox/radio/combobox/reveal/clearable CSS classes
-│               ├── password_strength.rb    # PasswordStrength CSS classes (wrapper/rules_heading/rules/rule/level) — sibling of Form
-│               ├── icon.rb                 # Icon CSS classes + ALIASES + Registry wiring
-│               ├── icons/
-│               │   ├── heroicon.rb         # Heroicons source (bundled SVGs or heroicons gem)
-│               │   ├── custom.rb           # Custom icons from icons/customs/
-│               │   ├── heroicons/          # Bundled heroicon SVGs (outline/ + solid/)
-│               │   └── customs/            # Custom icon SVGs (e.g. spinner.svg)
-│               ├── layout.rb              # Layout CSS classes
-│               ├── link.rb                # Link CSS classes
-│               ├── ordered_list.rb        # OrderedList CSS classes (reorderable list, drag handle)
-│               ├── timeline.rb            # Timeline CSS classes
-│               └── timeline/
-│                   └── group.rb            # Timeline::Group CSS classes
-├── test/
-│   ├── generators/
-│   │   └── stimulus_plumbers_tailwind/
-│   │       └── install_generator_test.rb   # Generator unit tests (Rails::Generators::TestCase)
+│   ├── stimulus_plumbers_tailwind.rb       # Entry point
 │   ├── stimulus_plumbers/
+│   │   ├── tailwind/                       # Engine and version; generators/ holds the install generator's CSS helpers
 │   │   └── themes/
-│   │       ├── tailwind_test.rb            # TailwindTheme integration tests
-│   │       └── tailwind/                   # Per-module unit tests
-│   │           ├── icons/                  # Unit tests for icon sources + registry
-│   │           └── ...
-│   ├── snapshots/                          # Playwright snapshot specs, nested by route category
+│   │       ├── tailwind_theme.rb           # TailwindTheme < Base; includes every component module
+│   │       └── tailwind/                   # <component>.rb CSS classes per component; <component>/ for sub-components; icons/ sources + SVGs
+│   ├── generators/                         # rails g stimulus_plumbers:tailwind:install
+│   └── tasks/                              # Consumer rake task
+├── app/assets/stylesheets/                 # Shipped CSS
+├── test/
+│   ├── stimulus_plumbers/                  # Unit tests mirroring lib/stimulus_plumbers/ (theme modules under themes/tailwind/), plus sandbox CSS and tasks tests
+│   ├── generators/                         # Install generator tests
+│   ├── snapshots/                          # Playwright snapshot specs at <url>.spec.js
 │   │   └── __snapshots__/                  # Baselines: {form}/{device}/{os}/<spec path>/<name>.png
-│   ├── browser/                            # Playwright browser specs, nested by route category
-│   ├── sandbox/                            # Layout + Tailwind CSS over the core gem's sandbox app
-│   │   ├── app/
-│   │   │   ├── assets/
-│   │   │   │   ├── stylesheets/
-│   │   │   │   │   └── application.css     # Tailwind CSS v4 entry source (generator-owned imports)
-│   │   │   │   └── builds/
-│   │   │   │       └── stimulus_plumbers/
-│   │   │   │           └── tailwind.css    # Generated gem @source partial (committed fixture)
-│   │   │   └── views/layouts/              # Tailwind layout around the core sandbox's pages
-│   │   ├── config/                         # Application, boot, and environments; routes come from the core sandbox
-│   │   └── public/                         # Compiled tailwind.css output (gitignored)
+│   ├── browser/                            # Playwright browser specs at <url>.spec.js
+│   ├── sandbox/                            # See "Sandbox View Convention"
 │   ├── support/                            # Shared Minitest and Playwright helpers
 │   └── test_helper.rb
-├── Gemfile
-├── package.json                            # Tailwind CLI + Playwright
-├── playwright.base.js                      # Shared settings + device projects (desktop Chrome/Firefox/Safari, Pixel 10, iPhone 17)
-├── playwright.snapshots.config.js
-├── playwright.browser.config.js
-├── Rakefile
-└── *.gemspec
+├── bin/                                    # Dev and CI scripts
+├── tasks/                                  # Gem-dev rake tasks
+├── docs/                                   # guide.md, architecture.md
+├── Gemfile                                 # gemspec + path: sibling gems
+├── playwright.base.js                      # Shared settings + device projects for both Playwright configs
+└── package.json                            # Tailwind CLI + Playwright
 ```
 
 > See [README.md](README.md) for installation and developer setup.
@@ -106,11 +56,11 @@ Start the sandbox webserver (see `playwright.base.js`) to inspect rendered HTML 
 RAILS_ENV=test bundle exec puma test/sandbox/config.ru --bind tcp://127.0.0.1:4001
 ```
 
-Routes: `/components/{controls,display,layout,popover,calendar,showcase}/{button,combobox,…}` and `/form/{floating_label,choices,field_error,…}` at `http://127.0.0.1:4001`.
+Routes: `/components/{controls,display,layout,modal,popover,calendar,showcase}/{button,combobox,…}` and `/form/{floating_label,choices,field_error,…}` at `http://127.0.0.1:4001`.
 
 **Never run `node --run test:snapshots:update` on Linux** — it overwrites the committed baselines, which are regenerated by running the CI snapshots workflow (`.github/workflows/ci-snapshots.yml`) with its `update_snapshots` input.
 
-**`test/sandbox/app/assets/stylesheets/application.css`'s generator-owned imports (`@import tokens.css`, `@import builds/…/tailwind.css`) and the committed `test/sandbox/app/assets/builds/stimulus_plumbers/tailwind.css` partial must always match `stimulus_plumbers:tailwind:install`'s output** — `test/stimulus_plumbers/tailwind/sandbox_css_test.rb` enforces this. If it fails, regenerate with `STIMULUS_PLUMBERS_CSS_ENTRY=test/sandbox/app/assets/stylesheets/application.css bin/rails generate stimulus_plumbers:tailwind:install` and commit the diff — never hand-edit them.
+**`test/sandbox/app/assets/stylesheets/application.css`'s generator-owned imports (`@import tokens.css`, `@import …/animations.css`, `@import builds/…/tailwind.css`) and the committed `test/sandbox/app/assets/builds/stimulus_plumbers/tailwind.css` partial must always match `stimulus_plumbers:tailwind:install`'s output** — `test/stimulus_plumbers/tailwind/sandbox_css_test.rb` enforces this. If it fails, regenerate with `STIMULUS_PLUMBERS_CSS_ENTRY=test/sandbox/app/assets/stylesheets/application.css bin/rails generate stimulus_plumbers:tailwind:install` and commit the diff — never hand-edit them.
 
 ## Sandbox View Convention
 
