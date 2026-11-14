@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-import { visibilityConfig } from '../../../src/plumbers/plumber/config'
+import { visibilityConfig } from '../../../src/plumbers/plumber/config';
 import VisibilityController from '../../../src/controllers/visibility_controller';
 
 describe('VisibilityController', () => {
@@ -41,12 +41,18 @@ describe('VisibilityController', () => {
         <button id="outside">Outside</button>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const content = document.querySelector('[data-visibility-target="content"]');
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 100, bottom: 200, right: 300,
-        width: 200, height: 100, x: 100, y: 100
+        top: 100,
+        left: 100,
+        bottom: 200,
+        right: 300,
+        width: 200,
+        height: 100,
+        x: 100,
+        y: 100,
       }));
     });
 
@@ -90,8 +96,14 @@ describe('VisibilityController', () => {
       );
 
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 900, bottom: 200, right: 1100,
-        width: 200, height: 100, x: 900, y: 100
+        top: 100,
+        left: 900,
+        bottom: 200,
+        right: 1100,
+        width: 200,
+        height: 100,
+        x: 900,
+        y: 100,
       }));
 
       await controller.toggle();
@@ -110,7 +122,7 @@ describe('VisibilityController', () => {
         </div>
         <button id="outside">Outside</button>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
     it('hides content when dismissed', async () => {
@@ -139,7 +151,7 @@ describe('VisibilityController', () => {
 
       outsideButton.click();
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(content.hidden).toBe(true);
     });
 
@@ -154,7 +166,7 @@ describe('VisibilityController', () => {
 
       insideContent.click();
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(content.hidden).toBe(false);
     });
 
@@ -171,7 +183,7 @@ describe('VisibilityController', () => {
       await controller.toggle();
 
       outsideButton.click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(dismissSpy).toHaveBeenCalledTimes(1);
       expect(dismissedSpy).toHaveBeenCalledTimes(1);
@@ -185,7 +197,7 @@ describe('VisibilityController', () => {
         </div>
         <button id="outside">Outside</button>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const element = document.querySelector('[data-controller="visibility"]');
       element.getBoundingClientRect = vi.fn(() => ({ top: 0, left: 0, width: 100, height: 100 }));
@@ -194,13 +206,13 @@ describe('VisibilityController', () => {
       element.addEventListener('visibility:dismiss', dismissSpy);
 
       outsideButton.click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(dismissSpy).not.toHaveBeenCalled();
 
       const controller = application.getControllerForElementAndIdentifier(element, 'visibility');
       await controller.toggle();
       outsideButton.click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(dismissSpy).toHaveBeenCalledTimes(1);
     });
   });
@@ -212,11 +224,11 @@ describe('VisibilityController', () => {
           <div data-visibility-target="content" hidden>Old</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const element = document.querySelector('[data-controller="visibility"]');
       element.innerHTML = '<div data-visibility-target="content" hidden>New</div>';
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const controller = application.getControllerForElementAndIdentifier(element, 'visibility');
       await controller.toggle();
@@ -233,7 +245,7 @@ describe('VisibilityController', () => {
         </div>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const controller = application.getControllerForElementAndIdentifier(
         document.querySelector('[data-controller="visibility"]'),
@@ -250,7 +262,7 @@ describe('VisibilityController', () => {
         </div>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const controller = application.getControllerForElementAndIdentifier(
         document.querySelector('[data-controller="visibility"]'),
@@ -268,7 +280,7 @@ describe('VisibilityController', () => {
           <div data-visibility-target="content" hidden>Content</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
     it('tracks visibility state correctly', async () => {
@@ -314,7 +326,7 @@ describe('VisibilityController', () => {
           <div data-visibility-target="content" hidden>Content</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
     it('shifts content on window resize when visible', async () => {
@@ -325,8 +337,14 @@ describe('VisibilityController', () => {
       );
 
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 900, bottom: 200, right: 1100,
-        width: 200, height: 100, x: 900, y: 100
+        top: 100,
+        left: 900,
+        bottom: 200,
+        right: 1100,
+        width: 200,
+        height: 100,
+        x: 900,
+        y: 100,
       }));
 
       await controller.toggle();
@@ -362,7 +380,7 @@ describe('VisibilityController', () => {
         </div>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const content = document.querySelector('[data-visibility-target="content"]');
       const controller = application.getControllerForElementAndIdentifier(
@@ -371,8 +389,14 @@ describe('VisibilityController', () => {
       );
 
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 800, bottom: 200, right: 1000,
-        width: 200, height: 100, x: 800, y: 100
+        top: 100,
+        left: 800,
+        bottom: 200,
+        right: 1000,
+        width: 200,
+        height: 100,
+        x: 800,
+        y: 100,
       }));
 
       await controller.toggle();
@@ -392,7 +416,7 @@ describe('VisibilityController', () => {
         <button id="outside">Outside</button>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const element = document.querySelector('[data-controller="visibility"]');
       const content = document.querySelector('[data-visibility-target="content"]');
@@ -403,10 +427,10 @@ describe('VisibilityController', () => {
       expect(content.hidden).toBe(false);
 
       element.remove();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       outsideButton.click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(content.hidden).toBe(false);
     });
 
@@ -417,15 +441,21 @@ describe('VisibilityController', () => {
         </div>
       `;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const element = document.querySelector('[data-controller="visibility"]');
       const content = document.querySelector('[data-visibility-target="content"]');
       const controller = application.getControllerForElementAndIdentifier(element, 'visibility');
 
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 900, bottom: 200, right: 1100,
-        width: 200, height: 100, x: 900, y: 100
+        top: 100,
+        left: 900,
+        bottom: 200,
+        right: 1100,
+        width: 200,
+        height: 100,
+        x: 900,
+        y: 100,
       }));
 
       await controller.toggle();
@@ -433,11 +463,11 @@ describe('VisibilityController', () => {
       expect(content.style.transform).toBe('translate(-76px, 0px)');
 
       element.remove();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       content.style.transform = '';
       window.dispatchEvent(new Event('resize'));
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(content.style.transform).toBeFalsy();
     });
 
@@ -447,16 +477,22 @@ describe('VisibilityController', () => {
           <div data-visibility-target="content" hidden>Content</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const content = document.querySelector('[data-visibility-target="content"]');
       content.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 900, bottom: 200, right: 1100,
-        width: 200, height: 100, x: 900, y: 100
+        top: 100,
+        left: 900,
+        bottom: 200,
+        right: 1100,
+        width: 200,
+        height: 100,
+        x: 900,
+        y: 100,
       }));
 
       content.remove();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       window.dispatchEvent(new Event('resize'));
 
       expect(content.style.transform).toBeFalsy();
@@ -468,17 +504,23 @@ describe('VisibilityController', () => {
           <div id="old-content" data-visibility-target="content" hidden>Old</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       const element = document.querySelector('[data-controller="visibility"]');
       const oldContent = document.querySelector('#old-content');
       oldContent.getBoundingClientRect = vi.fn(() => ({
-        top: 100, left: 900, bottom: 200, right: 1100,
-        width: 200, height: 100, x: 900, y: 100
+        top: 100,
+        left: 900,
+        bottom: 200,
+        right: 1100,
+        width: 200,
+        height: 100,
+        x: 900,
+        y: 100,
       }));
 
       element.insertAdjacentHTML('beforeend', '<div data-visibility-target="content" hidden>New</div>');
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       window.dispatchEvent(new Event('resize'));
 
       expect(oldContent.style.transform).toBeFalsy();
@@ -492,7 +534,7 @@ describe('VisibilityController', () => {
           <div data-visibility-target="content" hidden>Content</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
     it('dispatches show event when showing', async () => {
@@ -514,7 +556,7 @@ describe('VisibilityController', () => {
       const controller = application.getControllerForElementAndIdentifier(element, 'visibility');
       await controller.toggle();
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(shownSpy).toHaveBeenCalled();
     });
 
@@ -539,7 +581,7 @@ describe('VisibilityController', () => {
       await controller.toggle();
       await controller.toggle();
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(hiddenSpy).toHaveBeenCalled();
     });
   });
@@ -552,7 +594,7 @@ describe('VisibilityController', () => {
           <div data-visibility-target="content" class="hidden">Content</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
     it('shows content by removing the hidden class', async () => {
@@ -607,7 +649,7 @@ describe('VisibilityController', () => {
           <div data-visibility-target="content" hidden>Content</div>
         </div>
       `;
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
     it('marks the trigger collapsed while content is hidden', () => {
@@ -620,11 +662,11 @@ describe('VisibilityController', () => {
       const trigger = document.querySelector('[data-visibility-target="trigger"]');
 
       trigger.click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(trigger.getAttribute('aria-expanded')).toBe('true');
 
       trigger.click();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(trigger.getAttribute('aria-expanded')).toBe('false');
     });
 
@@ -632,7 +674,7 @@ describe('VisibilityController', () => {
       const element = document.querySelector('[data-controller="visibility"]');
       element.querySelector('[data-visibility-target="trigger"]').remove();
       element.insertAdjacentHTML('afterbegin', '<button data-visibility-target="trigger">New</button>');
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(element.querySelector('[data-visibility-target="trigger"]').getAttribute('aria-expanded')).toBe('false');
     });

@@ -205,7 +205,10 @@ describe('PasswordStrengthController', () => {
     await type('abc');
     const element = document.querySelector('[data-controller="password-strength"]');
 
-    element.setAttribute('data-password-strength-rules-value', JSON.stringify([{ key: 'digit', pattern: '\\d', min: 0 }]));
+    element.setAttribute(
+      'data-password-strength-rules-value',
+      JSON.stringify([{ key: 'digit', pattern: '\\d', min: 0 }])
+    );
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(document.querySelector('[data-rule="digit"]').dataset.satisfied).toBe('true');
@@ -226,7 +229,10 @@ describe('PasswordStrengthController', () => {
     await mount(markup());
     const element = document.querySelector('[data-controller="password-strength"]');
 
-    element.setAttribute('data-password-strength-labels-value', JSON.stringify({ weak: 'Too weak', fine: 'Fine', strong: 'Strong' }));
+    element.setAttribute(
+      'data-password-strength-labels-value',
+      JSON.stringify({ weak: 'Too weak', fine: 'Fine', strong: 'Strong' })
+    );
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(level().textContent.trim()).toBe('Too weak');

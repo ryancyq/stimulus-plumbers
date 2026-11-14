@@ -54,14 +54,12 @@ describe('CalendarTurboController', () => {
   it('ignores responses for other frames inside the calendar', async () => {
     const { failed } = await render();
 
-    document
-      .querySelector('#other')
-      .dispatchEvent(
-        new CustomEvent('turbo:before-fetch-response', {
-          bubbles: true,
-          detail: { fetchResponse: { succeeded: false } },
-        })
-      );
+    document.querySelector('#other').dispatchEvent(
+      new CustomEvent('turbo:before-fetch-response', {
+        bubbles: true,
+        detail: { fetchResponse: { succeeded: false } },
+      })
+    );
 
     expect(failed).not.toHaveBeenCalled();
   });
