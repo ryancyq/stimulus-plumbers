@@ -68,9 +68,9 @@
 - Selected date: `aria-selected="true"` on the gridcell; today: `aria-current="date"` on the control, independent of selection
 - Unavailable dates: `aria-disabled="true"`; a display-only grid is `aria-readonly="true"`; an unavailable selected date keeps `aria-selected="true"`
 - Every control has a full-date `aria-label`; the heading sits inside the replaced frame without `aria-live`, and a persistent `role="status"` outside it announces period changes
-- Previous/next, previous/next year in the month view, zoom, and month or year cells are buttons in stimulus mode; in Turbo mode they are links that work without JavaScript, and a control with no URL or an unavailable month or year cell is `role="link"` with `aria-disabled="true"` and no `href`
+- Previous/next, previous/next year at the month level, zoom, and month or year cells are buttons in stimulus mode; in Turbo mode they are links that work without JavaScript, and a control with no URL or an unavailable month or year cell is `role="link"` with `aria-disabled="true"` and no `href`
 - Keys on a day: Arrow Left/Right ±1 day, Arrow Up/Down ±7 days, Home/End to the first/last day shown in the week, Page Up/Down ±1 month and Shift+Page Up/Down ±1 year (both clamp the day); Enter/Space select; leaving the shown period requests navigation and focus follows the intended date, or the nearest available date in that period
-- Keys in the year and decade views: arrows move one cell or one row of four, Home/End to the row's ends; Enter or Space opens the month or year
+- Keys at the year and decade levels: arrows move one cell or one row of four, Home/End to the row's ends; Enter or Space opens the month or year
 - A period reached with no available date sends focus to the previous or next control in the direction of travel, to zoom after opening a month or year, or else to the first shown, enabled header control
 - Focus never selects; arrows may land on unavailable days, which cannot be selected; Tab leaves the grid; Escape belongs to an enclosing dialog or popover
 
