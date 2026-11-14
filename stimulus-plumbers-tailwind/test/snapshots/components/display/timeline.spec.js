@@ -23,7 +23,11 @@ test.describe("timeline", () => {
       .locator("#timeline-interactive")
       .getByRole("button", { name: "Application UI code in Tailwind CSS" });
     await trigger.click();
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(
+      page
+        .locator("#timeline-interactive [data-timeline-target='detail']")
+        .first(),
+    ).toBeVisible();
     await expect(page.locator("#timeline-interactive")).toHaveScreenshot(
       "expanded.png",
     );

@@ -8,7 +8,11 @@ class DividerAccessibilityTest < ApplicationAccessibilityTestCase
     visit "/components/layout/divider"
   end
 
-  def test_passes_wcag
-    assert_accessible context: "#divider"
+  def test_default_passes_wcag
+    assert_accessible context: "#divider-default"
+  end
+
+  def test_labeled_passes_wcag
+    assert_accessible context: "#divider-labeled"
   end
 end

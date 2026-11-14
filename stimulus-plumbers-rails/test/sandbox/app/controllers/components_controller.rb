@@ -38,6 +38,17 @@ class ComponentsController < ApplicationController
   def popover_fetch
   end
 
+  def popover_turbo
+  end
+
+  def popover_frame
+    render layout: false
+  end
+
+  def popover_frame_replacement
+    render layout: false, content_type: "text/vnd.turbo-stream.html"
+  end
+
   def popover_menu
     return head(:internal_server_error) if params[:fail]
 
@@ -67,6 +78,9 @@ class ComponentsController < ApplicationController
   end
 
   def avatar
+  end
+
+  def link
   end
 
   def divider

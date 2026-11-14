@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import ClipboardController from '../../../src/controllers/clipboard_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 function makePasteEvent(data = {}) {
   const event = new Event('paste', { bubbles: true, cancelable: true });
@@ -17,19 +17,17 @@ describe('ClipboardController', () => {
   let application;
 
   beforeEach(async () => {
-    application = Application.start();
-    application.register('clipboard', ClipboardController);
+    application = startApplication({ clipboard: ClipboardController });
 
     document.body.innerHTML = `
       <div data-controller="clipboard"
            data-action="paste->clipboard#onPaste">
       </div>
     `;
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await flush();
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -41,7 +39,7 @@ describe('ClipboardController', () => {
 
       element.dispatchEvent(makePasteEvent({ 'text/plain': 'hello world' }));
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0].detail.text).toBe('hello world');
     });
@@ -53,7 +51,7 @@ describe('ClipboardController', () => {
 
       element.dispatchEvent(makePasteEvent({ 'text/plain': 'hello', 'text/html': '<b>hello</b>' }));
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy.mock.calls[0][0].detail.types).toEqual(expect.arrayContaining(['text/plain', 'text/html']));
     });
 
@@ -85,7 +83,7 @@ describe('ClipboardController', () => {
       Object.defineProperty(event, 'clipboardData', { value: null });
       element.dispatchEvent(event);
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy.mock.calls[0][0].detail.text).toBe('');
       expect(spy.mock.calls[0][0].detail.types).toEqual([]);
     });
@@ -101,7 +99,7 @@ describe('ClipboardController', () => {
 
       element.dispatchEvent(makePasteEvent({ 'text/plain': 'bubbled text' }));
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });
@@ -111,8 +109,7 @@ describe('ClipboardController', () => {
       application.stop();
       document.body.innerHTML = '';
 
-      application = Application.start();
-      application.register('clipboard', ClipboardController);
+      application = startApplication({ clipboard: ClipboardController });
 
       document.body.innerHTML = `
         <div data-controller="clipboard"
@@ -120,7 +117,7 @@ describe('ClipboardController', () => {
              data-action="paste->clipboard#onPaste">
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('extracts the configured MIME type from clipboardData', async () => {
@@ -135,7 +132,7 @@ describe('ClipboardController', () => {
         })
       );
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy.mock.calls[0][0].detail.text).toBe('<b>bold</b>');
     });
 
@@ -151,7 +148,7 @@ describe('ClipboardController', () => {
         })
       );
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy.mock.calls[0][0].detail.types).toEqual(expect.arrayContaining(['text/plain', 'text/html']));
     });
 
@@ -162,7 +159,7 @@ describe('ClipboardController', () => {
 
       element.dispatchEvent(makePasteEvent({ 'text/plain': 'only plain' }));
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy.mock.calls[0][0].detail.text).toBe('');
     });
   });
@@ -172,15 +169,14 @@ describe('ClipboardController', () => {
       application.stop();
       document.body.innerHTML = '';
 
-      application = Application.start();
-      application.register('clipboard', ClipboardController);
+      application = startApplication({ clipboard: ClipboardController });
 
       document.body.innerHTML = `
         <div data-controller="clipboard">
           <input value="copy this text" data-clipboard-target="source">
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
     });
 
     it('writes source value to clipboard and dispatches clipboard:copied', async () => {
@@ -198,7 +194,7 @@ describe('ClipboardController', () => {
       await controller.copy();
 
       expect(writeTextSpy).toHaveBeenCalledWith('copy this text');
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0].detail.text).toBe('copy this text');
     });
@@ -231,7 +227,7 @@ describe('ClipboardController', () => {
       const controller = application.getControllerForElementAndIdentifier(element, 'clipboard');
       await controller.copy();
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0].detail.error).toBe(error);
     });
@@ -248,9 +244,9 @@ describe('ClipboardController', () => {
         'beforeend',
         '<button data-action="clipboard#onCopy" data-clipboard-text-param="from params">Copy</button>'
       );
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       element.querySelector('button').click();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(writeTextSpy).toHaveBeenCalledWith('from params');
     });
@@ -264,9 +260,9 @@ describe('ClipboardController', () => {
 
       const element = document.querySelector('[data-controller="clipboard"]');
       element.insertAdjacentHTML('beforeend', '<button data-action="clipboard#onCopy">Copy</button>');
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       element.querySelector('button').click();
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(writeTextSpy).toHaveBeenCalledWith('copy this text');
     });
@@ -288,15 +284,14 @@ describe('ClipboardController', () => {
     it('uses textContent when source has no value (e.g. a span)', async () => {
       application.stop();
       document.body.innerHTML = '';
-      application = Application.start();
-      application.register('clipboard', ClipboardController);
+      application = startApplication({ clipboard: ClipboardController });
 
       document.body.innerHTML = `
         <div data-controller="clipboard">
           <span data-clipboard-target="source">span text</span>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       const writeTextSpy = vi.fn().mockResolvedValue(undefined);
       Object.defineProperty(navigator, 'clipboard', {
@@ -314,11 +309,10 @@ describe('ClipboardController', () => {
     it('reports copy-failed instead of clearing the clipboard when there is nothing to copy', async () => {
       application.stop();
       document.body.innerHTML = '';
-      application = Application.start();
-      application.register('clipboard', ClipboardController);
+      application = startApplication({ clipboard: ClipboardController });
 
       document.body.innerHTML = `<div data-controller="clipboard"></div>`;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       const writeTextSpy = vi.fn().mockResolvedValue(undefined);
       Object.defineProperty(navigator, 'clipboard', {

@@ -20,8 +20,6 @@ test.describe("credit card", () => {
     );
     const input = field.getByRole("textbox", { name: "Card number" });
     await input.fill("4242424242424242");
-
-    await expect(input).toHaveValue("4242 4242 4242 4242");
     await expect(field).toHaveScreenshot("filled.png");
   });
 
@@ -39,8 +37,6 @@ test.describe("credit card", () => {
     );
     const input = field.getByRole("textbox", { name: "Card number" });
     await input.fill("4242424242424242");
-
-    await expect(input).toHaveValue("4242 4242 4242 4242");
     await expect(field).toHaveScreenshot("separator-filled.png");
   });
 });

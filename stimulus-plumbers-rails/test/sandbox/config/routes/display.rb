@@ -5,8 +5,8 @@ scope "/display", controller: "components" do
   get :ordered_list
   get :avatar
   get :icon
-  get :timeline
-  get :progress
   get :indicator
+  get :progress
+  get :timeline
   get :checklist
 end

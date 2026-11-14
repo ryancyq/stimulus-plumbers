@@ -1,10 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import CalendarTurboController from '../../../src/controllers/calendar_turbo_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('CalendarTurboController', () => {
-  let application;
-
   const render = async () => {
     document.body.innerHTML = `<section id="container" data-controller="calendar-turbo"
         data-action="calendar:navigate->calendar-turbo#onNavigate turbo:before-fetch-response->calendar-turbo#onResponse
@@ -12,19 +10,17 @@ describe('CalendarTurboController', () => {
         <turbo-frame id="container_frame"><span id="inside"></span></turbo-frame>
         <turbo-frame id="other"></turbo-frame></section>`;
     const container = document.querySelector('#container');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'calendar-turbo'));
+    await flush();
     const failed = vi.fn();
     container.addEventListener('calendar-turbo:failed', failed);
     return { container, frame: document.querySelector('turbo-frame'), failed };
   };
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('calendar-turbo', CalendarTurboController);
+    startApplication({ 'calendar-turbo': CalendarTurboController });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 

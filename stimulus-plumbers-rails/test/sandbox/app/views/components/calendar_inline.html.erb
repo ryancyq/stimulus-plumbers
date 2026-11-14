@@ -6,24 +6,44 @@
 <% navigation = params[:navigation] == "turbo" ? :turbo : :stimulus %>
 <% period = ->(id) { { displayed: params.dig(id, "displayed"), view: params.dig(id, "view"), navigation: navigation } } %>
 
-<div id="calendar-inline">
-  <section id="calendar-inline-month">
+<section id="calendar-inline-month" class="sb-section">
+  <h2>Selectable month, with a minimum and weekends unavailable</h2>
+  <div class="sb-col">
     <%= sp_calendar id: "calendar-month", today: today, selectable: true, selected: "2026-09-15",
                     min: "2026-09-03", disabled_weekdays: [0, 6], **period.("calendar-month") %>
-  </section>
+  </div>
+</section>
 
-  <section id="calendar-inline-other-months">
+<section id="calendar-inline-other-months" class="sb-section">
+  <h2>Adjacent month days, Monday first</h2>
+  <div class="sb-col">
     <%= sp_calendar id: "calendar-other-months", today: today, show_other_months: true, first_day_of_week: 1,
                     **period.("calendar-other-months") %>
-  </section>
+  </div>
+</section>
 
-  <section id="calendar-inline-year">
+<section id="calendar-inline-year" class="sb-section">
+  <h2>Year</h2>
+  <div class="sb-col">
     <%= sp_calendar id: "calendar-year", today: today, **period.("calendar-year"),
                     view: params.dig("calendar-year", "view") || :year %>
-  </section>
+  </div>
+</section>
 
-  <section id="calendar-inline-decade">
+<section id="calendar-inline-decade" class="sb-section">
+  <h2>Decade, 2027 unavailable</h2>
+  <div class="sb-col">
     <%= sp_calendar id: "calendar-decade", today: today, disabled_years: [2027], **period.("calendar-decade"),
                     view: params.dig("calendar-decade", "view") || :decade %>
-  </section>
-</div>
+  </div>
+</section>
+
+<section id="calendar-inline-native" class="sb-section">
+  <h2>Native date field</h2>
+  <div class="sb-col">
+    <%= form_with model: SignUp.new, url: "/demo", scope: :native do |f| %>
+      <%= f.label :birth_date, "Start date", for: "calendar-native-date" %>
+      <%= f.date_field :birth_date, id: "calendar-native-date" %>
+    <% end %>
+  </div>
+</section>

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import CalendarController from '../../../src/controllers/calendar_controller';
 import CalendarTurboController from '../../../src/controllers/calendar_turbo_controller';
 import { monthGrid, parseDateKey } from '../../../src/date';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('CalendarController', () => {
   let application;
@@ -59,7 +59,7 @@ describe('CalendarController', () => {
         <div role="status" data-calendar-target="status"></div>${grid}${PERIOD_LINKS}</section>`;
     document.body.innerHTML = form ? `<form id="form">${section}</form>` : section;
     const container = document.querySelector('#container');
-    await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'calendar'));
+    await flush();
     return { container, controller: application.getControllerForElementAndIdentifier(container, 'calendar') };
   };
 
@@ -72,15 +72,12 @@ describe('CalendarController', () => {
   const tabStops = () => [...document.querySelectorAll('[tabindex="0"]')].map((element) => element.dataset.date);
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('calendar', CalendarController);
-    application.register('calendar-turbo', CalendarTurboController);
+    application = startApplication({ calendar: CalendarController, 'calendar-turbo': CalendarTurboController });
     consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
     consoleError.mockRestore();
     consoleWarn.mockRestore();
@@ -249,8 +246,9 @@ describe('CalendarController', () => {
       day('2026-09-15').click();
 
       container.querySelector('table').outerHTML = monthMarkup({ focus: '2026-09-10', selected: '2026-09-10' });
-      await vi.waitUntil(() => day('2026-09-15').closest('td').getAttribute('aria-selected') === 'true');
+      await flush();
 
+      expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('true');
       expect(day('2026-09-10').closest('td').getAttribute('aria-selected')).toBe('false');
       expect(tabStops()).toEqual(['2026-09-15']);
     });
@@ -280,7 +278,7 @@ describe('CalendarController', () => {
 
       day('2026-09-15').click();
       document.querySelector('#form').reset();
-      await new Promise((resolve) => setTimeout(resolve));
+      await flush();
 
       expect(day('2026-09-10').closest('td').getAttribute('aria-selected')).toBe('true');
       expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('false');
@@ -305,12 +303,12 @@ describe('CalendarController', () => {
           <div role="status" data-calendar-target="status"></div>
           <turbo-frame id="container_frame">${frameContent('2026-09-15', 'September 2026')}</turbo-frame></section>`;
       const container = document.querySelector('#container');
-      await vi.waitUntil(() => application.getControllerForElementAndIdentifier(container, 'calendar'));
+      await flush();
       return { container, frame: document.querySelector('turbo-frame') };
     };
     const replace = async (frame, displayed, heading, options) => {
       frame.innerHTML = frameContent(displayed, heading, options);
-      await new Promise((resolve) => setTimeout(resolve));
+      await flush();
     };
 
     it('loads the next period into the frame from the keyboard', async () => {
@@ -578,7 +576,7 @@ describe('CalendarController', () => {
             <table role="grid" aria-labelledby="container_heading" data-calendar-target="grid"
                    data-action="keydown->calendar#onKeydown"></table></div>${templates}</section>`;
       const container = document.querySelector('#container');
-      await vi.waitUntil(() => container.querySelector('[data-date]'));
+      await flush();
       return container;
     };
     const values =

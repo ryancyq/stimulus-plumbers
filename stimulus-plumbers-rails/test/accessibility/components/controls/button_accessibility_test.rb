@@ -36,8 +36,16 @@ class ButtonAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#button-card"
   end
 
+  def test_sizes_passes_wcag
+    assert_accessible context: "#button-sizes"
+  end
+
   def test_icons_passes_wcag
     assert_accessible context: "#button-icons"
+  end
+
+  def test_card_icons_passes_wcag
+    assert_accessible context: "#button-card-icons"
   end
 
   def test_disabled_passes_wcag

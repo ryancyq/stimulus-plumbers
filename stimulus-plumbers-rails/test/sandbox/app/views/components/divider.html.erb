@@ -1,17 +1,19 @@
 <h1>Divider components</h1>
 
-<div id="divider">
-  <%# ── Plain divider ───────────────────────────────────────────────────── %>
-  <section aria-label="Plain divider">
+<section id="divider-default" class="sb-section">
+  <h2>Default</h2>
+  <div class="sb-col-center">
     <p>Section above</p>
     <%= sp_divider %>
     <p>Section below</p>
-  </section>
+  </div>
+</section>
 
-  <%# ── Labeled divider ─────────────────────────────────────────────────── %>
-  <section aria-label="Labeled divider">
+<section id="divider-labeled" class="sb-section">
+  <h2>Labeled</h2>
+  <div class="sb-col-center">
     <p>Sign in with email</p>
     <%= sp_divider("OR") %>
     <p>Sign in with Google</p>
-  </section>
-</div>
+  </div>
+</section>

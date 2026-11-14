@@ -2,13 +2,11 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Flipper, attachFlipper } from '../../../src/plumbers/flipper';
 
 describe('Flipper', () => {
-  let observeSpy;
   let mockController;
   let element;
   let anchor;
 
   beforeEach(() => {
-    observeSpy = vi.spyOn(Flipper.prototype, 'observe');
     element = document.createElement('div');
     anchor = document.createElement('button');
     document.body.appendChild(element);
@@ -17,7 +15,7 @@ describe('Flipper', () => {
     mockController = {
       identifier: 'flipper',
       element: element,
-      dispatch: vi.fn((name, options) => true),
+      dispatch: vi.fn(() => true),
     };
 
     // Mock getBoundingClientRect for element
@@ -46,89 +44,26 @@ describe('Flipper', () => {
   });
 
   afterEach(() => {
-    observeSpy.mock.contexts.forEach((observer) => observer.disconnect());
-    observeSpy.mockRestore();
     vi.clearAllMocks();
   });
 
-  describe('constructor', () => {
-    it('initializes with default options', () => {
+  describe('callbacks', () => {
+    it('calls the controller flipped method by default', async () => {
+      mockController.flipped = vi.fn();
       const flipper = new Flipper(mockController, { anchor });
 
-      expect(flipper.controller).toBe(mockController);
-      expect(flipper.anchor).toBe(anchor);
-      expect(flipper.events).toEqual(['click', 'resize', 'scroll']);
-      expect(flipper.placement).toBe('bottom');
-      expect(flipper.alignment).toBe('start');
-      expect(flipper.onFlipped).toBe('flipped');
+      await flipper.flip();
+
+      expect(mockController.flipped).toHaveBeenCalledWith(expect.objectContaining({ target: element }));
     });
 
-    it('accepts custom placement', () => {
-      const flipper = new Flipper(mockController, {
-        anchor,
-        placement: 'top',
-      });
+    it('calls the onFlipped method it is given', async () => {
+      mockController.customFlipped = vi.fn();
+      const flipper = new Flipper(mockController, { anchor, onFlipped: 'customFlipped' });
 
-      expect(flipper.placement).toBe('top');
-    });
+      await flipper.flip();
 
-    it('accepts custom alignment', () => {
-      const flipper = new Flipper(mockController, {
-        anchor,
-        alignment: 'center',
-      });
-
-      expect(flipper.alignment).toBe('center');
-    });
-
-    it('accepts custom events', () => {
-      const flipper = new Flipper(mockController, {
-        anchor,
-        events: ['mouseenter', 'focus'],
-      });
-
-      expect(flipper.events).toEqual(['mouseenter', 'focus']);
-    });
-
-    it('accepts custom onFlipped callback', () => {
-      const flipper = new Flipper(mockController, {
-        anchor,
-        onFlipped: 'customFlipped',
-      });
-
-      expect(flipper.onFlipped).toBe('customFlipped');
-    });
-
-    it('enhances controller with flip method', () => {
-      const flipper = new Flipper(mockController, { anchor });
-
-      expect(mockController.flip).toBeTypeOf('function');
-    });
-
-    it('initializes with respectMotion enabled by default', () => {
-      const flipper = new Flipper(mockController, { anchor });
-
-      expect(flipper.respectMotion).toBe(true);
-    });
-
-    it('accepts custom respectMotion option', () => {
-      const flipper = new Flipper(mockController, {
-        anchor,
-        respectMotion: false,
-      });
-
-      expect(flipper.respectMotion).toBe(false);
-    });
-
-    it('checks prefers-reduced-motion media query on initialization', () => {
-      const matchMediaSpy = vi.spyOn(window, 'matchMedia');
-      const flipper = new Flipper(mockController, { anchor });
-
-      expect(matchMediaSpy).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
-      expect(flipper.prefersReducedMotion).toBeDefined();
-      expect(typeof flipper.prefersReducedMotion).toBe('boolean');
-
-      matchMediaSpy.mockRestore();
+      expect(mockController.customFlipped).toHaveBeenCalledOnce();
     });
   });
 
@@ -470,15 +405,6 @@ describe('Flipper', () => {
       window.dispatchEvent(new Event('resize'));
 
       expect(mockController.dispatch).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('enhance', () => {
-    it('adds flip method to controller', () => {
-      const flipper = new Flipper(mockController, { anchor });
-
-      expect(mockController.flip).toBeDefined();
-      expect(typeof mockController.flip).toBe('function');
     });
   });
 

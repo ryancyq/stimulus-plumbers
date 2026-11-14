@@ -24,12 +24,32 @@ class ProgressAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#progress-segmented-ramp"
   end
 
+  def test_segmented_indeterminate_with_3_segments_passes_wcag
+    assert_accessible context: "#progress-segmented-indeterminate-3"
+  end
+
   def test_segmented_indeterminate_passes_wcag
     assert_accessible context: "#progress-segmented-indeterminate"
   end
 
+  def test_segmented_indeterminate_with_10_segments_passes_wcag
+    assert_accessible context: "#progress-segmented-indeterminate-10"
+  end
+
   def test_progress_ring_passes_wcag
     assert_accessible context: "#progress-ring"
+  end
+
+  def test_large_progress_ring_passes_wcag
+    assert_accessible context: "#progress-ring-lg"
+  end
+
+  def test_indeterminate_progress_ring_passes_wcag
+    assert_accessible context: "#progress-ring-indeterminate"
+  end
+
+  def test_meter_passes_wcag
+    assert_accessible context: "#progress-meter"
   end
 
   def test_bar_with_percent_readout_passes_wcag
@@ -44,11 +64,15 @@ class ProgressAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#progress-bar-percent-low"
   end
 
-  def test_bar_with_readout_beside_the_track_passes_wcag
-    assert_accessible context: "#progress-bar-readout-outside"
+  def test_bar_with_readout_at_the_maximum_passes_wcag
+    assert_accessible context: "#progress-bar-percent-full"
   end
 
-  def test_meter_passes_wcag
-    assert_accessible context: "#progress-meter"
+  def test_bar_with_readout_crossing_the_fill_passes_wcag
+    assert_accessible context: "#progress-bar-percent-crossing"
+  end
+
+  def test_bar_with_readout_beside_the_track_passes_wcag
+    assert_accessible context: "#progress-bar-readout-outside"
   end
 end

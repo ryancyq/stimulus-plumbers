@@ -3,12 +3,10 @@
 require "test_helper"
 
 class TailwindThemeCalendarTest < Minitest::Test
+  include ThemeAssertions
+
   def setup
     @theme = StimulusPlumbers::Themes::TailwindTheme.new
-  end
-
-  def classes_for(component, **args)
-    @theme.resolve(component, **args)[:classes]
   end
 
   def test_calendar_status_is_visually_hidden

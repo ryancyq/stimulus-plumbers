@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { FOCUSABLE_SELECTOR, getFocusableElements, isVisible, focusFirst } from '../../../src/accessibility/focus';
 
 // jsdom returns offsetWidth=0 and getClientRects()=[] for all elements.
@@ -9,11 +9,6 @@ function makeVisible(el) {
 
 describe('focus', () => {
   describe('FOCUSABLE_SELECTOR', () => {
-    it('is a non-empty string', () => {
-      expect(typeof FOCUSABLE_SELECTOR).toBe('string');
-      expect(FOCUSABLE_SELECTOR.length).toBeGreaterThan(0);
-    });
-
     it('includes button, input, a[href], and [tabindex] selectors', () => {
       expect(FOCUSABLE_SELECTOR).toContain('button');
       expect(FOCUSABLE_SELECTOR).toContain('input');
@@ -80,7 +75,7 @@ describe('focus', () => {
 
     it('excludes invisible elements', () => {
       container.innerHTML = '<button>Hidden</button><button>Visible</button>';
-      const [hidden, visible] = container.querySelectorAll('button');
+      const [, visible] = container.querySelectorAll('button');
       makeVisible(visible);
       // hidden button has no getClientRects override → isVisible returns false
       const els = getFocusableElements(container);

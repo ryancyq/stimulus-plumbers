@@ -12,6 +12,10 @@ class OrderedListAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#ordered-list-default"
   end
 
+  def test_editing_ordered_list_passes_wcag
+    assert_accessible context: "#ordered-list-editing"
+  end
+
   def test_ordered_list_with_links_in_editing_state_passes_wcag
     assert_accessible context: "#ordered-list-with-links"
   end

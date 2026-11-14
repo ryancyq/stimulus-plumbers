@@ -1,20 +1,18 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Application } from '@hotwired/stimulus';
 import FlipperController from '../../../src/controllers/flipper_controller';
+import { flush, startApplication } from '../../support/stimulus';
 
 describe('FlipperController', () => {
   let application;
 
   beforeEach(() => {
-    application = Application.start();
-    application.register('flipper', FlipperController);
+    application = startApplication({ flipper: FlipperController });
 
     Object.defineProperty(window, 'scrollX', { value: 0, writable: true });
     Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
   });
 
   afterEach(() => {
-    application.stop();
     document.body.innerHTML = '';
   });
 
@@ -136,7 +134,7 @@ describe('FlipperController', () => {
       element.addEventListener('flipper:flipped', flippedSpy);
       document.querySelector('button').click();
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
       expect(flippedSpy).toHaveBeenCalled();
     });
   });
@@ -209,7 +207,7 @@ describe('FlipperController', () => {
           <div data-flipper-target="reference">Tooltip</div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('tooltip');
     });
@@ -221,7 +219,7 @@ describe('FlipperController', () => {
           <div data-flipper-target="reference">Menu</div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('menu');
     });
@@ -233,7 +231,7 @@ describe('FlipperController', () => {
           <div data-flipper-target="reference">Menu</div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(document.querySelector('[data-flipper-target="anchor"]').getAttribute('aria-haspopup')).toBe('menu');
     });
@@ -245,7 +243,7 @@ describe('FlipperController', () => {
           <div role="dialog" data-flipper-target="reference">Content</div>
         </div>
       `;
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(document.querySelector('[data-flipper-target="reference"]').getAttribute('role')).toBe('dialog');
     });
@@ -269,7 +267,7 @@ describe('FlipperController', () => {
         </div>
       `;
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'FlipperController requires a reference target. Add data-flipper-target="reference" to your element.'
@@ -283,7 +281,7 @@ describe('FlipperController', () => {
         </div>
       `;
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await flush();
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'FlipperController requires an anchor target. Add data-flipper-target="anchor" to your element.'

@@ -189,7 +189,7 @@ stimulus-plumbers-rails/
 │   ├── accessibility/                    # Accessibility tests (axe-core via Capybara)
 │   │   ├── components/                   # Nested by route category
 │   │   └── form/
-│   ├── sandbox/                          # Minimal Rails app used by a11y tests
+│   ├── sandbox/                          # The one sandbox app (a11y tests here; Tailwind Playwright specs via its layout)
 │   ├── support/                          # Shared test helpers (HtmlAssertions, StubTheme, DateFixtures)
 │   └── test_helper.rb
 ├── docs/
@@ -206,7 +206,7 @@ stimulus-plumbers-rails/
 
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
-- **Accessibility tests** using Capybara + axe-core (`rake test:accessibility`)
+- **Accessibility tests** using Capybara + Cuprite + axe-core (`rake test:accessibility`) — axe per page and state plus one keyboard/focus happy path per interaction; logic edge cases belong to their owning layer (root CLAUDE.md "Testing")
 - **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
 
 ## Unit Test Convention
@@ -240,26 +240,22 @@ This applies to all test types: unit tests, helper tests, and accessibility test
 
 ## Accessibility Test Convention
 
-**File placement:** test path mirrors the URL it visits — `/components/display/avatar` → `accessibility/components/display/avatar_accessibility_test.rb`. Class names stay flat (`AvatarAccessibilityTest`). Sandbox views stay flat (`sandbox/app/views/components/avatar.html.erb`); only routes and tests carry the category.
+**File placement:** at the path root CLAUDE.md "Testing" gives (`accessibility/components/display/avatar_accessibility_test.rb`). Class names stay flat (`AvatarAccessibilityTest`).
 
-**Icon naming in sandbox views:** Always use generic icon names (e.g., `close`, `download`, `book`), never heroicon/tailwind-specific compound names (e.g., `x-mark`, `arrow-down-tray`, `book-open`). The core sandbox runs without any theme, so heroicon names will not resolve. Aliases are defined in `stimulus-plumbers-tailwind/lib/stimulus_plumbers/themes/tailwind/icon.rb` (`Icon::ALIASES`).
+Scope axe to a sandbox section or a component inside one, never the bare page: `assert_accessible context: "#combobox-date"` for a section, `context: "#calendar-month"` for a component; each section gets its own test. A context that matches nothing fails the test.
 
-**Sandbox models:** one model per use case (`SignUp`, `SignIn`, `Preferences`, `Verification`, `Payment`, `Search`) — never one grab-bag fixture shared across unrelated pages. A view may only bind attributes its backing model declares: `form_with` defaults to `allow_method_names_outside_object: true`, so an undeclared attribute renders `nil` instead of raising, and label resolution silently diverges from a real app. The `code` and `credit_card` pages deliberately omit `label:` to exercise the `human_attribute_name` default against `test/sandbox/config/locales/en.yml` — don't reintroduce it.
-
-Always pass `context:` to `assert_accessible` to scope axe to the component, not the full page:
-
-```ruby
-assert_accessible context: "#combobox-date"
-```
-
-Sandbox views must have matching wrapper IDs:
-- Single-component pages: `<div id="component-name">` around all variants
-- Multi-variant pages: outer `<div id="component">` + inner `<section id="component-variant">` per variant
-- Form pages: `<div id="page-name">` around the form
-- State variants (error, required, etc.) get their own `<section id="component-state">` so tests can scope axe to that state alone
-- Panels render inline (not portaled) — the nearest wrapper always contains the open panel
 - For interactive states (e.g. a dialog opens), test closed and open separately; use `find(...).click` before `assert_accessible`
 - For multi-view pages (e.g. calendar month/year/decade), use a controller query param (`?view=month`) to expose each view unhidden
+
+## Sandbox Convention
+
+`test/sandbox` is the one sandbox app for every suite: Rails a11y tests run it directly, and the Tailwind sandbox reuses its controllers, models, routes, and views behind its own layout. A page change here is a change to both suites.
+
+- **Views** stay flat (`app/views/components/avatar.html.erb`); only routes and tests carry the category.
+- **Sections** — every use case is a `<section id="{component}-{usecase}" class="sb-section">`, the ID unique across all pages and never a bare `{component}` (`card-default`, not `card`). It opens with an `<h2>` naming the use case, then wraps its content in one `<div class="sb-row">` or `<div class="sb-col">`; no layout classes on `<section>`, no nested sections. State variants (error, required, open) get their own section so a test can scope to that state alone.
+- **Panels** render inline (not portaled), so the section always contains its open panel.
+- **Icons** use generic names (`close`, `download`, `book`), never heroicon compound names (`x-mark`, `arrow-down-tray`); the core sandbox runs without a theme, and the Tailwind theme maps generic names in `Icon::ALIASES`.
+- **Models** — one model per use case (`SignUp`, `SignIn`, `Preferences`, `Verification`, `Payment`, `Search`), never one grab-bag fixture. A view binds only attributes its model declares: `form_with` defaults to `allow_method_names_outside_object: true`, so an undeclared attribute renders `nil` instead of raising.
 
 ## Form Builder Convention
 

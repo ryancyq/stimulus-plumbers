@@ -1,20 +1,5 @@
 import { test, expect } from "@playwright/test";
-
-// Union the section and its open popover panel into a single clip rect.
-async function screenshotWithPanel(page, sectionLocator, filename) {
-  const panel = sectionLocator.locator("[data-popover-target='panel']");
-  await panel.waitFor({ state: "visible" });
-  await expect(panel).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
-  const sBox = await sectionLocator.boundingBox();
-  const pBox = await panel.boundingBox();
-  const x = Math.min(sBox.x, pBox.x);
-  const y = Math.min(sBox.y, pBox.y);
-  const right = Math.max(sBox.x + sBox.width, pBox.x + pBox.width);
-  const bottom = Math.max(sBox.y + sBox.height, pBox.y + pBox.height);
-  await expect(page).toHaveScreenshot(filename, {
-    clip: { x, y, width: right - x, height: bottom - y },
-  });
-}
+import { screenshotWithPanel } from "../../../support/playwright.js";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/components/popover");
