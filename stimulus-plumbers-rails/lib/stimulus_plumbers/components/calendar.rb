@@ -7,14 +7,14 @@ module StimulusPlumbers
       include Plumber::Options::Choice
 
       STIMULUS_CONTROLLER = "calendar"
-      VIEWS               = %i[month year decade].freeze
+      LEVELS              = %i[month year decade].freeze
       NAVIGATIONS         = %i[stimulus turbo].freeze
 
       # Options: `navigation` (`:stimulus` or `:turbo`), `url` with `:turbo`, Configuration::OPTIONS, and
       # Dates::Availability::OPTIONS; the rest go to the container.
-      def render(id:, view: nil, navigation: :stimulus, **kwargs)
+      def render(id:, level: nil, navigation: :stimulus, **kwargs)
         body          = navigation_for(navigation, kwargs.delete(:url))
-        configuration = Configuration.extract!(id, view, kwargs)
+        configuration = Configuration.extract!(id, level, kwargs)
 
         template.content_tag(:div, **container_attrs(configuration, kwargs, body.stimulus_data(configuration))) do
           template.safe_join([status, body.render(configuration)])

@@ -41,15 +41,15 @@ module StimulusPlumbers
         attr_reader :url
 
         def grid_for(configuration)
-          grid = { month: DaysOfMonth, year: MonthsOfYear, decade: YearsOfDecade }.fetch(configuration.view)
+          grid = { month: DaysOfMonth, year: MonthsOfYear, decade: YearsOfDecade }.fetch(configuration.level)
           grid.new(template, configuration, url_builder(configuration.id))
         end
 
-        # Builds a period URL from a date and a view; nil disables the control.
+        # Builds a period URL from a date and a level; nil disables the control.
         def url_builder(id)
           generator, init_args = url.nil? || url.is_a?(String) ? [PeriodUrl, [template, id, url]] : [url, []]
-          lambda do |date, view|
-            dispatcher = Plumber::Dispatcher.build(generator, date, view, method_name: :call, init_args: init_args)
+          lambda do |date, level|
+            dispatcher = Plumber::Dispatcher.build(generator, date, level, method_name: :call, init_args: init_args)
             raise ArgumentError, "invalid url: #{url.inspect}" unless dispatcher
 
             dispatcher.call(template).presence

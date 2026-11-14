@@ -83,7 +83,7 @@ This applies to all test types: unit tests, helper tests, and accessibility test
 Scope axe to a sandbox section or a component inside one, never the bare page: `assert_accessible context: "#combobox-date"` for a section, `context: "#calendar-month"` for a component; each section gets its own test. A context that matches nothing fails the test.
 
 - For interactive states (e.g. a dialog opens), test closed and open separately; use `find(...).click` before `assert_accessible`
-- For multi-view pages (e.g. calendar month/year/decade), use a controller query param (`?view=month`) to expose each view unhidden
+- For multi-level pages (e.g. calendar month/year/decade), use a controller query param (`?level=month`) to expose each level unhidden
 
 ## Sandbox Convention
 

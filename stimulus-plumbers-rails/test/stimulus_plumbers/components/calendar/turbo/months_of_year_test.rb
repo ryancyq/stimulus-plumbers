@@ -6,7 +6,7 @@ class CalendarTurboMonthsOfYearTest < ActionView::TestCase
   def render_year(**kwargs)
     parse_html(
       StimulusPlumbers::Components::Calendar.new(self).render(
-        navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), view: :year, **kwargs
+        navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), level: :year, **kwargs
       )
     )
   end
@@ -23,7 +23,7 @@ class CalendarTurboMonthsOfYearTest < ActionView::TestCase
 
     assert_equal "March", month.text
     assert_equal "March 2026", month["aria-label"]
-    assert_equal "?cal%5Bdisplayed%5D=2026-03-01&cal%5Bview%5D=month", month["href"]
+    assert_equal "?cal%5Bdisplayed%5D=2026-03-01&cal%5Blevel%5D=month", month["href"]
   end
 
   def test_the_current_month_holds_the_tab_stop_and_marks_today
@@ -40,7 +40,7 @@ class CalendarTurboMonthsOfYearTest < ActionView::TestCase
     assert_css doc, "a[href][data-date='2026-03-01']:not([aria-disabled])"
   end
 
-  def test_year_view_zooms_out_to_the_decade
+  def test_year_level_zooms_out_to_the_decade
     assert(render_year.css("a").any? { |link| link.text == "Choose year" })
   end
 end

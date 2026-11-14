@@ -10,7 +10,7 @@ import {
 } from '../../date';
 
 const COLUMNS = 4;
-const VIEWS = ['month', 'year', 'decade'];
+const LEVELS = ['month', 'year', 'decade'];
 
 // A UTC instant for Intl only; never used for arithmetic.
 const instant = ({ year, month, day }) => {
@@ -52,15 +52,15 @@ export function todayKey() {
   return dateKey({ year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() });
 }
 
-export function viewName(view) {
-  return VIEWS.includes(view) ? view : 'month';
+export function levelName(level) {
+  return LEVELS.includes(level) ? level : 'month';
 }
 
-// A date key as the view's cell key: itself, its month, or its year.
-export function unitKey(key, view) {
+// A date key as the level's cell key: itself, its month, or its year.
+export function unitKey(key, level) {
   if (!key) return null;
-  if (view === 'year') return `${key.slice(0, 7)}-01`;
-  return view === 'decade' ? `${key.slice(0, 4)}-01-01` : key;
+  if (level === 'year') return `${key.slice(0, 7)}-01`;
+  return level === 'decade' ? `${key.slice(0, 4)}-01-01` : key;
 }
 
 // The same month a year away, or null outside 0001–9999.
@@ -73,27 +73,27 @@ export function neighbourYear(displayed, direction) {
 }
 
 // The period one step away, or null outside 0001–9999.
-export function neighbour(displayed, view, direction) {
+export function neighbour(displayed, level, direction) {
   const date = parseDateKey(displayed);
   if (!date) return null;
 
   const first = { ...date, day: 1 };
   const target =
-    view === 'month'
+    level === 'month'
       ? addMonths(first, direction)
-      : addYears({ ...first, month: 1 }, view === 'year' ? direction : direction * 10);
+      : addYears({ ...first, month: 1 }, level === 'year' ? direction : direction * 10);
   return target ? dateKey(target) : null;
 }
 
-export function zoomOut(view) {
-  return { month: 'year', year: 'decade' }[view] ?? null;
+export function zoomOut(level) {
+  return { month: 'year', year: 'decade' }[level] ?? null;
 }
 
-export function zoomIn(view) {
-  return { year: 'month', decade: 'year' }[view] ?? null;
+export function zoomIn(level) {
+  return { year: 'month', decade: 'year' }[level] ?? null;
 }
 
-const views = {
+const grids = {
   month({ displayed, firstDayOfWeek, showOtherMonths, availability, locale }) {
     const date = parseDateKey(displayed);
     const month = displayed.slice(0, 7);
@@ -173,23 +173,23 @@ function control(templates) {
 }
 
 // Selected, then today, then the displayed date, then the first enabled cell.
-function focusKey(period, keys, { selected, today, displayed }, view) {
+function focusKey(period, keys, { selected, today, displayed }, level) {
   const enabled = keys.filter((key) => key && period.navigable(key) && !period.disabled(key));
   return (
-    [selected, today, displayed].map((key) => unitKey(key, view)).find((key) => enabled.includes(key)) ?? enabled[0]
+    [selected, today, displayed].map((key) => unitKey(key, level)).find((key) => enabled.includes(key)) ?? enabled[0]
   );
 }
 
 // Fills a grid with one period; returns the heading text.
 export function renderPeriod(grid, options) {
-  const view = viewName(options.view);
-  const period = views[view](options);
+  const level = levelName(options.level);
+  const period = grids[level](options);
   const templates = options.templates ?? {};
-  const focus = focusKey(period, period.rows.flat(), options, view);
-  const today = unitKey(options.today, view);
+  const focus = focusKey(period, period.rows.flat(), options, level);
+  const today = unitKey(options.today, level);
 
   const head = [];
-  if (view === 'month') {
+  if (level === 'month') {
     const long = formatter(options.locale, { weekday: 'long' });
     const short = formatter(options.locale, { weekday: 'short' });
     const row = document.createElement('tr');
@@ -217,7 +217,7 @@ export function renderPeriod(grid, options) {
       const cell = control(templates);
       const button = cell.querySelector('button');
       cell.setAttribute('role', 'gridcell');
-      if (view === 'month' && options.selectable) cell.setAttribute('aria-selected', String(key === options.selected));
+      if (level === 'month' && options.selectable) cell.setAttribute('aria-selected', String(key === options.selected));
       button.tabIndex = key === focus ? 0 : -1;
       button.textContent = period.text(key);
       const label = period.label(key);
@@ -233,8 +233,8 @@ export function renderPeriod(grid, options) {
   });
 
   grid.dataset.displayed = options.displayed;
-  grid.dataset.view = view;
-  if (view === 'month' && !options.selectable) grid.setAttribute('aria-readonly', 'true');
+  grid.dataset.level = level;
+  if (level === 'month' && !options.selectable) grid.setAttribute('aria-readonly', 'true');
   else grid.removeAttribute('aria-readonly');
   grid.replaceChildren(...head, body);
   return period.heading;

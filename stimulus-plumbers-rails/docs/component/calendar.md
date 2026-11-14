@@ -1,6 +1,6 @@
 # Calendar
 
-`sp_calendar` renders the month, year, and decade views.
+`sp_calendar` renders the month, year, and decade levels.
 
 ---
 
@@ -16,22 +16,22 @@
 - `:stimulus` (default): renders a label-free template; the `calendar` controller draws each period
   with `Intl` in `I18n.locale` and redraws it on navigation without a request.
 - `:turbo`: renders the period with Rails I18n inside `turbo-frame#<id>_frame`; previous, next, the
-  year links in the month view, and zoom are links that `calendar-turbo` loads into the frame. By
-  default a link is the current URL plus `<id>[displayed]=YYYY-MM-DD` and `<id>[view]=…`. Pass both
-  back from `params`; the page re-renders the same call. An invalid `displayed` or `view` falls back
+  year links at the month level, and zoom are links that `calendar-turbo` loads into the frame. By
+  default a link is the current URL plus `<id>[displayed]=YYYY-MM-DD` and `<id>[level]=…`. Pass both
+  back from `params`; the page re-renders the same call. An invalid `displayed` or `level` falls back
   to its default rather than raising.
 
 ```erb
 <%= sp_calendar id: "availability", navigation: :turbo, selectable: true, selected: @booking.date,
-                displayed: params.dig(:availability, :displayed), view: params.dig(:availability, :view) %>
+                displayed: params.dig(:availability, :displayed), level: params.dig(:availability, :level) %>
 ```
 
 `url:` generates the links instead. A Symbol names a view method and a Proc runs on the view; each takes the date and
-view and returns the URL. Without a URL, the control renders disabled, and a key that needs it does nothing.
+level and returns the URL. Without a URL, the control renders disabled, and a key that needs it does nothing.
 
 ```erb
 <%= sp_calendar id: "availability", navigation: :turbo,
-                url: ->(date, view) { calendar_path(date.strftime("%Y/%m"), view: view) } %>
+                url: ->(date, level) { calendar_path(date.strftime("%Y/%m"), level: level) } %>
 ```
 
 A `selected` set in the browser moves the calendar only under `:stimulus`
@@ -42,7 +42,7 @@ A `selected` set in the browser moves the calendar only under `:stimulus`
 | `id`                | required                 | Stable id; the container, frame, heading, and grid ids derive from it                                                                       |
 | `navigation`        | `:stimulus`              | `:stimulus` or `:turbo`                                                                                                                     |
 | `displayed`         | `today`                  | `Date` or `YYYY-MM-DD` inside the period shown                                                                                              |
-| `view`              | `:month`                 | `:month`, `:year`, or `:decade`                                                                                                             |
+| `level`             | `:month`                 | `:month`, `:year`, or `:decade`                                                                                                             |
 | `selected`          | `nil`                    | Selected date                                                                                                                               |
 | `today`             | `Date.current`           | Marked `aria-current="date"`                                                                                                                |
 | `selectable`        | `false`                  | Days select a date; otherwise the grid is `aria-readonly`                                                                                   |
@@ -74,7 +74,7 @@ and the load error) comes from `stimulus_plumbers.calendar.*`.
   data-controller="calendar"
   data-action="click->calendar#onClick"
   data-calendar-displayed-value="2026-09-15"
-  data-calendar-view-value="month"
+  data-calendar-level-value="month"
   data-calendar-locale-value="en"
   data-calendar-first-day-of-week-value="1"
   data-calendar-labels-value='{"previousMonth":"Previous month",…}'
@@ -117,43 +117,43 @@ and the load error) comes from `stimulus_plumbers.calendar.*`.
   <turbo-frame id="availability_frame">
     <div>
       <a
-        href="?availability[displayed]=2025-09-01&availability[view]=month"
+        href="?availability[displayed]=2025-09-01&availability[level]=month"
         aria-label="Previous year"
         data-navigation="previous-year"
         data-date="2025-09-01"
-        data-view="month"
+        data-level="month"
         >…</a
       >
       <a
-        href="?availability[displayed]=2026-08-01&availability[view]=month"
+        href="?availability[displayed]=2026-08-01&availability[level]=month"
         aria-label="Previous month"
         data-navigation="previous"
         data-date="2026-08-01"
-        data-view="month"
+        data-level="month"
         >…</a
       >
       <h2 id="availability_heading">September 2026</h2>
       <a
-        href="?availability[displayed]=2026-09-15&availability[view]=year"
+        href="?availability[displayed]=2026-09-15&availability[level]=year"
         data-navigation="zoom"
         data-date="2026-09-15"
-        data-view="year"
+        data-level="year"
         >Choose month</a
       >
       <a
-        href="?availability[displayed]=2026-10-01&availability[view]=month"
+        href="?availability[displayed]=2026-10-01&availability[level]=month"
         aria-label="Next month"
         data-navigation="next"
         data-date="2026-10-01"
-        data-view="month"
+        data-level="month"
         >…</a
       >
       <a
-        href="?availability[displayed]=2027-09-01&availability[view]=month"
+        href="?availability[displayed]=2027-09-01&availability[level]=month"
         aria-label="Next year"
         data-navigation="next-year"
         data-date="2027-09-01"
-        data-view="month"
+        data-level="month"
         >…</a
       >
     </div>
@@ -162,7 +162,7 @@ and the load error) comes from `stimulus_plumbers.calendar.*`.
       aria-labelledby="availability_heading"
       data-calendar-target="grid"
       data-displayed="2026-09-15"
-      data-view="month"
+      data-level="month"
     >
       <thead>
         <tr>
