@@ -1,10 +1,10 @@
 <h1>Calendar</h1>
 
-<%# Each calendar reads <id>[displayed] and <id>[view] from params. %>
+<%# Each calendar reads <id>[displayed] and <id>[level] from params. %>
 <% today = Date.new(2026, 9, 10) %>
 <%# ?navigation=turbo renders every calendar in Turbo mode. %>
 <% navigation = params[:navigation] == "turbo" ? :turbo : :stimulus %>
-<% period = ->(id) { { displayed: params.dig(id, "displayed"), view: params.dig(id, "view"), navigation: navigation } } %>
+<% period = ->(id) { { displayed: params.dig(id, "displayed"), level: params.dig(id, "level"), navigation: navigation } } %>
 
 <section id="calendar-inline-month" class="sb-section">
   <h2>Selectable month, with a minimum and weekends unavailable</h2>
@@ -26,7 +26,7 @@
   <h2>Year</h2>
   <div class="sb-col">
     <%= sp_calendar id: "calendar-year", today: today, **period.("calendar-year"),
-                    view: params.dig("calendar-year", "view") || :year %>
+                    level: params.dig("calendar-year", "level") || :year %>
   </div>
 </section>
 
@@ -34,7 +34,7 @@
   <h2>Decade, 2027 unavailable</h2>
   <div class="sb-col">
     <%= sp_calendar id: "calendar-decade", today: today, disabled_years: [2027], **period.("calendar-decade"),
-                    view: params.dig("calendar-decade", "view") || :decade %>
+                    level: params.dig("calendar-decade", "level") || :decade %>
   </div>
 </section>
 

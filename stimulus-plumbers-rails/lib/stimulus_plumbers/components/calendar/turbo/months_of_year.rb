@@ -15,7 +15,7 @@ module StimulusPlumbers
             configuration.displayed.year.to_s
           end
 
-          def view_name
+          def level
             :year
           end
 
@@ -27,14 +27,14 @@ module StimulusPlumbers
             :decade
           end
 
+          def zoom_in
+            :month
+          end
+
           private
 
           def target
             "period"
-          end
-
-          def control_view
-            :month
           end
 
           def render_control(date, tabindex)

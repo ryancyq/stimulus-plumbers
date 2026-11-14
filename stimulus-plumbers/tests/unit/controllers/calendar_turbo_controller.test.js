@@ -28,10 +28,10 @@ describe('CalendarTurboController', () => {
     const { container, frame } = await render();
 
     container.dispatchEvent(
-      new CustomEvent('calendar:navigate', { detail: { url: 'http://localhost/?container%5Bview%5D=year' } })
+      new CustomEvent('calendar:navigate', { detail: { url: 'http://localhost/?container%5Blevel%5D=year' } })
     );
 
-    expect(frame.src).toBe('http://localhost/?container%5Bview%5D=year');
+    expect(frame.src).toBe('http://localhost/?container%5Blevel%5D=year');
   });
 
   it('reports a failed response', async () => {

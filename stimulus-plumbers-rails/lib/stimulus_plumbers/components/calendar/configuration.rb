@@ -3,12 +3,12 @@
 module StimulusPlumbers
   module Components
     class Calendar
-      # The calendar's options. An invalid `displayed`, `selected`, or `view` falls back to its default.
+      # The calendar's options. An invalid `displayed`, `selected`, or `level` falls back to its default.
       class Configuration
         OPTIONS = %i[displayed selected today selectable show_other_months first_day_of_week].freeze
 
         attr_reader :id,
-                    :view,
+                    :level,
                     :displayed,
                     :selected,
                     :today,
@@ -19,17 +19,17 @@ module StimulusPlumbers
 
         class << self
           # Takes OPTIONS and Dates::Availability::OPTIONS out of `options`.
-          def extract!(id, view, options)
+          def extract!(id, level, options)
             availability = Dates::Availability.new(**options.extract!(*Dates::Availability::OPTIONS))
-            new(id, view, options.extract!(*OPTIONS), availability)
+            new(id, level, options.extract!(*OPTIONS), availability)
           end
         end
 
-        def initialize(id, view, options, availability)
+        def initialize(id, level, options, availability)
           raise ArgumentError, "calendar id must be a nonblank stable id" if id.to_s.blank?
 
           @id                = id.to_s
-          @view              = VIEWS.find { |candidate| candidate.to_s == view.to_s } || :month
+          @level             = LEVELS.find { |candidate| candidate.to_s == level.to_s } || :month
           @availability      = availability
           @selectable        = options.fetch(:selectable, false)
           @show_other_months = options.fetch(:show_other_months, false)

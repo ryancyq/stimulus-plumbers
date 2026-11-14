@@ -33,9 +33,9 @@ or hand-written markup: keeps at most one cell in the Tab sequence, moves focus 
 
 | Target            | Description                                                                        |
 | ----------------- | ---------------------------------------------------------------------------------- |
-| `grid`            | `<table role="grid">`; carries `data-displayed` and `data-view` once drawn         |
+| `grid`            | `<table role="grid">`; carries `data-displayed` and `data-level` once drawn        |
 | `day`             | Day button with `data-date="YYYY-MM-DD"`                                           |
-| `period`          | Month or year cell in the year and decade views                                    |
+| `period`          | Month or year cell at the year and decade levels                                   |
 | `status`          | `role="status"` outside the replaced grid                                          |
 | `weekdayTemplate` | Optional `<template>` holding the weekday `<th>`                                   |
 | `cellTemplate`    | Optional `<template>` holding an empty `<td>`                                      |
@@ -52,7 +52,7 @@ the heading is the grid's `aria-labelledby`.
 | `selected`         | String  | `""`                             | Selected date key; setting it updates the selection                                                                            |
 | `selectable`       | Boolean | `false`                          | Day activation selects                                                                                                         |
 | `displayed`        | String  | `selected`, then today           | First period drawn (stimulus)                                                                                                  |
-| `view`             | String  | `"month"`                        | First view drawn: `month`, `year`, or `decade` (stimulus)                                                                      |
+| `level`            | String  | `"month"`                        | First level drawn: `month`, `year`, or `decade` (stimulus)                                                                     |
 | `today`            | String  | the browser's local date         | Date marked `aria-current="date"` (stimulus)                                                                                   |
 | `locale`           | String  | the browser's locale             | `Intl` locale for headings and labels (stimulus)                                                                               |
 | `firstDayOfWeek`   | Number  | the locale's week info, else `1` | `0` is Sunday (stimulus)                                                                                                       |
@@ -80,22 +80,22 @@ unavailable `selected` date stays selected and cannot be selected, and the calen
 
 **Events**
 
-| Event                      | Cancelable | Detail                               |
-| -------------------------- | ---------- | ------------------------------------ |
-| `calendar:before-change`   | yes        | `{ value, previousValue }`           |
-| `calendar:changed`         | no         | `{ value, previousValue }`           |
-| `calendar:before-navigate` | yes        | `{ from, to, focusDate, view, url }` |
-| `calendar:navigate`        | no         | `{ from, to, focusDate, view, url }` |
-| `calendar:navigated`       | no         | `{ from, to, focusDate, view }`      |
+| Event                      | Cancelable | Detail                                |
+| -------------------------- | ---------- | ------------------------------------- |
+| `calendar:before-change`   | yes        | `{ value, previousValue }`            |
+| `calendar:changed`         | no         | `{ value, previousValue }`            |
+| `calendar:before-navigate` | yes        | `{ from, to, focusDate, level, url }` |
+| `calendar:navigate`        | no         | `{ from, to, focusDate, level, url }` |
+| `calendar:navigated`       | no         | `{ from, to, focusDate, level }`      |
 
 Values are date keys (`YYYY-MM-DD`). `changed` also fires when the current date is activated again.
 A form reset restores the initial selection.
 
-Navigation: `from` is the shown period's date, `to` a date inside the requested period, `view` the
-requested view, and `url` the URL of the link followed, in turbo mode only; `focusDate` is the intended
+Navigation: `from` is the shown period's date, `to` a date inside the requested period, `level` the
+requested level, and `url` the URL of the link followed, in turbo mode only; `focusDate` is the intended
 date after a grid key, or `null` otherwise. In stimulus mode the period is drawn at once; in turbo mode
 `calendar-turbo` loads `url` and the response replaces the grid. Turbo period links carry `data-date` and
-`data-view`; a grid key that leaves the period follows the header link to it, and does nothing without one. When the requested
+`data-level`; a grid key that leaves the period follows the header link to it, and does nothing without one. When the requested
 period arrives, the controller moves the Tab stop to the intended date (or the nearest available
 one in that period), returns focus there or to the same header control if focus is still in the
 calendar (with no available date, to a header control, as [ARIA.md](../../../ARIA.md) lists), writes the heading to `status`, and dispatches `navigated`. A grid for another period is

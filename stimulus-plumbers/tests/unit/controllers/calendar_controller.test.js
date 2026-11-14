@@ -24,7 +24,7 @@ describe('CalendarController', () => {
         return `<tr>${cells.join('')}</tr>`;
       })
       .join('');
-    return `<table role="grid" data-calendar-target="grid" data-displayed="${displayed}" data-view="month"
+    return `<table role="grid" data-calendar-target="grid" data-displayed="${displayed}" data-level="month"
                    data-action="keydown->calendar#onKeydown click->calendar#onClick"><tbody>${rows}</tbody></table>`;
   };
 
@@ -41,13 +41,13 @@ describe('CalendarController', () => {
           )
           .join('')}</tr>`
     );
-    return `<table role="grid" data-calendar-target="grid" data-displayed="2026-01-01" data-view="decade"
+    return `<table role="grid" data-calendar-target="grid" data-displayed="2026-01-01" data-level="decade"
                    data-action="keydown->calendar#onKeydown click->calendar#onClick"><tbody>${rows.join('')}</tbody></table>`;
   };
 
   // Turbo header links to the periods keys reach.
   const PERIOD_LINKS = ['2025-09', '2026-02', '2026-08', '2026-10', '2027-09']
-    .map((month) => `<a href="?period=${month}" data-navigation="step" data-date="${month}-01" data-view="month"></a>`)
+    .map((month) => `<a href="?period=${month}" data-navigation="step" data-date="${month}-01" data-level="month"></a>`)
     .join('');
 
   const render = async ({
@@ -165,7 +165,7 @@ describe('CalendarController', () => {
       key(day(from), name, init);
 
       expect(navigate).toHaveBeenCalledWith(
-        expect.objectContaining({ from: '2026-09-15', to: target, focusDate: target, view: 'month' })
+        expect.objectContaining({ from: '2026-09-15', to: target, focusDate: target, level: 'month' })
       );
     });
 
@@ -199,7 +199,7 @@ describe('CalendarController', () => {
       expect(open).toHaveBeenCalledOnce();
     });
 
-    it('moves by rows of four in the decade view', async () => {
+    it('moves by rows of four at the decade level', async () => {
       await render({ grid: decadeMarkup('2026-01-01') });
 
       key(day('2026-01-01'), 'ArrowUp');
@@ -335,8 +335,8 @@ describe('CalendarController', () => {
   });
 
   describe('navigation', () => {
-    const link = (name, displayed, view = 'month') =>
-      `<a href="?container%5Bdisplayed%5D=${displayed}&container%5Bview%5D=${view}" data-navigation="${name}" data-date="${displayed}" data-view="${view}">${name}</a>`;
+    const link = (name, displayed, level = 'month') =>
+      `<a href="?container%5Bdisplayed%5D=${displayed}&container%5Blevel%5D=${level}" data-navigation="${name}" data-date="${displayed}" data-level="${level}">${name}</a>`;
     const frameContent = (displayed, heading, options = {}) => {
       const grid = (
         options.grid ?? monthMarkup({ displayed, focus: `${displayed.slice(0, 7)}-01`, ...options })
@@ -367,7 +367,7 @@ describe('CalendarController', () => {
 
       const url = new URL(frame.src);
       expect(url.searchParams.get('container[displayed]')).toBe('2026-10-01');
-      expect(url.searchParams.get('container[view]')).toBe('month');
+      expect(url.searchParams.get('container[level]')).toBe('month');
     });
 
     it('stays put from the keyboard when the period has no link', async () => {
@@ -450,7 +450,7 @@ describe('CalendarController', () => {
         from: '2026-09-15',
         to: '2026-10-15',
         focusDate: '2026-10-15',
-        view: 'month',
+        level: 'month',
       });
     });
 
@@ -552,7 +552,7 @@ describe('CalendarController', () => {
         from: '2026-09-15',
         to: '2026-10-01',
         focusDate: null,
-        view: 'month',
+        level: 'month',
         url: next.href,
       });
       expect(document.activeElement).toBe(container.querySelector('[data-navigation="next"]'));
@@ -583,13 +583,13 @@ describe('CalendarController', () => {
       const { container, frame } = await renderFramed();
       await replace(frame, '2026-01-01', '2020 – 2029', { grid: decadeMarkup('2026-01-01') });
       const year = day('2024-01-01');
-      year.href = '?container%5Bdisplayed%5D=2024-01-01&container%5Bview%5D=year';
-      year.dataset.view = 'year';
+      year.href = '?container%5Bdisplayed%5D=2024-01-01&container%5Blevel%5D=year';
+      year.dataset.level = 'year';
       year.focus();
 
       year.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
       const months = Array.from({ length: 12 }, (_, index) => `2024-${String(index + 1).padStart(2, '0')}-01`);
-      const yearGrid = `<table role="grid" data-calendar-target="grid" data-displayed="2024-01-01" data-view="year"
+      const yearGrid = `<table role="grid" data-calendar-target="grid" data-displayed="2024-01-01" data-level="year"
           data-action="keydown->calendar#onKeydown"><tbody><tr>${months
             .map(
               (month) => `<td role="gridcell"><a href="#" tabindex="${month === '2024-01-01' ? 0 : -1}"
@@ -705,7 +705,7 @@ describe('CalendarController', () => {
 
     it('hands focus to zoom when an opened month has no available date', async () => {
       const container = await renderLocal(
-        `${values} data-calendar-view-value="year" data-calendar-disabled-weekdays-value="[0,1,2,3,4,5,6]"`
+        `${values} data-calendar-level-value="year" data-calendar-disabled-weekdays-value="[0,1,2,3,4,5,6]"`
       );
       const october = container.querySelector('[data-calendar-target~="period"][data-date^="2026-10"]');
       october.focus();
@@ -718,7 +718,7 @@ describe('CalendarController', () => {
     it('hands focus to another shown control when the one in the direction of travel is hidden', async () => {
       const container = await renderLocal(
         'data-calendar-displayed-value="9998-12-01" data-calendar-today-value="2026-09-10" data-calendar-locale-value="en-US" ' +
-          'data-calendar-view-value="year" data-calendar-disabled-years-value="[9999]"'
+          'data-calendar-level-value="year" data-calendar-disabled-years-value="[9999]"'
       );
       const december = container.querySelector('[data-calendar-target~="period"][data-date^="9998-12"]');
       december.focus();
@@ -806,7 +806,7 @@ describe('CalendarController', () => {
       expect(container.querySelector('h2').textContent).toBe('October 2026');
       expect(container.querySelector('[role="status"]').textContent).toBe('October 2026');
       expect(document.activeElement).toBe(next);
-      expect(navigate).toHaveBeenCalledWith(expect.objectContaining({ to: '2026-10-01', view: 'month' }));
+      expect(navigate).toHaveBeenCalledWith(expect.objectContaining({ to: '2026-10-01', level: 'month' }));
     });
 
     it('draws a month a year away from the year buttons', async () => {
@@ -818,7 +818,7 @@ describe('CalendarController', () => {
       expect(container.querySelector('[data-navigation="next-year"]').getAttribute('aria-label')).toBe('Next year');
     });
 
-    it('shows the year buttons only in the month view', async () => {
+    it('shows the year buttons only at the month level', async () => {
       const container = await renderLocal(values);
       const year = container.querySelector('[data-navigation="previous-year"]');
       expect(year.hidden).toBe(false);
@@ -860,7 +860,7 @@ describe('CalendarController', () => {
     });
 
     it('shows the decade and hides the zoom at the top', async () => {
-      const container = await renderLocal(`${values} data-calendar-view-value="decade"`);
+      const container = await renderLocal(`${values} data-calendar-level-value="decade"`);
 
       expect(container.querySelector('h2').textContent).toMatch(/^2020\s–\s2029$/);
       expect(container.querySelector('[data-navigation="zoom"]').hidden).toBe(true);

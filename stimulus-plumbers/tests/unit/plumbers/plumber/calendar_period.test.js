@@ -24,7 +24,7 @@ describe('calendar period', () => {
     expect(neighbourYear('9999-09-15', 1)).toBeNull();
   });
 
-  it('maps a date to the cell of each view', () => {
+  it('maps a date to the cell of each level', () => {
     expect(unitKey('2026-09-15', 'month')).toBe('2026-09-15');
     expect(unitKey('2026-09-15', 'year')).toBe('2026-09-01');
     expect(unitKey('2026-09-15', 'decade')).toBe('2026-01-01');

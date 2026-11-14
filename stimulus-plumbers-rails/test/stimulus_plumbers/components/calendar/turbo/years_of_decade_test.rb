@@ -6,7 +6,7 @@ class CalendarTurboYearsOfDecadeTest < ActionView::TestCase
   def render_decade(**kwargs)
     parse_html(
       StimulusPlumbers::Components::Calendar.new(self).render(
-        navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), view: :decade, **kwargs
+        navigation: :turbo, id: "cal", today: Date.new(2026, 9, 10), level: :decade, **kwargs
       )
     )
   end
@@ -24,7 +24,7 @@ class CalendarTurboYearsOfDecadeTest < ActionView::TestCase
   def test_each_year_zooms_in_to_its_year_and_is_named_by_it
     year = render_decade.at_css("[data-date='2024-01-01']")
 
-    assert_equal "?cal%5Bdisplayed%5D=2024-01-01&cal%5Bview%5D=year", year["href"]
+    assert_equal "?cal%5Bdisplayed%5D=2024-01-01&cal%5Blevel%5D=year", year["href"]
     assert_nil year["aria-label"]
   end
 
@@ -32,7 +32,7 @@ class CalendarTurboYearsOfDecadeTest < ActionView::TestCase
     assert_css render_decade(disabled_years: [2027]), "a[aria-disabled='true'][data-date='2027-01-01']:not([href])"
   end
 
-  def test_the_decade_has_no_wider_view
+  def test_the_decade_has_no_wider_level
     assert(render_decade.css("a").none? { |link| link.text.start_with?("Choose") })
   end
 

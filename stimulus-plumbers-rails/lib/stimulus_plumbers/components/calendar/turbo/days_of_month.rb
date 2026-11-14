@@ -16,7 +16,7 @@ module StimulusPlumbers
             I18n.l(configuration.displayed, format: "%B %Y")
           end
 
-          def view_name
+          def level
             :month
           end
 

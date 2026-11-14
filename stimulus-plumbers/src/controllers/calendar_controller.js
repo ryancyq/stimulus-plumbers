@@ -17,7 +17,7 @@ import {
   renderPeriod,
   todayKey,
   unitKey,
-  viewName,
+  levelName,
   weekStart,
   zoomIn,
   zoomOut,
@@ -44,7 +44,7 @@ export default class extends Controller {
     selectable: Boolean,
     navigation: { type: String, default: 'stimulus' },
     displayed: String,
-    view: { type: String, default: 'month' },
+    level: { type: String, default: 'month' },
     today: String,
     locale: String,
     firstDayOfWeek: Number,
@@ -79,7 +79,7 @@ export default class extends Controller {
   gridTargetConnected(grid) {
     if (this._usesStimulusNavigation && !grid.querySelector('[data-date]')) {
       const displayed = [this.displayedValue, this.selectedValue, this._today].find((key) => parseDateKey(key));
-      this._draw(grid, displayed ?? todayKey(), viewName(this.viewValue));
+      this._draw(grid, displayed ?? todayKey(), levelName(this.levelValue));
     }
     this._syncGrid(grid);
   }
@@ -157,10 +157,10 @@ export default class extends Controller {
 
   // The date an arrow or page key moves to, or null for other keys.
   _step(date, event) {
-    const view = this.gridTarget.dataset.view;
-    if (view === 'month') return this._stepDay(date, event);
+    const level = this.gridTarget.dataset.level;
+    if (level === 'month') return this._stepDay(date, event);
 
-    const add = view === 'year' ? addMonths : addYears;
+    const add = level === 'year' ? addMonths : addYears;
     const moves = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -PERIOD_COLUMNS, ArrowDown: PERIOD_COLUMNS };
     return event.key in moves ? add(date, moves[event.key]) : null;
   }
@@ -198,60 +198,65 @@ export default class extends Controller {
   }
 
   _navigate(key, direction) {
-    const view = this.gridTarget.dataset.view;
-    const url = this._usesStimulusNavigation ? null : this._periodLink(key, view)?.href;
+    const level = this.gridTarget.dataset.level;
+    const url = this._usesStimulusNavigation ? null : this._periodLink(key, level)?.href;
     if (this._usesStimulusNavigation || url)
-      this._request({ to: key, focusDate: key, view, url }, { focus: 'grid', direction });
+      this._request({ to: key, focusDate: key, level, url }, { focus: 'grid', direction });
   }
 
   // The header link to a period, which holds its URL in turbo mode.
-  _periodLink(key, view) {
+  _periodLink(key, level) {
     const links = this.element.querySelectorAll('a[data-navigation]');
     return [...links].find(
-      (link) => link.dataset.view === view && this._period(link.dataset.date ?? '', view) === this._period(key, view)
+      (link) =>
+        link.dataset.level === level && this._period(link.dataset.date ?? '', level) === this._period(key, level)
     );
   }
 
   // Period links in turbo mode.
   _followPeriodLink(link, event) {
-    const { date: to, view } = link.dataset;
-    if (!to || !view || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const { date: to, level } = link.dataset;
+    if (!to || !level || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
     event.preventDefault();
     const focus = link.dataset.navigation
       ? { focus: 'navigation', navigation: link.dataset.navigation }
       : { focus: 'grid' };
-    this._request({ to, focusDate: null, view, url: link.href }, focus);
+    this._request({ to, focusDate: null, level, url: link.href }, focus);
   }
 
   // Header buttons and period cells in stimulus mode.
   _pressNavigation(button) {
     if (!button || !this.element.contains(button) || isAriaDisabled(button)) return;
 
-    const { displayed, view } = this.gridTarget.dataset;
+    const { displayed, level } = this.gridTarget.dataset;
     const name = button.dataset.navigation;
     if (name) {
-      const [to, target] = this._navigationTarget(name, displayed, view);
-      if (to && target) this._request({ to, focusDate: null, view: target }, { focus: 'navigation', navigation: name });
+      const [to, target] = this._navigationTarget(name, displayed, level);
+      if (to && target)
+        this._request({ to, focusDate: null, level: target }, { focus: 'navigation', navigation: name });
     } else if (button.matches('[data-calendar-target~="period"]')) {
-      this._request({ to: button.dataset.date, focusDate: null, view: zoomIn(view) }, { focus: 'grid' });
+      this._request({ to: button.dataset.date, focusDate: null, level: zoomIn(level) }, { focus: 'grid' });
     }
   }
 
-  _navigationTarget(name, displayed, view) {
-    if (name === 'zoom') return [displayed, zoomOut(view)];
+  _navigationTarget(name, displayed, level) {
+    if (name === 'zoom') return [displayed, zoomOut(level)];
 
     const direction = name.startsWith('next') ? 1 : -1;
-    return [name.endsWith('year') ? neighbourYear(displayed, direction) : neighbour(displayed, view, direction), view];
+    return [
+      name.endsWith('year') ? neighbourYear(displayed, direction) : neighbour(displayed, level, direction),
+      level,
+    ];
   }
 
   // Stimulus navigation draws the period; turbo navigation loads `url`.
-  _request({ to, focusDate: intended, view, url }, focus) {
+  _request({ to, focusDate: intended, level, url }, focus) {
     const detail = {
       from: this.gridTarget.dataset.displayed,
       to,
       focusDate: intended,
-      view,
+      level,
       ...(url && { url }),
     };
     if (this.dispatch('before-navigate', { detail, cancelable: true }).defaultPrevented) return false;
@@ -259,32 +264,32 @@ export default class extends Controller {
     this.pending = { ...detail, ...focus, restore: this.element.contains(document.activeElement) };
     this.dispatch('navigate', { detail });
     if (this._usesStimulusNavigation) {
-      this._draw(this.gridTarget, to, view);
+      this._draw(this.gridTarget, to, level);
       this._syncGrid(this.gridTarget);
     }
     return true;
   }
 
   // Whether a replacement shows the requested period.
-  _showsPeriod(grid, { to, view }) {
-    return grid.dataset.view === view && this._period(grid.dataset.displayed, view) === this._period(to, view);
+  _showsPeriod(grid, { to, level }) {
+    return grid.dataset.level === level && this._period(grid.dataset.displayed, level) === this._period(to, level);
   }
 
-  _period(key, view) {
-    if (view === 'month') return key.slice(0, 7);
-    return view === 'year' ? key.slice(0, 4) : key.slice(0, 3);
+  _period(key, level) {
+    if (level === 'month') return key.slice(0, 7);
+    return level === 'year' ? key.slice(0, 4) : key.slice(0, 3);
   }
 
   // Restores focus intent, announces the period, and dispatches navigated.
   _finishNavigation(grid) {
-    const { from, to, focusDate: intended, view, focus, navigation, direction } = this.pending;
+    const { from, to, focusDate: intended, level, focus, navigation, direction } = this.pending;
     // Focus is still here, or fell to the body with the replaced control.
     const restore = this.pending.restore && (this.element.contains(document.activeElement) || this._isFocusOnBody());
     this.pending = null;
 
     if (!intended) this._focusSelected();
     const target = intended
-      ? this._nearestEnabled(grid, intended, view, direction)
+      ? this._nearestEnabled(grid, intended, level, direction)
       : grid.querySelector('[tabindex="0"]');
     if (target) this._takeTabStop(grid, target);
     if (restore && focus === 'grid') (target ?? this._fallbackControl(direction))?.focus();
@@ -296,15 +301,15 @@ export default class extends Controller {
 
     const heading = document.getElementById(grid.getAttribute('aria-labelledby'));
     if (this.hasStatusTarget && heading) this.statusTarget.textContent = heading.textContent;
-    this.dispatch('navigated', { detail: { from, to, focusDate: target?.dataset.date ?? null, view } });
+    this.dispatch('navigated', { detail: { from, to, focusDate: target?.dataset.date ?? null, level } });
   }
 
   // The closest available date in the requested period; ties follow the direction of travel.
-  _nearestEnabled(grid, key, view, direction) {
+  _nearestEnabled(grid, key, level, direction) {
     const intended = parseDateKey(key);
     const distance = (control) => daysBetween(intended, parseDateKey(control.dataset.date));
     const candidates = [...grid.querySelectorAll(CONTROL_SELECTOR)].filter(
-      (control) => !isAriaDisabled(control) && this._period(control.dataset.date, view) === this._period(key, view)
+      (control) => !isAriaDisabled(control) && this._period(control.dataset.date, level) === this._period(key, level)
     );
     return candidates.reduce((best, control) => {
       if (!best) return control;
@@ -336,10 +341,10 @@ export default class extends Controller {
     if (this.hasStatusTarget) this.statusTarget.textContent = this._labels.error;
   }
 
-  _draw(grid, displayed, view) {
+  _draw(grid, displayed, level) {
     const heading = renderPeriod(grid, {
       displayed,
-      view,
+      level,
       today: this._today,
       selected: this.selectedValue || null,
       selectable: this.selectableValue,
@@ -355,28 +360,28 @@ export default class extends Controller {
     });
     const title = document.getElementById(grid.getAttribute('aria-labelledby'));
     if (title) title.textContent = heading;
-    this._drawHeader(displayed, view);
+    this._drawHeader(displayed, level);
     const shell = grid.closest('[hidden]');
     if (shell && this.element.contains(shell)) shell.hidden = false;
   }
 
-  _drawHeader(displayed, view) {
-    const noun = view[0].toUpperCase() + view.slice(1);
+  _drawHeader(displayed, level) {
+    const noun = level[0].toUpperCase() + level.slice(1);
     ['previous', 'next'].forEach((name) => {
       const button = this.element.querySelector(`button[data-navigation="${name}"]`);
       if (!button) return;
       button.setAttribute('aria-label', this._labels[`${name}${noun}`]);
-      button.hidden = !neighbour(displayed, view, name === 'next' ? 1 : -1);
+      button.hidden = !neighbour(displayed, level, name === 'next' ? 1 : -1);
 
       const year = this.element.querySelector(`button[data-navigation="${name}-year"]`);
       if (!year) return;
       year.setAttribute('aria-label', this._labels[`${name}Year`]);
-      year.hidden = view !== 'month' || !neighbourYear(displayed, name === 'next' ? 1 : -1);
+      year.hidden = level !== 'month' || !neighbourYear(displayed, name === 'next' ? 1 : -1);
     });
 
     const zoom = this.element.querySelector('button[data-navigation="zoom"]');
     if (!zoom) return;
-    const target = zoomOut(view);
+    const target = zoomOut(level);
     zoom.hidden = !target;
     zoom.textContent = target ? this._labels[target === 'year' ? 'chooseMonth' : 'chooseYear'] : '';
   }
@@ -417,9 +422,9 @@ export default class extends Controller {
     console.warn(`CalendarController expected one cell with tabindex="0"; found ${stops.length}.`);
     const focus = focusDate({
       dates: enabled.map((control) => control.dataset.date),
-      selected: unitKey(this.selectedValue, grid.dataset.view),
+      selected: unitKey(this.selectedValue, grid.dataset.level),
       today: grid.querySelector('[aria-current="date"]')?.dataset.date ?? null,
-      displayed: unitKey(grid.dataset.displayed, grid.dataset.view),
+      displayed: unitKey(grid.dataset.displayed, grid.dataset.level),
     });
     controls.forEach((control) => (control.tabIndex = control.dataset.date === focus ? 0 : -1));
   }
@@ -450,7 +455,7 @@ export default class extends Controller {
 
     if (this.dayTargets.some((day) => day.dataset.date === value)) this._focusSelected();
     else if (this._usesStimulusNavigation)
-      this._request({ to: value, focusDate: null, view: 'month' }, { focus: 'grid' });
+      this._request({ to: value, focusDate: null, level: 'month' }, { focus: 'grid' });
   }
 
   _control(key) {

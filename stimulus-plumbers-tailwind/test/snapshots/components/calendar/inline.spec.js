@@ -77,13 +77,13 @@ for (const mode of ["stimulus", "turbo"]) {
         const section = page.locator("#calendar-inline-month");
         await navigation(section, "zoom").click();
         await expect(
-          section.locator("[role='grid'][data-view='year']"),
+          section.locator("[role='grid'][data-level='year']"),
         ).toBeVisible();
         await expect(section).toHaveScreenshot("month-zoomed-out.png");
       });
     });
 
-    test.describe("calendar — other views", () => {
+    test.describe("calendar — other calendars", () => {
       test("adjacent month days", async ({ page }) => {
         await expect(
           page.locator("#calendar-inline-other-months"),
@@ -96,7 +96,7 @@ for (const mode of ["stimulus", "turbo"]) {
         );
       });
 
-      test("a month in the year view opens that month", async ({ page }) => {
+      test("a month at the year level opens that month", async ({ page }) => {
         const section = page.locator("#calendar-inline-year");
         await section.locator("[aria-label='March 2026']").click();
         await expect(heading(section, "March 2026")).toBeVisible();

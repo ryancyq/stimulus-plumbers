@@ -8,7 +8,7 @@ module StimulusPlumbers
         def stimulus_data(configuration)
           {
             "calendar-displayed-value"         => configuration.displayed.iso8601,
-            "calendar-view-value"              => configuration.view.to_s,
+            "calendar-level-value"             => configuration.level.to_s,
             "calendar-today-value"             => configuration.today.iso8601,
             "calendar-locale-value"            => I18n.locale.to_s.tr("_", "-"),
             "calendar-first-day-of-week-value" => configuration.first_day_of_week.to_s,

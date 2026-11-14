@@ -4,7 +4,7 @@ module StimulusPlumbers
   module Components
     class Calendar
       class Turbo
-        # Previous/next links, year links in the month view, the grid heading, and the zoom-out link.
+        # Previous/next links, year links at the month level, the grid heading, and the zoom-out link.
         class Header < Plumber::Base
           def render(grid)
             template.content_tag(:div, **merge_html_options(theme.resolve(:calendar_header))) do
@@ -30,19 +30,19 @@ module StimulusPlumbers
           end
 
           def step_link(grid, direction, name, icon)
-            label = I18n.t("stimulus_plumbers.calendar.#{name}_#{grid.view_name}")
-            icon_link(grid, grid.neighbour(direction), grid.view_name, name, label, icon)
+            label = I18n.t("stimulus_plumbers.calendar.#{name}_#{grid.level}")
+            icon_link(grid, grid.neighbour(direction), grid.level, name, label, icon)
           end
 
           def year_link(grid, direction, name, icon)
-            return unless grid.view_name == :month
+            return unless grid.level == :month
 
             label = I18n.t("stimulus_plumbers.calendar.#{name}_year")
             icon_link(grid, grid.neighbour_year(direction), :month, "#{name}-year", label, icon)
           end
 
-          def icon_link(grid, date, view, navigation, label, icon)
-            period_link(grid, date, view, { aria: { label: label }, data: { navigation: navigation } }) do
+          def icon_link(grid, date, level, navigation, label, icon)
+            period_link(grid, date, level, { aria: { label: label }, data: { navigation: navigation } }) do
               Icon.new(template).render(icon, aria: { hidden: "true" })
             end
           end
@@ -56,9 +56,9 @@ module StimulusPlumbers
           end
 
           # Disabled without a date or a URL.
-          def period_link(grid, date, view, attrs, &block)
-            url  = grid.url_builder.call(date, view) if date
-            data = date ? { date: date.iso8601, view: view } : {}
+          def period_link(grid, date, level, attrs, &block)
+            url  = grid.url_builder.call(date, level) if date
+            data = date ? { date: date.iso8601, level: level } : {}
             html = merge_html_options(theme.resolve(:calendar_navigation), attrs, { data: data })
             return template.link_to(url, **html, &block) if url
 

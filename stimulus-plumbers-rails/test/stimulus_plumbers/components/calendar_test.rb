@@ -49,21 +49,21 @@ class CalendarComponentTest < ActionView::TestCase
   end
 
   def test_render_passes_what_the_controller_draws
-    container = render_calendar(displayed: "2026-12-01", view: :year, first_day_of_week: 1).at_css("#cal")
+    container = render_calendar(displayed: "2026-12-01", level: :year, first_day_of_week: 1).at_css("#cal")
 
     assert_equal "2026-12-01", container["data-calendar-displayed-value"]
-    assert_equal "year", container["data-calendar-view-value"]
+    assert_equal "year", container["data-calendar-level-value"]
     assert_equal "2026-09-10", container["data-calendar-today-value"]
     assert_equal "en", container["data-calendar-locale-value"]
     assert_equal "1", container["data-calendar-first-day-of-week-value"]
     assert_equal "Previous month", JSON.parse(container["data-calendar-labels-value"])["previousMonth"]
   end
 
-  def test_render_falls_back_when_displayed_and_view_are_invalid
-    container = render_calendar(displayed: "not-a-date", view: "week").at_css("#cal")
+  def test_render_falls_back_when_displayed_and_level_are_invalid
+    container = render_calendar(displayed: "not-a-date", level: "week").at_css("#cal")
 
     assert_equal "2026-09-10", container["data-calendar-displayed-value"]
-    assert_equal "month", container["data-calendar-view-value"]
+    assert_equal "month", container["data-calendar-level-value"]
   end
 
   def test_render_selects_nothing_when_selected_is_not_a_date
