@@ -8,7 +8,7 @@ module StimulusPlumbers
       class << self
         def call
           path = resolved_path
-          path ? File.read(path) : ""
+          path ? DocLinks.rewrite(File.read(path), source: FILENAME) : ""
         end
 
         private

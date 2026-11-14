@@ -9,6 +9,7 @@ require "stimulus_plumbers"
 require "stimulus_plumbers_tailwind"
 
 require_relative "stimulus_plumbers/mcp/version"
+require_relative "stimulus_plumbers/mcp/loaders/support/doc_links"
 require_relative "stimulus_plumbers/mcp/loaders/support/docs_table_parser"
 require_relative "stimulus_plumbers/mcp/loaders/support/gem_vendor_path"
 

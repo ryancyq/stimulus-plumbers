@@ -15,8 +15,7 @@ module StimulusPlumbers
 
         # Same file ComponentDocsLoader already serves at component://theme/docs — avoids a duplicate heredoc.
         def base_doc
-          path = File.join(ComponentDocsLoader.docs_dir, "theme.md")
-          File.exist?(path) ? File.read(path) : ""
+          ComponentDocsLoader.read(:theme)
         end
 
         def extract_interface

@@ -8,8 +8,8 @@ is `ComponentThemeLoader`. `GuideLoader` and `AriaLoader` already match their ba
 so they're unchanged.
 
 Not every class in `loaders/` is a plugin's `.loader`: `ComponentRequirements` (invoked by
-`ComponentSchemaLoader`, not a plugin itself) and `loaders/support/`'s `DocsTableParser`/`GemVendorPath`
-(pure parsing/path-resolution helpers, not sources) sit outside this naming rule — they don't get a
+`ComponentSchemaLoader`, not a plugin itself) and `loaders/support/`'s `DocLinks`/`DocsTableParser`/`GemVendorPath`
+(pure parsing, link-rewriting, and path-resolution helpers, not sources) sit outside this naming rule — they don't get a
 `Loader` suffix because they aren't one.
 
 ## Store Shapes

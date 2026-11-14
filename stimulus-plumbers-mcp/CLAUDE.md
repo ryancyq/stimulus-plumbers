@@ -20,6 +20,7 @@ stimulus-plumbers-mcp/
 │           │   │                                # of their own (parsers, path resolution) live in support/. Named
 │           │   │                                # `<Plugin><Loader>` — loader name mirrors its owning plugin.
 │           │   ├── support/
+│           │   │   ├── doc_links.rb            # Rewrites served docs' relative links: served docs → resource URIs, other repo files → GitHub at the release tag
 │           │   │   ├── gem_vendor_path.rb      # gem_dir/vendor/<relative> resolution, used by any loader with a vendored npm-package fallback
 │           │   │   └── docs_table_parser.rb    # Parses `| Option |`/`| Slot method |` tables into the helper surface for component_docs_loader.rb
 │           │   ├── guide_loader.rb             # Reads own guide.md (overview) + docs/guide.md from each package (npm/rails/tailwind) + docs/component/theme.md (theme) → guide://{overview,component,controller,tailwind,theme}
@@ -81,7 +82,7 @@ stimulus-plumbers-mcp/
 `ComponentTheme` plugin ↔ `ComponentThemeLoader`. Exceptions: `GuideLoader`/`AriaLoader` already match
 their bare plugin names exactly.
 `ComponentRequirements` has no `Loader` suffix — it isn't assigned as any plugin's `.loader` (it's
-invoked by `ComponentSchemaLoader`), same as `loaders/support/`'s two files.
+invoked by `ComponentSchemaLoader`), same as `loaders/support/`'s files.
 
 ## Deployment Design
 

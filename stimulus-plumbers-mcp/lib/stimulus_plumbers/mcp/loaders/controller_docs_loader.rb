@@ -3,6 +3,8 @@
 module StimulusPlumbers
   module MCP
     class ControllerDocsLoader
+      REPO_DIR = "stimulus-plumbers/docs/component"
+
       class << self
         def docs_dir
           @docs_dir ||= resolve_docs_dir
@@ -10,7 +12,8 @@ module StimulusPlumbers
 
         def call
           Dir[File.join(docs_dir, "*.md")].to_h do |path|
-            [File.basename(path, ".md").to_sym, File.read(path)]
+            name = File.basename(path, ".md")
+            [name.to_sym, DocLinks.rewrite(File.read(path), source: "#{REPO_DIR}/#{name}.md")]
           end
         end
 
