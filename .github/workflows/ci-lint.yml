@@ -22,6 +22,7 @@ jobs:
 
       - run: npm ci
       - run: npm run format:docs:check
+      - run: npm run docs:links
 
   lint-eslint-npm:
     name: "eslint (npm)"
