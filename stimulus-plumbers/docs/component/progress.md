@@ -11,7 +11,7 @@ Value-driven progress indicator supporting five render variants: a linear bar, a
 | Name    | Element                                                          | Purpose                                                                                                                               |
 | ------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `fill`  | `<div>` (bar, segment slot) / `<circle pathLength="100">` (ring) | Element the geometry CSS sizes from `--sp-progress-percent` (see [Geometry](#geometry)). Segmented renders **one `fill` per segment** |
-| `meter` | `<meter>`                                                        | Present only for `variant: "meter"` — native element, attributes synced directly                                                      |
+| `meter` | `<meter>`                                                        | Present only for `variant: "meter"` — native element, the controller writes `value`/`min`/`max`/`low`/`high`/`optimum` onto it        |
 | `value` | `<span>`                                                         | Optional on-screen readout; its `textContent` is set from `format`. Bar and range variants                                            |
 | `input` | `<input type="range">`                                           | Range-only, and only when a readout is present — the controller then sits on a container holding both                                 |
 

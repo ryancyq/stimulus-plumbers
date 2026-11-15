@@ -12,7 +12,7 @@
 | 2.1.2 No Keyboard Trap     | A     | Focus must be escapable from any component (Escape or documented key)                                                                                                                  |
 | 2.4.3 Focus Order          | A     | Focus sequence must be logical and predictable                                                                                                                                         |
 | 2.4.7 Focus Visible        | AA    | Keyboard focus indicator must be visible                                                                                                                                               |
-| 4.1.2 Name, Role, Value    | A     | All UI components must have accessible name, role, and state via ARIA or native semantics; state must stay in sync dynamically (e.g. `aria-expanded`, `aria-selected`, `aria-checked`) |
+| 4.1.2 Name, Role, Value    | A     | All UI components must have accessible name, role, and state via ARIA or native semantics; ARIA state must change whenever the component's state does (e.g. `aria-expanded`, `aria-selected`, `aria-checked`) |
 | 4.1.3 Status Messages      | AA    | Status/error messages announced via `role="status"` or `aria-live` without focus move                                                                                                  |
 
 ## JS Keyboard Navigation Patterns
