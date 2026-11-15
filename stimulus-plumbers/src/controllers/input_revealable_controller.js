@@ -25,17 +25,17 @@ export default class extends Controller {
     this.revealedValue = !this.revealedValue;
   }
 
-  // Syncs at once, before the page is cached.
+  // Renders at once, before the page is cached.
   _conceal() {
     this.revealedValue = false;
-    this._syncRevealed();
+    this._renderRevealed();
   }
 
   revealedValueChanged() {
-    this._syncRevealed();
+    this._renderRevealed();
   }
 
-  _syncRevealed() {
+  _renderRevealed() {
     if (this.hasInputTarget) this.inputTarget.type = this.revealedValue ? 'text' : 'password';
     if (!this.hasToggleTarget) return;
 

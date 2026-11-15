@@ -51,7 +51,7 @@ export default class extends Controller {
       { signal }
     );
     this.selection = { value: this.inputTarget.value, label: this._displayLabel() };
-    this._syncSelection();
+    this._markSelected(this._selectedOption());
     if (!this.hasPanelTarget)
       console.error('ComboboxController requires a panel target. Add data-combobox-target="panel".');
     if (this._isEditable() && !this.hasStatusTarget)
@@ -105,7 +105,7 @@ export default class extends Controller {
     const active = this.activeDescendant.active;
     if (!active) this.triggerTarget.removeAttribute('aria-activedescendant');
     if (this.expanded && !active) this.activeDescendant.clear();
-    else this._syncSelection(active);
+    else this._markSelected(active || this._selectedOption());
   }
 
   onKeydown(event) {
@@ -224,7 +224,7 @@ export default class extends Controller {
     this.selection.label = this._displayLabel();
     this._closePanel();
     this._resetFilter();
-    this._syncSelection();
+    this._markSelected(this._selectedOption());
   }
 
   onClick(event) {
@@ -264,7 +264,7 @@ export default class extends Controller {
     this.selection = { value, label };
     this.edited = false;
     if (this.expanded) this.activeDescendant.activate(option);
-    else this._syncSelection();
+    else this._markSelected(this._selectedOption());
     if (differs) {
       this.inputTarget.dispatchEvent(new Event('input', { bubbles: true }));
       this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
@@ -329,11 +329,10 @@ export default class extends Controller {
     }
     this.activeDescendant.clear();
     this._resetFilter();
-    this._syncSelection();
+    this._markSelected(this._selectedOption());
   }
 
-  _syncSelection(active = null) {
-    const selected = active || this._selectedOption();
+  _markSelected(selected) {
     this._allOptions().forEach((option) => setSelected(option, option === selected));
   }
 

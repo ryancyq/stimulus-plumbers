@@ -153,7 +153,7 @@ export default class extends Controller {
 export default class extends Controller {
   onSelect(event) {}
 
-  _sync(option) {}
+  _markSelected(option) {}
 }
 `;
     expect(parseActionParams(source)).toEqual({ onSelect: ['event'] });

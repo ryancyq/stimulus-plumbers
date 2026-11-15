@@ -80,7 +80,7 @@ export default class extends Controller {
   }
 
   _syncGrid(grid) {
-    this._syncSelected();
+    this._markSelected();
     this._normalize(grid);
     if (this.pending && this._showsPeriod(grid, this.pending)) this._finishNavigation(grid);
     else this._focusSelected();
@@ -145,7 +145,7 @@ export default class extends Controller {
     if (this.dispatch('before-change', { detail, cancelable: true }).defaultPrevented) return false;
 
     this.selectedValue = value;
-    this._syncSelected();
+    this._markSelected();
     this.dispatch('changed', { detail });
     return true;
   }
@@ -430,7 +430,7 @@ export default class extends Controller {
     if (day && !isAriaDisabled(day)) this._takeTabStop(this.gridTarget, day);
   }
 
-  _syncSelected() {
+  _markSelected() {
     this.dayTargets.forEach((day) => {
       const cell = day.closest('[role="gridcell"]');
       if (cell?.hasAttribute('aria-selected')) setSelected(cell, day.dataset.date === this.selectedValue);
@@ -438,7 +438,7 @@ export default class extends Controller {
   }
 
   selectedValueChanged(value) {
-    this._syncSelected();
+    this._markSelected();
     if (!this.connection || !this.hasGridTarget || !parseDateKey(value)) return;
 
     if (this.dayTargets.some((day) => day.dataset.date === value)) this._focusSelected();
