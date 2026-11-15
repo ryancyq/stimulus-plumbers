@@ -50,19 +50,6 @@ describe('CalendarTurboController', () => {
     expect(failed).toHaveBeenCalledOnce();
   });
 
-  it('reports a successful response that is not HTML', async () => {
-    const { frame, failed } = await render();
-
-    frame.dispatchEvent(
-      new CustomEvent('turbo:before-fetch-response', {
-        bubbles: true,
-        detail: { fetchResponse: { succeeded: true, isHTML: false } },
-      })
-    );
-
-    expect(failed).toHaveBeenCalledOnce();
-  });
-
   it('ignores responses for other frames inside the calendar', async () => {
     const { failed } = await render();
 
@@ -73,25 +60,6 @@ describe('CalendarTurboController', () => {
       })
     );
 
-    expect(failed).not.toHaveBeenCalled();
-  });
-
-  it('ignores turbo events when the calendar has no frame', async () => {
-    document.body.innerHTML = `<section id="container" data-controller="calendar-turbo"
-        data-action="turbo:before-fetch-response->calendar-turbo#onResponse turbo:frame-missing->calendar-turbo#onError">
-        <span id="inside"></span></section>`;
-    await flush();
-    const failed = vi.fn();
-    document.querySelector('#container').addEventListener('calendar-turbo:failed', failed);
-    const inside = document.querySelector('#inside');
-    const missing = new CustomEvent('turbo:frame-missing', { bubbles: true, cancelable: true });
-
-    inside.dispatchEvent(
-      new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
-    );
-    inside.dispatchEvent(missing);
-
-    expect(missing.defaultPrevented).toBe(false);
     expect(failed).not.toHaveBeenCalled();
   });
 

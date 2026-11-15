@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { isFailedResponse, isFrameEvent } from '../plumbers/plumber/turbo_frame';
 
 // Loads calendar periods through the calendar's Turbo Frame.
 export default class extends Controller {
@@ -7,13 +8,12 @@ export default class extends Controller {
   }
 
   onResponse(event) {
-    const response = event.detail?.fetchResponse;
-    if (this._owns(event) && (!response?.succeeded || !response.isHTML)) this.dispatch('failed');
+    if (isFrameEvent(event, this._frame) && isFailedResponse(event)) this.dispatch('failed');
   }
 
   // Keeps the current grid when the response has no matching frame.
   onError(event) {
-    if (!this._owns(event)) return;
+    if (!isFrameEvent(event, this._frame)) return;
 
     if (event.type === 'turbo:frame-missing') event.preventDefault();
     this.dispatch('failed');
@@ -21,9 +21,5 @@ export default class extends Controller {
 
   get _frame() {
     return this.element.querySelector('turbo-frame');
-  }
-
-  _owns(event) {
-    return Boolean(this._frame) && event.target.closest?.('turbo-frame') === this._frame;
   }
 }
