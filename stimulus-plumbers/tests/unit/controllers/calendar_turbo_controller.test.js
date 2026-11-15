@@ -41,7 +41,23 @@ describe('CalendarTurboController', () => {
       new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
     );
     frame.dispatchEvent(
-      new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: true } } })
+      new CustomEvent('turbo:before-fetch-response', {
+        bubbles: true,
+        detail: { fetchResponse: { succeeded: true, isHTML: true } },
+      })
+    );
+
+    expect(failed).toHaveBeenCalledOnce();
+  });
+
+  it('reports a successful response that is not HTML', async () => {
+    const { frame, failed } = await render();
+
+    frame.dispatchEvent(
+      new CustomEvent('turbo:before-fetch-response', {
+        bubbles: true,
+        detail: { fetchResponse: { succeeded: true, isHTML: false } },
+      })
     );
 
     expect(failed).toHaveBeenCalledOnce();
