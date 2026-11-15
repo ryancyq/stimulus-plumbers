@@ -24,6 +24,6 @@ export default class extends Controller {
   }
 
   _owns(event) {
-    return event.target.closest?.('turbo-frame') === this._frame;
+    return Boolean(this._frame) && event.target.closest?.('turbo-frame') === this._frame;
   }
 }
