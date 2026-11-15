@@ -76,6 +76,25 @@ describe('CalendarTurboController', () => {
     expect(failed).not.toHaveBeenCalled();
   });
 
+  it('ignores turbo events when the calendar has no frame', async () => {
+    document.body.innerHTML = `<section id="container" data-controller="calendar-turbo"
+        data-action="turbo:before-fetch-response->calendar-turbo#onResponse turbo:frame-missing->calendar-turbo#onError">
+        <span id="inside"></span></section>`;
+    await flush();
+    const failed = vi.fn();
+    document.querySelector('#container').addEventListener('calendar-turbo:failed', failed);
+    const inside = document.querySelector('#inside');
+    const missing = new CustomEvent('turbo:frame-missing', { bubbles: true, cancelable: true });
+
+    inside.dispatchEvent(
+      new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
+    );
+    inside.dispatchEvent(missing);
+
+    expect(missing.defaultPrevented).toBe(false);
+    expect(failed).not.toHaveBeenCalled();
+  });
+
   it('keeps the grid when the response has no matching frame', async () => {
     const { frame, failed } = await render();
     const missing = new CustomEvent('turbo:frame-missing', { bubbles: true, cancelable: true });
