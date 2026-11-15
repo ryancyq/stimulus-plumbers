@@ -6,7 +6,7 @@ export default class extends Controller {
   connect() {
     this.connection = new AbortController();
     const { signal } = this.connection;
-    // A morph re-syncs every item's checked state from the markup, but never the select-all checkbox's
+    // A morph rewrites every item's checked state from the markup, but never the select-all checkbox's
     // indeterminate property, so each morphed node schedules a recompute.
     this.element.addEventListener('turbo:morph-element', () => this._scheduleRecompute(), { signal });
   }

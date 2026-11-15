@@ -45,12 +45,8 @@ export default class extends Controller {
   }
 
   editingValueChanged(value) {
-    this._syncTriggers();
+    this.triggerTargets.forEach((trigger) => setDisabled(trigger, value));
     if (!value) this.reorderable?.cancelDrag();
-  }
-
-  _syncTriggers() {
-    this.triggerTargets.forEach((trigger) => setDisabled(trigger, this.editingValue));
   }
 
   toggleEditing() {
