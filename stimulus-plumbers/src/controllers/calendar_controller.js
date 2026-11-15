@@ -76,10 +76,6 @@ export default class extends Controller {
       const displayed = [this.displayedValue, this.selectedValue, this._today].find((key) => parseDateKey(key));
       this._draw(grid, displayed ?? todayKey(), levelName(this.levelValue));
     }
-    this._syncGrid(grid);
-  }
-
-  _syncGrid(grid) {
     this._markSelected();
     this._normalize(grid);
     if (this.pending && this._showsPeriod(grid, this.pending)) this._finishNavigation(grid);
@@ -260,7 +256,7 @@ export default class extends Controller {
     this.dispatch('navigate', { detail });
     if (this._usesStimulusNavigation) {
       this._draw(this.gridTarget, to, level);
-      this._syncGrid(this.gridTarget);
+      this._finishNavigation(this.gridTarget);
     }
     return true;
   }
