@@ -32,11 +32,15 @@ export default class extends Controller {
   }
 
   onResponse(event) {
+    if (!this._owns(event)) return;
+
     const response = event.detail.fetchResponse;
     if (!response?.succeeded || !response.isHTML) this._setStatus(this.errorTextValue);
   }
 
   onError(event) {
+    if (!this._owns(event)) return;
+
     if (event.type === 'turbo:frame-missing') event.preventDefault();
     this._setStatus(this.errorTextValue);
   }
@@ -51,6 +55,11 @@ export default class extends Controller {
     const url = new URL(this.srcValue, window.location.href);
     if (query) url.searchParams.set(this.paramValue, query);
     this.frameTarget.setAttribute('src', url.href);
+  }
+
+  // Whether the event came from inside the frame target, not from a frame nested in it.
+  _owns(event) {
+    return this.hasFrameTarget && event.target.closest?.('turbo-frame') === this.frameTarget;
   }
 
   _setStatus(text) {
