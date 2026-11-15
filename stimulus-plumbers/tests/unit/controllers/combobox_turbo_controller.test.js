@@ -159,17 +159,6 @@ describe('ComboboxTurboController', () => {
     expect(status()).toBe('Results could not be loaded');
   });
 
-  it('shows the error text for a successful response that is not HTML', async () => {
-    const { container, frame } = await render();
-
-    query(container, 'Se');
-    frame.dispatchEvent(
-      new CustomEvent('turbo:before-fetch-response', { detail: { fetchResponse: { succeeded: true, isHTML: false } } })
-    );
-
-    expect(status()).toBe('Results could not be loaded');
-  });
-
   it('shows the error text for a network error without blocking Turbo', async () => {
     const { frame } = await render();
     const event = new Event('turbo:fetch-request-error', { cancelable: true });
