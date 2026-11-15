@@ -269,4 +269,20 @@ describe('ComboboxTimeController', () => {
     expect(input.value).toBe('14:30');
     expect(option('minute', '30').getAttribute('aria-selected')).toBe('true');
   });
+
+  it('form reset fires no change event', async () => {
+    const { container, panel, input } = await render();
+    const formatted = vi.fn();
+    container.addEventListener('combobox-time:changed', formatted);
+    open(panel);
+    option('minute', '00').click();
+    const changed = vi.fn();
+    input.addEventListener('change', changed);
+
+    document.querySelector('#form').reset();
+    await flush();
+
+    expect(formatted).toHaveBeenCalledTimes(2);
+    expect(changed).not.toHaveBeenCalled();
+  });
 });

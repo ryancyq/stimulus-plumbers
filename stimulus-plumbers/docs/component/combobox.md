@@ -243,13 +243,13 @@ formats the input from `combobox-date:changed`.
 
 **Actions**
 
-| Action               | Wired on                        | Description                                                                                       |
-| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `onKeydown(event)`   | `keydown` on `trigger`          | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel  |
-| `onFocusout(event)`  | `focusout` on container         | Closes the panel when focus leaves the combobox                                                   |
-| `onClick(event)`     | `click` on container            | A click on the icons or padding focuses `trigger` and opens the panel                             |
-| `onMousedown(event)` | `mousedown` on container        | Keeps focus on `trigger` while the icons or padding are pressed                                   |
-| `onChange(event)`    | `calendar:changed` on container | Copies the value into `input`, dispatches `change` on it, closes the panel, and focuses `trigger` |
+| Action               | Wired on                        | Description                                                                                                              |
+| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `onKeydown(event)`   | `keydown` on `trigger`          | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel                         |
+| `onFocusout(event)`  | `focusout` on container         | Closes the panel when focus leaves the combobox                                                                          |
+| `onClick(event)`     | `click` on container            | A click on the icons or padding focuses `trigger` and opens the panel                                                    |
+| `onMousedown(event)` | `mousedown` on container        | Keeps focus on `trigger` while the icons or padding are pressed                                                          |
+| `onChange(event)`    | `calendar:changed` on container | Copies the value into `input`, dispatches `change` on it when the value differs, closes the panel, and focuses `trigger` |
 
 **Dispatches**
 
@@ -329,7 +329,7 @@ formats the input from `combobox-time:changed`.
 | `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel                                                                             |
 | `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                                                   |
 
-Selecting an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are selected, the value goes into `input`, which dispatches `change`.
+Selecting an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are selected, the value goes into `input`, which dispatches `change` when the value differs.
 
 **Dispatches**
 

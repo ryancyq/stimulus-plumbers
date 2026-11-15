@@ -56,8 +56,10 @@ export default class extends Controller {
 
   // Copies the selected date into the field, closes the panel, and focuses the trigger.
   onChange(event) {
-    this.inputTarget.value = event.detail.value;
-    this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+    if (this.inputTarget.value !== event.detail.value) {
+      this.inputTarget.value = event.detail.value;
+      this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+    }
     this._selectionChanged();
     if (this._isOpen) this.panelTarget.hidePopover();
     this.triggerTarget.focus();
