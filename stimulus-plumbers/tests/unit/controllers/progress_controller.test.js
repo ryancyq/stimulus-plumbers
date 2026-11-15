@@ -169,7 +169,7 @@ describe('ProgressController', () => {
       await flush();
     });
 
-    it('syncs value/min/max/low/high/optimum onto the native meter', () => {
+    it('writes value/min/max/low/high/optimum onto the native meter', () => {
       const meter = document.querySelector('[data-controller="progress"]');
       expect(meter.value).toBe(40);
       expect(meter.min).toBe(0);
