@@ -2,7 +2,7 @@
 
 require_relative "../../test_helper"
 
-# Cross-checks that docs/component/*.md stays in sync with the Ruby source.
+# Cross-checks docs/component/*.md against the Ruby source.
 # Schema values come from source constants (always authoritative).
 # For each documented component that also exists in schema, every valid param value
 # must appear in the PARSED signature option tables (not just anywhere in the markdown).

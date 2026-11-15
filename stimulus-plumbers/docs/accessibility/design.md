@@ -31,7 +31,7 @@ this.rovingTabIndex?.updateItems(this.triggerTargets);
 - `orientation` (`'vertical'` | `'horizontal'` | `'both'`) — which arrow keys move focus; default `'both'`
 - `wrap` (boolean) — whether navigation wraps at boundaries; default `true`
 - `initialIndex` (number) — which item starts focused; default `0`
-- `ignoreModifierKeys` (array of `'Alt' | 'Control' | 'Shift' | 'Meta'`) — modifier keys that suppress arrow/Home/End handling entirely when held; default: all four. A modified key is ignored before any internal state changes (no `currentIndex` sync either). Narrow this list (or pass `[]`) if a specific modifier combination should still move focus.
+- `ignoreModifierKeys` (array of `'Alt' | 'Control' | 'Shift' | 'Meta'`) — modifier keys that suppress arrow/Home/End handling entirely when held; default: all four. A modified key is ignored before any internal state changes. Narrow this list (or pass `[]`) if a specific modifier combination should still move focus.
 
 `orientation: 'vertical'` restricts to Up/Down/Home/End. Use `'horizontal'` for Left/Right, `'both'` for all four arrows (default).
 

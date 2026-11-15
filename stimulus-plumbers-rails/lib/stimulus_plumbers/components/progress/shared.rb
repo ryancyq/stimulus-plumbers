@@ -42,7 +42,7 @@ module StimulusPlumbers
           raise ArgumentError, "unknown format: #{format.inspect} (expected one of #{FORMATS.join(", ")})"
         end
 
-        # Keep in sync with the progress controller's formattedValue().
+        # Must match the progress controller's formattedValue().
         def value_text(format, current, min, max)
           case format&.to_sym
           when :percent   then "#{percent(current, min, max).round}%"

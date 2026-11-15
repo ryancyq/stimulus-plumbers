@@ -1,6 +1,6 @@
 # Visibility
 
-Manages show/hide state for an element, synchronises `aria-expanded` on an optional activator, and dispatches lifecycle events. Used by `popover` and `visibility`.
+Manages show/hide state for an element, sets `aria-expanded` on an optional activator, and dispatches lifecycle events. Used by `popover` and `visibility`.
 
 ## Factory
 
