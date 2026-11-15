@@ -7,7 +7,8 @@ export default class extends Controller {
   }
 
   onResponse(event) {
-    if (this._owns(event) && !event.detail?.fetchResponse?.succeeded) this.dispatch('failed');
+    const response = event.detail?.fetchResponse;
+    if (this._owns(event) && (!response?.succeeded || !response.isHTML)) this.dispatch('failed');
   }
 
   // Keeps the current grid when the response has no matching frame.
