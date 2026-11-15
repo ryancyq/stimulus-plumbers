@@ -93,7 +93,7 @@ describe('InputFormatterController', () => {
     });
   });
 
-  describe('sync without input target', () => {
+  describe('without an input target', () => {
     beforeEach(async () => {
       document.body.innerHTML = `<div data-controller="input-formatter"></div>`;
       await flush();

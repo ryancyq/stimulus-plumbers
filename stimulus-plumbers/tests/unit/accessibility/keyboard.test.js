@@ -157,7 +157,7 @@ describe('RovingTabIndex', () => {
     });
   });
 
-  describe('click sync', () => {
+  describe('click', () => {
     it('clicking an item updates currentIndex so next arrow key navigates from it', () => {
       const [a, b, c] = makeButtons(['a', 'b', 'c']);
       const rti = new RovingTabIndex([a, b, c], { orientation: 'vertical' });
@@ -235,13 +235,13 @@ describe('RovingTabIndex', () => {
       expect(document.activeElement).toBe(b);
     });
 
-    it('a modified keydown does not sync currentIndex either', () => {
+    it('a modified keydown leaves currentIndex unchanged', () => {
       const [a, b, c] = makeButtons(['a', 'b', 'c']);
       const rti = new RovingTabIndex([a, b, c], { orientation: 'vertical' });
       rti.activate();
       // physically focus c without going through setCurrentIndex, then send a modified
-      // keydown on it — if the guard ran after the fromIndex sync, currentIndex would
-      // become 2 as a side effect even though navigation itself is ignored
+      // keydown on it — reading currentIndex from the focused item before the guard would
+      // make it 2 even though navigation itself is ignored
       c.focus();
       c.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true }));
       expect(rti.currentIndex).toBe(0);

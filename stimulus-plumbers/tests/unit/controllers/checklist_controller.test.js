@@ -163,7 +163,7 @@ describe('ChecklistController', () => {
       expect(events).toEqual(['input 0', 'change 0']);
     });
 
-    it('syncs the select-all checkbox when called directly', async () => {
+    it('is callable directly and checks the select-all checkbox, clearing its mixed state', async () => {
       await render(item(false) + item(true));
 
       getController().toggleAll(true);

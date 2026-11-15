@@ -139,7 +139,7 @@ describe('PopoverController', () => {
     expect(panel.showPopover).toHaveBeenCalledWith();
   });
 
-  it('synchronizes aria-expanded only when the trigger authored it', async () => {
+  it('sets aria-expanded only when the trigger authored it', async () => {
     const authored = await render();
     authored.controller.open();
     await flush();
@@ -260,7 +260,7 @@ describe('PopoverController', () => {
     });
   });
 
-  it('stops syncing the trigger and closing for the Turbo cache after disconnect', async () => {
+  it('stops setting aria-expanded and closing for the Turbo cache after disconnect', async () => {
     const { panel, container, trigger } = await render();
 
     container.remove();
