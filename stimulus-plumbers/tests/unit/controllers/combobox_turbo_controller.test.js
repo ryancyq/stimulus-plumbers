@@ -180,6 +180,22 @@ describe('ComboboxTurboController', () => {
     expect(status()).toBe('Results could not be loaded');
   });
 
+  it('ignores turbo events from a frame nested in the results', async () => {
+    await render();
+    const nested = document.createElement('turbo-frame');
+    document.querySelector('#listbox').append(nested);
+    const missing = new CustomEvent('turbo:frame-missing', { bubbles: true, cancelable: true });
+
+    nested.dispatchEvent(
+      new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
+    );
+    nested.dispatchEvent(missing);
+    nested.dispatchEvent(new CustomEvent('turbo:fetch-request-error', { bubbles: true }));
+
+    expect(missing.defaultPrevented).toBe(false);
+    expect(status()).toBe('');
+  });
+
   it('ignores a query from a nested combobox', async () => {
     const { frame } = await render();
 
