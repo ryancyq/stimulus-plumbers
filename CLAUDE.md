@@ -70,6 +70,7 @@ bin/                       # Repo scripts
 - **Ruby raising methods** — `validate_*!` raises; `parse_*!` converts or raises.
 - **JS private methods** — a command is a verb phrase (`_draw`, `_moveTo`); a method or getter that returns something is named for it with a noun (`_availability`, `_strengthOf`); a predicate reads as a yes/no question (`_hasResults`, `_isOpen`, `_owns(event)`); a hook that runs after an event is named for that event, in the past tense (`_modalOpened`, `_navigationFailed`, `_selectionChanged`).
 - **Actions** — an adapter is named for the event it handles: a DOM event spelled like the event (`onKeydown`, `onPointerdown`, `onFocusout`), a key filter like its key (`onEscape` for `keydown.esc`), a custom or Turbo event camelCased (`onDateChange`, `onResponse`). When the event alone doesn't say what happens, it is named for the command it runs (`onSelect` on `click`, `onDismiss`).
+- **No "sync"** — never use "sync"/"keep in sync" in identifiers, comments, docs, or test names; name what is written where (`_markSelected`, `_setTriggerExpanded`), or state the requirement ("must match X"); "synchronous" for execution timing is fine.
 
 ## Testing
 

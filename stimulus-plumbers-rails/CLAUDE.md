@@ -44,7 +44,7 @@ stimulus-plumbers-rails/
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
 - **Accessibility tests** using Capybara + Cuprite + axe-core (`rake test:accessibility`) — axe per page and state plus one keyboard/focus happy path per interaction; logic edge cases belong to their owning layer (root CLAUDE.md "Testing")
-- **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
+- **Lint tests** using Rubocop (`rake rubocop`) — run in the foreground from this gem's directory; never background or tail
 - **Constant lookup** — inside `Combobox::Date` / `Combobox::Time` a bare `Trigger` resolves to `Combobox::Trigger`; write `Temporal::Trigger`. Inside `Combobox` a bare `Date` or `Time` is the component class; write `::Date` / `::Time`
 
 ## Unit Test Convention
