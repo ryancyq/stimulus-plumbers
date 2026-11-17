@@ -24,7 +24,15 @@ path. The panel is a `popover="manual"` element opened through the
     data-combobox-target="trigger"
     data-action="input->combobox#onInput keydown->combobox#onKeydown"
   />
-  <input type="hidden" name="city_id" data-combobox-target="input" />
+  <input
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
+    name="city_id"
+    data-combobox-target="input"
+    data-action="form:reset->combobox#onFormReset"
+  />
   <div popover="manual" data-combobox-target="panel">
     <ul id="city_listbox" role="listbox" data-combobox-target="listbox">
       <li id="city_sg" role="option" data-value="sg">Singapore</li>
@@ -54,7 +62,7 @@ Select-only uses a button trigger with no `input` action:
 | Target    | Element                                             | Description                               |
 | --------- | --------------------------------------------------- | ----------------------------------------- |
 | `trigger` | `<button type="button">` (select-only) or `<input>` | Keeps DOM focus; shows the selected label |
-| `input`   | `input[type=hidden]`                                | Submitted value                           |
+| `input`   | `input[type=text][hidden][readonly]`                | Submitted value; a form reset restores it |
 | `panel`   | `[popover="manual"]`                                | Popup; contains the listbox               |
 | `listbox` | `[role=listbox]`                                    | Options with `role="option"`              |
 | `status`  | `[role=status]` after the listbox                   | Required when editable; shows `emptyText` |
@@ -64,24 +72,25 @@ without an `id` get one.
 
 **Values**
 
-| Value           | Type    | Default       | Description                                                                                                                          |
-| --------------- | ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `mode`          | String  | `select_only` | `select_only` or `editable`                                                                                                          |
-| `valuePolicy`   | String  | `restricted`  | Editable only: `restricted` empties the hidden value while editing and reverts unselected text on close; `freeform` submits the text |
-| `closeOnSelect` | Boolean | `true`        | Closes the panel after a selection                                                                                                   |
-| `match`         | String  | `prefix`      | Editable only: `prefix`, `contains`, `fuzzy` (characters in order), or `none` (server-filtered results)                              |
-| `minLength`     | Number  | `1`           | Editable only: a shorter query counts as empty and shows every option                                                                |
-| `emptyText`     | String  | `No results`  | Status text when a query matches no option                                                                                           |
+| Value           | Type    | Default       | Description                                                                                                                         |
+| --------------- | ------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `mode`          | String  | `select_only` | `select_only` or `editable`                                                                                                         |
+| `valuePolicy`   | String  | `restricted`  | Editable only: `restricted` empties the value input while editing and reverts unselected text on close; `freeform` submits the text |
+| `closeOnSelect` | Boolean | `true`        | Closes the panel after a selection                                                                                                  |
+| `match`         | String  | `prefix`      | Editable only: `prefix`, `contains`, `fuzzy` (characters in order), or `none` (server-filtered results)                             |
+| `minLength`     | Number  | `1`           | Editable only: a shorter query counts as empty and shows every option                                                               |
+| `emptyText`     | String  | `No results`  | Status text when a query matches no option                                                                                          |
 
 **Methods**
 
-| Method               | Wired via                      | Description                                                                                                        |
-| -------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
-| `onKeydown(event)`   | `keydown` on the trigger       | Keyboard contract                                                                                                  |
-| `onInput()`          | `input` on an editable trigger | Clears the active option, filters, dispatches `query` when the query changes, opens                                |
-| `onClick(event)`     | `click` on the container       | Selects a clicked option; elsewhere outside the panel and other controls, toggles (select-only) or opens the panel |
-| `onMousedown(event)` | `mousedown` on the container   | Keeps focus on the trigger outside the trigger itself                                                              |
-| `select(option)`     | —                              | Selects an enabled, visible option; returns `false` if refused                                                     |
+| Method               | Wired via                       | Description                                                                                                        |
+| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `onKeydown(event)`   | `keydown` on the trigger        | Keyboard contract                                                                                                  |
+| `onInput()`          | `input` on an editable trigger  | Clears the active option, filters, dispatches `query` when the query changes, opens                                |
+| `onClick(event)`     | `click` on the container        | Selects a clicked option; elsewhere outside the panel and other controls, toggles (select-only) or opens the panel |
+| `onMousedown(event)` | `mousedown` on the container    | Keeps focus on the trigger outside the trigger itself                                                              |
+| `onFormReset()`      | `form:reset` on the value input | Reads the selection from the restored value input and trigger; closes the panel and clears the filter              |
+| `select(option)`     | —                               | Selects an enabled, visible option; returns `false` if refused                                                     |
 
 **Dispatches**
 
@@ -100,7 +109,7 @@ hides non-matching options and empty groups. `results` dispatches after the list
 updated. Closing clears the filter. The panel opens only with a visible option or status text.
 
 Popup events dispatch from the panel. The panel also closes on `turbo:before-cache`. A form reset
-restores the server-rendered value. See
+restores the server-rendered value without dispatching `changed`. See
 [ARIA.md's Combobox pattern](../../../ARIA.md#combobox-combobox_controller) for keyboard, ARIA,
 and the other close paths.
 
@@ -143,7 +152,7 @@ the frame while loading.
   data-combobox-turbo-src-value="/cities"
   data-action="mousedown->combobox#onMousedown click->combobox#onClick combobox:query->combobox-turbo#onQuery combobox:closed->combobox-turbo#onClosed"
 >
-  <!-- trigger and hidden input as above -->
+  <!-- trigger and value input as above -->
   <div popover="manual" data-combobox-target="panel">
     <turbo-frame
       id="city_results"
@@ -180,7 +189,7 @@ with the response element of the same `id`. No Turbo dependency.
   data-combobox-fetch-src-value="/cities"
   data-action="mousedown->combobox#onMousedown click->combobox#onClick combobox:query->combobox-fetch#onQuery combobox:closed->combobox-fetch#onClosed"
 >
-  <!-- trigger and hidden input as above -->
+  <!-- trigger and value input as above -->
   <div popover="manual" data-combobox-target="panel">
     <ul id="city_listbox" role="listbox" data-combobox-target="listbox"></ul>
     <div role="status" data-combobox-target="status" data-combobox-fetch-target="status"></div>
