@@ -33,7 +33,11 @@ module StimulusPlumbers
         template.tag.input(
           **merge_html_options(
             theme.resolve(:checklist_item_input),
-            { type: "checkbox", checked: all_items_checked? || nil, data: { checklist_target: "master" } }
+            {
+              type:    "checkbox",
+              checked: all_items_checked? || nil,
+              data:    { checklist_target: "master", action: "form:reset->checklist#recompute" }
+            }
           )
         )
       end

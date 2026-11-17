@@ -205,7 +205,7 @@ describe('ChecklistController', () => {
       document.body.innerHTML = `
         <form>
           <div data-controller="checklist" data-action="change->checklist#onChange">
-            <input type="checkbox" data-checklist-target="master">
+            <input type="checkbox" data-checklist-target="master" data-action="form:reset->checklist#recompute">
             ${item(false)}${item(false)}
           </div>
         </form>
@@ -216,7 +216,7 @@ describe('ChecklistController', () => {
       expect(master().indeterminate).toBe(true);
 
       document.querySelector('form').reset();
-      await flush();
+      master().dispatchEvent(new CustomEvent('form:reset'));
 
       expect(master().indeterminate).toBe(false);
       expect(master().checked).toBe(false);

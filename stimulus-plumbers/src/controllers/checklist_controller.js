@@ -9,13 +9,6 @@ export default class extends Controller {
     // A morph re-syncs every item's checked state from the markup, but never the master's
     // indeterminate property, so each morphed node schedules a recompute.
     this.element.addEventListener('turbo:morph-element', () => this._scheduleRecompute(), { signal });
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => signal.aborted || event.defaultPrevented || this.recompute()),
-        { signal }
-      );
   }
 
   disconnect() {

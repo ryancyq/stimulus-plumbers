@@ -21,14 +21,14 @@ Master "select all" toggle for a group of native `<input type="checkbox">` check
 | `toggleAll` | Programmatic API — sets every enabled item's `.checked` to the given value, then calls `recompute`                           |
 | `recompute` | Programmatic API — writes the master's `.checked`/`.indeterminate` from the enabled items' aggregate state                   |
 
-The master also recomputes when items are added or removed, after a Turbo morph, and after a form reset.
+The master also recomputes when items are added or removed, after a Turbo morph, and, through `form:reset->checklist#recompute` on the master, after a form reset.
 
 ## Example HTML
 
 ```html
 <div data-controller="checklist" data-action="change->checklist#onChange">
   <label>
-    <input type="checkbox" data-checklist-target="master" />
+    <input type="checkbox" data-checklist-target="master" data-action="form:reset->checklist#recompute" />
     Select all
   </label>
 
