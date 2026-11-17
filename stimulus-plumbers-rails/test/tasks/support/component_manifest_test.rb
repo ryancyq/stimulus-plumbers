@@ -8,8 +8,8 @@ class ComponentManifestTest < Minitest::Test
   JS_MANIFEST_PATH = File.expand_path("../../../../stimulus-plumbers/dist/controllers.manifest.json", __dir__)
 
   # calendar: constant-interpolated identifier; combobox-date: the calendar:changed binding;
-  # modal: the helper's generated action.
-  KNOWN_IDS = %w[popover reorderable calendar combobox-date modal modal-turbo].freeze
+  # modal: the helper's generated action; combobox: the form:reset binding.
+  KNOWN_IDS = %w[popover reorderable calendar combobox combobox-date modal modal-turbo].freeze
 
   def setup
     @result = StimulusPlumbers::ComponentManifest.call(known_identifiers: KNOWN_IDS)
@@ -27,6 +27,10 @@ class ComponentManifestTest < Minitest::Test
 
   def test_extracts_dispatch_listens
     assert_includes @result["calendar"]["listens"], "changed"
+  end
+
+  def test_extracts_listens_on_a_source_that_is_not_a_controller
+    assert_includes @result["form"]["listens"], "reset"
   end
 
   # "calendar:changed->combobox-date#onChange" — both halves must be recorded.

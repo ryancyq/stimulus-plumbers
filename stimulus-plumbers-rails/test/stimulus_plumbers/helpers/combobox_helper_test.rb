@@ -28,7 +28,7 @@ class ComboboxHelperTest < ActionView::TestCase
     def test_names_the_hidden_input_and_shows_the_selected_label
       doc = parse_html(sp_combobox_dropdown(name: "country", options: OPTIONS, value: "ca"))
 
-      assert_css doc, "input[type='hidden'][name='country'][value='ca']"
+      assert_css doc, "input[hidden][readonly][name='country'][value='ca']"
       assert_equal "Canada", doc.at_css("button[role='combobox']").text
     end
 

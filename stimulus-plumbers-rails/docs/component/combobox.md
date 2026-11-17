@@ -266,10 +266,14 @@ See [form.md](form.md) for the full API.
     <!-- trailing icon -->
   </div>
   <input
-    type="hidden"
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
     name="[name]"
     value="[value]"
     data-combobox-target="input"
+    data-action="form:reset->combobox#onFormReset"
   />
   <div id="[id]_popover" popover="manual" data-combobox-target="panel">
     <ul

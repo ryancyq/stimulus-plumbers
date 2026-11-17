@@ -12,7 +12,7 @@ class ComboboxTypeaheadTest < ActionView::TestCase
 
     assert_css doc, "[data-controller='combobox'][data-combobox-mode-value='editable']"
     assert_css doc, "input[type='text'][role='combobox'][value='Canada']"
-    assert_css doc, "input[type='hidden'][name='city'][value='ca']"
+    assert_css doc, "input[hidden][readonly][name='city'][value='ca']"
   end
 
   def test_value_policy
