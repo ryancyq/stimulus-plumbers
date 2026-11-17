@@ -8,6 +8,7 @@ import {
   parseActionParams,
   parseController,
   parseDispatches,
+  parseLibraryEvents,
   withPlumberSources,
   parseValues,
 } from '../../scripts/build-controllers-manifest.mjs';
@@ -176,6 +177,18 @@ describe('parseDispatches', () => {
 
   it('returns an empty array when nothing is dispatched', () => {
     expect(parseDispatches('export default class extends Controller {}')).toEqual([]);
+  });
+});
+
+describe('parseLibraryEvents', () => {
+  it('groups prefixed custom events by prefix', () => {
+    const source = `new CustomEvent('form:reset'); new CustomEvent("form:reset"); new CustomEvent('form:cleared');`;
+
+    expect(parseLibraryEvents(source)).toEqual({ form: ['cleared', 'reset'] });
+  });
+
+  it('skips unprefixed custom events', () => {
+    expect(parseLibraryEvents("new CustomEvent('reset')")).toEqual({});
   });
 });
 

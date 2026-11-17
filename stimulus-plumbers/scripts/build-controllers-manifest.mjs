@@ -3,8 +3,10 @@ import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const controllersDir = join(__dirname, '..', 'src', 'controllers');
+const srcDir = join(__dirname, '..', 'src');
+const controllersDir = join(srcDir, 'controllers');
 const outputFile = join(__dirname, '..', 'dist', 'controllers.manifest.json');
+const eventsFile = join(__dirname, '..', 'dist', 'events.manifest.json');
 
 function toIdentifier(filename) {
   return basename(filename, '.js')
@@ -172,6 +174,15 @@ export function parseController(file, dir) {
   };
 }
 
+// Events a standalone module dispatches, `prefix:event`, grouped by prefix.
+export function parseLibraryEvents(source) {
+  const events = {};
+  for (const [, prefix, event] of source.matchAll(/new CustomEvent\(\s*['"]([\w-]+):([\w-]+)['"]/g)) {
+    events[prefix] = [...new Set([...(events[prefix] ?? []), event])].sort();
+  }
+  return events;
+}
+
 const files = readdirSync(controllersDir)
   .filter((f) => f.endsWith('_controller.js'))
   .sort();
@@ -182,3 +193,11 @@ for (const file of files) controllers[toIdentifier(file)] = parseController(file
 mkdirSync(dirname(outputFile), { recursive: true });
 writeFileSync(outputFile, JSON.stringify(controllers, null, 2));
 console.log(`Written ${Object.keys(controllers).length} controllers to dist/controllers.manifest.json`);
+
+const libraryEvents = parseLibraryEvents(
+  readdirSync(srcDir)
+    .filter((f) => f.endsWith('.js') && f !== 'index.js')
+    .map((f) => readFileSync(join(srcDir, f), 'utf8'))
+    .join('\n')
+);
+writeFileSync(eventsFile, JSON.stringify(libraryEvents, null, 2));
