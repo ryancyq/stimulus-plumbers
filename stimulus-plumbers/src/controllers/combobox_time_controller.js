@@ -11,22 +11,7 @@ const MOVES = {
 export default class extends Controller {
   static targets = ['trigger', 'input', 'panel', 'hour', 'minute', 'meridiem'];
 
-  connect() {
-    this.connection = new AbortController();
-    // Survives reconnects.
-    this.initial ??= this._snapshot();
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._reset()),
-        { signal: this.connection.signal }
-      );
-  }
-
   disconnect() {
-    this.connection?.abort();
-    this.connection = null;
     this.descendants = null;
   }
 
@@ -43,9 +28,13 @@ export default class extends Controller {
     }
   }
 
-  // Records the value to restore on Escape.
+  // Selects the input's time in the columns and records it to restore on Escape.
   onOpening(event) {
-    if (event.target === this.panelTarget) this.opened = this._snapshot();
+    if (event.target !== this.panelTarget) return;
+
+    const options = this._optionsFor(this.inputTarget.value);
+    this._columns.forEach((column, index) => this._selectOption(column, options[index]));
+    this.opened = { value: this.inputTarget.value, options };
   }
 
   // Shows the selected options.
@@ -81,6 +70,10 @@ export default class extends Controller {
 
     this._activeDescendant(event.currentTarget).activate(option);
     this._selectionChanged();
+  }
+
+  onFormReset() {
+    if (this._isOpen) this.panelTarget.hidePopover();
   }
 
   // Clicks on the icons and padding open the panel from the trigger.
@@ -136,14 +129,18 @@ export default class extends Controller {
     return `${String(meridiem === 'PM' ? twelve + 12 : twelve).padStart(2, '0')}:${minute}`;
   }
 
-  _snapshot() {
-    return { value: this.inputTarget.value, options: this._columns.map((column) => this._selectedOption(column)) };
-  }
-
-  // Restores the initial time without a change event, as a native form reset does.
-  _reset() {
-    this.inputTarget.value = this.initial.value;
-    this._apply(this.initial);
+  // The option of each column that a HH:MM value selects; none for a minute off the step.
+  _optionsFor(value) {
+    const [hour, minute] = (value || '').split(':').map(Number);
+    const twelve = String(((hour + 11) % 12) + 1);
+    const values = [
+      this.hasMeridiemTarget ? twelve : String(hour).padStart(2, '0'),
+      String(minute).padStart(2, '0'),
+      hour < 12 ? 'AM' : 'PM',
+    ];
+    return this._columns.map((column, index) =>
+      value ? column.querySelector(`[role="option"][data-value="${values[index]}"]`) : null
+    );
   }
 
   _apply({ value, options }) {
