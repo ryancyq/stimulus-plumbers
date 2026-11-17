@@ -98,6 +98,12 @@ export default class extends Controller {
     this.format(this.readValue());
   }
 
+  // Reformats without dispatching `filled`.
+  onFormReset() {
+    this.primeFilledState();
+    this.format(this.readValue());
+  }
+
   onFocus() {
     this.drawCells(this.formatter?.normalize(this.readValue()) ?? '');
   }

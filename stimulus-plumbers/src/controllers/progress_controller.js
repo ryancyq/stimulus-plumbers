@@ -40,6 +40,12 @@ export default class extends Controller {
     this.setValue(Number(this.rangeInput.value));
   }
 
+  // Redraws without dispatching `changed`.
+  onFormReset() {
+    this.currentValue = this._clamp(Number(this.rangeInput.value));
+    this._render();
+  }
+
   currentValueChanged() {
     if (this.variantValue === 'range') this.rangeInput.value = `${this._clamp(this.currentValue)}`;
     this._render();

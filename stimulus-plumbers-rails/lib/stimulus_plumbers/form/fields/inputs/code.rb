@@ -9,7 +9,8 @@ module StimulusPlumbers
           STIMULUS_ACTION      = [
             "input->#{STIMULUS_CONTROLLER}#onInput",
             "focus->#{STIMULUS_CONTROLLER}#onFocus",
-            "blur->#{STIMULUS_CONTROLLER}#onBlur"
+            "blur->#{STIMULUS_CONTROLLER}#onBlur",
+            "form:reset->#{STIMULUS_CONTROLLER}#onFormReset"
           ].join(" ").freeze
           DEFAULT_CHARSET      = :digits
           DEFAULT_AUTOCOMPLETE = "one-time-code"

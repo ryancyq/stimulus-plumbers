@@ -35,7 +35,7 @@ describe('PasswordStrengthController', () => {
          data-password-strength-options-value='${OPTIONS}'
          data-password-strength-labels-value='{"weak":"Weak","fine":"Fine","strong":"Strong"}'>
       <input type="password" data-password-strength-target="input"
-             data-action="input->password-strength#score">
+             data-action="input->password-strength#score form:reset->password-strength#onFormReset">
       ${withMeter ? '<meter data-controller="progress" data-progress-target="meter" data-password-strength-target="meter" data-progress-variant-value="meter" data-progress-current-value="0" min="0" max="100" value="0"></meter>' : ''}
       <p data-password-strength-target="level">Weak</p>
       <ul>
@@ -67,6 +67,22 @@ describe('PasswordStrengthController', () => {
     });
     return records;
   };
+
+  it('redraws a reset password without announcing', async () => {
+    vi.useFakeTimers();
+    await mount(`<form>${markup()}</form>`);
+    const input = document.querySelector('input');
+    const rule = document.querySelector('[data-rule="digit"]');
+    await type('abc1');
+
+    document.querySelector('form').reset();
+    input.dispatchEvent(new CustomEvent('form:reset'));
+    await vi.advanceTimersByTimeAsync(1000);
+
+    expect(rule.dataset.satisfied).toBe('false');
+    expect(level().textContent).toBe('Weak');
+    expect(announced()).toBeNull();
+  });
 
   it('toggles data-satisfied and swaps the icon pair', async () => {
     await mount(markup());

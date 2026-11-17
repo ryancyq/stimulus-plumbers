@@ -34,6 +34,7 @@ module StimulusPlumbers
               html_opts,
               kwargs,
               wired,
+              { data: { action: "form:reset->progress#onFormReset" } },
               # The input carries the track gradient, so the fill percentage lands here, not on
               # the wrapper. Server-rendered so the fill is right before the controller connects.
               { min: min, max: max, style: "--sp-progress-percent: #{integral(percent(current, min, max).round(2))}" }
