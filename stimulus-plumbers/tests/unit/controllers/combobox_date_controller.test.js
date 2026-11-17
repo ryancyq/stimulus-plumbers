@@ -7,6 +7,8 @@ import { flush, startApplication } from '../../support/stimulus';
 describe('ComboboxDateController', () => {
   // Stands in for the calendar outlet.
   class Calendar extends Controller {
+    static values = { selected: String };
+
     focusTabStop() {
       this.element.querySelector('[tabindex="0"]').focus();
     }
@@ -15,13 +17,14 @@ describe('ComboboxDateController', () => {
   const render = async () => {
     document.body.innerHTML = `
       <form id="form">
-        <div id="container" data-controller="combobox-date" data-combobox-date-calendar-outlet="#calendar" data-action="calendar:changed->combobox-date#onChange focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick">
+        <div id="container" data-controller="combobox-date" data-combobox-date-calendar-outlet="#calendar" data-action="calendar:changed->combobox-date#onChange popover:before-open->combobox-date#onOpening focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick">
           <div id="group">
             <span id="icon" aria-hidden="true"></span>
             <input id="trigger" readonly value="2026-09-15" data-combobox-date-target="trigger"
                    data-action="keydown->combobox-date#onKeydown">
           </div>
-          <input type="hidden" name="person[birthday]" value="2026-09-15" data-combobox-date-target="input">
+          <input type="text" hidden readonly name="person[birthday]" value="2026-09-15" data-combobox-date-target="input"
+                 data-action="form:reset->combobox-date#onFormReset">
           <div id="panel" popover="auto" data-combobox-date-target="panel">
             <a href="#" id="previous">Previous month</a>
             <section id="calendar" data-controller="calendar">
@@ -43,7 +46,7 @@ describe('ComboboxDateController', () => {
       container,
       panel,
       trigger: document.querySelector('#trigger'),
-      input: document.querySelector('[type="hidden"]'),
+      input: document.querySelector('[data-combobox-date-target="input"]'),
     };
   };
 
@@ -165,16 +168,28 @@ describe('ComboboxDateController', () => {
     expect(changed).not.toHaveBeenCalled();
   });
 
-  it('form reset reports the restored date', async () => {
-    const { container, input } = await render();
-    const formatted = vi.fn();
-    container.addEventListener('combobox-date:changed', (event) => formatted(event.detail.value));
+  it('form reset closes the panel without events', async () => {
+    const { container, panel, input } = await render();
+    panel.showPopover();
     input.value = '2026-09-14';
+    const changed = vi.fn();
+    container.addEventListener('combobox-date:changed', changed);
 
     document.querySelector('#form').reset();
-    await flush();
+    input.dispatchEvent(new CustomEvent('form:reset'));
 
-    expect(formatted).toHaveBeenCalledWith('2026-09-15');
+    expect(input.value).toBe('2026-09-15');
+    expect(panel.matches(':popover-open')).toBe(false);
+    expect(changed).not.toHaveBeenCalled();
+  });
+
+  it('opening selects the input date in the calendar', async () => {
+    const { panel, input } = await render();
+    input.value = '2026-09-14';
+
+    panel.dispatchEvent(new CustomEvent('popover:before-open', { bubbles: true }));
+
+    expect(document.querySelector('#calendar').getAttribute('data-calendar-selected-value')).toBe('2026-09-14');
   });
 
   it('ignores a nested combobox date', async () => {

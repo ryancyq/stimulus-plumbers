@@ -4,24 +4,6 @@ export default class extends Controller {
   static targets = ['trigger', 'input', 'panel'];
   static outlets = ['calendar'];
 
-  connect() {
-    this.connection = new AbortController();
-    // Survives reconnects.
-    this.initial ??= this.inputTarget.value;
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._restore()),
-        { signal: this.connection.signal }
-      );
-  }
-
-  disconnect() {
-    this.connection?.abort();
-    this.connection = null;
-  }
-
   // ArrowDown opens the panel and has the calendar outlet focus its Tab stop; Tab closes the panel.
   // The native popover API opens and closes the panel; the popover controller follows its toggle events.
   onKeydown(event) {
@@ -32,6 +14,16 @@ export default class extends Controller {
     } else if (event.key === 'Tab' && this._isOpen) {
       this.panelTarget.hidePopover();
     }
+  }
+
+  onOpening(event) {
+    if (event.target === this.panelTarget && this.hasCalendarOutlet) {
+      this.calendarOutlet.selectedValue = this.inputTarget.value;
+    }
+  }
+
+  onFormReset() {
+    if (this._isOpen) this.panelTarget.hidePopover();
   }
 
   // Clicks on the icons and padding open the panel from the trigger.
@@ -67,11 +59,6 @@ export default class extends Controller {
 
   get _isOpen() {
     return this.panelTarget.matches(':popover-open');
-  }
-
-  _restore() {
-    this.inputTarget.value = this.initial;
-    this._selectionChanged();
   }
 
   _selectionChanged() {

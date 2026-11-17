@@ -215,7 +215,7 @@ formats the input from `combobox-date:changed`.
   data-controller="popover combobox-date input-formatter"
   data-input-formatter-format-value="date"
   data-combobox-date-calendar-outlet="#birthday_calendar"
-  data-action="calendar:changed->combobox-date#onChange focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick combobox-date:changed->input-formatter#onChange"
+  data-action="calendar:changed->combobox-date#onChange popover:before-open->combobox-date#onOpening focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick combobox-date:changed->input-formatter#onChange"
 >
   <input
     role="combobox"
@@ -229,7 +229,16 @@ formats the input from `combobox-date:changed`.
     data-input-formatter-target="input"
     data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-date#onKeydown form:reset->input-formatter#onFormReset"
   />
-  <input type="hidden" name="person[birthday]" value="2026-09-15" data-combobox-date-target="input" />
+  <input
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
+    name="person[birthday]"
+    value="2026-09-15"
+    data-combobox-date-target="input"
+    data-action="form:reset->combobox-date#onFormReset"
+  />
   <div id="birthday_popover" popover="auto" role="dialog" data-popover-target="panel" data-combobox-date-target="panel">
     <!-- sp_calendar markup with id="birthday_calendar" -->
   </div>
@@ -238,11 +247,11 @@ formats the input from `combobox-date:changed`.
 
 **Targets**
 
-| Target    | Description                                      |
-| --------- | ------------------------------------------------ |
-| `trigger` | Read-only input showing the formatted date       |
-| `input`   | Hidden input that submits the `YYYY-MM-DD` value |
-| `panel`   | Popover holding the calendar                     |
+| Target    | Description                                                                |
+| --------- | -------------------------------------------------------------------------- |
+| `trigger` | Read-only input showing the formatted date                                 |
+| `input`   | Hidden input that submits the `YYYY-MM-DD` value; a form reset restores it |
+| `panel`   | Popover holding the calendar                                               |
 
 **Outlets**
 
@@ -252,19 +261,21 @@ formats the input from `combobox-date:changed`.
 
 **Actions**
 
-| Action               | Wired on                        | Description                                                                                                              |
-| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `onKeydown(event)`   | `keydown` on `trigger`          | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel                         |
-| `onFocusout(event)`  | `focusout` on container         | Closes the panel when focus leaves the combobox                                                                          |
-| `onClick(event)`     | `click` on container            | A click on the icons or padding focuses `trigger` and opens the panel                                                    |
-| `onMousedown(event)` | `mousedown` on container        | Keeps focus on `trigger` while the icons or padding are pressed                                                          |
-| `onChange(event)`    | `calendar:changed` on container | Copies the value into `input`, dispatches `change` on it when the value differs, closes the panel, and focuses `trigger` |
+| Action               | Wired on                           | Description                                                                                                              |
+| -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel                         |
+| `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                          |
+| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel                                                    |
+| `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                          |
+| `onChange(event)`    | `calendar:changed` on container    | Copies the value into `input`, dispatches `change` on it when the value differs, closes the panel, and focuses `trigger` |
+| `onOpening(event)`   | `popover:before-open` on container | Selects `input`'s date in the `calendar` outlet                                                                          |
+| `onFormReset()`      | `form:reset` on `input`            | Closes the panel                                                                                                         |
 
 **Dispatches**
 
-| Event                   | Detail                     | When                                   |
-| ----------------------- | -------------------------- | -------------------------------------- |
-| `combobox-date:changed` | `{ value }` (`YYYY-MM-DD`) | After a selection and after form reset |
+| Event                   | Detail                     | When              |
+| ----------------------- | -------------------------- | ----------------- |
+| `combobox-date:changed` | `{ value }` (`YYYY-MM-DD`) | After a selection |
 
 Events from a nested combobox date are ignored.
 
@@ -295,7 +306,16 @@ formats the input from `combobox-time:changed`.
     data-input-formatter-target="input"
     data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-time#onKeydown form:reset->input-formatter#onFormReset"
   />
-  <input type="hidden" name="meeting" value="14:30" data-combobox-time-target="input" />
+  <input
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
+    name="meeting"
+    value="14:30"
+    data-combobox-time-target="input"
+    data-action="form:reset->combobox-time#onFormReset"
+  />
   <div id="meeting_popover" popover="auto" role="dialog" data-popover-target="panel" data-combobox-time-target="panel">
     <ul
       role="listbox"
@@ -319,7 +339,7 @@ formats the input from `combobox-time:changed`.
 | Target     | Description                                                                  |
 | ---------- | ---------------------------------------------------------------------------- |
 | `trigger`  | Read-only input showing the formatted time                                   |
-| `input`    | Hidden input that submits the `HH:MM` value                                  |
+| `input`    | Hidden input that submits the `HH:MM` value; a form reset restores it        |
 | `panel`    | Popover holding the columns                                                  |
 | `hour`     | Hour column; option values `1`–`12` with a `meridiem` column, else `00`–`23` |
 | `minute`   | Minute column; option values `00`–`59`                                       |
@@ -330,18 +350,19 @@ formats the input from `combobox-time:changed`.
 | Action               | Wired on                           | Description                                                                                                                                       |
 | -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and focuses `hour`; Tab closes the panel; Escape as in `onNavigate`                                                     |
-| `onOpening(event)`   | `popover:before-open` on container | Records the value Escape restores                                                                                                                 |
+| `onOpening(event)`   | `popover:before-open` on container | Selects `input`'s time in the columns and records it for Escape                                                                                   |
 | `onOpened(event)`    | `popover:opened` on container      | Scrolls the selected options into view                                                                                                            |
 | `onNavigate(event)`  | `keydown` on a column              | Arrows, Home, and End select an option; Enter closes the panel; Escape restores the value from opening and closes the panel; both focus `trigger` |
 | `onSelect(event)`    | `click` on a column                | Selects the clicked option                                                                                                                        |
 | `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                                                   |
 | `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel                                                                             |
 | `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                                                   |
+| `onFormReset()`      | `form:reset` on `input`            | Closes the panel                                                                                                                                  |
 
 Selecting an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are selected, the value goes into `input`, which dispatches `change` when the value differs.
 
 **Dispatches**
 
-| Event                   | Detail                | When                                                              |
-| ----------------------- | --------------------- | ----------------------------------------------------------------- |
-| `combobox-time:changed` | `{ value }` (`HH:MM`) | After a selection that completes the time, Escape, and form reset |
+| Event                   | Detail                | When                                                  |
+| ----------------------- | --------------------- | ----------------------------------------------------- |
+| `combobox-time:changed` | `{ value }` (`HH:MM`) | After a selection that completes the time, and Escape |

@@ -61,7 +61,7 @@ class DatetimeTest < ActionView::TestCase
   end
 
   def test_date_renders_hidden_value_input
-    assert_css build_date_combobox, "input[type='hidden'][name='sign_in_form[birthday]']"
+    assert_css build_date_combobox, "input[hidden][readonly][name='sign_in_form[birthday]']"
   end
 
   def test_date_renders_calendar_popover
@@ -91,7 +91,7 @@ class DatetimeTest < ActionView::TestCase
     @form.define_singleton_method(:birthday) { "2000-06-15" }
 
     assert_equal "2000-06-15",
-                 build_date_combobox.at_css("input[type='hidden'][name='sign_in_form[birthday]']")["value"]
+                 build_date_combobox.at_css("input[hidden][readonly][name='sign_in_form[birthday]']")["value"]
   end
 
   def test_date_fills_the_input_from_model_value
@@ -148,7 +148,7 @@ class DatetimeTest < ActionView::TestCase
   end
 
   def test_time_renders_hidden_value_input
-    assert_css build_time_combobox, "input[type='hidden'][name='sign_in_form[meeting_time]']"
+    assert_css build_time_combobox, "input[hidden][readonly][name='sign_in_form[meeting_time]']"
   end
 
   def test_time_renders_dialog_popover

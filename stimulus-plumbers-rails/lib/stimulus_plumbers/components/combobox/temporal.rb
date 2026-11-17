@@ -3,7 +3,7 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      # A read-only input formatted by input-formatter, with a hidden input and a popover panel.
+      # A read-only input formatted by input-formatter, with a value input and a popover panel.
       # Subclasses define STIMULUS_CONTROLLER, FORMAT, ICON, POPOVER_KEY, ACTIONS, `parse`, `key_for`, and `render_panel`.
       class Temporal < Plumber::Base
         FORMAT_CONTROLLER = "input-formatter"
@@ -76,8 +76,21 @@ module StimulusPlumbers
           template.safe_join(
             [
               Trigger.new(template).render(controller: controller, id: @id, value: @text, aria: aria, **trigger),
-              template.tag.input(type: "hidden", name: name, value: @text, data: { "#{controller}-target" => "input" })
+              value_input(controller, name)
             ]
+          )
+        end
+
+        # A hidden text input, not type=hidden, so a form reset restores it.
+        def value_input(controller, name)
+          template.tag.input(
+            type:         "text",
+            hidden:       true,
+            readonly:     true,
+            autocomplete: "off",
+            name:         name,
+            value:        @text,
+            data:         { "#{controller}-target" => "input", action: "form:reset->#{controller}#onFormReset" }
           )
         end
 

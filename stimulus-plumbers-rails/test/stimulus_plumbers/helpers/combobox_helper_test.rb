@@ -11,7 +11,7 @@ class ComboboxHelperTest < ActionView::TestCase
 
       assert_css doc, "[data-controller~='combobox-date']"
       assert_css doc, "input[role='combobox'][aria-label='Birthday']"
-      assert_css doc, "input[type='hidden'][name='birthday'][value='2026-09-15']"
+      assert_css doc, "input[hidden][readonly][name='birthday'][value='2026-09-15']"
     end
   end
 
@@ -80,7 +80,7 @@ class ComboboxHelperTest < ActionView::TestCase
 
       assert_css doc, "[data-controller~='combobox-time']"
       assert_css doc, "input[role='combobox'][aria-label='Meeting']"
-      assert_css doc, "input[type='hidden'][name='meeting'][value='14:30']"
+      assert_css doc, "input[hidden][readonly][name='meeting'][value='14:30']"
     end
   end
 end

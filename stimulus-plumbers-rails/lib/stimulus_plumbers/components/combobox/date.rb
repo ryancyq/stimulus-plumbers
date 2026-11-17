@@ -9,7 +9,10 @@ module StimulusPlumbers
         FORMAT              = "date"
         ICON                = "calendar"
         POPOVER_KEY         = :combobox_date_popover
-        ACTIONS             = ["calendar:changed->#{STIMULUS_CONTROLLER}#onChange"].freeze
+        ACTIONS             = [
+          "calendar:changed->#{STIMULUS_CONTROLLER}#onChange",
+          "popover:before-open->#{STIMULUS_CONTROLLER}#onOpening"
+        ].freeze
 
         # `calendar:` goes to the `:stimulus` sp_calendar.
         def render(calendar: {}, **kwargs)
