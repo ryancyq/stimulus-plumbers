@@ -14,4 +14,5 @@ scope "/form", controller: "form" do
   get :password
   get :progress
   get :range
+  get :reset
 end

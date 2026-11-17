@@ -1,0 +1,11 @@
+<h1>Form reset</h1>
+
+<section id="reset-comboboxes" class="sb-section">
+  <h2>Comboboxes</h2>
+  <form class="sb-col">
+    <%= sp_combobox_dropdown(id: "reset-country", name: "country", label: "Country", value: "ca",
+                             options: [["Australia", "au"], ["Canada", "ca"], ["United States", "us"]]) %>
+    <%= sp_combobox_time(id: "reset-standup", name: "standup", label: "Standup", value: "14:30") %>
+    <button type="reset">Reset</button>
+  </form>
+</section>
