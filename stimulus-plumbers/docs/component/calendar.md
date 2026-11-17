@@ -89,7 +89,6 @@ unavailable `selected` date stays selected and cannot be selected, and the calen
 | `calendar:navigated`       | no         | `{ from, to, focusDate, view }`      |
 
 Values are date keys (`YYYY-MM-DD`). `changed` also fires when the current date is activated again.
-A form reset restores the initial selection.
 
 Navigation: `from` is the shown period's date, `to` a date inside the requested period, `view` the
 requested view, and `url` the URL of the link followed, in turbo mode only; `focusDate` is the intended
