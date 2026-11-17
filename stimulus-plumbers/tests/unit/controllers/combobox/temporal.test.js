@@ -81,6 +81,15 @@ describe('Combobox Temporal', () => {
     expect(document.activeElement).toBe(trigger);
   });
 
+  it('a click on an icon leaves a disabled trigger closed', async () => {
+    const { panel, trigger } = await render();
+    trigger.disabled = true;
+
+    document.querySelector('#icon').click();
+
+    expect(panel.showPopover).not.toHaveBeenCalled();
+  });
+
   it('a click inside the panel leaves the panel to its content', async () => {
     const { panel, selection } = await render();
     panel.showPopover();

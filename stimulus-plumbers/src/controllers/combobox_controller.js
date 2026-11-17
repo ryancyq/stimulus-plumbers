@@ -228,6 +228,8 @@ export default class extends Controller {
   }
 
   onClick(event) {
+    if (this.triggerTarget.matches(':disabled')) return;
+
     const option = event.target.closest?.(OPTION_SELECTOR);
     if (option && this.hasListboxTarget && this.listboxTarget.contains(option)) {
       this.select(option);

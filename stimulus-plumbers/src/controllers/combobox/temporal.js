@@ -18,7 +18,7 @@ export default class extends Controller {
 
   // Clicks on the icons and padding open the panel from the trigger.
   onClick(event) {
-    if (!this._isInFieldBox(event.target)) return;
+    if (!this._isInFieldBox(event.target) || this.triggerTarget.matches(':disabled')) return;
 
     this.triggerTarget.focus({ preventScroll: true });
     if (!this._isOpen) this.panelTarget.showPopover({ source: this.triggerTarget });
