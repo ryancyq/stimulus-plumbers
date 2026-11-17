@@ -15,7 +15,7 @@ Shows a clear button when an input has a value, hides it when empty, and clears 
 | --------- | ------------- | ----------------------------------------------------------------------------------------------- |
 | `clear()` | `data-action` | Empties the input, hides the clear button, returns focus to the input, dispatches `input` event |
 
-> The clear button shows and hides automatically as the input value changes; nothing needs wiring via `data-action`.
+> The clear button shows and hides automatically as the input value changes, including after a form reset; nothing needs wiring via `data-action`.
 
 ## Example
 

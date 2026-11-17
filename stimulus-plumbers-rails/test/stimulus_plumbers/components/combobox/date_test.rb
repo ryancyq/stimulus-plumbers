@@ -76,6 +76,10 @@ class ComboboxDateTest < ActionView::TestCase
     assert_includes actions, "keydown->combobox-date#onKeydown"
   end
 
+  def test_trigger_reformats_on_form_reset
+    assert_includes render_date.at_css("input#birthday")["data-action"].split, "form:reset->input-formatter#onFormReset"
+  end
+
   def test_open_on_focus_can_be_turned_off
     actions = render_date(open_on_focus: false).at_css("input#birthday")["data-action"].split
 

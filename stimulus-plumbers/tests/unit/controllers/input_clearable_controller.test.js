@@ -186,6 +186,26 @@ describe('InputClearableController', () => {
     });
   });
 
+  describe('form reset', () => {
+    it('shows the clear button again for a restored value', async () => {
+      await setup(`
+        <form>
+          <div data-controller="input-clearable">
+            <input type="search" value="rails" data-input-clearable-target="input">
+            <button type="button" data-input-clearable-target="clear" data-action="click->input-clearable#clear"></button>
+          </div>
+        </form>
+      `);
+      const input = document.querySelector('input');
+      getController().clear();
+
+      document.querySelector('form').reset();
+      input.dispatchEvent(new CustomEvent('form:reset'));
+
+      expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(false);
+    });
+  });
+
   describe('missing targets', () => {
     beforeEach(async () => {
       await setup(`<div data-controller="input-clearable"></div>`);

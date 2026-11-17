@@ -15,11 +15,13 @@ export default class extends Controller {
 
   inputTargetConnected(input) {
     input.addEventListener('input', this.onInput);
+    input.addEventListener('form:reset', this.onInput);
     input.addEventListener('keydown', this.onEscape);
   }
 
   inputTargetDisconnected(input) {
     input.removeEventListener('input', this.onInput);
+    input.removeEventListener('form:reset', this.onInput);
     input.removeEventListener('keydown', this.onEscape);
   }
 

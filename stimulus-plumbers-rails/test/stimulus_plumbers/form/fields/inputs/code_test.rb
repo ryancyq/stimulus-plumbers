@@ -71,6 +71,10 @@ class CodeTest < ActionView::TestCase
     assert_includes input["data-action"], "blur->input-formatter#onBlur"
   end
 
+  def test_input_reformats_on_form_reset
+    assert_includes build_field.at_css("input[type='text']")["data-action"], "form:reset->input-formatter#onFormReset"
+  end
+
   def test_groups_are_passed_to_the_controller
     assert_css build_field(groups: [3, 3]), "[data-input-formatter-groups-value='[3,3]']"
   end
