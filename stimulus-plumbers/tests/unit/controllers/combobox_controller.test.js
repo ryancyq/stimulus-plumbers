@@ -850,6 +850,21 @@ describe('ComboboxController', () => {
     });
   });
 
+  describe('disabled', () => {
+    it('a click on an icon leaves a trigger disabled by its fieldset closed', async () => {
+      const { panel } = await render({ value: 'sg', label: 'Singapore' });
+      const fieldset = document.createElement('fieldset');
+      fieldset.disabled = true;
+      document.querySelector('#form').append(fieldset);
+      fieldset.append(document.querySelector('#container'));
+      await flush();
+
+      document.querySelector('#icon').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      expect(isOpen(panel)).toBe(false);
+    });
+  });
+
   describe('lifecycle', () => {
     it('restores the server-rendered selection after a form reset', async () => {
       const { trigger, input } = await render({ value: 'sg', label: 'Singapore' });

@@ -83,14 +83,14 @@ without an `id` get one.
 
 **Methods**
 
-| Method               | Wired via                       | Description                                                                                                        |
-| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `onKeydown(event)`   | `keydown` on the trigger        | Keyboard contract                                                                                                  |
-| `onInput()`          | `input` on an editable trigger  | Clears the active option, filters, dispatches `query` when the query changes, opens                                |
-| `onClick(event)`     | `click` on the container        | Selects a clicked option; elsewhere outside the panel and other controls, toggles (select-only) or opens the panel |
-| `onMousedown(event)` | `mousedown` on the container    | Keeps focus on the trigger outside the trigger itself                                                              |
-| `onFormReset()`      | `form:reset` on the value input | Reads the selection from the restored value input and trigger; closes the panel and clears the filter              |
-| `select(option)`     | —                               | Selects an enabled, visible option; returns `false` if refused                                                     |
+| Method               | Wired via                       | Description                                                                                                                                             |
+| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `onKeydown(event)`   | `keydown` on the trigger        | Keyboard contract                                                                                                                                       |
+| `onInput()`          | `input` on an editable trigger  | Clears the active option, filters, dispatches `query` when the query changes, opens                                                                     |
+| `onClick(event)`     | `click` on the container        | Selects a clicked option; elsewhere outside the panel and other controls, toggles (select-only) or opens the panel; nothing while `trigger` is disabled |
+| `onMousedown(event)` | `mousedown` on the container    | Keeps focus on the trigger outside the trigger itself                                                                                                   |
+| `onFormReset()`      | `form:reset` on the value input | Reads the selection from the restored value input and trigger; closes the panel and clears the filter                                                   |
+| `select(option)`     | —                               | Selects an enabled, visible option; returns `false` if refused                                                                                          |
 
 **Dispatches**
 
@@ -265,7 +265,7 @@ formats the input from `combobox-date:changed`.
 | -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel                         |
 | `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                          |
-| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel                                                    |
+| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel unless `trigger` is disabled                       |
 | `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                          |
 | `onChange(event)`    | `calendar:changed` on container    | Copies the value into `input`, dispatches `change` on it when the value differs, closes the panel, and focuses `trigger` |
 | `onOpening(event)`   | `popover:before-open` on container | Selects `input`'s date in the `calendar` outlet                                                                          |
@@ -355,7 +355,7 @@ formats the input from `combobox-time:changed`.
 | `onNavigate(event)`  | `keydown` on a column              | Arrows, Home, and End select an option; Enter closes the panel; Escape restores the value from opening and closes the panel; both focus `trigger` |
 | `onSelect(event)`    | `click` on a column                | Selects the clicked option                                                                                                                        |
 | `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                                                   |
-| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel                                                                             |
+| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel unless `trigger` is disabled                                                |
 | `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                                                   |
 | `onFormReset()`      | `form:reset` on `input`            | Closes the panel                                                                                                                                  |
 
