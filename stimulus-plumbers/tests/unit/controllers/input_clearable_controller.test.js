@@ -126,6 +126,16 @@ describe('InputClearableController', () => {
       expect(spy.mock.calls[0][0].target).toBe(input);
     });
 
+    it('dispatches a bubbling change event after the input event', () => {
+      const events = [];
+      document.body.addEventListener('input', (event) => events.push(event.type));
+      document.body.addEventListener('change', (event) => events.push(event.type));
+
+      getController().clear();
+
+      expect(events).toEqual(['input', 'change']);
+    });
+
     it('returns focus to the input', () => {
       const input = document.querySelector('[data-input-clearable-target="input"]');
       getController().clear();

@@ -59,12 +59,12 @@ A theme can also read the root's `--sp-progress-percent`, for example to split t
 
 ## Methods
 
-| Method                       | Wired via                 | Purpose                                                                                                                    |
-| ---------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `setValue(value)`            | —                         | Programmatic API — clamps to `[min, max]`, updates `currentValue`, dispatches `progress:changed` when the value changes    |
-| `currentValueChanged(value)` | Stimulus value callback   | Re-renders whenever `current` changes (covers `setValue()`, attribute edits, and Turbo morphs); range also moves its thumb |
-| `refresh()`                  | `input->progress#refresh` | Range-only. Reads the native input's value and passes it to `setValue()`                                                   |
-| `onFormReset()`              | `form:reset` on the input | Range-only. Redraws the restored value without dispatching `progress:changed`                                              |
+| Method                       | Wired via                 | Purpose                                                                                                                                                                               |
+| ---------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `setValue(value)`            | —                         | Programmatic API — clamps to `[min, max]`, updates `currentValue`, dispatches `progress:changed` when the value changes; a range dispatches `input` and `change` when its thumb moves |
+| `currentValueChanged(value)` | Stimulus value callback   | Re-renders whenever `current` changes (covers `setValue()`, attribute edits, and Turbo morphs); range also moves its thumb                                                            |
+| `refresh()`                  | `input->progress#refresh` | Range-only. Reads the native input's value and passes it to `setValue()`                                                                                                              |
+| `onFormReset()`              | `form:reset` on the input | Range-only. Redraws the restored value without dispatching `progress:changed`                                                                                                         |
 
 Changing any other value (`min`, `max`, `indeterminate`, `format`, …) re-renders too.
 

@@ -402,6 +402,21 @@ describe('ProgressController', () => {
       expect(changed).not.toHaveBeenCalled();
     });
 
+    it('setValue dispatches input and change on the range it moves', async () => {
+      const input = await setup();
+      const events = [];
+      input.addEventListener('input', () => events.push('input'));
+      input.addEventListener('change', () => events.push('change'));
+      const changed = vi.fn();
+      input.addEventListener('progress:changed', changed);
+
+      getController().setValue(80);
+      getController().setValue(80);
+
+      expect(events).toEqual(['input', 'change']);
+      expect(changed).toHaveBeenCalledOnce();
+    });
+
     it('setValue moves the native input, not just the fill', async () => {
       const input = await setup();
       getController().setValue(80);

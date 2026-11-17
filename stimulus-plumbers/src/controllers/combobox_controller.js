@@ -258,12 +258,17 @@ export default class extends Controller {
     const detail = { value, label, option };
     if (this.dispatch('before-change', { detail, cancelable: true }).defaultPrevented) return false;
 
+    const differs = this.inputTarget.value !== value;
     this.inputTarget.value = value;
     this._setDisplayLabel(label);
     this.selection = { value, label };
     this.edited = false;
     if (this.expanded) this.activeDescendant.activate(option);
     else this._syncSelection();
+    if (differs) {
+      this.inputTarget.dispatchEvent(new Event('input', { bubbles: true }));
+      this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+    }
     this.dispatch('changed', { detail });
     if (this.closeOnSelectValue) this._closePanel();
     return true;

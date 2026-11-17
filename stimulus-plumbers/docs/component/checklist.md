@@ -15,12 +15,12 @@ Master "select all" toggle for a group of native `<input type="checkbox">` check
 
 ## Actions
 
-| Name          | Purpose                                                                                                                      |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`    | Wired to `change` on the wrapper — event adapter: calls `toggleAll` if the event came from the master, otherwise `recompute` |
-| `toggleAll`   | Programmatic API — sets every enabled item's `.checked` to the given value, then calls `recompute`                           |
-| `recompute`   | Programmatic API — writes the master's `.checked`/`.indeterminate` from the enabled items' aggregate state                   |
-| `onFormReset` | Wired to `form:reset` on the master — event adapter: calls `recompute`                                                       |
+| Name          | Purpose                                                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `onChange`    | Wired to `change` on the wrapper — event adapter: calls `toggleAll` if the event came from the master, otherwise `recompute`                                 |
+| `toggleAll`   | Programmatic API — sets every enabled item's `.checked` to the given value, dispatching `input` and `change` on each item it changes, then calls `recompute` |
+| `recompute`   | Programmatic API — writes the master's `.checked`/`.indeterminate` from the enabled items' aggregate state                                                   |
+| `onFormReset` | Wired to `form:reset` on the master — event adapter: calls `recompute`                                                                                       |
 
 The master also recomputes when items are added or removed and after a Turbo morph.
 

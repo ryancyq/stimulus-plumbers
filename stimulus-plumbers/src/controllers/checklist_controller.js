@@ -41,9 +41,13 @@ export default class extends Controller {
   }
 
   toggleAll(checked) {
-    this.enabledItems().forEach((item) => {
-      item.checked = checked;
-    });
+    this.enabledItems()
+      .filter((item) => item.checked !== checked)
+      .forEach((item) => {
+        item.checked = checked;
+        item.dispatchEvent(new Event('input', { bubbles: true }));
+        item.dispatchEvent(new Event('change', { bubbles: true }));
+      });
     this.recompute();
   }
 
