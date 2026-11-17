@@ -92,6 +92,18 @@ describe('ComboboxDateController', () => {
     expect(document.activeElement).toBe(trigger);
   });
 
+  it('a new date dispatches input, change, and changed in order', async () => {
+    const { container, input } = await render();
+    const events = [];
+    input.addEventListener('input', () => events.push('input'));
+    input.addEventListener('change', () => events.push('change'));
+    container.addEventListener('combobox-date:changed', () => events.push('changed'));
+
+    change(document.querySelector('#calendar'), '2026-09-14');
+
+    expect(events).toEqual(['input', 'change', 'changed']);
+  });
+
   it('selecting the selected date reports it without a change event', async () => {
     const { container, input } = await render();
     const changed = vi.fn();

@@ -150,6 +150,19 @@ describe('ChecklistController', () => {
       items().forEach((el) => expect(el.checked).toBe(false));
     });
 
+    it('dispatches input and change on each item it toggles', async () => {
+      await render(item(false) + item(true));
+      const events = [];
+      items().forEach((el, index) => {
+        el.addEventListener('input', () => events.push(`input ${index}`));
+        el.addEventListener('change', () => events.push(`change ${index}`));
+      });
+
+      getController().toggleAll(true);
+
+      expect(events).toEqual(['input 0', 'change 0']);
+    });
+
     it('syncs the master when called directly', async () => {
       await render(item(false) + item(true));
 

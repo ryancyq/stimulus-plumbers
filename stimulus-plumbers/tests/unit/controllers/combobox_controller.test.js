@@ -280,6 +280,22 @@ describe('ComboboxController', () => {
       expect(selected()).toEqual(['opt-se']);
     });
 
+    it('dispatches input and change on the value input only for a new value', async () => {
+      const { trigger, input } = await render({ value: 'sg', label: 'Singapore' });
+      const events = [];
+      input.addEventListener('input', () => events.push('input'));
+      input.addEventListener('change', () => events.push('change'));
+
+      key(trigger, 'ArrowDown');
+      key(trigger, 'Enter');
+      key(trigger, 'ArrowDown');
+      key(trigger, 'ArrowDown');
+      key(trigger, 'Enter');
+
+      expect(input.value).toBe('se');
+      expect(events).toEqual(['input', 'change']);
+    });
+
     it('selects with Space in select-only mode', async () => {
       const { trigger, input } = await render();
       key(trigger, 'ArrowDown');

@@ -31,6 +31,7 @@ export default class extends Controller {
     this._syncClear();
     this.inputTarget.focus();
     this.inputTarget.dispatchEvent(new Event('input', { bubbles: true }));
+    this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   _syncClear() {

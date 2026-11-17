@@ -26,12 +26,17 @@ export default class extends Controller {
 
   setValue(value) {
     const next = this._clamp(value);
-    if (this.variantValue === 'range') this.rangeInput.value = `${next}`;
-    if (next === this.currentValue) return;
-
-    this.currentValue = next;
-    this._render();
-    this.dispatch('changed', { detail: { value: next, min: this.minValue, max: this.maxValue } });
+    const moved = this.variantValue === 'range' && this.rangeInput.value !== `${next}`;
+    if (moved) this.rangeInput.value = `${next}`;
+    if (next !== this.currentValue) {
+      this.currentValue = next;
+      this._render();
+      this.dispatch('changed', { detail: { value: next, min: this.minValue, max: this.maxValue } });
+    }
+    if (moved) {
+      this.rangeInput.dispatchEvent(new Event('input', { bubbles: true }));
+      this.rangeInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
   }
 
   // Action for `input->progress#refresh`. Delegates to setValue so a drag dispatches

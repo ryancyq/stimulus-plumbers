@@ -90,7 +90,7 @@ without an `id` get one.
 | `onClick(event)`     | `click` on the container        | Selects a clicked option; elsewhere outside the panel and other controls, toggles (select-only) or opens the panel; nothing while `trigger` is disabled |
 | `onMousedown(event)` | `mousedown` on the container    | Keeps focus on the trigger outside the trigger itself                                                                                                   |
 | `onFormReset()`      | `form:reset` on the value input | Reads the selection from the restored value input and trigger; closes the panel and clears the filter                                                   |
-| `select(option)`     | —                               | Selects an enabled, visible option; returns `false` if refused                                                                                          |
+| `select(option)`     | —                               | Selects an enabled, visible option, dispatching `input` and `change` on `input` for a new value; returns `false` if refused                             |
 
 **Dispatches**
 
@@ -261,15 +261,15 @@ formats the input from `combobox-date:changed`.
 
 **Actions**
 
-| Action               | Wired on                           | Description                                                                                                              |
-| -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel                         |
-| `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                          |
-| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel unless `trigger` is disabled                       |
-| `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                          |
-| `onChange(event)`    | `calendar:changed` on container    | Copies the value into `input`, dispatches `change` on it when the value differs, closes the panel, and focuses `trigger` |
-| `onOpening(event)`   | `popover:before-open` on container | Selects `input`'s date in the `calendar` outlet                                                                          |
-| `onFormReset()`      | `form:reset` on `input`            | Closes the panel                                                                                                         |
+| Action               | Wired on                           | Description                                                                                                                          |
+| -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel                                     |
+| `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                                      |
+| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel unless `trigger` is disabled                                   |
+| `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                                      |
+| `onChange(event)`    | `calendar:changed` on container    | Copies the value into `input`, dispatches `input` and `change` on it when the value differs, closes the panel, and focuses `trigger` |
+| `onOpening(event)`   | `popover:before-open` on container | Selects `input`'s date in the `calendar` outlet                                                                                      |
+| `onFormReset()`      | `form:reset` on `input`            | Closes the panel                                                                                                                     |
 
 **Dispatches**
 
@@ -359,7 +359,7 @@ formats the input from `combobox-time:changed`.
 | `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                                                   |
 | `onFormReset()`      | `form:reset` on `input`            | Closes the panel                                                                                                                                  |
 
-Selecting an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are selected, the value goes into `input`, which dispatches `change` when the value differs.
+Selecting an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are selected, the value goes into `input`, which dispatches `input` and `change` when the value differs.
 
 **Dispatches**
 
