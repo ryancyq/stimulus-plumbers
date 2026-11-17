@@ -66,7 +66,7 @@ control receives a non-bubbling `form:reset` event. A controller that draws from
 through an action on that control, as each controller's doc lists:
 
 ```html
-<input type="checkbox" data-checklist-target="selectAll" data-action="form:reset->checklist#recompute" />
+<input type="checkbox" data-checklist-target="selectAll" data-action="form:reset->checklist#onFormReset" />
 ```
 
 ## Styling
