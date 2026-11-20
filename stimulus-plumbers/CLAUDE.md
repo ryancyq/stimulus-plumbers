@@ -8,6 +8,7 @@ stimulus-plumbers/
 │   ├── index.js                     # Package entry: every export
 │   ├── accessibility/               # Accessibility utilities (see Guidelines)
 │   ├── controllers/                 # <identifier>_controller.js — one Stimulus controller each
+│   │   └── combobox/                # <base>.js — mirrors of abstract Combobox::* Rails bases
 │   ├── date/                        # Date-only core: { year, month, day }, never an instant
 │   ├── plumbers/                    # <name>.js — one plumber each; index.js exports their attach functions
 │   │   ├── formatters/              # Input formatter strategies
@@ -39,7 +40,9 @@ See [ARIA.md](../ARIA.md) for the full WCAG 2.1 AA criteria table and component-
 
 > See `docs/component/*.md` for HTML structure, Stimulus Controller + Action Wiring.
 
-- **Naming** — controller helpers are `_`-prefixed methods (the manifest skips them), not `#private` members.
+- **Naming** — controller helpers are `_`-prefixed methods (the manifest skips them), not `#private` members; an unprefixed `onX` names only a `data-action` adapter, never a helper function.
+- **Shared base** — a controller extends a class only where its Rails component does; an abstract Rails base has a JS base at the matching path (`Combobox::Temporal` → `controllers/combobox/temporal.js`); the manifest merges what it passes on. Other shared logic is a helper in `plumbers/plumber/` that keeps nothing (a listener it adds takes the caller's `{ signal }`), or a plumber.
 - **Listener cleanup** — group listeners that share a lifetime (connection, open state, target) under one `AbortController` and abort it when the lifetime ends; some controllers pair `addEventListener`/`removeEventListener`.
+- **Form reset** — keep a form value in a control the browser restores, never in a snapshot; redraw through a `form:reset` action on the control you draw from (`src/form.js` dispatches it).
 - **Plumber disposal** — a plumber that holds listeners, observers, timers, requests, or DOM state owns them and exposes an idempotent `disconnect()`; it never takes an owner's `signal` or wraps controller methods. The controller keeps the instance and calls `disconnect()` in its own `disconnect()`; for a target-scoped plumber, also in `xTargetDisconnected` (same element only) and before replacing it in `xTargetConnected`. Target callbacks run before `connect()` and after `disconnect()`, so never use `this.connection` in them.
 - **`onX(event)` adapts, `x(value)` computes** — a `data-action` names only an `onX(event)` adapter or a method that takes no arguments; plain verbs are the programmatic API and never take the event. Name the adapter's first parameter `event`: the manifest reads it to tell an adapter from a method taking a value, and the Rails contract test rejects a `data-action` naming the latter.

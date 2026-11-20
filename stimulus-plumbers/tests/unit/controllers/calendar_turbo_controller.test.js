@@ -41,7 +41,10 @@ describe('CalendarTurboController', () => {
       new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
     );
     frame.dispatchEvent(
-      new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: true } } })
+      new CustomEvent('turbo:before-fetch-response', {
+        bubbles: true,
+        detail: { fetchResponse: { succeeded: true, isHTML: true } },
+      })
     );
 
     expect(failed).toHaveBeenCalledOnce();

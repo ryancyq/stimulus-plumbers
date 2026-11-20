@@ -3,8 +3,10 @@ import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const controllersDir = join(__dirname, '..', 'src', 'controllers');
+const srcDir = join(__dirname, '..', 'src');
+const controllersDir = join(srcDir, 'controllers');
 const outputFile = join(__dirname, '..', 'dist', 'controllers.manifest.json');
+const eventsFile = join(__dirname, '..', 'dist', 'events.manifest.json');
 
 function toIdentifier(filename) {
   return basename(filename, '.js')
@@ -66,21 +68,30 @@ export function parseDispatches(source) {
 // controller itself (e.g. attachPopover dispatches 'opened' on behalf of
 // popover_controller.js) — resolve those imports so parsing
 // isn't blind to wiring that lives one level away from the controller class.
-function resolvePlumberSource(importPath, controllersDir) {
-  const plumbersDir = join(controllersDir, '..', 'plumbers');
-  const rel = importPath.replace(/^\.\.\/plumbers\/?/, '');
-  const base = rel ? join(plumbersDir, rel) : plumbersDir;
+function resolvePlumberSource(importPath, dir) {
+  const base = join(dir, importPath);
   return [`${base}.js`, join(base, 'index.js')].find((c) => existsSync(c)) ?? null;
 }
 
-export function withPlumberSources(source, controllersDir) {
-  const importRe = /from\s+['"](\.\.\/plumbers[^'"]*)['"]/g;
+// `dir` is the directory of the file `source` was read from.
+export function withPlumberSources(source, dir) {
+  const importRe = /from\s+['"]((?:\.\.\/)+plumbers[^'"]*)['"]/g;
   const importPaths = [...source.matchAll(importRe)].map((m) => m[1]);
   const extraSources = importPaths
-    .map((p) => resolvePlumberSource(p, controllersDir))
+    .map((p) => resolvePlumberSource(p, dir))
     .filter(Boolean)
     .map((p) => readFileSync(p, 'utf8'));
   return [source, ...extraSources].join('\n');
+}
+
+// The controller's `{ source, dir }`, then those of the relatively imported base classes it extends.
+export function withBaseSources(source, dir) {
+  const base = source.match(/class\s+(?:\w+\s+)?extends\s+(\w+)/)?.[1];
+  const path = base && source.match(new RegExp(`import\\s+${base}\\s+from\\s+['"](\\.[^'"]+)['"]`))?.[1];
+  if (!path) return [{ source, dir }];
+
+  const file = join(dir, `${path}.js`);
+  return [{ source, dir }, ...withBaseSources(readFileSync(file, 'utf8'), dirname(file))];
 }
 
 export function parseArray(source, name) {
@@ -134,7 +145,8 @@ export function parseValues(source) {
   }
 
   // Short form: key: Type. Nested `{…}` and literal `{}` defaults collapse so each field reads as one level.
-  const flatBlock = block.replace(/\{\}/g, '""').replace(/\{[^{}]*\}/g, '{}');
+  const entries = block.slice(1, -1).replace(/\{\}/g, '""').replace(/\{[^{}]*\}/g, '{}');
+  const flatBlock = `{${entries}}`;
   const shortRe = /(\w+)\s*:\s*(String|Number|Boolean|Array|Object)\s*[,\n}]/g;
   while ((match = shortRe.exec(flatBlock)) !== null) {
     if (!result[match[1]]) result[match[1]] = { type: match[2] };
@@ -143,27 +155,49 @@ export function parseValues(source) {
   return result;
 }
 
+export function parseController(file, dir) {
+  const sources = withBaseSources(readFileSync(join(dir, file), 'utf8'), dir);
+  const own = sources.map(({ source }) => source);
+  const inherited = [...own].reverse();
+  const array = (name) => [...new Set(inherited.flatMap((source) => parseArray(source, name)))];
+  const source = own.join('\n');
+  const withPlumbers = sources.map(({ source, dir }) => withPlumberSources(source, dir)).join('\n');
+  return {
+    identifier: toIdentifier(file),
+    targets: array('targets'),
+    values: Object.assign({}, ...inherited.map(parseValues)),
+    outlets: array('outlets'),
+    classes: array('classes'),
+    actions: parseActions(source),
+    actionParams: parseActionParams(source),
+    dispatches: parseDispatches(withPlumbers),
+  };
+}
+
+// Events a standalone module dispatches, `prefix:event`, grouped by prefix.
+export function parseLibraryEvents(source) {
+  const events = {};
+  for (const [, prefix, event] of source.matchAll(/new CustomEvent\(\s*['"]([\w-]+):([\w-]+)['"]/g)) {
+    events[prefix] = [...new Set([...(events[prefix] ?? []), event])].sort();
+  }
+  return events;
+}
+
 const files = readdirSync(controllersDir)
   .filter((f) => f.endsWith('_controller.js'))
   .sort();
 
 const controllers = {};
-for (const file of files) {
-  const identifier = toIdentifier(file);
-  const source = readFileSync(join(controllersDir, file), 'utf8');
-  const extendedSource = withPlumberSources(source, controllersDir);
-  controllers[identifier] = {
-    identifier,
-    targets: parseArray(source, 'targets'),
-    values: parseValues(source),
-    outlets: parseArray(source, 'outlets'),
-    classes: parseArray(source, 'classes'),
-    actions: parseActions(source),
-    actionParams: parseActionParams(source),
-    dispatches: parseDispatches(extendedSource),
-  };
-}
+for (const file of files) controllers[toIdentifier(file)] = parseController(file, controllersDir);
 
 mkdirSync(dirname(outputFile), { recursive: true });
 writeFileSync(outputFile, JSON.stringify(controllers, null, 2));
 console.log(`Written ${Object.keys(controllers).length} controllers to dist/controllers.manifest.json`);
+
+const libraryEvents = parseLibraryEvents(
+  readdirSync(srcDir)
+    .filter((f) => f.endsWith('.js') && f !== 'index.js')
+    .map((f) => readFileSync(join(srcDir, f), 'utf8'))
+    .join('\n')
+);
+writeFileSync(eventsFile, JSON.stringify(libraryEvents, null, 2));

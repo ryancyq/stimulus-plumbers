@@ -32,6 +32,12 @@ class PasswordTest < ActionView::TestCase
     assert_css doc, "ul li[data-rule='digit']", text: "One number"
   end
 
+  def test_strength_redraws_on_form_reset
+    doc = build_field { |p| p.enforce(digit: true) }
+
+    assert_css doc, "input[data-action~='form:reset->password-strength#onFormReset']"
+  end
+
   # Reads a JSON data-* value attribute off the wrapper. Shared to keep each
   # test under Metrics/AbcSize (inlining JSON.parse(at_css(...)) trips it).
   def strength_value(doc, name)

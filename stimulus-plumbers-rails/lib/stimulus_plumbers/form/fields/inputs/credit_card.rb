@@ -9,7 +9,8 @@ module StimulusPlumbers
           STIMULUS_ACTION      = [
             "input->#{STIMULUS_CONTROLLER}#onInput",
             "focus->#{STIMULUS_CONTROLLER}#onFocus",
-            "blur->#{STIMULUS_CONTROLLER}#onBlur"
+            "blur->#{STIMULUS_CONTROLLER}#onBlur",
+            "form:reset->#{STIMULUS_CONTROLLER}#onFormReset"
           ].join(" ").freeze
           DEFAULT_GROUPS       = [4, 4, 4, 4].freeze
           DEFAULT_AUTOCOMPLETE = "cc-number"

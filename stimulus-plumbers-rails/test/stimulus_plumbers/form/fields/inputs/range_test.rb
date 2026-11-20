@@ -97,6 +97,12 @@ class FormFieldsRangeTest < ActionView::TestCase
     assert host.at_css("input[type='range'][data-progress-target='input']")
   end
 
+  def test_range_redraws_on_form_reset
+    [build_field, build_field(format: :percent)].each do |doc|
+      assert_css doc, "input[type='range'][data-action~='form:reset->progress#onFormReset']"
+    end
+  end
+
   def test_readout_is_hidden_from_assistive_technology
     readout = build_field(format: :percent).at_css("[data-progress-target='value']")
 

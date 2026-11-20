@@ -27,7 +27,7 @@ class ComboboxDateTest < ActionView::TestCase
     doc = render_date(value: Date.new(2026, 9, 15))
 
     assert_equal "2026-09-15", doc.at_css("input#birthday")["value"]
-    assert_css doc, "input[type='hidden'][name='person[birthday]'][value='2026-09-15']"
+    assert_css doc, "input[hidden][readonly][name='person[birthday]'][value='2026-09-15']"
   end
 
   def test_a_value_that_is_not_a_date_shows_as_typed_and_selects_nothing
@@ -76,6 +76,10 @@ class ComboboxDateTest < ActionView::TestCase
     assert_includes actions, "keydown->combobox-date#onKeydown"
   end
 
+  def test_trigger_reformats_on_form_reset
+    assert_includes render_date.at_css("input#birthday")["data-action"].split, "form:reset->input-formatter#onFormReset"
+  end
+
   def test_open_on_focus_can_be_turned_off
     actions = render_date(open_on_focus: false).at_css("input#birthday")["data-action"].split
 
@@ -94,7 +98,8 @@ class ComboboxDateTest < ActionView::TestCase
     container = render_date.at_css("[data-controller]")
 
     assert_equal "popover combobox-date input-formatter", container["data-controller"]
-    assert_equal "calendar:changed->combobox-date#onChange focusout->combobox-date#onFocusout " \
+    assert_equal "calendar:changed->combobox-date#onChange popover:before-open->combobox-date#onOpening " \
+                 "focusout->combobox-date#onFocusout " \
                  "mousedown->combobox-date#onMousedown click->combobox-date#onClick " \
                  "combobox-date:changed->input-formatter#onChange",
                  container["data-action"]

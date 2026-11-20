@@ -54,10 +54,16 @@ class ComboboxTest < ActionView::TestCase
     assert_equal "Seoul", render_typeahead(value: "se").at_css("input[role='combobox']")["value"]
   end
 
-  def test_hidden_input_holds_name_and_value
+  def test_value_input_holds_name_and_value
     doc = render_dropdown(name: "trip[city]", value: "sg")
 
-    assert_css doc, "input[type='hidden'][name='trip[city]'][value='sg'][data-combobox-target='input']"
+    assert_css doc, "input[type='text'][hidden][readonly][autocomplete='off'][name='trip[city]'][value='sg']"
+  end
+
+  def test_value_input_redraws_the_combobox_on_form_reset
+    doc = render_dropdown(name: "trip[city]")
+
+    assert_css doc, "[data-combobox-target='input'][data-action='form:reset->combobox#onFormReset']"
   end
 
   def test_panel_is_a_manual_popover_owned_only_by_the_combobox

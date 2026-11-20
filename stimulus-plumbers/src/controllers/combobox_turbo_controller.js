@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { isFailedResponse, isFrameEvent } from '../plumbers/plumber/turbo_frame';
 
 export default class extends Controller {
   static targets = ['frame', 'status'];
@@ -32,11 +33,13 @@ export default class extends Controller {
   }
 
   onResponse(event) {
-    const response = event.detail.fetchResponse;
-    if (!response?.succeeded || !response.isHTML) this._setStatus(this.errorTextValue);
+    if (isFrameEvent(event, this._frame) && isFailedResponse(event)) this._setStatus(this.errorTextValue);
   }
 
+  // Keeps the current results when the response has no matching frame.
   onError(event) {
+    if (!isFrameEvent(event, this._frame)) return;
+
     if (event.type === 'turbo:frame-missing') event.preventDefault();
     this._setStatus(this.errorTextValue);
   }
@@ -51,6 +54,10 @@ export default class extends Controller {
     const url = new URL(this.srcValue, window.location.href);
     if (query) url.searchParams.set(this.paramValue, query);
     this.frameTarget.setAttribute('src', url.href);
+  }
+
+  get _frame() {
+    return this.hasFrameTarget ? this.frameTarget : null;
   }
 
   _setStatus(text) {

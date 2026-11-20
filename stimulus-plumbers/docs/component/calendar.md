@@ -89,7 +89,6 @@ unavailable `selected` date stays selected and cannot be selected, and the calen
 | `calendar:navigated`       | no         | `{ from, to, focusDate, view }`      |
 
 Values are date keys (`YYYY-MM-DD`). `changed` also fires when the current date is activated again.
-A form reset restores the initial selection.
 
 Navigation: `from` is the shown period's date, `to` a date inside the requested period, `view` the
 requested view, and `url` the URL of the link followed, in turbo mode only; `focusDate` is the intended
@@ -109,11 +108,11 @@ Loads [`calendar`](#calendar) periods through the calendar's `<turbo-frame>`
 ([Rails `sp_calendar(navigation: :turbo)`](../../../stimulus-plumbers-rails/docs/component/calendar.md#sp_calendar)).
 Turbo mode requires it; without it, period links do nothing.
 
-| Action              | Wired on                                                     | Description                                 |
-| ------------------- | ------------------------------------------------------------ | ------------------------------------------- |
-| `onNavigate(event)` | `calendar:navigate` container                                | Sets the frame `src` to the period URL      |
-| `onResponse(event)` | `turbo:before-fetch-response` container                      | Dispatches `failed` for a failed response   |
-| `onError(event)`    | `turbo:frame-missing`, `turbo:fetch-request-error` container | Keeps the current grid; dispatches `failed` |
+| Action              | Wired on                                                     | Description                                                         |
+| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------- |
+| `onNavigate(event)` | `calendar:navigate` container                                | Sets the frame `src` to the period URL                              |
+| `onResponse(event)` | `turbo:before-fetch-response` container                      | Dispatches `failed` for a failed or non-HTML response for its frame |
+| `onError(event)`    | `turbo:frame-missing`, `turbo:fetch-request-error` container | Keeps the current grid; dispatches `failed` for its frame           |
 
 | Event                   | Detail | When                        |
 | ----------------------- | ------ | --------------------------- |

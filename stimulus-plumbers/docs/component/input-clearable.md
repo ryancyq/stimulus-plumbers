@@ -11,11 +11,11 @@ Shows a clear button when an input has a value, hides it when empty, and clears 
 
 ## Methods
 
-| Method    | Wired via     | Description                                                                                     |
-| --------- | ------------- | ----------------------------------------------------------------------------------------------- |
-| `clear()` | `data-action` | Empties the input, hides the clear button, returns focus to the input, dispatches `input` event |
+| Method    | Wired via     | Description                                                                                                   |
+| --------- | ------------- | ------------------------------------------------------------------------------------------------------------- |
+| `clear()` | `data-action` | Empties the input, hides the clear button, returns focus to the input, dispatches `input` and `change` events |
 
-> The clear button shows and hides automatically as the input value changes; nothing needs wiring via `data-action`.
+> The clear button shows and hides automatically as the input value changes, including after a form reset; nothing needs wiring via `data-action`.
 
 ## Example
 
@@ -39,5 +39,5 @@ Shows a clear button when an input has a value, hides it when empty, and clears 
 ## Notes
 
 - Suppress the native WebKit clear button via CSS to avoid visual duplication: `input[type="search"]::-webkit-search-cancel-button { appearance: none }`.
-- `clear()` dispatches a native `input` event with `bubbles: true` so upstream listeners (e.g. live search) react to the cleared value.
+- `clear()` dispatches bubbling `input` and `change` events, as a native edit does.
 - The controller is standalone — it has no dependency on `input-formatter` or any other plumber.

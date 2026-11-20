@@ -59,16 +59,6 @@ export default class extends Controller {
 
   connect() {
     this.connection = new AbortController();
-    // Survives reconnects.
-    this.initial ??= this.selectedValue;
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._restore()),
-        { signal: this.connection.signal }
-      );
-
     document.addEventListener('turbo:before-cache', () => this._clearNavigation(), { signal: this.connection.signal });
 
     const errors = availabilityErrors(this._availability());
@@ -440,11 +430,6 @@ export default class extends Controller {
       const cell = day.closest('[role="gridcell"]');
       if (cell?.hasAttribute('aria-selected')) setSelected(cell, day.dataset.date === this.selectedValue);
     });
-  }
-
-  _restore() {
-    this.selectedValue = this.initial;
-    this._syncSelected();
   }
 
   _control(key) {

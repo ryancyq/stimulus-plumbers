@@ -25,6 +25,7 @@ Live password meter and requirements checklist. Scoring is provided by the [pass
 `score()` is wired to the input event. It redraws the rules, the meter, and the level at once, and announces the level after `announceDelay` ms without typing ([ARIA](../../../ARIA.md)).
 
 - Connect, Turbo morphs, and changes to `rules`, `options`, or `labels` redraw silently from the input.
+- `onFormReset()`, wired as `form:reset->password-strength#onFormReset` on the input, redraws silently after a form reset.
 - Only attributes and text that differ are written, so server-rendered markup is left as it is.
 
 ## Rule descriptors

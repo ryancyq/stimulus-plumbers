@@ -98,6 +98,7 @@ Renders a `<label>` wrapping a native `<input type="checkbox">`.
     <input
       type="checkbox"
       data-checklist-target="master"
+      data-action="form:reset->checklist#recompute"
       class="[checklist_item_input theme classes]"
     />
     Select all

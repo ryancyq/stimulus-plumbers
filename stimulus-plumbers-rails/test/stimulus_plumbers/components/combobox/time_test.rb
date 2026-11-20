@@ -25,7 +25,14 @@ class ComboboxTimeTest < ActionView::TestCase
     doc = render_time(value: Time.utc(2026, 9, 15, 9, 5))
 
     assert_equal "09:05", doc.at_css("input#meeting")["value"]
-    assert_css doc, "input[type='hidden'][name='event[meeting]'][value='09:05']"
+    assert_css doc, "input[hidden][readonly][name='event[meeting]'][value='09:05']"
+  end
+
+  def test_the_submitted_time_closes_the_panel_on_form_reset
+    input = render_time.at_css("input[name='event[meeting]']")
+
+    assert_equal "text", input["type"]
+    assert_equal "form:reset->combobox-time#onFormReset", input["data-action"]
   end
 
   def test_a_value_that_is_not_a_time_shows_as_typed_and_selects_nothing
@@ -81,7 +88,7 @@ class ComboboxTimeTest < ActionView::TestCase
 
     assert_selected doc, "Hour", "2"
     assert_no_css doc, "[aria-label='Minute'][aria-activedescendant], [aria-label='Minute'] [aria-selected='true']"
-    assert_equal "14:58", doc.at_css("input[type='hidden']")["value"]
+    assert_equal "14:58", doc.at_css("input[hidden][readonly]")["value"]
   end
 
   def test_columns_are_focusable_and_wired_to_the_controller

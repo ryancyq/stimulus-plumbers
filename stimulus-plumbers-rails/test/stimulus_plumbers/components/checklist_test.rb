@@ -58,6 +58,12 @@ class ChecklistTest < ActionView::TestCase
     assert_css doc, "label input[type='checkbox'][data-checklist-target='master']"
   end
 
+  def test_master_recomputes_on_form_reset
+    doc = parse_html(renderer.render(select_all: true) { |c| c.item("Buy milk", checked: false) })
+
+    assert_css doc, "input[data-checklist-target='master'][data-action='form:reset->checklist#recompute']"
+  end
+
   def test_select_all_wraps_wrapper_with_checklist_controller
     doc = parse_html(renderer.render(select_all: true) { |c| c.item("Buy milk", checked: true) })
 

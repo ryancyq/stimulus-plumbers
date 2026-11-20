@@ -59,11 +59,12 @@ A theme can also read the root's `--sp-progress-percent`, for example to split t
 
 ## Methods
 
-| Method                       | Wired via                 | Purpose                                                                                                                    |
-| ---------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `setValue(value)`            | —                         | Programmatic API — clamps to `[min, max]`, updates `currentValue`, dispatches `progress:changed` when the value changes    |
-| `currentValueChanged(value)` | Stimulus value callback   | Re-renders whenever `current` changes (covers `setValue()`, attribute edits, and Turbo morphs); range also moves its thumb |
-| `refresh()`                  | `input->progress#refresh` | Range-only. Reads the native input's value and passes it to `setValue()`                                                   |
+| Method                       | Wired via                 | Purpose                                                                                                                                                                               |
+| ---------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `setValue(value)`            | —                         | Programmatic API — clamps to `[min, max]`, updates `currentValue`, dispatches `progress:changed` when the value changes; a range dispatches `input` and `change` when its thumb moves |
+| `currentValueChanged(value)` | Stimulus value callback   | Re-renders whenever `current` changes (covers `setValue()`, attribute edits, and Turbo morphs); range also moves its thumb                                                            |
+| `refresh()`                  | `input->progress#refresh` | Range-only. Reads the native input's value and passes it to `setValue()`                                                                                                              |
+| `onFormReset()`              | `form:reset` on the input | Range-only. Redraws the restored value without dispatching `progress:changed`                                                                                                         |
 
 Changing any other value (`min`, `max`, `indeterminate`, `format`, …) re-renders too.
 
@@ -156,7 +157,7 @@ Changing any other value (`min`, `max`, `indeterminate`, `format`, …) re-rende
   data-progress-current-value="45"
   data-progress-min-value="0"
   data-progress-max-value="100"
-  data-action="input->progress#refresh"
+  data-action="input->progress#refresh form:reset->progress#onFormReset"
 />
 
 <!-- Range with a readout — a target must be a descendant, so a wrapper hosts the controller -->
@@ -168,7 +169,15 @@ Changing any other value (`min`, `max`, `indeterminate`, `format`, …) re-rende
   data-progress-format-value="percent"
   data-action="input->progress#refresh"
 >
-  <input type="range" min="0" max="100" value="45" style="--sp-progress-percent: 45" data-progress-target="input" />
+  <input
+    type="range"
+    min="0"
+    max="100"
+    value="45"
+    style="--sp-progress-percent: 45"
+    data-progress-target="input"
+    data-action="form:reset->progress#onFormReset"
+  />
   <span data-progress-target="value" aria-hidden="true">45%</span>
 </div>
 

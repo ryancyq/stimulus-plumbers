@@ -126,6 +126,16 @@ describe('InputClearableController', () => {
       expect(spy.mock.calls[0][0].target).toBe(input);
     });
 
+    it('dispatches a bubbling change event after the input event', () => {
+      const events = [];
+      document.body.addEventListener('input', (event) => events.push(event.type));
+      document.body.addEventListener('change', (event) => events.push(event.type));
+
+      getController().clear();
+
+      expect(events).toEqual(['input', 'change']);
+    });
+
     it('returns focus to the input', () => {
       const input = document.querySelector('[data-input-clearable-target="input"]');
       getController().clear();
@@ -183,6 +193,26 @@ describe('InputClearableController', () => {
       input.addEventListener('keydown', (event) => event.preventDefault(), { capture: true });
       input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
       expect(input.value).toBe('hello');
+    });
+  });
+
+  describe('form reset', () => {
+    it('shows the clear button again for a restored value', async () => {
+      await setup(`
+        <form>
+          <div data-controller="input-clearable">
+            <input type="search" value="rails" data-input-clearable-target="input">
+            <button type="button" data-input-clearable-target="clear" data-action="click->input-clearable#clear"></button>
+          </div>
+        </form>
+      `);
+      const input = document.querySelector('input');
+      getController().clear();
+
+      document.querySelector('form').reset();
+      input.dispatchEvent(new CustomEvent('form:reset'));
+
+      expect(document.querySelector('[data-input-clearable-target="clear"]').hidden).toBe(false);
     });
   });
 
