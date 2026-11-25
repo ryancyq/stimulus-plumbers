@@ -7,8 +7,8 @@ export default class extends Controller {
     this.connection = new AbortController();
     const { signal } = this.connection;
     // A morph rewrites every item's checked state from the markup, but never the select-all checkbox's
-    // indeterminate property, so each morphed node schedules a recompute.
-    this.element.addEventListener('turbo:morph-element', () => this._scheduleRecompute(), { signal });
+    // indeterminate property, so each morphed node schedules a redraw.
+    this.element.addEventListener('turbo:morph-element', () => this._scheduleDrawSelectAll(), { signal });
   }
 
   disconnect() {
@@ -17,15 +17,15 @@ export default class extends Controller {
   }
 
   selectAllTargetConnected() {
-    this._scheduleRecompute();
+    this._scheduleDrawSelectAll();
   }
 
   itemTargetConnected() {
-    this._scheduleRecompute();
+    this._scheduleDrawSelectAll();
   }
 
   itemTargetDisconnected() {
-    this._scheduleRecompute();
+    this._scheduleDrawSelectAll();
   }
 
   onChange(event) {
@@ -33,11 +33,11 @@ export default class extends Controller {
       this.toggleAll(this.selectAllTarget.checked);
       return;
     }
-    this.recompute();
+    this._drawSelectAll();
   }
 
   onFormReset() {
-    this.recompute();
+    this._drawSelectAll();
   }
 
   toggleAll(checked) {
@@ -48,10 +48,10 @@ export default class extends Controller {
         item.dispatchEvent(new Event('input', { bubbles: true }));
         item.dispatchEvent(new Event('change', { bubbles: true }));
       });
-    this.recompute();
+    this._drawSelectAll();
   }
 
-  recompute() {
+  _drawSelectAll() {
     if (!this.hasSelectAllTarget) return;
     const items = this.enabledItems();
     const checkedCount = items.filter((item) => item.checked).length;
@@ -64,13 +64,13 @@ export default class extends Controller {
   }
 
   // Target callbacks and morph events arrive in bursts (one per item on connect or morph);
-  // they share one recompute after the burst.
-  _scheduleRecompute() {
-    if (this._recomputeScheduled) return;
-    this._recomputeScheduled = true;
+  // they share one redraw after the burst.
+  _scheduleDrawSelectAll() {
+    if (this._drawSelectAllScheduled) return;
+    this._drawSelectAllScheduled = true;
     queueMicrotask(() => {
-      this._recomputeScheduled = false;
-      this.recompute();
+      this._drawSelectAllScheduled = false;
+      this._drawSelectAll();
     });
   }
 }

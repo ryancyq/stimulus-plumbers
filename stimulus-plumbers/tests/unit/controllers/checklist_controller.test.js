@@ -73,7 +73,7 @@ describe('ChecklistController', () => {
   });
 
   describe('onChange from an item', () => {
-    it('recomputes the select-all checkbox without touching other items', async () => {
+    it('redraws the select-all checkbox without touching other items', async () => {
       await render(item(false) + item(false));
       const [first, second] = items();
 
@@ -214,7 +214,7 @@ describe('ChecklistController', () => {
   });
 
   describe('form reset', () => {
-    it('recomputes the select-all checkbox once the items return to their defaults', async () => {
+    it('redraws the select-all checkbox once the items return to their defaults', async () => {
       document.body.innerHTML = `
         <form>
           <div data-controller="checklist" data-action="change->checklist#onChange">

@@ -15,14 +15,13 @@ Select-all checkbox for a group of native `<input type="checkbox">` checklist it
 
 ## Actions
 
-| Name          | Purpose                                                                                                                                                      |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `onChange`    | Wired to `change` on the container — event adapter: calls `toggleAll` if the event came from the select-all checkbox, otherwise `recompute`                  |
-| `toggleAll`   | Programmatic API — sets every enabled item's `.checked` to the given value, dispatching `input` and `change` on each item it changes, then calls `recompute` |
-| `recompute`   | Programmatic API — writes the select-all checkbox's `.checked`/`.indeterminate` from the enabled items' aggregate state                                      |
-| `onFormReset` | Wired to `form:reset` on the select-all checkbox — event adapter: calls `recompute`                                                                          |
+| Name          | Purpose                                                                                                                                                                    |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`    | Wired to `change` on the container — event adapter: calls `toggleAll` if the event came from the select-all checkbox, otherwise redraws the select-all checkbox            |
+| `toggleAll`   | Programmatic API — sets every enabled item's `.checked` to the given value, dispatching `input` and `change` on each item it changes, then redraws the select-all checkbox |
+| `onFormReset` | Wired to `form:reset` on the select-all checkbox — event adapter: redraws the select-all checkbox                                                                          |
 
-The select-all checkbox also recomputes when items are added or removed and after a Turbo morph.
+A redraw writes the select-all checkbox's `.checked`/`.indeterminate` from the enabled items; it also runs when items are added or removed and after a Turbo morph.
 
 ## Example HTML
 
