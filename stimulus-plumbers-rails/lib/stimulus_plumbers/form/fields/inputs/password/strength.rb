@@ -15,7 +15,8 @@ module StimulusPlumbers
                 html_options,
                 aria: { describedby: described },
                 data: {
-                  password_strength_target: "input", action: "input->password-strength#score"
+                  password_strength_target: "input",
+                  action:                   "input->password-strength#score form:reset->password-strength#onFormReset"
                 }
               )
             end

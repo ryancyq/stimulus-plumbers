@@ -19,6 +19,10 @@ class CreditCardTest < ActionView::TestCase
     assert_css build_field, "[data-controller='input-formatter'][data-input-formatter-format-value='creditCard']"
   end
 
+  def test_input_reformats_on_form_reset
+    assert_css build_field, "input[data-action~='form:reset->input-formatter#onFormReset']"
+  end
+
   def test_renders_one_cell_per_group
     doc = build_field
 

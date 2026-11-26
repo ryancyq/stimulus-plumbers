@@ -11,7 +11,7 @@ class ComboboxHelperTest < ActionView::TestCase
 
       assert_css doc, "[data-controller~='combobox-date']"
       assert_css doc, "input[role='combobox'][aria-label='Birthday']"
-      assert_css doc, "input[type='hidden'][name='birthday'][value='2026-09-15']"
+      assert_css doc, "input[hidden][readonly][name='birthday'][value='2026-09-15']"
     end
   end
 
@@ -28,7 +28,7 @@ class ComboboxHelperTest < ActionView::TestCase
     def test_names_the_hidden_input_and_shows_the_selected_label
       doc = parse_html(sp_combobox_dropdown(name: "country", options: OPTIONS, value: "ca"))
 
-      assert_css doc, "input[type='hidden'][name='country'][value='ca']"
+      assert_css doc, "input[hidden][readonly][name='country'][value='ca']"
       assert_equal "Canada", doc.at_css("button[role='combobox']").text
     end
 
@@ -80,7 +80,7 @@ class ComboboxHelperTest < ActionView::TestCase
 
       assert_css doc, "[data-controller~='combobox-time']"
       assert_css doc, "input[role='combobox'][aria-label='Meeting']"
-      assert_css doc, "input[type='hidden'][name='meeting'][value='14:30']"
+      assert_css doc, "input[hidden][readonly][name='meeting'][value='14:30']"
     end
   end
 end

@@ -124,8 +124,9 @@ module StimulusPlumbers
       def extract_listen_token(token, nesting, const_table, manifest)
         return unless token[:event]
 
+        # A source that is not a controller (`form`, `turbo`) gets an entry too.
         resolve_all(token[:src], const_table, nesting).each do |src|
-          manifest[src]["listens"] << token[:event] if manifest.key?(src)
+          (manifest[src] ||= { "actions" => [], "listens" => [], "targets" => [], "values" => [] })["listens"] << token[:event]
         end
       end
 

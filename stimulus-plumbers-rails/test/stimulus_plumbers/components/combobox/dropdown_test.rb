@@ -12,7 +12,7 @@ class ComboboxDropdownTest < ActionView::TestCase
 
     assert_css doc, "[data-controller='combobox'][data-combobox-mode-value='select_only']"
     assert_css doc, "button[role='combobox']", text: "Canada"
-    assert_css doc, "input[type='hidden'][name='country'][value='ca']"
+    assert_css doc, "input[hidden][readonly][name='country'][value='ca']"
   end
 
   def test_rejects_a_value_policy

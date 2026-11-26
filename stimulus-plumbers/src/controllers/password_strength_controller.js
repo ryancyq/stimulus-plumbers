@@ -45,6 +45,13 @@ export default class extends Controller {
     this._requestor.schedule(() => this._announce(), this.announceDelayValue);
   }
 
+  // Redraws without announcing.
+  onFormReset() {
+    this._requestor.cancel();
+    this._announcedFrom = null;
+    this._draw(this.readValue());
+  }
+
   readValue() {
     return this.hasInputTarget ? this.inputTarget.value : '';
   }

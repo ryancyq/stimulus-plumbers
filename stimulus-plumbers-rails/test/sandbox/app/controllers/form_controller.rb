@@ -52,6 +52,9 @@ class FormController < ApplicationController
     @form = Preferences.new(volume: 45)
   end
 
+  def reset
+  end
+
   def code
     @form = Verification.new
   end

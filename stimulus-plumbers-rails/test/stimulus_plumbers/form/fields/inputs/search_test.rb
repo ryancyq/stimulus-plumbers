@@ -34,7 +34,7 @@ class SearchTest < ActionView::TestCase
   end
 
   def test_native_does_not_render_hidden_value_input
-    assert_no_css build_native, "input[type='hidden'][name='sign_in_form[email]']"
+    assert_no_css build_native, "input[hidden][readonly][name='sign_in_form[email]']"
   end
 
   def test_native_clearable_renders_input_clearable_controller_wrapper
@@ -71,7 +71,7 @@ class SearchTest < ActionView::TestCase
   end
 
   def test_renders_hidden_value_input
-    assert_css build_field, "input[type='hidden'][name='sign_in_form[email]']"
+    assert_css build_field, "input[hidden][readonly][name='sign_in_form[email]']"
   end
 
   def test_renders_an_editable_freeform_combobox
@@ -194,7 +194,7 @@ class SearchTest < ActionView::TestCase
     @form.define_singleton_method(:email) { "hello@example.com" }
 
     assert_equal "hello@example.com",
-                 build_field.at_css("input[type='hidden'][name='sign_in_form[email]']")["value"]
+                 build_field.at_css("input[hidden][readonly][name='sign_in_form[email]']")["value"]
   end
 
   def test_model_value_shows_as_the_freeform_text

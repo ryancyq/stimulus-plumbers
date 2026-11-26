@@ -2,7 +2,7 @@
 
 module StimulusPlumbers
   module Components
-    # The `combobox` controller markup: container, Trigger, hidden input, and Panel. Dropdown and Typeahead define MODE,
+    # The `combobox` controller markup: container, Trigger, value input, and Panel. Dropdown and Typeahead define MODE,
     # the trigger element, and the popover theme key.
     class Combobox < Plumber::Base
       include Plumber::Options::Choice
@@ -35,7 +35,7 @@ module StimulusPlumbers
           template.safe_join(
             [
               render_trigger(label, labelledby, group.merge(trigger)),
-              hidden_input(name),
+              value_input(name),
               render_panel(labelled_aria(label, labelledby: labelledby))
             ]
           )
@@ -103,8 +103,17 @@ module StimulusPlumbers
         listbox
       end
 
-      def hidden_input(name)
-        template.tag.input(type: "hidden", name: name, value: @value, data: { "#{STIMULUS_CONTROLLER}-target" => "input" })
+      # A hidden text input, not type=hidden, so a form reset restores it.
+      def value_input(name)
+        template.tag.input(
+          type:         "text",
+          hidden:       true,
+          readonly:     true,
+          autocomplete: "off",
+          name:         name,
+          value:        @value,
+          data:         { "#{STIMULUS_CONTROLLER}-target" => "input", action: "form:reset->#{STIMULUS_CONTROLLER}#onFormReset" }
+        )
       end
     end
   end

@@ -34,7 +34,8 @@ describe('ComboboxController', () => {
           ${trigger}
           <svg id="icon" aria-hidden="true"></svg>
           <button id="other" type="button">Other</button>
-          <input type="hidden" name="city" value="${value}" data-combobox-target="input" />
+          <input type="text" hidden readonly autocomplete="off" name="city" value="${value}"
+                 data-combobox-target="input" data-action="form:reset->combobox#onFormReset" />
           <div id="panel" popover="manual" data-combobox-target="panel">
             <ul id="listbox" role="listbox" data-combobox-target="listbox">
               ${items}
@@ -53,7 +54,7 @@ describe('ComboboxController', () => {
       container,
       panel,
       trigger: document.querySelector('#trigger'),
-      input: document.querySelector('input[type="hidden"]'),
+      input: document.querySelector('[data-combobox-target="input"]'),
       option: (id) => document.querySelector(`#opt-${id}`),
     };
   };
@@ -65,6 +66,10 @@ describe('ComboboxController', () => {
   };
 
   const isOpen = (panel) => panel.matches(':popover-open');
+  const resetForm = () => {
+    document.querySelector('#form').reset();
+    document.querySelector('[data-combobox-target="input"]').dispatchEvent(new CustomEvent('form:reset'));
+  };
   const settle = flush;
   const active = (trigger) => trigger.getAttribute('aria-activedescendant');
   const selected = () => [...document.querySelectorAll('[aria-selected="true"]')].map((option) => option.id);
@@ -273,6 +278,22 @@ describe('ComboboxController', () => {
       expect(isOpen(panel)).toBe(false);
       expect(changed.mock.calls[0][0].detail).toMatchObject({ value: 'se', label: 'Seoul' });
       expect(selected()).toEqual(['opt-se']);
+    });
+
+    it('dispatches input and change on the value input only for a new value', async () => {
+      const { trigger, input } = await render({ value: 'sg', label: 'Singapore' });
+      const events = [];
+      input.addEventListener('input', () => events.push('input'));
+      input.addEventListener('change', () => events.push('change'));
+
+      key(trigger, 'ArrowDown');
+      key(trigger, 'Enter');
+      key(trigger, 'ArrowDown');
+      key(trigger, 'ArrowDown');
+      key(trigger, 'Enter');
+
+      expect(input.value).toBe('se');
+      expect(events).toEqual(['input', 'change']);
     });
 
     it('selects with Space in select-only mode', async () => {
@@ -743,8 +764,7 @@ describe('ComboboxController', () => {
       const { trigger } = await render({ mode: 'editable', status: false });
 
       type(trigger, 'zz');
-      document.querySelector('#form').reset();
-      await settle();
+      resetForm();
 
       expect(visible()).toEqual(['opt-sg', 'opt-sy', 'opt-se', 'opt-st']);
       console.error.mockRestore();
@@ -846,65 +866,55 @@ describe('ComboboxController', () => {
     });
   });
 
+  describe('disabled', () => {
+    it('a click on an icon leaves a trigger disabled by its fieldset closed', async () => {
+      const { panel } = await render({ value: 'sg', label: 'Singapore' });
+      const fieldset = document.createElement('fieldset');
+      fieldset.disabled = true;
+      document.querySelector('#form').append(fieldset);
+      fieldset.append(document.querySelector('#container'));
+      await flush();
+
+      document.querySelector('#icon').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      expect(isOpen(panel)).toBe(false);
+    });
+  });
+
   describe('lifecycle', () => {
-    it('restores the initial selection after a form reset', async () => {
-      vi.useFakeTimers();
-      try {
-        const { trigger, input } = await render({ value: 'sg', label: 'Singapore' });
-        key(trigger, 'ArrowDown');
-        key(trigger, 'ArrowDown');
-        key(trigger, 'Enter');
-
-        document.querySelector('#form').reset();
-        vi.runAllTimers();
-
-        expect(input.value).toBe('sg');
-        expect(trigger.textContent).toBe('Singapore');
-        expect(selected()).toEqual(['opt-sg']);
-      } finally {
-        vi.useRealTimers();
-      }
-    });
-
-    it('ignores a cancelled form reset', async () => {
-      vi.useFakeTimers();
-      try {
-        const { trigger, input } = await render({ value: 'sg', label: 'Singapore' });
-        key(trigger, 'ArrowDown');
-        key(trigger, 'ArrowDown');
-        key(trigger, 'Enter');
-        const form = document.querySelector('#form');
-        form.addEventListener('reset', (event) => event.preventDefault());
-
-        form.reset();
-        vi.runAllTimers();
-
-        expect(input.value).toBe('se');
-      } finally {
-        vi.useRealTimers();
-      }
-    });
-
-    it('keeps the server-rendered state for reset across a reconnect', async () => {
-      const { container, trigger, input } = await render({ value: 'sg', label: 'Singapore' });
+    it('restores the server-rendered selection after a form reset', async () => {
+      const { trigger, input } = await render({ value: 'sg', label: 'Singapore' });
       key(trigger, 'ArrowDown');
       key(trigger, 'ArrowDown');
       key(trigger, 'Enter');
 
-      const form = document.querySelector('#form');
-      const wrapper = document.createElement('div');
-      form.appendChild(wrapper);
-      wrapper.appendChild(container);
-      await flush();
-      vi.useFakeTimers();
-      try {
-        form.reset();
-        vi.runAllTimers();
-      } finally {
-        vi.useRealTimers();
-      }
+      resetForm();
 
       expect(input.value).toBe('sg');
+      expect(trigger.textContent).toBe('Singapore');
+      expect(selected()).toEqual(['opt-sg']);
+    });
+
+    it('restores an edited editable combobox after a form reset', async () => {
+      const { trigger, input, panel } = await render({ mode: 'editable', value: 'sg', label: 'Singapore' });
+      trigger.value = 'Se';
+      trigger.dispatchEvent(new Event('input', { bubbles: true }));
+
+      resetForm();
+
+      expect(input.value).toBe('sg');
+      expect(trigger.value).toBe('Singapore');
+      expect(isOpen(panel)).toBe(false);
+      expect(selected()).toEqual(['opt-sg']);
+    });
+
+    it('closes the panel on a form reset', async () => {
+      const { trigger, panel } = await render({ value: 'sg', label: 'Singapore' });
+      key(trigger, 'ArrowDown');
+
+      resetForm();
+
+      expect(isOpen(panel)).toBe(false);
       expect(trigger.getAttribute('aria-expanded')).toBe('false');
     });
 
@@ -936,7 +946,7 @@ describe('ComboboxController', () => {
       key(trigger, 'Enter');
 
       expect(selected()).toEqual([]);
-      expect(document.querySelector('input[type="hidden"]').value).toBe('');
+      expect(document.querySelector('[data-combobox-target="input"]').value).toBe('');
     });
 
     it('drops an active option that replacement removed', async () => {

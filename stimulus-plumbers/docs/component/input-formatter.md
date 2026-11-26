@@ -29,6 +29,7 @@ Formats values written to an input element. Handles structured display formattin
 | `onInput(event)`  | `input` DOM event                                | Event adapter — re-formats from the input's current value                                                                                    |
 | `onFocus(event)`  | `focus` DOM event                                | Event adapter — redraws cells so the caret cell appears                                                                                      |
 | `onBlur(event)`   | `blur` DOM event                                 | Event adapter — redraws cells so the caret cell clears                                                                                       |
+| `onFormReset()`   | `form:reset` on the input                        | Re-formats the restored value without dispatching `filled`                                                                                   |
 
 ## Dispatches
 
@@ -94,7 +95,7 @@ Formatter.register('iban', {
     autocomplete="one-time-code"
     inputmode="numeric"
     maxlength="6"
-    data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur"
+    data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur form:reset->input-formatter#onFormReset"
   />
 </div>
 ```
@@ -124,7 +125,7 @@ dash) are authored HTML, never inserted by the plumber — see
     autocomplete="cc-number"
     inputmode="numeric"
     maxlength="19"
-    data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur"
+    data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur form:reset->input-formatter#onFormReset"
   />
 </div>
 ```

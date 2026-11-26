@@ -381,6 +381,42 @@ describe('ProgressController', () => {
       expect(spy.mock.calls[0][0].detail).toEqual({ value: 80, min: 0, max: 100 });
     });
 
+    it('redraws the restored value after a form reset without dispatching progress:changed', async () => {
+      document.body.innerHTML = `
+        <form>
+          <input type="range" min="0" max="100" value="45"
+                 data-controller="progress" data-progress-variant-value="range"
+                 data-action="input->progress#refresh form:reset->progress#onFormReset">
+        </form>`;
+      await flush();
+      const input = document.querySelector('input[type="range"]');
+      input.value = '80';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      const changed = vi.fn();
+      input.addEventListener('progress:changed', changed);
+
+      document.querySelector('form').reset();
+      input.dispatchEvent(new CustomEvent('form:reset'));
+
+      expect(input.style.getPropertyValue('--sp-progress-percent')).toBe('45');
+      expect(changed).not.toHaveBeenCalled();
+    });
+
+    it('setValue dispatches input and change on the range it moves', async () => {
+      const input = await setup();
+      const events = [];
+      input.addEventListener('input', () => events.push('input'));
+      input.addEventListener('change', () => events.push('change'));
+      const changed = vi.fn();
+      input.addEventListener('progress:changed', changed);
+
+      getController().setValue(80);
+      getController().setValue(80);
+
+      expect(events).toEqual(['input', 'change']);
+      expect(changed).toHaveBeenCalledOnce();
+    });
+
     it('setValue moves the native input, not just the fill', async () => {
       const input = await setup();
       getController().setValue(80);

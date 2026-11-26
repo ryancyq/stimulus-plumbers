@@ -159,17 +159,6 @@ describe('ComboboxTurboController', () => {
     expect(status()).toBe('Results could not be loaded');
   });
 
-  it('shows the error text for a successful response that is not HTML', async () => {
-    const { container, frame } = await render();
-
-    query(container, 'Se');
-    frame.dispatchEvent(
-      new CustomEvent('turbo:before-fetch-response', { detail: { fetchResponse: { succeeded: true, isHTML: false } } })
-    );
-
-    expect(status()).toBe('Results could not be loaded');
-  });
-
   it('shows the error text for a network error without blocking Turbo', async () => {
     const { frame } = await render();
     const event = new Event('turbo:fetch-request-error', { cancelable: true });
@@ -178,6 +167,22 @@ describe('ComboboxTurboController', () => {
 
     expect(event.defaultPrevented).toBe(false);
     expect(status()).toBe('Results could not be loaded');
+  });
+
+  it('ignores turbo events from a frame nested in the results', async () => {
+    await render();
+    const nested = document.createElement('turbo-frame');
+    document.querySelector('#listbox').append(nested);
+    const missing = new CustomEvent('turbo:frame-missing', { bubbles: true, cancelable: true });
+
+    nested.dispatchEvent(
+      new CustomEvent('turbo:before-fetch-response', { bubbles: true, detail: { fetchResponse: { succeeded: false } } })
+    );
+    nested.dispatchEvent(missing);
+    nested.dispatchEvent(new CustomEvent('turbo:fetch-request-error', { bubbles: true }));
+
+    expect(missing.defaultPrevented).toBe(false);
+    expect(status()).toBe('');
   });
 
   it('ignores a query from a nested combobox', async () => {

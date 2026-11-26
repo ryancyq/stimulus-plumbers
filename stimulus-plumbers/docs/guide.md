@@ -59,6 +59,16 @@ doc:
 Markup shape is per-controller — take the authoritative structure from `get_controller_docs(name:)`
 rather than adapting this example.
 
+## Form reset
+
+Importing the package installs one listener: after a form reset restores the form's controls, each
+control receives a non-bubbling `form:reset` event. A controller that draws from a control redraws
+through an action on that control, as each controller's doc lists:
+
+```html
+<input type="checkbox" data-checklist-target="selectAll" data-action="form:reset->checklist#onFormReset" />
+```
+
 ## Styling
 
 Controllers ship no CSS; they toggle classes and attributes only. Bring your own styles, or use the

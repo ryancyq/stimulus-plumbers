@@ -6,18 +6,20 @@ require "json"
 class StimulusContractTest < Minitest::Test
   COMPONENT_MANIFEST_PATH  = File.expand_path("../../vendor/component/manifest.json", __dir__)
   CONTROLLER_MANIFEST_PATH = File.expand_path("../../../stimulus-plumbers/dist/controllers.manifest.json", __dir__)
+  EVENTS_MANIFEST_PATH     = File.expand_path("../../../stimulus-plumbers/dist/events.manifest.json", __dir__)
 
   # Pre-existing drift found when this test was introduced — not caused by this change.
   # Tracked separately; remove each entry here once it's fixed for real.
   KNOWN_VIOLATIONS = {}.freeze
 
   def setup
-    unless File.exist?(COMPONENT_MANIFEST_PATH) && File.exist?(CONTROLLER_MANIFEST_PATH)
+    unless [COMPONENT_MANIFEST_PATH, CONTROLLER_MANIFEST_PATH, EVENTS_MANIFEST_PATH].all? { |path| File.exist?(path) }
       raise "missing manifest — run `npm run build` in stimulus-plumbers/ and `rake build:manifest` here first"
     end
 
     @component  = JSON.parse(File.read(COMPONENT_MANIFEST_PATH))
     @controller = JSON.parse(File.read(CONTROLLER_MANIFEST_PATH))
+    @events     = JSON.parse(File.read(EVENTS_MANIFEST_PATH))
 
     return if @controller.each_value.all? { |data| data.key?("actionParams") }
 
@@ -26,12 +28,21 @@ class StimulusContractTest < Minitest::Test
 
   def test_every_referenced_identifier_exists_in_js
     @component.each_key do |id|
-      assert @controller.key?(id), "Ruby references controller `#{id}` which does not exist in controllers.manifest.json"
+      assert @controller.key?(id) || @events.key?(id),
+             "Ruby references `#{id}`, which is neither a controller nor a library event source in the JS manifests"
+    end
+  end
+
+  def test_every_ruby_listened_library_event_is_dispatched_by_js
+    @component.slice(*@events.keys).each do |source, wiring|
+      wiring["listens"].each do |event|
+        assert_includes @events[source], event, "Ruby listens for `#{source}:#{event}` but the library never dispatches it"
+      end
     end
   end
 
   def test_every_ruby_action_exists_as_a_js_method
-    @component.each do |id, wiring|
+    controllers.each do |id, wiring|
       wiring["actions"].each do |method|
         assert_includes @controller[id]["actions"],
                         method,
@@ -43,7 +54,7 @@ class StimulusContractTest < Minitest::Test
   # Stimulus passes the Event as arg 1, so a data-action may only name an onX(event)
   # adapter or a method that takes no arguments — never the programmatic API.
   def test_every_ruby_action_is_an_event_adapter_or_takes_no_arguments
-    @component.each do |id, wiring|
+    controllers.each do |id, wiring|
       wiring["actions"].each do |method|
         params = @controller[id]["actionParams"][method] || []
         next if params.empty?
@@ -60,7 +71,7 @@ class StimulusContractTest < Minitest::Test
   end
 
   def test_every_ruby_listened_event_is_dispatched_by_js
-    @component.each do |id, wiring|
+    controllers.each do |id, wiring|
       wiring["listens"].each do |event|
         assert_includes @controller[id]["dispatches"],
                         event,
@@ -70,7 +81,7 @@ class StimulusContractTest < Minitest::Test
   end
 
   def test_every_ruby_target_exists_in_js
-    @component.each do |id, wiring|
+    controllers.each do |id, wiring|
       wiring["targets"].each do |target|
         next if known_violation?(id, "targets", target)
 
@@ -82,7 +93,7 @@ class StimulusContractTest < Minitest::Test
   end
 
   def test_every_ruby_value_exists_in_js
-    @component.each do |id, wiring|
+    controllers.each do |id, wiring|
       wiring["values"].each do |value|
         next if known_violation?(id, "values", value)
 
@@ -94,6 +105,10 @@ class StimulusContractTest < Minitest::Test
   end
 
   private
+
+  def controllers
+    @component.slice(*@controller.keys)
+  end
 
   def known_violation?(id, category, name)
     KNOWN_VIOLATIONS.dig(id, category)&.include?(name) || false

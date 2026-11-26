@@ -92,7 +92,7 @@ class SelectTest < ActionView::TestCase
   end
 
   def test_select_renders_hidden_value_input
-    assert_css build_combobox_select(:country), "input[type='hidden'][name='sign_in_form[country]']"
+    assert_css build_combobox_select(:country), "input[hidden][readonly][name='sign_in_form[country]']"
   end
 
   def test_select_renders_a_select_only_combobox_button_labelled_by_the_field_label
@@ -198,7 +198,7 @@ class SelectTest < ActionView::TestCase
 
   def test_collection_select_renders_hidden_value_input
     assert_css build_collection_combobox(:country, [], :code, :name),
-               "input[type='hidden'][name='sign_in_form[country]']"
+               "input[hidden][readonly][name='sign_in_form[country]']"
   end
 
   def test_collection_select_renders_options_from_collection

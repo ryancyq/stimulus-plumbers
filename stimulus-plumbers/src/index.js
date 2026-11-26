@@ -5,6 +5,8 @@
  * Following WCAG 2.1+ and WAI-ARIA best practices
  */
 
+import './form.js';
+
 // Export accessibility utilities
 export * from './accessibility/focus.js';
 export * from './accessibility/keyboard.js';

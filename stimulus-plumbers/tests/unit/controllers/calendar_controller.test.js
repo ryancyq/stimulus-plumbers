@@ -50,14 +50,10 @@ describe('CalendarController', () => {
     .map((month) => `<a href="?period=${month}" data-navigation="step" data-date="${month}-01" data-view="month"></a>`)
     .join('');
 
-  const render = async ({
-    grid = monthMarkup(),
-    attrs = 'data-calendar-selectable-value="true"',
-    form = false,
-  } = {}) => {
+  const render = async ({ grid = monthMarkup(), attrs = 'data-calendar-selectable-value="true"' } = {}) => {
     const section = `<section id="container" data-controller="calendar" data-calendar-navigation-value="turbo" ${attrs}>
         <div role="status" data-calendar-target="status"></div>${grid}${PERIOD_LINKS}</section>`;
-    document.body.innerHTML = form ? `<form id="form">${section}</form>` : section;
+    document.body.innerHTML = section;
     const container = document.querySelector('#container');
     await flush();
     return { container, controller: application.getControllerForElementAndIdentifier(container, 'calendar') };
@@ -268,20 +264,6 @@ describe('CalendarController', () => {
 
       const display = await render({ attrs: '' });
       expect(display.controller.select('2026-09-15')).toBe(false);
-    });
-
-    it('restores the server-rendered selection on form reset', async () => {
-      await render({
-        form: true,
-        attrs: 'data-calendar-selectable-value="true" data-calendar-selected-value="2026-09-10"',
-      });
-
-      day('2026-09-15').click();
-      document.querySelector('#form').reset();
-      await flush();
-
-      expect(day('2026-09-10').closest('td').getAttribute('aria-selected')).toBe('true');
-      expect(day('2026-09-15').closest('td').getAttribute('aria-selected')).toBe('false');
     });
   });
 

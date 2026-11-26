@@ -28,7 +28,6 @@ export default class extends Controller {
     this.expanded = false;
     this.edited = false;
     this.selection = { value: '', label: '' };
-    this.initial = null;
     this.sequence = 0;
     this.query = '';
     this.filtered = [];
@@ -52,15 +51,6 @@ export default class extends Controller {
       { signal }
     );
     this.selection = { value: this.inputTarget.value, label: this._displayLabel() };
-    // Survives reconnects.
-    this.initial ??= { ...this.selection };
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._restoreInitial()),
-        { signal }
-      );
     this._syncSelection();
     if (!this.hasPanelTarget)
       console.error('ComboboxController requires a panel target. Add data-combobox-target="panel".');
@@ -225,7 +215,21 @@ export default class extends Controller {
     if (this.hasStatusTarget) this.statusTarget.textContent = '';
   }
 
+  // Clears `edited` first, so closing keeps the restored value.
+  onFormReset() {
+    this.edited = false;
+    this.selection = { value: this.inputTarget.value, label: '' };
+    const selected = this._selectedOption();
+    if (!this._isEditable()) this._setDisplayLabel(selected ? this._optionLabel(selected) : '');
+    this.selection.label = this._displayLabel();
+    this._closePanel();
+    this._resetFilter();
+    this._syncSelection();
+  }
+
   onClick(event) {
+    if (this.triggerTarget.matches(':disabled')) return;
+
     const option = event.target.closest?.(OPTION_SELECTOR);
     if (option && this.hasListboxTarget && this.listboxTarget.contains(option)) {
       this.select(option);
@@ -254,12 +258,17 @@ export default class extends Controller {
     const detail = { value, label, option };
     if (this.dispatch('before-change', { detail, cancelable: true }).defaultPrevented) return false;
 
+    const differs = this.inputTarget.value !== value;
     this.inputTarget.value = value;
     this._setDisplayLabel(label);
     this.selection = { value, label };
     this.edited = false;
     if (this.expanded) this.activeDescendant.activate(option);
     else this._syncSelection();
+    if (differs) {
+      this.inputTarget.dispatchEvent(new Event('input', { bubbles: true }));
+      this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+    }
     this.dispatch('changed', { detail });
     if (this.closeOnSelectValue) this._closePanel();
     return true;
@@ -326,16 +335,6 @@ export default class extends Controller {
   _syncSelection(active = null) {
     const selected = active || this._selectedOption();
     this._allOptions().forEach((option) => setSelected(option, option === selected));
-  }
-
-  _restoreInitial() {
-    this._closePanel();
-    this._resetFilter();
-    this.inputTarget.value = this.initial.value;
-    this._setDisplayLabel(this.initial.label);
-    this.selection = { ...this.initial };
-    this.edited = false;
-    this._syncSelection();
   }
 
   _selectedOption() {

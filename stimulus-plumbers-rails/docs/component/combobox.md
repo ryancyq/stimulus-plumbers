@@ -113,7 +113,7 @@ A read-only date input whose popover holds [`sp_calendar`](calendar.md); `combob
   data-controller="popover combobox-date input-formatter"
   data-input-formatter-format-value="date"
   data-input-formatter-options-value="{}"
-  data-action="calendar:changed->combobox-date#onChange focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick combobox-date:changed->input-formatter#onChange"
+  data-action="calendar:changed->combobox-date#onChange popover:before-open->combobox-date#onOpening focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick combobox-date:changed->input-formatter#onChange"
 >
   <div class="[combobox_trigger_group theme classes]">
     <input
@@ -127,15 +127,19 @@ A read-only date input whose popover holds [`sp_calendar`](calendar.md); `combob
       aria-haspopup="dialog"
       aria-expanded="false"
       aria-controls="[id]_popover"
-      data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-date#onKeydown"
+      data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-date#onKeydown form:reset->input-formatter#onFormReset"
     />
     <!-- decorative calendar icon -->
   </div>
   <input
-    type="hidden"
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
     name="[name]"
     value="2026-09-15"
     data-combobox-date-target="input"
+    data-action="form:reset->combobox-date#onFormReset"
   />
   <div
     id="[id]_popover"
@@ -191,15 +195,19 @@ Column names come from `stimulus_plumbers.combobox.time.*_label`; AM and PM labe
       aria-haspopup="dialog"
       aria-expanded="false"
       aria-controls="[id]_popover"
-      data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-time#onKeydown"
+      data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-time#onKeydown form:reset->input-formatter#onFormReset"
     />
     <!-- decorative clock icon -->
   </div>
   <input
-    type="hidden"
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
     name="[name]"
     value="14:30"
     data-combobox-time-target="input"
+    data-action="form:reset->combobox-time#onFormReset"
   />
   <div
     id="[id]_popover"
@@ -266,10 +274,14 @@ See [form.md](form.md) for the full API.
     <!-- trailing icon -->
   </div>
   <input
-    type="hidden"
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
     name="[name]"
     value="[value]"
     data-combobox-target="input"
+    data-action="form:reset->combobox#onFormReset"
   />
   <div id="[id]_popover" popover="manual" data-combobox-target="panel">
     <ul

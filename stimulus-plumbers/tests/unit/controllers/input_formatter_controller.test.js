@@ -254,6 +254,32 @@ describe('InputFormatterController', () => {
       expect(cells().map((cell) => cell.textContent)).toEqual(['4', '8', '2', '', '', '']);
     });
 
+    it('repaints the restored value after a form reset without dispatching filled', async () => {
+      document.body.innerHTML = `
+        <form>
+          <div data-controller="input-formatter"
+               data-input-formatter-format-value="code"
+               data-input-formatter-options-value='{"charset":"digits","length":6}'>
+            ${'<div data-input-formatter-target="cell"></div>'.repeat(6)}
+            <input value="123456" data-input-formatter-target="input"
+                   data-action="input->input-formatter#onInput form:reset->input-formatter#onFormReset" />
+          </div>
+        </form>
+      `;
+      await flush();
+      input().value = '48';
+      input().dispatchEvent(new Event('input', { bubbles: true }));
+      const filled = vi.fn();
+      document.addEventListener('input-formatter:filled', filled);
+
+      document.querySelector('form').reset();
+      input().dispatchEvent(new CustomEvent('form:reset'));
+      document.removeEventListener('input-formatter:filled', filled);
+
+      expect(cells().map((cell) => cell.textContent)).toEqual(['1', '2', '3', '4', '5', '6']);
+      expect(filled).not.toHaveBeenCalled();
+    });
+
     it('clears previously painted cells when switching to a formatter with no cells hint', async () => {
       input().value = '1234';
       input().dispatchEvent(new Event('input', { bubbles: true }));

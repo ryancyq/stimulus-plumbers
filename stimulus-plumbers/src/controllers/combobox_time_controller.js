@@ -1,5 +1,5 @@
-import { Controller } from '@hotwired/stimulus';
 import { ActiveDescendant } from '../accessibility/keyboard';
+import Temporal from './combobox/temporal';
 
 const MOVES = {
   ArrowDown: (descendant) => descendant.move(1),
@@ -8,44 +8,24 @@ const MOVES = {
   End: (descendant) => descendant.last(),
 };
 
-export default class extends Controller {
-  static targets = ['trigger', 'input', 'panel', 'hour', 'minute', 'meridiem'];
-
-  connect() {
-    this.connection = new AbortController();
-    // Survives reconnects.
-    this.initial ??= this._snapshot();
-    this.element
-      .closest('form')
-      ?.addEventListener(
-        'reset',
-        (event) => setTimeout(() => event.defaultPrevented || !this.connection || this._reset()),
-        { signal: this.connection.signal }
-      );
-  }
+export default class extends Temporal {
+  static targets = ['hour', 'minute', 'meridiem'];
 
   disconnect() {
-    this.connection?.abort();
-    this.connection = null;
     this.descendants = null;
   }
 
-  // ArrowDown opens the panel and focuses the hour column; Tab closes the panel.
   onKeydown(event) {
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      if (!this._isOpen) this.panelTarget.showPopover({ source: this.triggerTarget });
-      this.hourTarget.focus();
-    } else if (event.key === 'Tab' && this._isOpen) {
-      this.panelTarget.hidePopover();
-    } else if (event.key === 'Escape') {
-      this._cancel(event);
-    }
+    if (event.key === 'Escape') this._cancel(event);
+    else super.onKeydown(event);
   }
 
-  // Records the value to restore on Escape.
+  // `opened` is what Escape restores.
   onOpening(event) {
-    if (event.target === this.panelTarget) this.opened = this._snapshot();
+    if (event.target !== this.panelTarget) return;
+
+    this.opened = { value: this.inputTarget.value, selection: this._selectionFor(this.inputTarget.value) };
+    this._showSelection(this.opened.selection);
   }
 
   // Shows the selected options.
@@ -83,30 +63,6 @@ export default class extends Controller {
     this._selectionChanged();
   }
 
-  // Clicks on the icons and padding open the panel from the trigger.
-  onClick(event) {
-    if (!this._isInFieldBox(event.target)) return;
-
-    this.triggerTarget.focus({ preventScroll: true });
-    if (!this._isOpen) this.panelTarget.showPopover({ source: this.triggerTarget });
-  }
-
-  // Keeps focus on the trigger while the icons and padding are pressed.
-  onMousedown(event) {
-    if (this._isInFieldBox(event.target)) event.preventDefault();
-  }
-
-  // Closes the panel when focus moves to an element outside the combobox; WebKit sends focus
-  // nowhere on a click inside the panel.
-  onFocusout(event) {
-    const target = event.relatedTarget;
-    if (this._isOpen && target && !this.element.contains(target)) this.panelTarget.hidePopover();
-  }
-
-  get _isOpen() {
-    return this.panelTarget.matches(':popover-open');
-  }
-
   get _columns() {
     return [this.hourTarget, this.minuteTarget, ...this.meridiemTargets];
   }
@@ -115,7 +71,8 @@ export default class extends Controller {
     if (!this._isOpen) return;
 
     event.preventDefault();
-    this._apply(this.opened);
+    this._showSelection(this.opened.selection);
+    this._setValue(this.opened.value);
     this.panelTarget.hidePopover();
     this.triggerTarget.focus();
   }
@@ -136,27 +93,28 @@ export default class extends Controller {
     return `${String(meridiem === 'PM' ? twelve + 12 : twelve).padStart(2, '0')}:${minute}`;
   }
 
-  _snapshot() {
-    return { value: this.inputTarget.value, options: this._columns.map((column) => this._selectedOption(column)) };
+  _focusPanel() {
+    this.hourTarget.focus();
   }
 
-  // Restores the initial time without a change event, as a native form reset does.
-  _reset() {
-    this.inputTarget.value = this.initial.value;
-    this._apply(this.initial);
+  // The option of each column that a HH:MM value selects; none for a minute off the step.
+  _selectionFor(value) {
+    const [hour, minute] = (value || '').split(':').map(Number);
+    const twelve = String(((hour + 11) % 12) + 1);
+    const values = [
+      this.hasMeridiemTarget ? twelve : String(hour).padStart(2, '0'),
+      String(minute).padStart(2, '0'),
+      hour < 12 ? 'AM' : 'PM',
+    ];
+    return {
+      options: this._columns.map((column, index) =>
+        value ? column.querySelector(`[role="option"][data-value="${values[index]}"]`) : null
+      ),
+    };
   }
 
-  _apply({ value, options }) {
+  _showSelection({ options }) {
     this._columns.forEach((column, index) => this._selectOption(column, options[index]));
-    this._setValue(value);
-  }
-
-  _setValue(value) {
-    if (this.inputTarget.value !== value) {
-      this.inputTarget.value = value;
-      this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-    this.dispatch('changed', { detail: { value } });
   }
 
   _selectOption(column, option) {
@@ -179,10 +137,5 @@ export default class extends Controller {
       this.descendants.set(column, descendant);
     }
     return this.descendants.get(column);
-  }
-
-  // Whether the target is in the input group holding the trigger, other than the trigger.
-  _isInFieldBox(target) {
-    return target !== this.triggerTarget && this.triggerTarget.parentElement.contains(target);
   }
 }

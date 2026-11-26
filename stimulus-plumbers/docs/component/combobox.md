@@ -24,7 +24,15 @@ path. The panel is a `popover="manual"` element opened through the
     data-combobox-target="trigger"
     data-action="input->combobox#onInput keydown->combobox#onKeydown"
   />
-  <input type="hidden" name="city_id" data-combobox-target="input" />
+  <input
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
+    name="city_id"
+    data-combobox-target="input"
+    data-action="form:reset->combobox#onFormReset"
+  />
   <div popover="manual" data-combobox-target="panel">
     <ul id="city_listbox" role="listbox" data-combobox-target="listbox">
       <li id="city_sg" role="option" data-value="sg">Singapore</li>
@@ -54,7 +62,7 @@ Select-only uses a button trigger with no `input` action:
 | Target    | Element                                             | Description                               |
 | --------- | --------------------------------------------------- | ----------------------------------------- |
 | `trigger` | `<button type="button">` (select-only) or `<input>` | Keeps DOM focus; shows the selected label |
-| `input`   | `input[type=hidden]`                                | Submitted value                           |
+| `input`   | `input[type=text][hidden][readonly]`                | Submitted value; a form reset restores it |
 | `panel`   | `[popover="manual"]`                                | Popup; contains the listbox               |
 | `listbox` | `[role=listbox]`                                    | Options with `role="option"`              |
 | `status`  | `[role=status]` after the listbox                   | Required when editable; shows `emptyText` |
@@ -64,24 +72,25 @@ without an `id` get one.
 
 **Values**
 
-| Value           | Type    | Default       | Description                                                                                                                          |
-| --------------- | ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `mode`          | String  | `select_only` | `select_only` or `editable`                                                                                                          |
-| `valuePolicy`   | String  | `restricted`  | Editable only: `restricted` empties the hidden value while editing and reverts unselected text on close; `freeform` submits the text |
-| `closeOnSelect` | Boolean | `true`        | Closes the panel after a selection                                                                                                   |
-| `match`         | String  | `prefix`      | Editable only: `prefix`, `contains`, `fuzzy` (characters in order), or `none` (server-filtered results)                              |
-| `minLength`     | Number  | `1`           | Editable only: a shorter query counts as empty and shows every option                                                                |
-| `emptyText`     | String  | `No results`  | Status text when a query matches no option                                                                                           |
+| Value           | Type    | Default       | Description                                                                                                                         |
+| --------------- | ------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `mode`          | String  | `select_only` | `select_only` or `editable`                                                                                                         |
+| `valuePolicy`   | String  | `restricted`  | Editable only: `restricted` empties the value input while editing and reverts unselected text on close; `freeform` submits the text |
+| `closeOnSelect` | Boolean | `true`        | Closes the panel after a selection                                                                                                  |
+| `match`         | String  | `prefix`      | Editable only: `prefix`, `contains`, `fuzzy` (characters in order), or `none` (server-filtered results)                             |
+| `minLength`     | Number  | `1`           | Editable only: a shorter query counts as empty and shows every option                                                               |
+| `emptyText`     | String  | `No results`  | Status text when a query matches no option                                                                                          |
 
 **Methods**
 
-| Method               | Wired via                      | Description                                                                                                        |
-| -------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
-| `onKeydown(event)`   | `keydown` on the trigger       | Keyboard contract                                                                                                  |
-| `onInput()`          | `input` on an editable trigger | Clears the active option, filters, dispatches `query` when the query changes, opens                                |
-| `onClick(event)`     | `click` on the container       | Selects a clicked option; elsewhere outside the panel and other controls, toggles (select-only) or opens the panel |
-| `onMousedown(event)` | `mousedown` on the container   | Keeps focus on the trigger outside the trigger itself                                                              |
-| `select(option)`     | —                              | Selects an enabled, visible option; returns `false` if refused                                                     |
+| Method               | Wired via                       | Description                                                                                                                                             |
+| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `onKeydown(event)`   | `keydown` on the trigger        | Keyboard contract                                                                                                                                       |
+| `onInput()`          | `input` on an editable trigger  | Clears the active option, filters, dispatches `query` when the query changes, opens                                                                     |
+| `onClick(event)`     | `click` on the container        | Selects a clicked option; elsewhere outside the panel and other controls, toggles (select-only) or opens the panel; nothing while `trigger` is disabled |
+| `onMousedown(event)` | `mousedown` on the container    | Keeps focus on the trigger outside the trigger itself                                                                                                   |
+| `onFormReset()`      | `form:reset` on the value input | Reads the selection from the restored value input and trigger; closes the panel and clears the filter                                                   |
+| `select(option)`     | —                               | Selects an enabled, visible option, dispatching `input` and `change` on `input` for a new value; returns `false` if refused                             |
 
 **Dispatches**
 
@@ -100,7 +109,7 @@ hides non-matching options and empty groups. `results` dispatches after the list
 updated. Closing clears the filter. The panel opens only with a visible option or status text.
 
 Popup events dispatch from the panel. The panel also closes on `turbo:before-cache`. A form reset
-restores the server-rendered value. See
+restores the server-rendered value without dispatching `changed`. See
 [ARIA.md's Combobox pattern](../../../ARIA.md#combobox-combobox_controller) for keyboard, ARIA,
 and the other close paths.
 
@@ -143,7 +152,7 @@ the frame while loading.
   data-combobox-turbo-src-value="/cities"
   data-action="mousedown->combobox#onMousedown click->combobox#onClick combobox:query->combobox-turbo#onQuery combobox:closed->combobox-turbo#onClosed"
 >
-  <!-- trigger and hidden input as above -->
+  <!-- trigger and value input as above -->
   <div popover="manual" data-combobox-target="panel">
     <turbo-frame
       id="city_results"
@@ -162,10 +171,10 @@ the frame while loading.
 | `frame`  | `<turbo-frame>` wrapping the listbox |
 | `status` | The combobox's `status` element      |
 
-| Method              | Wired via                                          | Description                                                     |
-| ------------------- | -------------------------------------------------- | --------------------------------------------------------------- |
-| `onResponse(event)` | `turbo:before-fetch-response` on the frame         | Shows `errorText` for a failed or non-HTML response             |
-| `onError(event)`    | `turbo:frame-missing`, `turbo:fetch-request-error` | Shows `errorText`; prevents only Turbo's missing-frame handling |
+| Method              | Wired via                                          | Description                                                                   |
+| ------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `onResponse(event)` | `turbo:before-fetch-response` on the frame         | Shows `errorText` for a failed or non-HTML response for its frame             |
+| `onError(event)`    | `turbo:frame-missing`, `turbo:fetch-request-error` | Shows `errorText` for its frame; prevents only Turbo's missing-frame handling |
 
 ### combobox-fetch
 
@@ -180,7 +189,7 @@ with the response element of the same `id`. No Turbo dependency.
   data-combobox-fetch-src-value="/cities"
   data-action="mousedown->combobox#onMousedown click->combobox#onClick combobox:query->combobox-fetch#onQuery combobox:closed->combobox-fetch#onClosed"
 >
-  <!-- trigger and hidden input as above -->
+  <!-- trigger and value input as above -->
   <div popover="manual" data-combobox-target="panel">
     <ul id="city_listbox" role="listbox" data-combobox-target="listbox"></ul>
     <div role="status" data-combobox-target="status" data-combobox-fetch-target="status"></div>
@@ -206,7 +215,7 @@ formats the input from `combobox-date:changed`.
   data-controller="popover combobox-date input-formatter"
   data-input-formatter-format-value="date"
   data-combobox-date-calendar-outlet="#birthday_calendar"
-  data-action="calendar:changed->combobox-date#onChange focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick combobox-date:changed->input-formatter#onChange"
+  data-action="calendar:changed->combobox-date#onChange popover:before-open->combobox-date#onOpening focusout->combobox-date#onFocusout mousedown->combobox-date#onMousedown click->combobox-date#onClick combobox-date:changed->input-formatter#onChange"
 >
   <input
     role="combobox"
@@ -218,9 +227,18 @@ formats the input from `combobox-date:changed`.
     data-popover-target="trigger"
     data-combobox-date-target="trigger"
     data-input-formatter-target="input"
-    data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-date#onKeydown"
+    data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-date#onKeydown form:reset->input-formatter#onFormReset"
   />
-  <input type="hidden" name="person[birthday]" value="2026-09-15" data-combobox-date-target="input" />
+  <input
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
+    name="person[birthday]"
+    value="2026-09-15"
+    data-combobox-date-target="input"
+    data-action="form:reset->combobox-date#onFormReset"
+  />
   <div id="birthday_popover" popover="auto" role="dialog" data-popover-target="panel" data-combobox-date-target="panel">
     <!-- sp_calendar markup with id="birthday_calendar" -->
   </div>
@@ -229,11 +247,11 @@ formats the input from `combobox-date:changed`.
 
 **Targets**
 
-| Target    | Description                                      |
-| --------- | ------------------------------------------------ |
-| `trigger` | Read-only input showing the formatted date       |
-| `input`   | Hidden input that submits the `YYYY-MM-DD` value |
-| `panel`   | Popover holding the calendar                     |
+| Target    | Description                                                                |
+| --------- | -------------------------------------------------------------------------- |
+| `trigger` | Read-only input showing the formatted date                                 |
+| `input`   | Hidden input that submits the `YYYY-MM-DD` value; a form reset restores it |
+| `panel`   | Popover holding the calendar                                               |
 
 **Outlets**
 
@@ -243,19 +261,21 @@ formats the input from `combobox-date:changed`.
 
 **Actions**
 
-| Action               | Wired on                        | Description                                                                                                              |
-| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `onKeydown(event)`   | `keydown` on `trigger`          | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel                         |
-| `onFocusout(event)`  | `focusout` on container         | Closes the panel when focus leaves the combobox                                                                          |
-| `onClick(event)`     | `click` on container            | A click on the icons or padding focuses `trigger` and opens the panel                                                    |
-| `onMousedown(event)` | `mousedown` on container        | Keeps focus on `trigger` while the icons or padding are pressed                                                          |
-| `onChange(event)`    | `calendar:changed` on container | Copies the value into `input`, dispatches `change` on it when the value differs, closes the panel, and focuses `trigger` |
+| Action               | Wired on                           | Description                                                                                                                          |
+| -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and has the `calendar` outlet focus its Tab stop; Tab closes the panel                                     |
+| `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                                      |
+| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel unless `trigger` is disabled                                   |
+| `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                                      |
+| `onChange(event)`    | `calendar:changed` on container    | Copies the value into `input`, dispatches `input` and `change` on it when the value differs, closes the panel, and focuses `trigger` |
+| `onOpening(event)`   | `popover:before-open` on container | Selects `input`'s date in the `calendar` outlet                                                                                      |
+| `onFormReset()`      | `form:reset` on `input`            | Closes the panel                                                                                                                     |
 
 **Dispatches**
 
-| Event                   | Detail                     | When                                   |
-| ----------------------- | -------------------------- | -------------------------------------- |
-| `combobox-date:changed` | `{ value }` (`YYYY-MM-DD`) | After a selection and after form reset |
+| Event                   | Detail                     | When              |
+| ----------------------- | -------------------------- | ----------------- |
+| `combobox-date:changed` | `{ value }` (`YYYY-MM-DD`) | After a selection |
 
 Events from a nested combobox date are ignored.
 
@@ -284,9 +304,18 @@ formats the input from `combobox-time:changed`.
     data-popover-target="trigger"
     data-combobox-time-target="trigger"
     data-input-formatter-target="input"
-    data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-time#onKeydown"
+    data-action="focus->popover#onFocus click->popover#onOpen keydown->combobox-time#onKeydown form:reset->input-formatter#onFormReset"
   />
-  <input type="hidden" name="meeting" value="14:30" data-combobox-time-target="input" />
+  <input
+    type="text"
+    hidden
+    readonly
+    autocomplete="off"
+    name="meeting"
+    value="14:30"
+    data-combobox-time-target="input"
+    data-action="form:reset->combobox-time#onFormReset"
+  />
   <div id="meeting_popover" popover="auto" role="dialog" data-popover-target="panel" data-combobox-time-target="panel">
     <ul
       role="listbox"
@@ -310,7 +339,7 @@ formats the input from `combobox-time:changed`.
 | Target     | Description                                                                  |
 | ---------- | ---------------------------------------------------------------------------- |
 | `trigger`  | Read-only input showing the formatted time                                   |
-| `input`    | Hidden input that submits the `HH:MM` value                                  |
+| `input`    | Hidden input that submits the `HH:MM` value; a form reset restores it        |
 | `panel`    | Popover holding the columns                                                  |
 | `hour`     | Hour column; option values `1`–`12` with a `meridiem` column, else `00`–`23` |
 | `minute`   | Minute column; option values `00`–`59`                                       |
@@ -321,18 +350,19 @@ formats the input from `combobox-time:changed`.
 | Action               | Wired on                           | Description                                                                                                                                       |
 | -------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and focuses `hour`; Tab closes the panel; Escape as in `onNavigate`                                                     |
-| `onOpening(event)`   | `popover:before-open` on container | Records the value Escape restores                                                                                                                 |
+| `onOpening(event)`   | `popover:before-open` on container | Selects `input`'s time in the columns and records it for Escape                                                                                   |
 | `onOpened(event)`    | `popover:opened` on container      | Scrolls the selected options into view                                                                                                            |
 | `onNavigate(event)`  | `keydown` on a column              | Arrows, Home, and End select an option; Enter closes the panel; Escape restores the value from opening and closes the panel; both focus `trigger` |
 | `onSelect(event)`    | `click` on a column                | Selects the clicked option                                                                                                                        |
 | `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                                                   |
-| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel                                                                             |
+| `onClick(event)`     | `click` on container               | A click on the icons or padding focuses `trigger` and opens the panel unless `trigger` is disabled                                                |
 | `onMousedown(event)` | `mousedown` on container           | Keeps focus on `trigger` while the icons or padding are pressed                                                                                   |
+| `onFormReset()`      | `form:reset` on `input`            | Closes the panel                                                                                                                                  |
 
-Selecting an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are selected, the value goes into `input`, which dispatches `change` when the value differs.
+Selecting an option sets `aria-selected` and the column's `aria-activedescendant`. Once hour, minute, and any AM or PM are selected, the value goes into `input`, which dispatches `input` and `change` when the value differs.
 
 **Dispatches**
 
-| Event                   | Detail                | When                                                              |
-| ----------------------- | --------------------- | ----------------------------------------------------------------- |
-| `combobox-time:changed` | `{ value }` (`HH:MM`) | After a selection that completes the time, Escape, and form reset |
+| Event                   | Detail                | When                                                  |
+| ----------------------- | --------------------- | ----------------------------------------------------- |
+| `combobox-time:changed` | `{ value }` (`HH:MM`) | After a selection that completes the time, and Escape |
