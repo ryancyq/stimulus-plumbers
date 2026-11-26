@@ -3,7 +3,6 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      # A read-only date input whose popover holds sp_calendar.
       class Date < Temporal
         STIMULUS_CONTROLLER = "combobox-date"
         FORMAT              = "date"
@@ -14,7 +13,6 @@ module StimulusPlumbers
           "popover:before-open->#{STIMULUS_CONTROLLER}#onOpening"
         ].freeze
 
-        # `calendar:` goes to the `:stimulus` sp_calendar.
         def render(calendar: {}, **kwargs)
           @calendar = calendar.merge(kwargs.extract!(*Dates::Availability::OPTIONS))
           super(**kwargs)
@@ -22,7 +20,6 @@ module StimulusPlumbers
 
         private
 
-        # A value that is not a date renders as text and selects nothing.
         def parse(value)
           Dates.parse_key(value)
         end

@@ -1,5 +1,3 @@
-// Civil dates as { year, month, day } with month 1–12; never a Date or an instant.
-// Date keys (YYYY-MM-DD) at the boundaries, parts for arithmetic; years 0001–9999.
 const KEY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 const inRange = (date) => (date.year >= 1 && date.year <= 9999 ? date : null);
 
@@ -79,7 +77,6 @@ export function weekday(date) {
   return (((toDayNumber(date) + 4) % 7) + 7) % 7;
 }
 
-// Whole weeks covering the month, as date keys.
 export function monthGrid(date, firstDayOfWeek = 0) {
   const first = { year: date.year, month: date.month, day: 1 };
   const last = { ...first, day: daysInMonth(date.year, date.month) };
@@ -92,7 +89,6 @@ export function monthGrid(date, firstDayOfWeek = 0) {
   return weeks;
 }
 
-// Availability uses date keys for `min`, `max`, and `disabledDates`; integers for the rest.
 export function isDisabled(date, availability = {}) {
   const { min, max, disabledDates = [], disabledWeekdays = [], disabledMonths = [], disabledYears = [] } = availability;
   const key = dateKey(date);
@@ -106,7 +102,6 @@ export function isDisabled(date, availability = {}) {
   );
 }
 
-// A month is unavailable when listed, when its year is, or when it lies outside min–max.
 export function isMonthDisabled(year, month, availability = {}) {
   const { min, max, disabledMonths = [] } = availability;
   const first = dateKey({ year, month, day: 1 });
@@ -119,7 +114,6 @@ export function isMonthDisabled(year, month, availability = {}) {
   );
 }
 
-// A year is unavailable when listed or when it lies outside min–max.
 export function isYearDisabled(year, availability = {}) {
   const { min, max, disabledYears = [] } = availability;
   return (
@@ -129,7 +123,6 @@ export function isYearDisabled(year, availability = {}) {
   );
 }
 
-// Problems that make availability unusable, each starting with the option it names; empty when valid.
 export function availabilityErrors(availability = {}) {
   const { min, max, disabledDates = [], disabledWeekdays = [], disabledMonths = [], disabledYears = [] } = availability;
   const integers = (values, low, high) =>
@@ -145,8 +138,6 @@ export function availabilityErrors(availability = {}) {
   return errors;
 }
 
-// Date keys in and out; `dates` are the navigable dates. Selected, then today, then the displayed
-// date, then the first enabled date.
 export function focusDate({ dates, selected, today, displayed, availability }) {
   const enabled = dates.filter((key) => !isDisabled(parseDateKey(key), availability));
   return [selected, today, displayed].find((key) => key && enabled.includes(key)) ?? enabled[0] ?? null;

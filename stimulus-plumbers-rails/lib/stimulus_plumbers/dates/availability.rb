@@ -2,7 +2,6 @@
 
 module StimulusPlumbers
   module Dates
-    # The dates a field offers. Dates are Date objects or date keys.
     class Availability
       OPTIONS = %i[min max disabled_dates disabled_weekdays disabled_months disabled_years].freeze
 

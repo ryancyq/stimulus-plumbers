@@ -3,7 +3,6 @@
 module StimulusPlumbers
   module Components
     class Combobox
-      # A read-only time input whose popover holds hour, minute, and AM/PM columns.
       class Time < Temporal
         STIMULUS_CONTROLLER = "combobox-time"
         FORMAT              = "time"
@@ -35,7 +34,6 @@ module StimulusPlumbers
           format("%<hour>02d:%<minute>02d", hour: hour, minute: minute)
         end
 
-        # The columns follow `hourCycle` or `hour12`, 12-hour by default.
         def format_options(format)
           return super unless format.respond_to?(:to_h)
 
