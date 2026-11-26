@@ -30,10 +30,6 @@ module StimulusPlumbers
         @name ||= self.class.name.demodulize.delete_suffix("Theme")
       end
 
-      def avatar_variants
-        {}
-      end
-
       def avatar_variant_range
         []
       end
@@ -44,6 +40,12 @@ module StimulusPlumbers
 
       def attribute_names(component)
         SCHEMA.fetch(component, {}).keys
+      end
+
+      def range_for(validator)
+        return validator if validator.nil? || validator.respond_to?(:include?)
+
+        Plumber::Dispatcher.build(validator).call(self)
       end
 
       def resolve(component, **args)

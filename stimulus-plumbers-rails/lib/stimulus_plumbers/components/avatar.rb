@@ -10,12 +10,12 @@ module StimulusPlumbers
       private
 
       def render_avatar(name: nil, initials: nil, url: nil, variant: nil, size: :md, **kwargs, &block)
-        variant_css = resolve_variant(variant, name, initials) unless url || block_given?
+        color = variant || seeded_variant(name, initials) unless url || block_given?
 
         html_options = merge_html_options(
-          theme.resolve(:avatar, size: size),
+          theme.resolve(:avatar, size: size, variant: color),
           kwargs,
-          { class: variant_css, aria: { label: name }, role: "img" }
+          { aria: { label: name }, role: "img" }
         )
 
         template.content_tag(:span, **html_options) do
@@ -47,11 +47,9 @@ module StimulusPlumbers
         template.tag.img(**img_options)
       end
 
-      def resolve_variant(variant, name, initials)
+      def seeded_variant(name, initials)
         range = theme.avatar_variant_range
-        if variant
-          theme.avatar_variants.fetch(variant, nil)
-        elsif (seed = name || initials) && range.any?
+        if (seed = name || initials) && range.any?
           range[seed.bytes.reduce(:^) % range.length]
         else
           range.first

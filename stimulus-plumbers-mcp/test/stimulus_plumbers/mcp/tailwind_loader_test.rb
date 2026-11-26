@@ -36,6 +36,10 @@ class TailwindLoaderTest < Minitest::Test
     assert @theme[:button].key?("type:card")
   end
 
+  def test_avatar_lists_the_classes_of_a_theme_variant
+    assert_includes @theme[:avatar]["variant:sky"].split, "bg-sky-600"
+  end
+
   def test_no_nil_classes
     @theme.each do |key, variants|
       variants.each do |variant, classes|
