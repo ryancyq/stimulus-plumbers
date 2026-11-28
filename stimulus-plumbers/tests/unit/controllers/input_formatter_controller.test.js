@@ -93,6 +93,41 @@ describe('InputFormatterController', () => {
     });
   });
 
+  describe('caret after reformatting', () => {
+    let input;
+
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
+          <input type="text" data-input-formatter-target="input" data-action="input->input-formatter#onInput">
+        </div>
+      `;
+      await flush();
+      input = document.querySelector('input');
+      input.focus();
+    });
+
+    const type = (value, caret) => {
+      input.value = value;
+      input.setSelectionRange(caret, caret);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
+    it('stays after a digit inserted mid-number', () => {
+      type('42142 4242', 3);
+
+      expect(input.value).toBe('4214 2424 2');
+      expect(input.selectionStart).toBe(3);
+    });
+
+    it('moves past a separator the reformat inserts', () => {
+      type('42421 4242', 5);
+
+      expect(input.value).toBe('4242 1424 2');
+      expect(input.selectionStart).toBe(6);
+    });
+  });
+
   describe('without an input target', () => {
     beforeEach(async () => {
       document.body.innerHTML = `<div data-controller="input-formatter"></div>`;

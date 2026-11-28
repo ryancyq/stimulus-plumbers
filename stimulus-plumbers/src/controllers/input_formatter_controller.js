@@ -95,7 +95,9 @@ export default class extends Controller {
   }
 
   onInput() {
+    const kept = this._keptBeforeCaret();
     this.format(this.readValue());
+    if (kept !== null) this._placeCaret(kept);
   }
 
   // Reformats without dispatching `filled`.
@@ -121,6 +123,21 @@ export default class extends Controller {
   readValue() {
     if (!this.hasInputTarget) return '';
     return this.inputTarget instanceof HTMLInputElement ? this.inputTarget.value : this.inputTarget.textContent;
+  }
+
+  // The characters normalize keeps before the caret, or null while the input has no caret.
+  _keptBeforeCaret() {
+    if (!this.formatter || !this.hasInputTarget || document.activeElement !== this.inputTarget) return null;
+    const { selectionStart, value } = this.inputTarget;
+    return selectionStart === null ? null : this.formatter.normalize(value.slice(0, selectionStart)).length;
+  }
+
+  // Moves the caret to just after the `kept`-th kept character.
+  _placeCaret(kept) {
+    const { value } = this.inputTarget;
+    let offset = 0;
+    while (offset < value.length && this.formatter.normalize(value.slice(0, offset)).length < kept) offset += 1;
+    this.inputTarget.setSelectionRange(offset, offset);
   }
 
   _writeFormatted(raw) {
