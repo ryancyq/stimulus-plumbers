@@ -31,6 +31,7 @@ class CreditCardTest < ActionView::TestCase
     actions = card_input(build_field)["data-action"].split
 
     assert_includes actions, "input->input-formatter#onInput"
+    assert_includes actions, "beforeinput->input-formatter#onBeforeinput"
     assert_includes actions, "form:reset->input-formatter#onFormReset"
   end
 

@@ -51,6 +51,20 @@ export default class extends Controller {
     this._writeFormatted(this.readValue(), this._keptBeforeCaret());
   }
 
+  // When the value is at its cap, a typed character replaces the one after the caret.
+  onBeforeinput(event) {
+    if (!this.formatter || event.inputType !== 'insertText' || !event.data) return;
+    const { selectionStart, selectionEnd } = this.inputTarget;
+    const value = this.formatter.normalize(this.readValue());
+    const typed = this.formatter.normalize(event.data);
+    if (selectionStart !== selectionEnd || typed === '' || this.formatter.normalize(value + typed) !== value) return;
+
+    event.preventDefault();
+    const kept = this._keptBeforeCaret();
+    if (kept === null || kept >= value.length) return;
+    this._writeFormatted(value.slice(0, kept) + typed + value.slice(kept + typed.length), kept + typed.length);
+  }
+
   // Reformats without dispatching `filled`.
   onFormReset() {
     this.primeFilledState();

@@ -20,4 +20,12 @@ class CodeAccessibilityTest < ApplicationAccessibilityTestCase
       assert_css "[data-input-code-target='cell']:nth-child(5)[data-caret]"
     end
   end
+
+  def test_typing_on_a_full_code_replaces_the_character_after_the_caret
+    within "#code-default" do
+      find_field("Verification code").send_keys "482913", :left, :left, "7"
+
+      assert_field "Verification code", with: "482973"
+    end
+  end
 end

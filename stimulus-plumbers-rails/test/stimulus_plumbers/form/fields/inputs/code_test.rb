@@ -87,6 +87,7 @@ class CodeTest < ActionView::TestCase
     actions = build_field.at_css("input[type='text']")["data-action"].split
 
     assert_includes actions, "input->input-formatter#onInput"
+    assert_includes actions, "beforeinput->input-formatter#onBeforeinput"
     %w[focus blur select selectionchange keyup].each { |event| assert_includes actions, "#{event}->input-code#draw" }
   end
 

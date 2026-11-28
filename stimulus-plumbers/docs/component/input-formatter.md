@@ -19,13 +19,14 @@ Formats values written to an input element. Handles structured display formattin
 
 ## Methods
 
-| Method            | Wired via                                                                     | Description                                                                                                                                  |
-| ----------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `format(value)`   | —                                                                             | Programmatic API — normalises, formats, writes to `input` target, dispatches `formatted`                                                     |
-| `onChange(event)` | `combobox-date:changed`, `combobox-time:changed`, `combobox-datetime:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`                                                                         |
-| `onPaste(event)`  | `clipboard:pasted`                                                            | Event adapter — normalises and validates pasted text; when valid, calls `format(value)` and cancels the event so the native paste is skipped |
-| `onInput(event)`  | `input` DOM event                                                             | Event adapter — re-formats from the input's current value; the caret stays after the same kept characters                                    |
-| `onFormReset()`   | `form:reset` on the input                                                     | Re-formats the restored value without dispatching `filled`                                                                                   |
+| Method                 | Wired via                                                                     | Description                                                                                                                                  |
+| ---------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `format(value)`        | —                                                                             | Programmatic API — normalises, formats, writes to `input` target, dispatches `formatted`                                                     |
+| `onChange(event)`      | `combobox-date:changed`, `combobox-time:changed`, `combobox-datetime:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`                                                                         |
+| `onPaste(event)`       | `clipboard:pasted`                                                            | Event adapter — normalises and validates pasted text; when valid, calls `format(value)` and cancels the event so the native paste is skipped |
+| `onInput(event)`       | `input` DOM event                                                             | Event adapter — re-formats from the input's current value; the caret stays after the same kept characters                                    |
+| `onBeforeinput(event)` | `beforeinput` DOM event                                                       | Event adapter — when the value is at the formatter's cap, a typed character replaces the one after the caret                                 |
+| `onFormReset()`        | `form:reset` on the input                                                     | Re-formats the restored value without dispatching `filled`                                                                                   |
 
 ## Dispatches
 
@@ -72,7 +73,7 @@ Formatter.register('iban', {
   data-input-formatter-target="input"
   data-input-formatter-format-value="creditCard"
   data-input-formatter-options-value='{"separator":"-"}'
-  data-action="input->input-formatter#onInput form:reset->input-formatter#onFormReset"
+  data-action="input->input-formatter#onInput beforeinput->input-formatter#onBeforeinput form:reset->input-formatter#onFormReset"
 />
 ```
 

@@ -9,6 +9,7 @@ module StimulusPlumbers
           CODE_CONTROLLER      = "input-code"
           STIMULUS_ACTION      = [
             "input->#{FORMATTER_CONTROLLER}#onInput",
+            "beforeinput->#{FORMATTER_CONTROLLER}#onBeforeinput",
             "form:reset->#{FORMATTER_CONTROLLER}#onFormReset",
             *%w[focus blur select selectionchange keyup].map { |event| "#{event}->#{CODE_CONTROLLER}#draw" }
           ].join(" ").freeze

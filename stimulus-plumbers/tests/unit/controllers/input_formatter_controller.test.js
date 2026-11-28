@@ -128,6 +128,73 @@ describe('InputFormatterController', () => {
     });
   });
 
+  describe('typing at the cap', () => {
+    const mount = async (format, options, value) => {
+      document.body.innerHTML = `
+        <div data-controller="input-formatter" data-input-formatter-format-value="${format}"
+             data-input-formatter-options-value='${options}'>
+          <input value="${value}" data-input-formatter-target="input"
+                 data-action="input->input-formatter#onInput beforeinput->input-formatter#onBeforeinput">
+        </div>
+      `;
+      await flush();
+      document.querySelector('input').focus();
+    };
+
+    const input = () => document.querySelector('input');
+
+    const typeAt = (caret, data) => {
+      input().setSelectionRange(caret, caret);
+      const event = new InputEvent('beforeinput', { inputType: 'insertText', data, bubbles: true, cancelable: true });
+      input().dispatchEvent(event);
+      return event;
+    };
+
+    it('replaces the code character after the caret', async () => {
+      await mount('code', '{"charset":"digits","length":6}', '482913');
+
+      const event = typeAt(2, '7');
+
+      expect(event.defaultPrevented).toBe(true);
+      expect(input().value).toBe('487913');
+      expect(input().selectionStart).toBe(3);
+    });
+
+    it('leaves a character typed below the cap to the browser', async () => {
+      await mount('code', '{"charset":"digits","length":6}', '4829');
+
+      expect(typeAt(2, '7').defaultPrevented).toBe(false);
+    });
+
+    it('leaves a character the formatter drops to the browser', async () => {
+      await mount('code', '{"charset":"digits","length":6}', '482913');
+
+      expect(typeAt(2, 'a').defaultPrevented).toBe(false);
+    });
+
+    it('ignores a character typed after a full code', async () => {
+      await mount('code', '{"charset":"digits","length":6}', '482913');
+
+      expect(typeAt(6, '7').defaultPrevented).toBe(true);
+      expect(input().value).toBe('482913');
+    });
+
+    it('lets a 16-digit card number grow toward 19 digits', async () => {
+      await mount('creditCard', '{}', '4242 4242 4242 4242');
+
+      expect(typeAt(2, '7').defaultPrevented).toBe(false);
+    });
+
+    it('replaces the Amex digit after the caret, past its separators', async () => {
+      await mount('creditCard', '{}', '3782 822463 10005');
+
+      typeAt(5, '9');
+
+      expect(input().value).toBe('3782 922463 10005');
+      expect(input().selectionStart).toBe(6);
+    });
+  });
+
   describe('without an input target', () => {
     beforeEach(async () => {
       document.body.innerHTML = `<div data-controller="input-formatter"></div>`;

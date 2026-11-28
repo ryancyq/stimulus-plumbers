@@ -8,6 +8,7 @@ module StimulusPlumbers
           STIMULUS_CONTROLLER  = "input-formatter"
           STIMULUS_ACTION      = [
             "input->#{STIMULUS_CONTROLLER}#onInput",
+            "beforeinput->#{STIMULUS_CONTROLLER}#onBeforeinput",
             "form:reset->#{STIMULUS_CONTROLLER}#onFormReset"
           ].join(" ").freeze
           DEFAULT_AUTOCOMPLETE = "cc-number"

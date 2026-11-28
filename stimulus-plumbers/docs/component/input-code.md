@@ -49,7 +49,7 @@ A cell that ends a group can carry `data-group-end` in the markup, for a gap aft
     inputmode="numeric"
     data-input-formatter-target="input"
     data-input-code-target="input"
-    data-action="input->input-formatter#onInput form:reset->input-formatter#onFormReset focus->input-code#draw blur->input-code#draw select->input-code#draw selectionchange->input-code#draw keyup->input-code#draw"
+    data-action="input->input-formatter#onInput beforeinput->input-formatter#onBeforeinput form:reset->input-formatter#onFormReset focus->input-code#draw blur->input-code#draw select->input-code#draw selectionchange->input-code#draw keyup->input-code#draw"
   />
 </div>
 ```
