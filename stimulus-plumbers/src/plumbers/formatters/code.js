@@ -48,20 +48,11 @@ export const CodeFormatter = {
   },
 
   /**
-   * Codes display as-is — CharacterCells handles visual chunking.
+   * Codes display as-is.
    * @param {string} value - Canonical value from normalize()
    * @returns {string}
    */
   format(value) {
     return typeof value === 'string' ? value : '';
-  },
-
-  /**
-   * CharacterCells hint: uniform single-character cells, `length` cells expected.
-   * @param {Object} [opts={}] - Formatter options
-   * @returns {{ groups: number[], length: number }}
-   */
-  cells(opts = {}) {
-    return { groups: [], length: opts.length ?? 0 };
   },
 };

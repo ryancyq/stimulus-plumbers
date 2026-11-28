@@ -29,6 +29,7 @@ import {
   ComboboxController,
   ComboboxTurboController,
   ComboboxFetchController,
+  InputCodeController,
   InputFormatterController,
   InputClearableController,
   InputRevealableController,
@@ -58,6 +59,7 @@ const application = Application.start();
 application.register('combobox', ComboboxController);
 application.register('combobox-turbo', ComboboxTurboController);
 application.register('combobox-fetch', ComboboxFetchController);
+application.register('input-code', InputCodeController);
 application.register('input-formatter', InputFormatterController);
 application.register('input-clearable', InputClearableController);
 application.register('input-revealable', InputRevealableController);
@@ -89,6 +91,7 @@ application.register('visibility', VisibilityController);
 | `combobox`          | Listbox combobox: keyboard, active option, selection, and dismissal on a manual popover                                         | [docs/component/combobox.md](docs/component/combobox.md#combobox)          |
 | `combobox-turbo`    | Remote results for `combobox` through a Turbo Frame                                                                             | [docs/component/combobox.md](docs/component/combobox.md#combobox-turbo)    |
 | `combobox-fetch`    | Remote results for `combobox` through `fetch`, without Turbo                                                                    | [docs/component/combobox.md](docs/component/combobox.md#combobox-fetch)    |
+| `input-code` | Draws a code input's characters, caret, and selection in cells | [docs/component/input-code.md](docs/component/input-code.md) |
 | `input-formatter`   | Formats and displays values                                                                                                     | [docs/component/input-formatter.md](docs/component/input-formatter.md)     |
 | `input-clearable`   | Input with clear button                                                                                                         | [docs/component/input-clearable.md](docs/component/input-clearable.md)     |
 | `input-revealable`  | Obscured input with reveal toggle                                                                                               | [docs/component/input-revealable.md](docs/component/input-revealable.md)   |
@@ -122,7 +125,6 @@ application.register('visibility', VisibilityController);
 | `Requestor`                                                                                | Fetch wrapper with lifecycle events                                                | [docs/utility/requestor.md](docs/utility/requestor.md)                 |
 | `fuzzyMatcher`                                                                             | Fuzzy subsequence matching                                                         | [docs/utility/matcher.md](docs/utility/matcher.md)                     |
 | `Formatter`, `FORMATTER_TYPES`                                                             | Input formatter plumber (attach to a controller; used by `input-formatter`)        | [docs/plumber/formatter.md](docs/plumber/formatter.md)                 |
-| `CharacterCells`, `attachCharacterCells`                                                   | Character-cell display plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/character-cells.md](docs/plumber/character-cells.md)     |
 | `PasswordStrength`, `attachPasswordStrength`, `STRENGTH_TYPES`                             | Password strength scoring plumber                                                  | [docs/plumber/password_strength.md](docs/plumber/password_strength.md) |
 | `Dialog`, `attachDialog`                                                                   | Native `<dialog>` lifecycle plumber                                                | [docs/plumber/dialog.md](docs/plumber/dialog.md)                       |
 | `Popover`, `attachPopover`                                                                 | Native popover lifecycle plumber                                                   | [docs/plumber/popover.md](docs/plumber/popover.md)                     |

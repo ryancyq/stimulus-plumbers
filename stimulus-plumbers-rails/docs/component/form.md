@@ -235,11 +235,11 @@ validates :password, password_strength: { with: PASSWORD_RULES }
 
 The validator also accepts inline options (`password_strength: { min_length: 12, max_length: 64, digit: true }`) and a custom `message:`. For the rule-descriptor wire contract and meter behaviour, see the [JS controller doc](../../../stimulus-plumbers/docs/component/password-strength.md).
 
-**Code** (`as: :code`) — character-cell entry backed by `input-formatter` and the `character-cells` plumber. The native input remains the accessible control; cells are decorative.
+**Code** (`as: :code`) — one cell per character, backed by `input-formatter` and [`input-code`](../../../stimulus-plumbers/docs/component/input-code.md). The native input remains the accessible control; the cells show its characters, caret, and selection.
 
 | Option         | Values                                   | Default                | Description                                              |
 | -------------- | ---------------------------------------- | ---------------------- | -------------------------------------------------------- |
-| `length`       | positive Integer                         | required               | Number of cells and input maximum length                 |
+| `length`       | positive Integer                         | required               | Number of cells and characters                           |
 | `charset`      | `:digits` / `:letters` / `:alphanumeric` | `:digits`              | Allowed code characters                                  |
 | `groups`       | Array of positive Integers               | `[]`                   | Visual cell groups; must add up to `length`              |
 | `separator`    | String / `nil`                           | `nil`                  | Character between groups; `nil` shows the break as a gap |

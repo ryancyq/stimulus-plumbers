@@ -17,7 +17,6 @@ export { Requestor } from './requestor.js';
 export { fuzzyMatcher } from './matcher.js';
 
 export { Formatter, FORMATTER_TYPES } from './plumbers/formatter.js';
-export { CharacterCells, attachCharacterCells } from './plumbers/character_cells.js';
 export { PasswordStrength, attachPasswordStrength, STRENGTH_TYPES } from './plumbers/password_strength.js';
 export { Dialog, attachDialog } from './plumbers/dialog.js';
 export { Popover, attachPopover } from './plumbers/popover.js';
@@ -36,6 +35,7 @@ export { default as ComboboxTimeController } from './controllers/combobox_time_c
 export { default as ComboboxTurboController } from './controllers/combobox_turbo_controller.js';
 export { default as DismisserController } from './controllers/dismisser_controller.js';
 export { default as FlipperController } from './controllers/flipper_controller.js';
+export { default as InputCodeController } from './controllers/input_code_controller.js';
 export { default as InputFormatterController } from './controllers/input_formatter_controller.js';
 export { default as InputClearableController } from './controllers/input_clearable_controller.js';
 export { default as InputRevealableController } from './controllers/input_revealable_controller.js';

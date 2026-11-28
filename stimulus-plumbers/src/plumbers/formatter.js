@@ -56,7 +56,6 @@ export class Formatter extends Plumber {
       validate: (value) => formatter.validate?.(value, context.options) ?? true,
       format: (value) => formatter.format?.(value, context.options) ?? (typeof value === 'string' ? value : ''),
       filledLength: (value) => formatter.filledLength?.(value, context.options) ?? 0,
-      cells: () => (typeof formatter.cells === 'function' ? formatter.cells(context.options) : null),
     };
 
     Object.defineProperty(this.controller, 'formatter', {

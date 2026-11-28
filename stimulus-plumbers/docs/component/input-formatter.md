@@ -6,18 +6,16 @@ Formats values written to an input element. Handles structured display formattin
 
 ## Targets
 
-| Target  | Element                  | Description                                                                                                                                                                                                                                |
-| ------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `input` | `<input>` or any element | Write destination — sets `.value` for `<input>`, `.textContent` otherwise                                                                                                                                                                  |
-| `cell`  | `<div>` (any element)    | Optional character cells; when present, the canonical value is painted one character per cell, or (grouped mode — cell count equals `groups.length`) one group-sized slice per cell — see [character-cells](../plumber/character-cells.md) |
+| Target  | Element                  | Description                                                               |
+| ------- | ------------------------ | ------------------------------------------------------------------------- |
+| `input` | `<input>` or any element | Write destination — sets `.value` for `<input>`, `.textContent` otherwise |
 
 ## Values
 
-| Value     | Type   | Default   | Description                                                                       |
-| --------- | ------ | --------- | --------------------------------------------------------------------------------- |
-| `format`  | String | `"plain"` | Formatter type — see [Formatters](#formatters) for valid identifiers              |
-| `options` | Object | `{}`      | Formatter-specific options (e.g. `{ locale: "en-US" }` for currency)              |
-| `groups`  | Array  | `[]`      | Cell group widths (e.g. `[4,4,4,4]`); overrides the formatter's own grouping hint |
+| Value     | Type   | Default   | Description                                                          |
+| --------- | ------ | --------- | -------------------------------------------------------------------- |
+| `format`  | String | `"plain"` | Formatter type — see [Formatters](#formatters) for valid identifiers |
+| `options` | Object | `{}`      | Formatter-specific options (e.g. `{ locale: "en-US" }` for currency) |
 
 ## Methods
 
@@ -27,8 +25,6 @@ Formats values written to an input element. Handles structured display formattin
 | `onChange(event)` | `combobox-date:changed`, `combobox-time:changed`, `combobox-datetime:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`                                                                         |
 | `onPaste(event)`  | `clipboard:pasted`                                                            | Event adapter — normalises and validates pasted text; when valid, calls `format(value)` and cancels the event so the native paste is skipped |
 | `onInput(event)`  | `input` DOM event                                                             | Event adapter — re-formats from the input's current value; the caret stays after the same kept characters                                    |
-| `onFocus(event)`  | `focus` DOM event                                                             | Event adapter — redraws cells so the caret cell appears                                                                                      |
-| `onBlur(event)`   | `blur` DOM event                                                              | Event adapter — redraws cells so the caret cell clears                                                                                       |
 | `onFormReset()`   | `form:reset` on the input                                                     | Re-formats the restored value without dispatching `filled`                                                                                   |
 
 ## Dispatches
@@ -68,69 +64,18 @@ Formatter.register('iban', {
 ### Credit card formatting
 
 ```html
-<div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-  <input type="text" data-input-formatter-target="input" />
-</div>
-```
-
-### One-time code entry (cells)
-
-```html
-<div
+<input
+  type="text"
+  autocomplete="cc-number"
+  inputmode="numeric"
   data-controller="input-formatter"
-  data-input-formatter-format-value="code"
-  data-input-formatter-options-value='{"charset":"digits","length":6}'
->
-  <label for="otp" class="sr-only">Verification code</label>
-  <div class="cells-row">
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-  </div>
-  <input
-    id="otp"
-    data-input-formatter-target="input"
-    autocomplete="one-time-code"
-    inputmode="numeric"
-    maxlength="6"
-    data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur form:reset->input-formatter#onFormReset"
-  />
-</div>
+  data-input-formatter-target="input"
+  data-input-formatter-format-value="creditCard"
+  data-input-formatter-options-value='{"separator":"-"}'
+  data-action="input->input-formatter#onInput form:reset->input-formatter#onFormReset"
+/>
 ```
 
-Cells are decoration; style them via `[data-filled]`, `[data-caret]`, `[data-group-end]`, `[data-inactive]`. See [ARIA.md's Code Input pattern](../../../ARIA.md) for the overlay/labeling requirements.
+### One-time code entry
 
-### Credit card formatting (grouped cells)
-
-Rendering exactly `groups.length` cells (instead of one cell per digit) puts the plumber into
-grouped mode: each cell displays its whole group of digits. Separators between cells (e.g. a
-dash) are authored HTML, never inserted by the plumber — see
-[character-cells](../plumber/character-cells.md#grouped-mode).
-
-```html
-<div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-  <div class="cells-row">
-    <span data-input-formatter-target="cell"></span>
-    <span aria-hidden="true">-</span>
-    <span data-input-formatter-target="cell"></span>
-    <span aria-hidden="true">-</span>
-    <span data-input-formatter-target="cell"></span>
-    <span aria-hidden="true">-</span>
-    <span data-input-formatter-target="cell"></span>
-  </div>
-  <input
-    data-input-formatter-target="input"
-    autocomplete="cc-number"
-    inputmode="numeric"
-    maxlength="19"
-    data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur form:reset->input-formatter#onFormReset"
-  />
-</div>
-```
-
-## Accessibility
-
-- Cell display: see [ARIA.md's Code Input pattern](../../../ARIA.md).
+See [input-code](input-code.md), which draws the code in cells.

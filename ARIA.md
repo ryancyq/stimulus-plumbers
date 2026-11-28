@@ -117,12 +117,12 @@
 - The visible strength label is plain text, not a live region, so redrawing it never speaks.
 - The level is announced through the shared polite live region after a pause in typing, and only when it differs from the level shown when typing began — never on connect, a Turbo morph, or a restored page.
 
-#### Code Input (`input_formatter_controller` + `character_cells`)
+#### Code Input (`input_code_controller` + `input_formatter_controller`)
 
-- The real `<input>` is the entire accessible surface; cells are stamped `aria-hidden="true"` automatically.
-- The input requires a `<label>` (visually hidden allowed), `autocomplete="one-time-code"` for OTP (WCAG 1.3.5), `inputmode` matching the charset, and `maxlength` matching the code length.
+- The real `<input>` is the entire accessible surface; the `input-code` controller sets `aria-hidden="true"` on every cell.
+- The input requires a `<label>` (visually hidden allowed), `autocomplete="one-time-code"` for OTP (WCAG 1.3.5), and `inputmode` matching the charset; the formatter caps the length, so a pasted code with spaces or dashes is not cut short.
 - Overlay the input with `opacity: 0` — never `display: none`/`visibility: hidden`, which remove it from the tab order (WCAG 2.1.1).
-- Focus visibility (WCAG 2.4.7): the caret cell (`data-caret`) appears only while the input has focus; style the container with `:focus-within` plus `[data-caret]`.
+- Focus visibility (WCAG 2.4.7): while the input has focus, the cell at its caret has `data-caret` and the cells in its selection have `data-selected`; style the container with `:focus-within` plus those attributes.
 
 #### Input Clearable (`input_clearable_controller`)
 

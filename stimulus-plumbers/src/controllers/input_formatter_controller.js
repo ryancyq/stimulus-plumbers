@@ -1,55 +1,35 @@
 import { Controller } from '@hotwired/stimulus';
-import { attachFormatter, attachCharacterCells } from '../plumbers';
+import { attachFormatter } from '../plumbers';
 
 export default class extends Controller {
-  static targets = ['input', 'cell'];
+  static targets = ['input'];
   static values = {
     format: { type: String, default: 'plain' },
     options: { type: Object, default: {} },
-    groups: { type: Array, default: [] },
   };
 
   connect() {
-    attachFormatter(this, { type: this.formatValue, options: this.formatterOptions });
-    this.attachCells();
+    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
     this.primeFilledState();
     this.format(this.readValue());
   }
 
   formatValueChanged() {
     if (!this.formatter) return;
-    attachFormatter(this, { type: this.formatValue, options: this.formatterOptions });
-    this.attachCells();
+    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
     this.primeFilledState();
     this.format(this.readValue());
   }
 
   optionsValueChanged() {
     if (!this.formatter) return;
-    attachFormatter(this, { type: this.formatValue, options: this.formatterOptions });
-    this.attachCells();
+    attachFormatter(this, { type: this.formatValue, options: this.optionsValue });
     this.primeFilledState();
-    this.format(this.readValue());
-  }
-
-  groupsValueChanged() {
-    if (!this.formatter) return;
-    attachFormatter(this, { type: this.formatValue, options: this.formatterOptions });
-    this.attachCells();
     this.format(this.readValue());
   }
 
   onChange(event) {
     this.format(event?.detail?.value ?? '');
-  }
-
-  // Fires for cells already in the DOM before connect() too, but this.formatter is unset
-  // at that point — connect()'s own attachCells() call handles the initial batch, so this
-  // only re-attaches for cells added afterward (e.g. Turbo Stream/morph).
-  cellTargetConnected() {
-    if (!this.formatter) return;
-    this.attachCells();
-    this.drawCells(this.formatter.normalize(this.readValue()));
   }
 
   format(value) {
@@ -66,58 +46,15 @@ export default class extends Controller {
     this.format(value);
   }
 
-  get formatterOptions() {
-    return this.groupsValue.length > 0 ? { ...this.optionsValue, groups: this.groupsValue } : this.optionsValue;
-  }
-
-  attachCells() {
-    if (!this.hasCellTarget) return;
-    const hints = this.formatter.cells();
-    if (!hints) {
-      this.detachCells();
-      return;
-    }
-    const hasGroupsOverride = this.groupsValue.length > 0;
-    attachCharacterCells(this, {
-      groups: hasGroupsOverride ? this.groupsValue : (hints.groups ?? []),
-      length: hasGroupsOverride ? 0 : (hints.length ?? 0),
-    });
-  }
-
-  detachCells() {
-    if (!this.hasCellTarget) return;
-    this.cellTargets.forEach((cell) => {
-      cell.textContent = '';
-      cell.removeAttribute('data-filled');
-      cell.removeAttribute('data-caret');
-    });
-    delete this.characterCells;
-  }
-
   onInput() {
-    const kept = this._keptBeforeCaret();
-    this.format(this.readValue());
-    if (kept !== null) this._placeCaret(kept);
+    if (!this.formatter) return;
+    this._writeFormatted(this.readValue(), this._keptBeforeCaret());
   }
 
   // Reformats without dispatching `filled`.
   onFormReset() {
     this.primeFilledState();
     this.format(this.readValue());
-  }
-
-  onFocus() {
-    this.drawCells(this.formatter?.normalize(this.readValue()) ?? '');
-  }
-
-  onBlur() {
-    this.drawCells(this.formatter?.normalize(this.readValue()) ?? '');
-  }
-
-  drawCells(value) {
-    if (!this.hasCellTarget) return;
-    const focused = this.hasInputTarget && document.activeElement === this.inputTarget;
-    this.characterCells?.draw(value, { focused });
   }
 
   readValue() {
@@ -140,7 +77,8 @@ export default class extends Controller {
     this.inputTarget.setSelectionRange(offset, offset);
   }
 
-  _writeFormatted(raw) {
+  // A `kept` count puts the caret after that many kept characters before `formatted` dispatches.
+  _writeFormatted(raw, kept = null) {
     if (!this.formatter) return;
 
     const value = this.formatter.normalize(raw);
@@ -149,13 +87,13 @@ export default class extends Controller {
     if (this.hasInputTarget) {
       if (this.inputTarget instanceof HTMLInputElement) {
         this.inputTarget.value = formatted;
+        if (kept !== null) this._placeCaret(kept);
       } else {
         this.inputTarget.textContent = formatted;
       }
     }
 
     this.dispatch('formatted', { detail: { value: formatted } });
-    this.drawCells(value);
 
     const full = this.isFull(value);
     if (full && !this.wasFull) {

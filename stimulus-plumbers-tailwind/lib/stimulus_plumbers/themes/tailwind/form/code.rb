@@ -19,6 +19,7 @@ module StimulusPlumbers
             transition-colors
             data-[filled]:border-(--sp-color-fg)
             data-[caret]:border-(--sp-color-primary) data-[caret]:ring-1 data-[caret]:ring-(--sp-color-primary)
+            data-[selected]:bg-(--sp-color-primary) data-[selected]:text-(--sp-color-primary-fg)
             data-[group-end]:me-(--sp-space-2)
           ].freeze
           CODE_CELL_ERROR = %w[border-(--sp-color-error) data-[caret]:ring-(--sp-color-error)].freeze

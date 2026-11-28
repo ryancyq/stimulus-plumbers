@@ -5,12 +5,12 @@ module StimulusPlumbers
     module Fields
       module Inputs
         module Code
-          STIMULUS_CONTROLLER  = "input-formatter"
+          FORMATTER_CONTROLLER = "input-formatter"
+          CODE_CONTROLLER      = "input-code"
           STIMULUS_ACTION      = [
-            "input->#{STIMULUS_CONTROLLER}#onInput",
-            "focus->#{STIMULUS_CONTROLLER}#onFocus",
-            "blur->#{STIMULUS_CONTROLLER}#onBlur",
-            "form:reset->#{STIMULUS_CONTROLLER}#onFormReset"
+            "input->#{FORMATTER_CONTROLLER}#onInput",
+            "form:reset->#{FORMATTER_CONTROLLER}#onFormReset",
+            *%w[focus blur select selectionchange keyup].map { |event| "#{event}->#{CODE_CONTROLLER}#draw" }
           ].join(" ").freeze
           DEFAULT_CHARSET      = :digits
           DEFAULT_AUTOCOMPLETE = "one-time-code"
@@ -66,20 +66,12 @@ module StimulusPlumbers
           def code_stimulus_attrs(config)
             {
               data: {
-                controller:                    STIMULUS_CONTROLLER,
+                controller:                    "#{FORMATTER_CONTROLLER} #{CODE_CONTROLLER}",
                 input_formatter_format_value:  "code",
                 input_formatter_options_value: { charset: config[:charset].to_s, length: config[:length] },
-                input_formatter_groups_value:  code_groups_value(config)
+                action:                        "#{FORMATTER_CONTROLLER}:formatted->#{CODE_CONTROLLER}#draw"
               }
             }
-          end
-
-          # Server-rendered separators already mark the group breaks. Passing groups as well
-          # would stamp data-group-end and lay the themed gap on top of the separator.
-          def code_groups_value(config)
-            return if config[:separator].present?
-
-            config[:groups].presence
           end
 
           def code_input(attribute, overlay_attrs, config)
@@ -87,10 +79,9 @@ module StimulusPlumbers
               overlay_attrs,
               config[:kwargs],
               {
-                maxlength:    config[:length],
                 autocomplete: config[:autocomplete],
                 inputmode:    config[:inputmode],
-                data:         { input_formatter_target: "input", action: STIMULUS_ACTION }
+                data:         { input_formatter_target: "input", input_code_target: "input", action: STIMULUS_ACTION }
               }
             )
             @template.text_field(@object_name, attribute, objectify_options(html_options))
@@ -105,15 +96,22 @@ module StimulusPlumbers
           def code_cells(config)
             groups = config[:groups].presence || [config[:length]]
             groups.flat_map.with_index do |width, index|
-              cells = Array.new(width) { render_code_cell(config) }
+              cells = Array.new(width) do |position|
+                render_code_cell(config, group_end: code_group_end?(config, groups, index, position))
+              end
               index.zero? || config[:separator].blank? ? cells : [render_code_separator(config), *cells]
             end
           end
 
-          def render_code_cell(config)
+          # Without a separator, the last cell of each group but the final one marks the gap.
+          def code_group_end?(config, groups, index, position)
+            config[:separator].blank? && index < groups.length - 1 && position == groups[index] - 1
+          end
+
+          def render_code_cell(config, group_end:)
             cell_attrs = merge_html_options(
               theme.resolve(:form_field_input_code_cell, error: config[:error]),
-              { data: { input_formatter_target: "cell" } }
+              { data: { input_code_target: "cell", group_end: (true if group_end) } }
             )
             @template.content_tag(:span, nil, **cell_attrs)
           end

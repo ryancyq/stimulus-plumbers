@@ -72,14 +72,4 @@ describe('CodeFormatter', () => {
       expect(CodeFormatter.filledLength('48')).toBe(0);
     });
   });
-
-  describe('cells', () => {
-    it('hints uniform cells with the configured length', () => {
-      expect(CodeFormatter.cells({ length: 6 })).toEqual({ groups: [], length: 6 });
-    });
-
-    it('hints length 0 when unset', () => {
-      expect(CodeFormatter.cells()).toEqual({ groups: [], length: 0 });
-    });
-  });
 });

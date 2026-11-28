@@ -28,6 +28,13 @@ class TailwindThemeFormCodeTest < Minitest::Test
     assert_includes result, "data-[caret]:ring-(--sp-color-primary)"
   end
 
+  def test_selected_code_cells_take_the_primary_highlight
+    result = classes_for(:form_field_input_code_cell)
+
+    assert_includes result, "data-[selected]:bg-(--sp-color-primary)"
+    assert_includes result, "data-[selected]:text-(--sp-color-primary-fg)"
+  end
+
   def test_code_cell_with_an_error_has_the_error_border_and_caret
     result = classes_for(:form_field_input_code_cell, error: true)
 
