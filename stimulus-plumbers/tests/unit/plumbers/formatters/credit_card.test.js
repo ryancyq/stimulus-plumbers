@@ -98,6 +98,20 @@ describe('CreditCardFormatter', () => {
     });
   });
 
+  describe('filledLength', () => {
+    it('is 16 by default', () => {
+      expect(CreditCardFormatter.filledLength('4242')).toBe(16);
+    });
+
+    it('is 15 for an Amex number', () => {
+      expect(CreditCardFormatter.filledLength('3782')).toBe(15);
+    });
+
+    it('is the given groups sum', () => {
+      expect(CreditCardFormatter.filledLength('4242', { groups: [4, 4, 4, 4, 3] })).toBe(19);
+    });
+  });
+
   describe('cells', () => {
     it('hints four groups of four with no fixed length (13-19 digit range)', () => {
       expect(CreditCardFormatter.cells()).toEqual({ groups: [4, 4, 4, 4], length: 0 });

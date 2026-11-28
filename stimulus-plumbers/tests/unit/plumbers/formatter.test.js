@@ -100,6 +100,18 @@ describe('Formatter', () => {
     });
   });
 
+  describe('filled length', () => {
+    it('exposes the strategy filled length through helpers', () => {
+      attachFormatter(mockController, { type: 'code', options: { length: 6 } });
+      expect(mockController.formatter.filledLength('')).toBe(6);
+    });
+
+    it('is 0 for strategies without a filled length', () => {
+      attachFormatter(mockController, { type: 'currency' });
+      expect(mockController.formatter.filledLength('1')).toBe(0);
+    });
+  });
+
   describe('cells hint', () => {
     it('exposes the strategy cells hint through helpers', () => {
       attachFormatter(mockController, { type: 'code', options: { length: 6 } });

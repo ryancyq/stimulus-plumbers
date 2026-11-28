@@ -38,6 +38,16 @@ export const CodeFormatter = {
   },
 
   /**
+   * The length a filled code has: `length`, or 0 when unset.
+   * @param {string} _value - Canonical value from normalize()
+   * @param {Object} [opts={}] - Options
+   * @returns {number}
+   */
+  filledLength(_value, opts = {}) {
+    return opts.length ?? 0;
+  },
+
+  /**
    * Codes display as-is — CharacterCells handles visual chunking.
    * @param {string} value - Canonical value from normalize()
    * @returns {string}

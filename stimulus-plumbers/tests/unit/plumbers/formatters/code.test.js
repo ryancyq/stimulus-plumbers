@@ -63,6 +63,16 @@ describe('CodeFormatter', () => {
     });
   });
 
+  describe('filledLength', () => {
+    it('is the configured length', () => {
+      expect(CodeFormatter.filledLength('48', { length: 6 })).toBe(6);
+    });
+
+    it('is 0 when length is unset', () => {
+      expect(CodeFormatter.filledLength('48')).toBe(0);
+    });
+  });
+
   describe('cells', () => {
     it('hints uniform cells with the configured length', () => {
       expect(CodeFormatter.cells({ length: 6 })).toEqual({ groups: [], length: 6 });

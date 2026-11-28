@@ -83,6 +83,16 @@ export const CreditCardFormatter = {
   },
 
   /**
+   * The length a filled card number has: the `options.groups` sum, else 15 for Amex, else 16.
+   * @param {string} value - Canonical value from normalize()
+   * @param {{ groups?: number[] }} [options]
+   * @returns {number}
+   */
+  filledLength(value, options = {}) {
+    return groupsOf(value, options).reduce((sum, size) => sum + size, 0);
+  },
+
+  /**
    * Formats a canonical card number for display: digits grouped as `options.groups`, else
    * 4-6-5 for Amex, else 4-4-4-4, joined by `options.separator` (a space by default).
    * e.g. '4242424242424242' → '4242 4242 4242 4242'; '378282246310005' → '3782 822463 10005'

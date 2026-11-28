@@ -20,11 +20,12 @@ Exposes `this.formatter` on the controller.
 
 ## Controller property — `this.formatter`
 
-| Helper            | Signature           | Description                               |
-| ----------------- | ------------------- | ----------------------------------------- |
-| `normalize(raw)`  | `(raw) → string`    | Strips raw input to canonical stored form |
-| `validate(value)` | `(value) → boolean` | Validates canonical value                 |
-| `format(value)`   | `(value) → string`  | Formats canonical value for display       |
+| Helper                | Signature           | Description                                        |
+| --------------------- | ------------------- | -------------------------------------------------- |
+| `normalize(raw)`      | `(raw) → string`    | Strips raw input to canonical stored form          |
+| `validate(value)`     | `(value) → boolean` | Validates canonical value                          |
+| `format(value)`       | `(value) → string`  | Formats canonical value for display                |
+| `filledLength(value)` | `(value) → number`  | The length a filled value has; `0` when open-ended |
 
 ## Built-in types
 
@@ -52,7 +53,7 @@ Formatter.register('iban', {
 });
 ```
 
-`normalize` and `validate` are required. `format` is optional.
+`normalize` and `validate` are required. `format` and `filledLength` are optional.
 
 ## Individual formatters
 

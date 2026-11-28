@@ -164,13 +164,9 @@ export default class extends Controller {
     this.wasFull = full;
   }
 
-  /** Whether value has reached the formatter's configured cell length and is valid.
-   *  Prefers the attached CharacterCells' active() count — which already resolves
-   *  groups/cell-count/override precedence (see attachCells()) — over the formatter's
-   *  raw hint, since some hints (e.g. creditCard) have no fixed length of their own. */
   isFull(value) {
-    const expected = this.characterCells?.active() ?? this.formatter?.cells()?.length ?? 0;
-    return expected > 0 && value.length === expected && this.formatter.validate(value);
+    const length = this.formatter.filledLength(value);
+    return length > 0 && value.length === length && this.formatter.validate(value);
   }
 
   /** Records the current filled state without dispatching, so system-driven (re)draws

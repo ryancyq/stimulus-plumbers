@@ -33,10 +33,10 @@ Formats values written to an input element. Handles structured display formattin
 
 ## Dispatches
 
-| Event                       | Detail      | When                                                                                                                                                                                             |
-| --------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `input-formatter:formatted` | `{ value }` | After every write to the `input` target                                                                                                                                                          |
-| `input-formatter:filled`    | `{ value }` | When a valid, cell-capable formatter's value reaches its expected cell length — auto-submit hook. Fires once per fill, on the transition into "full"; not on connect with an already-full value. |
+| Event                       | Detail      | When                                                                                                                                                                         |
+| --------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `input-formatter:formatted` | `{ value }` | After every write to the `input` target                                                                                                                                      |
+| `input-formatter:filled`    | `{ value }` | When a valid value reaches the formatter's `filledLength` — auto-submit hook. Fires once per fill, on the transition into "full"; not on connect with an already-full value. |
 
 ## Formatters
 

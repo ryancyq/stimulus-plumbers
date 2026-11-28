@@ -412,7 +412,6 @@ describe('InputFormatterController', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
         <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-          ${'<div data-input-formatter-target="cell"></div>'.repeat(16)}
           <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
@@ -421,13 +420,21 @@ describe('InputFormatterController', () => {
 
     const input = () => document.querySelector('[data-input-formatter-target="input"]');
 
-    it('dispatches filled for a valid creditCard value reaching its cells length', () => {
+    it('dispatches filled for a valid creditCard value at its filled length', () => {
       const spy = vi.fn();
       document.querySelector('[data-controller="input-formatter"]').addEventListener('input-formatter:filled', spy);
       input().value = '4242424242424242';
       input().dispatchEvent(new Event('input', { bubbles: true }));
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0].detail).toEqual({ value: '4242424242424242' });
+    });
+
+    it('dispatches filled for a valid 15-digit Amex number', () => {
+      const spy = vi.fn();
+      document.querySelector('[data-controller="input-formatter"]').addEventListener('input-formatter:filled', spy);
+      input().value = '378282246310005';
+      input().dispatchEvent(new Event('input', { bubbles: true }));
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 
