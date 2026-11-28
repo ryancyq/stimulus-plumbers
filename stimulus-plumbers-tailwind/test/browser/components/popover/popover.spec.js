@@ -286,12 +286,7 @@ test.describe("positioning", () => {
 
   test("keeps the nested panel below its trigger on a scrolled page", async ({
     page,
-    browserName,
   }) => {
-    test.fail(
-      browserName === "webkit",
-      "WebKit offsets a popover anchored inside another popover by the page scroll",
-    );
     const section = page.locator("#popover-nested");
     const outer = section.locator("#popover-outer-panel");
     const inner = outer.locator("#popover-inner-panel");
@@ -332,11 +327,7 @@ test.describe("in a native dialog", () => {
     return { dialog, source, panel };
   }
 
-  test("anchors above the dialog", async ({ page, browserName }) => {
-    test.fail(
-      browserName === "webkit",
-      "WebKit offsets an anchored popover by the document scroll inside a native dialog.",
-    );
+  test("anchors above the dialog", async ({ page }) => {
     const { source, panel } = await openDialogPopover(page);
     await assertInViewport(page, panel);
 
