@@ -246,16 +246,16 @@ The validator also accepts inline options (`password_strength: { min_length: 12,
 | `autocomplete` | String                                   | `"one-time-code"`      | Native autocomplete value                                |
 | `inputmode`    | String                                   | `"numeric"` for digits | Native input mode                                        |
 
-**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group; `maxlength` is their sum plus one space per group break.
+**Credit card** (`as: :credit_card`) — a text input backed by `input-formatter`, which groups the digits as the user types and caps them at the groups' sum; the submitted value keeps the separators.
 
-| Option         | Values                     | Default        | Description                                                                     |
-| -------------- | -------------------------- | -------------- | ------------------------------------------------------------------------------- |
-| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group; the input value is spaced at each group break |
-| `separator`    | String / `nil`             | `nil`          | Character between cells; `nil` renders none                                     |
-| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                                       |
-| `inputmode`    | String                     | `"numeric"`    | Native input mode                                                               |
+| Option         | Values                     | Default       | Description                                                 |
+| -------------- | -------------------------- | ------------- | ----------------------------------------------------------- |
+| `groups`       | Array of positive Integers | `nil`         | Digit groups; `nil` groups Amex as 4-6-5 and others 4-4-4-4 |
+| `separator`    | String / `nil`             | `nil`         | Character between groups; `nil` is a space                  |
+| `autocomplete` | String                     | `"cc-number"` | Native autocomplete value                                   |
+| `inputmode`    | String                     | `"numeric"`   | Native input mode                                           |
 
-Character-cell fields do not support `floating:` labels.
+Code fields do not support `floating:` labels.
 
 **Range** (`as: :range`) — native `<input type="range">` styled as a progress track with a thumb. Unlike the progress field it is a real control, so it keeps an ordinary `<label for>`.
 

@@ -14,7 +14,6 @@ require_relative "tailwind/modal"
 require_relative "tailwind/form"
 require_relative "tailwind/form/field"
 require_relative "tailwind/form/code"
-require_relative "tailwind/form/credit_card"
 require_relative "tailwind/form/input"
 require_relative "tailwind/password_strength"
 require_relative "tailwind/icon"
@@ -40,7 +39,6 @@ module StimulusPlumbers
       include Tailwind::Form
       include Tailwind::Form::Field
       include Tailwind::Form::Code
-      include Tailwind::Form::CreditCard
       include Tailwind::Form::Input
       include Tailwind::PasswordStrength
       include Tailwind::Icon
