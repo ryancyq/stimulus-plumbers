@@ -13,6 +13,16 @@ export default class extends Controller {
     this.draw();
   }
 
+  // The input covers the cells, so the click lands on it; the caret goes before the cell under the pointer.
+  onClick(event) {
+    const { selectionStart, selectionEnd, value } = this.inputTarget;
+    if (selectionStart !== selectionEnd) return;
+    const index = this.cellTargets.findIndex((cell) => event.clientX < cell.getBoundingClientRect().right);
+    const offset = Math.min(index === -1 ? this.cellTargets.length : index, value.length);
+    this.inputTarget.setSelectionRange(offset, offset);
+    this.draw();
+  }
+
   draw() {
     if (!this.hasInputTarget) return;
     const { value, selectionStart, selectionEnd } = this.inputTarget;

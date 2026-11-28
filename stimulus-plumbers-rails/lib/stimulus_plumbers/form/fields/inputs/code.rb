@@ -11,7 +11,8 @@ module StimulusPlumbers
             "input->#{FORMATTER_CONTROLLER}#onInput",
             "beforeinput->#{FORMATTER_CONTROLLER}#onBeforeinput",
             "form:reset->#{FORMATTER_CONTROLLER}#onFormReset",
-            *%w[focus blur select selectionchange keyup].map { |event| "#{event}->#{CODE_CONTROLLER}#draw" }
+            *%w[focus blur select selectionchange keyup].map { |event| "#{event}->#{CODE_CONTROLLER}#draw" },
+            "click->#{CODE_CONTROLLER}#onClick"
           ].join(" ").freeze
           DEFAULT_CHARSET      = :digits
           DEFAULT_AUTOCOMPLETE = "one-time-code"

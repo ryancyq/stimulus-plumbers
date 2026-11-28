@@ -13,7 +13,7 @@ describe('InputCodeController', () => {
            data-action="input-formatter:formatted->input-code#draw">
         <div class="cells">${'<span data-input-code-target="cell"></span>'.repeat(6)}</div>
         <input data-input-formatter-target="input" data-input-code-target="input"
-               data-action="input->input-formatter#onInput focus->input-code#draw blur->input-code#draw selectionchange->input-code#draw" />
+               data-action="input->input-formatter#onInput focus->input-code#draw blur->input-code#draw selectionchange->input-code#draw click->input-code#onClick" />
       </div>
     `;
     await flush();
@@ -81,6 +81,43 @@ describe('InputCodeController', () => {
 
     expect(marked('data-selected')).toEqual([false, true, true, false, false, false]);
     expect(marked('data-caret')).toEqual([false, false, false, false, false, false]);
+  });
+
+  describe('clicking', () => {
+    beforeEach(() => {
+      cells().forEach((cell, index) => {
+        cell.getBoundingClientRect = () => ({ left: index * 40, right: index * 40 + 36 });
+      });
+      input().focus();
+    });
+
+    const clickAt = (clientX) => input().dispatchEvent(new MouseEvent('click', { clientX, bubbles: true }));
+
+    it('puts the caret before the clicked cell', () => {
+      type('482913');
+
+      clickAt(85);
+
+      expect(input().selectionStart).toBe(2);
+      expect(marked('data-caret')).toEqual([false, false, true, false, false, false]);
+    });
+
+    it('puts the caret after the value when an empty cell is clicked', () => {
+      type('48');
+
+      clickAt(165);
+
+      expect(input().selectionStart).toBe(2);
+    });
+
+    it('keeps a selection the click made', () => {
+      type('482913');
+      input().setSelectionRange(0, 6);
+
+      clickAt(85);
+
+      expect(input().selectionEnd).toBe(6);
+    });
   });
 
   it('draws the value into a cell added after connect', async () => {

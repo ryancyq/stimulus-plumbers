@@ -89,6 +89,7 @@ class CodeTest < ActionView::TestCase
     assert_includes actions, "input->input-formatter#onInput"
     assert_includes actions, "beforeinput->input-formatter#onBeforeinput"
     %w[focus blur select selectionchange keyup].each { |event| assert_includes actions, "#{event}->input-code#draw" }
+    assert_includes actions, "click->input-code#onClick"
   end
 
   def test_input_reformats_on_form_reset

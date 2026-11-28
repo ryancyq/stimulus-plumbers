@@ -11,9 +11,10 @@ Draws a code input's characters, caret, and selection in cells, one character pe
 
 ## Methods
 
-| Method   | Wired via                                                                                       | Description                                                  |
-| -------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `draw()` | `input-formatter:formatted`; `focus`, `blur`, `select`, `selectionchange`, `keyup` on the input | Draws the input's value, caret, and selection into the cells |
+| Method           | Wired via                                                                                       | Description                                                                                                              |
+| ---------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `draw()`         | `input-formatter:formatted`; `focus`, `blur`, `select`, `selectionchange`, `keyup` on the input | Draws the input's value, caret, and selection into the cells                                                             |
+| `onClick(event)` | `click` on the input                                                                            | Event adapter — with nothing selected, puts the caret before the clicked cell, or after the value when the cell is empty |
 
 ## Cell state attributes
 
@@ -49,7 +50,7 @@ A cell that ends a group can carry `data-group-end` in the markup, for a gap aft
     inputmode="numeric"
     data-input-formatter-target="input"
     data-input-code-target="input"
-    data-action="input->input-formatter#onInput beforeinput->input-formatter#onBeforeinput form:reset->input-formatter#onFormReset focus->input-code#draw blur->input-code#draw select->input-code#draw selectionchange->input-code#draw keyup->input-code#draw"
+    data-action="input->input-formatter#onInput beforeinput->input-formatter#onBeforeinput form:reset->input-formatter#onFormReset focus->input-code#draw blur->input-code#draw select->input-code#draw selectionchange->input-code#draw keyup->input-code#draw click->input-code#onClick"
   />
 </div>
 ```
