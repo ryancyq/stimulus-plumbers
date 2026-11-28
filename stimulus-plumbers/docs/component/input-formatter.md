@@ -40,16 +40,16 @@ Formats values written to an input element. Handles structured display formattin
 
 ## Formatters
 
-| `type`         | Description                                                                                                        |
-| -------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `"plain"`      | No-op — passes the value through unchanged                                                                         |
-| `"creditCard"` | Spaces digits at the `groups` breaks; `#### #### #### ####` without `groups`                                       |
-| `"phone"`      | Formats as a local phone number                                                                                    |
-| `"currency"`   | Locale-aware thousands separator and decimal places                                                                |
-| `"date"`       | Locale-aware date string                                                                                           |
-| `"time"`       | Locale-aware time string                                                                                           |
-| `"datetime"`   | Locale-aware date and time of a `YYYY-MM-DDTHH:MM` value, on the wall clock                                        |
-| `"code"`       | Charset-filtered fixed-length codes (OTP, PIN); options `{ charset: "digits"\|"letters"\|"alphanumeric", length }` |
+| `type`         | Description                                                                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"plain"`      | No-op — passes the value through unchanged                                                                                                                   |
+| `"creditCard"` | Groups digits at the `groups` breaks, else 4-6-5 for Amex and 4-4-4-4 otherwise, joined by `separator` (a space by default); options `{ groups, separator }` |
+| `"phone"`      | Formats as a local phone number                                                                                                                              |
+| `"currency"`   | Locale-aware thousands separator and decimal places                                                                                                          |
+| `"date"`       | Locale-aware date string                                                                                                                                     |
+| `"time"`       | Locale-aware time string                                                                                                                                     |
+| `"datetime"`   | Locale-aware date and time of a `YYYY-MM-DDTHH:MM` value, on the wall clock                                                                                  |
+| `"code"`       | Charset-filtered fixed-length codes (OTP, PIN); options `{ charset: "digits"\|"letters"\|"alphanumeric", length }`                                           |
 
 Custom formatters can be registered at runtime:
 

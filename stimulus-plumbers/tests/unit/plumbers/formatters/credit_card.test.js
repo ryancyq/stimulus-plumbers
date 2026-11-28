@@ -15,6 +15,20 @@ describe('CreditCardFormatter', () => {
       expect(CreditCardFormatter.normalize('4242424242424242')).toBe('4242424242424242');
     });
 
+    it('caps at 19 digits', () => {
+      expect(CreditCardFormatter.normalize('4242 4242 4242 4242 4242')).toBe('4242424242424242424');
+    });
+
+    it('caps an Amex number at 15 digits', () => {
+      expect(CreditCardFormatter.normalize('3782 822463 10005 99')).toBe('378282246310005');
+    });
+
+    it('caps at the given groups sum', () => {
+      expect(CreditCardFormatter.normalize('4242 - 4242 - 4242 - 4242 99', { groups: [4, 4, 4, 4] })).toBe(
+        '4242424242424242'
+      );
+    });
+
     it('returns empty string for null', () => {
       expect(CreditCardFormatter.normalize(null)).toBe('');
     });
@@ -59,8 +73,12 @@ describe('CreditCardFormatter', () => {
       expect(CreditCardFormatter.format('4242424242424242')).toBe('4242 4242 4242 4242');
     });
 
-    it('formats 15-digit number with spaces', () => {
-      expect(CreditCardFormatter.format('378282246310005')).toBe('3782 8224 6310 005');
+    it('formats an Amex number as 4-6-5', () => {
+      expect(CreditCardFormatter.format('378282246310005')).toBe('3782 822463 10005');
+    });
+
+    it('joins the groups with the given separator', () => {
+      expect(CreditCardFormatter.format('4242424242424242', { separator: '-' })).toBe('4242-4242-4242-4242');
     });
 
     it('formats at the given group breaks', () => {
