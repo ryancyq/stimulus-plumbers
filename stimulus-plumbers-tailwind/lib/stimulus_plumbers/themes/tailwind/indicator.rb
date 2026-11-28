@@ -22,7 +22,7 @@ module StimulusPlumbers
         ].freeze
 
         # Positioning context for the pulse ring.
-        WRAPPER = %w[relative inline-flex items-center justify-center].freeze
+        CONTAINER = %w[relative inline-flex items-center justify-center].freeze
 
         PULSE_RING = %w[
           absolute inset-0 rounded-full
@@ -33,15 +33,15 @@ module StimulusPlumbers
         private
 
         def indicator_classes(type: :dot, variant: nil)
-          { classes: klasses(*(type.to_sym == :badge ? BADGE : DOT), VARIANTS.fetch(variant, nil)) }
+          { classes: class_names(*(type.to_sym == :badge ? BADGE : DOT), VARIANTS.fetch(variant, nil)) }
         end
 
-        def indicator_wrapper_classes
-          { classes: klasses(*WRAPPER) }
+        def indicator_container_classes
+          { classes: class_names(*CONTAINER) }
         end
 
         def indicator_pulse_classes
-          { classes: klasses(*PULSE_RING) }
+          { classes: class_names(*PULSE_RING) }
         end
       end
     end

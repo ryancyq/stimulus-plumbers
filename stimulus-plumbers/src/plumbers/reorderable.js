@@ -105,7 +105,7 @@ export class Reorderable extends Plumber {
     const items = this.items;
     const draggingIndex = items.indexOf(this.draggingItem);
 
-    // Moves the neighbor, not the dragging item.
+    // Moves the neighbour, not the dragging item.
     const previous = items[draggingIndex - 1];
     if (previous && coord < this.midpointOf(previous)) {
       this.draggingItem.after(previous);
@@ -118,9 +118,6 @@ export class Reorderable extends Plumber {
     }
   }
 
-  // Returns the moved item (or null if no drag was in progress) purely for test
-  // assertions — the controller's onPointerUp ignores the return value, since a
-  // drag deliberately does not refocus or announce (unlike a keyboard move).
   endDrag(handle, pointerId) {
     if (!this.draggingItem) return null;
 

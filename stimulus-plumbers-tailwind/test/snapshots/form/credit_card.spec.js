@@ -7,36 +7,34 @@ test.describe("credit card", () => {
   });
 
   test("empty", async ({ page }) => {
-    const field = page.locator(
-      "#credit-card-default [data-input-formatter-format-value='creditCard']",
-    );
+    const input = page
+      .locator("#credit-card-default")
+      .getByRole("textbox", { name: "Card number" });
 
-    await expect(field).toHaveScreenshot("empty.png");
+    await expect(input).toHaveScreenshot("empty.png");
   });
 
   test("formatted and filled", async ({ page }) => {
-    const field = page.locator(
-      "#credit-card-default [data-input-formatter-format-value='creditCard']",
-    );
-    const input = field.getByRole("textbox", { name: "Card number" });
+    const input = page
+      .locator("#credit-card-default")
+      .getByRole("textbox", { name: "Card number" });
     await input.fill("4242424242424242");
-    await expect(field).toHaveScreenshot("filled.png");
+    await expect(input).toHaveScreenshot("filled.png");
   });
 
   test("separator empty", async ({ page }) => {
-    const field = page.locator(
-      "#credit-card-separator [data-input-formatter-format-value='creditCard']",
-    );
+    const input = page
+      .locator("#credit-card-separator")
+      .getByRole("textbox", { name: "Card number" });
 
-    await expect(field).toHaveScreenshot("separator-empty.png");
+    await expect(input).toHaveScreenshot("separator-empty.png");
   });
 
   test("separator formatted and filled", async ({ page }) => {
-    const field = page.locator(
-      "#credit-card-separator [data-input-formatter-format-value='creditCard']",
-    );
-    const input = field.getByRole("textbox", { name: "Card number" });
+    const input = page
+      .locator("#credit-card-separator")
+      .getByRole("textbox", { name: "Card number" });
     await input.fill("4242424242424242");
-    await expect(field).toHaveScreenshot("separator-filled.png");
+    await expect(input).toHaveScreenshot("separator-filled.png");
   });
 });

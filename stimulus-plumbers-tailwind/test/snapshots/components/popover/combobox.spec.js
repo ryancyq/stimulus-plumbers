@@ -54,6 +54,18 @@ test.describe("combobox", () => {
     await screenshotWithPanel(page, section, "time-selected-focused.png");
   });
 
+  test("time range — open", async ({ page }) => {
+    const section = page.locator("#combobox-time-range");
+    await section.getByRole("combobox", { name: "Opening" }).click();
+    await screenshotWithPanel(page, section, "time-range-open.png");
+  });
+
+  test("datetime — open", async ({ page }) => {
+    const section = page.locator("#combobox-datetime");
+    await section.getByRole("combobox", { name: "Booking" }).click();
+    await screenshotWithPanel(page, section, "datetime-open.png");
+  });
+
   test("dropdown — open", async ({ page }) => {
     const section = page.locator("#combobox-dropdown");
     await section.getByRole("combobox", { name: "Country" }).click();

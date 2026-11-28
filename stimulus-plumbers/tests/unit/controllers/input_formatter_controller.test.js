@@ -93,7 +93,109 @@ describe('InputFormatterController', () => {
     });
   });
 
-  describe('sync without input target', () => {
+  describe('caret after reformatting', () => {
+    let input;
+
+    beforeEach(async () => {
+      document.body.innerHTML = `
+        <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
+          <input type="text" data-input-formatter-target="input" data-action="input->input-formatter#onInput">
+        </div>
+      `;
+      await flush();
+      input = document.querySelector('input');
+      input.focus();
+    });
+
+    const type = (value, caret) => {
+      input.value = value;
+      input.setSelectionRange(caret, caret);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
+    it('stays after a digit inserted mid-number', () => {
+      type('42142 4242', 3);
+
+      expect(input.value).toBe('4214 2424 2');
+      expect(input.selectionStart).toBe(3);
+    });
+
+    it('moves past a separator the reformat inserts', () => {
+      type('42421 4242', 5);
+
+      expect(input.value).toBe('4242 1424 2');
+      expect(input.selectionStart).toBe(6);
+    });
+  });
+
+  describe('typing at the cap', () => {
+    const mount = async (format, options, value) => {
+      document.body.innerHTML = `
+        <div data-controller="input-formatter" data-input-formatter-format-value="${format}"
+             data-input-formatter-options-value='${options}'>
+          <input value="${value}" data-input-formatter-target="input"
+                 data-action="input->input-formatter#onInput beforeinput->input-formatter#onBeforeinput">
+        </div>
+      `;
+      await flush();
+      document.querySelector('input').focus();
+    };
+
+    const input = () => document.querySelector('input');
+
+    const typeAt = (caret, data) => {
+      input().setSelectionRange(caret, caret);
+      const event = new InputEvent('beforeinput', { inputType: 'insertText', data, bubbles: true, cancelable: true });
+      input().dispatchEvent(event);
+      return event;
+    };
+
+    it('replaces the code character after the caret', async () => {
+      await mount('code', '{"charset":"digits","length":6}', '482913');
+
+      const event = typeAt(2, '7');
+
+      expect(event.defaultPrevented).toBe(true);
+      expect(input().value).toBe('487913');
+      expect(input().selectionStart).toBe(3);
+    });
+
+    it('leaves a character typed below the cap to the browser', async () => {
+      await mount('code', '{"charset":"digits","length":6}', '4829');
+
+      expect(typeAt(2, '7').defaultPrevented).toBe(false);
+    });
+
+    it('leaves a character the formatter drops to the browser', async () => {
+      await mount('code', '{"charset":"digits","length":6}', '482913');
+
+      expect(typeAt(2, 'a').defaultPrevented).toBe(false);
+    });
+
+    it('ignores a character typed after a full code', async () => {
+      await mount('code', '{"charset":"digits","length":6}', '482913');
+
+      expect(typeAt(6, '7').defaultPrevented).toBe(true);
+      expect(input().value).toBe('482913');
+    });
+
+    it('lets a 16-digit card number grow toward 19 digits', async () => {
+      await mount('creditCard', '{}', '4242 4242 4242 4242');
+
+      expect(typeAt(2, '7').defaultPrevented).toBe(false);
+    });
+
+    it('replaces the Amex digit after the caret, past its separators', async () => {
+      await mount('creditCard', '{}', '3782 822463 10005');
+
+      typeAt(5, '9');
+
+      expect(input().value).toBe('3782 922463 10005');
+      expect(input().selectionStart).toBe(6);
+    });
+  });
+
+  describe('without an input target', () => {
     beforeEach(async () => {
       document.body.innerHTML = `<div data-controller="input-formatter"></div>`;
       await flush();
@@ -223,44 +325,26 @@ describe('InputFormatterController', () => {
     });
   });
 
-  describe('code type with cells', () => {
+  describe('code type', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
         <div data-controller="input-formatter"
              data-input-formatter-format-value="code"
              data-input-formatter-options-value='{"charset":"digits","length":6}'>
-          ${'<div data-input-formatter-target="cell"></div>'.repeat(6)}
-          <input data-input-formatter-target="input"
-                 data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur" />
+          <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
       await flush();
     });
 
-    const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
     const input = () => document.querySelector('[data-input-formatter-target="input"]');
 
-    it('attaches characterCells on connect', () => {
-      expect(getController().characterCells).toBeDefined();
-    });
-
-    it('stamps aria-hidden on cells', () => {
-      cells().forEach((cell) => expect(cell.getAttribute('aria-hidden')).toBe('true'));
-    });
-
-    it('paints typed characters into cells on input', () => {
-      input().value = '482';
-      input().dispatchEvent(new Event('input', { bubbles: true }));
-      expect(cells().map((cell) => cell.textContent)).toEqual(['4', '8', '2', '', '', '']);
-    });
-
-    it('repaints the restored value after a form reset without dispatching filled', async () => {
+    it('reformats the restored value after a form reset without dispatching filled', async () => {
       document.body.innerHTML = `
         <form>
           <div data-controller="input-formatter"
                data-input-formatter-format-value="code"
                data-input-formatter-options-value='{"charset":"digits","length":6}'>
-            ${'<div data-input-formatter-target="cell"></div>'.repeat(6)}
             <input value="123456" data-input-formatter-target="input"
                    data-action="input->input-formatter#onInput form:reset->input-formatter#onFormReset" />
           </div>
@@ -276,30 +360,18 @@ describe('InputFormatterController', () => {
       input().dispatchEvent(new CustomEvent('form:reset'));
       document.removeEventListener('input-formatter:filled', filled);
 
-      expect(cells().map((cell) => cell.textContent)).toEqual(['1', '2', '3', '4', '5', '6']);
+      expect(input().value).toBe('123456');
       expect(filled).not.toHaveBeenCalled();
-    });
-
-    it('clears previously painted cells when switching to a formatter with no cells hint', async () => {
-      input().value = '1234';
-      input().dispatchEvent(new Event('input', { bubbles: true }));
-      expect(cells().map((cell) => cell.textContent)).toEqual(['1', '2', '3', '4', '', '']);
-
-      document
-        .querySelector('[data-controller="input-formatter"]')
-        .setAttribute('data-input-formatter-format-value', 'plain');
-      await flush();
-
-      expect(
-        cells()
-          .map((cell) => cell.textContent)
-          .join('')
-      ).toBe('');
-      expect(getController().characterCells).toBeUndefined();
     });
 
     it('filters non-charset characters and writes back to the input', () => {
       input().value = '4 8-29 13';
+      input().dispatchEvent(new Event('input', { bubbles: true }));
+      expect(input().value).toBe('482913');
+    });
+
+    it('keeps the first length characters of a longer paste', () => {
+      input().value = '4829137';
       input().dispatchEvent(new Event('input', { bubbles: true }));
       expect(input().value).toBe('482913');
     });
@@ -319,15 +391,6 @@ describe('InputFormatterController', () => {
       input().value = '4829';
       input().dispatchEvent(new Event('input', { bubbles: true }));
       expect(spy).not.toHaveBeenCalled();
-    });
-
-    it('shows the caret cell only while focused', () => {
-      input().value = '48';
-      input().focus();
-      input().dispatchEvent(new Event('input', { bubbles: true }));
-      expect(cells()[2].hasAttribute('data-caret')).toBe(true);
-      input().blur();
-      expect(cells()[2].hasAttribute('data-caret')).toBe(false);
     });
 
     it('does not dispatch filled again when a 7th char is typed and truncated back to the same 6 chars', () => {
@@ -361,7 +424,6 @@ describe('InputFormatterController', () => {
         <div data-controller="input-formatter"
              data-input-formatter-format-value="code"
              data-input-formatter-options-value='{"charset":"digits","length":6}'>
-          ${'<div data-input-formatter-target="cell"></div>'.repeat(6)}
           <input data-input-formatter-target="input" value="482913"
                  data-action="input->input-formatter#onInput" />
         </div>
@@ -377,7 +439,6 @@ describe('InputFormatterController', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
         <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-          ${'<div data-input-formatter-target="cell"></div>'.repeat(16)}
           <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
@@ -386,7 +447,7 @@ describe('InputFormatterController', () => {
 
     const input = () => document.querySelector('[data-input-formatter-target="input"]');
 
-    it('dispatches filled for a valid creditCard value reaching its cells length', () => {
+    it('dispatches filled for a valid creditCard value at its filled length', () => {
       const spy = vi.fn();
       document.querySelector('[data-controller="input-formatter"]').addEventListener('input-formatter:filled', spy);
       input().value = '4242424242424242';
@@ -394,58 +455,33 @@ describe('InputFormatterController', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy.mock.calls[0][0].detail).toEqual({ value: '4242424242424242' });
     });
-  });
 
-  describe('creditCard type with cells', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-          ${'<div data-input-formatter-target="cell"></div>'.repeat(16)}
-          <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
-        </div>
-      `;
-      await flush();
-    });
-
-    it('derives 4-4-4-4 grouping from the formatter hint', () => {
-      const cells = [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
-      expect(cells[3].hasAttribute('data-group-end')).toBe(true);
-      expect(cells[4].getAttribute('data-group-index')).toBe('1');
-    });
-
-    it('paints the canonical (unformatted) value into cells', () => {
-      const input = document.querySelector('[data-input-formatter-target="input"]');
-      input.value = '4242 4242';
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      const cells = [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
-      expect(cells.slice(0, 8).map((cell) => cell.textContent)).toEqual(['4', '2', '4', '2', '4', '2', '4', '2']);
+    it('dispatches filled for a valid 15-digit Amex number', () => {
+      const spy = vi.fn();
+      document.querySelector('[data-controller="input-formatter"]').addEventListener('input-formatter:filled', spy);
+      input().value = '378282246310005';
+      input().dispatchEvent(new Event('input', { bubbles: true }));
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('creditCard type with cells — 19-digit card via groups override', () => {
+  describe('creditCard type with groups', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
         <div data-controller="input-formatter" data-input-formatter-format-value="creditCard"
-             data-input-formatter-groups-value="[4,4,4,4,3]">
-          ${'<div data-input-formatter-target="cell"></div>'.repeat(19)}
+             data-input-formatter-options-value='{"groups":[4,4,4,4,3]}'>
           <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
         </div>
       `;
       await flush();
     });
 
-    const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
     const input = () => document.querySelector('[data-input-formatter-target="input"]');
 
-    it('paints all 19 digits, including the last 3 beyond the default 16-cell cap', () => {
+    it('groups the input value at the given breaks', () => {
       input().value = '1234567890123456785';
       input().dispatchEvent(new Event('input', { bubbles: true }));
-      expect(
-        cells()
-          .map((cell) => cell.textContent)
-          .join('')
-      ).toBe('1234567890123456785');
-      expect(cells()[18].hasAttribute('data-inactive')).toBe(false);
+      expect(input().value).toBe('1234 5678 9012 3456 785');
     });
 
     it('dispatches filled once the full 19-digit valid number is entered', () => {
@@ -455,169 +491,15 @@ describe('InputFormatterController', () => {
       input().dispatchEvent(new Event('input', { bubbles: true }));
       expect(spy).toHaveBeenCalledTimes(1);
     });
-  });
 
-  describe('groups value override', () => {
-    // 20 cells: more than the override's groups sum (15) and more than the formatter's
-    // own hint length (16), so active()/warn behavior only matches the override sum
-    // when length is correctly re-derived from it rather than the formatter's hint.
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="input-formatter" data-input-formatter-format-value="creditCard"
-             data-input-formatter-groups-value="[4,6,5]">
-          ${'<div data-input-formatter-target="cell"></div>'.repeat(20)}
-          <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
-        </div>
-      `;
-      await flush();
-    });
-
-    const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
-
-    it('derives expected length from the override groups sum, not the formatter hint length', () => {
-      expect(getController().characterCells.active()).toBe(15);
-    });
-
-    it('marks cells beyond the override sum as inactive, not just beyond the hint length', () => {
-      expect(cells()[14].hasAttribute('data-inactive')).toBe(false);
-      expect(cells()[15].hasAttribute('data-inactive')).toBe(true);
-    });
-
-    it('stamps group boundaries from the override, not the formatter hint', () => {
-      expect(cells()[3].hasAttribute('data-group-end')).toBe(true);
-      expect(cells()[4].getAttribute('data-group-index')).toBe('1');
-      expect(cells()[9].hasAttribute('data-group-end')).toBe(true);
-      expect(cells()[10].getAttribute('data-group-index')).toBe('2');
-    });
-
-    it('re-derives grouping when groupsValue changes', async () => {
-      const el = document.querySelector('[data-controller="input-formatter"]');
-      el.setAttribute('data-input-formatter-groups-value', '[3,3,3,3,3]');
-      await flush();
-      expect(cells()[2].hasAttribute('data-group-end')).toBe(true);
-      expect(cells()[3].getAttribute('data-group-index')).toBe('1');
-      expect(getController().characterCells.active()).toBe(15);
-    });
-
-    it('spaces the input value at the override group breaks', () => {
-      const input = document.querySelector('input');
-      input.value = '378282246310005';
-      input.dispatchEvent(new Event('input'));
-      expect(input.value).toBe('3782 822463 10005');
-    });
-
-    it('re-spaces the input value when groupsValue changes', async () => {
-      const el = document.querySelector('[data-controller="input-formatter"]');
-      const input = document.querySelector('input');
-      input.value = '378282246310005';
-      input.dispatchEvent(new Event('input'));
-      el.setAttribute('data-input-formatter-groups-value', '[3,3,3,3,3]');
-      await flush();
-      expect(input.value).toBe('378 282 246 310 005');
-    });
-  });
-
-  describe('cells appended after connect (e.g. Turbo Stream/morph)', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="input-formatter"
-             data-input-formatter-format-value="code"
-             data-input-formatter-options-value='{"charset":"digits","length":6}'>
-          <div class="cells-row">
-            ${'<div data-input-formatter-target="cell"></div>'.repeat(4)}
-          </div>
-          <input data-input-formatter-target="input" value="482915"
-                 data-action="input->input-formatter#onInput" />
-        </div>
-      `;
-      await flush();
-    });
-
-    const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
-
-    it('adopts (stamps aria-hidden on) a cell appended after connect', async () => {
-      const newCell = document.createElement('div');
-      newCell.setAttribute('data-input-formatter-target', 'cell');
-      document.querySelector('.cells-row').appendChild(newCell);
-      await flush();
-
-      expect(newCell.getAttribute('aria-hidden')).toBe('true');
-    });
-
-    it('extends active() to include cells appended after connect', async () => {
-      const row = document.querySelector('.cells-row');
-      const a = document.createElement('div');
-      a.setAttribute('data-input-formatter-target', 'cell');
-      const b = document.createElement('div');
-      b.setAttribute('data-input-formatter-target', 'cell');
-      row.appendChild(a);
-      row.appendChild(b);
-      await flush();
-
-      expect(cells().length).toBe(6);
-      expect(getController().characterCells.active()).toBe(6);
-    });
-
-    it('paints the current value into a cell appended after connect', async () => {
-      const row = document.querySelector('.cells-row');
-      const newCell = document.createElement('div');
-      newCell.setAttribute('data-input-formatter-target', 'cell');
-      row.appendChild(newCell);
-      await flush();
-
-      expect(newCell.textContent).toBe('1');
-    });
-  });
-
-  describe('creditCard type with 4 grouped cells (one cell per group)', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-          ${'<div data-input-formatter-target="cell"></div>'.repeat(4)}
-          <input data-input-formatter-target="input" data-action="input->input-formatter#onInput" />
-        </div>
-      `;
-      await flush();
-    });
-
-    const cells = () => [...document.querySelectorAll('[data-input-formatter-target="cell"]')];
-    const input = () => document.querySelector('[data-input-formatter-target="input"]');
-
-    it('paints a 4-digit chunk per cell', () => {
-      input().value = '4242424242424242';
+    it('regroups the input value when the groups change', async () => {
+      input().value = '378282246310005';
       input().dispatchEvent(new Event('input', { bubbles: true }));
-      expect(cells().map((cell) => cell.textContent)).toEqual(['4242', '4242', '4242', '4242']);
-    });
-
-    it('dispatches filled once the full 16-digit value is entered', () => {
-      const spy = vi.fn();
-      document.querySelector('[data-controller="input-formatter"]').addEventListener('input-formatter:filled', spy);
-      input().value = '4242424242424242';
-      input().dispatchEvent(new Event('input', { bubbles: true }));
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-
-    it('does not dispatch filled below 16 digits', () => {
-      const spy = vi.fn();
-      document.querySelector('[data-controller="input-formatter"]').addEventListener('input-formatter:filled', spy);
-      input().value = '424242';
-      input().dispatchEvent(new Event('input', { bubbles: true }));
-      expect(spy).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('without cell targets (regression)', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-          <input data-input-formatter-target="input" />
-        </div>
-      `;
+      document
+        .querySelector('[data-controller="input-formatter"]')
+        .setAttribute('data-input-formatter-options-value', '{"groups":[3,3,3,3,3]}');
       await flush();
-    });
-
-    it('does not attach characterCells', () => {
-      expect(getController().characterCells).toBeUndefined();
+      expect(input().value).toBe('378 282 246 310 005');
     });
   });
 });

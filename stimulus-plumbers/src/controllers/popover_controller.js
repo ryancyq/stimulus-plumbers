@@ -37,9 +37,13 @@ export default class extends Controller {
     this.panelElement = panel;
     this.panelListeners = new AbortController();
     const { signal } = this.panelListeners;
-    panel.addEventListener('popover:opened', (event) => event.target === panel && this._syncTrigger(true), { signal });
-    panel.addEventListener('popover:closed', (event) => event.target === panel && this._syncTrigger(false), { signal });
-    this._syncTrigger();
+    panel.addEventListener('popover:opened', (event) => event.target === panel && this._setTriggerExpanded(true), {
+      signal,
+    });
+    panel.addEventListener('popover:closed', (event) => event.target === panel && this._setTriggerExpanded(false), {
+      signal,
+    });
+    this._setTriggerExpanded();
   }
 
   panelTargetDisconnected(panel) {
@@ -49,7 +53,7 @@ export default class extends Controller {
   }
 
   triggerTargetConnected() {
-    this._syncTrigger();
+    this._setTriggerExpanded();
   }
 
   onOpen(event) {
@@ -104,7 +108,7 @@ export default class extends Controller {
     return this.hasTriggerTarget ? this.triggerTarget : undefined;
   }
 
-  _syncTrigger(open = this.popover?.open === true) {
+  _setTriggerExpanded(open = this.popover?.open === true) {
     if (!this.hasTriggerTarget || !this.triggerTarget.hasAttribute('aria-expanded')) return;
 
     this.triggerTarget.setAttribute('aria-expanded', String(open));

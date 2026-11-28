@@ -106,7 +106,7 @@ A read-only date input whose popover holds [`sp_calendar`](calendar.md); `combob
 | `trigger`                      | `{}`             | Attributes for the input                                                                |
 | `calendar`                     | `{}`             | [`sp_calendar`](calendar.md) `:stimulus` options (`displayed`, `today`, …)              |
 | `min`, `max`, `disabled_*`     | —                | Available dates, as in [`sp_calendar`](calendar.md)                                     |
-| `**html_options`               | —                | Forwarded to the wrapper `div`                                                          |
+| `**html_options`               | —                | Forwarded to the container `div`                                                        |
 
 ```html
 <div
@@ -163,14 +163,18 @@ It takes the `sp_combobox_date` options `name`, `label`/`labelledby`, `id`, `ope
 
 ```erb
 <%= sp_combobox_time(name: "event[starts_at]", value: @event.starts_at, label: "Starts at",
-                     format: { hourCycle: "h23" }, step: 15) %>
+                     format: { hourCycle: "h23" }, min: "09:00", max: "17:00", step: 15) %>
 ```
 
-| Option   | Default | Description                                                                                             |
-| -------- | ------- | ------------------------------------------------------------------------------------------------------- |
-| `value`  | `nil`   | A time or `HH:MM`; submits `HH:MM`; other text shows as is and selects nothing                          |
-| `format` | `{}`    | `input-formatter` options, passed as given; `locale` defaults to `I18n.locale` and `hourCycle` to `h12` |
-| `step`   | `1`     | Minute interval; `15` lists 00, 15, 30, 45; a minute off it selects no minute and is kept               |
+| Option       | Default | Description                                                                                                                                 |
+| ------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`      | `nil`   | A time, read by its clock without seconds, or `HH:MM`; submits `HH:MM`; other text shows as is and selects nothing                          |
+| `format`     | `{}`    | `input-formatter` options, passed as given; `locale` defaults to `I18n.locale` and `hourCycle` to `h12`                                     |
+| `min`, `max` | `nil`   | Available range as times or `HH:MM`, inclusive; a `min` after `max` wraps past midnight; options outside it are unavailable                 |
+| `step`       | `1`     | Minutes counted from midnight, one of 1–6, 10, 12, 15, 20, 30, 60; `15` lists 00, 15, 30, 45; a minute off it selects no minute and is kept |
+
+A `min` or `max` that is not a time or `HH:MM`, a `min`–`max` with no time on the `step`, or another `step` raises
+`ArgumentError`. An unavailable `value` stays selected; validate it in the model.
 
 `hourCycle: "h11"`/`"h12"` or `hour12: true` adds the AM/PM column with hours 1–12; otherwise hours run 00–23.
 Column names come from `stimulus_plumbers.combobox.time.*_label`; AM and PM labels from
@@ -179,9 +183,10 @@ Column names come from `stimulus_plumbers.combobox.time.*_label`; AM and PM labe
 ```html
 <div
   data-controller="popover combobox-time input-formatter"
+  data-combobox-time-step-value="1"
   data-input-formatter-format-value="time"
   data-input-formatter-options-value='{"hourCycle":"h12","locale":"en"}'
-  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
+  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened popover:closed->combobox-time#onClosed focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
 >
   <div class="[combobox_trigger_group theme classes]">
     <input
@@ -234,6 +239,62 @@ Column names come from `stimulus_plumbers.combobox.time.*_label`; AM and PM labe
 
 ---
 
+### `sp_combobox_datetime`
+
+A read-only date-time input whose popover holds [`sp_calendar`](calendar.md) and the `sp_combobox_time` columns;
+`combobox-datetime` and `input-formatter` ([JS](../../../stimulus-plumbers/docs/component/combobox.md#combobox-datetime))
+fill it. It takes the `sp_combobox_time` options, but `min` and `max` are moments and `step` goes in `time:`:
+
+```erb
+<%= sp_combobox_datetime(name: "booking[starts_at]", value: @booking.starts_at, label: "Starts at",
+                         min: Time.current, max: 30.days.from_now, disabled_weekdays: [0],
+                         time: { min: "18:00", max: "23:00", step: 15 }) %>
+```
+
+| Option          | Default    | Description                                                                                                                                |
+| --------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `value`         | `nil`      | A time, read in `Time.zone` without seconds, or `YYYY-MM-DDTHH:MM`; submits `YYYY-MM-DDTHH:MM`; other text shows as is and selects nothing |
+| `format`        | `{}`       | `input-formatter` `datetime` options; `locale` defaults to `I18n.locale` and `hourCycle` to `h12`                                          |
+| `min`, `max`    | `nil`      | Available moments as times or `YYYY-MM-DDTHH:MM`, inclusive                                                                                |
+| `disabled_*`    | —          | Unavailable dates, as in [`sp_calendar`](calendar.md)                                                                                      |
+| `time`          | `{}`       | The daily window: `sp_combobox_time` `min`, `max`, and `step`                                                                              |
+| `calendar`      | `{}`       | [`sp_calendar`](calendar.md) `:stimulus` options (`displayed`, `today`, …)                                                                 |
+| `icon_trailing` | `calendar` | Decorative icon                                                                                                                            |
+
+The calendar and the columns offer what `combobox-datetime` does. Unusable options raise
+`ArgumentError`, including a `min` and `max` on the same or neighbouring dates with no time left on either; an
+unavailable `value` stays selected, so validate it in the model.
+
+```html
+<div
+  data-controller="popover combobox-datetime input-formatter"
+  data-combobox-datetime-min-value="[min]"
+  data-combobox-datetime-max-value="[max]"
+  data-combobox-datetime-time-min-value="[time min]"
+  data-combobox-datetime-time-max-value="[time max]"
+  data-combobox-datetime-step-value="1"
+  data-combobox-datetime-disabled-weekdays-value="[disabled weekdays]"
+  data-input-formatter-format-value="datetime"
+  data-action="calendar:changed->combobox-datetime#onDateChange popover:before-open->combobox-datetime#onOpening popover:opened->combobox-datetime#onOpened popover:closed->combobox-datetime#onClosed focusout->combobox-datetime#onFocusout mousedown->combobox-datetime#onMousedown click->combobox-datetime#onClick combobox-datetime:changed->input-formatter#onChange"
+>
+  <!-- trigger group and value input as in sp_combobox_date; the value input submits YYYY-MM-DDTHH:MM -->
+  <div
+    id="[id]_popover"
+    popover="auto"
+    role="dialog"
+    aria-label="Choose [label]"
+    data-action="keydown.esc->combobox-datetime#onEscape"
+  >
+    <!-- sp_calendar id="[id]_calendar", selectable, data-combobox-datetime-target="calendar" -->
+    <div class="[combobox_time theme classes]">
+      <!-- Hour, Minute, and AM/PM columns as in sp_combobox_time -->
+    </div>
+  </div>
+</div>
+```
+
+---
+
 ## Form Builder
 
 `StimulusPlumbers::Form::Builder` exposes combobox-backed fields through purpose-specific methods.
@@ -247,7 +308,8 @@ See [form.md](form.md) for the full API.
 ```
 
 `as: :select` renders `sp_combobox_dropdown`, `as: :search` `sp_combobox_typeahead`, `as: :date`
-`sp_combobox_date`, and `as: :time` `sp_combobox_time` (defaults in [form.md](form.md)).
+`sp_combobox_date`, `as: :time` `sp_combobox_time`, and `as: :datetime` `sp_combobox_datetime` (defaults in
+[form.md](form.md)).
 
 ---
 
@@ -337,11 +399,13 @@ spans.
 | `combobox_typeahead_popover`  | `sp_combobox_typeahead` panel          |
 | `combobox_date_popover`       | `sp_combobox_date` panel               |
 | `combobox_time_popover`       | `sp_combobox_time` panel               |
+| `combobox_datetime_popover`   | `sp_combobox_datetime` panel           |
 | `combobox_listbox`            | Listbox                                |
-| `combobox_option`             | Option (`disabled:`)                   |
+| `combobox_option`             | Option                                 |
 | `combobox_option_description` | Option description                     |
 | `combobox_option_group`       | Group item                             |
 | `combobox_option_group_label` | Group label                            |
 | `combobox_status`             | Editable status                        |
-| `combobox_time`               | Time panel columns row                 |
-| `combobox_time_drum`          | Time column (`type: :unit\|:meridiem`) |
+| `combobox_time`               | Time and date-time panel columns row   |
+| `combobox_datetime`           | Date-time panel: calendar and columns  |
+| `combobox_time_column`        | Time column (`type: :unit\|:meridiem`) |

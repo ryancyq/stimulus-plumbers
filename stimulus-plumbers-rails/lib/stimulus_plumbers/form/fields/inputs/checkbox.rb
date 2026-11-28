@@ -19,11 +19,11 @@ module StimulusPlumbers
             html_options = {},
             &block
           )
-            item_opts = merge_html_options(theme.resolve(:form_field_input_checkbox), html_options)
+            item_attrs = merge_html_options(theme.resolve(:form_field_input_checkbox), html_options)
             if block_given?
-              super(attribute, collection, value_method, text_method, options, item_opts, &block)
+              super(attribute, collection, value_method, text_method, options, item_attrs, &block)
             else
-              super(attribute, collection, value_method, text_method, options, item_opts) do |builder|
+              super(attribute, collection, value_method, text_method, options, item_attrs) do |builder|
                 render_check_box_label(builder, theme.resolve(:form_field_checkbox_label))
               end
             end
@@ -44,21 +44,21 @@ module StimulusPlumbers
             variant = kwargs.delete(:variant) { :default }
             field   = Field.new(@template, **{ layout: :inline }.deep_merge(field_opts))
             render_fieldset(attribute, field) do |error|
-              item_opts = merge_html_options(
+              item_attrs = merge_html_options(
                 theme.resolve(:form_field_input_checkbox, error: error, type: type, variant: variant),
                 kwargs,
                 field.required ? { aria: { required: "true" } } : {}
               )
               @template.collection_check_boxes(
-                @object_name, attribute, collection, value_method, text_method, {}, item_opts
+                @object_name, attribute, collection, value_method, text_method, {}, item_attrs
               ) do |builder|
                 render_check_box_label(builder, theme.resolve(:form_field_checkbox_label, type: type, variant: variant), type)
               end
             end
           end
 
-          def render_check_box_label(builder, label_opts, type = :default)
-            html_options = merge_html_options(label_opts)
+          def render_check_box_label(builder, label_attrs, type = :default)
+            html_options = merge_html_options(label_attrs)
             case type
             when :card
               builder.label(**html_options) { @template.safe_join([builder.text, builder.check_box]) }
@@ -85,7 +85,7 @@ module StimulusPlumbers
           end
 
           def build_check_box_input(field, attribute, input_id, error, checked_value, unchecked_value, **kwargs)
-            check_box_opts = merge_html_options(
+            check_box_attrs = merge_html_options(
               theme.resolve(:form_checkbox, error: error),
               kwargs,
               {
@@ -98,13 +98,13 @@ module StimulusPlumbers
               },
               field.required ? { required: true } : {}
             )
-            @template.check_box(@object_name, attribute, objectify_options(check_box_opts), checked_value, unchecked_value)
+            @template.check_box(@object_name, attribute, objectify_options(check_box_attrs), checked_value, unchecked_value)
           end
 
           def build_check_box_label(field, attribute, input_id, check_box_html)
-            label_opts = merge_html_options(theme.resolve(:form_field_checkbox_label))
+            label_attrs = merge_html_options(theme.resolve(:form_field_checkbox_label))
             label_text = field.label || attribute.to_s.humanize
-            @template.content_tag(:label, **label_opts, for: input_id) do
+            @template.content_tag(:label, **label_attrs, for: input_id) do
               @template.safe_join([check_box_html, label_text])
             end
           end

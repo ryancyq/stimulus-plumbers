@@ -1,54 +1,52 @@
 # input-formatter
 
-Formats values written to an input element. Handles structured display formatting for credit cards, phone numbers, currencies, dates, and times.
+Formats values written to an input element. Handles structured display formatting for credit cards, phone numbers, currencies, dates, times, and date-times.
 
-> [`combobox-date`](combobox.md#combobox-date) and [`combobox-time`](combobox.md#combobox-time) wire `onChange` to their `changed` events.
+> [`combobox-date`](combobox.md#combobox-date), [`combobox-time`](combobox.md#combobox-time), and [`combobox-datetime`](combobox.md#combobox-datetime) wire `onChange` to their `changed` events.
 
 ## Targets
 
-| Target  | Element                  | Description                                                                                                                                                                                                                                |
-| ------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `input` | `<input>` or any element | Write destination — sets `.value` for `<input>`, `.textContent` otherwise                                                                                                                                                                  |
-| `cell`  | `<div>` (any element)    | Optional character cells; when present, the canonical value is painted one character per cell, or (grouped mode — cell count equals `groups.length`) one group-sized slice per cell — see [character-cells](../plumber/character-cells.md) |
+| Target  | Element                  | Description                                                               |
+| ------- | ------------------------ | ------------------------------------------------------------------------- |
+| `input` | `<input>` or any element | Write destination — sets `.value` for `<input>`, `.textContent` otherwise |
 
 ## Values
 
-| Value     | Type   | Default   | Description                                                                       |
-| --------- | ------ | --------- | --------------------------------------------------------------------------------- |
-| `format`  | String | `"plain"` | Formatter type — see [Formatters](#formatters) for valid identifiers              |
-| `options` | Object | `{}`      | Formatter-specific options (e.g. `{ locale: "en-US" }` for currency)              |
-| `groups`  | Array  | `[]`      | Cell group widths (e.g. `[4,4,4,4]`); overrides the formatter's own grouping hint |
+| Value     | Type   | Default   | Description                                                          |
+| --------- | ------ | --------- | -------------------------------------------------------------------- |
+| `format`  | String | `"plain"` | Formatter type — see [Formatters](#formatters) for valid identifiers |
+| `options` | Object | `{}`      | Formatter-specific options (e.g. `{ locale: "en-US" }` for currency) |
 
 ## Methods
 
-| Method            | Wired via                                        | Description                                                                                                                                  |
-| ----------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `format(value)`   | —                                                | Programmatic API — normalises, formats, writes to `input` target, dispatches `formatted`                                                     |
-| `onChange(event)` | `combobox-date:changed`, `combobox-time:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`                                                                         |
-| `onPaste(event)`  | `clipboard:pasted`                               | Event adapter — normalises and validates pasted text; when valid, calls `format(value)` and cancels the event so the native paste is skipped |
-| `onInput(event)`  | `input` DOM event                                | Event adapter — re-formats from the input's current value                                                                                    |
-| `onFocus(event)`  | `focus` DOM event                                | Event adapter — redraws cells so the caret cell appears                                                                                      |
-| `onBlur(event)`   | `blur` DOM event                                 | Event adapter — redraws cells so the caret cell clears                                                                                       |
-| `onFormReset()`   | `form:reset` on the input                        | Re-formats the restored value without dispatching `filled`                                                                                   |
+| Method                 | Wired via                                                                     | Description                                                                                                                                  |
+| ---------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `format(value)`        | —                                                                             | Programmatic API — normalises, formats, writes to `input` target, dispatches `formatted`                                                     |
+| `onChange(event)`      | `combobox-date:changed`, `combobox-time:changed`, `combobox-datetime:changed` | Event adapter — extracts `event.detail.value`, calls `format(value)`                                                                         |
+| `onPaste(event)`       | `clipboard:pasted`                                                            | Event adapter — normalises and validates pasted text; when valid, calls `format(value)` and cancels the event so the native paste is skipped |
+| `onInput(event)`       | `input` DOM event                                                             | Event adapter — re-formats from the input's current value; the caret stays after the same kept characters                                    |
+| `onBeforeinput(event)` | `beforeinput` DOM event                                                       | Event adapter — when the value is at the formatter's cap, a typed character replaces the one after the caret                                 |
+| `onFormReset()`        | `form:reset` on the input                                                     | Re-formats the restored value without dispatching `filled`                                                                                   |
 
 ## Dispatches
 
-| Event                       | Detail      | When                                                                                                                                                                                             |
-| --------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `input-formatter:formatted` | `{ value }` | After every write to the `input` target                                                                                                                                                          |
-| `input-formatter:filled`    | `{ value }` | When a valid, cell-capable formatter's value reaches its expected cell length — auto-submit hook. Fires once per fill, on the transition into "full"; not on connect with an already-full value. |
+| Event                       | Detail      | When                                                                                                                                                                         |
+| --------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `input-formatter:formatted` | `{ value }` | After every write to the `input` target                                                                                                                                      |
+| `input-formatter:filled`    | `{ value }` | When a valid value reaches the formatter's `filledLength` — auto-submit hook. Fires once per fill, on the transition into "full"; not on connect with an already-full value. |
 
 ## Formatters
 
-| `type`         | Description                                                                                                        |
-| -------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `"plain"`      | No-op — passes the value through unchanged                                                                         |
-| `"creditCard"` | Spaces digits at the `groups` breaks; `#### #### #### ####` without `groups`                                       |
-| `"phone"`      | Formats as a local phone number                                                                                    |
-| `"currency"`   | Locale-aware thousands separator and decimal places                                                                |
-| `"date"`       | Locale-aware date string                                                                                           |
-| `"time"`       | Locale-aware time string                                                                                           |
-| `"code"`       | Charset-filtered fixed-length codes (OTP, PIN); options `{ charset: "digits"\|"letters"\|"alphanumeric", length }` |
+| `type`         | Description                                                                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"plain"`      | No-op — passes the value through unchanged                                                                                                                   |
+| `"creditCard"` | Groups digits at the `groups` breaks, else 4-6-5 for Amex and 4-4-4-4 otherwise, joined by `separator` (a space by default); options `{ groups, separator }` |
+| `"phone"`      | Formats as a local phone number                                                                                                                              |
+| `"currency"`   | Locale-aware thousands separator and decimal places                                                                                                          |
+| `"date"`       | Locale-aware date string                                                                                                                                     |
+| `"time"`       | Locale-aware time string                                                                                                                                     |
+| `"datetime"`   | Locale-aware date and time of a `YYYY-MM-DDTHH:MM` value, on the wall clock                                                                                  |
+| `"code"`       | Charset-filtered fixed-length codes (OTP, PIN); options `{ charset: "digits"\|"letters"\|"alphanumeric", length }`                                           |
 
 Custom formatters can be registered at runtime:
 
@@ -67,69 +65,18 @@ Formatter.register('iban', {
 ### Credit card formatting
 
 ```html
-<div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-  <input type="text" data-input-formatter-target="input" />
-</div>
-```
-
-### One-time code entry (cells)
-
-```html
-<div
+<input
+  type="text"
+  autocomplete="cc-number"
+  inputmode="numeric"
   data-controller="input-formatter"
-  data-input-formatter-format-value="code"
-  data-input-formatter-options-value='{"charset":"digits","length":6}'
->
-  <label for="otp" class="sr-only">Verification code</label>
-  <div class="cells-row">
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-    <div data-input-formatter-target="cell"></div>
-  </div>
-  <input
-    id="otp"
-    data-input-formatter-target="input"
-    autocomplete="one-time-code"
-    inputmode="numeric"
-    maxlength="6"
-    data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur form:reset->input-formatter#onFormReset"
-  />
-</div>
+  data-input-formatter-target="input"
+  data-input-formatter-format-value="creditCard"
+  data-input-formatter-options-value='{"separator":"-"}'
+  data-action="input->input-formatter#onInput beforeinput->input-formatter#onBeforeinput form:reset->input-formatter#onFormReset"
+/>
 ```
 
-Cells are decoration; style them via `[data-filled]`, `[data-caret]`, `[data-group-end]`, `[data-inactive]`. See [ARIA.md's Code Input pattern](../../../ARIA.md) for the overlay/labeling requirements.
+### One-time code entry
 
-### Credit card formatting (grouped cells)
-
-Rendering exactly `groups.length` cells (instead of one cell per digit) puts the plumber into
-grouped mode: each cell displays its whole group of digits. Separators between cells (e.g. a
-dash) are authored HTML, never inserted by the plumber — see
-[character-cells](../plumber/character-cells.md#grouped-mode).
-
-```html
-<div data-controller="input-formatter" data-input-formatter-format-value="creditCard">
-  <div class="cells-row">
-    <span data-input-formatter-target="cell"></span>
-    <span aria-hidden="true">-</span>
-    <span data-input-formatter-target="cell"></span>
-    <span aria-hidden="true">-</span>
-    <span data-input-formatter-target="cell"></span>
-    <span aria-hidden="true">-</span>
-    <span data-input-formatter-target="cell"></span>
-  </div>
-  <input
-    data-input-formatter-target="input"
-    autocomplete="cc-number"
-    inputmode="numeric"
-    maxlength="19"
-    data-action="input->input-formatter#onInput focus->input-formatter#onFocus blur->input-formatter#onBlur form:reset->input-formatter#onFormReset"
-  />
-</div>
-```
-
-## Accessibility
-
-- Cell display: see [ARIA.md's Code Input pattern](../../../ARIA.md).
+See [input-code](input-code.md), which draws the code in cells.

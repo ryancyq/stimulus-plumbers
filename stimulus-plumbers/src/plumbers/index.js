@@ -2,7 +2,6 @@
  * Plumbers - Core utilities for Stimulus controllers
  */
 
-export { attachCharacterCells } from './character_cells';
 export { Dialog, attachDialog } from './dialog';
 export { attachDismisser } from './dismisser';
 export { attachFlipper } from './flipper';

@@ -64,6 +64,7 @@ The engine re-runs the installer before `assets:precompile` to restore a missing
 | Combobox — dropdown | `sp_combobox_dropdown` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_dropdown) |
 | Combobox — typeahead | `sp_combobox_typeahead` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_typeahead) |
 | Combobox — time | `sp_combobox_time` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_time) |
+| Combobox — date and time | `sp_combobox_datetime` | [docs/component/combobox.md](docs/component/combobox.md#sp_combobox_datetime) |
 | Divider | `sp_divider` | [docs/component/divider.md](docs/component/divider.md) |
 | Icon | `sp_icon` | [docs/component/icon.md](docs/component/icon.md) |
 | Indicator | `sp_indicator` | [docs/component/indicator.md](docs/component/indicator.md) |
@@ -80,6 +81,7 @@ The engine re-runs the installer before `assets:precompile` to restore a missing
 `StimulusPlumbers::Form::Builder` wraps all components as model-aware form fields with automatic label, name/id, error, and ARIA wiring.
 
 Password fields support strength rules that also enforce server-side via `validates :password, password_strength:`.
+Date and time fields share their available dates and times with the `date_availability:`, `time_availability:`, and `datetime_availability:` validators.
 
 → [docs/component/form.md](docs/component/form.md)
 

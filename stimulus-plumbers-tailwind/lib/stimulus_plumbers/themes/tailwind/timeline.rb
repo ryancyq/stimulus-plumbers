@@ -64,12 +64,12 @@ module StimulusPlumbers
 
         def timeline_classes(orientation: :vertical)
           track = orientation.to_sym == :horizontal ? TRACK_HORIZONTAL : TRACK_VERTICAL
-          { classes: klasses(track) }
+          { classes: class_names(track) }
         end
 
         def timeline_item_classes(orientation: :vertical)
           item = orientation.to_sym == :horizontal ? ITEM_HORIZONTAL : ITEM_VERTICAL
-          { classes: klasses(item) }
+          { classes: class_names(item) }
         end
 
         def timeline_item_indicator_classes(type: :dot, orientation: :vertical)
@@ -78,52 +78,52 @@ module StimulusPlumbers
                  else
                    type.to_sym == :icon ? ITEM_INDICATOR_ICON : ITEM_INDICATOR_DOT
                  end
-          { classes: klasses(base) }
+          { classes: class_names(base) }
         end
 
         def timeline_item_time_classes(type: :default)
           base = type.to_sym == :badge ? ITEM_TIME_BADGE : ITEM_TIME
-          { classes: klasses(base) }
+          { classes: class_names(base) }
         end
 
         def timeline_item_title_classes
-          { classes: klasses(ITEM_TITLE) }
+          { classes: class_names(ITEM_TITLE) }
         end
 
         def timeline_item_heading_classes
-          { classes: klasses(ITEM_HEADING) }
+          { classes: class_names(ITEM_HEADING) }
         end
 
         def timeline_item_trigger_classes
-          { classes: klasses(ITEM_TRIGGER) }
+          { classes: class_names(ITEM_TRIGGER) }
         end
 
         def timeline_item_description_classes
-          { classes: klasses(ITEM_DESCRIPTION) }
+          { classes: class_names(ITEM_DESCRIPTION) }
         end
 
         def timeline_item_detail_classes
-          { classes: klasses(ITEM_DETAIL) }
+          { classes: class_names(ITEM_DETAIL) }
         end
 
         def timeline_item_actions_classes
-          { classes: klasses(ITEM_ACTIONS) }
+          { classes: class_names(ITEM_ACTIONS) }
         end
 
         def timeline_item_connector_classes
-          { classes: klasses(ITEM_CONNECTOR_HORIZONTAL) }
+          { classes: class_names(ITEM_CONNECTOR_HORIZONTAL) }
         end
 
         def timeline_item_content_classes
-          { classes: klasses(ITEM_CONTENT_HORIZONTAL) }
+          { classes: class_names(ITEM_CONTENT_HORIZONTAL) }
         end
 
         def timeline_track_line_classes
-          { classes: klasses(TRACK_LINE_VERTICAL) }
+          { classes: class_names(TRACK_LINE_VERTICAL) }
         end
 
         def timeline_item_indicator_icon_slot_classes
-          { classes: klasses(ITEM_INDICATOR_ICON_SLOT) }
+          { classes: class_names(ITEM_INDICATOR_ICON_SLOT) }
         end
       end
     end

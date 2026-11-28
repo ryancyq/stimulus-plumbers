@@ -39,25 +39,25 @@ module StimulusPlumbers
           stroke_linejoin: "stroke-linejoin"
         }.freeze
 
-        def resolve(icon_data)
-          return unless icon_data.is_a?(Hash)
+        def resolve(icon_definition)
+          return unless icon_definition.is_a?(Hash)
 
-          elements = Array(icon_data[:elements]).filter_map do |element|
+          elements = Array(icon_definition[:elements]).filter_map do |element|
             next unless element.is_a?(Hash) && ELEMENT_ATTRS.key?(element[:tag])
 
             { tag: element[:tag] }.merge(resolve_element_attrs(element))
           end
           return if elements.empty?
 
-          resolve_svg_attrs(icon_data).tap do |attrs|
+          resolve_svg_attrs(icon_definition).tap do |attrs|
             attrs[:elements] = elements
           end
         end
 
         private
 
-        def resolve_svg_attrs(svg_data)
-          SVG_ATTR_DEFAULTS.merge(svg_data).filter_map do |key, value|
+        def resolve_svg_attrs(svg_definition)
+          SVG_ATTR_DEFAULTS.merge(svg_definition).filter_map do |key, value|
             next unless svg_attr_allowed?(key)
 
             [svg_attr_name(key), value.to_s]
@@ -74,10 +74,10 @@ module StimulusPlumbers
           SVG_ATTR_NAMES.fetch(key, key.to_s)
         end
 
-        def resolve_element_attrs(element_data)
-          element_data.filter_map do |key, value|
+        def resolve_element_attrs(element_definition)
+          element_definition.filter_map do |key, value|
             next if key == :tag
-            next unless element_attr_allowed?(element_data[:tag], key)
+            next unless element_attr_allowed?(element_definition[:tag], key)
 
             [element_attr_name(key), value.to_s]
           end.to_h

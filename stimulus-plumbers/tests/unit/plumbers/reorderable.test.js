@@ -233,7 +233,7 @@ describe('Reorderable', () => {
       expect(mockController.itemTargets.map((i) => i.id)).toEqual(['row-a', 'row-b', 'row-c']);
     });
 
-    it('swaps the dragging item past a neighbor once the pointer crosses its midpoint', () => {
+    it('swaps the dragging item past a neighbour once the pointer crosses its midpoint', () => {
       stubRects();
       const reorderable = createReorderable();
       const handle = makeHandle();
@@ -305,7 +305,7 @@ describe('Reorderable', () => {
         expect(order()).toEqual(['row-a', 'row-b', 'row-c']);
       });
 
-      it('restores an item dragged back past several neighbors', () => {
+      it('restores an item dragged back past several neighbours', () => {
         stubRects();
         const reorderable = createReorderable();
         const handle = makeHandle();
@@ -343,7 +343,7 @@ describe('Reorderable', () => {
         expect(mockController.dispatch).toHaveBeenCalledTimes(1);
       });
 
-      it('keeps the dragging item in the DOM while neighbors move past it', () => {
+      it('keeps the dragging item in the DOM while neighbours move past it', () => {
         stubRects();
         const reorderable = createReorderable();
         const handle = makeHandle();

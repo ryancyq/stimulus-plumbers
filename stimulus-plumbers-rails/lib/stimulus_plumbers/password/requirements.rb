@@ -97,7 +97,7 @@ module StimulusPlumbers
         options = @enforced_options
         return length_descriptor(options) if key == :length && (options.key?(:min_length) || options.key?(:max_length))
 
-        bounds = parse_count(options[key])
+        bounds = parse_count!(options[key])
         return unless bounds
 
         label = builtin_label(key, bounds[:min])
@@ -113,7 +113,7 @@ module StimulusPlumbers
         { key: :length, min: options[:min_length], max: options[:max_length], label: label }
       end
 
-      def parse_count(value)
+      def parse_count!(value)
         case value
         when nil, false then nil
         when true then { min: 1, max: nil }

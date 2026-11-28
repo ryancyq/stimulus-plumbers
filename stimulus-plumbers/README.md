@@ -29,11 +29,13 @@ import {
   ComboboxController,
   ComboboxTurboController,
   ComboboxFetchController,
+  InputCodeController,
   InputFormatterController,
   InputClearableController,
   InputRevealableController,
   ComboboxDateController,
   ComboboxTimeController,
+  ComboboxDatetimeController,
   CalendarController,
   CalendarTurboController,
   ChecklistController,
@@ -57,11 +59,13 @@ const application = Application.start();
 application.register('combobox', ComboboxController);
 application.register('combobox-turbo', ComboboxTurboController);
 application.register('combobox-fetch', ComboboxFetchController);
+application.register('input-code', InputCodeController);
 application.register('input-formatter', InputFormatterController);
 application.register('input-clearable', InputClearableController);
 application.register('input-revealable', InputRevealableController);
 application.register('combobox-date', ComboboxDateController);
 application.register('combobox-time', ComboboxTimeController);
+application.register('combobox-datetime', ComboboxDatetimeController);
 application.register('calendar', CalendarController);
 application.register('calendar-turbo', CalendarTurboController);
 application.register('checklist', ChecklistController);
@@ -87,14 +91,16 @@ application.register('visibility', VisibilityController);
 | `combobox`          | Listbox combobox: keyboard, active option, selection, and dismissal on a manual popover                                         | [docs/component/combobox.md](docs/component/combobox.md#combobox)          |
 | `combobox-turbo`    | Remote results for `combobox` through a Turbo Frame                                                                             | [docs/component/combobox.md](docs/component/combobox.md#combobox-turbo)    |
 | `combobox-fetch`    | Remote results for `combobox` through `fetch`, without Turbo                                                                    | [docs/component/combobox.md](docs/component/combobox.md#combobox-fetch)    |
+| `input-code` | Draws a code input's characters, caret, and selection in cells | [docs/component/input-code.md](docs/component/input-code.md) |
 | `input-formatter`   | Formats and displays values                                                                                                     | [docs/component/input-formatter.md](docs/component/input-formatter.md)     |
 | `input-clearable`   | Input with clear button                                                                                                         | [docs/component/input-clearable.md](docs/component/input-clearable.md)     |
 | `input-revealable`  | Obscured input with reveal toggle                                                                                               | [docs/component/input-revealable.md](docs/component/input-revealable.md)   |
 | `combobox-date`     | Read-only date input whose popover holds a `calendar`                                                                           | [docs/component/combobox.md](docs/component/combobox.md#combobox-date)     |
 | `combobox-time`     | Read-only time input whose popover holds hour, minute, and AM/PM columns                                                        | [docs/component/combobox.md](docs/component/combobox.md#combobox-time)     |
+| `combobox-datetime` | Read-only date-time input whose popover holds a calendar and the time columns                                                   | [docs/component/combobox.md](docs/component/combobox.md#combobox-datetime) |
 | `calendar`          | Calendar grid — draws periods with `Intl` or enhances server markup; at most one Tab stop, grid keyboard, selection, navigation | [docs/component/calendar.md](docs/component/calendar.md#calendar)          |
 | `calendar-turbo`    | Loads `calendar` periods through a Turbo Frame                                                                                  | [docs/component/calendar.md](docs/component/calendar.md#calendar-turbo)    |
-| `checklist`         | Master "select all" toggle for native checkbox items                                                                            | [docs/component/checklist.md](docs/component/checklist.md)                 |
+| `checklist`         | Select-all checkbox for native checkbox items                                                                                   | [docs/component/checklist.md](docs/component/checklist.md)                 |
 | `modal`             | Native `<dialog>` lifecycle adapter                                                                                             | [docs/component/modal.md](docs/component/modal.md)                         |
 | `modal-turbo`       | Turbo Frame adapter for `modal`                                                                                                 | [docs/component/modal.md](docs/component/modal.md#turbo-modal)             |
 | `popover`           | Native HTML Popover lifecycle adapter                                                                                           | [docs/component/popover.md](docs/component/popover.md)                     |
@@ -117,9 +123,8 @@ application.register('visibility', VisibilityController);
 | `getFocusableElements`, `focusFirst`                                                       | Focus management                                                                   | [docs/utility/accessibility.md](docs/utility/accessibility.md)         |
 | `RovingTabIndex`, `ActiveDescendant`, `isActivationKey`, `isArrowKey`                      | Keyboard interaction                                                               | [docs/utility/accessibility.md](docs/utility/accessibility.md)         |
 | `Requestor`                                                                                | Fetch wrapper with lifecycle events                                                | [docs/utility/requestor.md](docs/utility/requestor.md)                 |
-| `fuzzyMatcher`                                                                             | Fuzzy subsequence matching                                                         | [docs/utility/researcher.md](docs/utility/researcher.md)               |
+| `fuzzyMatcher`                                                                             | Fuzzy subsequence matching                                                         | [docs/utility/matcher.md](docs/utility/matcher.md)                     |
 | `Formatter`, `FORMATTER_TYPES`                                                             | Input formatter plumber (attach to a controller; used by `input-formatter`)        | [docs/plumber/formatter.md](docs/plumber/formatter.md)                 |
-| `CharacterCells`, `attachCharacterCells`                                                   | Character-cell display plumber (attach to a controller; used by `input-formatter`) | [docs/plumber/character-cells.md](docs/plumber/character-cells.md)     |
 | `PasswordStrength`, `attachPasswordStrength`, `STRENGTH_TYPES`                             | Password strength scoring plumber                                                  | [docs/plumber/password_strength.md](docs/plumber/password_strength.md) |
 | `Dialog`, `attachDialog`                                                                   | Native `<dialog>` lifecycle plumber                                                | [docs/plumber/dialog.md](docs/plumber/dialog.md)                       |
 | `Popover`, `attachPopover`                                                                 | Native popover lifecycle plumber                                                   | [docs/plumber/popover.md](docs/plumber/popover.md)                     |

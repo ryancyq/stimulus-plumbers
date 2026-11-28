@@ -50,7 +50,7 @@ module StimulusPlumbers
           label.to_s
         end
 
-        def editable_data
+        def editable_values
           {
             "combobox-value-policy-value" => @value_policy&.to_s,
             "combobox-match-value"        => (@turbo ? "none" : @match&.to_s),
@@ -59,8 +59,8 @@ module StimulusPlumbers
           }.compact
         end
 
-        def extra_container_options
-          [{ data: editable_data }, ({ data: @turbo.stimulus_data } if @turbo)].compact
+        def extra_container_attrs
+          [{ data: editable_values }, ({ data: @turbo.stimulus_data } if @turbo)].compact
         end
 
         def panel_content(listbox)

@@ -10,9 +10,9 @@ module StimulusPlumbers
           include Combobox
 
           def search_field(attribute, options = {})
-            clearable    = options.delete(:clearable) { false }
-            data         = clearable ? { data: { input_clearable_target: "input" } } : {}
-            html_options = merge_html_options(theme.resolve(:form_field_input), options, data)
+            clearable = options.delete(:clearable) { false }
+            clearable_stimulus_attrs = clearable ? { data: { input_clearable_target: "input" } } : {}
+            html_options = merge_html_options(theme.resolve(:form_field_input), options, clearable_stimulus_attrs)
             render_input_group(
               trailing: clearable ? method(:clear_button) : nil,
               error:    false,
@@ -27,7 +27,7 @@ module StimulusPlumbers
 
           def render_combobox_typeahead(
             attribute,
-            html_opts,
+            input_attrs,
             opts,
             error,
             floating: nil,
@@ -39,7 +39,7 @@ module StimulusPlumbers
             render_combobox(
               attribute,
               component:    Components::Combobox::Typeahead,
-              html_opts:    html_opts,
+              input_attrs:  input_attrs,
               opts:         clearable ? merge_html_options(opts, { data: { controller: "input-clearable" } }) : opts,
               error:        error,
               floating:     floating,

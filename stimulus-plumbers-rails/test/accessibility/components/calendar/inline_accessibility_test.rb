@@ -20,11 +20,11 @@ class CalendarInlineAccessibilityTest < ApplicationAccessibilityTestCase
     assert_accessible context: "#calendar-inline-other-months"
   end
 
-  def test_passes_wcag_at_the_year_view
+  def test_passes_wcag_at_the_year_level
     assert_accessible context: "#calendar-inline-year"
   end
 
-  def test_passes_wcag_at_the_decade_view
+  def test_passes_wcag_at_the_decade_level
     assert_accessible context: "#calendar-inline-decade"
   end
 
@@ -140,7 +140,7 @@ class CalendarModeParityTest < ApplicationAccessibilityTestCase
         ]];
       });
       const headers = [...grid.querySelectorAll("th")].map((th) => [th.scope, th.abbr !== ""]);
-      return [container.id, grid.dataset.view, grid.dataset.displayed, grid.getAttribute("aria-readonly"), heading.id,
+      return [container.id, grid.dataset.level, grid.dataset.displayed, grid.getAttribute("aria-readonly"), heading.id,
               heading.textContent !== "", headers, cells];
     })
   JS

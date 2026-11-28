@@ -4,7 +4,7 @@ require "test_helper"
 
 class BaseThemeModalTest < StubThemeTestCase
   def test_modal_components_resolve_without_a_theme
-    %i[modal_wrapper modal modal_backdrop modal_header modal_title modal_body modal_footer modal_turbo].each do |component|
+    %i[modal_container modal modal_backdrop modal_header modal_title modal_body modal_footer modal_turbo].each do |component|
       assert_equal({}, @theme.resolve(component))
     end
   end

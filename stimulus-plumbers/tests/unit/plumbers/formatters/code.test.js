@@ -63,13 +63,13 @@ describe('CodeFormatter', () => {
     });
   });
 
-  describe('cells', () => {
-    it('hints uniform cells with the configured length', () => {
-      expect(CodeFormatter.cells({ length: 6 })).toEqual({ groups: [], length: 6 });
+  describe('filledLength', () => {
+    it('is the configured length', () => {
+      expect(CodeFormatter.filledLength('48', { length: 6 })).toBe(6);
     });
 
-    it('hints length 0 when unset', () => {
-      expect(CodeFormatter.cells()).toEqual({ groups: [], length: 0 });
+    it('is 0 when length is unset', () => {
+      expect(CodeFormatter.filledLength('48')).toBe(0);
     });
   });
 });

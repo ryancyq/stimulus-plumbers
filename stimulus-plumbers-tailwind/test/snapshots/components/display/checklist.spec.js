@@ -61,21 +61,21 @@ test.describe("checklist", () => {
   });
 
   test("select all - click to check all", async ({ page }) => {
-    const master = page.locator(
-      "#checklist-select-all [data-checklist-target='master']",
+    const selectAll = page.locator(
+      "#checklist-select-all [data-checklist-target='selectAll']",
     );
-    await master.click();
+    await selectAll.click();
     await expect(page.locator("#checklist-select-all")).toHaveScreenshot(
       "select-all-check-all.png",
     );
   });
 
   test("select all - click to uncheck all", async ({ page }) => {
-    const master = page.locator(
-      "#checklist-select-all [data-checklist-target='master']",
+    const selectAll = page.locator(
+      "#checklist-select-all [data-checklist-target='selectAll']",
     );
-    await master.click();
-    await master.click();
+    await selectAll.click();
+    await selectAll.click();
     await expect(page.locator("#checklist-select-all")).toHaveScreenshot(
       "select-all-uncheck-all.png",
     );

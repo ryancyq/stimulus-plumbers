@@ -16,38 +16,37 @@ module StimulusPlumbers
           private
 
           # `floating:` is dropped — a label can't sit inside a slider.
-          def render_range_input(attribute, html_opts, opts, _error, format: nil, min: 0, max: 100, **kwargs)
+          def render_range_input(attribute, input_attrs, opts, _error, format: nil, min: 0, max: 100, **kwargs)
             validate_format!(format)
             current = clamp(numeric(object.public_send(attribute)), min, max)
-            input   = range_input(attribute, current, min, max, format, html_opts, opts, kwargs.except(:floating))
+            input   = range_input(attribute, current, min, max, format, input_attrs, opts, kwargs.except(:floating))
             return input if format.nil?
 
-            range_group(input, current, min, max, format)
+            range_container(input, current, min, max, format)
           end
 
           # No readout to contain, so the input hosts the controller itself.
-          def range_input(attribute, current, min, max, format, html_opts, opts, kwargs)
-            wired = format.nil? ? range_stimulus_data(current, min, max, format) : { data: { "progress-target": "input" } }
+          def range_input(attribute, current, min, max, format, input_attrs, opts, kwargs)
+            input_stimulus_attrs =
+              format.nil? ? range_stimulus_attrs(current, min, max, format) : { data: { "progress-target": "input" } }
             html_options = merge_html_options(
               theme.resolve(:form_field_input_range),
               opts,
-              html_opts,
+              input_attrs,
               kwargs,
-              wired,
+              input_stimulus_attrs,
               { data: { action: "form:reset->progress#onFormReset" } },
-              # The input carries the track gradient, so the fill percentage lands here, not on
-              # the wrapper. Server-rendered so the fill is right before the controller connects.
+              # The input draws the track gradient, so it carries the fill before the controller connects.
               { min: min, max: max, style: "--sp-progress-percent: #{integral(percent(current, min, max).round(2))}" }
             )
             @template.range_field(@object_name, attribute, objectify_options(html_options))
           end
 
-          # A Stimulus target must be a descendant of its controller element, so a readout
-          # forces a wrapper local to the input row.
-          def range_group(input, current, min, max, format)
+          # A readout target must sit inside the controller element, so the row gets its own container.
+          def range_container(input, current, min, max, format)
             html_options = merge_html_options(
-              theme.resolve(:form_field_input_range_group),
-              range_stimulus_data(current, min, max, format)
+              theme.resolve(:form_field_input_range_container),
+              range_stimulus_attrs(current, min, max, format)
             )
             body = @template.safe_join([input, range_value(format, current, min, max)])
             @template.content_tag(:div, body, **html_options)
@@ -65,8 +64,8 @@ module StimulusPlumbers
             )
           end
 
-          def range_stimulus_data(current, min, max, format)
-            progress_stimulus_data(
+          def range_stimulus_attrs(current, min, max, format)
+            progress_stimulus_attrs(
               value:   current,
               min:     min,
               max:     max,

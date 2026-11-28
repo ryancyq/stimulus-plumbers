@@ -36,21 +36,31 @@ class CodeTest < ActionView::TestCase
     assert_includes described_by, "sign_in_form_verification_code_error"
   end
 
-  def test_wires_input_formatter_for_code
-    doc = build_field
+  def container(doc)
+    doc.at_css("[data-controller='input-formatter input-code']")
+  end
 
-    assert_css doc, "[data-controller='input-formatter'][data-input-formatter-format-value='code']"
-    wrapper = doc.at_css("[data-controller='input-formatter']")
+  def cells(doc)
+    doc.css("[data-input-code-target='cell']")
+  end
 
-    assert_equal '{"charset":"digits","length":6}', wrapper["data-input-formatter-options-value"]
+  def test_wires_the_code_formatter_and_the_cells
+    field = container(build_field)
+
+    assert_equal "code", field["data-input-formatter-format-value"]
+    assert_equal '{"charset":"digits","length":6}', field["data-input-formatter-options-value"]
+  end
+
+  def test_cells_redraw_after_every_format
+    assert_equal "input-formatter:formatted->input-code#draw", container(build_field)["data-action"]
   end
 
   def test_renders_one_cell_per_code_character
-    assert_equal 6, build_field.css("[data-input-formatter-target='cell']").length
+    assert_equal 6, cells(build_field).length
   end
 
   def test_cells_wrapper_has_a_valid_class_attribute
-    wrapper = build_field.at_css("[data-input-formatter-target='cell']").parent
+    wrapper = cells(build_field).first.parent
 
     refute wrapper.key?("classes")
   end
@@ -60,28 +70,40 @@ class CodeTest < ActionView::TestCase
 
     assert_equal "one-time-code", input["autocomplete"]
     assert_equal "numeric", input["inputmode"]
-    assert_equal "6", input["maxlength"]
   end
 
-  def test_input_wires_format_and_caret_actions
+  def test_has_no_maxlength_so_a_paste_reaches_the_formatter_whole
+    refute build_field.at_css("input[type='text']").key?("maxlength")
+  end
+
+  def test_input_is_the_target_of_both_controllers
     input = build_field.at_css("input[type='text']")
 
-    assert_includes input["data-action"], "input->input-formatter#onInput"
-    assert_includes input["data-action"], "focus->input-formatter#onFocus"
-    assert_includes input["data-action"], "blur->input-formatter#onBlur"
+    assert_equal "input", input["data-input-formatter-target"]
+    assert_equal "input", input["data-input-code-target"]
+  end
+
+  def test_input_formats_on_input_and_redraws_the_cells_on_caret_moves
+    actions = build_field.at_css("input[type='text']")["data-action"].split
+
+    assert_includes actions, "input->input-formatter#onInput"
+    assert_includes actions, "beforeinput->input-formatter#onBeforeinput"
+    %w[focus blur select selectionchange keyup].each { |event| assert_includes actions, "#{event}->input-code#draw" }
+    assert_includes actions, "click->input-code#onClick"
   end
 
   def test_input_reformats_on_form_reset
     assert_includes build_field.at_css("input[type='text']")["data-action"], "form:reset->input-formatter#onFormReset"
   end
 
-  def test_groups_are_passed_to_the_controller
-    assert_css build_field(groups: [3, 3]), "[data-input-formatter-groups-value='[3,3]']"
+  def test_the_last_cell_of_each_group_but_the_final_one_marks_the_gap
+    marks = cells(build_field(groups: [2, 2, 2])).map { |cell| cell.key?("data-group-end") }
+
+    assert_equal [false, true, false, true, false, false], marks
   end
 
   def separators_in(doc)
-    cells = doc.css("[data-input-formatter-target='cell']")
-    cells[0].parent.children.reject { |node| node["data-input-formatter-target"] == "cell" }
+    cells(doc)[0].parent.children.reject { |node| node["data-input-code-target"] == "cell" }
   end
 
   def test_code_renders_no_separators_by_default
@@ -92,17 +114,15 @@ class CodeTest < ActionView::TestCase
     doc = build_field(groups: [3, 3], separator: "-")
     separator = separators_in(doc).first
 
-    assert_equal 6, doc.css("[data-input-formatter-target='cell']").length
+    assert_equal 6, cells(doc).length
     assert_equal "-", separator.text
     assert_equal "true", separator["aria-hidden"]
   end
 
-  # Rendered separators own the group breaks; leaving groups on the controller would
-  # stamp data-group-end and add the themed gap on top of the separator.
-  def test_separator_suppresses_the_controller_side_grouping
-    doc = build_field(groups: [3, 3], separator: "-")
+  def test_a_separator_replaces_the_gap
+    marks = cells(build_field(groups: [3, 3], separator: "-")).map { |cell| cell.key?("data-group-end") }
 
-    assert_nil doc.at_css("[data-controller='input-formatter']")["data-input-formatter-groups-value"]
+    assert_equal [false] * 6, marks
   end
 
   def test_alphanumeric_code_does_not_force_numeric_inputmode

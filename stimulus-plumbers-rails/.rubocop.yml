@@ -88,7 +88,6 @@ Metrics/ClassLength:
 Metrics/ModuleLength:
   Exclude:
     - lib/stimulus_plumbers/form/fields/inputs/code.rb
-    - lib/stimulus_plumbers/form/fields/inputs/credit_card.rb
     - lib/stimulus_plumbers/generators/css_entrypoint.rb
     - lib/stimulus_plumbers/plumber/renderer.rb
     - lib/stimulus_plumbers/themes/schema.rb

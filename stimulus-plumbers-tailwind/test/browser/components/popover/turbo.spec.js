@@ -7,10 +7,12 @@ test.describe("turbo popover", () => {
   });
 
   test("lazy-loads the frame when the panel opens", async ({ page }) => {
-    const root = page.locator("#popover-turbo");
-    const panel = root.locator("#popover-turbo-panel");
+    const container = page.locator("#popover-turbo");
+    const panel = container.locator("#popover-turbo-panel");
 
-    await root.getByRole("button", { name: "Load remote content" }).click();
+    await container
+      .getByRole("button", { name: "Load remote content" })
+      .click();
     await expect(panel).toBeVisible();
     await expect(
       panel.getByRole("heading", { name: "Remote popover content" }),
@@ -20,9 +22,11 @@ test.describe("turbo popover", () => {
   test("reconnects when a Turbo Stream replaces the panel", async ({
     page,
   }) => {
-    const root = page.locator("#popover-turbo");
-    const source = root.getByRole("button", { name: "Replace panel content" });
-    const panel = root.locator("#popover-replacement-panel");
+    const container = page.locator("#popover-turbo");
+    const source = container.getByRole("button", {
+      name: "Replace panel content",
+    });
+    const panel = container.locator("#popover-replacement-panel");
     const initialPanel = await panel.elementHandle();
 
     await source.click();
@@ -41,12 +45,14 @@ test.describe("turbo popover", () => {
   });
 
   test("restores a closed panel from the Turbo cache", async ({ page }) => {
-    const root = page.locator("#popover-turbo");
-    const panel = root.locator("#popover-turbo-panel");
+    const container = page.locator("#popover-turbo");
+    const panel = container.locator("#popover-turbo-panel");
 
-    await root.getByRole("button", { name: "Load remote content" }).click();
+    await container
+      .getByRole("button", { name: "Load remote content" })
+      .click();
     await expect(panel).toBeVisible();
-    await root.getByRole("link", { name: "Navigate away" }).click();
+    await container.getByRole("link", { name: "Navigate away" }).click();
     await expect(page).toHaveURL(/\/components\/controls\/button$/);
     await page.goBack();
     await expect(page).toHaveURL(/\/components\/popover\/turbo$/);

@@ -20,22 +20,24 @@ Exposes `this.formatter` on the controller.
 
 ## Controller property — `this.formatter`
 
-| Helper            | Signature           | Description                               |
-| ----------------- | ------------------- | ----------------------------------------- |
-| `normalize(raw)`  | `(raw) → string`    | Strips raw input to canonical stored form |
-| `validate(value)` | `(value) → boolean` | Validates canonical value                 |
-| `format(value)`   | `(value) → string`  | Formats canonical value for display       |
+| Helper                | Signature           | Description                                        |
+| --------------------- | ------------------- | -------------------------------------------------- |
+| `normalize(raw)`      | `(raw) → string`    | Strips raw input to canonical stored form          |
+| `validate(value)`     | `(value) → boolean` | Validates canonical value                          |
+| `format(value)`       | `(value) → string`  | Formats canonical value for display                |
+| `filledLength(value)` | `(value) → number`  | The length a filled value has; `0` when open-ended |
 
 ## Built-in types
 
-| `type`         | Class                 | Description                                                                                                 |
-| -------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `'plain'`      | `PlainFormatter`      | No-op — passes value through unchanged                                                                      |
-| `'creditCard'` | `CreditCardFormatter` | Normalises to digits only; spaces digits at `options.groups` breaks, else as `#### #### #### ####`          |
-| `'phone'`      | `PhoneFormatter`      | Normalises to digits or E.164; formats local numbers as `(555) 123-4567`                                    |
-| `'currency'`   | `CurrencyFormatter`   | Locale-aware normalisation and `Intl.NumberFormat` display                                                  |
-| `'date'`       | `DateFormatter`       | Normalises to ISO 8601; `Intl.DateTimeFormat` display                                                       |
-| `'time'`       | `TimeFormatter`       | Normalises to `HH:MM` (24h); `Intl.DateTimeFormat` display (`locale` plus Intl options such as `hourCycle`) |
+| `type`         | Class                 | Description                                                                                                                                                                                                                 |
+| -------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `'plain'`      | `PlainFormatter`      | No-op — passes value through unchanged                                                                                                                                                                                      |
+| `'creditCard'` | `CreditCardFormatter` | Normalises to digits, capped at the `options.groups` sum, else 15 for Amex and 19 otherwise; groups them as `options.groups`, else 4-6-5 for Amex and 4-4-4-4 otherwise, joined by `options.separator` (a space by default) |
+| `'phone'`      | `PhoneFormatter`      | Normalises to digits or E.164; formats local numbers as `(555) 123-4567`                                                                                                                                                    |
+| `'currency'`   | `CurrencyFormatter`   | Locale-aware normalisation and `Intl.NumberFormat` display                                                                                                                                                                  |
+| `'date'`       | `DateFormatter`       | Normalises to ISO 8601; `Intl.DateTimeFormat` display                                                                                                                                                                       |
+| `'time'`       | `TimeFormatter`       | Normalises to `HH:MM` (24h); `Intl.DateTimeFormat` display (`locale` plus Intl options such as `hourCycle`)                                                                                                                 |
+| `'datetime'`   | `DatetimeFormatter`   | Trims to `YYYY-MM-DDTHH:MM`; `Intl.DateTimeFormat` display on the wall clock                                                                                                                                                |
 
 ## Custom formatters
 
@@ -51,7 +53,7 @@ Formatter.register('iban', {
 });
 ```
 
-`normalize` and `validate` are required. `format` is optional.
+`normalize` and `validate` are required. `format` and `filledLength` are optional.
 
 ## Individual formatters
 

@@ -33,9 +33,9 @@ module StimulusPlumbers
 
       def segmented_html_options(current, min, max, segments, mode, indeterminate, kwargs)
         merge_html_options(
-          theme.resolve(:progress_segment_group),
+          theme.resolve(:progress_segments_container),
           kwargs,
-          segmented_stimulus_data(current, min, max, mode, indeterminate),
+          segmented_stimulus_attrs(current, min, max, mode, indeterminate),
           {
             role:  "progressbar",
             aria:  progress_aria(value: current, min: min, max: max, indeterminate: indeterminate),
@@ -49,8 +49,8 @@ module StimulusPlumbers
         raise ArgumentError, "segments must be a positive integer" unless segments.is_a?(Integer) && segments.positive?
       end
 
-      def segmented_stimulus_data(current, min, max, mode, indeterminate)
-        progress_stimulus_data(
+      def segmented_stimulus_attrs(current, min, max, mode, indeterminate)
+        progress_stimulus_attrs(
           value:                          current,
           min:                            min,
           max:                            max,
@@ -65,7 +65,7 @@ module StimulusPlumbers
         validate_readout!(readout)
         current      = clamp(value, min, max)
         text         = value_text(format, current, min, max) unless indeterminate
-        html_options = bar_html_options(current, min, max, indeterminate, format, readout, text, kwargs)
+        html_options = bar_attrs(current, min, max, indeterminate, format, readout, text, kwargs)
         template.content_tag(:div, bar_body(format, readout, text), **html_options)
       end
 
@@ -75,7 +75,7 @@ module StimulusPlumbers
         raise ArgumentError, "readout must be one of #{Themes::Schema::Progress::Ranges::PLACEMENT.join(", ")}"
       end
 
-      # The track clips its overflow, so an outside readout needs the root to be a wrapper.
+      # The track clips its overflow, so an outside readout sits beside it in the container.
       def bar_body(format, readout, text)
         return render_fill if format.nil?
         return template.safe_join([render_fill, render_value(text, :inside)]) if readout.to_sym == :inside
@@ -87,26 +87,26 @@ module StimulusPlumbers
         template.content_tag(:div, render_fill, **merge_html_options(theme.resolve(:progress_bar, labelled: false)))
       end
 
-      def bar_html_options(current, min, max, indeterminate, format, readout, text, kwargs)
+      def bar_attrs(current, min, max, indeterminate, format, readout, text, kwargs)
         # `percent` omits aria-valuetext — AT derives the percentage from aria-valuenow itself.
         valuetext = text unless format&.to_sym == :percent
         aria      = progress_aria(value: current, min: min, max: max, indeterminate: indeterminate, valuetext: valuetext)
         merge_html_options(
-          bar_root_theme(format, readout),
+          bar_container_theme(format, readout),
           kwargs,
-          bar_stimulus_data(current, min, max, indeterminate, format),
+          bar_stimulus_attrs(current, min, max, indeterminate, format),
           { role: "progressbar", aria: aria, style: progress_style(current, min, max, kwargs[:style]) }
         )
       end
 
-      def bar_root_theme(format, readout)
-        return theme.resolve(:progress_bar_group) if format && readout.to_sym == :outside
+      def bar_container_theme(format, readout)
+        return theme.resolve(:progress_bar_container) if format && readout.to_sym == :outside
 
         theme.resolve(:progress_bar, labelled: !format.nil?)
       end
 
-      def bar_stimulus_data(current, min, max, indeterminate, format)
-        progress_stimulus_data(
+      def bar_stimulus_attrs(current, min, max, indeterminate, format)
+        progress_stimulus_attrs(
           value:                          current,
           min:                            min,
           max:                            max,

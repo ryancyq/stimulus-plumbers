@@ -14,6 +14,8 @@ stimulus-plumbers-rails/
 │   │   ├── plumber/                      # Shared base classes; options/ holds the option mixins; Base includes the merging ones
 │   │   ├── themes/                       # Base theme, registry, key schema (schema/<component>/ ranges), icons/
 │   │   ├── dates/                        # Dates::Availability — the dates a date field offers; dates.rb parses date keys
+│   │   ├── datetimes/                    # Datetimes::Availability — the date-times a date-time field offers; datetimes.rb parses date-time keys
+│   │   ├── times/                        # Times::Availability — the times a time field offers; times.rb parses time keys
 │   │   ├── password/                     # Password::Requirements — server and client rule source of truth
 │   │   ├── generators/                   # Install generator helpers
 │   │   └── *.rb                          # Engine, configuration, and other top-level support
@@ -42,8 +44,8 @@ stimulus-plumbers-rails/
 ## Guidelines
 - **Unit tests** using Rails minitest (`rake test:unit`)
 - **Accessibility tests** using Capybara + Cuprite + axe-core (`rake test:accessibility`) — axe per page and state plus one keyboard/focus happy path per interaction; logic edge cases belong to their owning layer (root CLAUDE.md "Testing")
-- **Lint tests** using Rubocop (`rake rubocop`) — run synchronously from this gem's directory; never background or tail
-- **Constant lookup** — inside `Combobox::Date` / `Combobox::Time` a bare `Trigger` resolves to `Combobox::Trigger`; write `Temporal::Trigger`
+- **Lint tests** using Rubocop (`rake rubocop`) — run in the foreground from this gem's directory; never background or tail
+- **Constant lookup** — inside `Combobox::Date` / `Combobox::Time` a bare `Trigger` resolves to `Combobox::Trigger`; write `Temporal::Trigger`. Inside `Combobox` a bare `Date` or `Time` is the component class; write `::Date` / `::Time`
 
 ## Unit Test Convention
 
@@ -56,7 +58,7 @@ stimulus-plumbers-rails/
 
 **Form field unit tests** cover both builder levels:
 - Native override (`email_field`, `text_area`, …) — element type and forwarded HTML attributes
-- Full-field wrapper (`f.field(as:)`) — label (explicit **and** the `human_attribute_name` default), hint, error message, `aria-invalid`, `aria-describedby`, `required`, `hide_label`, all floating variants (`:floating_filled`, `:floating_outlined`, `:floating_standard`), and combined hint+error `aria-describedby`
+- Full-field helper (`f.field(as:)`) — label (explicit **and** the `human_attribute_name` default), hint, error message, `aria-invalid`, `aria-describedby`, `required`, `hide_label`, all floating variants (`:floating_filled`, `:floating_outlined`, `:floating_standard`), and combined hint+error `aria-describedby`
 - When `error:` override is set, assert the override message appears **and** model errors are suppressed
 
 ## I18n / Locale Convention
@@ -81,7 +83,7 @@ This applies to all test types: unit tests, helper tests, and accessibility test
 Scope axe to a sandbox section or a component inside one, never the bare page: `assert_accessible context: "#combobox-date"` for a section, `context: "#calendar-month"` for a component; each section gets its own test. A context that matches nothing fails the test.
 
 - For interactive states (e.g. a dialog opens), test closed and open separately; use `find(...).click` before `assert_accessible`
-- For multi-view pages (e.g. calendar month/year/decade), use a controller query param (`?view=month`) to expose each view unhidden
+- For multi-level pages (e.g. calendar month/year/decade), use a controller query param (`?level=month`) to expose each level unhidden
 
 ## Sandbox Convention
 

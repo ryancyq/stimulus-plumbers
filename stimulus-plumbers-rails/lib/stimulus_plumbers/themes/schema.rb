@@ -96,119 +96,110 @@ module StimulusPlumbers
         combobox_typeahead_popover:  {}.freeze,
         combobox_date_popover:       {}.freeze,
         combobox_time_popover:       {}.freeze,
+        combobox_datetime_popover:   {}.freeze,
         combobox_trigger:            {}.freeze,
         combobox_trigger_icon:       {}.freeze,
         combobox_trigger_group:      {}.freeze,
-        combobox_option:             { disabled: { default: false, validate: Ranges::BOOL } }.freeze,
+        combobox_option:             {}.freeze,
         combobox_option_description: {}.freeze,
         combobox_option_group:       {}.freeze,
         combobox_option_group_label: {}.freeze,
         combobox_listbox:            {}.freeze,
         combobox_status:             {}.freeze,
         combobox_time:               {}.freeze,
-        combobox_time_drum:          { type: { default: :unit, validate: %i[unit meridiem] } }.freeze
+        combobox_datetime:           {}.freeze,
+        combobox_time_column:        { type: { default: :unit, validate: %i[unit meridiem] } }.freeze
       }.freeze
 
       FORM = {
-        form_group:                             {
+        form_group:                       {
           layout: { default: :stacked, validate: Form::Ranges::LAYOUT },
           error:  { default: false,    validate: Ranges::BOOL }
         }.freeze,
-        form_field_label:                       {
+        form_field_label:                 {
           required: { default: false, validate: Ranges::BOOL },
           hidden:   { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] },
           error:    { default: false, validate: Ranges::BOOL }
         }.freeze,
-        form_field_required_mark:               {}.freeze,
-        form_field_hint:                        {}.freeze,
-        form_field_error:                       {}.freeze,
-        form_field_choice_items:                {
+        form_field_required_mark:         {}.freeze,
+        form_field_hint:                  {}.freeze,
+        form_field_error:                 {}.freeze,
+        form_field_choice_items:          {
           layout: { default: :stacked, validate: Form::Ranges::LAYOUT }
         }.freeze,
-        form_field_checkbox_label:              {
+        form_field_checkbox_label:        {
           type:    { default: :default,  validate: Form::Checkbox::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Checkbox::Ranges::VARIANT }
         }.freeze,
-        form_field_radio_label:                 {
+        form_field_radio_label:           {
           type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
-        form_field_radio_item_group:            {}.freeze,
-        form_field_input:                       {
+        form_field_radio_item_container:  {}.freeze,
+        form_field_input:                 {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_input_group:                 {
+        form_field_floating_container:    {
           floating: { default: nil, validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_input_textarea:              {
+        form_field_input_textarea:        {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_input_file:                  {
+        form_field_input_file:            {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        password_strength_wrapper:              {}.freeze,
-        password_strength_rules_heading:        {}.freeze,
-        password_strength_rules:                {}.freeze,
-        password_strength_rule:                 {}.freeze,
-        password_strength_rule_icon:            {}.freeze,
-        password_strength_level:                {}.freeze,
-        form_field_input_select:                {
+        password_strength_container:      {}.freeze,
+        password_strength_rules_heading:  {}.freeze,
+        password_strength_rules:          {}.freeze,
+        password_strength_rule:           {}.freeze,
+        password_strength_rule_icon:      {}.freeze,
+        password_strength_level:          {}.freeze,
+        form_field_input_select:          {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_input_checkbox:              {
+        form_field_input_checkbox:        {
           error:   { default: false,     validate: Ranges::BOOL },
           type:    { default: :default,  validate: Form::Checkbox::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Checkbox::Ranges::VARIANT }
         }.freeze,
-        form_field_input_radio:                 {
+        form_field_input_radio:           {
           error:   { default: false,     validate: Ranges::BOOL },
           type:    { default: :default,  validate: Form::Radio::Ranges::TYPE },
           variant: { default: :tertiary, validate: Form::Radio::Ranges::VARIANT }
         }.freeze,
-        form_field_input_progress:              {}.freeze,
-        form_field_input_range:                 {}.freeze,
-        form_field_input_range_group:           {}.freeze,
-        form_field_input_range_value:           {}.freeze,
-        form_field_input_combobox:              {
+        form_field_input_progress:        {}.freeze,
+        form_field_input_range:           {}.freeze,
+        form_field_input_range_container: {}.freeze,
+        form_field_input_range_value:     {}.freeze,
+        form_field_input_combobox:        {
           error:    { default: false, validate: Ranges::BOOL },
           floating: { default: nil,   validate: [nil, *Form::Floating::Ranges::TYPE] }
         }.freeze,
-        form_field_input_reveal:                { error: { default: false, validate: Ranges::BOOL } }.freeze,
-        form_field_input_clearable:             {}.freeze,
-        form_field_input_code:                  {
+        form_field_input_reveal:          { error: { default: false, validate: Ranges::BOOL } }.freeze,
+        form_field_input_clearable:       {}.freeze,
+        form_field_input_code:            {
           error: { default: false, validate: Ranges::BOOL }
         }.freeze,
-        form_field_input_code_cells:            {}.freeze,
-        form_field_input_code_cell:             {
+        form_field_input_code_cells:      {}.freeze,
+        form_field_input_code_cell:       {
           error: { default: false, validate: Ranges::BOOL }
         }.freeze,
-        form_field_input_code_separator:        {}.freeze,
-        form_field_input_code_overlay:          {
+        form_field_input_code_separator:  {}.freeze,
+        form_field_input_code_overlay:    {
           error: { default: false, validate: Ranges::BOOL }
         }.freeze,
-        form_field_input_credit_card:           {
-          error: { default: false, validate: Ranges::BOOL }
-        }.freeze,
-        form_field_input_credit_card_cells:     {}.freeze,
-        form_field_input_credit_card_cell:      {
-          error: { default: false, validate: Ranges::BOOL }
-        }.freeze,
-        form_field_input_credit_card_separator: {}.freeze,
-        form_field_input_credit_card_overlay:   {
-          error: { default: false, validate: Ranges::BOOL }
-        }.freeze,
-        form_field_input_button_reveal:         {}.freeze,
-        form_field_input_button_clear:          {}.freeze,
-        form_submit:                            {
+        form_field_input_button_reveal:   {}.freeze,
+        form_field_input_button_clear:    {}.freeze,
+        form_submit:                      {
           type:    { default: :default, validate: Button::Ranges::TYPE },
           variant: { default: :primary, validate: Button::Ranges::VARIANT }
         }.freeze,
-        form_submit_label:                      {
+        form_submit_label:                {
           hidden: { default: false, validate: Ranges::BOOL }
         }.freeze
       }.freeze
@@ -218,12 +209,12 @@ module StimulusPlumbers
       }.freeze
 
       INDICATOR = {
-        indicator:         {
+        indicator:           {
           type:    { default: :dot,     validate: Indicator::Ranges::TYPE },
           variant: { default: :primary, validate: Indicator::Ranges::VARIANT }
         }.freeze,
-        indicator_wrapper: {}.freeze,
-        indicator_pulse:   {}.freeze
+        indicator_container: {}.freeze,
+        indicator_pulse:     {}.freeze
       }.freeze
 
       INPUT_GROUP = {
@@ -242,21 +233,21 @@ module StimulusPlumbers
       }.freeze
 
       MODAL = {
-        modal_wrapper:  {}.freeze,
-        modal:          { size: { default: :md, validate: Modal::Ranges::SIZE } }.freeze,
-        modal_backdrop: {}.freeze,
-        modal_header:   {}.freeze,
-        modal_title:    {}.freeze,
-        modal_body:     {}.freeze,
-        modal_footer:   {}.freeze,
-        modal_turbo:    {}.freeze
+        modal_container: {}.freeze,
+        modal:           { size: { default: :md, validate: Modal::Ranges::SIZE } }.freeze,
+        modal_backdrop:  {}.freeze,
+        modal_header:    {}.freeze,
+        modal_title:     {}.freeze,
+        modal_body:      {}.freeze,
+        modal_footer:    {}.freeze,
+        modal_turbo:     {}.freeze
       }.freeze
 
       LAYOUT = {
         divider:           {}.freeze,
         divider_separator: {}.freeze,
         divider_label:     {}.freeze,
-        popover_wrapper:   {}.freeze,
+        popover_container: {}.freeze,
         popover_trigger:   {}.freeze,
         popover:           { placement: { default: :block_end_start, validate: Popover::Ranges::PLACEMENT } }.freeze
       }.freeze
@@ -264,16 +255,16 @@ module StimulusPlumbers
       # The outside readout gets its own keys, not parameters on existing ones — a theme method
       # written before them has no keyword to accept.
       PROGRESS = {
-        progress_bar:               { labelled: { default: false, validate: Ranges::BOOL } }.freeze,
-        progress_bar_group:         {}.freeze,
-        progress_bar_fill:          {}.freeze,
-        progress_bar_value:         {}.freeze,
-        progress_bar_value_outside: {}.freeze,
-        progress_segment_group:     {}.freeze,
-        progress_segment:           {}.freeze,
-        progress_segment_fill:      {}.freeze,
-        progress_ring:              { size: { default: nil, validate: %i[sm md lg] } }.freeze,
-        progress_meter:             {}.freeze
+        progress_bar:                { labelled: { default: false, validate: Ranges::BOOL } }.freeze,
+        progress_bar_container:      {}.freeze,
+        progress_bar_fill:           {}.freeze,
+        progress_bar_value:          {}.freeze,
+        progress_bar_value_outside:  {}.freeze,
+        progress_segments_container: {}.freeze,
+        progress_segment:            {}.freeze,
+        progress_segment_fill:       {}.freeze,
+        progress_ring:               { size: { default: nil, validate: %i[sm md lg] } }.freeze,
+        progress_meter:              {}.freeze
       }.freeze
 
       TIMELINE = {

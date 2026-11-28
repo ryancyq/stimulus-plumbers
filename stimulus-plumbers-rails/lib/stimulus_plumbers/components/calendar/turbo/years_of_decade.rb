@@ -16,12 +16,16 @@ module StimulusPlumbers
             I18n.t("stimulus_plumbers.calendar.decade_heading", first: first_year, last: first_year + 9)
           end
 
-          def view_name
+          def level
             :decade
           end
 
           def step(direction)
             configuration.displayed.beginning_of_year >> (120 * direction)
+          end
+
+          def zoom_in
+            :year
           end
 
           private
@@ -32,10 +36,6 @@ module StimulusPlumbers
 
           def target
             "period"
-          end
-
-          def control_view
-            :year
           end
 
           def render_control(date, tabindex)

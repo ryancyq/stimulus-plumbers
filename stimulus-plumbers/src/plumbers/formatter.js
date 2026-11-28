@@ -5,6 +5,7 @@ import { PhoneFormatter } from './formatters/phone';
 import { CurrencyFormatter } from './formatters/currency';
 import { DateFormatter } from './formatters/date';
 import { TimeFormatter } from './formatters/time';
+import { DatetimeFormatter } from './formatters/datetime';
 import { CodeFormatter } from './formatters/code';
 
 export const FORMATTER_TYPES = {
@@ -14,6 +15,7 @@ export const FORMATTER_TYPES = {
   CURRENCY: 'currency',
   DATE: 'date',
   TIME: 'time',
+  DATETIME: 'datetime',
   CODE: 'code',
 };
 
@@ -24,6 +26,7 @@ const registry = new Map([
   [FORMATTER_TYPES.CURRENCY, CurrencyFormatter],
   [FORMATTER_TYPES.DATE, DateFormatter],
   [FORMATTER_TYPES.TIME, TimeFormatter],
+  [FORMATTER_TYPES.DATETIME, DatetimeFormatter],
   [FORMATTER_TYPES.CODE, CodeFormatter],
 ]);
 
@@ -52,7 +55,7 @@ export class Formatter extends Plumber {
       normalize: (raw) => formatter.normalize?.(raw, context.options) ?? (typeof raw === 'string' ? raw : ''),
       validate: (value) => formatter.validate?.(value, context.options) ?? true,
       format: (value) => formatter.format?.(value, context.options) ?? (typeof value === 'string' ? value : ''),
-      cells: () => (typeof formatter.cells === 'function' ? formatter.cells(context.options) : null),
+      filledLength: (value) => formatter.filledLength?.(value, context.options) ?? 0,
     };
 
     Object.defineProperty(this.controller, 'formatter', {

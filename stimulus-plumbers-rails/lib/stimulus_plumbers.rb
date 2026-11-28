@@ -17,8 +17,13 @@ require_relative "stimulus_plumbers/plumber/base"
 require_relative "stimulus_plumbers/plumber/options/choice"
 
 require_relative "stimulus_plumbers/password/requirements"
+require_relative "stimulus_plumbers/resolve_value"
 require_relative "stimulus_plumbers/dates"
 require_relative "stimulus_plumbers/dates/availability"
+require_relative "stimulus_plumbers/times"
+require_relative "stimulus_plumbers/times/availability"
+require_relative "stimulus_plumbers/datetimes"
+require_relative "stimulus_plumbers/datetimes/availability"
 
 # -- UI components --
 require_relative "stimulus_plumbers/components/icon"
@@ -90,6 +95,8 @@ require_relative "stimulus_plumbers/components/combobox/temporal"
 require_relative "stimulus_plumbers/components/combobox/temporal/trigger"
 require_relative "stimulus_plumbers/components/combobox/date"
 require_relative "stimulus_plumbers/components/combobox/time"
+require_relative "stimulus_plumbers/components/combobox/time/columns"
+require_relative "stimulus_plumbers/components/combobox/datetime"
 
 # -- Form --
 require_relative "stimulus_plumbers/form/field"
@@ -113,4 +120,9 @@ module StimulusPlumbers
 end
 
 require_relative "stimulus_plumbers/engine" if defined?(Rails::Engine)
-require_relative "stimulus_plumbers/password_strength_validator" if defined?(ActiveModel::EachValidator)
+if defined?(ActiveModel::EachValidator)
+  require_relative "stimulus_plumbers/password_strength_validator"
+  require_relative "stimulus_plumbers/date_availability_validator"
+  require_relative "stimulus_plumbers/time_availability_validator"
+  require_relative "stimulus_plumbers/datetime_availability_validator"
+end

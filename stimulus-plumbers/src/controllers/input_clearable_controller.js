@@ -5,12 +5,12 @@ export default class extends Controller {
   static targets = ['input', 'clear'];
 
   initialize() {
-    this.onInput = this._syncClear.bind(this);
+    this.onInput = this._hideClearWhenEmpty.bind(this);
     this.onEscape = this._handleEscape.bind(this);
   }
 
   connect() {
-    this._syncClear();
+    this._hideClearWhenEmpty();
   }
 
   inputTargetConnected(input) {
@@ -28,13 +28,13 @@ export default class extends Controller {
   clear() {
     if (!this.hasInputTarget) return;
     this.inputTarget.value = '';
-    this._syncClear();
+    this._hideClearWhenEmpty();
     this.inputTarget.focus();
     this.inputTarget.dispatchEvent(new Event('input', { bubbles: true }));
     this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  _syncClear() {
+  _hideClearWhenEmpty() {
     if (!this.hasInputTarget || !this.hasClearTarget) return;
     setHidden(this.clearTarget, this.inputTarget.value.length === 0);
   }

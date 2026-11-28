@@ -81,7 +81,7 @@ dismissal requests. Explicit completion remains available for every policy.
 
 ## Turbo modal
 
-`modal-turbo` is the Turbo Frame adapter for `modal` on the same wrapper and opens a native dialog after a
+`modal-turbo` is the Turbo Frame adapter for `modal` on the same container and opens a native dialog after a
 successful, non-empty Turbo Frame render. It uses `onBeforeFetchRequest(event)`,
 `onFrameRender(event)`, `onSubmitEnd(event)`, and `onClosed(event)` actions; frame rendering must
 use Turbo's `fetchResponse` detail from `turbo:frame-render`.

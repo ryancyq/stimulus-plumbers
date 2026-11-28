@@ -12,7 +12,7 @@
 | 2.1.2 No Keyboard Trap     | A     | Focus must be escapable from any component (Escape or documented key)                                                                                                                  |
 | 2.4.3 Focus Order          | A     | Focus sequence must be logical and predictable                                                                                                                                         |
 | 2.4.7 Focus Visible        | AA    | Keyboard focus indicator must be visible                                                                                                                                               |
-| 4.1.2 Name, Role, Value    | A     | All UI components must have accessible name, role, and state via ARIA or native semantics; state must stay in sync dynamically (e.g. `aria-expanded`, `aria-selected`, `aria-checked`) |
+| 4.1.2 Name, Role, Value    | A     | All UI components must have accessible name, role, and state via ARIA or native semantics; ARIA state must change whenever the component's state does (e.g. `aria-expanded`, `aria-selected`, `aria-checked`) |
 | 4.1.3 Status Messages      | AA    | Status/error messages announced via `role="status"` or `aria-live` without focus move                                                                                                  |
 
 ## JS Keyboard Navigation Patterns
@@ -68,9 +68,9 @@
 - Selected date: `aria-selected="true"` on the gridcell; today: `aria-current="date"` on the control, independent of selection
 - Unavailable dates: `aria-disabled="true"`; a display-only grid is `aria-readonly="true"`; an unavailable selected date keeps `aria-selected="true"`
 - Every control has a full-date `aria-label`; the heading sits inside the replaced frame without `aria-live`, and a persistent `role="status"` outside it announces period changes
-- Previous/next, previous/next year in the month view, zoom, and month or year cells are buttons in stimulus mode; in Turbo mode they are links that work without JavaScript, and a control with no URL or an unavailable month or year cell is `role="link"` with `aria-disabled="true"` and no `href`
+- Previous/next, previous/next year at the month level, zoom, and month or year cells are buttons in stimulus mode; in Turbo mode they are links that work without JavaScript, and a control with no URL or an unavailable month or year cell is `role="link"` with `aria-disabled="true"` and no `href`
 - Keys on a day: Arrow Left/Right ±1 day, Arrow Up/Down ±7 days, Home/End to the first/last day shown in the week, Page Up/Down ±1 month and Shift+Page Up/Down ±1 year (both clamp the day); Enter/Space select; leaving the shown period requests navigation and focus follows the intended date, or the nearest available date in that period
-- Keys in the year and decade views: arrows move one cell or one row of four, Home/End to the row's ends; Enter or Space opens the month or year
+- Keys at the year and decade levels: arrows move one cell or one row of four, Home/End to the row's ends; Enter or Space opens the month or year
 - A period reached with no available date sends focus to the previous or next control in the direction of travel, to zoom after opening a month or year, or else to the first shown, enabled header control
 - Focus never selects; arrows may land on unavailable days, which cannot be selected; Tab leaves the grid; Escape belongs to an enclosing dialog or popover
 
@@ -86,9 +86,18 @@
 
 - Trigger and opening as the date combobox; ArrowDown moves focus to the hour column
 - Columns: focusable `role="listbox"` named Hour, Minute, and AM/PM, with `aria-activedescendant` referencing the selected `role="option"` (`aria-selected="true"`); a minute off the step selects no minute option; Tab moves between columns
-- Arrow Up/Down move one option, Home/End to the ends; each selection updates the value
+- Arrow Up/Down move one option, Home/End to the ends, skipping unavailable options; each selection updates the value
+- Options outside the available times are `aria-disabled="true"`, judged against the selected AM or PM, then hour; a selected option that a later selection makes unavailable keeps `aria-selected="true"`. The available range belongs in the field's hint (WCAG 3.3.2)
 - Enter closes the popover and keeps the value; Tab out of the columns, focus elsewhere, or an outside click closes and keeps it; Escape restores the value from opening, closes the popover, and keeps an enclosing modal open; Enter and Escape return focus to the input
 - Columns show a visible focus indicator (WCAG 2.4.7)
+
+#### Date-time combobox (`sp_combobox_datetime`, `combobox-datetime`)
+
+- Trigger and opening as the date combobox; the popover holds the calendar, then the time columns, in Tab order
+- ArrowDown moves focus as in the date combobox; selecting a date keeps the popover open, and Tab moves on to the hour column
+- The calendar and columns follow their own patterns above; the columns judge times against the selected date
+- Escape anywhere in the popover restores the value from opening, closes it, and returns focus to the input; Enter in a column closes it and keeps the value
+- The available dates and times belong in the field's hint (WCAG 3.3.2)
 
 #### Form Fields (`form/`, `form-field_controller`)
 
@@ -108,12 +117,12 @@
 - The visible strength label is plain text, not a live region, so redrawing it never speaks.
 - The level is announced through the shared polite live region after a pause in typing, and only when it differs from the level shown when typing began — never on connect, a Turbo morph, or a restored page.
 
-#### Code Input (`input_formatter_controller` + `character_cells`)
+#### Code Input (`input_code_controller` + `input_formatter_controller`)
 
-- The real `<input>` is the entire accessible surface; cells are stamped `aria-hidden="true"` automatically.
-- The input requires a `<label>` (visually hidden allowed), `autocomplete="one-time-code"` for OTP (WCAG 1.3.5), `inputmode` matching the charset, and `maxlength` matching the code length.
+- The real `<input>` is the entire accessible surface; the `input-code` controller sets `aria-hidden="true"` on every cell.
+- The input requires a `<label>` (visually hidden allowed), `autocomplete="one-time-code"` for OTP (WCAG 1.3.5), and `inputmode` matching the charset; the formatter caps the length, so a pasted code with spaces or dashes is not cut short.
 - Overlay the input with `opacity: 0` — never `display: none`/`visibility: hidden`, which remove it from the tab order (WCAG 2.1.1).
-- Focus visibility (WCAG 2.4.7): the caret cell (`data-caret`) appears only while the input has focus; style the wrapper with `:focus-within` plus `[data-caret]`.
+- Focus visibility (WCAG 2.4.7): while the input has focus, the cell at its caret has `data-caret` and the cells in its selection have `data-selected`; style the container with `:focus-within` plus those attributes.
 
 #### Input Clearable (`input_clearable_controller`)
 
@@ -143,9 +152,9 @@
 
 - Each item: native `<input type="checkbox">` inside a `<label>` — role, keyboard activation (Space), focus, and checked-state announcement are all handled by the browser. The component sets no ARIA attributes on items.
 - Read-only item (`readonly: true`): native `disabled` attribute — removes the control from the tab order and announces it as unavailable to assistive tech. No `aria-readonly`/`tabindex` hack.
-- Master "select all" toggle (`select_all:`): same `<input type="checkbox">` shape as an item. Its `indeterminate` property (JS-only, no HTML attribute) is set client-side by the `checklist` controller when some but not all enabled items are checked — modern browsers map `indeterminate` to the accessibility tree's `mixed` checked state automatically, satisfying WCAG 4.1.2 with no manual ARIA.
-- Accepted tradeoff: because `indeterminate` has no HTML attribute, the server can only render the master's initial `checked` state for the all-true case; every other case (including mixed) renders unchecked and is corrected to `indeterminate` once the `checklist` controller connects — a brief, accepted flash for the mixed case only.
-- Disabled (readonly) items are excluded from the master's aggregate and from bulk toggling — the `checklist` controller filters them out via their own `.disabled` property, mirroring their exclusion from tab order and AT interaction.
+- Select-all checkbox (`select_all:`): a native checkbox like an item. The `checklist` controller sets its `indeterminate` property when some but not all enabled items are checked; browsers expose it as the `mixed` checked state (WCAG 4.1.2), so it needs no ARIA.
+- `indeterminate` has no HTML attribute, so the server renders the select-all checkbox `checked` only when every item is checked; a mixed group renders unchecked until the `checklist` controller connects.
+- Disabled (readonly) items are left out of the select-all state and bulk toggling, as they are left out of the tab order.
 
 #### Progress (`progress_controller`, `sp_progress_*`)
 

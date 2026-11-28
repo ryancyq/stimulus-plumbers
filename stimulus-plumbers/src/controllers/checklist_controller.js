@@ -1,14 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['master', 'item'];
+  static targets = ['selectAll', 'item'];
 
   connect() {
     this.connection = new AbortController();
     const { signal } = this.connection;
-    // A morph re-syncs every item's checked state from the markup, but never the master's
-    // indeterminate property, so each morphed node schedules a recompute.
-    this.element.addEventListener('turbo:morph-element', () => this._scheduleRecompute(), { signal });
+    // A morph rewrites every item's checked state from the markup, but never the select-all checkbox's
+    // indeterminate property, so each morphed node schedules a redraw.
+    this.element.addEventListener('turbo:morph-element', () => this._scheduleDrawSelectAll(), { signal });
   }
 
   disconnect() {
@@ -16,28 +16,28 @@ export default class extends Controller {
     this.connection = null;
   }
 
-  masterTargetConnected() {
-    this._scheduleRecompute();
+  selectAllTargetConnected() {
+    this._scheduleDrawSelectAll();
   }
 
   itemTargetConnected() {
-    this._scheduleRecompute();
+    this._scheduleDrawSelectAll();
   }
 
   itemTargetDisconnected() {
-    this._scheduleRecompute();
+    this._scheduleDrawSelectAll();
   }
 
   onChange(event) {
-    if (this.hasMasterTarget && event.target === this.masterTarget) {
-      this.toggleAll(this.masterTarget.checked);
+    if (this.hasSelectAllTarget && event.target === this.selectAllTarget) {
+      this.toggleAll(this.selectAllTarget.checked);
       return;
     }
-    this.recompute();
+    this._drawSelectAll();
   }
 
   onFormReset() {
-    this.recompute();
+    this._drawSelectAll();
   }
 
   toggleAll(checked) {
@@ -48,15 +48,15 @@ export default class extends Controller {
         item.dispatchEvent(new Event('input', { bubbles: true }));
         item.dispatchEvent(new Event('change', { bubbles: true }));
       });
-    this.recompute();
+    this._drawSelectAll();
   }
 
-  recompute() {
-    if (!this.hasMasterTarget) return;
+  _drawSelectAll() {
+    if (!this.hasSelectAllTarget) return;
     const items = this.enabledItems();
     const checkedCount = items.filter((item) => item.checked).length;
-    this.masterTarget.checked = items.length > 0 && checkedCount === items.length;
-    this.masterTarget.indeterminate = checkedCount > 0 && checkedCount < items.length;
+    this.selectAllTarget.checked = items.length > 0 && checkedCount === items.length;
+    this.selectAllTarget.indeterminate = checkedCount > 0 && checkedCount < items.length;
   }
 
   enabledItems() {
@@ -64,13 +64,13 @@ export default class extends Controller {
   }
 
   // Target callbacks and morph events arrive in bursts (one per item on connect or morph);
-  // they share one recompute after the burst.
-  _scheduleRecompute() {
-    if (this._recomputeScheduled) return;
-    this._recomputeScheduled = true;
+  // they share one redraw after the burst.
+  _scheduleDrawSelectAll() {
+    if (this._drawSelectAllScheduled) return;
+    this._drawSelectAllScheduled = true;
     queueMicrotask(() => {
-      this._recomputeScheduled = false;
-      this.recompute();
+      this._drawSelectAllScheduled = false;
+      this._drawSelectAll();
     });
   }
 }

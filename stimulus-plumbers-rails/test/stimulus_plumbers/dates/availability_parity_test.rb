@@ -2,7 +2,6 @@
 
 require "test_helper"
 
-# Runs the date core's availability fixtures through Dates::Availability.
 class DatesAvailabilityParityTest < ActiveSupport::TestCase
   def build(json)
     StimulusPlumbers::Dates::Availability.new(**DateFixtures.availability(json))

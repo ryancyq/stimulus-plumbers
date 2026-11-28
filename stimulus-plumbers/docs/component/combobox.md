@@ -1,6 +1,6 @@
 # Combobox Controllers
 
-`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date` and `combobox-time` keep a read-only input in step with their popover.
+`combobox` is the listbox combobox; `combobox-turbo` and `combobox-fetch` add remote results. `combobox-date`, `combobox-time`, and `combobox-datetime` write their popover's selection into a read-only input.
 
 ---
 
@@ -292,7 +292,7 @@ formats the input from `combobox-time:changed`.
 <div
   data-controller="popover combobox-time input-formatter"
   data-input-formatter-format-value="time"
-  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
+  data-action="popover:before-open->combobox-time#onOpening popover:opened->combobox-time#onOpened popover:closed->combobox-time#onClosed focusout->combobox-time#onFocusout mousedown->combobox-time#onMousedown click->combobox-time#onClick combobox-time:changed->input-formatter#onChange"
 >
   <input
     role="combobox"
@@ -345,6 +345,18 @@ formats the input from `combobox-time:changed`.
 | `minute`   | Minute column; option values `00`–`59`                                       |
 | `meridiem` | Optional AM/PM column; option values `AM` and `PM`                           |
 
+**Values**
+
+| Value        | Type   | Default | Description                                                          |
+| ------------ | ------ | ------- | -------------------------------------------------------------------- |
+| `min`, `max` | String | `""`    | Range as `HH:MM`, inclusive; a `min` after `max` wraps past midnight |
+| `step`       | Number | `1`     | Minutes counted from midnight; one of 1–6, 10, 12, 15, 20, 30, 60    |
+
+An option is unavailable (`aria-disabled="true"`) when no time in `min`–`max` and on the `step` matches it and the
+selections it depends on: an hour depends on the selected AM or PM, a minute on the selected AM or PM and hour. Arrows, Home,
+and End skip unavailable options and a click on one does nothing. A selection that makes a selected option unavailable
+keeps it selected, and nothing goes into `input` until every selected option is available. Closing the panel discards every selection not in `input`, and the columns show its value again. Invalid `min`, `max`, or `step` values, or ones that leave no time, are reported with `console.error`.
+
 **Actions**
 
 | Action               | Wired on                           | Description                                                                                                                                       |
@@ -352,6 +364,7 @@ formats the input from `combobox-time:changed`.
 | `onKeydown(event)`   | `keydown` on `trigger`             | ArrowDown opens the panel and focuses `hour`; Tab closes the panel; Escape as in `onNavigate`                                                     |
 | `onOpening(event)`   | `popover:before-open` on container | Selects `input`'s time in the columns and records it for Escape                                                                                   |
 | `onOpened(event)`    | `popover:opened` on container      | Scrolls the selected options into view                                                                                                            |
+| `onClosed(event)`    | `popover:closed` on container      | Discards the selections not in `input`                                                                                                            |
 | `onNavigate(event)`  | `keydown` on a column              | Arrows, Home, and End select an option; Enter closes the panel; Escape restores the value from opening and closes the panel; both focus `trigger` |
 | `onSelect(event)`    | `click` on a column                | Selects the clicked option                                                                                                                        |
 | `onFocusout(event)`  | `focusout` on container            | Closes the panel when focus leaves the combobox                                                                                                   |
@@ -366,3 +379,55 @@ Selecting an option sets `aria-selected` and the column's `aria-activedescendant
 | Event                   | Detail                | When                                                  |
 | ----------------------- | --------------------- | ----------------------------------------------------- |
 | `combobox-time:changed` | `{ value }` (`HH:MM`) | After a selection that completes the time, and Escape |
+
+---
+
+## combobox-datetime
+
+Extends [`combobox-time`](#combobox-time) with a [`calendar`](calendar.md#calendar) in the popover
+([Rails `sp_combobox_datetime`](../../../stimulus-plumbers-rails/docs/component/combobox.md#sp_combobox_datetime)).
+It has the `combobox-time` targets, actions, and keys; `input` submits the `YYYY-MM-DDTHH:MM` value. It adds:
+
+**Targets**
+
+| Target     | Description                                                         |
+| ---------- | ------------------------------------------------------------------- |
+| `calendar` | The `calendar` container; its `selected` value is the selected date |
+
+**Outlets**
+
+| Outlet     | Description                                            |
+| ---------- | ------------------------------------------------------ |
+| `calendar` | The same calendar; ArrowDown has it focus its Tab stop |
+
+**Values**
+
+| Value                                                                  | Type   | Default | Description                              |
+| ---------------------------------------------------------------------- | ------ | ------- | ---------------------------------------- |
+| `min`, `max`                                                           | String | `""`    | Range as `YYYY-MM-DDTHH:MM`, inclusive   |
+| `timeMin`, `timeMax`                                                   | String | `""`    | Daily window as `HH:MM`, inclusive       |
+| `disabledDates`, `disabledWeekdays`, `disabledMonths`, `disabledYears` | Array  | `[]`    | As in [`calendar`](calendar.md#calendar) |
+| `step`                                                                 | Number | `1`     | As in `combobox-time`                    |
+
+The time columns offer the selected date's times: the daily window's ranges, trimmed at `min` on its date and `max` on
+its date. A daily window that wraps past midnight offers each date its own times after `timeMin` and before `timeMax`.
+Before a date is selected they offer the daily window. When the calendar connects, its `min`, `max`, and `disabled*`
+values become the dates from `min`'s to `max`'s, less the `disabled*` dates and a `min` or `max` date with no time left.
+Invalid `min`, `max`, `timeMin`, `timeMax`, `step`, or `disabled*` values, or ones that leave no time, are reported with
+`console.error` and leave the calendar's values as rendered.
+
+**Actions**
+
+| Action            | Wired on                        | Description                                                                      |
+| ----------------- | ------------------------------- | -------------------------------------------------------------------------------- |
+| `onDateChange()`  | `calendar:changed` on container | Takes the selected date; the panel stays open                                    |
+| `onEscape(event)` | `keydown.esc` on `panel`        | Restores the date and time from opening, closes the panel, and focuses `trigger` |
+
+ArrowDown on `trigger` has the `calendar` outlet focus its Tab stop. Once a date, hour, minute, and any AM or PM are selected and
+available, the value goes into `input`.
+
+**Dispatches**
+
+| Event                       | Detail                           | When                                                       |
+| --------------------------- | -------------------------------- | ---------------------------------------------------------- |
+| `combobox-datetime:changed` | `{ value }` (`YYYY-MM-DDTHH:MM`) | After a selection that completes the date-time, and Escape |

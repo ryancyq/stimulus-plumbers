@@ -8,6 +8,7 @@ module StimulusPlumbers
       module Inputs
         module Datetime
           include Combobox
+          include ResolveValue
 
           def date_field(attribute, options = {})
             html_options = merge_html_options(theme.resolve(:form_field_input), options)
@@ -22,25 +23,34 @@ module StimulusPlumbers
           private
 
           # Explicit keywords: Ruby 3.0 reports `...` as taking none.
-          def render_combobox_date(attribute, html_opts, opts, error, **kwargs)
-            render_temporal(attribute, Components::Combobox::Date, html_opts, opts, error, **kwargs)
+          def render_combobox_date(attribute, input_attrs, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Date, input_attrs, opts, error, **kwargs)
           end
 
-          def render_combobox_time(attribute, html_opts, opts, error, **kwargs)
-            render_temporal(attribute, Components::Combobox::Time, html_opts, opts, error, **kwargs)
+          def render_combobox_time(attribute, input_attrs, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Time, input_attrs, opts, error, **kwargs)
           end
 
-          def render_temporal(attribute, component, html_opts, opts, error, floating: nil, **kwargs)
+          def render_combobox_datetime(attribute, input_attrs, opts, error, **kwargs)
+            render_temporal(attribute, Components::Combobox::Datetime, input_attrs, opts, error, **kwargs)
+          end
+
+          def render_temporal(attribute, component, input_attrs, opts, error, floating: nil, **kwargs)
             render_combobox(
               attribute,
-              component: component,
-              html_opts: html_opts,
-              opts:      opts,
-              error:     error,
-              floating:  floating,
-              value:     (object.public_send(attribute) if object.respond_to?(attribute)),
-              **kwargs
+              component:   component,
+              input_attrs: input_attrs,
+              opts:        opts,
+              error:       error,
+              floating:    floating,
+              value:       (object.public_send(attribute) if object.respond_to?(attribute)),
+              **kwargs,
+              **availability(component, kwargs)
             )
+          end
+
+          def availability(component, kwargs)
+            kwargs.slice(*component::AVAILABILITY::OPTIONS).transform_values { |value| resolve_value(object, value) }
           end
         end
       end

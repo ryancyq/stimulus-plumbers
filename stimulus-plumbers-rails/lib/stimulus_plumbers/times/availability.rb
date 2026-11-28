@@ -1,0 +1,63 @@
+# frozen_string_literal: true
+
+module StimulusPlumbers
+  module Times
+    class Availability
+      OPTIONS = %i[min max step].freeze
+      STEPS   = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60].freeze
+
+      attr_reader :min, :max, :step, :ranges
+
+      def initialize(min: nil, max: nil, step: 1)
+        @min = min && parse_key!(min, :min)
+        @max = max && parse_key!(max, :max)
+        raise ArgumentError, "step must be one of #{STEPS.join(", ")}" unless STEPS.include?(step)
+
+        @step   = step
+        @ranges = window_ranges
+        raise ArgumentError, "min and max leave no time on the step" if empty?
+      end
+
+      def disabled?(key)
+        outside_window?(key) || !(key[3, 2].to_i % step).zero?
+      end
+
+      def outside_window?(key)
+        ranges.none? { |start, finish| key.between?(start, finish) }
+      end
+
+      def wraps?
+        min && max && min > max
+      end
+
+      def hour_disabled?(hour)
+        (0..59).all? { |minute| disabled?(Times.key(hour, minute)) }
+      end
+
+      def empty?
+        HOURS.all? { |hour| hour_disabled?(hour) }
+      end
+
+      def trim(from: nil, to: nil)
+        trimmed = ranges.map { |start, finish| [[start, from].compact.max, [finish, to].compact.min] }
+        dup.tap { |copy| copy.ranges = trimmed.select { |start, finish| start <= finish } }
+      end
+
+      protected
+
+      attr_writer :ranges
+
+      private
+
+      def window_ranges
+        start  = min || "00:00"
+        finish = max || "23:59"
+        wraps? ? [["00:00", finish], [start, "23:59"]] : [[start, finish]]
+      end
+
+      def parse_key!(value, name)
+        Times.parse_key(value) || raise(ArgumentError, "#{name} must be a time or time key")
+      end
+    end
+  end
+end

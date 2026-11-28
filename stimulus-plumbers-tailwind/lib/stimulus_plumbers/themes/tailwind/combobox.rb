@@ -51,7 +51,7 @@ module StimulusPlumbers
         ].freeze
 
         OPTION_DISABLED = %w[
-          opacity-50 cursor-not-allowed pointer-events-none
+          aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none
         ].freeze
 
         OPTION_DESCRIPTION = %w[basis-full text-(length:--sp-text-xs) text-(--sp-color-muted-fg)].freeze
@@ -71,79 +71,82 @@ module StimulusPlumbers
 
         # ── Time ──────────────────────────────────────────────────────────────
         TIME             = %w[flex gap-(--sp-space-2) overflow-hidden].freeze
-        TIME_DRUM        = %w[
+        DATETIME         = %w[flex flex-wrap items-start gap-(--sp-space-3)].freeze
+        TIME_COLUMN      = %w[
           rounded-(--sp-radius-sm) outline-none
           focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--sp-focus-ring-color)
         ].freeze
-        TIME_DRUM_UNIT     = %w[flex-1 min-w-0].freeze
-        TIME_DRUM_MERIDIEM = %w[shrink-0].freeze
+        TIME_COLUMN_UNIT     = %w[flex-1 min-w-0].freeze
+        TIME_COLUMN_MERIDIEM = %w[shrink-0].freeze
 
         private
 
         def combobox_classes
-          { classes: klasses(*CONTAINER) }
+          { classes: class_names(*CONTAINER) }
         end
 
         def combobox_dropdown_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_typeahead_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_date_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_time_popover_classes
-          { classes: klasses(*POPOVER) }
+          { classes: class_names(*POPOVER) }
+        end
+
+        def combobox_datetime_popover_classes
+          { classes: class_names(*POPOVER) }
         end
 
         def combobox_trigger_classes
-          { classes: klasses(*TRIGGER) }
+          { classes: class_names(*TRIGGER) }
         end
 
         def combobox_trigger_group_classes
-          { classes: klasses(*TRIGGER_GROUP) }
+          { classes: class_names(*TRIGGER_GROUP) }
         end
 
         def combobox_listbox_classes
-          { classes: klasses(*LISTBOX) }
+          { classes: class_names(*LISTBOX) }
         end
 
-        def combobox_option_classes(disabled: false)
-          {
-            classes: klasses(
-              *OPTION,
-              *OPTION_SELECTED,
-              *(disabled ? OPTION_DISABLED : [])
-            )
-          }
+        def combobox_option_classes
+          { classes: class_names(*OPTION, *OPTION_SELECTED, *OPTION_DISABLED) }
         end
 
         def combobox_option_description_classes
-          { classes: klasses(*OPTION_DESCRIPTION) }
+          { classes: class_names(*OPTION_DESCRIPTION) }
         end
 
         def combobox_option_group_classes
-          { classes: klasses(*OPTION_GROUP) }
+          { classes: class_names(*OPTION_GROUP) }
         end
 
         def combobox_option_group_label_classes
-          { classes: klasses(*OPTION_GROUP_LABEL) }
+          { classes: class_names(*OPTION_GROUP_LABEL) }
         end
 
         def combobox_status_classes
-          { classes: klasses(*STATUS) }
+          { classes: class_names(*STATUS) }
         end
 
         def combobox_time_classes
-          { classes: klasses(*TIME) }
+          { classes: class_names(*TIME) }
         end
 
-        def combobox_time_drum_classes(type: :unit)
-          { classes: klasses(*TIME_DRUM, *(type == :meridiem ? TIME_DRUM_MERIDIEM : TIME_DRUM_UNIT)) }
+        def combobox_datetime_classes
+          { classes: class_names(*DATETIME) }
+        end
+
+        def combobox_time_column_classes(type: :unit)
+          { classes: class_names(*TIME_COLUMN, *(type == :meridiem ? TIME_COLUMN_MERIDIEM : TIME_COLUMN_UNIT)) }
         end
       end
     end

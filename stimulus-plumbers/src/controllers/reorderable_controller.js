@@ -45,12 +45,8 @@ export default class extends Controller {
   }
 
   editingValueChanged(value) {
-    this._syncTriggers();
+    this.triggerTargets.forEach((trigger) => setDisabled(trigger, value));
     if (!value) this.reorderable?.cancelDrag();
-  }
-
-  _syncTriggers() {
-    this.triggerTargets.forEach((trigger) => setDisabled(trigger, this.editingValue));
   }
 
   toggleEditing() {
@@ -65,19 +61,19 @@ export default class extends Controller {
     this.editingValue = false;
   }
 
-  onPointerDown(event) {
+  onPointerdown(event) {
     if (!this.editingValue) return;
     const item = event.currentTarget.closest('[data-reorderable-target~="item"]');
     if (!item) return;
     this.reorderable.startDrag(item, event.currentTarget, event.pointerId);
   }
 
-  onPointerMove(event) {
+  onPointermove(event) {
     if (!this.editingValue) return;
     this.reorderable.drag(event);
   }
 
-  onPointerUp(event) {
+  onPointerup(event) {
     if (!this.editingValue) return;
     this.reorderable.endDrag(event.currentTarget, event.pointerId);
     this.rovingTabIndex?.updateItems(this.itemTargets);

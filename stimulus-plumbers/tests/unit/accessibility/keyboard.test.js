@@ -157,7 +157,7 @@ describe('RovingTabIndex', () => {
     });
   });
 
-  describe('click sync', () => {
+  describe('click', () => {
     it('clicking an item updates currentIndex so next arrow key navigates from it', () => {
       const [a, b, c] = makeButtons(['a', 'b', 'c']);
       const rti = new RovingTabIndex([a, b, c], { orientation: 'vertical' });
@@ -235,13 +235,11 @@ describe('RovingTabIndex', () => {
       expect(document.activeElement).toBe(b);
     });
 
-    it('a modified keydown does not sync currentIndex either', () => {
+    it('a modified keydown leaves currentIndex unchanged', () => {
       const [a, b, c] = makeButtons(['a', 'b', 'c']);
       const rti = new RovingTabIndex([a, b, c], { orientation: 'vertical' });
       rti.activate();
-      // physically focus c without going through setCurrentIndex, then send a modified
-      // keydown on it — if the guard ran after the fromIndex sync, currentIndex would
-      // become 2 as a side effect even though navigation itself is ignored
+      // Focus c directly, bypassing setCurrentIndex.
       c.focus();
       c.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true }));
       expect(rti.currentIndex).toBe(0);
@@ -313,6 +311,23 @@ describe('ActiveDescendant', () => {
 
     descendant.move(-5);
     expect(descendant.active).toBe(option('a'));
+  });
+
+  it('moves from a disabled active option to the enabled option on that side', () => {
+    descendant.activate(option('b'));
+    descendant.move(1);
+    expect(descendant.active).toBe(option('c'));
+
+    descendant.activate(option('b'));
+    descendant.move(-1);
+    expect(descendant.active).toBe(option('a'));
+  });
+
+  it('moves from a disabled active option to the other side when that side has none', () => {
+    option('a').setAttribute('aria-disabled', 'true');
+    descendant.activate(option('a'));
+    descendant.move(-1);
+    expect(descendant.active).toBe(option('c'));
   });
 
   it('starts from the first or last option when none is active', () => {

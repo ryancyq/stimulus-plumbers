@@ -20,10 +20,10 @@ config.action_view.default_form_builder = StimulusPlumbers::Form::Builder
 
 ## Two-level API
 
-| Level                                 | What it renders                                                 | When to use                                  |
-| ------------------------------------- | --------------------------------------------------------------- | -------------------------------------------- |
-| **Level 1** — native helper overrides | Input element only (theme classes, no label/hint/error wrapper) | When you control surrounding markup manually |
-| **Level 2** — full-field helpers      | Label + input + hint + error, fully wired for accessibility     | Default choice                               |
+| Level                                 | What it renders                                                   | When to use                                  |
+| ------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------- |
+| **Level 1** — native helper overrides | Input element only (theme classes, no label/hint/error container) | When you control surrounding markup manually |
+| **Level 2** — full-field helpers      | Label + input + hint + error, fully wired for accessibility       | Default choice                               |
 
 ---
 
@@ -59,7 +59,7 @@ Special options on native helpers:
 
 ### f.submit
 
-`f.submit` renders a themed `<button type="submit">` without a field wrapper.
+`f.submit` renders a themed `<button type="submit">` without a field container.
 
 ```erb
 <%= f.submit "Save" %>
@@ -82,11 +82,11 @@ Submit buttons need an accessible name: pass non-blank text, or an `aria` label 
 
 Three methods render a complete, accessible field:
 
-| Method                                                                            | `as:` values                                                                                                                                                                                          |
-| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `f.field(attr, as:, **opts)`                                                      | `:text` `:email` `:number` `:url` `:tel` `:color` `:month` `:week` `:range` `:datetime_local` `:text_area` `:file` `:password` `:date` `:time` `:select` `:search` `:code` `:credit_card` `:progress` |
-| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | `:collection_select` `:grouped_collection_select`                                                                                                                                                     |
-| `f.choice(attr, as:, **opts)`                                                     | `:radio` `:check_box`                                                                                                                                                                                 |
+| Method                                                                            | `as:` values                                                                                                                                                                                                      |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `f.field(attr, as:, **opts)`                                                      | `:text` `:email` `:number` `:url` `:tel` `:color` `:month` `:week` `:range` `:datetime_local` `:text_area` `:file` `:password` `:date` `:time` `:datetime` `:select` `:search` `:code` `:credit_card` `:progress` |
+| `f.collection_field(attr, as:, collection:, value_method:, text_method:, **opts)` | `:collection_select` `:grouped_collection_select`                                                                                                                                                                 |
+| `f.choice(attr, as:, **opts)`                                                     | `:radio` `:check_box`                                                                                                                                                                                             |
 
 ### Shared field options
 
@@ -125,7 +125,7 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
       choices: ["ruby", "rails", "hotwire"], clearable: true %>
 ```
 
-`f.field` can take a block when its renderer declares `&block`; that declaration opts the renderer into the block DSL. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` wrapper containing the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`. The meter, level, and rule states render the empty-password result, so rules an empty password already meets (such as `negate: true`) start as met.
+`f.field` takes a block when its renderer declares `&block`. For example, the password renderer yields a `Password::Requirements` that accepts `enforce(**options)` and `rule(...)` configuration — see **Password** below. Strength renders a `password-strength` container holding the input, a native `<meter>`, a polite live level, a rules heading, and a rules list. The input references the rules list with `aria-describedby`. The meter, level, and rule states render the empty-password result, so rules an empty password already meets (such as `negate: true`) start as met.
 
 `choices:` takes the standard Rails shape — an array of `[label, value]` pairs (or a flat array of strings).
 
@@ -139,9 +139,43 @@ Labels and legends default to the text `f.label` renders: `helpers.label.<object
 
 **Date** (`as: :date`) — [`sp_combobox_date`](combobox.md#sp_combobox_date), labelled and described by the field; it takes the same options (`format:`, `open_on_focus:`, `calendar:`, `min:`, `max:`, `disabled_*:`). Use `f.date_field` for a plain `<input type="date">`.
 
-**Time** (`as: :time`) — [`sp_combobox_time`](combobox.md#sp_combobox_time), labelled and described by the field; it takes the same options (`format:`, `step:`, `open_on_focus:`). Use `f.time_field` for a plain `<input type="time">`.
+**Time** (`as: :time`) — [`sp_combobox_time`](combobox.md#sp_combobox_time), labelled and described by the field; it takes the same options (`format:`, `min:`, `max:`, `step:`, `open_on_focus:`). Use `f.time_field` for a plain `<input type="time">`.
 
-The browser does not validate either read-only input: `required:` sets `aria-required` and a presence validator enforces it, and `min:`, `max:`, and `disabled_*:` limit the dates offered, so validate the value in the model.
+**Date and time** (`as: :datetime`) — [`sp_combobox_datetime`](combobox.md#sp_combobox_datetime), labelled and described by the field; it takes the same options (`format:`, `calendar:`, `min:`, `max:`, `disabled_*:`, `time:`, `open_on_focus:`). Use `f.datetime_local_field` for a plain `<input type="datetime-local">`.
+
+The browser does not validate these read-only inputs: `required:` sets `aria-required` and a presence validator enforces it, and `min:`, `max:`, `step:`, `disabled_*:`, and `time:` limit the dates and times offered, so validate the value in the model.
+The builder resolves a Proc, Symbol, or callable `min:`, `max:`, `step:`, `disabled_*:`, or `time:` against the form object, as validator options resolve against the record.
+
+**Server enforcement.** Share one hash between the field and the model's `date_availability:`, `time_availability:`, or `datetime_availability:` validator so they cannot drift:
+
+```ruby
+class Booking < ApplicationRecord
+  SLOTS = { min: -> { Date.current }, disabled_weekdays: [0, 6] }.freeze
+  HOURS = { min: "09:00", max: "17:00", step: 15 }.freeze
+  VISITS = { min: -> { Time.current }, disabled_weekdays: [0], time: HOURS }.freeze
+
+  validates :starts_on, date_availability: SLOTS
+  validates :starts_at, time_availability: HOURS
+  validates :visit_at, datetime_availability: VISITS
+end
+```
+
+```erb
+<%= f.field :starts_on, as: :date, **Booking::SLOTS %>
+<%= f.field :starts_at, as: :time, **Booking::HOURS %>
+<%= f.field :visit_at, as: :datetime, **Booking::VISITS %>
+```
+
+| Error             | Message                                | When                                                                      |
+| ----------------- | -------------------------------------- | ------------------------------------------------------------------------- |
+| `:invalid`        | Rails' "is invalid"                    | Not a date, a time, or a `YYYY-MM-DD`, `HH:MM`, or `YYYY-MM-DDTHH:MM` key |
+| `:too_early`      | "must be %{count} or later"            | Before `min`                                                              |
+| `:too_late`       | "must be %{count} or earlier"          | After `max`                                                               |
+| `:outside_window` | "must be from %{min} to %{max}"        | Outside a `min`–`max` that wraps past midnight                            |
+| `:unavailable`    | "is not available"                     | A date `disabled_*:` excludes, or a time outside `time:`                  |
+| `:step_mismatch`  | "must be in steps of %{count} minutes" | A time off `step:` or `time: { step: }`                                   |
+
+A blank value passes; pair the validator with `presence:` to require one. A value that fails to cast to a date or time is `:invalid` when the model has `<attribute>_before_type_cast`, as Active Record does; otherwise it reads as blank. Times are read by their clock without seconds; date-times in `Time.zone`, without seconds; dates as in [`sp_calendar`](calendar.md). `%{count}` is `I18n.l` of the date, the time in `stimulus_plumbers.availability.time_format`, or both for a date-time. `time:` resolves as a whole. Unusable static options raise `ArgumentError` when the model loads, and a Proc or Symbol that resolves to one raises when the model validates or the field renders; `message:`, `strict:`, `if:`, `unless:`, and `on:` work as in Rails. The shared hash suits `f.field as: :date`, `as: :time`, and `as: :datetime` only: `f.time_field` reads `step` in seconds.
 
 **Select** (`as: :select`) — select-only combobox ([`sp_combobox_dropdown`](combobox.md#sp_combobox_dropdown)) backed by `combobox`.
 
@@ -165,7 +199,7 @@ Use `f.select` for a native `<select>`.
 `match:`, `min_length:`, `source:`, and `param:` pass through to [`sp_combobox_typeahead`](combobox.md#sp_combobox_typeahead).
 Use `f.search_field` for a native `<input type="search">`.
 
-**Password** (`as: :password`) — reveal-toggle wrapper backed by `input-revealable`.
+**Password** (`as: :password`) — reveal-toggle container backed by `input-revealable`.
 
 | Option         | Values                   | Default              | Description                                      |
 | -------------- | ------------------------ | -------------------- | ------------------------------------------------ |
@@ -201,27 +235,27 @@ validates :password, password_strength: { with: PASSWORD_RULES }
 
 The validator also accepts inline options (`password_strength: { min_length: 12, max_length: 64, digit: true }`) and a custom `message:`. For the rule-descriptor wire contract and meter behaviour, see the [JS controller doc](../../../stimulus-plumbers/docs/component/password-strength.md).
 
-**Code** (`as: :code`) — character-cell entry backed by `input-formatter` and the `character-cells` plumber. The native input remains the accessible control; cells are decorative.
+**Code** (`as: :code`) — one cell per character, backed by `input-formatter` and [`input-code`](../../../stimulus-plumbers/docs/component/input-code.md). The native input remains the accessible control; the cells show its characters, caret, and selection.
 
 | Option         | Values                                   | Default                | Description                                              |
 | -------------- | ---------------------------------------- | ---------------------- | -------------------------------------------------------- |
-| `length`       | positive Integer                         | required               | Number of cells and input maximum length                 |
+| `length`       | positive Integer                         | required               | Number of cells and characters                           |
 | `charset`      | `:digits` / `:letters` / `:alphanumeric` | `:digits`              | Allowed code characters                                  |
 | `groups`       | Array of positive Integers               | `[]`                   | Visual cell groups; must add up to `length`              |
 | `separator`    | String / `nil`                           | `nil`                  | Character between groups; `nil` shows the break as a gap |
 | `autocomplete` | String                                   | `"one-time-code"`      | Native autocomplete value                                |
 | `inputmode`    | String                                   | `"numeric"` for digits | Native input mode                                        |
 
-**Credit card** (`as: :credit_card`) — grouped card-number entry backed by `input-formatter` and the `character-cells` plumber (grouped mode). Renders one cell per group; `maxlength` is their sum plus one space per group break.
+**Credit card** (`as: :credit_card`) — a text input backed by `input-formatter`, which groups the digits as the user types and caps them at the groups' sum; the submitted value keeps the separators.
 
-| Option         | Values                     | Default        | Description                                                                     |
-| -------------- | -------------------------- | -------------- | ------------------------------------------------------------------------------- |
-| `groups`       | Array of positive Integers | `[4, 4, 4, 4]` | Cell groups — one cell per group; the input value is spaced at each group break |
-| `separator`    | String / `nil`             | `nil`          | Character between cells; `nil` renders none                                     |
-| `autocomplete` | String                     | `"cc-number"`  | Native autocomplete value                                                       |
-| `inputmode`    | String                     | `"numeric"`    | Native input mode                                                               |
+| Option         | Values                     | Default       | Description                                                 |
+| -------------- | -------------------------- | ------------- | ----------------------------------------------------------- |
+| `groups`       | Array of positive Integers | `nil`         | Digit groups; `nil` groups Amex as 4-6-5 and others 4-4-4-4 |
+| `separator`    | String / `nil`             | `nil`         | Character between groups; `nil` is a space                  |
+| `autocomplete` | String                     | `"cc-number"` | Native autocomplete value                                   |
+| `inputmode`    | String                     | `"numeric"`   | Native input mode                                           |
 
-Character-cell fields do not support `floating:` labels.
+Code fields do not support `floating:` labels.
 
 **Range** (`as: :range`) — native `<input type="range">` styled as a progress track with a thumb. Unlike the progress field it is a real control, so it keeps an ordinary `<label for>`.
 
@@ -270,7 +304,7 @@ Its label renders as a `<span>`, not a `<label>`, and names the bar via `aria-la
       group_label_method: :name %>
 ```
 
-Groups render as `role="group"` labelled by their heading through `aria-labelledby`. Use native `f.collection_select` / `f.grouped_collection_select` to skip the field wrapper.
+Groups render as `role="group"` labelled by their heading through `aria-labelledby`. Use native `f.collection_select` / `f.grouped_collection_select` to skip the field container.
 
 ---
 

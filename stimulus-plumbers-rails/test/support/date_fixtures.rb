@@ -2,7 +2,6 @@
 
 require "json"
 
-# The JS date core's fixtures, the source of truth for date rules.
 module DateFixtures
   DIRECTORY = File.expand_path("../../../stimulus-plumbers/tests/fixtures/date", __dir__)
   AVAILABILITY_KEYS = {

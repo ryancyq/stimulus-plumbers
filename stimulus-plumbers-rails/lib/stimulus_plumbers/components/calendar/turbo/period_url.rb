@@ -4,7 +4,6 @@ module StimulusPlumbers
   module Components
     class Calendar
       class Turbo
-        # The default period URL: `url`, or the current URL, plus <id>[displayed] and <id>[view].
         class PeriodUrl < Plumber::Base
           def initialize(template, id, url = nil)
             super(template)
@@ -14,8 +13,8 @@ module StimulusPlumbers
             @query = Rack::Utils.parse_nested_query(query)
           end
 
-          def call(displayed, view)
-            "#{@path}?#{@query.deep_merge(@id => { "displayed" => displayed.iso8601, "view" => view.to_s }).to_query}"
+          def call(displayed, level)
+            "#{@path}?#{@query.deep_merge(@id => { "displayed" => displayed.iso8601, "level" => level.to_s }).to_query}"
           end
 
           private

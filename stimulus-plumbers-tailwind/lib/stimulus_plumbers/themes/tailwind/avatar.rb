@@ -39,7 +39,7 @@ module StimulusPlumbers
 
         def avatar_classes(size: :md, variant: nil)
           {
-            classes: klasses(
+            classes: class_names(
               SIZES.fetch(size, SIZES[:md]),
               VARIANTS.fetch(variant, nil),
               *BASE

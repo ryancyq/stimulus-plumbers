@@ -60,7 +60,7 @@ module StimulusPlumbers
           ].freeze
           FLOATING_INPUT_GROUP_ERROR = %w[border-(--sp-color-error)].freeze
 
-          # ── Combobox wrappers ─────────────────────────────────────────────────
+          # ── Combobox containers ───────────────────────────────────────────────
           COMBOBOX_INPUT = %w[
             [&>input:not([type=hidden])]:border-0
             [&>input:not([type=hidden])]:rounded-none
@@ -125,7 +125,7 @@ module StimulusPlumbers
           ].freeze
 
           # Dims the readout of a disabled slider.
-          RANGE_GROUP = %w[
+          RANGE_CONTAINER = %w[
             flex items-center gap-(--sp-space-3)
             [&:has(input:disabled)>span]:opacity-50
           ].freeze
@@ -190,14 +190,14 @@ module StimulusPlumbers
 
           def form_field_input_classes(floating: nil, error: false)
             if floating
-              { classes: klasses(
+              { classes: class_names(
                 *FLOATING_INPUT,
                 *FLOATING_INPUT_TYPES.fetch(floating, []),
                 *(error ? FLOATING_INPUT_ERROR : FLOATING_INPUT_DEFAULT)
               )
 }
             else
-              { classes: klasses(*INPUT, *(error ? INPUT_ERROR : INPUT_DEFAULT)) }
+              { classes: class_names(*INPUT, *(error ? INPUT_ERROR : INPUT_DEFAULT)) }
             end
           end
 
@@ -211,19 +211,19 @@ module StimulusPlumbers
 
           # No text-input chrome; progress_bar styles the track.
           def form_field_input_progress_classes
-            { classes: klasses("w-full") }
+            { classes: class_names("w-full") }
           end
 
           def form_field_input_range_classes
-            { classes: klasses(*RANGE) }
+            { classes: class_names(*RANGE) }
           end
 
-          def form_field_input_range_group_classes
-            { classes: klasses(*RANGE_GROUP) }
+          def form_field_input_range_container_classes
+            { classes: class_names(*RANGE_CONTAINER) }
           end
 
           def form_field_input_range_value_classes
-            { classes: klasses(*Progress::VALUE_TEXT, *RANGE_VALUE) }
+            { classes: class_names(*Progress::VALUE_TEXT, *RANGE_VALUE) }
           end
 
           def form_field_input_select_classes(floating: nil, error: false)
@@ -232,20 +232,20 @@ module StimulusPlumbers
 
           def form_field_input_checkbox_classes(type: :default, variant: :default, **)
             card_color = type == :card ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:tertiary]) : []
-            { classes: klasses(*CHECKBOX_TYPES.fetch(type), *card_color) }
+            { classes: class_names(*CHECKBOX_TYPES.fetch(type), *card_color) }
           end
 
           def form_field_input_radio_classes(type: :default, variant: :default, **)
             card_color = %i[button card].include?(type) ? Card::VARIANTS.fetch(variant, Card::VARIANTS[:tertiary]) : []
-            { classes: klasses(*RADIO_TYPES.fetch(type), *card_color) }
+            { classes: class_names(*RADIO_TYPES.fetch(type), *card_color) }
           end
 
           def input_group_classes(error: false, floating: nil)
             if floating
               color = error ? FLOATING_INPUT_GROUP_ERROR : FLOATING_INPUT_GROUP_DEFAULT
-              { classes: klasses(*FLOATING_INPUT_GROUP, *FLOATING_INPUT_GROUP_TYPES.fetch(floating, []), *color) }
+              { classes: class_names(*FLOATING_INPUT_GROUP, *FLOATING_INPUT_GROUP_TYPES.fetch(floating, []), *color) }
             else
-              { classes: klasses(*INPUT_GROUP, INPUT_GROUP_BORDER[error ? :error : :default]) }
+              { classes: class_names(*INPUT_GROUP, INPUT_GROUP_BORDER[error ? :error : :default]) }
             end
           end
 
@@ -254,7 +254,7 @@ module StimulusPlumbers
               form_field_input_combobox_floating_classes(floating: floating, error: error)
             else
               {
-                classes: klasses(
+                classes: class_names(
                   *INPUT,
                   *(error ? INPUT_ERROR : INPUT_DEFAULT),
                   *COMBOBOX_INPUT,
@@ -268,7 +268,7 @@ module StimulusPlumbers
 
           def form_field_input_combobox_floating_classes(floating: :standard, error: false)
             {
-              classes: klasses(
+              classes: class_names(
                 *FLOATING_INPUT,
                 *FLOATING_INPUT_TYPES.fetch(floating, []),
                 *(error ? FLOATING_INPUT_ERROR : [*FLOATING_INPUT_DEFAULT, *COMBOBOX_FLOATING_FOCUS]),
@@ -281,7 +281,7 @@ module StimulusPlumbers
 
           def form_field_input_reveal_classes(**)
             {
-              classes: klasses(
+              classes: class_names(
                 "peer",
                 "[&>input]:border-0",
                 "[&>input]:rounded-none",
@@ -294,7 +294,7 @@ module StimulusPlumbers
 
           def form_field_input_clearable_classes
             {
-              classes: klasses(
+              classes: class_names(
                 "[&>input]:border-0",
                 "[&>input]:rounded-none",
                 "[&>input]:bg-transparent",
@@ -305,11 +305,11 @@ module StimulusPlumbers
           end
 
           def form_field_input_button_reveal_classes
-            { classes: klasses(*BUTTON_REVEAL) }
+            { classes: class_names(*BUTTON_REVEAL) }
           end
 
           def form_field_input_button_clear_classes
-            { classes: klasses(*BUTTON_CLEAR) }
+            { classes: class_names(*BUTTON_CLEAR) }
           end
         end
       end

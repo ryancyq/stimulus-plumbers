@@ -33,6 +33,10 @@ module StimulusPlumbers
           def zoom_out
           end
 
+          # The level a cell's link opens.
+          def zoom_in
+          end
+
           # The adjacent period, or nil outside 0001–9999.
           def neighbour(direction)
             date = step(direction)
@@ -55,7 +59,7 @@ module StimulusPlumbers
                   "#{STIMULUS_CONTROLLER}-target" => "grid",
                   action:                           "keydown->#{STIMULUS_CONTROLLER}#onKeydown",
                   displayed:                        configuration.displayed.iso8601,
-                  view:                             view_name
+                  level:                            level
                 }
               }
             )
@@ -100,15 +104,11 @@ module StimulusPlumbers
 
           def control_data(date)
             { "#{STIMULUS_CONTROLLER}-target" => target, date: date.iso8601, outside: outside?(date) ? "true" : nil }
-              .merge(view: control_view).compact
-          end
-
-          # The view a cell's link opens.
-          def control_view
+              .merge(level: zoom_in).compact
           end
 
           def period_url(date)
-            (@period_urls ||= {}).fetch(date) { |key| @period_urls[key] = url_builder.call(key, control_view) }
+            (@period_urls ||= {}).fetch(date) { |key| @period_urls[key] = url_builder.call(key, zoom_in) }
           end
 
           # Links to the period; a disabled one, or one without a URL, has no href.

@@ -15,67 +15,52 @@ class CreditCardTest < ActionView::TestCase
     parse_html(html)
   end
 
-  def test_wires_credit_card_formatter
-    assert_css build_field, "[data-controller='input-formatter'][data-input-formatter-format-value='creditCard']"
+  def card_input(doc)
+    doc.at_css("input[type='text']")
   end
 
-  def test_input_reformats_on_form_reset
-    assert_css build_field, "input[data-action~='form:reset->input-formatter#onFormReset']"
+  def test_the_visible_input_carries_the_credit_card_formatter
+    input = card_input(build_field)
+
+    assert_equal "input-formatter", input["data-controller"]
+    assert_equal "input", input["data-input-formatter-target"]
+    assert_equal "creditCard", input["data-input-formatter-format-value"]
   end
 
-  def test_renders_one_cell_per_group
-    doc = build_field
+  def test_input_reformats_on_input_and_form_reset
+    actions = card_input(build_field)["data-action"].split
 
-    assert_equal 4, doc.css("[data-input-formatter-target='cell']").length
-    assert_css doc, "[data-input-formatter-groups-value='[4,4,4,4]']"
+    assert_includes actions, "input->input-formatter#onInput"
+    assert_includes actions, "beforeinput->input-formatter#onBeforeinput"
+    assert_includes actions, "form:reset->input-formatter#onFormReset"
   end
 
-  def separators_in(doc)
-    cells = doc.css("[data-input-formatter-target='cell']")
-    cells[0].parent.children.reject { |node| node["data-input-formatter-target"] == "cell" }
+  def test_leaves_grouping_and_separator_to_the_formatter_by_default
+    assert_equal "{}", card_input(build_field)["data-input-formatter-options-value"]
   end
 
-  def test_cell_borders_carry_the_grouping_without_a_separator_character
-    assert_empty separators_in(build_field)
-  end
+  def test_passes_groups_and_separator_to_the_formatter
+    input = card_input(build_field(groups: [4, 4, 4, 4, 3], separator: "-"))
 
-  def test_renders_separators_between_cells_only
-    separators = separators_in(build_field(separator: "-"))
-
-    assert_equal 3, separators.length
-    separators.each do |separator|
-      assert_equal "true", separator["aria-hidden"]
-      assert_equal "-", separator.text
-    end
-  end
-
-  def test_separator_character_is_configurable
-    separators = separators_in(build_field(separator: "/"))
-
-    assert_equal 3, separators.length
-    separators.each { |separator| assert_equal "/", separator.text }
-  end
-
-  def test_cells_wrapper_has_a_valid_class_attribute
-    wrapper = build_field.at_css("[data-input-formatter-target='cell']").parent
-
-    refute wrapper.key?("classes")
+    assert_equal(
+      { "groups" => [4, 4, 4, 4, 3], "separator" => "-" },
+      JSON.parse(input["data-input-formatter-options-value"])
+    )
   end
 
   def test_uses_credit_card_browser_defaults
-    input = build_field.at_css("input[type='text']")
+    input = card_input(build_field)
 
     assert_equal "cc-number", input["autocomplete"]
     assert_equal "numeric", input["inputmode"]
-    assert_equal "19", input["maxlength"]
   end
 
-  def test_supports_nonstandard_card_grouping
-    doc = build_field(groups: [4, 4, 4, 4, 3])
+  def test_has_no_maxlength_so_a_paste_reaches_the_formatter_whole
+    refute card_input(build_field).key?("maxlength")
+  end
 
-    assert_equal 5, doc.css("[data-input-formatter-target='cell']").length
-    assert_equal "23", doc.at_css("input[type='text']")["maxlength"]
-    assert_css doc, "[data-input-formatter-groups-value='[4,4,4,4,3]']"
+  def test_rejects_groups_that_are_not_positive_integers
+    assert_raises(ArgumentError, "groups must be an array of positive integers") { build_field(groups: [4, 0]) }
   end
 
   def test_renders_label_and_error_state
@@ -84,7 +69,7 @@ class CreditCardTest < ActionView::TestCase
 
     assert_css doc, "label[for='sign_in_form_card_number']"
     assert_css doc, "p[role='alert']"
-    assert_equal "true", doc.at_css("input[type='text']")["aria-invalid"]
+    assert_equal "true", card_input(doc)["aria-invalid"]
   end
 
   def test_label_is_associated_with_the_input
@@ -101,7 +86,21 @@ class CreditCardTest < ActionView::TestCase
     assert_includes described_by, "sign_in_form_card_number_error"
   end
 
-  def test_rejects_floating_labels
-    assert_raises(ArgumentError, "floating labels are not supported for credit card fields") { build_field(floating: :outlined) }
+  def test_floating_filled_renders_input_before_label
+    html = build_field(floating: :filled).to_html
+
+    assert_operator html.index("<input"), :<, html.index("<label")
+  end
+
+  def test_floating_outlined_renders_input_before_label
+    html = build_field(floating: :outlined).to_html
+
+    assert_operator html.index("<input"), :<, html.index("<label")
+  end
+
+  def test_floating_standard_renders_input_before_label
+    html = build_field(floating: :standard).to_html
+
+    assert_operator html.index("<input"), :<, html.index("<label")
   end
 end
